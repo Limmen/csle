@@ -9,7 +9,6 @@ Subpackages
 
    csle_common.dao.datasets
    csle_common.dao.docker
-   csle_common.dao.domain_randomization
    csle_common.dao.emulation_action
    csle_common.dao.emulation_action_result
    csle_common.dao.emulation_config

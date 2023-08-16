@@ -10,6 +10,7 @@ Subpackages
    csle_agents.agents.base
    csle_agents.agents.bayesian_optimization
    csle_agents.agents.cross_entropy
+   csle_agents.agents.dfsp_local
    csle_agents.agents.differential_evolution
    csle_agents.agents.dqn
    csle_agents.agents.dynasec

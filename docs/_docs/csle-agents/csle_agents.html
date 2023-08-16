@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents package &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents package &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -92,6 +92,13 @@
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_agent">csle_agents.agents.dfsp_local.dfsp_local_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_ppo_agent">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a><ul>
@@ -220,7 +227,6 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian"><code class="docutils literal notranslate"><span class="pre">FNNwithGaussian</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.forward"><code class="docutils literal notranslate"><span class="pre">FNNwithGaussian.forward()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.get_hidden_activation"><code class="docutils literal notranslate"><span class="pre">FNNwithGaussian.get_hidden_activation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.training"><code class="docutils literal notranslate"><span class="pre">FNNwithGaussian.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
@@ -230,7 +236,6 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear"><code class="docutils literal notranslate"><span class="pre">FNNwithLinear</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.forward"><code class="docutils literal notranslate"><span class="pre">FNNwithLinear.forward()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.get_hidden_activation"><code class="docutils literal notranslate"><span class="pre">FNNwithLinear.get_hidden_activation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.training"><code class="docutils literal notranslate"><span class="pre">FNNwithLinear.training</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.common.html#csle_agents.common.fnn_w_linear.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
@@ -443,6 +448,16 @@
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THETA1"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THETA1</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THETAS"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THETAS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THRESHOLDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.BEST_RESPONSE_EVALUATION_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.BEST_RESPONSE_EVALUATION_ITERATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.N_2"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.N_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.constants.html#csle_agents.constants.constants.LP_FOR_NF_GAMES"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES</span></code></a><ul>

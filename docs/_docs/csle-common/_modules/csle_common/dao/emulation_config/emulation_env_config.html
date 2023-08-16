@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.emulation_env_config &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_config.emulation_env_config &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -100,10 +100,11 @@
 <span class="kn">from</span> <span class="nn">csle_common.util.ssh_util</span> <span class="kn">import</span> <span class="n">SSHUtil</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvConfig</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing the configuration of an emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -120,7 +121,7 @@
                  <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">csle_collector_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">LATEST_VERSION</span><span class="p">,</span>
                  <span class="n">csle_ryu_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">LATEST_VERSION</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the object</span>
 
 <span class="sd">        :param name: the name of the emulation</span>
@@ -159,7 +160,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">resources_config</span> <span class="o">=</span> <span class="n">resources_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="o">=</span> <span class="n">kafka_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">services_config</span> <span class="o">=</span> <span class="n">services_config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port_forward_port</span> <span class="o">=</span> <span class="mi">1900</span>
@@ -183,7 +184,7 @@
 
 <div class="viewcode-block" id="EmulationEnvConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation into an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -219,10 +220,12 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+<span class="sd">        </span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;containers_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;users_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">users_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -262,7 +265,7 @@
 
 <div class="viewcode-block" id="EmulationEnvConfig.connect"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                 <span class="n">create_producer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects to the agent&#39;s host with SSH, either directly or through a jumphost</span>
 
 <span class="sd">        :param ip: the ip to connect to</span>
@@ -281,7 +284,11 @@
         <span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pw</span><span class="p">)</span>
-        <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">transport</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="n">conn</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">create_producer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_producer</span><span class="p">()</span>
@@ -290,7 +297,7 @@
         <span class="k">return</span> <span class="n">conn</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_connection"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets a connection to a given IP address</span>
 
 <span class="sd">        :param ip: the ip address to get the connection for</span>
@@ -299,34 +306,43 @@
         <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="ow">and</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">check_if_ssh_connection_is_alive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">ip</span><span class="p">]):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection to ip:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not activep&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection to ip:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not active&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_hacker_connection"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_hacker_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_hacker_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets an SSH connection to the hacker agent, creates one if it does not exist</span>
 
 <span class="sd">        :return: SSH connection to the hacker</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">hacker_ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_agent_container</span><span class="p">()</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_agent_container</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No agent_container obtained&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hacker_ip</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
         <span class="k">if</span> <span class="n">hacker_ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">]</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">]</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">is_active</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">SSHUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ls &gt; /dev/null&quot;</span><span class="p">],</span> <span class="n">conn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconnecting attacker, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconnecting attacker, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span><span class="w"> </span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="EmulationEnvConfig.cleanup"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EmulationEnvConfig.cleanup"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleans up old connections</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">conn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.create_producer"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.create_producer">[docs]</a>    <span class="k">def</span> <span class="nf">create_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a Kafka producer</span>
 
 <span class="sd">        :return: None</span>
@@ -338,7 +354,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="n">conf</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.close_all_connections"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.close_all_connections">[docs]</a>    <span class="k">def</span> <span class="nf">close_all_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes the emulation connection</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -348,25 +364,28 @@
 
 <div class="viewcode-block" id="EmulationEnvConfig.check_if_ssh_connection_is_alive"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.check_if_ssh_connection_is_alive">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_if_ssh_connection_is_alive</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to check whether a SSH connection is alive or not</span>
 <span class="sd">        :param conn: the connection to check</span>
 <span class="sd">        :return: true or false</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">alive</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">is_active</span><span class="p">()</span>
+        <span class="n">transport</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">alive</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">is_active</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not obtain transport&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">alive</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_port_forward_port"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_port_forward_port">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_forward_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the next port to use for forwarding</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port_forward_port</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_forward_port</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.ids"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.ids">[docs]</a>    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the configuration includes an IDS</span>
 
 <span class="sd">        :return: True if it includes an IDS, otherwise False</span>
@@ -377,7 +396,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_container_from_ip"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_container_from_ip">[docs]</a>    <span class="k">def</span> <span class="nf">get_container_from_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NodeContainerConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for getting a container with a specific IP</span>
 
 <span class="sd">        :param ip: the ip of the container</span>
@@ -395,7 +414,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return:  a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, containers_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="si">}</span><span class="s2">, users_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">users_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -413,7 +432,7 @@
                <span class="sa">f</span><span class="s2">&quot; csle_ryu_version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csle_ryu_version</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_all_ips"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_all_ips">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_ips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list of all ip addresses in the emulation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -423,31 +442,9 @@
                 <span class="n">ips</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EmulationEnvConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the DTO into a json string</span>
-
-<span class="sd">        :return: the json string representation of the DTO</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json_str</span></div>
-
-<div class="viewcode-block" id="EmulationEnvConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the DTO to a json file</span>
-
-<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="EmulationEnvConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>
@@ -460,13 +457,13 @@
         <span class="k">return</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an execution config from the base config</span>
 
 <span class="sd">        :param ip_first_octet:  the id of the execution</span>
@@ -509,7 +506,7 @@
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_network_by_name"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_network_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_network_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainerNetwork</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the network by name from the config</span>
 
 <span class="sd">        :param net_name: the name of the network</span>

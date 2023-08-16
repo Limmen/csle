@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.pages.sdn_controllers.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.pages.sdn_controllers.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../../index.html" class="icon icon-home">
-            csle-rest-api
+            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -58,7 +57,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_rest_api.pages.sdn_controllers.routes</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,7 +72,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and resources for the /sdn-controllers-page page</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 
@@ -96,11 +96,12 @@
                                         <span class="n">static_folder</span><span class="o">=</span><span class="n">static_folder</span><span class="p">)</span>
 
     <span class="nd">@sdn_controllers_page_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">sdn_controllers_page</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">sdn_controllers_page</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: static resources for the /sdn-controllers-page url</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">sdn_controllers_page_bp</span><span class="o">.</span><span class="n">send_static_file</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC_RESOURCE_INDEX</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sdn_controllers_page_bp</span><span class="o">.</span><span class="n">send_static_file</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC_RESOURCE_INDEX</span><span class="p">),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sdn_controllers_page_bp</span></div>
 </pre></div>

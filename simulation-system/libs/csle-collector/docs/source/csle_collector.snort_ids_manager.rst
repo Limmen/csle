@@ -1,6 +1,15 @@
 csle\_collector.snort\_ids\_manager package
 ===========================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   csle_collector.snort_ids_manager.dao
+   csle_collector.snort_ids_manager.threads
+
 Submodules
 ----------
 
@@ -8,30 +17,6 @@ csle\_collector.snort\_ids\_manager.query\_snort\_ids\_manager module
 ---------------------------------------------------------------------
 
 .. automodule:: csle_collector.snort_ids_manager.query_snort_ids_manager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_collector.snort\_ids\_manager.snort\_ids\_alert module
-------------------------------------------------------------
-
-.. automodule:: csle_collector.snort_ids_manager.snort_ids_alert
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_collector.snort\_ids\_manager.snort\_ids\_alert\_counters module
-----------------------------------------------------------------------
-
-.. automodule:: csle_collector.snort_ids_manager.snort_ids_alert_counters
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_collector.snort\_ids\_manager.snort\_ids\_ip\_alert\_counters module
---------------------------------------------------------------------------
-
-.. automodule:: csle_collector.snort_ids_manager.snort_ids_ip_alert_counters
    :members:
    :undoc-members:
    :show-inheritance:
@@ -64,14 +49,6 @@ csle\_collector.snort\_ids\_manager.snort\_ids\_manager\_util module
 --------------------------------------------------------------------
 
 .. automodule:: csle_collector.snort_ids_manager.snort_ids_manager_util
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_collector.snort\_ids\_manager.snort\_ids\_rule\_counters module
----------------------------------------------------------------------
-
-.. automodule:: csle_collector.snort_ids_manager.snort_ids_rule_counters
    :members:
    :undoc-members:
    :show-inheritance:

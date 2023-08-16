@@ -28,14 +28,6 @@ csle\_common.dao.emulation\_config.client\_population\_config module
    :undoc-members:
    :show-inheritance:
 
-csle\_common.dao.emulation\_config.client\_population\_process\_type module
----------------------------------------------------------------------------
-
-.. automodule:: csle_common.dao.emulation_config.client_population_process_type
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 csle\_common.dao.emulation\_config.cluster\_config module
 ---------------------------------------------------------
 
@@ -136,14 +128,6 @@ csle\_common.dao.emulation\_config.emulation\_env\_config module
 ----------------------------------------------------------------
 
 .. automodule:: csle_common.dao.emulation_config.emulation_env_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_common.dao.emulation\_config.emulation\_env\_generation\_config module
-----------------------------------------------------------------------------
-
-.. automodule:: csle_common.dao.emulation_config.emulation_env_generation_config
    :members:
    :undoc-members:
    :show-inheritance:

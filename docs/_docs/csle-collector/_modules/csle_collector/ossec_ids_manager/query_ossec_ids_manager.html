@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.ossec_ids_manager.query_ossec_ids_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.ossec_ids_manager.query_ossec_ids_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.ossec_ids_manager.query_ossec_ids_manager</li>
       <li class="wy-breadcrumbs-aside">
@@ -91,7 +90,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">get_ids_monitor_status_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">GetOSSECIdsMonitorStatusMsg</span><span class="p">()</span>
-    <span class="n">ids_monitor_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getOSSECIdsMonitorStatus</span><span class="p">(</span><span class="n">get_ids_monitor_status_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">getOSSECIdsMonitorStatus</span><span class="p">(</span><span class="n">get_ids_monitor_status_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_monitor_dto</span></div>
 
 
@@ -114,7 +114,8 @@
         <span class="n">kafka_ip</span><span class="o">=</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">log_file_path</span><span class="o">=</span><span class="n">log_file_path</span><span class="p">,</span>
         <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span>
     <span class="p">)</span>
-    <span class="n">ids_monitor_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startOSSECIdsMonitor</span><span class="p">(</span><span class="n">start_ids_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startOSSECIdsMonitor</span><span class="p">(</span><span class="n">start_ids_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_monitor_dto</span></div>
 
 
@@ -131,7 +132,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_ids_monitor_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StopOSSECIdsMonitorMsg</span><span class="p">()</span>
-    <span class="n">ids_monitor_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopOSSECIdsMonitor</span><span class="p">(</span><span class="n">stop_ids_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopOSSECIdsMonitor</span><span class="p">(</span><span class="n">stop_ids_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_monitor_dto</span></div>
 
 
@@ -148,7 +150,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_ossec_ids_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StopOSSECIdsMsg</span><span class="p">()</span>
-    <span class="n">ids_monitor_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopOSSECIds</span><span class="p">(</span><span class="n">stop_ossec_ids_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopOSSECIds</span><span class="p">(</span><span class="n">stop_ossec_ids_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_monitor_dto</span></div>
 
 
@@ -165,7 +168,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_ossec_ids_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StartOSSECIdsMsg</span><span class="p">()</span>
-    <span class="n">ids_monitor_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startOSSECIds</span><span class="p">(</span><span class="n">start_ossec_ids_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startOSSECIds</span><span class="p">(</span><span class="n">start_ossec_ids_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_monitor_dto</span></div>
 
 
@@ -185,7 +189,8 @@
     <span class="n">get_ids_log_alerts_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">GetOSSECIdsAlertsMsg</span><span class="p">(</span>
             <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">log_file_path</span><span class="o">=</span><span class="n">log_file_path</span><span class="p">)</span>
-    <span class="n">ids_log_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getOSSECIdsAlerts</span><span class="p">(</span><span class="n">get_ids_log_alerts_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">ids_log_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">getOSSECIdsAlerts</span><span class="p">(</span><span class="n">get_ids_log_alerts_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ids_log_dto</span></div>
 </pre></div>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.container_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.container_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,8 +72,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.controllers.container_controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">docker</span>
@@ -100,13 +100,13 @@
 
 
 <div class="viewcode-block" id="ContainerController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController">[docs]</a><span class="k">class</span> <span class="nc">ContainerController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for managing Docker containers and virtual networks</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ContainerController.stop_all_running_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.stop_all_running_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_all_running_containers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping all running containers</span>
 
 <span class="sd">        :return: None</span>
@@ -120,7 +120,7 @@
 
 <div class="viewcode-block" id="ContainerController.stop_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.stop_container">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_container</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping a specific container</span>
 
 <span class="sd">        :param name: the name of the container to stop</span>
@@ -137,7 +137,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_all_stopped_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_all_stopped_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_all_stopped_containers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for removing all stopped containers</span>
 
 <span class="sd">        :return: None</span>
@@ -153,7 +153,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_container">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_container</span><span class="p">(</span><span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a specific container</span>
 
 <span class="sd">        :param container_name: the container to remove</span>
@@ -169,7 +169,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_all_images"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_all_images">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_all_images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for removing all csle images</span>
 
 <span class="sd">        :return: None</span>
@@ -200,7 +200,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_image"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_image">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_image</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for removing a specific image</span>
 
 <span class="sd">        :param name: the name of the image to remove</span>
@@ -237,7 +237,7 @@
 
 <div class="viewcode-block" id="ContainerController.list_all_images"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_images">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for listing all csle images</span>
 
 <span class="sd">        :return: a list of the csle images</span>
@@ -253,26 +253,27 @@
 
 <div class="viewcode-block" id="ContainerController.list_docker_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_docker_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_docker_networks</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lists the csle docker networks</span>
 
 <span class="sd">        :return: (network names, network ids)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">LIST_NETWORKS_CMD</span>
         <span class="n">stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="n">networks</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">networks</span><span class="p">))</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">networks</span><span class="p">))</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">networks</span><span class="p">))</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">\d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">),</span> <span class="n">x</span><span class="p">),</span> <span class="n">networks</span><span class="p">))</span>
-        <span class="n">network_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
-                               <span class="n">networks</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">networks</span><span class="p">,</span> <span class="n">network_ids</span></div>
+        <span class="n">networks_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">networks_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">networks_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">networks</span><span class="p">))</span>
+        <span class="n">networks_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">networks_list</span><span class="p">))</span>
+        <span class="n">networks_ids_str</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">networks_list</span><span class="p">))</span>
+        <span class="n">networks_ids_str</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">\d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">),</span> <span class="n">x</span><span class="p">),</span> <span class="n">networks_ids_str</span><span class="p">))</span>
+        <span class="n">network_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
+                                          <span class="n">networks_ids_str</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">networks_ids_str</span><span class="p">,</span> <span class="n">network_ids</span></div>
 
 <div class="viewcode-block" id="ContainerController.list_all_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_networks</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for listing all csle networks</span>
 
 <span class="sd">        :return: a list of the networks</span>
@@ -282,7 +283,7 @@
 
 <div class="viewcode-block" id="ContainerController.start_all_stopped_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.start_all_stopped_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_all_stopped_containers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts all stopped csle containers</span>
 
 <span class="sd">        :return: None</span>
@@ -298,7 +299,7 @@
 
 <div class="viewcode-block" id="ContainerController.start_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.start_container">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_container</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts a stopped container with a specific name</span>
 
 <span class="sd">        :param name: the name of the stopped container to start</span>
@@ -317,13 +318,13 @@
 
 <div class="viewcode-block" id="ContainerController.list_all_running_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_running_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_running_containers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lists all running csle containers</span>
 
 <span class="sd">        :return: a list of the names of the running containers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_envs</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_runnning_emulation_infos</span><span class="p">()</span>
-        <span class="n">container_name_image_ip</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">container_name_image_ip</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="n">parsed_envs</span><span class="p">:</span>
             <span class="n">container_name_image_ip</span> <span class="o">=</span> <span class="p">(</span><span class="n">container_name_image_ip</span> <span class="o">+</span>
                                        <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">image_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">ip</span><span class="p">),</span> <span class="n">env</span><span class="o">.</span><span class="n">containers</span><span class="p">)))</span>
@@ -332,7 +333,7 @@
 <div class="viewcode-block" id="ContainerController.list_all_running_containers_in_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_running_containers_in_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_running_containers_in_emulation</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NodeContainerConfig</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NodeContainerConfig</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the running containers and the stopped containers of a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
@@ -365,7 +366,7 @@
 <div class="viewcode-block" id="ContainerController.list_all_active_networks_for_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_active_networks_for_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_active_networks_for_emulation</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ContainerNetwork</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">ContainerNetwork</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the active networks of a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
@@ -383,7 +384,7 @@
 
 <div class="viewcode-block" id="ContainerController.is_emulation_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.is_emulation_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_emulation_running</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given emulation config is running or not</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -394,7 +395,7 @@
 
 <div class="viewcode-block" id="ContainerController.list_running_emulations"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_running_emulations">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_running_emulations</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: A list of names of running emulations</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_envs</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_runnning_emulation_infos</span><span class="p">()</span>
@@ -405,7 +406,7 @@
 
 <div class="viewcode-block" id="ContainerController.list_all_stopped_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_stopped_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_all_stopped_containers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lists all stopped csle containers</span>
 
 <span class="sd">        :return: a list of the stopped containers</span>
@@ -418,7 +419,7 @@
 
 <div class="viewcode-block" id="ContainerController.get_network_references"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.get_network_references">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_network_references</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list of Docker network references</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -427,7 +428,7 @@
 
 <div class="viewcode-block" id="ContainerController.create_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.create_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_networks</span><span class="p">(</span><span class="n">containers_config</span><span class="p">:</span> <span class="n">ContainersConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates docker networks for a given containers configuration</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -447,7 +448,7 @@
 <div class="viewcode-block" id="ContainerController.connect_containers_to_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.connect_containers_to_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">connect_containers_to_networks</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                        <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects running containers to networks</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
@@ -479,6 +480,8 @@
                     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
                     <span class="c1"># Extract the docker bridge gateway IP</span>
                     <span class="n">container_id</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">get_container_hex_id</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">container_name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not parse the container id with container name: </span><span class="si">{</span><span class="n">container_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">get_docker_gw_bridge_ip</span><span class="p">(</span><span class="n">container_id</span><span class="o">=</span><span class="n">container_id</span><span class="p">)</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">docker_gw_bridge_ip</span>
 
@@ -496,11 +499,13 @@
             <span class="c1"># Update IPs of OVS switches</span>
             <span class="k">for</span> <span class="n">ovs_sw</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">ovs_config</span><span class="o">.</span><span class="n">switch_configs</span><span class="p">:</span>
                 <span class="n">node_container_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">ovs_sw</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">node_container_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find node container config for IP: </span><span class="si">{</span><span class="n">ovs_sw</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">ovs_sw</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">node_container_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span></div>
 
 <div class="viewcode-block" id="ContainerController.connect_container_to_network"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.connect_container_to_network">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">connect_container_to_network</span><span class="p">(</span><span class="n">container</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect a running container to networks</span>
 
 <span class="sd">        :param container: the container to connect</span>
@@ -527,13 +532,15 @@
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
                 <span class="c1"># Extract the docker bridge gateway IP</span>
                 <span class="n">container_id</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">get_container_hex_id</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">container_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not parse the container id for container name: </span><span class="si">{</span><span class="n">container_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">get_docker_gw_bridge_ip</span><span class="p">(</span><span class="n">container_id</span><span class="o">=</span><span class="n">container_id</span><span class="p">)</span>
                 <span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">docker_gw_bridge_ip</span></div>
 
 <div class="viewcode-block" id="ContainerController.start_docker_stats_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.start_docker_stats_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_docker_stats_thread</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                   <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a request to the docker stats manager on the docker host for starting a docker stats monitor thread</span>
 
 <span class="sd">        :param execution: the emulation execution</span>
@@ -556,7 +563,8 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2_grpc</span><span class="o">.</span><span class="n">DockerStatsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">container_ip_dtos</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
@@ -578,7 +586,7 @@
 <div class="viewcode-block" id="ContainerController.stop_docker_stats_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.stop_docker_stats_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_docker_stats_thread</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                  <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -598,8 +606,8 @@
         <span class="n">ip</span> <span class="o">=</span> <span class="n">physical_server_ip</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> \
-                <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2_grpc</span><span class="o">.</span><span class="n">DockerStatsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">query_docker_stats_manager</span><span class="o">.</span><span class="n">stop_docker_stats_monitor</span><span class="p">(</span>
                 <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">execution_first_ip_octet</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">)</span></div>
@@ -607,7 +615,7 @@
 <div class="viewcode-block" id="ContainerController.get_docker_stats_manager_status"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.get_docker_stats_manager_status">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_docker_stats_manager_status</span><span class="p">(</span><span class="n">docker_stats_manager_config</span><span class="p">:</span> <span class="n">DockerStatsManagerConfig</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a request to get the status of the docker stats manager</span>
 
 <span class="sd">        :param docker_stats_manager_config: the docker stats manager configuration</span>
@@ -621,7 +629,7 @@
 <div class="viewcode-block" id="ContainerController.get_docker_stats_manager_status_by_ip_and_port"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.get_docker_stats_manager_status_by_ip_and_port">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_docker_stats_manager_status_by_ip_and_port</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a request to get the status of the docker stats manager</span>
 
 <span class="sd">        :param ip: ip of the host where the stats manager is running</span>
@@ -629,7 +637,7 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2_grpc</span><span class="o">.</span><span class="n">DockerStatsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">docker_stats_monitor_dto</span> <span class="o">=</span> \
                     <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">query_docker_stats_manager</span><span class="o">.</span><span class="n">get_docker_stats_manager_status</span><span class="p">(</span>
@@ -641,7 +649,7 @@
 <div class="viewcode-block" id="ContainerController.create_network_from_dto"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.create_network_from_dto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_network_from_dto</span><span class="p">(</span><span class="n">network_dto</span><span class="p">:</span> <span class="n">ContainerNetwork</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
                                 <span class="n">existing_network_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a network from a given DTO representing the network</span>
 
 <span class="sd">        :param network_dto: details of the network to create</span>
@@ -650,6 +658,8 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_current_config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not parse the CSLE config&quot;</span><span class="p">)</span>
         <span class="n">driver</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">BRIDGE_NETWORK_DRIVER</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">driver</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">OVERLAY_NETWORK_DRIVER</span>
@@ -659,8 +669,8 @@
 
 <div class="viewcode-block" id="ContainerController.create_network"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.create_network">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_network</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subnetmask</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
-                       <span class="n">driver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bridge&quot;</span><span class="p">,</span> <span class="n">existing_network_names</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                       <span class="n">driver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bridge&quot;</span><span class="p">,</span> <span class="n">existing_network_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a network</span>
 
 <span class="sd">        :param name: the name of the network to create</span>
@@ -671,12 +681,8 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-        <span class="n">ipam_pool</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">IPAMPool</span><span class="p">(</span>
-            <span class="n">subnet</span><span class="o">=</span><span class="n">subnetmask</span>
-        <span class="p">)</span>
-        <span class="n">ipam_config</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">IPAMConfig</span><span class="p">(</span>
-            <span class="n">pool_configs</span><span class="o">=</span><span class="p">[</span><span class="n">ipam_pool</span><span class="p">],</span>
-        <span class="p">)</span>
+        <span class="n">ipam_pool</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">IPAMPool</span><span class="p">(</span><span class="n">subnet</span><span class="o">=</span><span class="n">subnetmask</span><span class="p">)</span>
+        <span class="n">ipam_config</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">IPAMConfig</span><span class="p">(</span><span class="n">pool_configs</span><span class="o">=</span><span class="p">[</span><span class="n">ipam_pool</span><span class="p">])</span>
         <span class="n">network_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">existing_network_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">network_names</span> <span class="o">=</span> <span class="n">existing_network_names</span>
@@ -691,7 +697,7 @@
 
 <div class="viewcode-block" id="ContainerController.remove_network"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.remove_network">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">remove_network</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a network</span>
 
 <span class="sd">        :param name: the name of the network to remove</span>
@@ -710,7 +716,7 @@
 
 <div class="viewcode-block" id="ContainerController.remove_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.remove_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">remove_networks</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a network</span>
 
 <span class="sd">        :param name: the name of the network to remove</span>
@@ -732,7 +738,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_all_networks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_all_networks">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_all_networks</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for removing all csle networks</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -747,7 +753,7 @@
 
 <div class="viewcode-block" id="ContainerController.rm_network"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.rm_network">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_network</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for removing a network with a specific name</span>
 
 <span class="sd">        :param name: the name of the network to remove</span>
@@ -765,21 +771,21 @@
 
 <div class="viewcode-block" id="ContainerController.run_command"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.run_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a container management command</span>
 
 <span class="sd">        :param cmd: the command to run</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">MANAGEMENT</span><span class="o">.</span><span class="n">LIST_STOPPED</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_stopped_containers</span><span class="p">()</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">stopped_container_names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_stopped_containers</span><span class="p">()</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">stopped_container_names</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cmd</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">MANAGEMENT</span><span class="o">.</span><span class="n">LIST_RUNNING</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_running_containers</span><span class="p">()</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">running_container_names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_running_containers</span><span class="p">()</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">running_container_names</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cmd</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">MANAGEMENT</span><span class="o">.</span><span class="n">LIST_IMAGES</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_images</span><span class="p">()</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">images_names</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_images</span><span class="p">()</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">images_names</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cmd</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">MANAGEMENT</span><span class="o">.</span><span class="n">STOP_RUNNING</span><span class="p">:</span>
             <span class="n">ContainerController</span><span class="o">.</span><span class="n">stop_all_running_containers</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">cmd</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">MANAGEMENT</span><span class="o">.</span><span class="n">RM_STOPPED</span><span class="p">:</span>
@@ -798,7 +804,7 @@
 
 <div class="viewcode-block" id="ContainerController.get_docker_stats_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.get_docker_stats_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_docker_stats_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the Docker stats managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -808,7 +814,7 @@
 
 <div class="viewcode-block" id="ContainerController.get_docker_stats_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.get_docker_stats_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_docker_stats_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Docker stats managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -820,7 +826,7 @@
     <span class="k">def</span> <span class="nf">get_docker_stats_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                        <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">DockerStatsManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the Docker stats managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>

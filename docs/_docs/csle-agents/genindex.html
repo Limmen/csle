@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; csle-agents 0.0.1 documentation</title>
+  <title>Index &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -131,8 +131,14 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.ENV_METRICS.ATTACKER_ACTION">ATTACKER_ACTION (csle_agents.constants.constants.ENV_METRICS attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response">attacker_best_response() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.attacker_best_response">attacker_best_response() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.attacker_best_response">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.ATTACKER_THRESHOLDS">ATTACKER_THRESHOLDS (csle_agents.constants.constants.T_FP attribute)</a>
@@ -145,10 +151,18 @@
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_ATTACKER_RETURN">AVERAGE_ATTACKER_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN (csle_agents.constants.constants.T_FP attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">AVERAGE_BEST_RESPONSE_DEFENDER_RETURN (csle_agents.constants.constants.T_FP attribute)</a>
+      </ul></li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">AVERAGE_BEST_RESPONSE_DEFENDER_RETURN (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_DEFENDER_RETURN">AVERAGE_DEFENDER_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_HEURISTIC_RETURN">AVERAGE_HEURISTIC_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
@@ -207,8 +221,12 @@
 </li>
       <li><a href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.best_response">best_response() (csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent method)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS">BEST_RESPONSE_EVALUATION_ITERATIONS (csle_agents.constants.constants.T_FP attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.BEST_RESPONSE_EVALUATION_ITERATIONS">BEST_RESPONSE_EVALUATION_ITERATIONS (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.BOUNDS">BOUNDS (csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.BUFFER_SIZE">BUFFER_SIZE (csle_agents.constants.constants.DQN attribute)</a>
@@ -247,6 +265,10 @@
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.compute_avg_metrics">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.compute_avg_metrics">(csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.compute_avg_metrics">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.compute_avg_metrics">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent static method)</a>
 </li>
@@ -328,13 +350,6 @@
 </li>
       </ul></li>
       <li>
-    csle_agents.agents.bayes_opt
-
-      <ul>
-        <li><a href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt">module</a>
-</li>
-      </ul></li>
-      <li>
     csle_agents.agents.bayesian_optimization
 
       <ul>
@@ -360,6 +375,27 @@
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.dfsp_local
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.dfsp_local.dfsp_local_agent
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_agent">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.dfsp_local.dfsp_local_ppo_agent
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_ppo_agent">module</a>
 </li>
       </ul></li>
       <li>
@@ -418,6 +454,8 @@
         <li><a href="csle_agents.agents.fp.html#module-csle_agents.agents.fp.fictitious_play_agent">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_agents.agents.hsvi
 
@@ -432,8 +470,6 @@
         <li><a href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi.hsvi_agent">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_agents.agents.hsvi_os_posg
 
@@ -696,8 +732,14 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.ENV_METRICS.DEFENDER_ACTION">DEFENDER_ACTION (csle_agents.constants.constants.ENV_METRICS attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.defender_best_response">defender_best_response() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.defender_best_response">defender_best_response() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.defender_best_response">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.defender_best_response">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.DEFENDER_THRESHOLDS">DEFENDER_THRESHOLDS (csle_agents.constants.constants.T_FP attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.DELTA">DELTA (csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
@@ -714,6 +756,10 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent">DFSPLocalAgent (class in csle_agents.agents.dfsp_local.dfsp_local_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent">DFSPLocalPPOAgent (class in csle_agents.agents.dfsp_local.dfsp_local_ppo_agent)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION">DIFFERENTIAL_EVOLUTION (class in csle_agents.constants.constants)</a>
 </li>
       <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.differential_evolution">differential_evolution() (csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent method)</a>
@@ -768,8 +814,12 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.SARSA.EPSILON">(csle_agents.constants.constants.SARSA attribute)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS">EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS (csle_agents.constants.constants.T_FP attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS">EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.estimate_gk">estimate_gk() (csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent method)</a>
 
       <ul>
@@ -796,14 +846,26 @@
         <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.eval_theta">(csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.eval_traces">eval_traces() (csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread method)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_attacker_policy">evaluate_attacker_policy() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_attacker_policy">evaluate_attacker_policy() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_attacker_policy">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_defender_policy">evaluate_defender_policy() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_attacker_policy">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
 </li>
+      </ul></li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_defender_policy">evaluate_defender_policy() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_defender_policy">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_defender_policy">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.evaluate_policy">evaluate_policy() (csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 
       <ul>
@@ -816,8 +878,14 @@
         <li><a href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.evaluate_policy">(csle_agents.agents.vi.vi_agent.VIAgent method)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_strategy_profile">evaluate_strategy_profile() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_strategy_profile">evaluate_strategy_profile() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_strategy_profile">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_strategy_profile">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.excess">excess() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -830,8 +898,14 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.EXPLOITABILITY">EXPLOITABILITY (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.exploitability">exploitability() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent static method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.exploitability">exploitability() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent static method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.exploitability">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent static method)</a>
 </li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.exploitability">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent static method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.EXPLORATION_FINAL_EPS">EXPLORATION_FINAL_EPS (csle_agents.constants.constants.DQN attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.EXPLORATION_FRACTION">EXPLORATION_FRACTION (csle_agents.constants.constants.DQN attribute)</a>
@@ -884,10 +958,18 @@
         <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.generate_corner_belief">(csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_attacker_experiment_config">get_attacker_experiment_config() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.get_attacker_experiment_config">get_attacker_experiment_config() (csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_attacker_experiment_config">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_defender_experiment_config">get_defender_experiment_config() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
+      </ul></li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.get_defender_experiment_config">get_defender_experiment_config() (csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_defender_experiment_config">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.get_hidden_activation">get_hidden_activation() (csle_agents.common.fnn_w_gaussian.FNNwithGaussian method)</a>
 
       <ul>
@@ -936,6 +1018,10 @@
         <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.hparam_names">(csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.hparam_names">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.hparam_names">(csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.hparam_names">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.hparam_names">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent method)</a>
 </li>
@@ -1126,10 +1212,18 @@
 </li>
       <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.linear_programming_normal_form">linear_programming_normal_form() (csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent">LinearProgrammingNormalFormGameAgent (class in csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP">LOCAL_DFSP (class in csle_agents.constants.constants)</a>
+</li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.local_dfsp">local_dfsp() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.local_dfsp">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_lower_bound_update">local_lower_bound_update() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -1146,12 +1240,6 @@
 
       <ul>
         <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.local_upper_bound_update">(csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
-</li>
-      </ul></li>
-      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.logger">logger (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.logger">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
 </li>
       </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_backup">lower_bound_backup() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
@@ -1198,12 +1286,6 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.MLP_POLICY">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.model">model (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.model">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
-</li>
-      </ul></li>
       <li>
     module
 
@@ -1216,8 +1298,6 @@
 </li>
         <li><a href="csle_agents.agents.base.html#module-csle_agents.agents.base.base_agent">csle_agents.agents.base.base_agent</a>
 </li>
-        <li><a href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt">csle_agents.agents.bayes_opt</a>
-</li>
         <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization">csle_agents.agents.bayesian_optimization</a>
 </li>
         <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization.bayes_opt_agent">csle_agents.agents.bayesian_optimization.bayes_opt_agent</a>
@@ -1225,6 +1305,12 @@
         <li><a href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">csle_agents.agents.cross_entropy</a>
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local">csle_agents.agents.dfsp_local</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_agent">csle_agents.agents.dfsp_local.dfsp_local_agent</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_ppo_agent">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent</a>
 </li>
         <li><a href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution">csle_agents.agents.differential_evolution</a>
 </li>
@@ -1357,12 +1443,16 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.SHAPLEY_ITERATION.N">(csle_agents.constants.constants.SHAPLEY_ITERATION attribute)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.N_2">N_2 (csle_agents.constants.constants.T_FP attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.N_2">N_2 (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.N_2">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.N_EPISODES_ROLLOUT">N_EPISODES_ROLLOUT (csle_agents.constants.constants.DQN attribute)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.N_EPISODES_ROLLOUT">N_EPISODES_ROLLOUT (csle_agents.constants.constants.DQN attribute)</a>
+</li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.next_belief">next_belief() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -1569,6 +1659,10 @@
         <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.record_metrics">(csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread method)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_R">reduce_R() (in module csle_agents.agents.dfsp_local.dfsp_local_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_T">reduce_T() (in module csle_agents.agents.dfsp_local.dfsp_local_agent)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.REINFORCE">REINFORCE (class in csle_agents.constants.constants)</a>
 </li>
       <li><a href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.reinforce">reinforce() (csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent method)</a>
@@ -1599,6 +1693,10 @@
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.round_vec">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.round_vec">(csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.round_vec">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.round_vec">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent static method)</a>
 </li>
@@ -1637,14 +1735,28 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE">RUNNING_AVERAGE (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.running_average">running_average() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent static method)</a>
+      <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.running_average">running_average() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent static method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.running_average">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent static method)</a>
 </li>
+        <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.running_average">(csle_agents.agents.t_fp.t_fp_agent.TFPAgent static method)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_ATTACKER_RETURN">RUNNING_AVERAGE_ATTACKER_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN (csle_agents.constants.constants.T_FP attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN (csle_agents.constants.constants.T_FP attribute)</a>
+      </ul></li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN (csle_agents.constants.constants.LOCAL_DFSP attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN">(csle_agents.constants.constants.T_FP attribute)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_DEFENDER_RETURN">RUNNING_AVERAGE_DEFENDER_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_EXPLOITABILITY">RUNNING_AVERAGE_EXPLOITABILITY (csle_agents.constants.constants.COMMON attribute)</a>
@@ -1856,6 +1968,10 @@
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.train">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.train">(csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.train">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent method)</a>
+</li>
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.train">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNAgent.train">(csle_agents.agents.dqn.dqn_agent.DQNAgent method)</a>
@@ -1903,12 +2019,6 @@
 </li>
       <li><a href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.train_sarsa">train_sarsa() (csle_agents.agents.sarsa.sarsa_agent.SARSAAgent method)</a>
 </li>
-      <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.training">training (csle_agents.common.fnn_w_gaussian.FNNwithGaussian attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.training">(csle_agents.common.fnn_w_linear.FNNwithLinear attribute)</a>
-</li>
-      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.TRAINING_EPOCHS">TRAINING_EPOCHS (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
       <li><a href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.training_step">training_step() (csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent method)</a>
@@ -1955,6 +2065,10 @@
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.update_metrics">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.update_metrics">(csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.update_metrics">(csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.update_metrics">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent static method)</a>
 </li>

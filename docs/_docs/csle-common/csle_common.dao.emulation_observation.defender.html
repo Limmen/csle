@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_observation.defender package &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_observation.defender package &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -47,7 +47,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="csle_common.dao.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.datasets.html">csle_common.dao.datasets package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.docker.html">csle_common.dao.docker package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_common.dao.domain_randomization.html">csle_common.dao.domain_randomization package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.emulation_action.html">csle_common.dao.emulation_action package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.emulation_action_result.html">csle_common.dao.emulation_action_result package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.emulation_config.html">csle_common.dao.emulation_config package</a></li>
@@ -109,7 +108,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderMachineObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.kafka_config.KafkaConfig" title="csle_common.dao.emulation_config.kafka_config.KafkaConfig"><span class="pre">KafkaConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">HostMetrics</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DockerStats</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIPAlertCounters</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ossec_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">OSSECIdsAlertCounters</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_machine_observation_state.html#EmulationDefenderMachineObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
 <p>Represents the defender’s belief state of a component in the emulation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.cleanup">
@@ -223,34 +222,10 @@ SSH/Telnet/FTP… connections that should be cleaned up, as well as background t
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_machine_observation_state.html#EmulationDefenderMachineObservationState.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_json_file">
-<span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_machine_observation_state.html#EmulationDefenderMachineObservationState.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_json_file" title="Permalink to this definition"></a></dt>
-<dd><p>Saves the DTO to a json file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_json_str">
-<span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_machine_observation_state.html#EmulationDefenderMachineObservationState.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState.to_json_str" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a json string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,7 +238,7 @@ SSH/Telnet/FTP… connections that should be cleaned up, as well as background t
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.</span></span><span class="sig-name descname"><span class="pre">EmulationDefenderObservationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.kafka_config.KafkaConfig" title="csle_common.dao.emulation_config.kafka_config.KafkaConfig"><span class="pre">KafkaConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_population_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ClientPopulationMetrics</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DockerStats</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCounters</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ossec_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">OSSECIdsAlertCounters</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregated_host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">HostMetrics</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction" title="csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction"><span class="pre">EmulationDefenderAction</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction" title="csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction"><span class="pre">EmulationAttackerAction</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCounters</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_observation_state.html#EmulationDefenderObservationState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
 <p>Represents the defender’s agent’s current belief state of the emulation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.average_metric_lists">
@@ -397,34 +372,10 @@ SSH/Telnet/FTP… connections that should be cleaned up, as well as background t
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_observation_state.html#EmulationDefenderObservationState.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_file">
-<span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_observation_state.html#EmulationDefenderObservationState.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_file" title="Permalink to this definition"></a></dt>
-<dd><p>Saves the DTO to a json file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_str">
-<span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/emulation_observation/defender/emulation_defender_observation_state.html#EmulationDefenderObservationState.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_str" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a json string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the json string representation of the DTO</p>
 </dd>
 </dl>
 </dd></dl>

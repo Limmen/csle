@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.kafka_manager package &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.kafka_manager package &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="csle_collector.ossec_ids_manager package" href="csle_collector.ossec_ids_manager.html" />
-    <link rel="prev" title="csle_collector.host_manager package" href="csle_collector.host_manager.html" /> 
+    <link rel="prev" title="csle_collector.host_manager.threads package" href="csle_collector.host_manager.threads.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.createTopic"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer.createTopic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.getKafkaStatus"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer.getKafkaStatus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer.hours_to_ms()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.startKafka"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer.startKafka()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.stopKafka"><code class="docutils literal notranslate"><span class="pre">KafkaManagerServicer.stopKafka()</span></code></a></li>
 </ul>
@@ -83,6 +82,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.kafka_manager.kafka_manager_util">csle_collector.kafka_manager.kafka_manager_util module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil"><code class="docutils literal notranslate"><span class="pre">KafkaManagerUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.hours_to_ms"><code class="docutils literal notranslate"><span class="pre">KafkaManagerUtil.hours_to_ms()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty"><code class="docutils literal notranslate"><span class="pre">KafkaManagerUtil.kafka_dto_empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict"><code class="docutils literal notranslate"><span class="pre">KafkaManagerUtil.kafka_dto_from_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_to_dict"><code class="docutils literal notranslate"><span class="pre">KafkaManagerUtil.kafka_dto_to_dict()</span></code></a></li>
@@ -172,20 +172,6 @@ state of the server and create/delete topics.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the kafka server</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms">
-<span class="sig-name descname"><span class="pre">hours_to_ms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager.html#KafkaManagerServicer.hours_to_ms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms" title="Permalink to this definition"></a></dt>
-<dd><p>Convert hours to ms</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>hours</strong> – the hours to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the ms</p>
 </dd>
 </dl>
 </dd></dl>
@@ -343,6 +329,20 @@ state of the server and create/delete topics.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class with utility functions related to the Kafka Manager</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.hours_to_ms">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hours_to_ms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.hours_to_ms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.hours_to_ms" title="Permalink to this definition"></a></dt>
+<dd><p>Convert hours to ms</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hours</strong> – the hours to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the ms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kafka_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KafkaDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/kafka_manager/kafka_manager_util.html#KafkaManagerUtil.kafka_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -467,7 +467,7 @@ state of the server and create/delete topics.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_collector.host_manager.html" class="btn btn-neutral float-left" title="csle_collector.host_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.host_manager.threads.html" class="btn btn-neutral float-left" title="csle_collector.host_manager.threads package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="csle_collector.ossec_ids_manager.html" class="btn btn-neutral float-right" title="csle_collector.ossec_ids_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

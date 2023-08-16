@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.emulation_execution_info &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_config.emulation_execution_info &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -84,10 +84,11 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.ryu_managers_info</span> <span class="kn">import</span> <span class="n">RyuManagersInfo</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_container_config</span> <span class="kn">import</span> <span class="n">NodeContainerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.container_network</span> <span class="kn">import</span> <span class="n">ContainerNetwork</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationExecutionInfo"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution_info.EmulationExecutionInfo">[docs]</a><span class="k">class</span> <span class="nc">EmulationExecutionInfo</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationExecutionInfo"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution_info.EmulationExecutionInfo">[docs]</a><span class="k">class</span> <span class="nc">EmulationExecutionInfo</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO containing the runtime status of an emulation execution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -99,7 +100,7 @@
                  <span class="n">active_networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ContainerNetwork</span><span class="p">],</span>
                  <span class="n">inactive_networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ContainerNetwork</span><span class="p">],</span> <span class="n">elk_managers_info</span><span class="p">:</span> <span class="n">ELKManagersInfo</span><span class="p">,</span>
                  <span class="n">ryu_managers_info</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">RyuManagersInfo</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param emulation_name: the name of the emulation</span>
@@ -135,7 +136,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ryu_managers_info</span> <span class="o">=</span> <span class="n">ryu_managers_info</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;emulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span><span class="si">}</span><span class="s2">, execution id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -145,14 +146,16 @@
                <span class="sa">f</span><span class="s2">&quot;client_managers_info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_managers_info</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;docker_stats_managers_info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_managers_info</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;elk_managers_info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elk_managers_info</span><span class="si">}</span><span class="s2">, traffic_managers_info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic_managers_info</span><span class="si">}</span><span class="s2">&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;running_containers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_containers</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;stopped_containers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopped_containers</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;active_networks : </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_networks</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;inactive_networks : </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">inactive_networks</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;running_containers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">running_containers</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;stopped_containers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">stopped_containers</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;active_networks : </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">active_networks</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;inactive_networks : </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">inactive_networks</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;ryu_managers_info: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_managers_info</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="EmulationExecutionInfo.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution_info.EmulationExecutionInfo.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -178,11 +181,12 @@
 
 <div class="viewcode-block" id="EmulationExecutionInfo.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution_info.EmulationExecutionInfo.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationExecutionInfo&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a dict representation to a DTO representation</span>
 
 <span class="sd">        :return: a dto representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+    
         <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationExecutionInfo</span><span class="p">(</span>
             <span class="n">emulation_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_name&quot;</span><span class="p">],</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_id&quot;</span><span class="p">],</span>
             <span class="n">snort_ids_managers_info</span><span class="o">=</span><span class="n">SnortIdsManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_managers_info&quot;</span><span class="p">]),</span>
@@ -193,12 +197,26 @@
             <span class="n">host_managers_info</span><span class="o">=</span><span class="n">HostManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;host_managers_info&quot;</span><span class="p">]),</span>
             <span class="n">client_managers_info</span><span class="o">=</span><span class="n">ClientManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_managers_info&quot;</span><span class="p">]),</span>
             <span class="n">docker_stats_managers_info</span><span class="o">=</span><span class="n">DockerStatsManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_stats_managers_info&quot;</span><span class="p">]),</span>
-            <span class="n">running_containers</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running_containers&quot;</span><span class="p">])),</span>
-            <span class="n">stopped_containers</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopped_containers&quot;</span><span class="p">])),</span>
-            <span class="n">active_networks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;active_networks&quot;</span><span class="p">])),</span>
-            <span class="n">inactive_networks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;inactive_networks&quot;</span><span class="p">])),</span>
-            <span class="n">ryu_managers_info</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ryu_managers_info&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">dto</span></div></div>
+            <span class="n">running_containers</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running_containers&quot;</span><span class="p">])),</span>
+            <span class="n">stopped_containers</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopped_containers&quot;</span><span class="p">])),</span>
+            <span class="n">active_networks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ContainerNetwork</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;active_networks&quot;</span><span class="p">])),</span>
+            <span class="n">inactive_networks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ContainerNetwork</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;inactive_networks&quot;</span><span class="p">])),</span>
+            <span class="n">ryu_managers_info</span><span class="o">=</span><span class="n">RyuManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ryu_managers_info&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="EmulationExecutionInfo.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution_info.EmulationExecutionInfo.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationExecutionInfo&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationExecutionInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

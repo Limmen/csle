@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.management_system_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.management_system_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -76,6 +76,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">docker</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -83,13 +84,13 @@
 
 
 <div class="viewcode-block" id="ManagementSystemController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController">[docs]</a><span class="k">class</span> <span class="nc">ManagementSystemController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Controller managing monitoring tools</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ManagementSystemController.read_pid_file"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.read_pid_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_pid_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the PID from a pidfile</span>
 
 <span class="sd">        :param path: the path to the file</span>
@@ -102,7 +103,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_prometheus_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_prometheus_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_prometheus_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if prometheus is running on the host</span>
 
 <span class="sd">        :return: True if it is running, false otherwise</span>
@@ -120,7 +121,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_node_exporter_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_node_exporter_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_node_exporter_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if node_exporter is running on the host</span>
 
 <span class="sd">        :return: True if it is running, false otherwise</span>
@@ -138,7 +139,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_nginx_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_nginx_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_nginx_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if Nginx is running on the host</span>
 
 <span class="sd">        :return: True if nginx is running, false otherwise</span>
@@ -149,7 +150,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_postgresql_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_postgresql_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_postgresql_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if PostgreSQL is running on the host</span>
 
 <span class="sd">        :return: True if PostgreSQL is running, false otherwise</span>
@@ -160,7 +161,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_docker_engine_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_docker_engine_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_docker_engine_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if Docker engine is running on the host</span>
 
 <span class="sd">        :return: True if Docker engine is running, false otherwise</span>
@@ -171,7 +172,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_flask_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_flask_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_flask_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the flask web server is running on the host</span>
 
 <span class="sd">        :return: True if it is running, false otherwise</span>
@@ -189,7 +190,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_node_exporter"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_node_exporter">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_node_exporter</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the node exporter</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -206,7 +207,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_flask"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_flask">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_flask</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Flask REST API Server</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -244,7 +245,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_node_exporter"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_node_exporter">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_node_exporter</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the node exporter</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -262,7 +263,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_flask"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_flask">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_flask</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the flask REST API</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -280,7 +281,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_prometheus"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_prometheus">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_prometheus</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Prometheus</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -297,7 +298,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_prometheus"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_prometheus">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_prometheus</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Prometheus</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -315,7 +316,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_cadvisor_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_cadvisor_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_cadvisor_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: True if cadvisor is running, otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -327,7 +328,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_pgadmin_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_pgadmin_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_pgadmin_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: True if pgadmin is running, otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -339,7 +340,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_cadvisor"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_cadvisor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_cadvisor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: True if cadvisor was stopped, otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -352,7 +353,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_pgadmin"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_pgadmin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_pgadmin</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: True if pgadmin was stopped, otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -365,7 +366,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_cadvisor"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_cadvisor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_cadvisor</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts cAdvisor</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -391,7 +392,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_postgresql"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_postgresql">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_postgresql</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts PostgreSQL</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -407,7 +408,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_postgresql"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_postgresql">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_postgresql</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops PostgreSQL</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -423,7 +424,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_nginx"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_nginx">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_nginx</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Nginx</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -439,7 +440,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_nginx"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_nginx">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_nginx</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Nginx</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -455,7 +456,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_docker_engine"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_engine">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_docker_engine</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Docker engine</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -471,7 +472,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_docker_engine"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_engine">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_docker_engine</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Docker engine</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -487,7 +488,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_pgadmin"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_pgadmin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_pgadmin</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts pgAdmin</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -513,7 +514,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_grafana"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_grafana">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_grafana</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Grafana</span>
 
 <span class="sd">        :return: True if grafana was stopped, otherwise False</span>
@@ -528,7 +529,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.start_grafana"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.start_grafana">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_grafana</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Grafana</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -554,7 +555,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_grafana_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_grafana_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_grafana_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: True if grafana is running otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
@@ -566,7 +567,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.is_statsmanager_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_statsmanager_running">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_statsmanager_running</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the statsmanager is running on the host</span>
 
 <span class="sd">        :return: True if it is running, false otherwise</span>
@@ -586,7 +587,7 @@
     <span class="k">def</span> <span class="nf">start_docker_stats_manager</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">log_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;docker_stats_manager.log&quot;</span><span class="p">,</span>
                                    <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                                    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50046</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the docker stats manager on the docker host if it is not already started</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -607,7 +608,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_docker_stats_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_stats_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_docker_stats_manager</span><span class="p">(</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the statsmanager</span>
 
 <span class="sd">        :param logger: the logger to use for logging</span>
@@ -625,7 +626,7 @@
 
 <div class="viewcode-block" id="ManagementSystemController.stop_cluster_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_cluster_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_cluster_manager</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the local cluster manager</span>
 
 <span class="sd">        :return: True if it was stopped, False otherwise</span>
@@ -637,31 +638,29 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="ManagementSystemController.is_pid_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_pid_running">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_pid_running</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">is_pid_running</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the given pid is running on the host</span>
 
 <span class="sd">        :param pid: the pid to check</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: True if it is running, false otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">PS_AUX</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">PIPE_DELIM</span> <span class="o">+</span>
-               <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">GREP</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="ow">in</span> <span class="n">output</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checking if PID: </span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2"> is running&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">pid_exists</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManagementSystemController.stop_pid"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.stop_pid">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">stop_pid</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">stop_pid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops a process with a given pid</span>
 
 <span class="sd">        :param pid: the pid to stop</span>
 <span class="sd">        :return: True if the pid was stopped, false if it was not running</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">is_pid_running</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">is_pid_running</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">KILL_PROCESS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping PID:</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2"> with command: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">True</span></div></div>

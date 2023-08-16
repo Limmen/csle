@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_system_identification.gp.gp_regression_algorithm &mdash; csle-system-identification 0.0.1 documentation</title>
+  <title>csle_system_identification.gp.gp_regression_algorithm &mdash; csle-system-identification 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -89,14 +89,14 @@
 
 
 <div class="viewcode-block" id="GPRegressionAlgorithm"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">GPRegressionAlgorithm</span><span class="p">(</span><span class="n">BaseSystemIdentificationAlgorithm</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that implements the system identification procedure using EM</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="p">:</span> <span class="n">EmulationStatistics</span><span class="p">,</span>
                  <span class="n">system_identification_config</span><span class="p">:</span> <span class="n">SystemIdentificationConfig</span><span class="p">,</span>
                  <span class="n">system_identification_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SystemIdentificationJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the algorithm</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation environment</span>
@@ -111,11 +111,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="o">=</span> <span class="n">system_identification_job</span>
 
 <div class="viewcode-block" id="GPRegressionAlgorithm.fit"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GPSystemModel</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits a Gaussian Process for each conditional and metric using the GP regression algorithm</span>
 
 <span class="sd">        :return: the fitted model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Emulation config cannot be None&quot;</span><span class="p">)</span>
+
         <span class="c1"># Setup system identification job</span>
         <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
         <span class="n">descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;System identification through Gaussian Process Regression, &quot;</span> \
@@ -231,7 +234,7 @@
         <span class="k">return</span> <span class="n">model</span></div>
 
 <div class="viewcode-block" id="GPRegressionAlgorithm.hparam_names"><a class="viewcode-back" href="../../../csle_system_identification.gp.html#csle_system_identification.gp.gp_regression_algorithm.GPRegressionAlgorithm.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the names of the necessary hyperparameters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>

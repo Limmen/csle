@@ -1,6 +1,15 @@
 csle\_collector.client\_manager package
 =======================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   csle_collector.client_manager.dao
+   csle_collector.client_manager.threads
+
 Submodules
 ----------
 

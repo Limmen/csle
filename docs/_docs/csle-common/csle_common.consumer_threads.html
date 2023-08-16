@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.consumer_threads package &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.consumer_threads package &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -82,13 +82,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.avg_host_metrics_thread">csle_common.consumer_threads.avg_host_metrics_thread module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread"><code class="docutils literal notranslate"><span class="pre">AvgHostMetricsThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread.run"><code class="docutils literal notranslate"><span class="pre">AvgHostMetricsThread.run()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#csle-common-consumer-threads-avg-host-metrics-thread-module">csle_common.consumer_threads.avg_host_metrics_thread module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.client_population_consumer_thread">csle_common.consumer_threads.client_population_consumer_thread module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread"><code class="docutils literal notranslate"><span class="pre">ClientPopulationConsumerThread</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.client_population_consumer_thread.ClientPopulationConsumerThread.get_average_client_population_metrics"><code class="docutils literal notranslate"><span class="pre">ClientPopulationConsumerThread.get_average_client_population_metrics()</span></code></a></li>
@@ -325,26 +319,8 @@
 </dd></dl>
 
 </section>
-<section id="module-csle_common.consumer_threads.avg_host_metrics_thread">
-<span id="csle-common-consumer-threads-avg-host-metrics-thread-module"></span><h2>csle_common.consumer_threads.avg_host_metrics_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.avg_host_metrics_thread" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.avg_host_metrics_thread.</span></span><span class="sig-name descname"><span class="pre">AvgHostMetricsThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HostMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState" title="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState"><span class="pre">EmulationDefenderMachineObservationState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/avg_host_metrics_thread.html#AvgHostMetricsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/avg_host_metrics_thread.html#AvgHostMetricsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.avg_host_metrics_thread.AvgHostMetricsThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the thread</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-consumer-threads-avg-host-metrics-thread-module">
+<h2>csle_common.consumer_threads.avg_host_metrics_thread module<a class="headerlink" href="#csle-common-consumer-threads-avg-host-metrics-thread-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_common.consumer_threads.client_population_consumer_thread">
 <span id="csle-common-consumer-threads-client-population-consumer-thread-module"></span><h2>csle_common.consumer_threads.client_population_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.client_population_consumer_thread" title="Permalink to this heading"></a></h2>

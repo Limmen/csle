@@ -31,6 +31,7 @@ Subpackages
    csle_rest_api.resources.linear_threshold_policies
    csle_rest_api.resources.login
    csle_rest_api.resources.logs
+   csle_rest_api.resources.mcmc_system_models
    csle_rest_api.resources.multi_threshold_policies
    csle_rest_api.resources.nginx
    csle_rest_api.resources.node_exporter

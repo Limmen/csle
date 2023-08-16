@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_system_identification.mcmc.mcmc &mdash; csle-system-identification 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-system-identification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.base.html">csle_system_identification.base package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.constants.html">csle_system_identification.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.empirical.html">csle_system_identification.empirical package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.expectation_maximization.html">csle_system_identification.expectation_maximization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_system_identification.job_controllers.html">csle_system_identification.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-system-identification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_system_identification.mcmc.mcmc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_system_identification.mcmc.mcmc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pymc</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">import</span> <span class="nn">pymc</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="kn">from</span> <span class="nn">csle_system_identification.base.base_system_identification_algorithm</span> <span class="kn">import</span> <span class="n">BaseSystemIdentificationAlgorithm</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.emulation_statistics</span> <span class="kn">import</span> <span class="n">EmulationStatistics</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.system_identification_config</span> <span class="kn">import</span> <span class="n">SystemIdentificationConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.mcmc_system_model</span> <span class="kn">import</span> <span class="n">MCMCSystemModel</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.mcmc_posterior</span> <span class="kn">import</span> <span class="n">MCMCPosterior</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.system_identification_job_config</span> <span class="kn">import</span> <span class="n">SystemIdentificationJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">import</span> <span class="nn">csle_system_identification.constants.constants</span> <span class="k">as</span> <span class="nn">system_identification_constants</span>
+
+
+<div class="viewcode-block" id="MCMCAlgorithm"><a class="viewcode-back" href="../../../csle_system_identification.mcmc.html#csle_system_identification.mcmc.mcmc.MCMCAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">MCMCAlgorithm</span><span class="p">(</span><span class="n">BaseSystemIdentificationAlgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the system identification procedure using MCMC</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="p">:</span> <span class="n">EmulationStatistics</span><span class="p">,</span>
+                 <span class="n">system_identification_config</span><span class="p">:</span> <span class="n">SystemIdentificationConfig</span><span class="p">,</span>
+                 <span class="n">bayesian_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
+                 <span class="n">system_identification_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SystemIdentificationJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the algorithm</span>
+
+<span class="sd">        :param emulation_env_config: the configuration of the emulation environment</span>
+<span class="sd">        :param emulation_statistics: the statistics to fit</span>
+<span class="sd">        :param bayesian_models: Bayesian model</span>
+<span class="sd">        :param system_identification_config: configuration of EM</span>
+<span class="sd">        :param system_identification_job: system identification job config (optional)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MCMCAlgorithm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">emulation_statistics</span><span class="o">=</span><span class="n">emulation_statistics</span><span class="p">,</span>
+            <span class="n">system_identification_config</span><span class="o">=</span><span class="n">system_identification_config</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="o">=</span> <span class="n">system_identification_job</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bayesian_model</span> <span class="o">=</span> <span class="n">bayesian_model</span>
+
+<div class="viewcode-block" id="MCMCAlgorithm.fit"><a class="viewcode-back" href="../../../csle_system_identification.mcmc.html#csle_system_identification.mcmc.mcmc.MCMCAlgorithm.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MCMCSystemModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fits a posterior model through Markov-Chain Monte-Carlo</span>
+
+<span class="sd">        :return: the fitted model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Emulation config cannot be None&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Setup system identification job</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+        <span class="n">descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;System identification through Markov Chain Monte-Carlo, &quot;</span> \
+                <span class="sa">f</span><span class="s2">&quot;emulation:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, statistic id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span> <span class="o">=</span> <span class="n">SystemIdentificationJobConfig</span><span class="p">(</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">emulation_statistics_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">system_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">system_identification_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="p">,</span>
+                <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">system_identification_job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_system_identification_job</span><span class="p">(</span>
+                <span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">system_identification_job_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">system_model</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_system_identification_job</span><span class="p">(</span><span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">,</span>
+                                                             <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Run the expectation maximization algorithm for each conditional and metric</span>
+        <span class="n">conditional</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">CONDITIONAL_DISTRIBUTION</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">METRIC</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">draws</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">DRAWS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">chains</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">CHAINS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting execution of the Markov Chain Monte-Carlo algorithm. &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;Emulation env name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;emulation_statistic_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;conditional: </span><span class="si">{</span><span class="n">conditional</span><span class="si">}</span><span class="s2">, metric: </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;parameters: </span><span class="si">{</span><span class="n">parameters</span><span class="si">}</span><span class="s2">, draws: </span><span class="si">{</span><span class="n">draws</span><span class="si">}</span><span class="s2">, chains: </span><span class="si">{</span><span class="n">chains</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">posteriors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">observation_counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">conditionals_counts</span><span class="p">[</span><span class="n">conditional</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span>
+        <span class="n">observations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">observation_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+                <span class="n">observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">bayesian_model</span><span class="p">:</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="n">draws</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+                <span class="n">param_trace</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="n">varname</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
+                <span class="n">sample_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">param_trace</span><span class="p">)</span>
+                <span class="n">sample_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sample_space</span><span class="p">)</span>
+                <span class="n">kde</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">param_trace</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_trace</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">densities</span> <span class="o">=</span> <span class="n">kde</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">sample_space</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">posterior</span> <span class="o">=</span> <span class="n">MCMCPosterior</span><span class="p">(</span><span class="n">posterior_name</span><span class="o">=</span><span class="n">param</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">param_trace</span><span class="p">,</span> <span class="n">densities</span><span class="o">=</span><span class="n">densities</span><span class="p">,</span>
+                                          <span class="n">sample_space</span><span class="o">=</span><span class="n">sample_space</span><span class="p">)</span>
+                <span class="n">posteriors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span>
+        <span class="n">model_descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Model fitted through Markov Chain Monte-Carlo, &quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;emulation:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, statistic id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MCMCSystemModel</span><span class="p">(</span>
+            <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">emulation_statistic_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">posteriors</span><span class="o">=</span><span class="n">posteriors</span><span class="p">,</span>
+            <span class="n">descr</span><span class="o">=</span><span class="n">model_descr</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">system_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_system_identification_job</span><span class="p">(</span><span class="n">system_identification_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="p">,</span>
+                                                         <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system_identification_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Execution of the Markov Chain Monte-Carlo algorithm complete.&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;Emulation env name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;emulation_statistic_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,&quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;conditional: </span><span class="si">{</span><span class="n">conditional</span><span class="si">}</span><span class="s2">, metric: </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">, parameters: </span><span class="si">{</span><span class="n">parameters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="MCMCAlgorithm.hparam_names"><a class="viewcode-back" href="../../../csle_system_identification.mcmc.html#csle_system_identification.mcmc.mcmc.MCMCAlgorithm.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the names of the necessary hyperparameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">CONDITIONAL_DISTRIBUTION</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">METRIC</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">DRAWS</span><span class="p">,</span>
+            <span class="n">system_identification_constants</span><span class="o">.</span><span class="n">MCMC</span><span class="o">.</span><span class="n">CHAINS</span>
+        <span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

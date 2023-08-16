@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.snort_ids_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.snort_ids_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -88,14 +88,14 @@
 
 
 <div class="viewcode-block" id="SnortIDSController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController">[docs]</a><span class="k">class</span> <span class="nc">SnortIDSController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class managing operations related to Snort IDS Managers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SnortIDSController.start_snort_idses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                           <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting the Snort IDSes</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env configuration</span>
@@ -115,7 +115,7 @@
 <div class="viewcode-block" id="SnortIDSController.stop_snort_idses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping the Snort IDSes</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env configuration</span>
@@ -133,7 +133,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.start_snort_ids"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_ids">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting the Snort IDS on a specific IP</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env configuration</span>
@@ -155,7 +155,8 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">query_snort_ids_manager</span><span class="o">.</span><span class="n">start_snort_ids</span><span class="p">(</span>
                     <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">ingress_interface</span><span class="o">=</span><span class="n">ingress_interface</span><span class="p">,</span> <span class="n">egress_interface</span><span class="o">=</span><span class="n">egress_interface</span><span class="p">,</span>
@@ -163,7 +164,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.stop_snort_ids"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping the Snort IDS on a specific IP</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env configuration</span>
@@ -179,14 +180,15 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">query_snort_ids_manager</span><span class="o">.</span><span class="n">stop_snort_ids</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIDSController.start_snort_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting snort IDS managers</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -204,7 +206,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.start_snort_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting the snort IDS manager on a specific IP</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -242,7 +244,7 @@
 <div class="viewcode-block" id="SnortIDSController.stop_snort_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                             <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping snort IDS managers</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -260,7 +262,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.stop_snort_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping the snort IDS manager on a specific IP</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -281,7 +283,7 @@
 <div class="viewcode-block" id="SnortIDSController.start_snort_idses_monitor_threads"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_threads">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager on every container that runs</span>
 <span class="sd">        an IDS to start the IDS manager and the monitor thread</span>
 
@@ -302,7 +304,7 @@
 <div class="viewcode-block" id="SnortIDSController.start_snort_idses_monitor_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_snort_idses_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager on a specific container that runs</span>
 <span class="sd">        an IDS to start the IDS manager and the monitor thread</span>
 
@@ -320,7 +322,8 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">query_snort_ids_manager</span><span class="o">.</span><span class="n">start_snort_ids_monitor</span><span class="p">(</span>
                     <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
@@ -331,7 +334,7 @@
 <div class="viewcode-block" id="SnortIDSController.stop_snort_idses_monitor_threads"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_threads">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager on every container that runs</span>
 <span class="sd">        an IDS to stop the monitor threads</span>
 
@@ -351,7 +354,7 @@
 <div class="viewcode-block" id="SnortIDSController.stop_snort_idses_monitor_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_snort_idses_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                         <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager on a specific container that runs</span>
 <span class="sd">        an IDS to stop the monitor threads</span>
 
@@ -364,7 +367,8 @@
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="o">.</span><span class="n">snort_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping the Snort IDS monitor thread on </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">query_snort_ids_manager</span><span class="o">.</span><span class="n">stop_snort_ids_monitor</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
@@ -373,7 +377,7 @@
     <span class="k">def</span> <span class="nf">get_snort_idses_monitor_threads_statuses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                  <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">start_if_stopped</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">List</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager on every container to get the status of the</span>
 <span class="sd">        IDS monitor thread</span>
 
@@ -403,7 +407,7 @@
 <div class="viewcode-block" id="SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_snort_idses_monitor_threads_statuses_by_ip_and_port</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the SnortIDSManager with a specific port and ip</span>
 <span class="sd">        to get the status of the IDS monitor thread</span>
 
@@ -411,7 +415,7 @@
 <span class="sd">        :param ip: the ip of the SnortIDSManager</span>
 <span class="sd">        :return: the status of the SnortIDSManager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">status</span> <span class="o">=</span> \
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">query_snort_ids_manager</span><span class="o">.</span><span class="n">get_snort_ids_monitor_status</span><span class="p">(</span>
@@ -420,7 +424,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.get_snort_ids_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_ids_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_snort_ids_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPs of the snort IDS managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -435,7 +439,7 @@
 
 <div class="viewcode-block" id="SnortIDSController.get_snort_idses_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_snort_idses_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the snort IDS managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -451,7 +455,7 @@
 <div class="viewcode-block" id="SnortIDSController.get_snort_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_snort_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SnortIdsManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the Snort managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>

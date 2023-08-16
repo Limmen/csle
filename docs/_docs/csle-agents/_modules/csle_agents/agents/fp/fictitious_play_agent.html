@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.fp.fictitious_play_agent &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents.agents.fp.fictitious_play_agent &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -92,7 +92,7 @@
 
 
 <div class="viewcode-block" id="FictitiousPlayAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent">[docs]</a><span class="k">class</span> <span class="nc">FictitiousPlayAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fictitious Play Agent for Normal-form Games (Brown 1951)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -100,7 +100,7 @@
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">EmulationEnvConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Fictitious play agent</span>
 
 <span class="sd">        :param simulation_env_config: the simulation env config</span>
@@ -118,7 +118,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
 
 <div class="viewcode-block" id="FictitiousPlayAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs the policy training for the given random seeds using fictitious play</span>
 
 <span class="sd">        :return: the training metrics and the trained policies</span>
@@ -246,7 +246,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
 <div class="viewcode-block" id="FictitiousPlayAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">FICTITIOUS_PLAY</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">FICTITIOUS_PLAY</span><span class="o">.</span><span class="n">PAYOFF_MATRIX</span><span class="p">,</span>
@@ -256,7 +256,7 @@
 
 <div class="viewcode-block" id="FictitiousPlayAgent.fictitious_play"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.fictitious_play">[docs]</a>    <span class="k">def</span> <span class="nf">fictitious_play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                         <span class="n">training_job</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">,</span> <span class="n">random_seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the fictitious play algorithm</span>
 
 <span class="sd">        :param exp_result: the experiment result object to store the result</span>
@@ -362,7 +362,7 @@
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
 <div class="viewcode-block" id="FictitiousPlayAgent.compute_empirical_strategy"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.compute_empirical_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">compute_empirical_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the empirical strategy from a list of counts</span>
 
 <span class="sd">        :param counts: the list of counts</span>
@@ -375,7 +375,7 @@
         <span class="k">return</span> <span class="n">s</span></div>
 
 <div class="viewcode-block" id="FictitiousPlayAgent.best_response"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.best_response">[docs]</a>    <span class="k">def</span> <span class="nf">best_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">maximize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes a best response against p</span>
 
 <span class="sd">        :param p: the opponents strategy vector</span>
@@ -395,7 +395,7 @@
 <div class="viewcode-block" id="FictitiousPlayAgent.update_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.update_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]],</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update a dict with aggregated metrics using new information from the environment</span>
 
 <span class="sd">        :param metrics: the dict with the aggregated metrics</span>
@@ -411,7 +411,7 @@
 
 <div class="viewcode-block" id="FictitiousPlayAgent.compute_avg_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.compute_avg_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_avg_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the average metrics of a dict with aggregated metrics</span>
 
 <span class="sd">        :param metrics: the dict with the aggregated metrics</span>
@@ -425,7 +425,7 @@
 
 <div class="viewcode-block" id="FictitiousPlayAgent.round_vec"><a class="viewcode-back" href="../../../../csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.round_vec">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">round_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rounds a vector to 3 decimals</span>
 
 <span class="sd">        :param vec: the vector to round</span>

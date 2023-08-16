@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; csle-collector 0.0.1 documentation</title>
+  <title>Overview: module code &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -76,7 +76,21 @@
 <li><a href="csle_collector/client_manager/client_manager_pb2_grpc.html">csle_collector.client_manager.client_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/client_manager/client_manager_util.html">csle_collector.client_manager.client_manager_util</a></li>
 <li><a href="csle_collector/client_manager/client_population_metrics.html">csle_collector.client_manager.client_population_metrics</a></li>
+<li><a href="csle_collector/client_manager/dao/arrival_config.html">csle_collector.client_manager.dao.arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/client.html">csle_collector.client_manager.dao.client</a></li>
+<li><a href="csle_collector/client_manager/dao/client_arrival_type.html">csle_collector.client_manager.dao.client_arrival_type</a></li>
+<li><a href="csle_collector/client_manager/dao/constant_arrival_config.html">csle_collector.client_manager.dao.constant_arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/eptmp_arrival_config.html">csle_collector.client_manager.dao.eptmp_arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html">csle_collector.client_manager.dao.piece_wise_constant_arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/sine_arrival_config.html">csle_collector.client_manager.dao.sine_arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/spiking_arrival_config.html">csle_collector.client_manager.dao.spiking_arrival_config</a></li>
+<li><a href="csle_collector/client_manager/dao/workflow_markov_chain.html">csle_collector.client_manager.dao.workflow_markov_chain</a></li>
+<li><a href="csle_collector/client_manager/dao/workflow_service.html">csle_collector.client_manager.dao.workflow_service</a></li>
+<li><a href="csle_collector/client_manager/dao/workflows_config.html">csle_collector.client_manager.dao.workflows_config</a></li>
 <li><a href="csle_collector/client_manager/query_clients.html">csle_collector.client_manager.query_clients</a></li>
+<li><a href="csle_collector/client_manager/threads/arrival_thread.html">csle_collector.client_manager.threads.arrival_thread</a></li>
+<li><a href="csle_collector/client_manager/threads/client_thread.html">csle_collector.client_manager.threads.client_thread</a></li>
+<li><a href="csle_collector/client_manager/threads/producer_thread.html">csle_collector.client_manager.threads.producer_thread</a></li>
 <li><a href="csle_collector/constants/constants.html">csle_collector.constants.constants</a></li>
 <li><a href="csle_collector/docker_stats_manager/docker_stats.html">csle_collector.docker_stats_manager.docker_stats</a></li>
 <li><a href="csle_collector/docker_stats_manager/docker_stats_manager.html">csle_collector.docker_stats_manager.docker_stats_manager</a></li>
@@ -87,35 +101,38 @@
 <li><a href="csle_collector/elk_manager/elk_manager_pb2_grpc.html">csle_collector.elk_manager.elk_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/elk_manager/elk_manager_util.html">csle_collector.elk_manager.elk_manager_util</a></li>
 <li><a href="csle_collector/elk_manager/query_elk_server.html">csle_collector.elk_manager.query_elk_server</a></li>
-<li><a href="csle_collector/host_manager/failed_login_attempt.html">csle_collector.host_manager.failed_login_attempt</a></li>
+<li><a href="csle_collector/host_manager/dao/failed_login_attempt.html">csle_collector.host_manager.dao.failed_login_attempt</a></li>
+<li><a href="csle_collector/host_manager/dao/host_metrics.html">csle_collector.host_manager.dao.host_metrics</a></li>
+<li><a href="csle_collector/host_manager/dao/successful_login.html">csle_collector.host_manager.dao.successful_login</a></li>
 <li><a href="csle_collector/host_manager/host_manager.html">csle_collector.host_manager.host_manager</a></li>
 <li><a href="csle_collector/host_manager/host_manager_pb2_grpc.html">csle_collector.host_manager.host_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/host_manager/host_manager_util.html">csle_collector.host_manager.host_manager_util</a></li>
-<li><a href="csle_collector/host_manager/host_metrics.html">csle_collector.host_manager.host_metrics</a></li>
 <li><a href="csle_collector/host_manager/query_host_manager.html">csle_collector.host_manager.query_host_manager</a></li>
-<li><a href="csle_collector/host_manager/successful_login.html">csle_collector.host_manager.successful_login</a></li>
+<li><a href="csle_collector/host_manager/threads/host_monitor_thread.html">csle_collector.host_manager.threads.host_monitor_thread</a></li>
 <li><a href="csle_collector/kafka_manager/kafka_manager.html">csle_collector.kafka_manager.kafka_manager</a></li>
 <li><a href="csle_collector/kafka_manager/kafka_manager_pb2_grpc.html">csle_collector.kafka_manager.kafka_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/kafka_manager/kafka_manager_util.html">csle_collector.kafka_manager.kafka_manager_util</a></li>
 <li><a href="csle_collector/kafka_manager/query_kafka_server.html">csle_collector.kafka_manager.query_kafka_server</a></li>
-<li><a href="csle_collector/ossec_ids_manager/ossec_ids_alert.html">csle_collector.ossec_ids_manager.ossec_ids_alert</a></li>
-<li><a href="csle_collector/ossec_ids_manager/ossec_ids_alert_counters.html">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</a></li>
+<li><a href="csle_collector/ossec_ids_manager/dao/ossec_ids_alert.html">csle_collector.ossec_ids_manager.dao.ossec_ids_alert</a></li>
+<li><a href="csle_collector/ossec_ids_manager/dao/ossec_ids_alert_counters.html">csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters</a></li>
 <li><a href="csle_collector/ossec_ids_manager/ossec_ids_manager.html">csle_collector.ossec_ids_manager.ossec_ids_manager</a></li>
 <li><a href="csle_collector/ossec_ids_manager/ossec_ids_manager_pb2_grpc.html">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/ossec_ids_manager/ossec_ids_manager_util.html">csle_collector.ossec_ids_manager.ossec_ids_manager_util</a></li>
 <li><a href="csle_collector/ossec_ids_manager/query_ossec_ids_manager.html">csle_collector.ossec_ids_manager.query_ossec_ids_manager</a></li>
+<li><a href="csle_collector/ossec_ids_manager/threads/ossec_ids_monitor_thread.html">csle_collector.ossec_ids_manager.threads.ossec_ids_monitor_thread</a></li>
 <li><a href="csle_collector/ryu_manager/query_ryu_server.html">csle_collector.ryu_manager.query_ryu_server</a></li>
 <li><a href="csle_collector/ryu_manager/ryu_manager.html">csle_collector.ryu_manager.ryu_manager</a></li>
 <li><a href="csle_collector/ryu_manager/ryu_manager_pb2_grpc.html">csle_collector.ryu_manager.ryu_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/ryu_manager/ryu_manager_util.html">csle_collector.ryu_manager.ryu_manager_util</a></li>
+<li><a href="csle_collector/snort_ids_manager/dao/snort_ids_alert.html">csle_collector.snort_ids_manager.dao.snort_ids_alert</a></li>
+<li><a href="csle_collector/snort_ids_manager/dao/snort_ids_alert_counters.html">csle_collector.snort_ids_manager.dao.snort_ids_alert_counters</a></li>
+<li><a href="csle_collector/snort_ids_manager/dao/snort_ids_ip_alert_counters.html">csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters</a></li>
+<li><a href="csle_collector/snort_ids_manager/dao/snort_ids_rule_counters.html">csle_collector.snort_ids_manager.dao.snort_ids_rule_counters</a></li>
 <li><a href="csle_collector/snort_ids_manager/query_snort_ids_manager.html">csle_collector.snort_ids_manager.query_snort_ids_manager</a></li>
-<li><a href="csle_collector/snort_ids_manager/snort_ids_alert.html">csle_collector.snort_ids_manager.snort_ids_alert</a></li>
-<li><a href="csle_collector/snort_ids_manager/snort_ids_alert_counters.html">csle_collector.snort_ids_manager.snort_ids_alert_counters</a></li>
-<li><a href="csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html">csle_collector.snort_ids_manager.snort_ids_ip_alert_counters</a></li>
 <li><a href="csle_collector/snort_ids_manager/snort_ids_manager.html">csle_collector.snort_ids_manager.snort_ids_manager</a></li>
 <li><a href="csle_collector/snort_ids_manager/snort_ids_manager_pb2_grpc.html">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc</a></li>
 <li><a href="csle_collector/snort_ids_manager/snort_ids_manager_util.html">csle_collector.snort_ids_manager.snort_ids_manager_util</a></li>
-<li><a href="csle_collector/snort_ids_manager/snort_ids_rule_counters.html">csle_collector.snort_ids_manager.snort_ids_rule_counters</a></li>
+<li><a href="csle_collector/snort_ids_manager/threads/snort_ids_monitor_thread.html">csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread</a></li>
 <li><a href="csle_collector/traffic_manager/query_traffic_manager.html">csle_collector.traffic_manager.query_traffic_manager</a></li>
 <li><a href="csle_collector/traffic_manager/traffic_manager.html">csle_collector.traffic_manager.traffic_manager</a></li>
 <li><a href="csle_collector/traffic_manager/traffic_manager_pb2_grpc.html">csle_collector.traffic_manager.traffic_manager_pb2_grpc</a></li>

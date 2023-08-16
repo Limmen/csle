@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_action_config &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_action_config &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,7 +72,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_action.attacker.emulation_attacker_action_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
@@ -85,21 +85,22 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions</span> <span class="kn">import</span> <span class="n">EmulationAttackerShellActions</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions</span> \
     <span class="kn">import</span> <span class="nn">EmulationAttackerStoppingActions</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationAttackerActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerActionConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationAttackerActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerActionConfig</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configuration of the action space for the attacker in the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">nmap_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">network_service_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">shell_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">nikto_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">masscan_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nmap_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">network_service_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">shell_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">nikto_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">masscan_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class constructor</span>
 
 <span class="sd">        :param num_indices: max num machine indexes allowed</span>
@@ -111,6 +112,8 @@
 <span class="sd">        :param masscan_action_ids: list of ids of the actions that are Masscan actions</span>
 <span class="sd">        :param stopping_action_ids: List of ids of the actions that are actions related to optimal stopping</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;self.num_actions can not be defined&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span> <span class="o">=</span> <span class="n">num_indices</span>
@@ -127,6 +130,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span> <span class="o">=</span> <span class="n">nikto_action_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span> <span class="o">=</span> <span class="n">masscan_action_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span> <span class="o">=</span> <span class="n">stopping_action_ids</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least one of the actions is None&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span>
                            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="p">)</span>
@@ -162,7 +169,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">ar_action_converter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 
 <div class="viewcode-block" id="EmulationAttackerActionConfig.print_actions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.print_actions">[docs]</a>    <span class="k">def</span> <span class="nf">print_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for printing the list of actions</span>
 
 <span class="sd">        :return: None</span>
@@ -179,7 +186,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerActionConfig.dict_brute_same_user_ids"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.dict_brute_same_user_ids">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">dict_brute_same_user_ids</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: list of brute-force attack ids for teh attacker</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -204,7 +211,7 @@
         <span class="p">]</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerActionConfig.get_continue_action_idx"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_continue_action_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_continue_action_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the id of the continue-action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
@@ -213,7 +220,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No Continue Action in the action space&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerActionConfig.get_action_by_id"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_action_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="n">EmulationAttackerActionId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the action of a given id</span>
 
 <span class="sd">        :param action_id: the action id</span>
@@ -226,7 +233,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerActionConfig.all_actions_config"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.all_actions_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">all_actions_config</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">subnet_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">hacker_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerActionConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the default action config for a given environment, which includes all actions</span>
 
 <span class="sd">        :param num_nodes: the number of nodes in the environment</span>
@@ -385,7 +392,63 @@
                                                                <span class="n">nikto_action_ids</span><span class="o">=</span><span class="n">nikto_action_ids</span><span class="p">,</span>
                                                                <span class="n">masscan_action_ids</span><span class="o">=</span><span class="n">masscan_action_ids</span><span class="p">,</span>
                                                                <span class="n">stopping_action_ids</span><span class="o">=</span><span class="n">stopping_action_ids</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">attacker_action_config</span></div></div>
+        <span class="k">return</span> <span class="n">attacker_action_config</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;num_indices: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span><span class="si">}</span><span class="s2">, actions: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="si">}</span><span class="s2">, nmap_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;network_service_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;shell_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span><span class="si">}</span><span class="s2">, nikto_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;masscan_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span><span class="si">}</span><span class="s2">, stopping_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;nmap_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nmap_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;network_service_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_service_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;shell_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;nikto_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nikto_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;masscan_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masscan_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopping_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerActionConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationAttackerActionConfig</span><span class="p">(</span>
+            <span class="n">num_indices</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_indices&quot;</span><span class="p">],</span> <span class="n">actions</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span> <span class="n">nmap_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;nmap_action_ids&quot;</span><span class="p">],</span>
+            <span class="n">network_service_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;network_service_action_ids&quot;</span><span class="p">],</span> <span class="n">shell_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;shell_action_ids&quot;</span><span class="p">],</span>
+            <span class="n">nikto_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;nikto_action_ids&quot;</span><span class="p">],</span> <span class="n">masscan_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;masscan_action_ids&quot;</span><span class="p">],</span>
+            <span class="n">stopping_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopping_action_ids&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="EmulationAttackerActionConfig.from_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerActionConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationAttackerActionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

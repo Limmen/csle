@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.images.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.images.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,13 +72,15 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /images resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
-<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
-<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
-<span class="kn">from</span> <span class="nn">csle_cluster.cluster_manager.cluster_controller</span> <span class="kn">import</span> <span class="n">ClusterController</span>
-<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
-<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">Response</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_cluster.cluster_manager.cluster_controller</span> <span class="kn">import</span> <span class="n">ClusterController</span>
+<span class="kn">from</span> <span class="nn">csle_cluster.cluster_manager.cluster_manager_pb2</span> <span class="kn">import</span> <span class="n">ContainerImageDTO</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
 
 <span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
 <span class="n">images_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span>
@@ -87,17 +89,17 @@
 
 
 <div class="viewcode-block" id="images"><a class="viewcode-back" href="../../../../csle_rest_api.resources.images.html#csle_rest_api.resources.images.routes.images">[docs]</a><span class="nd">@images_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">images</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /images resource</span>
 
 <span class="sd">    :return: Returns a list of images</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">images</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ContainerImageDTO</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
         <span class="n">images_dto</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">list_all_container_images</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>

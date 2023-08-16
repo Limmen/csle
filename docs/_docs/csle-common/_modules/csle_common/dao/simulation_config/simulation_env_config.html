@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.simulation_config.simulation_env_config &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.simulation_config.simulation_env_config &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -95,10 +95,11 @@
     <span class="kn">import</span> <span class="nn">WorkflowIntrusionResponsePOMDPDefenderConfig</span>
 <span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config</span> \
     <span class="kn">import</span> <span class="nn">WorkflowIntrusionResponsePOMDPAttackerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="SimulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">SimulationEnvConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">SimulationEnvConfig</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A DTO class representing the configuration of a simulation environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -112,9 +113,8 @@
                  <span class="n">observation_function_config</span><span class="p">:</span> <span class="n">ObservationFunctionConfig</span><span class="p">,</span>
                  <span class="n">initial_state_distribution_config</span><span class="p">:</span> <span class="n">InitialStateDistributionConfig</span><span class="p">,</span>
                  <span class="n">env_parameters_config</span><span class="p">:</span> <span class="n">EnvParametersConfig</span><span class="p">,</span> <span class="n">plot_transition_probabilities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">plot_observation_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">plot_reward_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-                 <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">plot_observation_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">plot_reward_function</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param name: the name of the simulation</span>
@@ -160,7 +160,7 @@
 
 <div class="viewcode-block" id="SimulationEnvConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -188,7 +188,7 @@
             <span class="n">state_space_config</span><span class="o">=</span><span class="n">StateSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;state_space_config&quot;</span><span class="p">]),</span>
             <span class="n">joint_action_space_config</span><span class="o">=</span><span class="n">JointActionSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_action_space_config&quot;</span><span class="p">]),</span>
             <span class="n">joint_observation_space_config</span><span class="o">=</span><span class="n">JointObservationSpaceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_observation_space_config&quot;</span><span class="p">]),</span>
-            <span class="n">time_step_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">],</span>
+            <span class="n">time_step_type</span><span class="o">=</span><span class="n">TimeStepType</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">]),</span>
             <span class="n">reward_function_config</span><span class="o">=</span><span class="n">RewardFunctionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;reward_function_config&quot;</span><span class="p">]),</span>
             <span class="n">transition_operator_config</span><span class="o">=</span><span class="n">TransitionOperatorConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_operator_config&quot;</span><span class="p">]),</span>
             <span class="n">observation_function_config</span><span class="o">=</span><span class="n">ObservationFunctionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_function_config&quot;</span><span class="p">]),</span>
@@ -205,10 +205,12 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="SimulationEnvConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descr</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_input_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -216,7 +218,7 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;state_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_action_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;joint_observation_space_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_observation_space_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step_type</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step_type</span><span class="o">.</span><span class="n">value</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;reward_function_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_function_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_operator_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_operator_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_function_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_function_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -232,7 +234,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, descr: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -251,10 +253,24 @@
                <span class="sa">f</span><span class="s2">&quot;plot_reward_function: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_reward_function</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="SimulationEnvConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="SimulationEnvConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationEnvConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">SimulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

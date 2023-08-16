@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.cluster_util &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.util.cluster_util &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -81,13 +81,13 @@
 
 
 <div class="viewcode-block" id="ClusterUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil">[docs]</a><span class="k">class</span> <span class="nc">ClusterUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility related to cluster management</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ClusterUtil.am_i_leader"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.am_i_leader">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">am_i_leader</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given IP is leader or not</span>
 
 <span class="sd">        :param ip: the ip to check</span>
@@ -102,7 +102,7 @@
 
 <div class="viewcode-block" id="ClusterUtil.get_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.get_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the current cluster config from the metastore or from disk depending on if it is the leader node or</span>
 <span class="sd">        not</span>
 <span class="sd">        :return: the cluster config</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="ClusterUtil.set_config_parameters_from_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_config_parameters_from_config_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the config file from $CSLE_HOME/config.json and initializes certain config parameters</span>
 
 <span class="sd">        :return: None</span>

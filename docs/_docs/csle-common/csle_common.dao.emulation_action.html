@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_action package &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_action package &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="csle_common.dao.emulation_action.attacker package" href="csle_common.dao.emulation_action.attacker.html" />
-    <link rel="prev" title="csle_common.dao.domain_randomization package" href="csle_common.dao.domain_randomization.html" /> 
+    <link rel="prev" title="csle_common.dao.docker package" href="csle_common.dao.docker.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="csle_common.dao.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.datasets.html">csle_common.dao.datasets package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.docker.html">csle_common.dao.docker package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_common.dao.domain_randomization.html">csle_common.dao.domain_randomization package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_common.dao.emulation_action package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.emulation_action">Module contents</a></li>
@@ -120,8 +119,6 @@
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.num_attributes"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.num_attributes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.schema"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.to_dict"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.to_json_file"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.to_json_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.to_json_str"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.to_json_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerAction.to_kafka_record()</span></code></a></li>
 </ul>
 </li>
@@ -131,9 +128,12 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.all_actions_config"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.all_actions_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.dict_brute_same_user_ids"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.dict_brute_same_user_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.from_json_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_action_by_id"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.get_action_by_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.get_continue_action_idx"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.get_continue_action_idx()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.print_actions"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.print_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_config.EmulationAttackerActionConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">EmulationAttackerActionConfig.to_dict()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -323,8 +323,6 @@
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.num_attributes"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.num_attributes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.schema"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.schema()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_dict"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_file"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.to_json_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_str"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.to_json_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderAction.to_kafka_record()</span></code></a></li>
 </ul>
 </li>
@@ -333,8 +331,11 @@
 <li class="toctree-l2"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#module-csle_common.dao.emulation_action.defender.emulation_defender_action_config">csle_common.dao.emulation_action.defender.emulation_defender_action_config module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.all_actions_config"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.all_actions_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.from_json_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.get_continue_action_idx"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.get_continue_action_idx()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.print_actions"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.print_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">EmulationDefenderActionConfig.to_dict()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -395,7 +396,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_common.dao.domain_randomization.html" class="btn btn-neutral float-left" title="csle_common.dao.domain_randomization package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_common.dao.docker.html" class="btn btn-neutral float-left" title="csle_common.dao.docker package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="csle_common.dao.emulation_action.attacker.html" class="btn btn-neutral float-right" title="csle_common.dao.emulation_action.attacker package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

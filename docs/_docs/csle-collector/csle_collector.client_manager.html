@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.client_manager package &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.client_manager package &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="csle_collector.constants package" href="csle_collector.constants.html" />
+    <link rel="next" title="csle_collector.client_manager.dao package" href="csle_collector.client_manager.dao.html" />
     <link rel="prev" title="csle_collector package" href="index.html" /> 
 </head>
 
@@ -41,29 +41,19 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.client_manager package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.client_manager.client_manager">csle_collector.client_manager.client_manager module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ArrivalThread"><code class="docutils literal notranslate"><span class="pre">ArrivalThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ArrivalThread.piece_wise_constant_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.piece_wise_constant_rate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ArrivalThread.run"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ArrivalThread.sine_modulated_poisson_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.sine_modulated_poisson_rate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ArrivalThread.spiking_poisson_arrival_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.spiking_poisson_arrival_rate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html">csle_collector.client_manager.dao package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.threads.html">csle_collector.client_manager.threads package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.client_manager.client_manager">csle_collector.client_manager.client_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.getClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.getClients()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.startClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.startClients()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.startProducer"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.startProducer()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.stopClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.stopClients()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.stopProducer"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.stopProducer()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientThread"><code class="docutils literal notranslate"><span class="pre">ClientThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ClientThread.run"><code class="docutils literal notranslate"><span class="pre">ClientThread.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ProducerThread"><code class="docutils literal notranslate"><span class="pre">ProducerThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.client_manager.client_manager.ProducerThread.run"><code class="docutils literal notranslate"><span class="pre">ProducerThread.run()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.client_manager.client_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
@@ -162,71 +152,188 @@
              
   <section id="csle-collector-client-manager-package">
 <h1>csle_collector.client_manager package<a class="headerlink" href="#csle-collector-client-manager-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.dao.html">csle_collector.client_manager.dao package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.arrival_config">csle_collector.client_manager.dao.arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">ArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">ArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">ArrivalConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.client">csle_collector.client_manager.dao.client module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client"><code class="docutils literal notranslate"><span class="pre">Client</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.copy"><code class="docutils literal notranslate"><span class="pre">Client.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.from_dict"><code class="docutils literal notranslate"><span class="pre">Client.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">Client.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.from_json_file"><code class="docutils literal notranslate"><span class="pre">Client.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.generate_commands"><code class="docutils literal notranslate"><span class="pre">Client.generate_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.to_dict"><code class="docutils literal notranslate"><span class="pre">Client.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">Client.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.client_arrival_type">csle_collector.client_manager.dao.client_arrival_type module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.CONSTANT"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType.CONSTANT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.EPTMP"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType.EPTMP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.PIECE_WISE_CONSTANT"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType.PIECE_WISE_CONSTANT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SINE_MODULATED"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType.SINE_MODULATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SPIKING"><code class="docutils literal notranslate"><span class="pre">ClientArrivalType.SPIKING</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.constant_arrival_config">csle_collector.client_manager.dao.constant_arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">ConstantArrivalConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.eptmp_arrival_config">csle_collector.client_manager.dao.eptmp_arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">EPTMPArrivalConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.piece_wise_constant_arrival_config">csle_collector.client_manager.dao.piece_wise_constant_arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">PieceWiseConstantArrivalConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.sine_arrival_config">csle_collector.client_manager.dao.sine_arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">SineArrivalConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.spiking_arrival_config">csle_collector.client_manager.dao.spiking_arrival_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">SpikingArrivalConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.workflow_markov_chain">csle_collector.client_manager.dao.workflow_markov_chain module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.copy"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_json_file"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.markov_next_state"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.markov_next_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.reset"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.step_forward"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.step_forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowMarkovChain.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.workflow_service">csle_collector.client_manager.dao.workflow_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService"><code class="docutils literal notranslate"><span class="pre">WorkflowService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.copy"><code class="docutils literal notranslate"><span class="pre">WorkflowService.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.create_execution_config"><code class="docutils literal notranslate"><span class="pre">WorkflowService.create_execution_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowService.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowService.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_json_file"><code class="docutils literal notranslate"><span class="pre">WorkflowService.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.get_commands"><code class="docutils literal notranslate"><span class="pre">WorkflowService.get_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.replace_first_octet_of_ip"><code class="docutils literal notranslate"><span class="pre">WorkflowService.replace_first_octet_of_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.to_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowService.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowService.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao.workflows_config">csle_collector.client_manager.dao.workflows_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.commands"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.copy"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.create_execution_config"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.create_execution_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.from_grpc_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_mc"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.get_workflow_mc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_service"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.get_workflow_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_grpc_object"><code class="docutils literal notranslate"><span class="pre">WorkflowsConfig.to_grpc_object()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.dao.html#module-csle_collector.client_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.threads.html">csle_collector.client_manager.threads package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.threads.html#module-csle_collector.client_manager.threads.arrival_thread">csle_collector.client_manager.threads.arrival_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread"><code class="docutils literal notranslate"><span class="pre">ArrivalThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.constant_poisson_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.constant_poisson_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.eptmp_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.eptmp_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.piece_wise_constant_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.piece_wise_constant_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.run"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.sine_modulated_poisson_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.sine_modulated_poisson_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.spiking_poisson_arrival_rate"><code class="docutils literal notranslate"><span class="pre">ArrivalThread.spiking_poisson_arrival_rate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.threads.html#module-csle_collector.client_manager.threads.client_thread">csle_collector.client_manager.threads.client_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.client_thread.ClientThread"><code class="docutils literal notranslate"><span class="pre">ClientThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.client_thread.ClientThread.run"><code class="docutils literal notranslate"><span class="pre">ClientThread.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.threads.html#module-csle_collector.client_manager.threads.producer_thread">csle_collector.client_manager.threads.producer_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.producer_thread.ProducerThread"><code class="docutils literal notranslate"><span class="pre">ProducerThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.producer_thread.ProducerThread.run"><code class="docutils literal notranslate"><span class="pre">ProducerThread.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.threads.html#module-csle_collector.client_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_collector.client_manager.client_manager">
 <span id="csle-collector-client-manager-client-manager-module"></span><h2>csle_collector.client_manager.client_manager module<a class="headerlink" href="#module-csle_collector.client_manager.client_manager" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ArrivalThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_manager.</span></span><span class="sig-name descname"><span class="pre">ArrivalThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lamb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sine_modulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece_wise_constant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakvalues</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ArrivalThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ArrivalThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that generates client arrivals (starts client threads according to a Poisson process)</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ArrivalThread.piece_wise_constant_rate">
-<span class="sig-name descname"><span class="pre">piece_wise_constant_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ArrivalThread.piece_wise_constant_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ArrivalThread.piece_wise_constant_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Function that returns the rate of a piece-wise constant Poisson process</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>t</strong> – the time-step</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the rate</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ArrivalThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ArrivalThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ArrivalThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the arrival generator, generates new clients dynamically according to a Poisson process</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ArrivalThread.sine_modulated_poisson_rate">
-<span class="sig-name descname"><span class="pre">sine_modulated_poisson_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ArrivalThread.sine_modulated_poisson_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ArrivalThread.sine_modulated_poisson_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Function that returns the rate of a sine-modulated Poisson process</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>t</strong> – the time-step</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the rate</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ArrivalThread.spiking_poisson_arrival_rate">
-<span class="sig-name descname"><span class="pre">spiking_poisson_arrival_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ArrivalThread.spiking_poisson_arrival_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ArrivalThread.spiking_poisson_arrival_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Function that returns the rate of a spiking Poisson process</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>t</strong> – the time-step</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the rate</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ClientManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_manager.</span></span><span class="sig-name descname"><span class="pre">ClientManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ClientManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ClientManagerServicer" title="Permalink to this definition"></a></dt>
@@ -253,7 +360,7 @@ state of the clients.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ClientManagerServicer.startClients">
 <span class="sig-name descname"><span class="pre">startClients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartClientsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ClientsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ClientManagerServicer.startClients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ClientManagerServicer.startClients" title="Permalink to this definition"></a></dt>
-<dd><p>Starts/Restarts the Poisson process that generates clients</p>
+<dd><p>Starts/Restarts the Poisson process(es) that generate(s) clients</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -314,42 +421,6 @@ state of the clients.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the clients</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ClientThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_manager.</span></span><span class="sig-name descname"><span class="pre">ClientThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ClientThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ClientThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread representing a client</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ClientThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ClientThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ClientThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>The main function of the client</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ProducerThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_manager.</span></span><span class="sig-name descname"><span class="pre">ProducerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrival_thread</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ProducerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ProducerThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that pushes statistics to Kafka</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.client_manager.client_manager.ProducerThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_manager.html#ProducerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_manager.ProducerThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Main loop of the thread, pushes data to Kafka periodically</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,7 +588,7 @@ state of the clients.</p>
 <span id="csle-collector-client-manager-client-population-metrics-module"></span><h2>csle_collector.client_manager.client_population_metrics module<a class="headerlink" href="#module-csle_collector.client_manager.client_population_metrics" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_population_metrics.</span></span><span class="sig-name descname"><span class="pre">ClientPopulationMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1682876061.2144186</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/client_population_metrics.html#ClientPopulationMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.client_population_metrics.</span></span><span class="sig-name descname"><span class="pre">ClientPopulationMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1692189640.452443</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/client_population_metrics.html#ClientPopulationMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DTO representing information about the client population</p>
 <dl class="py method">
@@ -600,7 +671,8 @@ state of the clients.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/client_population_metrics.html#ClientPopulationMetrics.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
@@ -645,30 +717,20 @@ state of the clients.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.client_manager.query_clients.start_clients">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.query_clients.</span></span><span class="sig-name descname"><span class="pre">start_clients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub" title="csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub"><span class="pre">ClientManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lamb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sine_modulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakvalues</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece_wise_constant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/query_clients.html#start_clients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.query_clients.start_clients" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.query_clients.</span></span><span class="sig-name descname"><span class="pre">start_clients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub" title="csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub"><span class="pre">ClientManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflows_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client" title="csle_collector.client_manager.dao.client.Client"><span class="pre">Client</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ClientsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/query_clients.html#start_clients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.query_clients.start_clients" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the client arrival process</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to the gRPC server</p></li>
-<li><p><strong>mu</strong> – the mu parameter for the Exponential service time</p></li>
-<li><p><strong>lamb</strong> – the lambda parameter for the Poisson process</p></li>
-<li><p><strong>time_step_len_seconds</strong> – the length of a time-step for simulating the arrival process</p></li>
-<li><p><strong>num:commands</strong> – the number of commands that each client will use</p></li>
-<li><p><strong>sine_modulated</strong> – whether the arrival process is sine modulated or not</p></li>
-<li><p><strong>time_scaling_factor</strong> – the time scaling factor for the sine modulated arrival process</p></li>
-<li><p><strong>period_scaling_factor</strong> – the period scaling factor for the sine modulated arrival process</p></li>
-<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
-<li><p><strong>spiking</strong> – boolean flag indicating whether the arrival process is spiking or not</p></li>
-<li><p><strong>exponents</strong> – list of exponents for spiking arrival process</p></li>
-<li><p><strong>factors</strong> – list of factors for spiking arrival process</p></li>
-<li><p><strong>piece_wise_constant</strong> – boolean flag indicating whether the arrival process is piece-wise constant or not</p></li>
-<li><p><strong>breakpoints</strong> – list of breakpoints for piece-wise constant arrival process</p></li>
-<li><p><strong>breakvalues</strong> – list of breakvalues for piece-wise constant arrival process</p></li>
+<li><p><strong>time_step_len_seconds</strong> – length of a time-step in the emulation</p></li>
+<li><p><strong>workflows_config</strong> – configuration of the workflows</p></li>
+<li><p><strong>clients</strong> – list of client profiles</p></li>
+<li><p><strong>timeout</strong> – the timeout for sending a request to the GRPC server</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a clientsDTO describing the state of the clients</p>
+<dd class="field-even"><p>a clients DTO describing the state of the clients</p>
 </dd>
 </dl>
 </dd></dl>
@@ -737,7 +799,7 @@ state of the clients.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="csle_collector package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="csle_collector.constants.html" class="btn btn-neutral float-right" title="csle_collector.constants package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="csle_collector.client_manager.dao.html" class="btn btn-neutral float-right" title="csle_collector.client_manager.dao package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

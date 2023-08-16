@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.snort_ids_manager.snort_ids_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.snort_ids_manager.snort_ids_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -73,85 +73,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_collector.snort_ids_manager.snort_ids_manager</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">socket</span>
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
-<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
-<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">import</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_manager_pb2</span>
 <span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_manager_util</span> <span class="kn">import</span> <span class="n">SnortIdsManagerUtil</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
-
-
-<div class="viewcode-block" id="SnortIDSMonitorThread"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread">[docs]</a><span class="k">class</span> <span class="nc">SnortIDSMonitorThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Thread that collects the Snort IDS statistics and pushes it to Kafka periodically</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the thread</span>
-
-<span class="sd">        :param kafka_ip: IP of the Kafka server to push to</span>
-<span class="sd">        :param kafka_port: port of the Kafka server to push to</span>
-<span class="sd">        :param ip: ip of the server we are pushing from</span>
-<span class="sd">        :param hostname: hostname of the server we are pushing from</span>
-<span class="sd">        :param log_file_path: path to the IDS log</span>
-<span class="sd">        :param time_step_len_seconds: the length of a timestep</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="n">kafka_ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="n">kafka_port</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_file_path</span> <span class="o">=</span> <span class="n">log_file_path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">latest_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                     <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SnortIDSMonitor thread started successfully&quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="SnortIDSMonitorThread.run"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">agg_alert_counters</span><span class="p">,</span> <span class="n">rule_alert_counters</span><span class="p">,</span> <span class="n">ip_alert_counters</span> <span class="o">=</span> \
-                    <span class="n">SnortIdsManagerUtil</span><span class="o">.</span><span class="n">read_snort_ids_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_ts</span><span class="p">)</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="n">agg_alert_counters</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_NAME</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="n">rule_alert_counters</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_RULE_LOG_TOPIC_NAME</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">ip_alert_counter</span> <span class="ow">in</span> <span class="n">ip_alert_counters</span><span class="p">:</span>
-                    <span class="n">record</span> <span class="o">=</span> <span class="n">ip_alert_counter</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_IP_LOG_TOPIC_NAME</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an exception parsing the Snort logs: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">latest_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div></div>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread</span> <span class="kn">import</span> <span class="n">SnortIDSMonitorThread</span>
 
 
 <div class="viewcode-block" id="SnortIdsManagerServicer"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">SnortIdsManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for collecting Snort IDS statistics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">SNORT_IDS_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -164,11 +106,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">SnortIDSMonitorThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the SnortIDSManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_is_snort_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to check if Snort is running</span>
 
 <span class="sd">        :return: status and list of topics</span>
@@ -183,10 +125,20 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running status: </span><span class="si">{</span><span class="n">running</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">running</span>
 
+    <span class="k">def</span> <span class="nf">_is_monitor_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility method to check if the monitor is running</span>
+
+<span class="sd">        :return: True if running else false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
 <div class="viewcode-block" id="SnortIdsManagerServicer.getSnortIdsAlerts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts">[docs]</a>    <span class="k">def</span> <span class="nf">getSnortIdsAlerts</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">GetSnortIdsAlertsMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the statistics of the IDS log from a given timestamp</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -201,7 +153,7 @@
 <div class="viewcode-block" id="SnortIdsManagerServicer.startSnortIdsMonitor"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIdsMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startSnortIdsMonitor</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">StartSnortIdsMonitorMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Snort IDS monitor thread</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -226,7 +178,7 @@
 <div class="viewcode-block" id="SnortIdsManagerServicer.startSnortIds"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIds">[docs]</a>    <span class="k">def</span> <span class="nf">startSnortIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">StartSnortIdsMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Snort IDS</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -235,9 +187,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the SnortIDS, ingress interface: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">ingress_interface</span><span class="si">}</span><span class="s2">, &quot;</span>
                      <span class="sa">f</span><span class="s2">&quot;egress interface: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">egress_interface</span><span class="si">}</span><span class="s2">, subnetmask: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">subnetmask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">snort_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_snort_running</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">snort_running</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">STOP_SNORT_IDS</span>
@@ -260,7 +210,7 @@
 <div class="viewcode-block" id="SnortIdsManagerServicer.stopSnortIds"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIds">[docs]</a>    <span class="k">def</span> <span class="nf">stopSnortIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">StartSnortIdsMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Snort IDS</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -268,9 +218,7 @@
 <span class="sd">        :return: a DTO with the status of the IDS and its monitor thread</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping the SnortIDS&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">STOP_SNORT_IDS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
                                 <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopped the SnortIDS, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -281,7 +229,7 @@
                             <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">StopSnortIdsMonitorMsg</span><span class="p">,</span>
                             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Snort IDS monitor thread if it is running</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -297,16 +245,14 @@
 <div class="viewcode-block" id="SnortIdsManagerServicer.getSnortIdsMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getSnortIdsMonitorStatus</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">GetSnortIdsMonitorStatusMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the status of the Snort IDS Monitor thread</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a DTO with the status of the IDS monitor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">snort_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_snort_running</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">(</span>
             <span class="n">monitor_running</span><span class="o">=</span><span class="n">running</span><span class="p">,</span> <span class="n">snort_ids_running</span><span class="o">=</span><span class="n">snort_running</span><span class="p">)</span></div></div>
@@ -314,7 +260,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50048</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;snort_ids_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing clients</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

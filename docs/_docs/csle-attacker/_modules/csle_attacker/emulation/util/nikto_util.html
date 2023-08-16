@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_attacker.emulation.util.nikto_util &mdash; csle-attacker 0.0.1 documentation</title>
+  <title>csle_attacker.emulation.util.nikto_util &mdash; csle-attacker 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../../index.html" class="icon icon-home">
-            csle-attacker
+            <a href="../../../../index.html" class="icon icon-home"> csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -54,7 +53,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_attacker.emulation.util.nikto_util</li>
       <li class="wy-breadcrumbs-aside">
@@ -156,16 +155,19 @@
             <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">ip</span><span class="p">:</span>
                 <span class="n">m_obs</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">vuln</span> <span class="ow">in</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">:</span>
-            <span class="n">vuln_obs</span> <span class="o">=</span> <span class="n">vuln</span><span class="o">.</span><span class="n">to_obs</span><span class="p">()</span>
-            <span class="n">m_obs</span><span class="o">.</span><span class="n">osvdb_vulns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vuln_obs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m_obs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown IP: </span><span class="si">{</span><span class="n">scan_result</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">vuln</span> <span class="ow">in</span> <span class="n">scan_result</span><span class="o">.</span><span class="n">vulnerabilities</span><span class="p">:</span>
+                <span class="n">vuln_obs</span> <span class="o">=</span> <span class="n">vuln</span><span class="o">.</span><span class="n">to_obs</span><span class="p">()</span>
+                <span class="n">m_obs</span><span class="o">.</span><span class="n">osvdb_vulns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vuln_obs</span><span class="p">)</span>
 
-        <span class="n">attacker_machine_observations</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">merge_new_obs_with_old</span><span class="p">(</span>
-            <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">,</span> <span class="p">[</span><span class="n">m_obs</span><span class="p">],</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
-        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
-        <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">attacker_machine_observations</span>
+            <span class="n">attacker_machine_observations</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">merge_new_obs_with_old</span><span class="p">(</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">,</span> <span class="p">[</span><span class="n">m_obs</span><span class="p">],</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
+            <span class="n">s_prime</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="n">attacker_machine_observations</span>
 
-        <span class="k">return</span> <span class="n">s_prime</span></div>
+            <span class="k">return</span> <span class="n">s_prime</span></div>
 
 <div class="viewcode-block" id="NiktoUtil.parse_nikto_scan_xml"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan_xml">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_nikto_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoScanResult</span><span class="p">:</span>
@@ -218,7 +220,7 @@
 <span class="sd">        :param xml_data: the item element</span>
 <span class="sd">        :return: parsed nikto vuln</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">osvdb_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">iplink</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -229,7 +231,7 @@
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">METHOD</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">method</span> <span class="o">=</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">METHOD</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">OSVDB_ID</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">method</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">OSVDB_ID</span><span class="p">])</span>
+            <span class="n">osvdb_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">OSVDB_ID</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM_ID</span> <span class="ow">in</span> <span class="n">xml_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">xml_data</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NIKTO_XML</span><span class="o">.</span><span class="n">ITEM_ID</span><span class="p">]))</span>
 

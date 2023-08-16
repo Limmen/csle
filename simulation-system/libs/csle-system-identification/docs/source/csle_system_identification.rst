@@ -13,6 +13,7 @@ Subpackages
    csle_system_identification.expectation_maximization
    csle_system_identification.gp
    csle_system_identification.job_controllers
+   csle_system_identification.mcmc
 
 Submodules
 ----------

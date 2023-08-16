@@ -60,6 +60,22 @@ csle\_common.dao.system\_identification.gp\_system\_model module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.system\_identification.mcmc\_posterior module
+--------------------------------------------------------------
+
+.. automodule:: csle_common.dao.system_identification.mcmc_posterior
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.dao.system\_identification.mcmc\_system\_model module
+------------------------------------------------------------------
+
+.. automodule:: csle_common.dao.system_identification.mcmc_system_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.system\_identification.system\_identification\_config module
 -----------------------------------------------------------------------------
 

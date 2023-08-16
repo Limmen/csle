@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.random_search.random_search_agent &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents.agents.random_search.random_search_agent &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -95,7 +95,7 @@
 
 
 <div class="viewcode-block" id="RandomSearchAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent">[docs]</a><span class="k">class</span> <span class="nc">RandomSearchAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Random Search Agent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -103,7 +103,7 @@
                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">EmulationEnvConfig</span><span class="p">],</span>
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Random Search Agent</span>
 
 <span class="sd">        :param simulation_env_config: the simulation env config</span>
@@ -121,7 +121,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
 
 <div class="viewcode-block" id="RandomSearchAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs the policy training for the given random seeds using random search</span>
 
 <span class="sd">        :return: the training metrics and the trained policies</span>
@@ -265,7 +265,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
 <div class="viewcode-block" id="RandomSearchAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">RANDOM_SEARCH</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">RANDOM_SEARCH</span><span class="o">.</span><span class="n">DELTA</span><span class="p">,</span>
@@ -276,7 +276,7 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.random_search"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_search">[docs]</a>    <span class="k">def</span> <span class="nf">random_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                       <span class="n">training_job</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">,</span> <span class="n">random_seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the random search algorithm</span>
 
 <span class="sd">        :param exp_result: the experiment result object to store the result</span>
@@ -422,7 +422,7 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.eval_theta"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.eval_theta">[docs]</a>    <span class="k">def</span> <span class="nf">eval_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="p">,</span> <span class="n">LinearThresholdStoppingPolicy</span><span class="p">],</span>
                    <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluates a given threshold policy by running monte-carlo simulations</span>
 
 <span class="sd">        :param policy: the policy to evaluate</span>
@@ -432,7 +432,7 @@
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_batch_size</span><span class="p">):</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
             <span class="n">l</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">b1</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
@@ -446,7 +446,7 @@
                     <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
-                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
                 <span class="n">l</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">b1</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -455,7 +455,7 @@
         <span class="k">return</span> <span class="n">avg_metrics</span></div>
 
 <div class="viewcode-block" id="RandomSearchAgent.random_perturbation"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_perturbation">[docs]</a>    <span class="k">def</span> <span class="nf">random_perturbation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a random perturbation to the theta vector</span>
 
 <span class="sd">        :param delta: the step size for the perturbation</span>
@@ -471,7 +471,7 @@
 <div class="viewcode-block" id="RandomSearchAgent.update_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.update_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]],</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update a dict with aggregated metrics using new information from the environment</span>
 
 <span class="sd">        :param metrics: the dict with the aggregated metrics</span>
@@ -487,7 +487,7 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.compute_avg_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.compute_avg_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_avg_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the average metrics of a dict with aggregated metrics</span>
 
 <span class="sd">        :param metrics: the dict with the aggregated metrics</span>
@@ -501,7 +501,7 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.initial_theta"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.initial_theta">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">initial_theta</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes theta randomly</span>
 
 <span class="sd">        :param L: the dimension of theta</span>
@@ -515,7 +515,7 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.round_vec"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.round_vec">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">round_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rounds a vector to 3 decimals</span>
 
 <span class="sd">        :param vec: the vector to round</span>
@@ -525,15 +525,15 @@
 
 <div class="viewcode-block" id="RandomSearchAgent.get_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.get_policy">[docs]</a>    <span class="k">def</span> <span class="nf">get_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="p">,</span>
                                                               <span class="n">LinearThresholdStoppingPolicy</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the policy of a given parameter vector</span>
 
 <span class="sd">        :param theta: the parameter vector</span>
 <span class="sd">        :param L: the number of parameters</span>
 <span class="sd">        :return: the policy</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">RANDOM_SEARCH</span><span class="o">.</span><span class="n">POLICY_TYPE</span><span class="p">]</span> \
-                <span class="o">==</span> <span class="n">PolicyType</span><span class="o">.</span><span class="n">MULTI_THRESHOLD</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">RANDOM_SEARCH</span><span class="o">.</span><span class="n">POLICY_TYPE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> \
+                <span class="o">==</span> <span class="n">PolicyType</span><span class="o">.</span><span class="n">MULTI_THRESHOLD</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">policy</span> <span class="o">=</span> <span class="n">MultiThresholdStoppingPolicy</span><span class="p">(</span>
                 <span class="n">theta</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">simulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">states</span><span class="p">,</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.users_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.users_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.controllers.users_controller</li>
       <li class="wy-breadcrumbs-aside">
@@ -133,6 +132,8 @@
             <span class="k">if</span> <span class="n">vuln</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">vuln</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vuln</span><span class="o">.</span><span class="n">credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not find credentials corresponding to node vulnerability config.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">vuln</span><span class="o">.</span><span class="n">credentials</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">cr</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
                     <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo useradd -rm -d /home/</span><span class="si">{}</span><span class="s2"> -s /bin/bash -g root -G sudo -p &quot;</span> \

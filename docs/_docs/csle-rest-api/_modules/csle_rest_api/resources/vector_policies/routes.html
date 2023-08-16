@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.vector_policies.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.vector_policies.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,12 +72,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /vector-policies resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
-<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
-
 
 <span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
 <span class="n">vector_policies_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span>
@@ -87,8 +87,8 @@
 
 <div class="viewcode-block" id="vector_policies"><a class="viewcode-back" href="../../../../csle_rest_api.resources.vector_policies.html#csle_rest_api.resources.vector_policies.routes.vector_policies">[docs]</a><span class="nd">@vector_policies_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                                        <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">vector_policies</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">vector_policies</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /vector-policies resource.</span>
 
 <span class="sd">    :return: A list of vector-policies or a list of ids of the policies or deletes the policies</span>
@@ -105,7 +105,6 @@
         <span class="n">ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IDS_QUERY_PARAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ids</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">vector_policies_ids</span><span class="p">()</span>
-
         <span class="n">vector_policies</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_vector_policies</span><span class="p">()</span>
         <span class="n">vector_policies_dicts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">vector_policies</span><span class="p">))</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">vector_policies_dicts</span><span class="p">)</span>
@@ -117,11 +116,13 @@
             <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">remove_vector_policy</span><span class="p">(</span><span class="n">vector_policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">({})</span>
         <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;HTTP method not supported&quot;</span><span class="p">}),</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="vector_policies_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.vector_policies.html#csle_rest_api.resources.vector_policies.routes.vector_policies_ids">[docs]</a><span class="k">def</span> <span class="nf">vector_policies_ids</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="vector_policies_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.vector_policies.html#csle_rest_api.resources.vector_policies.routes.vector_policies_ids">[docs]</a><span class="k">def</span> <span class="nf">vector_policies_ids</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :return: An HTTP response with all vector policies ids</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vector_policies_ids</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_vector_policies_ids</span><span class="p">()</span>
@@ -138,8 +139,8 @@
 
 <div class="viewcode-block" id="vector_policy"><a class="viewcode-back" href="../../../../csle_rest_api.resources.vector_policies.html#csle_rest_api.resources.vector_policies.routes.vector_policy">[docs]</a><span class="nd">@vector_policies_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&lt;policy_id&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                                                    <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">vector_policy</span><span class="p">(</span><span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">vector_policy</span><span class="p">(</span><span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /vector-policies/id resource.</span>
 
 <span class="sd">    :param policy_id: the id of the policy</span>

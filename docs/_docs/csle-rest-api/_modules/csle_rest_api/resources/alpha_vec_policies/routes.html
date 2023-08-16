@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.alpha_vec_policies.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.alpha_vec_policies.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,7 +72,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /alpha-vec-policies resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
@@ -86,8 +87,8 @@
 
 <div class="viewcode-block" id="alpha_vec_policies"><a class="viewcode-back" href="../../../../csle_rest_api.resources.alpha_vec_policies.html#csle_rest_api.resources.alpha_vec_policies.routes.alpha_vec_policies">[docs]</a><span class="nd">@alpha_vec_policies_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                                           <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">alpha_vec_policies</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">alpha_vec_policies</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /alpha-vec-policies resource.</span>
 
 <span class="sd">    :return: A list of alpha-vec-policies or a list of ids of the policies or deletes the policies</span>
@@ -116,11 +117,13 @@
             <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">remove_alpha_vec_policy</span><span class="p">(</span><span class="n">alpha_vec_policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">({})</span>
         <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;HTTP method not supported&quot;</span><span class="p">}}),</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="alpha_vec_policies_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.alpha_vec_policies.html#csle_rest_api.resources.alpha_vec_policies.routes.alpha_vec_policies_ids">[docs]</a><span class="k">def</span> <span class="nf">alpha_vec_policies_ids</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="alpha_vec_policies_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.alpha_vec_policies.html#csle_rest_api.resources.alpha_vec_policies.routes.alpha_vec_policies_ids">[docs]</a><span class="k">def</span> <span class="nf">alpha_vec_policies_ids</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :return: An HTTP response with all alphavec policies ids</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">alphavec_policies_ids</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_alpha_vec_policies_ids</span><span class="p">()</span>
@@ -138,8 +141,8 @@
 <div class="viewcode-block" id="alpha_vec_policy"><a class="viewcode-back" href="../../../../csle_rest_api.resources.alpha_vec_policies.html#csle_rest_api.resources.alpha_vec_policies.routes.alpha_vec_policy">[docs]</a><span class="nd">@alpha_vec_policies_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&lt;policy_id&gt;&quot;</span><span class="p">,</span>
                              <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                                       <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">alpha_vec_policy</span><span class="p">(</span><span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">alpha_vec_policy</span><span class="p">(</span><span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /alpha=vec-policies/id resource.</span>
 
 <span class="sd">    :param policy_id: the id of the policy</span>

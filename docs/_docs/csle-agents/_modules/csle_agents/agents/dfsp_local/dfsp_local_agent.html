@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.dfsp_local.dfsp_local_agent &mdash; csle-agents 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.dfsp_local.dfsp_local_agent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.dfsp_local.dfsp_local_agent</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_execution</span> <span class="kn">import</span> <span class="n">ExperimentExecution</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_result</span> <span class="kn">import</span> <span class="n">ExperimentResult</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.agent_type</span> <span class="kn">import</span> <span class="n">AgentType</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.experiment_util</span> <span class="kn">import</span> <span class="n">ExperimentUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.player_type</span> <span class="kn">import</span> <span class="n">PlayerType</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.mixed_ppo_policy</span> <span class="kn">import</span> <span class="n">MixedPPOPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.mixed_linear_tabular</span> <span class="kn">import</span> <span class="n">MixedLinearTabularPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.ppo_policy</span> <span class="kn">import</span> <span class="n">PPOPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.linear_threshold_stopping_policy</span> <span class="kn">import</span> <span class="n">LinearThresholdStoppingPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.tabular_policy</span> <span class="kn">import</span> <span class="n">TabularPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.linear_tabular_policy</span> <span class="kn">import</span> <span class="n">LinearTabularPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.ppo.ppo_agent</span> <span class="kn">import</span> <span class="n">PPOAgent</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.differential_evolution.differential_evolution_agent</span> <span class="kn">import</span> <span class="n">DifferentialEvolutionAgent</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
+<span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
+<span class="kn">import</span> <span class="nn">gym_csle_stopping_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.util.intrusion_response_game_util</span> <span class="kn">import</span> <span class="n">IntrusionResponseGameUtil</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.vi.vi_agent</span> <span class="kn">import</span> <span class="n">VIAgent</span>
+
+
+<div class="viewcode-block" id="reduce_T"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_T">[docs]</a><span class="k">def</span> <span class="nf">reduce_T</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduces the transition tensor based on a given strategy</span>
+
+<span class="sd">    :param T: the tensor to reduce</span>
+<span class="sd">    :param strategy: the strategy to use for the reduction</span>
+<span class="sd">    :return: the reduced transition tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">attacker_state</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">reduced_T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">prob</span> <span class="o">+=</span> <span class="n">strategy</span><span class="p">[</span><span class="n">attacker_state</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">reduced_T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">prob</span>
+    <span class="k">return</span> <span class="n">reduced_T</span></div>
+
+
+<div class="viewcode-block" id="reduce_R"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_R">[docs]</a><span class="k">def</span> <span class="nf">reduce_R</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduces the reward tensor based on a given strategy</span>
+
+<span class="sd">    :param R: the reward tensor to reduce</span>
+<span class="sd">    :param strategy: the strategy to use for the reduction</span>
+<span class="sd">    :return: the reduced reward tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">attacker_state</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">reduced_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">r</span> <span class="o">+=</span> <span class="n">strategy</span><span class="p">[</span><span class="n">attacker_state</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span> <span class="o">*</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">reduced_R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="k">return</span> <span class="n">reduced_R</span></div>
+
+
+<div class="viewcode-block" id="DFSPLocalAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent">[docs]</a><span class="k">class</span> <span class="nc">DFSPLocalAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RL Agent implementing the local DFSP algorithm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defender_simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
+                 <span class="n">attacker_simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
+                 <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">EmulationEnvConfig</span><span class="p">],</span> <span class="n">ppo_experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
+                 <span class="n">de_experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">vi_experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
+                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the local DFSP agent</span>
+
+<span class="sd">        :param attacker_simulation_env_config: the simulation env config of the attacker</span>
+<span class="sd">        :param defender_simulation_env_config: the simulation env config of the defender</span>
+<span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param attacker_experiment_config: the experiment config</span>
+<span class="sd">        :param training_job: (optional) reuse an existing training job configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="n">defender_simulation_env_config</span><span class="p">,</span>
+                         <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                         <span class="n">experiment_config</span><span class="o">=</span><span class="n">ppo_experiment_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span> <span class="o">=</span> <span class="n">ppo_experiment_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span> <span class="o">=</span> <span class="n">de_experiment_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span> <span class="o">=</span> <span class="n">vi_experiment_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span> <span class="o">=</span> <span class="n">attacker_simulation_env_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span> <span class="o">=</span> <span class="n">defender_simulation_env_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">training_job</span>
+
+<div class="viewcode-block" id="DFSPLocalAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the policy training for the given random seeds using the local DFSP algorithm</span>
+
+<span class="sd">        :return: the training metrics and the trained policies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+
+        <span class="c1"># Initialize result metrics</span>
+        <span class="n">exp_result</span> <span class="o">=</span> <span class="n">ExperimentResult</span><span class="p">()</span>
+
+        <span class="c1"># Define which metrics to plot in the UI</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EXPLOITABILITY</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_EXPLOITABILITY</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_ATTACKER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_ATTACKER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_DEFENDER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_DEFENDER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">INTRUSION_LENGTH</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_INTRUSION_LENGTH</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">INTRUSION_START</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_INTRUSION_START</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_TIME_HORIZON</span><span class="p">)</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">plot_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">)</span>
+        <span class="n">descr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Approximating a Nash equilibrium with the local DFSP algorithm using &quot;</span> \
+                <span class="sa">f</span><span class="s2">&quot;simulations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                <span class="sa">f</span><span class="s2">&quot;and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_DEFENDER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_DEFENDER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_ATTACKER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_ATTACKER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EXPLOITABILITY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_EXPLOITABILITY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_INTRUSION_START</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_TIME_HORIZON</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_INTRUSION_LENGTH</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">INTRUSION_START</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">INTRUSION_LENGTH</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">TrainingJobConfig</span><span class="p">(</span>
+                <span class="n">simulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span>
+                <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_CACHED_SIMULATION_TRACES</span><span class="p">,</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span>
+                <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">())</span>
+            <span class="n">training_job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">training_job_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">pid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+            <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">exp_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_dfsp</span><span class="p">(</span><span class="n">exp_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">,</span>
+                                         <span class="n">random_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_training_job_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Calculate average and std metrics</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">confidence</span> <span class="o">=</span> <span class="mf">0.95</span>
+            <span class="n">value_vectors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">:</span>
+                <span class="n">value_vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span>
+
+            <span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">std_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">seed_values</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">seed_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">)):</span>
+                    <span class="n">seed_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_vectors</span><span class="p">[</span><span class="n">seed_idx</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">avg_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">seed_values</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">std_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">seed_values</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_metrics</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">std_metrics</span>
+
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">emulation_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">simulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">exp_execution</span> <span class="o">=</span> <span class="n">ExperimentExecution</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span>
+                                            <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">simulation_name</span><span class="o">=</span><span class="n">simulation_name</span><span class="p">,</span>
+                                            <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">log_file_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">log_file_path</span><span class="p">)</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">remove_training_job</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">exp_execution</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.local_dfsp"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.local_dfsp">[docs]</a>    <span class="k">def</span> <span class="nf">local_dfsp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">,</span>
+                   <span class="n">training_job</span><span class="p">:</span> <span class="n">TrainingJobConfig</span><span class="p">,</span> <span class="n">random_seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements the logic of the local DFSP algorithm</span>
+
+<span class="sd">        :param exp_result: the experiment result</span>
+<span class="sd">        :param seed: the random seed of the experiment</span>
+<span class="sd">        :param env: the environment for the experiment</span>
+<span class="sd">        :param training_job: the training job for the experiment</span>
+<span class="sd">        :param random_seeds: the random seeds for the experiment</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initialize policies</span>
+        <span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">MixedLinearTabularPolicy</span><span class="p">(</span>
+            <span class="n">simulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">states</span><span class="p">,</span>
+            <span class="n">player_type</span><span class="o">=</span><span class="n">PlayerType</span><span class="o">.</span><span class="n">DEFENDER</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="o">.</span><span class="n">player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="p">,</span> <span class="n">avg_R</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span>
+        <span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">MixedPPOPolicy</span><span class="p">(</span>
+            <span class="n">simulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">states</span><span class="p">,</span>
+            <span class="n">player_type</span><span class="o">=</span><span class="n">PlayerType</span><span class="o">.</span><span class="n">ATTACKER</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="o">.</span><span class="n">player_idx</span><span class="p">]</span><span class="o">.</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="p">,</span> <span class="n">avg_R</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_A</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">N_2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+
+            <span class="c1"># Compute best responses</span>
+            <span class="n">br_seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">attacker_br</span><span class="p">,</span> <span class="n">attacker_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_best_response</span><span class="p">(</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">br_seed</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="o">=</span><span class="n">defender_strategy</span><span class="p">,</span> <span class="n">attacker_strategy</span><span class="o">=</span><span class="n">attacker_strategy</span><span class="p">)</span>
+            <span class="n">defender_br</span><span class="p">,</span> <span class="n">defender_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_best_response</span><span class="p">(</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">br_seed</span><span class="p">,</span> <span class="n">attacker_strategy</span><span class="o">=</span><span class="n">attacker_strategy</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="o">=</span><span class="n">defender_strategy</span><span class="p">)</span>
+
+            <span class="c1"># Update strategies</span>
+            <span class="n">defender_br</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+            <span class="n">defender_br</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span>
+            <span class="n">attacker_br</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_A</span>
+            <span class="n">attacker_br</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span>
+
+            <span class="c1"># Update empirical strategies</span>
+            <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">ppo_policies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attacker_br</span><span class="p">)</span>
+            <span class="n">defender_strategy</span><span class="o">.</span><span class="n">linear_tabular_policies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_br</span><span class="p">)</span>
+
+            <span class="c1"># Evaluate best response strategies against empirical strategies</span>
+            <span class="n">attacker_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_attacker_policy</span><span class="p">(</span>
+                <span class="n">defender_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span><span class="p">,</span>
+                <span class="n">attacker_strategy</span><span class="o">=</span><span class="n">attacker_br</span><span class="p">)</span>
+            <span class="n">defender_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_attacker_policy</span><span class="p">(</span>
+                <span class="n">attacker_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span><span class="p">,</span>
+                <span class="n">defender_strategy</span><span class="o">=</span><span class="n">defender_br</span><span class="p">)</span>
+
+            <span class="c1"># Evaluate empirical against empirical</span>
+            <span class="n">strategy_profile_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_strategy_profile</span><span class="p">(</span>
+                <span class="n">defender_strategy</span><span class="o">=</span><span class="n">defender_strategy</span><span class="p">,</span> <span class="n">attacker_strategy</span><span class="o">=</span><span class="n">attacker_strategy</span><span class="p">)</span>
+
+            <span class="c1"># Update envs for the next BR iteration</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">attacker_strategy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">attacker_strategy</span>
+
+            <span class="c1"># Compute exploitability</span>
+            <span class="n">attacker_val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">attacker_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">defender_val</span> <span class="o">=</span> <span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">defender_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">attacker_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">attacker_val</span><span class="p">,</span> <span class="o">-</span><span class="n">defender_val</span><span class="p">)</span>
+            <span class="n">defender_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">defender_val</span><span class="p">,</span> <span class="o">-</span><span class="n">attacker_val</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">strategy_profile_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">val_attacker_exp</span> <span class="o">=</span> <span class="n">attacker_val</span>
+            <span class="n">val_defender_exp</span> <span class="o">=</span> <span class="n">defender_val</span>
+
+            <span class="c1"># Don&#39;t log the first iteration which is just initializing the policies</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Log rewards</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">val_attacker_exp</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">val_defender_exp</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_ATTACKER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_DEFENDER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_ATTACKER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_ATTACKER_RETURN</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_DEFENDER_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_DEFENDER_RETURN</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">strategy_profile_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_TIME_HORIZON</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                    <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="c1"># Log baseline returns</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">strategy_profile_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+
+            <span class="c1"># Compute and log exploitability</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="n">DFSPLocalAgent</span><span class="o">.</span><span class="n">exploitability</span><span class="p">(</span><span class="n">attacker_val</span><span class="o">=</span><span class="n">val_attacker_exp</span><span class="p">,</span> <span class="n">defender_val</span><span class="o">=</span><span class="n">val_defender_exp</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EXPLOITABILITY</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+            <span class="n">running_avg_exp</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">running_average</span><span class="p">(</span>
+                <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EXPLOITABILITY</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_EXPLOITABILITY</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">running_avg_exp</span><span class="p">)</span>
+
+            <span class="c1"># Logging the progress</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">log_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;[Local DFSP] i: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, Exp: </span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Exp_avg_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">running_avg_exp</span><span class="si">}</span><span class="s2">, game_val: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;opt_val:</span><span class="si">{</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">,&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; Defender val:</span><span class="si">{</span><span class="n">defender_val</span><span class="si">}</span><span class="s2">, Attacker val:</span><span class="si">{</span><span class="n">attacker_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Update training job</span>
+                <span class="n">total_iterations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">random_seeds</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                    <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">N_2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">iterations_done</span> <span class="o">=</span> <span class="p">((</span><span class="n">random_seeds</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span> <span class="o">*</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">N_2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">progress</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">iterations_done</span> <span class="o">/</span> <span class="n">total_iterations</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="n">progress</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="n">training_job</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.evaluate_defender_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_defender_policy">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_defender_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">LinearTabularPolicy</span><span class="p">,</span>
+                                 <span class="n">attacker_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monte-Carlo evaluation of the game value of a given defender policy against the average attacker strategy</span>
+
+<span class="sd">        :param defender_thresholds: the defender strategy to evaluate</span>
+<span class="sd">        :param attacker_strategy: the average attacker strategy</span>
+<span class="sd">        :return: the average reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_A</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">attacker_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                       <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_env</span><span class="p">(</span>
+            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="n">defender_strategy</span><span class="p">,</span>
+            <span class="n">num_iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">BEST_RESPONSE_EVALUATION_ITERATIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.evaluate_strategy_profile"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_strategy_profile">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_strategy_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">,</span>
+                                  <span class="n">attacker_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monte-Carlo evaluation of the game value following a given strategy profile</span>
+
+<span class="sd">        :param defender_strategy: the average defender strategy</span>
+<span class="sd">        :param attacker_strategy: the average attacker strategy</span>
+<span class="sd">        :return: the average reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_A</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">attacker_strategy</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                       <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_env</span><span class="p">(</span>
+            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="n">attacker_strategy</span><span class="p">,</span>
+            <span class="n">num_iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.evaluate_attacker_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_attacker_policy">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_attacker_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">,</span>
+                                 <span class="n">attacker_strategy</span><span class="p">:</span> <span class="n">PPOPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monte-Carlo evaluation of the game value of a given attacker strategy against the average defender strategy</span>
+
+<span class="sd">        :param defender_strategy: the average defender strategy</span>
+<span class="sd">        :param attacker_strategy: the attacker strategy to evaluate</span>
+<span class="sd">        :return: the average reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="n">defender_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_A</span>
+        <span class="n">attacker_strategy</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span> <span class="o">=</span> <span class="n">attacker_strategy</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                       <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_env</span><span class="p">(</span>
+            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="n">attacker_strategy</span><span class="p">,</span>
+            <span class="n">num_iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span>
+                <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">BEST_RESPONSE_EVALUATION_ITERATIONS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.defender_best_response"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.defender_best_response">[docs]</a>    <span class="k">def</span> <span class="nf">defender_best_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">,</span>
+                               <span class="n">attacker_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PPOPolicy</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Learns a best response for the defender against a given attacker strategy</span>
+
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param defender_strategy: the defender strategy</span>
+<span class="sd">        :param attacker_strategy: the attacker strategy</span>
+<span class="sd">        :return: the learned best response strategy and the average return</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="o">.</span><span class="n">random_seeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span><span class="o">.</span><span class="n">random_seeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">=</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">DIFFERENTIAL_EVOLUTION</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span> <span class="o">=</span> \
+            <span class="s2">&quot;csle-intrusion-response-game-local-stopping-pomdp-defender-v1&quot;</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">DifferentialEvolutionAgent</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span>
+            <span class="n">simulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="p">,</span>
+            <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">de_experiment_config</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Local DFSP] Starting training of the defender&#39;s best response &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;against defender strategy: </span><span class="si">{</span><span class="n">defender_strategy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">experiment_execution</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">stopping_policy</span><span class="p">:</span> <span class="n">LinearThresholdStoppingPolicy</span> <span class="o">=</span> <span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="n">S_D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span> <span class="o">=</span> <span class="s2">&quot;csle-intrusion-response-game-local-pomdp-defender-v1&quot;</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_stopping_mdp_transition_tensor</span><span class="p">(</span>
+            <span class="n">S</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+            <span class="n">A1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span><span class="p">,</span>
+            <span class="n">A2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span><span class="p">,</span>
+            <span class="n">S_D</span><span class="o">=</span><span class="n">S_D</span><span class="p">,</span>
+            <span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">stopping_zone</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span>
+                 <span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">a_b1</span><span class="p">)</span>
+        <span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">reduce_T</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">))</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_stopping_mdp_reward_tensor</span><span class="p">(</span>
+            <span class="n">S</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S</span><span class="p">,</span>
+            <span class="n">A1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A1</span><span class="p">,</span>
+            <span class="n">A2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">A2</span><span class="p">,</span>
+            <span class="n">R</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">S_D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">S_D</span>
+        <span class="p">)</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">stopping_zone</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span>
+                 <span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">a_b1</span><span class="p">)</span>
+        <span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">reduce_R</span><span class="p">(</span><span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">REWARD_TENSOR</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">TRANSITION_TENSOR</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">vi_agent</span> <span class="o">=</span> <span class="n">VIAgent</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="p">,</span>
+                           <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vi_experiment_config</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">experiment_execution</span> <span class="o">=</span> <span class="n">vi_agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">action_policy</span><span class="p">:</span> <span class="n">TabularPolicy</span> <span class="o">=</span> <span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="n">LinearTabularPolicy</span><span class="p">(</span>
+            <span class="n">stopping_policy</span><span class="o">=</span><span class="n">stopping_policy</span><span class="p">,</span> <span class="n">action_policy</span><span class="o">=</span><span class="n">action_policy</span><span class="p">,</span>
+            <span class="n">simulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">state_space_config</span><span class="o">.</span><span class="n">states</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">joint_action_space_config</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">,</span>
+            <span class="n">experiment_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">avg_R</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">agent_type</span><span class="o">=</span><span class="n">AgentType</span><span class="o">.</span><span class="n">DFSP_LOCAL</span><span class="p">,</span>
+            <span class="n">player_type</span><span class="o">=</span><span class="n">PlayerType</span><span class="o">.</span><span class="n">DEFENDER</span>
+        <span class="p">)</span>
+        <span class="n">defender_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_defender_policy</span><span class="p">(</span>
+            <span class="n">defender_strategy</span><span class="o">=</span><span class="n">policy</span><span class="p">,</span>
+            <span class="n">attacker_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="o">.</span><span class="n">attacker_strategy</span>
+        <span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">defender_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">policy</span><span class="p">,</span> <span class="n">val</span></div>
+
+    <span class="k">def</span> <span class="nf">_eval_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">num_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param env: the environment to use for evaluation</span>
+<span class="sd">        :param policy: the policy to evaluate</span>
+<span class="sd">        :param num_iterations: number of iterations to evaluate</span>
+<span class="sd">        :return: the average reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">J</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">MAX_ENV_STEPS</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">TabularPolicy</span><span class="p">):</span>
+                    <span class="n">o</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">J</span> <span class="o">+=</span> <span class="n">r</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">avg_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_avg_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">avg_metrics</span>
+
+<div class="viewcode-block" id="DFSPLocalAgent.update_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.update_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">update_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]],</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update a dict with aggregated metrics using new information from the environment</span>
+
+<span class="sd">        :param metrics: the dict with the aggregated metrics</span>
+<span class="sd">        :param info: the new information</span>
+<span class="sd">        :return: the updated dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">metrics</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.compute_avg_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.compute_avg_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_avg_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the average metrics of a dict with aggregated metrics</span>
+
+<span class="sd">        :param metrics: the dict with the aggregated metrics</span>
+<span class="sd">        :return: the average metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">avg</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">avg_metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">avg_metrics</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.attacker_best_response"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.attacker_best_response">[docs]</a>    <span class="k">def</span> <span class="nf">attacker_best_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">,</span> <span class="n">attacker_strategy</span><span class="p">:</span> <span class="n">MixedPPOPolicy</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PPOPolicy</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Learns a best response strategy for the attacker against a given defender strategy</span>
+
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param defender_strategy: the defender strategy</span>
+<span class="sd">        :param attacker_strategy: the attacker strategy</span>
+<span class="sd">        :return: the learned best response strategy and the average return</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="o">.</span><span class="n">random_seeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_output_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">=</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">PPO</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">PPOAgent</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                         <span class="n">simulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_simulation_env_config</span><span class="p">,</span>
+                         <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ppo_experiment_config</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Local DFSP] Starting training of the attacker&#39;s best response &quot;</span>
+                                            <span class="sa">f</span><span class="s2">&quot;against defender strategy: </span><span class="si">{</span><span class="n">defender_strategy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">experiment_execution</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">policy</span><span class="p">:</span> <span class="n">PPOPolicy</span> <span class="o">=</span> <span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">policy</span><span class="p">,</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a list with the hyperparameter names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">NUM_HIDDEN_LAYERS</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">STEPS_BETWEEN_UPDATES</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LEARNING_RATE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">BATCH_SIZE</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">GAE_LAMBDA</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">CLIP_RANGE</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">CLIP_RANGE_VF</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">ENT_COEF</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">VF_COEF</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">MAX_GRAD_NORM</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">PPO</span><span class="o">.</span><span class="n">TARGET_KL</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_TRAINING_TIMESTEPS</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_EVERY</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">N_2</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">BEST_RESPONSE_EVALUATION_ITERATIONS</span><span class="p">,</span>
+            <span class="n">agents_constants</span><span class="o">.</span><span class="n">LOCAL_DFSP</span><span class="o">.</span><span class="n">EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.exploitability"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.exploitability">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">exploitability</span><span class="p">(</span><span class="n">attacker_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">defender_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the exploitability metric given the value of the attacker when following a best response</span>
+<span class="sd">        against the current defender strategy and the value of the defender when following a best response against</span>
+<span class="sd">        the current attacker strategy.</span>
+
+<span class="sd">        :param attacker_val: the value of the attacker when following a best response against</span>
+<span class="sd">                             the current defender strategy</span>
+<span class="sd">        :param defender_val: the value of the defender when following a best response against the</span>
+<span class="sd">                             current attacker strategy</span>
+<span class="sd">        :return: the exploitability</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">attacker_val</span> <span class="o">+</span> <span class="n">defender_val</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.round_vec"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.round_vec">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">round_vec</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rounds a vector to 3 decimals</span>
+
+<span class="sd">        :param vec: the vector to round</span>
+<span class="sd">        :return: the rounded vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">vec</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DFSPLocalAgent.running_average"><a class="viewcode-back" href="../../../../csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.running_average">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">running_average</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the running average of the last N elements of vector x</span>
+
+<span class="sd">        :param x: the vector</span>
+<span class="sd">        :param N: the number of elements to use for average calculation</span>
+<span class="sd">        :return: the running average vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,))</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,))</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

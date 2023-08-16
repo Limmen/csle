@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.util package &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.util package &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -48,6 +48,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_rest_api.util.rest_api_util">csle_rest_api.util.rest_api_util module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized"><code class="docutils literal notranslate"><span class="pre">check_if_user_edit_is_authorized()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.util.rest_api_util.check_if_user_is_authorized"><code class="docutils literal notranslate"><span class="pre">check_if_user_is_authorized()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.util.rest_api_util.set_container_terminal_winsize"><code class="docutils literal notranslate"><span class="pre">set_container_terminal_winsize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.util.rest_api_util.ssh_connect"><code class="docutils literal notranslate"><span class="pre">ssh_connect()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_rest_api.util">Module contents</a></li>
@@ -89,7 +91,7 @@
 <span id="csle-rest-api-util-rest-api-util-module"></span><h2>csle_rest_api.util.rest_api_util module<a class="headerlink" href="#module-csle_rest_api.util.rest_api_util" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">check_if_user_edit_is_authorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ManagementUser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#check_if_user_edit_is_authorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">check_if_user_edit_is_authorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ManagementUser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ManagementUser</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#check_if_user_edit_is_authorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized" title="Permalink to this definition"></a></dt>
 <dd><p>Check if a user is authorized to edit another user</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -103,7 +105,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.util.rest_api_util.check_if_user_is_authorized">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">check_if_user_is_authorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requires_admin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#check_if_user_is_authorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.check_if_user_is_authorized" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">check_if_user_is_authorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requires_admin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#check_if_user_is_authorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.check_if_user_is_authorized" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if a user request is authorized</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -114,6 +116,40 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the non-authorized response or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_rest_api.util.rest_api_util.set_container_terminal_winsize">
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">set_container_terminal_winsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssh_channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xpix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ypix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#set_container_terminal_winsize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.set_container_terminal_winsize" title="Permalink to this definition"></a></dt>
+<dd><p>Set shell window size of the host terminal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ssh_channel</strong> – the ssh_channel of the shell</p></li>
+<li><p><strong>row</strong> – the number of rows of the new window size</p></li>
+<li><p><strong>col</strong> – the number of cols of the new window size</p></li>
+<li><p><strong>xpix</strong> – the number of x pixels of the new size</p></li>
+<li><p><strong>ypix</strong> – the number of y pixels of the new size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_rest_api.util.rest_api_util.ssh_connect">
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.util.rest_api_util.</span></span><span class="sig-name descname"><span class="pre">ssh_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SSHClient</span></span></span><a class="reference internal" href="_modules/csle_rest_api/util/rest_api_util.html#ssh_connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.util.rest_api_util.ssh_connect" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up an SSH connection to a given IP using the CSLE admin account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip</strong> – the IP to connect to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created ssh connection</p>
 </dd>
 </dl>
 </dd></dl>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.ovs_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.ovs_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -82,14 +82,14 @@
 
 
 <div class="viewcode-block" id="OVSController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ovs_controller.OVSController">[docs]</a><span class="k">class</span> <span class="nc">OVSController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that contains functionality for interacting and managing OVS bridges in CSLE</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OVSController.create_virtual_switches_on_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ovs_controller.OVSController.create_virtual_switches_on_container">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_virtual_switches_on_container</span><span class="p">(</span><span class="n">containers_config</span><span class="p">:</span> <span class="n">ContainersConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up OVS switches on containers</span>
 
 <span class="sd">        :param containers_config: the containers configuration</span>
@@ -141,7 +141,7 @@
 <div class="viewcode-block" id="OVSController.apply_ovs_config"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ovs_controller.OVSController.apply_ovs_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">apply_ovs_config</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Aplies the OVS configuration on the OVS switches</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>

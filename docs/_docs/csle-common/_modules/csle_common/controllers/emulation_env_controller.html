@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.emulation_env_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.emulation_env_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,8 +72,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.controllers.emulation_env_controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">random</span>
@@ -103,14 +103,14 @@
 
 
 <div class="viewcode-block" id="EmulationEnvController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class managing emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EmulationEnvController.stop_all_executions_of_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.stop_all_executions_of_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_all_executions_of_emulation</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops all executions of a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation for which executions should be stopped</span>
@@ -129,7 +129,7 @@
 <div class="viewcode-block" id="EmulationEnvController.stop_execution_of_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.stop_execution_of_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_execution_of_emulation</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                     <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops an execution of a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation for which executions should be stopped</span>
@@ -140,6 +140,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">execution</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_execution</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                                             <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">execution_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">execution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find any execution with id: </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">, &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;emulation: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">EmulationEnvController</span><span class="o">.</span><span class="n">stop_containers</span><span class="p">(</span><span class="n">execution</span><span class="o">=</span><span class="n">execution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">,</span>
                                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">ContainerController</span><span class="o">.</span><span class="n">stop_docker_stats_thread</span><span class="p">(</span><span class="n">execution</span><span class="o">=</span><span class="n">execution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">,</span>
@@ -147,7 +150,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.stop_all_executions"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.stop_all_executions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_all_executions</span><span class="p">(</span><span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops all emulation executions</span>
 
 <span class="sd">        :param physical_server_ip: ip of the physical server</span>
@@ -165,7 +168,7 @@
     <span class="k">def</span> <span class="nf">install_csle_collector_and_ryu_libraries</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                  <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Installs the latest csle-collector and csle-ryu libraries on all nodes of a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
@@ -207,7 +210,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_execution_config_w_docker_gw_bridge_ip</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the execution configuration with the IP of the docker gw of the docker swarm</span>
 
 <span class="sd">        :param execution: the execution to update</span>
@@ -292,7 +295,7 @@
 <div class="viewcode-block" id="EmulationEnvController.apply_kafka_config"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.apply_kafka_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">apply_kafka_config</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Applies the kafka config</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -325,7 +328,7 @@
 <div class="viewcode-block" id="EmulationEnvController.start_custom_traffic"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.start_custom_traffic">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_custom_traffic</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">no_traffic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting traffic generators and client population on a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
@@ -351,7 +354,7 @@
     <span class="k">def</span> <span class="nf">delete_networks_of_emulation_env_config</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                                 <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
                                                 <span class="n">leader</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the docker networks</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -367,18 +370,21 @@
                     <span class="n">ContainerController</span><span class="o">.</span><span class="n">remove_network</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span>
-        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_server_ip</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">ip_net</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">ips_and_networks</span> <span class="ow">or</span> <span class="n">leader</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_server_ip</span> <span class="ow">or</span> <span class="n">leader</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ip_net</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">ips_and_networks</span><span class="p">:</span>
                 <span class="n">ip</span><span class="p">,</span> <span class="n">net</span> <span class="o">=</span> <span class="n">ip_net</span>
                 <span class="n">ContainerController</span><span class="o">.</span><span class="n">remove_network</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvController.create_execution"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.create_execution">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_execution</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EmulationExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">create_execution</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
+                         <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationExecution</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new emulation execution</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
 <span class="sd">        :param physical_servers: the physical servers to deploy the containers on</span>
+<span class="sd">        :param id: the id of the execution (if not specified the next available id will be used)</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: a DTO representing the execution</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
@@ -388,6 +394,12 @@
                                     <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
         <span class="n">available_subnets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_subnets</span><span class="p">,</span> <span class="n">total_subnets</span><span class="p">))</span>
         <span class="n">ip_first_octet</span> <span class="o">=</span> <span class="n">available_subnets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_subnets</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The specified execution ID: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2"> is not valid or is already taken. &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;Using ID: </span><span class="si">{</span><span class="n">ip_first_octet</span><span class="si">}</span><span class="s2"> instead&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">available_subnets</span><span class="p">:</span>
+            <span class="n">ip_first_octet</span> <span class="o">=</span> <span class="nb">id</span>
+
         <span class="n">em_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span>
                                                                  <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
         <span class="n">emulation_execution</span> <span class="o">=</span> <span class="n">EmulationExecution</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -398,7 +410,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.run_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.run_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">run_containers</span><span class="p">(</span><span class="n">emulation_execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run containers in the emulation env config</span>
 
 <span class="sd">        :param emulation_execution: the execution DTO</span>
@@ -414,12 +426,12 @@
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_host_ip</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">ips</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()</span>
-            <span class="n">container_resources</span><span class="p">:</span> <span class="n">NodeResourcesConfig</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">container_resources</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">NodeResourcesConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">resources_config</span><span class="o">.</span><span class="n">node_resources_configurations</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ip_net_resources</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ips_and_network_configs</span><span class="p">:</span>
                     <span class="n">ip</span><span class="p">,</span> <span class="n">net_resources</span> <span class="o">=</span> <span class="n">ip_net_resources</span>
                     <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ips</span><span class="p">:</span>
-                        <span class="n">container_resources</span><span class="p">:</span> <span class="n">NodeResourcesConfig</span> <span class="o">=</span> <span class="n">r</span>
+                        <span class="n">container_resources</span> <span class="o">=</span> <span class="n">r</span>
                         <span class="k">break</span>
             <span class="k">if</span> <span class="n">container_resources</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Container resources not found for container with ips:</span><span class="si">{</span><span class="n">ips</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -427,7 +439,7 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">c</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> --label dir=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &quot;</span> \
-                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--label emulation=</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> --network=none --publish-all=true &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--memory=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">available_memory_gb</span><span class="si">}</span><span class="s2">G --cpus=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">num_cpus</span><span class="si">}</span><span class="s2"> &quot;</span> \
@@ -439,11 +451,11 @@
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_host_ip</span><span class="p">:</span>
             <span class="c1"># Start the kafka container</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span>
-            <span class="n">container_resources</span><span class="p">:</span> <span class="n">NodeResourcesConfig</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">resources</span>
+            <span class="n">container_resources</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">resources</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">c</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> --label dir=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &quot;</span> \
-                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--label emulation=</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> --network=none --publish-all=true &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--memory=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">available_memory_gb</span><span class="si">}</span><span class="s2">G --cpus=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">num_cpus</span><span class="si">}</span><span class="s2"> &quot;</span> \
@@ -455,11 +467,11 @@
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_host_ip</span><span class="p">:</span>
             <span class="c1"># Start the ELK container</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span>
-            <span class="n">container_resources</span><span class="p">:</span> <span class="n">NodeResourcesConfig</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">resources</span>
+            <span class="n">container_resources</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">resources</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">c</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> --label dir=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &quot;</span> \
-                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--label emulation=</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> --network=none --publish-all=true &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--memory=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">available_memory_gb</span><span class="si">}</span><span class="s2">G --cpus=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">num_cpus</span><span class="si">}</span><span class="s2"> &quot;</span> \
@@ -472,11 +484,11 @@
                 <span class="ow">and</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_host_ip</span><span class="p">:</span>
             <span class="c1"># Start the SDN controller container</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span>
-            <span class="n">container_resources</span><span class="p">:</span> <span class="n">NodeResourcesConfig</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">resources</span>
+            <span class="n">container_resources</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">resources</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">c</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2"> --label dir=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &quot;</span> \
-                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                  <span class="sa">f</span><span class="s2">&quot;--label cfg=</span><span class="si">{</span><span class="n">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION_ENV_CFG_PATH</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--label emulation=</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> --network=none --publish-all=true &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--memory=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">available_memory_gb</span><span class="si">}</span><span class="s2">G --cpus=</span><span class="si">{</span><span class="n">container_resources</span><span class="o">.</span><span class="n">num_cpus</span><span class="si">}</span><span class="s2"> &quot;</span> \
@@ -487,7 +499,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.start_containers_of_execution"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.start_containers_of_execution">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_containers_of_execution</span><span class="p">(</span><span class="n">emulation_execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts stopped containers in a given emulation execution</span>
 
 <span class="sd">        :param emulation_execution: the execution DTO</span>
@@ -520,7 +532,7 @@
 <div class="viewcode-block" id="EmulationEnvController.run_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.run_container">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">run_container</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">memory</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">num_cpus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                       <span class="n">create_network</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a given container</span>
 
 <span class="sd">        :param image: image of the container</span>
@@ -532,7 +544,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting container with image:</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2"> and name:csle_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting container with image:</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2"> and name:csle_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">create_network</span><span class="p">:</span>
             <span class="n">net_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">254</span><span class="p">)</span>
             <span class="n">sub_net_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">254</span><span class="p">)</span>
@@ -541,7 +553,7 @@
             <span class="n">ip</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;55.</span><span class="si">{</span><span class="n">net_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sub_net_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">host_id</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">ContainerController</span><span class="o">.</span><span class="n">create_network</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">net_name</span><span class="p">,</span> <span class="n">subnetmask</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;55.</span><span class="si">{</span><span class="n">net_id</span><span class="si">}</span><span class="s2">.0.0/16&quot;</span><span class="p">,</span> <span class="n">existing_network_names</span><span class="o">=</span><span class="p">[],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name csle_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name csle_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--network=</span><span class="si">{</span><span class="n">net_name</span><span class="si">}</span><span class="s2"> --ip </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> --publish-all=true &quot;</span> \
@@ -549,7 +561,7 @@
                   <span class="sa">f</span><span class="s2">&quot;--restart=</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">ON_FAILURE_3</span><span class="si">}</span><span class="s2"> --cap-add NET_ADMIN --privileged &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--cap-add=SYS_NICE </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name csle-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker container run -dt --name csle-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">version</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--hostname=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;-e TZ=Europe/Stockholm --net=none &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;--publish-all=true &quot;</span> \
@@ -560,7 +572,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.stop_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.stop_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_containers</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop containers in the emulation env config</span>
 
 <span class="sd">        :param execution: the execution to stop</span>
@@ -607,7 +619,7 @@
 <div class="viewcode-block" id="EmulationEnvController.clean_all_emulation_executions"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_emulation_executions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">clean_all_emulation_executions</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                        <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">leader</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans an emulation</span>
 
 <span class="sd">        :param emulation_env_config: the config of the emulation to clean</span>
@@ -634,7 +646,7 @@
 <div class="viewcode-block" id="EmulationEnvController.clean_emulation_execution"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_emulation_execution">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">clean_emulation_execution</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                   <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">leader</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans an emulation execution</span>
 
 <span class="sd">        :param execution_id: the id of the execution to clean</span>
@@ -646,6 +658,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">execution</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_execution</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">execution_id</span><span class="p">,</span>
                                                             <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">execution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find any execution with id: </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">, &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;emulation: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">EmulationEnvController</span><span class="o">.</span><span class="n">stop_containers</span><span class="p">(</span><span class="n">execution</span><span class="o">=</span><span class="n">execution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">,</span>
                                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">EmulationEnvController</span><span class="o">.</span><span class="n">rm_containers</span><span class="p">(</span><span class="n">execution</span><span class="o">=</span><span class="n">execution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
@@ -660,7 +675,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.clean_all_executions"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_executions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">clean_all_executions</span><span class="p">(</span><span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">leader</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans all executions of a given emulation on a given physical server</span>
 
 <span class="sd">        :param physical_server_ip: the ip of the physical server to clean the executions</span>
@@ -685,7 +700,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.rm_containers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.rm_containers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">rm_containers</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove containers in the emulation env config for a given execution</span>
 
 <span class="sd">        :param execution: the execution to remove</span>
@@ -730,7 +745,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.install_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.install_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">install_emulation</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Installs the emulation configuration in the metastore</span>
 
 <span class="sd">        :param config: the config to install</span>
@@ -740,7 +755,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.save_emulation_image"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.save_emulation_image">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">save_emulation_image</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">emulation_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the emulation image</span>
 
 <span class="sd">        :param image: the image data</span>
@@ -751,7 +766,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.uninstall_emulation"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.uninstall_emulation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">uninstall_emulation</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uninstalls the emulation configuration in the metastore</span>
 
 <span class="sd">        :param config: the config to uninstall</span>
@@ -761,7 +776,7 @@
 
 <div class="viewcode-block" id="EmulationEnvController.ping_all"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.ping_all">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">ping_all</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the connections between all the containers using ping</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
@@ -800,7 +815,7 @@
 <div class="viewcode-block" id="EmulationEnvController.get_execution_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.get_execution_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_execution_info</span><span class="p">(</span><span class="n">execution</span><span class="p">:</span> <span class="n">EmulationExecution</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationExecutionInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets runtime information about an execution</span>
 
 <span class="sd">        :param execution: the emulation execution to get the information for</span>
@@ -810,7 +825,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">running_containers</span><span class="p">,</span> <span class="n">stopped_containers</span> <span class="o">=</span> <span class="n">ContainerController</span><span class="o">.</span><span class="n">list_all_running_containers_in_emulation</span><span class="p">(</span>
             <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
-        <span class="n">active_ips</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">running_containers</span><span class="p">:</span>
             <span class="n">active_ips</span> <span class="o">=</span> <span class="n">active_ips</span> <span class="o">+</span> <span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()</span>
             <span class="n">active_ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
@@ -818,6 +833,8 @@
         <span class="n">active_ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LOCALHOST_127_0_0_1</span><span class="p">)</span>
         <span class="n">active_ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LOCALHOST_127_0_1_1</span><span class="p">)</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_current_config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not cluster read configuration&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
             <span class="n">active_ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
         <span class="n">emulation_name</span> <span class="o">=</span> <span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span>
@@ -887,7 +904,7 @@
 <div class="viewcode-block" id="EmulationEnvController.create_ssh_tunnel"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.emulation_env_controller.EmulationEnvController.create_ssh_tunnel">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_ssh_tunnel</span><span class="p">(</span><span class="n">tunnels_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">local_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                           <span class="n">remote_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">remote_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an SSH tunnel to forward the port of a container</span>
 
 <span class="sd">        :param execution: the emulation execution</span>
@@ -902,19 +919,25 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_current_config</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ClusterUtil</span><span class="o">.</span><span class="n">set_config_parameters_from_config_file</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_current_config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not read the CSLE configuration&quot;</span><span class="p">)</span>
         <span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not create paramiko SSH client&quot;</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
-        <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">remote_ip</span><span class="p">,</span>
-                     <span class="n">username</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">ssh_admin_username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">ssh_admin_password</span><span class="p">)</span>
-        <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">remote_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">ssh_admin_username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">ssh_admin_password</span><span class="p">)</span>
         <span class="n">agent_transport</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">agent_transport</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error opening SSH connection to </span><span class="si">{</span><span class="n">remote_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">agent_transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">tunnel_thread</span> <span class="o">=</span> <span class="n">ForwardTunnelThread</span><span class="p">(</span>
             <span class="n">local_port</span><span class="o">=</span><span class="n">local_port</span><span class="p">,</span>
             <span class="n">remote_host</span><span class="o">=</span><span class="n">remote_ip</span><span class="p">,</span>
             <span class="n">remote_port</span><span class="o">=</span><span class="n">remote_port</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="n">agent_transport</span><span class="p">,</span>
             <span class="n">tunnels_dict</span><span class="o">=</span><span class="n">tunnels_dict</span><span class="p">)</span>
         <span class="n">tunnel_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">tunnel_thread_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">tunnel_thread_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">ForwardTunnelThread</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">GENERAL</span><span class="o">.</span><span class="n">THREAD_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">tunnel_thread</span>
         <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">GENERAL</span><span class="o">.</span><span class="n">PORT_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_port</span>
         <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">GENERAL</span><span class="o">.</span><span class="n">EMULATION_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">emulation</span>

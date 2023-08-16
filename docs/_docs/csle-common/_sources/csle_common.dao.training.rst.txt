@@ -68,6 +68,14 @@ csle\_common.dao.training.hparam module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.training.linear\_tabular\_policy module
+--------------------------------------------------------
+
+.. automodule:: csle_common.dao.training.linear_tabular_policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.training.linear\_threshold\_stopping\_policy module
 --------------------------------------------------------------------
 
@@ -76,10 +84,26 @@ csle\_common.dao.training.linear\_threshold\_stopping\_policy module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.training.mixed\_linear\_tabular module
+-------------------------------------------------------
+
+.. automodule:: csle_common.dao.training.mixed_linear_tabular
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.training.mixed\_multi\_threshold\_stopping\_policy module
 --------------------------------------------------------------------------
 
 .. automodule:: csle_common.dao.training.mixed_multi_threshold_stopping_policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.dao.training.mixed\_ppo\_policy module
+---------------------------------------------------
+
+.. automodule:: csle_common.dao.training.mixed_ppo_policy
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.general_util &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.util.general_util &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -77,13 +77,13 @@
 
 
 <div class="viewcode-block" id="GeneralUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil">[docs]</a><span class="k">class</span> <span class="nc">GeneralUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with general utility functions</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="GeneralUtil.get_host_ip"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.get_host_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_host_ip</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for getting the ip of the host</span>
 
 <span class="sd">        :return: the ip of the host</span>
@@ -94,7 +94,7 @@
 
 <div class="viewcode-block" id="GeneralUtil.replace_first_octet_of_ip"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">replace_first_octet_of_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for changing the first octet in an IP address</span>
 
 <span class="sd">        :param ip: the IP to modify</span>
@@ -106,7 +106,7 @@
 
 <div class="viewcode-block" id="GeneralUtil.replace_first_octet_of_ip_tuple"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip_tuple">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">replace_first_octet_of_ip_tuple</span><span class="p">(</span><span class="n">tuple_of_ips</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for changing the first octet in an IP address</span>
 
 <span class="sd">        :param ip: the IP to modify</span>
@@ -121,7 +121,7 @@
 
 <div class="viewcode-block" id="GeneralUtil.get_latest_table_id"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.get_latest_table_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_latest_table_id</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the next ID for a table with a serial column primary key</span>
 
 <span class="sd">        :param cur: the postgres connection cursor</span>

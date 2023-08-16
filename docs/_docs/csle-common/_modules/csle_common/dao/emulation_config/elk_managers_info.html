@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.elk_managers_info &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_config.elk_managers_info &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -76,10 +76,11 @@
 <span class="kn">import</span> <span class="nn">csle_collector.elk_manager.elk_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.elk_manager.elk_manager_pb2</span>
 <span class="kn">import</span> <span class="nn">csle_collector.elk_manager.elk_manager_util</span> <span class="k">as</span> <span class="nn">elk_manager_util</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="ELKManagersInfo"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.elk_managers_info.ELKManagersInfo">[docs]</a><span class="k">class</span> <span class="nc">ELKManagersInfo</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ELKManagersInfo"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.elk_managers_info.ELKManagersInfo">[docs]</a><span class="k">class</span> <span class="nc">ELKManagersInfo</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO containing the status of the ELK managers for a given emulation execution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -88,7 +89,7 @@
                  <span class="n">elk_managers_statuses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">],</span>
                  <span class="n">elk_managers_running</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span> <span class="n">local_kibana_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">physical_server_ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param elk_managers_running: boolean list that indicate whether the elk managers are running</span>
@@ -110,18 +111,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_server_ip</span> <span class="o">=</span> <span class="n">physical_server_ip</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;elk_managers_running: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elk_managers_running</span><span class="si">}</span><span class="s2">, ips: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;elk_managers_running: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elk_managers_running</span><span class="si">}</span><span class="s2">, ips: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;emulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;execution_id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;elk_managers_statuses: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">elk_managers_statuses</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;ports: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;elk_managers_statuses: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">elk_managers_statuses</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;ports: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;local_kibana_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_kibana_port</span><span class="si">}</span><span class="s2">, physical_server_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_server_ip</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="ELKManagersInfo.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.elk_managers_info.ELKManagersInfo.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -138,7 +141,7 @@
 
 <div class="viewcode-block" id="ELKManagersInfo.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.elk_managers_info.ELKManagersInfo.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ELKManagersInfo&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a dict representation to a DTO representation</span>
 
 <span class="sd">        :return: a dto representation of the object</span>
@@ -146,10 +149,24 @@
         <span class="n">dto</span> <span class="o">=</span> <span class="n">ELKManagersInfo</span><span class="p">(</span><span class="n">elk_managers_running</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;elk_managers_running&quot;</span><span class="p">],</span> <span class="n">ips</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips&quot;</span><span class="p">],</span> <span class="n">ports</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">],</span>
                               <span class="n">emulation_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_name&quot;</span><span class="p">],</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_id&quot;</span><span class="p">],</span>
                               <span class="n">elk_managers_statuses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
-                                  <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">elk_manager_util</span><span class="o">.</span><span class="n">ElkManagerUtil</span><span class="o">.</span><span class="n">elk_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                  <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">elk_manager_util</span><span class="o">.</span><span class="n">ElkManagerUtil</span><span class="o">.</span><span class="n">elk_dto_from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                   <span class="n">d</span><span class="p">[</span><span class="s2">&quot;elk_managers_statuses&quot;</span><span class="p">])),</span> <span class="n">local_kibana_port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;local_kibana_port&quot;</span><span class="p">],</span>
                               <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_server_ip&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">dto</span></div></div>
+        <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="ELKManagersInfo.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.elk_managers_info.ELKManagersInfo.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ELKManagersInfo&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ELKManagersInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

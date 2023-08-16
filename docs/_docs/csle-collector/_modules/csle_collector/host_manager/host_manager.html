@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.host_manager.host_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.host_manager.host_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -73,85 +73,29 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_collector.host_manager.host_manager</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">import</span> <span class="nn">csle_collector.host_manager.host_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.host_manager.host_manager_pb2</span>
 <span class="kn">from</span> <span class="nn">csle_collector.host_manager.host_manager_util</span> <span class="kn">import</span> <span class="n">HostManagerUtil</span>
+<span class="kn">from</span> <span class="nn">csle_collector.host_manager.threads.host_monitor_thread</span> <span class="kn">import</span> <span class="n">HostMonitorThread</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 
 
-<div class="viewcode-block" id="HostMonitorThread"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostMonitorThread">[docs]</a><span class="k">class</span> <span class="nc">HostMonitorThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Thread that collects the Host statistics and pushes it to Kafka periodically</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the thread</span>
-
-<span class="sd">        :param kafka_ip: IP of the Kafka server to push to</span>
-<span class="sd">        :param kafka_port: port of the Kafka server to push to</span>
-<span class="sd">        :param ip: ip of the server we are pushing from</span>
-<span class="sd">        :param hostname: hostname of the server we are pushing from</span>
-<span class="sd">        :param time_step_len_seconds: the length of a timestep</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="n">kafka_ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="n">kafka_port</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">latest_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">failed_auth_last_ts</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_latest_ts_auth</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">login_last_ts</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_latest_ts_login</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;HostMonitor thread started successfully&quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="HostMonitorThread.run"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostMonitorThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Main loop of the thread. Parses log files and metrics on the host and pushes it to Kafka periodically</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;HostMonitor [Running]&quot;</span><span class="p">)</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">host_metrics</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_host_metrics</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">failed_auth_last_ts</span><span class="p">,</span>
-                                                                 <span class="n">login_last_ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">login_last_ts</span><span class="p">)</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="n">host_metrics</span><span class="o">.</span><span class="n">to_kafka_record</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">HOST_METRICS_TOPIC_NAME</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">failed_auth_last_ts</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_latest_ts_auth</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">login_last_ts</span> <span class="o">=</span> <span class="n">HostManagerUtil</span><span class="o">.</span><span class="n">read_latest_ts_login</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Monitor thread], &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;There was an exception reading host metrics and producing to kafka: &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
-
-
 <div class="viewcode-block" id="HostManagerServicer"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">HostManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for collecting Host statistics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">HOST_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -163,12 +107,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">HostMonitorThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the HostManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="HostManagerServicer.getIdsAlerts"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts">[docs]</a>    <span class="k">def</span> <span class="nf">getIdsAlerts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="p">,</span>
-                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HostManagerServicer.getHostMetrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.getHostMetrics">[docs]</a>    <span class="k">def</span> <span class="nf">getHostMetrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="p">,</span>
+                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the host metrics from given timestamps</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -182,7 +126,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startHostMonitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startHostMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startHostMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartHostMonitorMsg</span><span class="p">,</span>
                          <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Host monitor thread</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -211,7 +155,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopHostMonitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopHostMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopHostMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopHostMonitorMsg</span><span class="p">,</span>
                         <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Host monitor thread if it is running</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -234,7 +178,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">startFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartFilebeatMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts filebeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -244,9 +188,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting filebeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_start_filebeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started filebeat&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -258,7 +200,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopFilebeatMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops filebeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -268,9 +210,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping filebeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_stop_filebeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filebeat stopped&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -282,7 +222,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.configFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.configFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">configFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigFilebeatMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the configuration of filebeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -303,9 +243,7 @@
             <span class="n">kafka</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
             <span class="n">kafka_topics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_topics</span><span class="p">),</span> <span class="n">filebeat_modules</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">filebeat_modules</span><span class="p">))</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filebeat configuration updated&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -318,7 +256,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartMetricbeatMsg</span><span class="p">,</span>
                         <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts metricbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -328,9 +266,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting metricbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_start_metricbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started metricbeat&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -342,7 +278,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopMetricbeatMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops metricbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -352,9 +288,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping metricbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_stop_metricbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Metricbeat stopped&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -366,7 +300,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.configMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.configMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigMetricbeatMsg</span><span class="p">,</span>
                          <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the configuration of metricbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -383,11 +317,10 @@
             <span class="n">kibana_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kibana_ip</span><span class="p">,</span> <span class="n">kibana_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kibana_port</span><span class="p">,</span>
             <span class="n">elastic_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_ip</span><span class="p">,</span> <span class="n">elastic_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_port</span><span class="p">,</span>
             <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">num_elastic_shards</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">reload_enabled</span><span class="p">,</span>
-            <span class="n">kafka_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">metricbeat_modules</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">metricbeat_modules</span><span class="p">)</span>
+            <span class="n">kafka_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+            <span class="n">metricbeat_modules</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">metricbeat_modules</span><span class="p">))</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Metricbeat configuration updated&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -400,7 +333,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartPacketbeatMsg</span><span class="p">,</span>
                         <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts packetbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -410,9 +343,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting packetbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_start_packetbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started packetbeat&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -424,7 +355,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopPacketbeatMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops packetbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -434,9 +365,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping packetbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_stop_packetbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Packetbeat stopped&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
         <span class="n">heartbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_heartbeat_status</span><span class="p">()</span>
@@ -448,7 +377,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.configPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.configPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigPacketbeatMsg</span><span class="p">,</span>
                          <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the configuration of packetbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -464,9 +393,7 @@
             <span class="n">elastic_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_ip</span><span class="p">,</span> <span class="n">elastic_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_port</span><span class="p">,</span>
             <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">num_elastic_shards</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Packetbeat configuration updated&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -480,16 +407,14 @@
 <div class="viewcode-block" id="HostManagerServicer.getHostStatus"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.getHostStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getHostStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">GetHostStatusMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the status of the host</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a DTO with the status of the host</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -502,7 +427,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartHeartbeatMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts heartbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -512,9 +437,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting heartbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_start_heartbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started heartbeat&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -526,7 +449,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopHeartbeatMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops heartbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -536,9 +459,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping heartbeat&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_stop_heartbeat</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Heartbeat stopped&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -550,7 +471,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.configHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.configHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigHeartbeatMsg</span><span class="p">,</span>
                         <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the configuration of heartbeat</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -566,9 +487,7 @@
             <span class="n">elastic_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_ip</span><span class="p">,</span> <span class="n">elastic_port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">elastic_port</span><span class="p">,</span>
             <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">num_elastic_shards</span><span class="p">,</span> <span class="n">hosts_to_monitor</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">hosts_to_monitor</span><span class="p">))</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Heartbeat configuration updated&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -581,7 +500,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.startSpark"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.startSpark">[docs]</a>    <span class="k">def</span> <span class="nf">startSpark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartSparkMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Spark</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -591,9 +510,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting spark&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_start_spark</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started spark&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -606,7 +523,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.stopSpark"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.stopSpark">[docs]</a>    <span class="k">def</span> <span class="nf">stopSpark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopSparkMsg</span><span class="p">,</span>
                   <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Spark</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -616,9 +533,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping spark&quot;</span><span class="p">)</span>
         <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_stop_spark</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopped spark&quot;</span><span class="p">)</span>
-        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_monitor_running</span><span class="p">()</span>
         <span class="n">packetbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_packetbeat_status</span><span class="p">()</span>
         <span class="n">filebeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_filebeat_status</span><span class="p">()</span>
         <span class="n">metricbeat_status</span> <span class="o">=</span> <span class="n">HostManagerServicer</span><span class="o">.</span><span class="n">_get_metricbeat_status</span><span class="p">()</span>
@@ -629,9 +544,19 @@
                                                                           <span class="n">metricbeat_running</span><span class="o">=</span><span class="n">metricbeat_status</span><span class="p">,</span>
                                                                           <span class="n">heartbeat_running</span><span class="o">=</span><span class="n">heartbeat_status</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">_is_monitor_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility method to check if the monitor is running</span>
+
+<span class="sd">        :return: True if running else false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_monitor_thread</span><span class="o">.</span><span class="n">running</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_filebeat_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of filebeat</span>
 
 <span class="sd">        :return: status of filebeat</span>
@@ -644,7 +569,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_start_filebeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to start filebeat</span>
 
 <span class="sd">        :return: None</span>
@@ -655,7 +580,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_stop_filebeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to stop filebeat</span>
 
 <span class="sd">        :return: None</span>
@@ -669,7 +594,7 @@
                              <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">filebeat_modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                              <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kafka</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat configuration file</span>
 
 <span class="sd">        :param log_files_paths: the list of log files that filebeat should monitor</span>
@@ -717,7 +642,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_metricbeat_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of metricbeat</span>
 
 <span class="sd">        :return: status of metricbeat</span>
@@ -730,7 +655,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_start_metricbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to start metricbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -741,7 +666,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_stop_metricbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to stop metricbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -754,7 +679,7 @@
     <span class="k">def</span> <span class="nf">_set_metricbeat_config</span><span class="p">(</span>
             <span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="n">metricbeat_modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat configuration file</span>
 
 <span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -797,7 +722,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_snort_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_snort_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_snort_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat snort module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -815,7 +740,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_elasticsearch_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat elasticsearch module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -833,7 +758,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_logstash_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat logstash module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -851,7 +776,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_kibana_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat kibana module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -869,7 +794,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat system module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -887,7 +812,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_filebeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_filebeat_kafka_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the filebeat kafka module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -905,7 +830,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_packetbeat_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of packetbeat</span>
 
 <span class="sd">        :return: status of filebeat</span>
@@ -918,7 +843,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_start_packetbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to start packetbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -929,7 +854,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_stop_packetbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to stop packetbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -941,7 +866,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_set_packetbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the packetbeat configuration file</span>
 
 <span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -963,7 +888,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat system module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -981,7 +906,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_linux_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_linux_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_linux_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat system module configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -999,7 +924,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_kafka_module_config</span><span class="p">(</span><span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat kafka module configuration</span>
 
 <span class="sd">        :param kafka_ip: ip of the kafka server</span>
@@ -1019,7 +944,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_elasticsearch_module_config</span><span class="p">(</span><span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat elastic module configuration</span>
 
 <span class="sd">        :param elastic_ip: ip of the elastic server</span>
@@ -1040,7 +965,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_kibana_module_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat kibana module configuration</span>
 
 <span class="sd">        :param kibana_ip: ip of the kibana server</span>
@@ -1061,7 +986,7 @@
 
 <div class="viewcode-block" id="HostManagerServicer.set_metricbeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.HostManagerServicer.set_metricbeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_metricbeat_logstash_module_config</span><span class="p">(</span><span class="n">logstash_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logstash_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the metricbeat logstas module configuration</span>
 
 <span class="sd">        :param logstash_ip: ip of the logstash server</span>
@@ -1082,7 +1007,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_heartbeat_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of heartbeat</span>
 
 <span class="sd">        :return: status of heartbeat</span>
@@ -1095,7 +1020,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_start_heartbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to start heartbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -1106,7 +1031,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_stop_heartbeat</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to stop heartbeat</span>
 
 <span class="sd">        :return: None</span>
@@ -1117,7 +1042,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_read_pid_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the PID from a pidfile</span>
 
 <span class="sd">        :param path: the path to the file</span>
@@ -1130,7 +1055,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_start_spark</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to start spark</span>
 
 <span class="sd">        :return: None</span>
@@ -1145,7 +1070,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_stop_spark</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to stop spark</span>
 
 <span class="sd">        :return: None</span>
@@ -1164,7 +1089,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_set_heartbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                               <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hosts_to_monitor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the heartbeat configuration file</span>
 
 <span class="sd">        :param hosts_to_monitor: the list of hosts to monitor</span>
@@ -1187,7 +1112,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50049</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;host_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing clients</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

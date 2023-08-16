@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.jobs.training_job_config &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.jobs.training_job_config &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,22 +72,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.jobs.training_job_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_result</span> <span class="kn">import</span> <span class="n">ExperimentResult</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="TrainingJobConfig"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig">[docs]</a><span class="k">class</span> <span class="nc">TrainingJobConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TrainingJobConfig"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig">[docs]</a><span class="k">class</span> <span class="nc">TrainingJobConfig</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO representing the configuration of a training job</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
                  <span class="n">progress_percentage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">experiment_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span>
-                 <span class="n">emulation_env_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">simulation_traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">],</span>
+                 <span class="n">emulation_env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">],</span>
                  <span class="n">num_cached_traces</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param simulation_env_name: the simulation environment name</span>
@@ -118,10 +119,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">=</span> <span class="n">physical_host_ip</span>
 
 <div class="viewcode-block" id="TrainingJobConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+<span class="sd">        </span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;experiment_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -139,7 +142,7 @@
 
 <div class="viewcode-block" id="TrainingJobConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;TrainingJobConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of the object to an instance</span>
 <span class="sd">        :param d: the dict to convert</span>
 <span class="sd">        :return: the created instance</span>
@@ -158,42 +161,20 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;simulation_env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span><span class="si">}</span><span class="s2">, experiment_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;progress_percentage: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_percentage</span><span class="si">}</span><span class="s2">, pid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, experiment_result: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_result</span><span class="si">}</span><span class="s2">, running: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;emulation_env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_name</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;simulation_traces: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;simulation_traces: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;num_cached_traces: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="si">}</span><span class="s2">, log_file_path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">log_file_path</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;descr: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="TrainingJobConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the DTO into a json string</span>
-
-<span class="sd">        :return: the json string representation of the DTO</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json_str</span></div>
-
-<div class="viewcode-block" id="TrainingJobConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the DTO to a json file</span>
-
-<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="TrainingJobConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TrainingJobConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.sondik_vi.sondik_vi_agent &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents.agents.sondik_vi.sondik_vi_agent &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -92,31 +92,32 @@
 
 
 <div class="viewcode-block" id="SondikVIAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent">[docs]</a><span class="k">class</span> <span class="nc">SondikVIAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sondik&#39;s value iteration for POMDPs (Sondik 1971)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
-                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Sondik-VI agent</span>
 
 <span class="sd">        :param simulation_env_config: configuration of the simulation environment</span>
 <span class="sd">        :param experiment_config: the experiment configuration</span>
 <span class="sd">        :param training_job: an existing training job to use (optional)</span>
 <span class="sd">        :param save_to_metastore: boolean flag whether to save the execution to the metastore</span>
+<span class="sd">        :param env: the gym environment for training</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">experiment_config</span><span class="o">=</span><span class="n">experiment_config</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">SONDIK_VALUE_ITERATION</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">training_job</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
-                            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
 
 <div class="viewcode-block" id="SondikVIAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the value iteration algorithm to compute V*</span>
 
 <span class="sd">        :return: the results</span>
@@ -139,6 +140,10 @@
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">SONDIK_VI</span><span class="o">.</span><span class="n">NUM_ALPHA_VECTORS</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">SONDIK_VI</span><span class="o">.</span><span class="n">INITIAL_BELIEF_VALUES</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -221,7 +226,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span>
@@ -233,7 +238,7 @@
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">SONDIK_VI</span><span class="o">.</span><span class="n">INITIAL_BELIEF</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.sondik_vi_algorithm"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi_algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">sondik_vi_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs</span>
 
 <span class="sd">        :param exp_result: the experiment result object</span>
@@ -272,7 +277,7 @@
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.compute_all_conditional_plans_conditioned_on_a_t"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.compute_all_conditional_plans_conditioned_on_a_t">[docs]</a>    <span class="k">def</span> <span class="nf">compute_all_conditional_plans_conditioned_on_a_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_alpha_vectors_t_plus_one</span><span class="p">,</span> <span class="n">n_obs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the number of conditional plans conditioned on an action a. It produces all possible combinations of</span>
 <span class="sd">        (observation -&gt; conditional_plan)</span>
 
@@ -293,7 +298,7 @@
 <div class="viewcode-block" id="SondikVIAgent.sondik_vi"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi">[docs]</a>    <span class="k">def</span> <span class="nf">sondik_vi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_obs</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                   <span class="n">use_pruning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param P: The transition probability matrix</span>
 <span class="sd">        :param Z: The observation probability matrix</span>
@@ -410,7 +415,7 @@
                 <span class="n">average_running_returns</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.prune"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.prune">[docs]</a>    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">aleph</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove dominated alpha-vectors using Lark&#39;s filtering algorithm</span>
 <span class="sd">        :param n_states</span>
 <span class="sd">        :return:</span>
@@ -469,7 +474,7 @@
         <span class="k">return</span> <span class="n">Q</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.check_duplicate"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.check_duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">check_duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">av</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether alpha vector av is already in set a</span>
 
 <span class="sd">        :param a:</span>
@@ -485,7 +490,7 @@
                 <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="SondikVIAgent.evaluate_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.evaluate_policy">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">AlphaVectorsPolicy</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evalutes a tabular policy</span>
 
 <span class="sd">        :param policy: the tabular policy to evaluate</span>
@@ -495,13 +500,13 @@
         <span class="n">returns</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_batch_size</span><span class="p">):</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
             <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
                 <span class="n">b1</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
                 <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
                 <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
             <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
         <span class="n">avg_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>

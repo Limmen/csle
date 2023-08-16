@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.logs.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.logs.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,7 +72,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /logs resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
@@ -87,8 +88,8 @@
 
 
 <div class="viewcode-block" id="logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs resource.</span>
 
 <span class="sd">    :return: List of log files in the CSLE logging directory</span>
@@ -100,7 +101,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_csle_log_files</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -110,8 +113,8 @@
 
 <div class="viewcode-block" id="docker_stats_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.docker_stats_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">DOCKER_STATS_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">docker_stats_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">docker_stats_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/docker-stats-manager resource.</span>
 
 <span class="sd">    :return: The logs of the docker stats manager</span>
@@ -123,7 +126,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_docker_statsmanager_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -133,8 +138,8 @@
 
 <div class="viewcode-block" id="prometheus_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.prometheus_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PROMETHEUS_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">prometheus_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">prometheus_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/prometheus resource.</span>
 
 <span class="sd">    :return: The Prometheus logs</span>
@@ -146,7 +151,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_prometheus_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -156,8 +163,8 @@
 
 <div class="viewcode-block" id="nginx_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.nginx_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">NGINX_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">nginx_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">nginx_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/nginx resource.</span>
 
 <span class="sd">    :return: The nginx logs</span>
@@ -169,7 +176,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_nginx_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -179,8 +188,8 @@
 
 <div class="viewcode-block" id="postgresql_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.postgresql_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">POSTGRESQL_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">postgresql_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">postgresql_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/postgresql resource.</span>
 
 <span class="sd">    :return: The PostgreSQL logs</span>
@@ -191,7 +200,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_postgresql_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -201,8 +212,8 @@
 
 <div class="viewcode-block" id="flask_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.flask_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">FLASK_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">flask_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">flask_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/flask resource.</span>
 
 <span class="sd">    :return: The Flask logs</span>
@@ -213,7 +224,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_flask_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -223,8 +236,8 @@
 
 <div class="viewcode-block" id="cluster_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.cluster_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CLUSTERMANAGER_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">cluster_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">cluster_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/clustermanager resource.</span>
 
 <span class="sd">    :return: The Clustermanager logs</span>
@@ -235,7 +248,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_cluster_manager_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -245,8 +260,8 @@
 
 <div class="viewcode-block" id="docker_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.docker_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">DOCKER_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">docker_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">docker_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/docker resource.</span>
 
 <span class="sd">    :return: The Docker logs</span>
@@ -257,7 +272,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_docker_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -267,8 +284,8 @@
 
 <div class="viewcode-block" id="node_exporter_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.node_exporter_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">NODE_EXPORTER_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">node_exporter_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">node_exporter_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/node-exporter resource.</span>
 
 <span class="sd">    :return: The logs of the docker stats manager</span>
@@ -280,7 +297,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_node_exporter_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -290,8 +309,8 @@
 
 <div class="viewcode-block" id="cadvisor_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.cadvisor_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CADVISOR_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">cadvisor_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">cadvisor_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/cadvisor resource.</span>
 
 <span class="sd">    :return: The logs of cAdvisor</span>
@@ -303,7 +322,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_cadvisor_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -313,8 +334,8 @@
 
 <div class="viewcode-block" id="pgadmin_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.pgadmin_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PGADMIN_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">pgadmin_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">pgadmin_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/pgadmin resource.</span>
 
 <span class="sd">    :return: The logs of pgAdmin</span>
@@ -326,7 +347,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_pgadmin_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -336,8 +359,8 @@
 
 <div class="viewcode-block" id="grafana_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.grafana_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">GRAFANA_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">grafana_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">grafana_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /lofgs/grafana resource.</span>
 
 <span class="sd">    :return: The logs of the docker stats manager</span>
@@ -348,7 +371,9 @@
         <span class="k">return</span> <span class="n">authorized</span>
     <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">IP_PROPERTY</span><span class="p">]</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_grafana_logs</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
@@ -358,8 +383,8 @@
 
 <div class="viewcode-block" id="container_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.container_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTAINER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">container_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">container_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/container resource.</span>
 
 <span class="sd">    :return: The logs of a specific container</span>
@@ -372,8 +397,12 @@
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">({})</span>
         <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
     <span class="n">container_name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">NAME_PROPERTY</span><span class="p">]</span>
-    <span class="n">emulation</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EMULATION_QUERY_PARAM</span><span class="p">)</span>
-    <span class="n">execution_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EXECUTION_ID_QUERY_PARAM</span><span class="p">)</span>
+    <span class="n">emulation</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EMULATION_QUERY_PARAM</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">execution_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EXECUTION_ID_QUERY_PARAM</span><span class="p">,</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">emulation</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">execution_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">response_str</span> <span class="o">=</span> <span class="s2">&quot;emulation or execution id query parameters were not provided&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
     <span class="n">execution</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_execution</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">execution_id</span><span class="p">),</span> <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation</span><span class="p">)</span>
     <span class="n">container_config</span> <span class="o">=</span> <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">get_container_from_full_name</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="n">container_name</span><span class="p">)</span>
@@ -395,8 +424,8 @@
 
 <div class="viewcode-block" id="client_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.client_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CLIENT_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">client_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">client_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/client-manager resource.</span>
 
 <span class="sd">    :return: The logs of the client manager</span>
@@ -427,8 +456,8 @@
 
 <div class="viewcode-block" id="kafka_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.kafka_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">KAFKA_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">kafka_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">kafka_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/kafka-manager resource.</span>
 
 <span class="sd">    :return: The logs of the kafka manager</span>
@@ -459,8 +488,8 @@
 
 <div class="viewcode-block" id="kafka_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.kafka_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">KAFKA_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">kafka_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">kafka_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/kafka resource.</span>
 
 <span class="sd">    :return: The logs of the kafka server</span>
@@ -491,8 +520,8 @@
 
 <div class="viewcode-block" id="snort_ids_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.snort_ids_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">SNORT_IDS_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">snort_ids_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">snort_ids_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/snort-ids-manager resource.</span>
 
 <span class="sd">    :return: The logs of a Snort IDS manager with a specific IP</span>
@@ -529,8 +558,8 @@
 
 <div class="viewcode-block" id="snort_ids_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.snort_ids_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">SNORT_IDS_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">snort_ids_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">snort_ids_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/snort-ids-logs resource.</span>
 
 <span class="sd">    :return: The logs of a Snort IDS with a specific IP</span>
@@ -566,8 +595,8 @@
 
 <div class="viewcode-block" id="ossec_ids_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.ossec_ids_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">ossec_ids_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">ossec_ids_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/ossec-ids-manager resource.</span>
 
 <span class="sd">    :return: The logs of a OSSEC IDS manager with a specific IP</span>
@@ -604,8 +633,8 @@
 
 <div class="viewcode-block" id="ossec_ids_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.ossec_ids_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">OSSEC_IDS_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">ossec_ids_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">ossec_ids_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/ossec-ids resource.</span>
 
 <span class="sd">    :return: The logs of an OSSEC IDS with a specific IP</span>
@@ -642,8 +671,8 @@
 
 <div class="viewcode-block" id="host_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.host_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HOST_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">host_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">host_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/host-manager resource.</span>
 
 <span class="sd">    :return: The logs of a Host manager with a specific IP</span>
@@ -679,8 +708,8 @@
 
 <div class="viewcode-block" id="traffic_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.traffic_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">traffic_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">traffic_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/traffic-manager resource.</span>
 
 <span class="sd">    :return: The logs of a Traffic manager with a specific IP</span>
@@ -717,8 +746,8 @@
 
 <div class="viewcode-block" id="elk_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.elk_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ELK_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">elk_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">elk_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/elk-manager resource.</span>
 
 <span class="sd">    :return: The logs of a ELK manager with a specific IP</span>
@@ -751,8 +780,8 @@
 
 <div class="viewcode-block" id="elk_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.elk_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ELK_STACK_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">elk_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">elk_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/elk-stack resource.</span>
 
 <span class="sd">    :return: The logs of an ELK-stack instance with a specific IP</span>
@@ -784,8 +813,8 @@
 
 <div class="viewcode-block" id="ryu_manager_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.ryu_manager_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RYU_MANAGER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">ryu_manager_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">ryu_manager_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/ryu-manager resource.</span>
 
 <span class="sd">    :return: The logs of a Ryu manager with a specific IP</span>
@@ -821,8 +850,8 @@
 
 <div class="viewcode-block" id="ryu_controller_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.ryu_controller_logs">[docs]</a><span class="nd">@logs_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RYU_CONTROLLER_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">ryu_controller_logs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">ryu_controller_logs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /logs/ryu-controller resource.</span>
 
 <span class="sd">    :return: The logs of a Ryu controller with a specific IP</span>

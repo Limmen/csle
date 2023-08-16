@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_action.defender.emulation_defender_action &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_action.defender.emulation_defender_action &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,15 +72,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_action.defender.emulation_defender_action</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_type</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionType</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_id</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionId</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_outcome</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionOutcome</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationDefenderAction"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderAction</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationDefenderAction"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderAction</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing an action of the defender in the environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -88,8 +89,8 @@
                  <span class="nb">type</span><span class="p">:</span> <span class="n">EmulationDefenderActionType</span><span class="p">,</span> <span class="n">descr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">action_outcome</span><span class="p">:</span> <span class="n">EmulationDefenderActionOutcome</span> <span class="o">=</span> <span class="n">EmulationDefenderActionOutcome</span><span class="o">.</span><span class="n">GAME_END</span><span class="p">,</span>
-                 <span class="n">alt_cmds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">execution_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">alt_cmds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">execution_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class constructor</span>
 
 <span class="sd">        :param id: id of the action</span>
@@ -107,24 +108,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="o">=</span> <span class="n">cmds</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="n">ips</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_outcome</span> <span class="o">=</span> <span class="n">action_outcome</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span> <span class="o">=</span> <span class="n">alt_cmds</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">execution_time</span> <span class="o">=</span> <span class="n">execution_time</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;id:</span><span class="si">{}</span><span class="s2">,name:</span><span class="si">{}</span><span class="s2">,ips:</span><span class="si">{}</span><span class="s2">,index:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EmulationDefenderAction.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderAction&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -134,11 +141,11 @@
             <span class="nb">id</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">cmds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cmds&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">descr</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">],</span>
             <span class="n">ips</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips&quot;</span><span class="p">],</span>
             <span class="n">index</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">],</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;action_outcome&quot;</span><span class="p">],</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;alt_cmds&quot;</span><span class="p">],</span>
-            <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">])</span>
+            <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">],</span> <span class="n">execution_time</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dicr representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -156,7 +163,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.ips_match"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.ips_match">[docs]</a>    <span class="k">def</span> <span class="nf">ips_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a list of ips overlap with the ips of this host</span>
 
 <span class="sd">        :param ips: the list of ips to check</span>
@@ -168,7 +175,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.to_kafka_record"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the instance into a kafka record format</span>
 
 <span class="sd">        :param total_time: the total time of execution</span>
@@ -182,7 +189,7 @@
 
 <div class="viewcode-block" id="EmulationDefenderAction.from_kafka_record"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderAction&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a kafka record into an instance</span>
 
 <span class="sd">        :param record: the record to convert</span>
@@ -199,31 +206,9 @@
                                       <span class="n">alt_cmds</span><span class="o">=</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
-<div class="viewcode-block" id="EmulationDefenderAction.to_json_str"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the DTO into a json string</span>
-
-<span class="sd">        :return: the json string representation of the DTO</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json_str</span></div>
-
-<div class="viewcode-block" id="EmulationDefenderAction.to_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the DTO to a json file</span>
-
-<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="EmulationDefenderAction.from_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderAction&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>
@@ -236,20 +221,20 @@
         <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.copy"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderAction&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.num_attributes"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: The number of attributes of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">11</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderAction.schema"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderAction&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EmulationDefenderAction</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">STOP</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cmds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>

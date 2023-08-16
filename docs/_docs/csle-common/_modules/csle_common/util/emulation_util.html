@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.emulation_util &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.util.emulation_util &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -94,13 +94,13 @@
 
 
 <div class="viewcode-block" id="EmulationUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil">[docs]</a><span class="k">class</span> <span class="nc">EmulationUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class containing utility functions for the emulation-middleware</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EmulationUtil.execute_ssh_cmds"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmds">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes a list of commands over an ssh connection to the emulation</span>
 
 <span class="sd">        :param cmds: the list of commands</span>
@@ -112,7 +112,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.execute_ssh_cmd"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes an action on the emulation over a ssh connection,</span>
 <span class="sd">        this is a synchronous operation that waits for the completion of the action before returning</span>
 
@@ -126,7 +126,7 @@
 <div class="viewcode-block" id="EmulationUtil.log_measured_action_time"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.log_measured_action_time">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">log_measured_action_time</span><span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
                                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">create_producer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Logs the measured time of an action to Kafka</span>
 
 <span class="sd">        :param total_time: the total time of executing the action</span>
@@ -146,7 +146,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_check_if_ssh_server_is_running</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">telnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if an ssh server is running on the machine</span>
 
 <span class="sd">        :param conn: the connection to use for the command</span>
@@ -165,8 +165,8 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_list_all_users</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
-                        <span class="n">telnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                        <span class="n">telnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        List all users on a machine</span>
 
 <span class="sd">        :param c: the connection to user for the command</span>
@@ -179,9 +179,8 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">ATTACKER_RETRY_FIND_USERS</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">telnet</span><span class="p">:</span>
                 <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
-                <span class="n">outdata</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-                <span class="n">errdata</span> <span class="o">=</span> <span class="n">errdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-                <span class="n">users</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">outdata_1</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="n">outdata_1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">users</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -202,7 +201,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.is_connection_active"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_connection_active">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_connection_active</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given connection is active or not</span>
 
 <span class="sd">        :param conn: the connection to check</span>
@@ -217,7 +216,7 @@
     <span class="k">def</span> <span class="nf">setup_custom_connection</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pw</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">target_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">proxy_conn</span><span class="p">,</span>
                                 <span class="n">root</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for setting up a custom SSH connection given credentials and a proxy connection</span>
 <span class="sd">        :param user: the username of the new connection</span>
 <span class="sd">        :param pw: the pw of the new connection</span>
@@ -250,7 +249,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.write_remote_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.write_remote_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_remote_file</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">write_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for writing contents to a file</span>
 
 <span class="sd">        :param conn: the SSH connection to use for writing</span>
@@ -271,7 +270,7 @@
 <div class="viewcode-block" id="EmulationUtil.connect_admin"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.connect_admin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                       <span class="n">create_producer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects the admin agent</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation to connect to</span>
@@ -285,7 +284,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.disconnect_admin"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.disconnect_admin">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">disconnect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Disconnects the admin agent</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation to disconnect the admin of</span>
@@ -295,7 +294,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.execute_cmd_interactive_channel"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.execute_cmd_interactive_channel">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_cmd_interactive_channel</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes an action on the emulation using an interactive shell (non synchronous)</span>
 <span class="sd">        :param a: action to execute</span>
 <span class="sd">        :param env_config: environment config</span>
@@ -306,7 +305,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.read_result_interactive"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.read_result_interactive">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_result_interactive</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the result of an action executed in interactive mode</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment config</span>
@@ -319,7 +318,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.read_result_interactive_channel"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.read_result_interactive_channel">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_result_interactive_channel</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the result of an action executed in interactive mode</span>
 <span class="sd">        :param emulation_env_config: the emulation environment config</span>
 <span class="sd">        :param channel: the channel to use</span>
@@ -335,7 +334,7 @@
 <div class="viewcode-block" id="EmulationUtil.is_emulation_defense_action_legal"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_emulation_defense_action_legal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_emulation_defense_action_legal</span><span class="p">(</span><span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                           <span class="n">env_state</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given defense action is legal in the current state of the environment</span>
 
 <span class="sd">        :param defense_action_id: the id of the action to check</span>
@@ -349,7 +348,7 @@
 <div class="viewcode-block" id="EmulationUtil.is_emulation_attack_action_legal"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_emulation_attack_action_legal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_emulation_attack_action_legal</span><span class="p">(</span><span class="n">attack_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                          <span class="n">env_state</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given attack action is legal in the current state of the environment</span>
 
 <span class="sd">        :param attack_action_id: the id of the action to check</span>
@@ -359,8 +358,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">attack_action_id</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">env_state</span><span class="o">.</span><span class="n">attacker_action_config</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-
         <span class="n">action</span> <span class="o">=</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_action_config</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">attack_action_id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not obtain EmulationAttackerObservationState&quot;</span><span class="p">)</span>
         <span class="n">ip</span> <span class="o">=</span> <span class="n">env_state</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">get_action_ips</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">env_config</span><span class="p">)</span>
 
         <span class="n">logged_in_ips_str</span> <span class="o">=</span> <span class="n">EnvDynamicsUtil</span><span class="o">.</span><span class="n">logged_in_ips_str</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">env_config</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">env_state</span><span class="p">)</span>
@@ -497,7 +497,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.check_pid"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.check_pid">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_pid</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a given pid is running on the host</span>
 
 <span class="sd">        :param pid: the pid to check</span>
@@ -510,7 +510,7 @@
 
 <div class="viewcode-block" id="EmulationUtil.physical_ip_match"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.physical_ip_match">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">physical_ip_match</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for checking if a container ip matches a physical ip</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>

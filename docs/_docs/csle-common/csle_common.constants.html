@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.constants package &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.constants package &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -451,6 +451,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.ENTRYPOINT"><code class="docutils literal notranslate"><span class="pre">DOCKER.ENTRYPOINT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.GATEWAY_INFO"><code class="docutils literal notranslate"><span class="pre">DOCKER.GATEWAY_INFO</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.HOSTNAME_INFO"><code class="docutils literal notranslate"><span class="pre">DOCKER.HOSTNAME_INFO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.IMAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER.IMAGE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.IMAGE_ARCHITECTURE"><code class="docutils literal notranslate"><span class="pre">DOCKER.IMAGE_ARCHITECTURE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.IMAGE_CREATED"><code class="docutils literal notranslate"><span class="pre">DOCKER.IMAGE_CREATED</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.DOCKER.IMAGE_INFO"><code class="docutils literal notranslate"><span class="pre">DOCKER.IMAGE_INFO</span></code></a></li>
@@ -626,6 +627,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.CLUSTER_MANAGER_PORT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.DOCKER_STATS_MANAGER_PORT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.ELK_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.ELK_MANAGER_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.GRPC_OPTIONS"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.GRPC_OPTIONS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.HOST_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.HOST_MANAGER_PORT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.OSSEC_IDS_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.OSSEC_IDS_MANAGER_PORT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.GRPC_SERVERS.RYU_MANAGER_PORT"><code class="docutils literal notranslate"><span class="pre">GRPC_SERVERS.RYU_MANAGER_PORT</span></code></a></li>
@@ -646,6 +648,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.CREATED_STATUS_CODE"><code class="docutils literal notranslate"><span class="pre">HTTPS.CREATED_STATUS_CODE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">HTTPS.DEFAULT_PORT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE"><code class="docutils literal notranslate"><span class="pre">HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.METHOD_NOT_ALLOWED_CODE"><code class="docutils literal notranslate"><span class="pre">HTTPS.METHOD_NOT_ALLOWED_CODE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.NOT_FOUND_STATUS_CODE"><code class="docutils literal notranslate"><span class="pre">HTTPS.NOT_FOUND_STATUS_CODE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.OK_STATUS_CODE"><code class="docutils literal notranslate"><span class="pre">HTTPS.OK_STATUS_CODE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.HTTPS.SERVICE_NAME"><code class="docutils literal notranslate"><span class="pre">HTTPS.SERVICE_NAME</span></code></a></li>
@@ -818,6 +821,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.HOST_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.HOST_PROPERTY</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.MANAGEMENT_USERS_TABLE"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.MANAGEMENT_USERS_TABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.PASSWORD"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.PASSWORD</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.constants.constants.METADATA_STORE.PPO_POLICIES_TABLE"><code class="docutils literal notranslate"><span class="pre">METADATA_STORE.PPO_POLICIES_TABLE</span></code></a></li>
@@ -1264,6 +1268,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.AGENT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">AGENT</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#AGENT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.AGENT" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants related to the agent</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.AGENT.PW">
 <span class="sig-name descname"><span class="pre">PW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'agent'</span></em><a class="headerlink" href="#csle_common.constants.constants.AGENT.PW" title="Permalink to this definition"></a></dt>
@@ -1326,6 +1331,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.CITUS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CITUS</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#CITUS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.CITUS" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to CITUS</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.CITUS.COORDINATOR_PORT">
 <span class="sig-name descname"><span class="pre">COORDINATOR_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5432</span></em><a class="headerlink" href="#csle_common.constants.constants.CITUS.COORDINATOR_PORT" title="Permalink to this definition"></a></dt>
@@ -1337,6 +1343,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.CLUSTER_CONFIG">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CLUSTER_CONFIG</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#CLUSTER_CONFIG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.CLUSTER_CONFIG" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to the cluster configuration</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.CLUSTER_CONFIG.IP">
 <span class="sig-name descname"><span class="pre">IP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'127.0.0.1'</span></em><a class="headerlink" href="#csle_common.constants.constants.CLUSTER_CONFIG.IP" title="Permalink to this definition"></a></dt>
@@ -2455,6 +2462,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.CONTAINER_POOLS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CONTAINER_POOLS</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#CONTAINER_POOLS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.CONTAINER_POOLS" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to container pools</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.CONTAINER_POOLS.AGENT_CONTAINERS">
 <span class="sig-name descname"><span class="pre">AGENT_CONTAINERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('csle_hacker_kali_1',</span> <span class="pre">'0.0.1')]</span></em><a class="headerlink" href="#csle_common.constants.constants.CONTAINER_POOLS.AGENT_CONTAINERS" title="Permalink to this definition"></a></dt>
@@ -2501,6 +2509,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.CSLE">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CSLE</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#CSLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.CSLE" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to general CSLE</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.CSLE.BRIDGE">
 <span class="sig-name descname"><span class="pre">BRIDGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'br'</span></em><a class="headerlink" href="#csle_common.constants.constants.CSLE.BRIDGE" title="Permalink to this definition"></a></dt>
@@ -2826,6 +2835,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.DATASETS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">DATASETS</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#DATASETS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.DATASETS" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to datasets</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.DATASETS.ADDED_BY_PROPERTY">
 <span class="sig-name descname"><span class="pre">ADDED_BY_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'added_by'</span></em><a class="headerlink" href="#csle_common.constants.constants.DATASETS.ADDED_BY_PROPERTY" title="Permalink to this definition"></a></dt>
@@ -2919,6 +2929,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.DOCKER">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">DOCKER</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#DOCKER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.DOCKER" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to Docker</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.DOCKER.ATTACHABLE_NETWORK_FLAG">
 <span class="sig-name descname"><span class="pre">ATTACHABLE_NETWORK_FLAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'--attachable'</span></em><a class="headerlink" href="#csle_common.constants.constants.DOCKER.ATTACHABLE_NETWORK_FLAG" title="Permalink to this definition"></a></dt>
@@ -3107,6 +3118,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.DOCKER.HOSTNAME_INFO">
 <span class="sig-name descname"><span class="pre">HOSTNAME_INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Hostname'</span></em><a class="headerlink" href="#csle_common.constants.constants.DOCKER.HOSTNAME_INFO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.constants.constants.DOCKER.IMAGE">
+<span class="sig-name descname"><span class="pre">IMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Image'</span></em><a class="headerlink" href="#csle_common.constants.constants.DOCKER.IMAGE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3503,6 +3519,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.EXPERIMENT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">EXPERIMENT</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#EXPERIMENT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.EXPERIMENT" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to experiments folder structure</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.EXPERIMENT.CONFIG_FILE_PATH">
 <span class="sig-name descname"><span class="pre">CONFIG_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/config.json'</span></em><a class="headerlink" href="#csle_common.constants.constants.EXPERIMENT.CONFIG_FILE_PATH" title="Permalink to this definition"></a></dt>
@@ -3896,6 +3913,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.constants.constants.GRPC_SERVERS.GRPC_OPTIONS">
+<span class="sig-name descname"><span class="pre">GRPC_OPTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('grpc.max_message_length',</span> <span class="pre">100000000),</span> <span class="pre">('grpc.max_send_message_length',</span> <span class="pre">100000000),</span> <span class="pre">('grpc.max_receive_message_length',</span> <span class="pre">100000000)]</span></em><a class="headerlink" href="#csle_common.constants.constants.GRPC_SERVERS.GRPC_OPTIONS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.GRPC_SERVERS.HOST_MANAGER_PORT">
 <span class="sig-name descname"><span class="pre">HOST_MANAGER_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50049</span></em><a class="headerlink" href="#csle_common.constants.constants.GRPC_SERVERS.HOST_MANAGER_PORT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -3977,6 +3999,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE">
 <span class="sig-name descname"><span class="pre">INTERNAL_SERVER_ERROR_STATUS_CODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">500</span></em><a class="headerlink" href="#csle_common.constants.constants.HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.constants.constants.HTTPS.METHOD_NOT_ALLOWED_CODE">
+<span class="sig-name descname"><span class="pre">METHOD_NOT_ALLOWED_CODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">405</span></em><a class="headerlink" href="#csle_common.constants.constants.HTTPS.METHOD_NOT_ALLOWED_CODE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -4436,6 +4463,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.MAKEFILE">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">MAKEFILE</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#MAKEFILE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.MAKEFILE" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to Makefiles</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.MAKEFILE.CFG">
 <span class="sig-name descname"><span class="pre">CFG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CFG'</span></em><a class="headerlink" href="#csle_common.constants.constants.MAKEFILE.CFG" title="Permalink to this definition"></a></dt>
@@ -4527,6 +4555,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.MANAGEMENT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">MANAGEMENT</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#MANAGEMENT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.MANAGEMENT" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to the management system</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.MANAGEMENT.ALL">
 <span class="sig-name descname"><span class="pre">ALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'all'</span></em><a class="headerlink" href="#csle_common.constants.constants.MANAGEMENT.ALL" title="Permalink to this definition"></a></dt>
@@ -4779,6 +4808,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.METADATA_STORE.MANAGEMENT_USERS_TABLE">
 <span class="sig-name descname"><span class="pre">MANAGEMENT_USERS_TABLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'management_users'</span></em><a class="headerlink" href="#csle_common.constants.constants.METADATA_STORE.MANAGEMENT_USERS_TABLE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.constants.constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE">
+<span class="sig-name descname"><span class="pre">MCMC_SYSTEM_MODELS_TABLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mcmc_system_models'</span></em><a class="headerlink" href="#csle_common.constants.constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -6449,6 +6483,7 @@
 <dt class="sig sig-object py" id="csle_common.constants.constants.VULNERABILITY_GENERATOR">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.constants.constants.</span></span><span class="sig-name descname"><span class="pre">VULNERABILITY_GENERATOR</span></span><a class="reference internal" href="_modules/csle_common/constants/constants.html#VULNERABILITY_GENERATOR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.constants.constants.VULNERABILITY_GENERATOR" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants related to the vulnerability generator</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_common.constants.constants.VULNERABILITY_GENERATOR.NAMES_SHORTLIST">
 <span class="sig-name descname"><span class="pre">NAMES_SHORTLIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['admin',</span> <span class="pre">'test',</span> <span class="pre">'guest',</span> <span class="pre">'info',</span> <span class="pre">'adm',</span> <span class="pre">'mysql',</span> <span class="pre">'user',</span> <span class="pre">'administrator',</span> <span class="pre">'oracle',</span> <span class="pre">'ftp',</span> <span class="pre">'pi',</span> <span class="pre">'puppet',</span> <span class="pre">'ansible',</span> <span class="pre">'ec2-user',</span> <span class="pre">'vagrant',</span> <span class="pre">'azureuser',</span> <span class="pre">'donald',</span> <span class="pre">'alan']</span></em><a class="headerlink" href="#csle_common.constants.constants.VULNERABILITY_GENERATOR.NAMES_SHORTLIST" title="Permalink to this definition"></a></dt>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.config.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.config.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,15 +72,15 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /config resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
-<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
-<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
-<span class="kn">from</span> <span class="nn">csle_common.util.cluster_util</span> <span class="kn">import</span> <span class="n">ClusterUtil</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
-
+<span class="kn">from</span> <span class="nn">csle_common.util.cluster_util</span> <span class="kn">import</span> <span class="n">ClusterUtil</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
 
 <span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
 <span class="n">config_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span>
@@ -89,8 +89,8 @@
 
 
 <div class="viewcode-block" id="config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.config.html#csle_rest_api.resources.config.routes.config">[docs]</a><span class="nd">@config_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_PUT</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">config</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /config resource.</span>
 
 <span class="sd">    :return: The CSLE configuration</span>
@@ -113,21 +113,37 @@
     <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_PUT</span><span class="p">:</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="c1"># Verify payload</span>
-        <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_RESOURCE</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({}),</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_PROPERTY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
+            <span class="n">response_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_PROPERTY</span><span class="si">}</span><span class="s2"> not provided&quot;</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="n">response_str</span><span class="p">}),</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONFIG_PROPERTY</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PARAMETERS_PROPERTY</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CLUSTER_CONFIG_PROPERTY</span> <span class="ow">in</span> <span class="n">config</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
+        <span class="n">found_param_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PARAMETERS_PROPERTY</span><span class="p">]))):</span>
+            <span class="n">found_param_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PARAMETERS_PROPERTY</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">PARAM_RESOURCE</span><span class="p">])</span>
+        <span class="n">std_param_names</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_std_param_names</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">std_param_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">found_param_names</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">from_param_dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">Config</span><span class="o">.</span><span class="n">save_config_file</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
         <span class="n">ClusterUtil</span><span class="o">.</span><span class="n">set_config_parameters_from_config_file</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_param_dict</span><span class="p">())</span>
         <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">jsonify</span><span class="p">({</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REASON_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;HTTP method not supported&quot;</span><span class="p">}),</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">BAD_REQUEST_STATUS_CODE</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="registration_allowed"><a class="viewcode-back" href="../../../../csle_rest_api.resources.config.html#csle_rest_api.resources.config.routes.registration_allowed">[docs]</a><span class="nd">@config_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REGISTRATION_ALLOWED_SUBRESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                  <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">registration_allowed</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">registration_allowed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /config/registration-allowed resource.</span>
 
 <span class="sd">    :return: The CSLE configuration</span>

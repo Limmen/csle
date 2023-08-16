@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.emulation_statistics_windowed &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_config.emulation_statistics_windowed &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,20 +72,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_config.emulation_statistics_windowed</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.system_identification.emulation_statistics</span> <span class="kn">import</span> <span class="n">EmulationStatistics</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationStatisticsWindowed"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed">[docs]</a><span class="k">class</span> <span class="nc">EmulationStatisticsWindowed</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Windowed emulation statistic. The statistic is updated with the last &lt;window size&gt; sampels</span>
+<div class="viewcode-block" id="EmulationStatisticsWindowed"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed">[docs]</a><span class="k">class</span> <span class="nc">EmulationStatisticsWindowed</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Windowed emulation statistic. The statistic is updated with the last &lt;window size&gt; samples</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">emulation_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param window_size: the window size</span>
@@ -93,15 +95,16 @@
 <span class="sd">        :param descr: the description</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_states</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state_transitions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationEnvState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_transitions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">EmulationDefenderAction</span><span class="p">,</span>
+                                           <span class="n">EmulationAttackerAction</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span> <span class="o">=</span> <span class="n">emulation_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span> <span class="o">=</span> <span class="n">EmulationStatistics</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">descr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">statistics_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_emulation_statistic</span><span class="p">(</span><span class="n">emulation_statistics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EmulationStatisticsWindowed.add_initial_state"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.add_initial_state">[docs]</a>    <span class="k">def</span> <span class="nf">add_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds an initial state sample</span>
 
 <span class="sd">        :param s: the initial state</span>
@@ -113,7 +116,7 @@
 
 <div class="viewcode-block" id="EmulationStatisticsWindowed.add_state_transition"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.add_state_transition">[docs]</a>    <span class="k">def</span> <span class="nf">add_state_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="n">EmulationDefenderAction</span><span class="p">,</span>
                              <span class="n">a2</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a state transition samlpe</span>
 
 <span class="sd">        :param s: the state</span>
@@ -127,7 +130,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">state_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EmulationStatisticsWindowed.update_emulation_statistics"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.update_emulation_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">update_emulation_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the emulation statistic using the current window of samples</span>
 
 <span class="sd">        :return: None</span>
@@ -148,7 +151,53 @@
             <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_emulation_statistic</span><span class="p">(</span><span class="n">emulation_statistics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="p">,</span>
                                                        <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">statistics_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">pass</span></div></div>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EmulationStatisticsWindowed.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationStatisticsWindowed&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of the object into an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationStatisticsWindowed</span><span class="p">(</span>
+            <span class="n">window_size</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;window_size&quot;</span><span class="p">],</span> <span class="n">emulation_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_name&quot;</span><span class="p">],</span> <span class="n">descr</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">emulation_statistics</span> <span class="o">=</span> <span class="n">EmulationStatistics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_statistics&quot;</span><span class="p">])</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">statistics_id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;statistics_id&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="EmulationStatisticsWindowed.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;window_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;initial_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_states</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;state_transitions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()),</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">state_transitions</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descr</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_statistics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;statistics_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_id</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="EmulationStatisticsWindowed.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_statistics_windowed.EmulationStatisticsWindowed.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationStatisticsWindowed&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationStatisticsWindowed</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

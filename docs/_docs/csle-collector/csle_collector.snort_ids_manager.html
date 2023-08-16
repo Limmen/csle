@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.snort_ids_manager package &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.snort_ids_manager package &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="csle_collector.traffic_manager package" href="csle_collector.traffic_manager.html" />
-    <link rel="prev" title="csle_collector.ossec_ids_manager package" href="csle_collector.ossec_ids_manager.html" /> 
+    <link rel="next" title="csle_collector.snort_ids_manager.dao package" href="csle_collector.snort_ids_manager.dao.html" />
+    <link rel="prev" title="csle_collector.ossec_ids_manager.threads package" href="csle_collector.ossec_ids_manager.threads.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,11 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.snort_ids_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html">csle_collector.snort_ids_manager.dao package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html">csle_collector.snort_ids_manager.threads package</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.query_snort_ids_manager">csle_collector.snort_ids_manager.query_snort_ids_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts"><code class="docutils literal notranslate"><span class="pre">get_snort_ids_alerts()</span></code></a></li>
@@ -58,56 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor"><code class="docutils literal notranslate"><span class="pre">stop_snort_ids_monitor()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert">csle_collector.snort_ids_manager.snort_ids_alert module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.fast_log_parse()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.parse_from_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.set_priority"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.set_priority()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsFastLogAlert</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters">csle_collector.snort_ids_manager.snort_ids_alert_counters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.count()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.get_deltas()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.num_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dto()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.update_with_kafka_record()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_ip_alert_counters">csle_collector.snort_ids_manager.snort_ids_ip_alert_counters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.count()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.get_deltas"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.get_deltas()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.num_attributes"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.num_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.update_with_kafka_record()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager">csle_collector.snort_ids_manager.snort_ids_manager module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread.run()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsAlerts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsMonitorStatus()</span></code></a></li>
@@ -160,21 +116,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_rule_counters">csle_collector.snort_ids_manager.snort_ids_rule_counters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.count()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.update_with_kafka_record()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager">Module contents</a></li>
 </ul>
 </li>
@@ -207,6 +148,90 @@
              
   <section id="csle-collector-snort-ids-manager-package">
 <h1>csle_collector.snort_ids_manager package<a class="headerlink" href="#csle-collector-snort-ids-manager-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html">csle_collector.snort_ids_manager.dao package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_alert">csle_collector.snort_ids_manager.dao.snort_ids_alert module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.fast_log_parse"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.fast_log_parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.parse_from_str"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.parse_from_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.set_priority"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.set_priority()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsFastLogAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsFastLogAlert</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_alert_counters">csle_collector.snort_ids_manager.dao.snort_ids_alert_counters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.get_deltas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.num_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dto()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.update_with_kafka_record()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters">csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.get_deltas"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.get_deltas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.num_attributes"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.num_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsIPAlertCounters.update_with_kafka_record()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_rule_counters">csle_collector.snort_ids_manager.dao.snort_ids_rule_counters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsRuleCounters.update_with_kafka_record()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html">csle_collector.snort_ids_manager.threads package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html#module-csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread">csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html#csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread.SnortIDSMonitorThread"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html#csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread.SnortIDSMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.snort_ids_manager.threads.html#module-csle_collector.snort_ids_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
@@ -324,401 +349,8 @@
 </dd></dl>
 
 </section>
-<section id="module-csle_collector.snort_ids_manager.snort_ids_alert">
-<span id="csle-collector-snort-ids-manager-snort-ids-alert-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.</span></span><span class="sig-name descname"><span class="pre">SnortIdsAlert</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Object representing an IDS Alert</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fast_log_parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fast_log_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.fast_log_parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse" title="Permalink to this definition"></a></dt>
-<dd><p>Parses the IDS Alert from a given string from the fast-log of Snort</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fast_log_str</strong> – the fast log string to parse</p></li>
-<li><p><strong>year</strong> – the year</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the priority, the class, and the time-stamp</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_str_record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">SnortIdsAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str" title="Permalink to this definition"></a></dt>
-<dd><p>Parses the IDS alert from a string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>csv_str_record</strong> – the string to parse</p></li>
-<li><p><strong>year</strong> – the year of the entry</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the parsed IDS Alert</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.set_priority">
-<span class="sig-name descname"><span class="pre">set_priority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.set_priority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.set_priority" title="Permalink to this definition"></a></dt>
-<dd><p>Sets the priority of the alert DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>priority</strong> – the priority to set</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.</span></span><span class="sig-name descname"><span class="pre">SnortIdsFastLogAlert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsFastLogAlert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO representing an alert entry in the fast log of Snort</p>
-</dd></dl>
-
-</section>
-<section id="module-csle_collector.snort_ids_manager.snort_ids_alert_counters">
-<span id="csle-collector-snort-ids-manager-snort-ids-alert-counters-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert_counters module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.</span></span><span class="sig-name descname"><span class="pre">SnortIdsAlertCounters</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO containing statistics from the Snort IDS log</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add" title="Permalink to this definition"></a></dt>
-<dd><p>Adds another alert counters object to this one</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alert_counters</strong> – the counters to add</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a copy of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count" title="Permalink to this definition"></a></dt>
-<dd><p>Counts the list of alerts</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alerts</strong> – list of alerts from the log</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representaion of the object into an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a kafka record to a DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas">
-<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counters_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas" title="Permalink to this definition"></a></dt>
-<dd><p>Get the deltas between two counters objects</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>counters_prime</strong> – the counters object to compare with</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the deltas and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes">
-<span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of attributes of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>get the schema of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto">
-<span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the object into a gRPC DTO for serialization</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the statistics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record">
-<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the record in addition to the IDS statistics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a comma-separated string representing the kafka record</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO with a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to use for updating</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-csle_collector.snort_ids_manager.snort_ids_ip_alert_counters">
-<span id="csle-collector-snort-ids-manager-snort-ids-ip-alert-counters-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_ip_alert_counters module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_ip_alert_counters" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.</span></span><span class="sig-name descname"><span class="pre">SnortIdsIPAlertCounters</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO containing statistics from the Snort IDS log</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.add" title="Permalink to this definition"></a></dt>
-<dd><p>Adds another alert counters object to this one</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alert_counters</strong> – the counters to add</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.copy" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a copy of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.count">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.count" title="Permalink to this definition"></a></dt>
-<dd><p>Counts the list of alerts</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alerts</strong> – list of alerts from the log</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representaion of the object into an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a kafka record to a DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.get_deltas">
-<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counters_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.get_deltas" title="Permalink to this definition"></a></dt>
-<dd><p>Get the deltas between two counters objects</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>counters_prime</strong> – the counters object to compare with</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the deltas and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.num_attributes">
-<span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.num_attributes" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of attributes of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.schema" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>get the schema of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_kafka_record">
-<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the record in addition to the IDS statistics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a comma-separated string representing the kafka record</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.update_with_kafka_record">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_ip_alert_counters.html#SnortIdsIPAlertCounters.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.update_with_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO with a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to use for updating</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_manager">
 <span id="csle-collector-snort-ids-manager-snort-ids-manager-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">SnortIDSMonitorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIDSMonitorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that collects the Snort IDS statistics and pushes it to Kafka periodically</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIDSMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">SnortIdsManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer" title="Permalink to this definition"></a></dt>
@@ -957,7 +589,7 @@
 <p>Class with utility functions related to the Snort IDS Manager</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_alerts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">SnortIdsAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_alerts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert"><span class="pre">SnortIdsAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts" title="Permalink to this definition"></a></dt>
 <dd><p>Reads alerts from the Snort IDS alerts log</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -968,7 +600,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_fast_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_fast_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_fast_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_fast_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log" title="Permalink to this definition"></a></dt>
 <dd><p>Reads alerts from the Snort IDS fast-log</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -996,7 +628,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_snort_ids_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">episode_last_alert_ts:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/home/kim/miniconda3/lib/python3.9/datetime.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.read_snort_ids_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_snort_ids_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">episode_last_alert_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters" title="csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters"><span class="pre">SnortIdsIPAlertCounters</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.read_snort_ids_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data" title="Permalink to this definition"></a></dt>
 <dd><p>Measures metrics from the Snort ids</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1090,130 +722,6 @@
 </dd></dl>
 
 </section>
-<section id="module-csle_collector.snort_ids_manager.snort_ids_rule_counters">
-<span id="csle-collector-snort-ids-manager-snort-ids-rule-counters-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_rule_counters module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_rule_counters" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_rule_counters.</span></span><span class="sig-name descname"><span class="pre">SnortIdsRuleCounters</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO containing rule-statistics from the Snort IDS log</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.add" title="Permalink to this definition"></a></dt>
-<dd><p>Adds another alert counters object to this one</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alert_counters</strong> – the counters to add</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.copy" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a copy of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.count">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.count" title="Permalink to this definition"></a></dt>
-<dd><p>Counts the list of alerts</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alerts</strong> – list of alerts from the log</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representaion of the object into an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a kafka record to a DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters" title="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters"><span class="pre">SnortIdsRuleCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.schema" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>get the schema of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_kafka_record">
-<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.to_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the record in addition to the IDS statistics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a comma-separated string representing the kafka record</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.update_with_kafka_record">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_rule_counters.html#SnortIdsRuleCounters.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_rule_counters.SnortIdsRuleCounters.update_with_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO with a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record to use for updating</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-csle_collector.snort_ids_manager">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.snort_ids_manager" title="Permalink to this heading"></a></h2>
 </section>
@@ -1223,8 +731,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_collector.ossec_ids_manager.html" class="btn btn-neutral float-left" title="csle_collector.ossec_ids_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="csle_collector.traffic_manager.html" class="btn btn-neutral float-right" title="csle_collector.traffic_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="csle_collector.ossec_ids_manager.threads.html" class="btn btn-neutral float-left" title="csle_collector.ossec_ids_manager.threads package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.snort_ids_manager.dao.html" class="btn btn-neutral float-right" title="csle_collector.snort_ids_manager.dao package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

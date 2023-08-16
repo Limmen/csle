@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.training.alpha_vectors_policy &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.training.alpha_vectors_policy &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -83,14 +83,14 @@
 
 
 <div class="viewcode-block" id="AlphaVectorsPolicy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy">[docs]</a><span class="k">class</span> <span class="nc">AlphaVectorsPolicy</span><span class="p">(</span><span class="n">Policy</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Object representing a policy based on alpha vectors for a POMDP (Sondik 1971)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player_type</span><span class="p">:</span> <span class="n">PlayerType</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">],</span> <span class="n">alpha_vectors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
                  <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">reward_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">State</span><span class="p">],</span>
                  <span class="n">agent_type</span><span class="p">:</span> <span class="n">AgentType</span><span class="p">,</span> <span class="n">simulation_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">avg_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the policy</span>
 
 <span class="sd">        :param actions: list of actions</span>
@@ -115,7 +115,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_type</span> <span class="o">=</span> <span class="n">PolicyType</span><span class="o">.</span><span class="n">ALPHA_VECTORS</span>
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.action"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.action">[docs]</a>    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects the next action</span>
 
 <span class="sd">        :param o: the belief</span>
@@ -139,10 +139,13 @@
             <span class="k">if</span> <span class="n">v_a</span> <span class="o">&gt;</span> <span class="n">max_a_v</span><span class="p">:</span>
                 <span class="n">max_a_v</span> <span class="o">=</span> <span class="n">v_a</span>
                 <span class="n">max_a</span> <span class="o">=</span> <span class="n">a</span>
-        <span class="k">return</span> <span class="n">max_a</span><span class="o">.</span><span class="n">id</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">max_a</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">max_a</span></div>
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.probability"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.probability">[docs]</a>    <span class="k">def</span> <span class="nf">probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the probability of taking a given action for a given observation</span>
 
 <span class="sd">        :param o: the input observation</span>
@@ -153,7 +156,7 @@
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AlphaVectorsPolicy&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -170,7 +173,7 @@
         <span class="k">return</span> <span class="n">dto</span></div>
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: A dict representation of the function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -188,7 +191,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.stage_policy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.stage_policy">[docs]</a>    <span class="k">def</span> <span class="nf">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the stage policy, i.e a |S|x|A| policy</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -197,40 +200,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_vectors</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the policy</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;agent_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_type</span><span class="si">}</span><span class="s2">, player_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">player_type</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">))</span><span class="si">}</span><span class="s2">, alpha_vectors: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_vectors</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">))</span><span class="si">}</span><span class="s2">, alpha_vectors: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_vectors</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;simulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_name</span><span class="si">}</span><span class="s2">, id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, avg_R: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avg_R</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;transition_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span><span class="si">}</span><span class="s2">, states: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;reward_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_tensor</span><span class="si">}</span><span class="s2">, policy_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_type</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="AlphaVectorsPolicy.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the DTO into a json string</span>
-
-<span class="sd">        :return: the json string representation of the DTO</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json_str</span></div>
-
-<div class="viewcode-block" id="AlphaVectorsPolicy.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the DTO to a json file</span>
-
-<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="AlphaVectorsPolicy.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AlphaVectorsPolicy&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>
@@ -243,7 +224,7 @@
         <span class="k">return</span> <span class="n">AlphaVectorsPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="AlphaVectorsPolicy.copy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AlphaVectorsPolicy&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">AlphaVectorsPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div></div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_system_identification.gp package &mdash; csle-system-identification 0.0.1 documentation</title>
+  <title>csle_system_identification.gp package &mdash; csle-system-identification 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -57,7 +57,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_system_identification.gp.gp_regression_model_with_gauissan_noise">csle_system_identification.gp.gp_regression_model_with_gauissan_noise module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise"><code class="docutils literal notranslate"><span class="pre">GPRegressionModelWithGaussianNoise</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.forward"><code class="docutils literal notranslate"><span class="pre">GPRegressionModelWithGaussianNoise.forward()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.training"><code class="docutils literal notranslate"><span class="pre">GPRegressionModelWithGaussianNoise.training</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -134,24 +133,20 @@
 <dt class="sig sig-object py" id="csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_system_identification.gp.gp_regression_model_with_gauissan_noise.</span></span><span class="sig-name descname"><span class="pre">GPRegressionModelWithGaussianNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">likelihood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_system_identification/gp/gp_regression_model_with_gauissan_noise.html#GPRegressionModelWithGaussianNoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ExactGP</span></code></p>
+<p>DTO representing a GPRegression model with Gaussian Noise</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_system_identification/gp/gp_regression_model_with_gauissan_noise.html#GPRegressionModelWithGaussianNoise.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MultivariateNormal</span></span></span><a class="reference internal" href="_modules/csle_system_identification/gp/gp_regression_model_with_gauissan_noise.html#GPRegressionModelWithGaussianNoise.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the prior latent distribution on a given input using the mean and covariance functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – the input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the prior</p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#csle_system_identification.gp.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.training" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 

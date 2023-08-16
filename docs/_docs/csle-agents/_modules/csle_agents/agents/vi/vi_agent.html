@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.vi.vi_agent &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents.agents.vi.vi_agent &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -90,31 +90,32 @@
 
 
 <div class="viewcode-block" id="VIAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent">[docs]</a><span class="k">class</span> <span class="nc">VIAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Value Iteration Agent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
-                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the value iteration agent</span>
 
 <span class="sd">        :param simulation_env_config: configuration of the simulation environment</span>
 <span class="sd">        :param experiment_config: the experiment configuration</span>
 <span class="sd">        :param training_job: an existing training job to use (optional)</span>
 <span class="sd">        :param save_to_metastore: boolean flag whether to save the execution to the metastore</span>
+<span class="sd">        :param env: the gym environment for training</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">experiment_config</span><span class="o">=</span><span class="n">experiment_config</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">VALUE_ITERATION</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">training_job</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
-                            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
 
 <div class="viewcode-block" id="VIAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the value iteration algorithm to compute V*</span>
 
 <span class="sd">        :return: the results</span>
@@ -134,6 +135,10 @@
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -216,7 +221,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
 <div class="viewcode-block" id="VIAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span>
@@ -225,7 +230,7 @@
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">REWARD_TENSOR</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_STATES</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">VI</span><span class="o">.</span><span class="n">NUM_ACTIONS</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="VIAgent.value_iteration"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.value_iteration">[docs]</a>    <span class="k">def</span> <span class="nf">value_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the value iteration algorithm</span>
 
 <span class="sd">        :param exp_result: the experiment result object</span>
@@ -261,7 +266,7 @@
 
 <div class="viewcode-block" id="VIAgent.one_step_lookahead"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.one_step_lookahead">[docs]</a>    <span class="k">def</span> <span class="nf">one_step_lookahead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">num_states</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a one-step lookahead for value iteration</span>
 <span class="sd">        :param state: the current state</span>
 <span class="sd">        :param V: the current value function</span>
@@ -283,7 +288,7 @@
 
 <div class="viewcode-block" id="VIAgent.vi"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.vi">[docs]</a>    <span class="k">def</span> <span class="nf">vi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
            <span class="n">theta</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">discount_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An implementation of the Value Iteration algorithm</span>
 <span class="sd">        :param T: the transition kernel T</span>
 <span class="sd">        :param num_states: the number of states</span>
@@ -342,7 +347,7 @@
         <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">average_returns</span><span class="p">,</span> <span class="n">running_average_returns</span></div>
 
 <div class="viewcode-block" id="VIAgent.evaluate_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.evaluate_policy">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evalutes a tabular policy</span>
 
 <span class="sd">        :param policy: the tabular policy to evaluate</span>
@@ -368,7 +373,7 @@
 
 <div class="viewcode-block" id="VIAgent.create_policy_from_value_function"><a class="viewcode-back" href="../../../../csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.create_policy_from_value_function">[docs]</a>    <span class="k">def</span> <span class="nf">create_policy_from_value_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                           <span class="n">discount_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a tabular policy from a value function</span>
 
 <span class="sd">        :param num_states: the number of states</span>

@@ -22,7 +22,7 @@ copyright = '2020-2023, Kim Hammar'
 author = 'Kim Hammar'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '0.3.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -33,7 +33,7 @@ release = '0.0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.napoleon'
+    'sphinx.ext.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

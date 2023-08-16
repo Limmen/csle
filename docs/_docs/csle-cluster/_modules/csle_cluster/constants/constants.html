@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_cluster.constants.constants &mdash; csle-cluster 0.0.1 documentation</title>
+  <title>csle_cluster.constants.constants &mdash; csle-cluster 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -70,21 +70,23 @@
 <span class="sd">Constants for csle-cluster</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
 
 <div class="viewcode-block" id="KIBANA_TUNNELS"><a class="viewcode-back" href="../../../csle_cluster.constants.html#csle_cluster.constants.constants.KIBANA_TUNNELS">[docs]</a><span class="k">class</span> <span class="nc">KIBANA_TUNNELS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Kibana tunnels</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">KIBANA_TUNNELS_DICT</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">KIBANA_TUNNELS_DICT</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">KIBANA_TUNNEL_BASE_PORT</span> <span class="o">=</span> <span class="mi">17000</span>
     <span class="n">THREAD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;thread&quot;</span></div>
 
 
 <div class="viewcode-block" id="RYU_TUNNELS"><a class="viewcode-back" href="../../../csle_cluster.constants.html#csle_cluster.constants.constants.RYU_TUNNELS">[docs]</a><span class="k">class</span> <span class="nc">RYU_TUNNELS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Ryu tunnels</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">RYU_TUNNELS_DICT</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">RYU_TUNNELS_DICT</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">RYU_TUNNEL_BASE_PORT</span> <span class="o">=</span> <span class="mi">18000</span>
     <span class="n">THREAD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;thread&quot;</span></div>
 </pre></div>

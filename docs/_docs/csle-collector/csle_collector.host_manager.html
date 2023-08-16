@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.host_manager package &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.host_manager package &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="csle_collector.kafka_manager package" href="csle_collector.kafka_manager.html" />
+    <link rel="next" title="csle_collector.host_manager.dao package" href="csle_collector.host_manager.dao.html" />
     <link rel="prev" title="csle_collector.elk_manager package" href="csle_collector.elk_manager.html" /> 
 </head>
 
@@ -45,22 +45,20 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.host_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.dao.html">csle_collector.host_manager.dao package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.threads.html">csle_collector.host_manager.threads package</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.failed_login_attempt">csle_collector.host_manager.failed_login_attempt module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt"><code class="docutils literal notranslate"><span class="pre">FailedLoginAttempt</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str"><code class="docutils literal notranslate"><span class="pre">FailedLoginAttempt.parse_from_str()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_manager">csle_collector.host_manager.host_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configFilebeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.configFilebeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configHeartbeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.configHeartbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configMetricbeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.configMetricbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.configPacketbeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.configPacketbeat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostMetrics"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.getHostMetrics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostStatus"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.getHostStatus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.getIdsAlerts()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_elasticsearch_module_config"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.set_filebeat_elasticsearch_module_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kafka_module_config"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.set_filebeat_kafka_module_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.set_filebeat_kibana_module_config"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.set_filebeat_kibana_module_config()</span></code></a></li>
@@ -85,10 +83,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopMetricbeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.stopMetricbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopPacketbeat"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.stopPacketbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostManagerServicer.stopSpark"><code class="docutils literal notranslate"><span class="pre">HostManagerServicer.stopSpark()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostMonitorThread"><code class="docutils literal notranslate"><span class="pre">HostMonitorThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_manager.HostMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">HostMonitorThread.run()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.host_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
@@ -180,23 +174,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.host_metrics">csle_collector.host_manager.host_metrics module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics"><code class="docutils literal notranslate"><span class="pre">HostMetrics</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.copy"><code class="docutils literal notranslate"><span class="pre">HostMetrics.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_dict"><code class="docutils literal notranslate"><span class="pre">HostMetrics.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_deltas"><code class="docutils literal notranslate"><span class="pre">HostMetrics.get_deltas()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_values"><code class="docutils literal notranslate"><span class="pre">HostMetrics.get_values()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.num_attributes"><code class="docutils literal notranslate"><span class="pre">HostMetrics.num_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.schema"><code class="docutils literal notranslate"><span class="pre">HostMetrics.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dict"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dto"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_dto()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.update_with_kafka_record()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.query_host_manager">csle_collector.host_manager.query_host_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.query_host_manager.config_filebeat"><code class="docutils literal notranslate"><span class="pre">config_filebeat()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.query_host_manager.config_heartbeat"><code class="docutils literal notranslate"><span class="pre">config_heartbeat()</span></code></a></li>
@@ -216,13 +193,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.query_host_manager.stop_metricbeat"><code class="docutils literal notranslate"><span class="pre">stop_metricbeat()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.query_host_manager.stop_packetbeat"><code class="docutils literal notranslate"><span class="pre">stop_packetbeat()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.query_host_manager.stop_spark"><code class="docutils literal notranslate"><span class="pre">stop_spark()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager.successful_login">csle_collector.host_manager.successful_login module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.host_manager.successful_login.SuccessfulLogin"><code class="docutils literal notranslate"><span class="pre">SuccessfulLogin</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str"><code class="docutils literal notranslate"><span class="pre">SuccessfulLogin.parse_from_str()</span></code></a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.host_manager">Module contents</a></li>
@@ -260,32 +230,63 @@
              
   <section id="csle-collector-host-manager-package">
 <h1>csle_collector.host_manager package<a class="headerlink" href="#csle-collector-host-manager-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.dao.html">csle_collector.host_manager.dao package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.dao.html#module-csle_collector.host_manager.dao.failed_login_attempt">csle_collector.host_manager.dao.failed_login_attempt module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt"><code class="docutils literal notranslate"><span class="pre">FailedLoginAttempt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt.parse_from_str"><code class="docutils literal notranslate"><span class="pre">FailedLoginAttempt.parse_from_str()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.dao.html#module-csle_collector.host_manager.dao.host_metrics">csle_collector.host_manager.dao.host_metrics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics"><code class="docutils literal notranslate"><span class="pre">HostMetrics</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.copy"><code class="docutils literal notranslate"><span class="pre">HostMetrics.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_dict"><code class="docutils literal notranslate"><span class="pre">HostMetrics.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.get_deltas"><code class="docutils literal notranslate"><span class="pre">HostMetrics.get_deltas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.get_values"><code class="docutils literal notranslate"><span class="pre">HostMetrics.get_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.num_attributes"><code class="docutils literal notranslate"><span class="pre">HostMetrics.num_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.schema"><code class="docutils literal notranslate"><span class="pre">HostMetrics.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_dict"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_dto"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_dto()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">HostMetrics.update_with_kafka_record()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.dao.html#module-csle_collector.host_manager.dao.successful_login">csle_collector.host_manager.dao.successful_login module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.successful_login.SuccessfulLogin"><code class="docutils literal notranslate"><span class="pre">SuccessfulLogin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.successful_login.SuccessfulLogin.parse_from_str"><code class="docutils literal notranslate"><span class="pre">SuccessfulLogin.parse_from_str()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.dao.html#module-csle_collector.host_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.threads.html">csle_collector.host_manager.threads package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.threads.html#module-csle_collector.host_manager.threads.host_monitor_thread">csle_collector.host_manager.threads.host_monitor_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.host_manager.threads.html#csle_collector.host_manager.threads.host_monitor_thread.HostMonitorThread"><code class="docutils literal notranslate"><span class="pre">HostMonitorThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.host_manager.threads.html#csle_collector.host_manager.threads.host_monitor_thread.HostMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">HostMonitorThread.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.host_manager.threads.html#module-csle_collector.host_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
-</section>
-<section id="module-csle_collector.host_manager.failed_login_attempt">
-<span id="csle-collector-host-manager-failed-login-attempt-module"></span><h2>csle_collector.host_manager.failed_login_attempt module<a class="headerlink" href="#module-csle_collector.host_manager.failed_login_attempt" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.failed_login_attempt.</span></span><span class="sig-name descname"><span class="pre">FailedLoginAttempt</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/failed_login_attempt.html#FailedLoginAttempt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing a failed login event on some server in the emulation</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/failed_login_attempt.html#FailedLoginAttempt.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.failed_login_attempt.FailedLoginAttempt.parse_from_str" title="Permalink to this definition"></a></dt>
-<dd><p>Parses a failed login event DTO from a string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>login_attempt_str</strong> – the string to parse</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the parsed DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="module-csle_collector.host_manager.host_manager">
 <span id="csle-collector-host-manager-host-manager-module"></span><h2>csle_collector.host_manager.host_manager module<a class="headerlink" href="#module-csle_collector.host_manager.host_manager" title="Permalink to this heading"></a></h2>
@@ -363,6 +364,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.getHostMetrics">
+<span class="sig-name descname"><span class="pre">getHostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetHostMetricsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getHostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostMetrics" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the host metrics from given timestamps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a DTO with IDS statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.getHostStatus">
 <span class="sig-name descname"><span class="pre">getHostStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetHostStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostStatusDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getHostStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getHostStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the status of the host</p>
@@ -375,23 +393,6 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a DTO with the status of the host</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts">
-<span class="sig-name descname"><span class="pre">getIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetHostMetricsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostManagerServicer.getIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostManagerServicer.getIdsAlerts" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the host metrics from given timestamps</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>request</strong> – the gRPC request</p></li>
-<li><p><strong>context</strong> – the gRPC context</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a DTO with IDS statistics</p>
 </dd>
 </dl>
 </dd></dl>
@@ -758,24 +759,6 @@
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostMonitorThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">HostMonitorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostMonitorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostMonitorThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that collects the Host statistics and pushes it to Kafka periodically</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.HostMonitorThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#HostMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.HostMonitorThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Main loop of the thread. Parses log files and metrics on the host and pushes it to Kafka periodically</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager.serve">
 <span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50049</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'host_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager.serve" title="Permalink to this definition"></a></dt>
@@ -1034,6 +1017,7 @@
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_manager_util.</span></span><span class="sig-name descname"><span class="pre">HostManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility class for the host manager</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_config">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filebeat_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_files_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kibana_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_elastic_shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_topics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.filebeat_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_config" title="Permalink to this definition"></a></dt>
@@ -1357,7 +1341,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_host_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_auth_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_last_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics" title="csle_collector.host_manager.dao.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_manager_util.html#HostManagerUtil.read_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics" title="Permalink to this definition"></a></dt>
 <dd><p>Reads the latest metrics from the host</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1464,157 +1448,6 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> – the filebeat config to write</p></li>
 <li><p><strong>path</strong> – the path to write the file to</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-csle_collector.host_manager.host_metrics">
-<span id="csle-collector-host-manager-host-metrics-module"></span><h2>csle_collector.host_manager.host_metrics module<a class="headerlink" href="#module-csle_collector.host_manager.host_metrics" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.host_metrics.</span></span><span class="sig-name descname"><span class="pre">HostMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_logged_in_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_failed_login_attempts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_open_connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_login_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_users</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO class containing host metrics</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.copy" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a copy of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a dict representation to an instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the created instance</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the Kafka record string to a DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the kafka record</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the created DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.get_deltas">
-<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_deltas" title="Permalink to this definition"></a></dt>
-<dd><p>Get the deltas between two stats objects</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>stats_prime</strong> – the stats object to compare with</p></li>
-<li><p><strong>max_counter</strong> – the maximum counter_value</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the deltas and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.get_values">
-<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.get_values" title="Permalink to this definition"></a></dt>
-<dd><p>Get the current values</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the values and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.num_attributes">
-<span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.num_attributes" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of attributes of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.host_manager.host_metrics.HostMetrics" title="csle_collector.host_manager.host_metrics.HostMetrics"><span class="pre">HostMetrics</span></a></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.schema" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>get the schema of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the instance</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_dto">
-<span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetricsDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_dto" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the object into a gRPC DTO for serialization</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the metrics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a csle_collector.host_manager.host_manager_pb2.HostMetricsDTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record">
-<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO into a Kafka record string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the IP to add to the record in addition to the metrics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a comma separated string representing the kafka record</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/host_manager/host_metrics.html#HostMetrics.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO based on a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>record</strong> – the kafka record</p></li>
-<li><p><strong>ip</strong> – the host ip</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1972,33 +1805,6 @@
 </dd></dl>
 
 </section>
-<section id="module-csle_collector.host_manager.successful_login">
-<span id="csle-collector-host-manager-successful-login-module"></span><h2>csle_collector.host_manager.successful_login module<a class="headerlink" href="#module-csle_collector.host_manager.successful_login" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.host_manager.successful_login.SuccessfulLogin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.host_manager.successful_login.</span></span><span class="sig-name descname"><span class="pre">SuccessfulLogin</span></span><a class="reference internal" href="_modules/csle_collector/host_manager/successful_login.html#SuccessfulLogin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.successful_login.SuccessfulLogin" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO Class representing a parsed successful login event from a server in the emulation</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login_attempt_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/host_manager/successful_login.html#SuccessfulLogin.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.host_manager.successful_login.SuccessfulLogin.parse_from_str" title="Permalink to this definition"></a></dt>
-<dd><p>Parses a login event from a string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>login_attempt_str</strong> – the string to parse</p></li>
-<li><p><strong>year</strong> – the current year</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the parsed login event</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-csle_collector.host_manager">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.host_manager" title="Permalink to this heading"></a></h2>
 </section>
@@ -2009,7 +1815,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="csle_collector.elk_manager.html" class="btn btn-neutral float-left" title="csle_collector.elk_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="csle_collector.kafka_manager.html" class="btn btn-neutral float-right" title="csle_collector.kafka_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="csle_collector.host_manager.dao.html" class="btn btn-neutral float-right" title="csle_collector.host_manager.dao package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

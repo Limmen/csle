@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.elk_manager.elk_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.elk_manager.elk_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -87,13 +87,13 @@
 
 
 <div class="viewcode-block" id="ElkManagerServicer"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">ElkManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2_grpc</span><span class="o">.</span><span class="n">ElkManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing an ELK stack. Allows to start/stop the ELK stack remotely and also to query the</span>
 <span class="sd">    state of the ELK stack.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">ELK_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -106,7 +106,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up ElkManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_elk_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of the ELK stack</span>
 
 <span class="sd">        :return: status of elastic, status of kibana, status of logstash</span>
@@ -125,7 +125,7 @@
 <div class="viewcode-block" id="ElkManagerServicer.getElkStatus"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.getElkStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getElkStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">GetElkStatusMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the ELK server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -140,7 +140,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopElk"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElk">[docs]</a>    <span class="k">def</span> <span class="nf">stopElk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopElkMsg</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the ELK stack</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -159,7 +159,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startElk"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElk">[docs]</a>    <span class="k">def</span> <span class="nf">startElk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElkMsg</span><span class="p">,</span>
                  <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the ELK stack</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -174,7 +174,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startElastic"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElastic">[docs]</a>    <span class="k">def</span> <span class="nf">startElastic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElasticMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts elasticsearch</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -190,7 +190,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startKibana"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startKibana">[docs]</a>    <span class="k">def</span> <span class="nf">startKibana</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartKibanaMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Kibana</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -207,7 +207,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startLogstash"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startLogstash">[docs]</a>    <span class="k">def</span> <span class="nf">startLogstash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartLogstashMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Logstash</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -224,7 +224,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopElastic"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElastic">[docs]</a>    <span class="k">def</span> <span class="nf">stopElastic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElasticMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops elasticsearch</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -240,7 +240,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopKibana"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopKibana">[docs]</a>    <span class="k">def</span> <span class="nf">stopKibana</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopKibanaMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Kibana</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopLogstash"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopLogstash">[docs]</a>    <span class="k">def</span> <span class="nf">stopLogstash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopLogstashMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Logstash</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -275,7 +275,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50045</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;elk_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing the ELK stack</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

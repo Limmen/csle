@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -76,18 +76,18 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Consumer</span><span class="p">,</span> <span class="n">KafkaError</span><span class="p">,</span> <span class="n">KafkaException</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
-<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 
 
 <div class="viewcode-block" id="AggregatedOSSECIdsLogConsumerThread"><a class="viewcode-back" href="../../../csle_common.consumer_threads.html#csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread.AggregatedOSSECIdsLogConsumerThread">[docs]</a><span class="k">class</span> <span class="nc">AggregatedOSSECIdsLogConsumerThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread that polls the OSSEC IDS log to get the latest metrics</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ossec_ids_alert_counters</span><span class="p">:</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">,</span>
                  <span class="n">auto_offset_reset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the thread</span>
 
 <span class="sd">        :param kafka_server_ip: the ip of the kafka server</span>
@@ -110,7 +110,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_LOG_TOPIC_NAME</span><span class="p">])</span>
 
 <div class="viewcode-block" id="AggregatedOSSECIdsLogConsumerThread.run"><a class="viewcode-back" href="../../../csle_common.consumer_threads.html#csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread.AggregatedOSSECIdsLogConsumerThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the thread</span>
 
 <span class="sd">        :return: None</span>
@@ -121,7 +121,7 @@
                 <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">()</span><span class="o">.</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="n">KafkaError</span><span class="o">.</span><span class="n">_PARTITION_EOF</span><span class="p">:</span>
                         <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;reached end of partition: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="sa">f</span><span class="s2">&quot;reached end of partition: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="p">(),</span><span class="w"> </span><span class="n">msg</span><span class="o">.</span><span class="n">partition</span><span class="p">(),</span><span class="w"> </span><span class="n">msg</span><span class="o">.</span><span class="n">offset</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">():</span>
                         <span class="k">raise</span> <span class="n">KafkaException</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">error</span><span class="p">())</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -130,7 +130,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AggregatedOSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters"><a class="viewcode-back" href="../../../csle_common.consumer_threads.html#csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread.AggregatedOSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters">[docs]</a>    <span class="k">def</span> <span class="nf">get_aggregated_ids_alert_counters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: aggregated alert counters from the list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

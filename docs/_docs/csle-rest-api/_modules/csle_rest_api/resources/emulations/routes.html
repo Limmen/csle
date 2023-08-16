@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.emulations.routes &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.resources.emulations.routes &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,8 +72,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Routes and sub-resources for the /emulations resource</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
 <span class="kn">from</span> <span class="nn">csle_common.controllers.emulation_env_controller</span> <span class="kn">import</span> <span class="n">EmulationEnvController</span>
@@ -89,13 +91,16 @@
 
 
 <div class="viewcode-block" id="emulations"><a class="viewcode-back" href="../../../../csle_rest_api.resources.emulations.html#csle_rest_api.resources.emulations.routes.emulations">[docs]</a><span class="nd">@emulations_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">emulations</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">emulations</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /emulations resource</span>
 
 <span class="sd">    :return: Returns a list of emulations, a list of emulation ids, or deletes the list of emulations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">:</span>
+        <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="n">requires_admin</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
 
@@ -107,13 +112,12 @@
     <span class="n">all_emulations</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_emulations</span><span class="p">()</span>
     <span class="n">all_images</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_emulation_images</span><span class="p">()</span>
 
-    <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">running_emulation_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
         <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="n">running_emulation_names</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">ClusterController</span><span class="o">.</span><span class="n">list_all_running_emulations</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span>
         <span class="p">)</span><span class="o">.</span><span class="n">runningEmulations</span><span class="p">)</span>
-
     <span class="n">emulations_dicts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="n">all_emulations</span><span class="p">:</span>
         <span class="n">executions</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_emulation_executions_for_a_given_emulation</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">em</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -144,14 +148,14 @@
     <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
 
 
-<div class="viewcode-block" id="emulation_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.emulations.html#csle_rest_api.resources.emulations.routes.emulation_ids">[docs]</a><span class="k">def</span> <span class="nf">emulation_ids</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="emulation_ids"><a class="viewcode-back" href="../../../../csle_rest_api.resources.emulations.html#csle_rest_api.resources.emulations.routes.emulation_ids">[docs]</a><span class="k">def</span> <span class="nf">emulation_ids</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Utility method for returning the list of emulation ids from the metastore to an HTTP client</span>
 
 <span class="sd">    :return: HTTP response with list of emulation ids</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">emulation_ids</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">list_emulations_ids</span><span class="p">()</span>
-    <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">running_emulation_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
         <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="n">running_emulation_names</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">ClusterController</span><span class="o">.</span><span class="n">list_all_running_emulations</span><span class="p">(</span>
@@ -176,24 +180,28 @@
                      <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                               <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">,</span>
                               <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">emulation_by_id</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">emulation_by_id</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /emulations/id resource. Gets an emulation by its id.</span>
 
 <span class="sd">    :param emulation_id: the id of the emulation</span>
 <span class="sd">    :return: the emulation with the given id if it exists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span> <span class="ow">or</span> \
+            <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">:</span>
+        <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="n">requires_admin</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
 
     <span class="n">em</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">emulation_id</span><span class="p">)</span>
-    <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">running_emulation_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
         <span class="n">running_emulation_names</span> <span class="o">=</span> <span class="n">running_emulation_names</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">ClusterController</span><span class="o">.</span><span class="n">list_all_running_emulations</span><span class="p">(</span>
-            <span class="n">ip</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">runningEmulations</span><span class="p">)</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">)</span><span class="o">.</span><span class="n">runningEmulations</span><span class="p">)</span>
     <span class="n">em_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">em</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span> <span class="ow">or</span> \
@@ -203,10 +211,16 @@
                 <span class="n">em</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">for</span> <span class="n">exec</span> <span class="ow">in</span> <span class="n">executions</span><span class="p">:</span>
                     <span class="n">exec</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">em_name</span><span class="p">,</span> <span class="n">img</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_image</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">em</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">em</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">exec</span> <span class="ow">in</span> <span class="n">executions</span><span class="p">:</span>
-                <span class="n">exec</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">em_img</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_emulation_image</span><span class="p">(</span><span class="n">emulation_name</span><span class="o">=</span><span class="n">em</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">em_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">em_name</span><span class="p">,</span> <span class="n">img</span> <span class="o">=</span> <span class="n">em_img</span>
+                <span class="n">em</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">exec</span> <span class="ow">in</span> <span class="n">executions</span><span class="p">:</span>
+                    <span class="n">exec</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">em</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">exec</span> <span class="ow">in</span> <span class="n">executions</span><span class="p">:</span>
+                    <span class="n">exec</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">em_dict</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
             <span class="n">em_dict</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EXECUTIONS_SUBRESOURCE</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">executions</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">:</span>
@@ -218,7 +232,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">physical_servers</span> <span class="o">=</span> <span class="p">[</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">()]</span>
                     <span class="n">emulation_execution</span> <span class="o">=</span> <span class="n">EmulationEnvController</span><span class="o">.</span><span class="n">create_execution</span><span class="p">(</span>
-                        <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">em</span><span class="p">,</span> <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
+                        <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">em</span><span class="p">,</span> <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
                     <span class="n">ClusterController</span><span class="o">.</span><span class="n">run_emulation</span><span class="p">(</span><span class="n">execution</span><span class="o">=</span><span class="n">emulation_execution</span><span class="p">,</span>
                                                     <span class="n">no_traffic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">no_clients</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                     <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
@@ -232,20 +246,21 @@
             <span class="n">em_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">em_dict</span><span class="p">)</span>
     <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">response</span></div>
+    <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
 
 
 <div class="viewcode-block" id="get_executions_of_emulation"><a class="viewcode-back" href="../../../../csle_rest_api.resources.emulations.html#csle_rest_api.resources.emulations.routes.get_executions_of_emulation">[docs]</a><span class="nd">@emulations_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&lt;emulation_id&gt;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&#39;</span>
                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EXECUTIONS_SUBRESOURCE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                      <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">get_executions_of_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">get_executions_of_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /emulations/id/executions resource. Gets all executions of a given emulation.</span>
 
 <span class="sd">    :param emulation_id: the id of the emulation</span>
 <span class="sd">    :return: the list of executions of the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+                                                           <span class="n">requires_admin</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
 
@@ -264,16 +279,22 @@
                      <span class="sa">f</span><span class="s1">&#39;&lt;execution_id&gt;&#39;</span><span class="p">,</span>
                      <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">,</span>
                               <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">get_execution_of_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">get_execution_of_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /emulations/ids/executions/id resource. Gets a given execution of a given emulation.</span>
 
 <span class="sd">    :param emulation_id: the id of the emulation</span>
 <span class="sd">    :param execution_id: the id of the execution</span>
-
 <span class="sd">    :return: The sought for execution if it exist</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_DELETE</span><span class="p">:</span>
+        <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">:</span>
+        <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HTTP method: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2"> not supported&quot;</span><span class="p">)</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="n">requires_admin</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
 
@@ -300,8 +321,8 @@
                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&lt;execution_id&gt;&#39;</span>
                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">MONITOR_SUBRESOURCE</span><span class="si">}</span><span class="s1">&#39;</span>
                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&lt;minutes&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">monitor_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">monitor_emulation</span><span class="p">(</span><span class="n">emulation_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The /emulations/id/executions/id/monitor/minutes resource. Fetches monitoring data from Kafka.</span>
 
 <span class="sd">    :param emulation_id: the emulation id</span>
@@ -309,7 +330,7 @@
 <span class="sd">    :param minutes: the number of minutes past to collect data from</span>
 <span class="sd">    :return: the collected data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">authorized</span>
 
@@ -324,8 +345,7 @@
         <span class="n">time_series</span> <span class="o">=</span> <span class="n">ClusterController</span><span class="o">.</span><span class="n">get_execution_time_series_data</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="p">,</span>
             <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">CLUSTER_MANAGER_PORT</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span>
-            <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
-        <span class="p">)</span>
+            <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">time_series</span> <span class="o">=</span> <span class="n">time_series</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
     <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>

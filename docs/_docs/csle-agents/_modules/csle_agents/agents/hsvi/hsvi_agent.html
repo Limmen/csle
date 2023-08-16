@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.hsvi.hsvi_agent &mdash; csle-agents 0.0.1 documentation</title>
+  <title>csle_agents.agents.hsvi.hsvi_agent &mdash; csle-agents 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -92,31 +92,32 @@
 
 
 <div class="viewcode-block" id="HSVIAgent"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent">[docs]</a><span class="k">class</span> <span class="nc">HSVIAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Heuristic-Search Value Iteration for POMDPs (Trey Smith and Reid Simmons, 2004) Agent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span>
-                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the HSVI agent</span>
 
 <span class="sd">        :param simulation_env_config: configuration of the simulation environment</span>
 <span class="sd">        :param experiment_config: the experiment configuration</span>
 <span class="sd">        :param training_job: an existing training job to use (optional)</span>
 <span class="sd">        :param save_to_metastore: boolean flag whether to save the execution to the metastore</span>
+<span class="sd">        :param env: the gym environment for training</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">experiment_config</span><span class="o">=</span><span class="n">experiment_config</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">experiment_config</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">HSVI</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">training_job</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span> <span class="o">=</span> <span class="n">save_to_metastore</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
-                            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
 
 <div class="viewcode-block" id="HSVIAgent.train"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentExecution</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the value iteration algorithm to compute V*</span>
 
 <span class="sd">        :return: the results</span>
@@ -142,6 +143,10 @@
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI</span><span class="o">.</span><span class="n">UB_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI</span><span class="o">.</span><span class="n">LB_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">,</span>
+                                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">simulation_env_input_config</span><span class="p">)</span>
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -224,7 +229,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.hparam_names"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.hparam_names">[docs]</a>    <span class="k">def</span> <span class="nf">hparam_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list with the hyperparameter names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">CONFIDENCE_INTERVAL</span><span class="p">,</span>
@@ -238,7 +243,7 @@
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI</span><span class="o">.</span><span class="n">SIMULATE_HORIZON</span><span class="p">,</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">HSVI</span><span class="o">.</span><span class="n">NUMBER_OF_SIMULATIONS</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.hsvi_algorithm"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.hsvi_algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">hsvi_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs</span>
 
 <span class="sd">        :param exp_result: the experiment result object</span>
@@ -290,7 +295,7 @@
              <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">prune_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
              <span class="n">simulation_frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">simulate_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">number_of_simulations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Heuristic Search Value Iteration for POMDPs (Trey Smith and Reid Simmons, 2004)</span>
 
 <span class="sd">        :param O: set of observations of the POMDP</span>
@@ -374,7 +379,7 @@
 <div class="viewcode-block" id="HSVIAgent.explore"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.explore">[docs]</a>    <span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span>
                 <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                 <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Explores the POMDP tree</span>
 
 <span class="sd">        :param b: current belief</span>
@@ -393,7 +398,7 @@
 <span class="sd">        :return: new lower and upper bounds</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">lower_bound</span><span class="o">=</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;explore, w:</span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">, ep:</span><span class="si">{</span><span class="n">epsilon</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;explore, w:</span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">, ep:</span><span class="si">{</span><span class="n">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">w</span> <span class="o">&lt;=</span> <span class="n">epsilon</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span>
 
@@ -430,7 +435,7 @@
         <span class="k">return</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.initialize_lower_bound"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.initialize_lower_bound">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_lower_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the lower bound</span>
 
 <span class="sd">        :param R: reward tensor</span>
@@ -454,7 +459,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.initialize_upper_bound"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.initialize_upper_bound">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_upper_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the upper bound</span>
 
 <span class="sd">        :param T: the transition tensor</span>
@@ -472,7 +477,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">point_set</span><span class="p">,</span> <span class="n">point_set</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.generate_corner_belief"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.generate_corner_belief">[docs]</a>    <span class="k">def</span> <span class="nf">generate_corner_belief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the corner of the simplex that corresponds to being in some state with probability 1</span>
 
 <span class="sd">        :param s: the state</span>
@@ -486,7 +491,7 @@
 <div class="viewcode-block" id="HSVIAgent.local_updates"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_updates">[docs]</a>    <span class="k">def</span> <span class="nf">local_updates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                       <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                       <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform local updates to the upper and  lower bounds for the given belief in the heuristic-search-exploration</span>
 
 <span class="sd">        :param lower_bound: the lower bound on V</span>
@@ -511,7 +516,7 @@
 <div class="viewcode-block" id="HSVIAgent.local_upper_bound_update"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_upper_bound_update">[docs]</a>    <span class="k">def</span> <span class="nf">local_upper_bound_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                  <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                  <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a local update to the upper bound during the heuristic-search exploration</span>
 
 <span class="sd">        :param upper_bound: the upper bound to update</span>
@@ -535,7 +540,7 @@
         <span class="k">return</span> <span class="n">upper_bound</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.update_corner_points"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.update_corner_points">[docs]</a>    <span class="k">def</span> <span class="nf">update_corner_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">corner_points</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">new_point</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        (Maybe) update the corner points of the upper bound</span>
 
 <span class="sd">        :param corner_points: the current set of corner points</span>
@@ -557,7 +562,7 @@
 <div class="viewcode-block" id="HSVIAgent.local_lower_bound_update"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_lower_bound_update">[docs]</a>    <span class="k">def</span> <span class="nf">local_lower_bound_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                  <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                  <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a local update to the lower bound given a belief point in the heuristic search</span>
 
 <span class="sd">        :param lower_bound: the current lower bound</span>
@@ -578,7 +583,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.lower_bound_backup"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_backup">[docs]</a>    <span class="k">def</span> <span class="nf">lower_bound_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                            <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a new alpha-vector for the lower bound</span>
 
 <span class="sd">        :param lower_bound: the current lower bound</span>
@@ -638,7 +643,7 @@
 <div class="viewcode-block" id="HSVIAgent.upper_bound_backup"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.upper_bound_backup">[docs]</a>    <span class="k">def</span> <span class="nf">upper_bound_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                            <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                            <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a point to the upper bound</span>
 
 <span class="sd">        :param upper_bound: the current upper bound</span>
@@ -672,7 +677,7 @@
         <span class="k">return</span> <span class="n">b</span><span class="p">,</span> <span class="n">new_val</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.lp_convex_hull_projection_lp"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lp_convex_hull_projection_lp">[docs]</a>    <span class="k">def</span> <span class="nf">lp_convex_hull_projection_lp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reference: (Hauskreht 2000)</span>
 
 <span class="sd">        Computes the upper bound belief by performing a projection onto the convex hull of the upper bound,</span>
@@ -727,7 +732,7 @@
         <span class="k">return</span> <span class="n">belief_value</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.approximate_projection_sawtooth"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.approximate_projection_sawtooth">[docs]</a>    <span class="k">def</span> <span class="nf">approximate_projection_sawtooth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reference: (Hauskreht 2000)</span>
 
 <span class="sd">        Performs an approximate projection of the belief onto the convex hull of the upepr bound</span>
@@ -739,8 +744,7 @@
 <span class="sd">        :return: the value of the belief point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">upper_bound_point_set</span><span class="p">,</span> <span class="n">corner_points</span> <span class="o">=</span> <span class="n">upper_bound</span>
-        <span class="n">alpha_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corner_points</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-
+        <span class="n">alpha_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">corner_points</span><span class="p">)))</span>
         <span class="c1"># min_val = corner_points_belief_value</span>
         <span class="n">interior_belief_values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">upper_bound_point_set</span><span class="p">:</span>
@@ -750,7 +754,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.interior_point_belief_val"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.interior_point_belief_val">[docs]</a>    <span class="k">def</span> <span class="nf">interior_point_belief_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interior_point</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                   <span class="n">alpha_corner</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the value induced on the belief point b projected onto the convex hull by a given interior belief point</span>
 
 <span class="sd">        :param interior_point: the interior point</span>
@@ -777,7 +781,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.upper_bound_value"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.upper_bound_value">[docs]</a>    <span class="k">def</span> <span class="nf">upper_bound_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the upper bound value of a given belief point</span>
 
 <span class="sd">        :param upper_bound: the upper bound</span>
@@ -793,7 +797,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">approximate_projection_sawtooth</span><span class="p">(</span><span class="n">upper_bound</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.lower_bound_value"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_value">[docs]</a>    <span class="k">def</span> <span class="nf">lower_bound_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the lower bound value of a given belief point</span>
 
 <span class="sd">        :param lower_bound: the lower bound</span>
@@ -810,7 +814,7 @@
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">alpha_vals</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.next_belief"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.next_belief">[docs]</a>    <span class="k">def</span> <span class="nf">next_belief</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the next belief using a Bayesian filter</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -828,7 +832,7 @@
         <span class="k">return</span> <span class="n">b_prime</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.bayes_filter"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.bayes_filter">[docs]</a>    <span class="k">def</span> <span class="nf">bayes_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Bayesian filter to compute the belief of being in s_prime when observing o after taking action a in belief b</span>
 
 <span class="sd">        :param s_prime: the state to compute the belief of</span>
@@ -855,7 +859,7 @@
         <span class="k">return</span> <span class="n">b_prime</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.p_o_given_b_a"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.p_o_given_b_a">[docs]</a>    <span class="k">def</span> <span class="nf">p_o_given_b_a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes P[o|a,b]</span>
 
 <span class="sd">        :param o: the observation</span>
@@ -876,7 +880,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.excess"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.excess">[docs]</a>    <span class="k">def</span> <span class="nf">excess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the excess uncertainty  (Trey Smith and Reid Simmons, 2004)</span>
 
 <span class="sd">        :param lower_bound: the lower bound</span>
@@ -896,7 +900,7 @@
             <span class="k">return</span> <span class="n">w</span> <span class="o">-</span> <span class="n">epsilon</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">t</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.width"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.width">[docs]</a>    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the bounds width (Trey Smith and Reid Simmons, 2004)</span>
 
 <span class="sd">        :param lower_bound: the current lower bound</span>
@@ -913,7 +917,7 @@
 <div class="viewcode-block" id="HSVIAgent.q_hat_interval"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.q_hat_interval">[docs]</a>    <span class="k">def</span> <span class="nf">q_hat_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                        <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the interval (Trey Smith and Reid Simmons, 2004)</span>
 
 <span class="sd">        :param b: the current belief point</span>
@@ -937,7 +941,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.q"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.q">[docs]</a>    <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
           <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Applies the Bellman equation to compute Q values</span>
 
 <span class="sd">        :param b: the belief point</span>
@@ -973,7 +977,7 @@
         <span class="k">return</span> <span class="n">Q_val</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.prune_upper_bound"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.prune_upper_bound">[docs]</a>    <span class="k">def</span> <span class="nf">prune_upper_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lp</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prunes the points in the upper bound</span>
 
 <span class="sd">        :param upper_bound: the current upper bound</span>
@@ -995,7 +999,7 @@
 <div class="viewcode-block" id="HSVIAgent.simulate"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b0</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                  <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simulates the POMDP to estimate the reward of the greedy policy with respect to the value function represented</span>
 <span class="sd">        by the lower bound</span>
 
@@ -1038,7 +1042,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.one_step_lookahead"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.one_step_lookahead">[docs]</a>    <span class="k">def</span> <span class="nf">one_step_lookahead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">,</span> <span class="n">num_states</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a one-step lookahead for value iteration</span>
 <span class="sd">        :param state: the current state</span>
 <span class="sd">        :param V: the current value function</span>
@@ -1060,7 +1064,7 @@
 
 <div class="viewcode-block" id="HSVIAgent.vi"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.vi">[docs]</a>    <span class="k">def</span> <span class="nf">vi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
            <span class="n">theta</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">discount_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An implementation of the Value Iteration algorithm</span>
 <span class="sd">        :param T: the transition kernel T</span>
 <span class="sd">        :param num_states: the number of states</span>
@@ -1104,7 +1108,7 @@
         <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">policy</span></div>
 
 <div class="viewcode-block" id="HSVIAgent.observation_possible"><a class="viewcode-back" href="../../../../csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.observation_possible">[docs]</a>    <span class="k">def</span> <span class="nf">observation_possible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a given observation can be observed when taking a given action in a given state</span>
 
 <span class="sd">        :param o: the observation to check</span>

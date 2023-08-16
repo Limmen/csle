@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.client_manager.dao package &mdash; csle-collector 0.3.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_collector.client_manager.threads package" href="csle_collector.client_manager.threads.html" />
+    <link rel="prev" title="csle_collector.client_manager package" href="csle_collector.client_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="csle_collector.client_manager.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">csle_collector.client_manager.dao package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.arrival_config">csle_collector.client_manager.dao.arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.client">csle_collector.client_manager.dao.client module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.client_arrival_type">csle_collector.client_manager.dao.client_arrival_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.constant_arrival_config">csle_collector.client_manager.dao.constant_arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.eptmp_arrival_config">csle_collector.client_manager.dao.eptmp_arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.piece_wise_constant_arrival_config">csle_collector.client_manager.dao.piece_wise_constant_arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.sine_arrival_config">csle_collector.client_manager.dao.sine_arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.spiking_arrival_config">csle_collector.client_manager.dao.spiking_arrival_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.workflow_markov_chain">csle_collector.client_manager.dao.workflow_markov_chain module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.workflow_service">csle_collector.client_manager.dao.workflow_service module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao.workflows_config">csle_collector.client_manager.dao.workflows_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_collector.client_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.threads.html">csle_collector.client_manager.threads package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_manager">csle_collector.client_manager.client_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_manager_pb2">csle_collector.client_manager.client_manager_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_manager_pb2_grpc">csle_collector.client_manager.client_manager_pb2_grpc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_manager_util">csle_collector.client_manager.client_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_population_metrics">csle_collector.client_manager.client_population_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.query_clients">csle_collector.client_manager.query_clients module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+      <li class="breadcrumb-item active">csle_collector.client_manager.dao package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_collector.client_manager.dao.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-collector-client-manager-dao-package">
+<h1>csle_collector.client_manager.dao package<a class="headerlink" href="#csle-collector-client-manager-dao-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-csle_collector.client_manager.dao.arrival_config">
+<span id="csle-collector-client-manager-dao-arrival-config-module"></span><h2>csle_collector.client_manager.dao.arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.arrival_config.ArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.arrival_config.</span></span><span class="sig-name descname"><span class="pre">ArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_arrival_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType" title="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType"><span class="pre">ClientArrivalType</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/arrival_config.html#ArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
+<p>Abstract arrival configuration class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><span class="pre">ArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/arrival_config.html#ArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><span class="pre">ArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/arrival_config.html#ArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.arrival_config.ArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/arrival_config.html#ArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.client">
+<span id="csle-collector-client-manager-dao-client-module"></span><h2>csle_collector.client_manager.dao.client module<a class="headerlink" href="#module-csle_collector.client_manager.dao.client" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.client.</span></span><span class="sig-name descname"><span class="pre">Client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_distribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrival_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><span class="pre">ArrivalConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponential_service_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>A client, which is characterized by its arrival process and its workflow distribution.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.client.Client" title="csle_collector.client_manager.dao.client.Client"><span class="pre">Client</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.client.Client" title="csle_collector.client_manager.dao.client.Client"><span class="pre">Client</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ClientDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.client.Client" title="csle_collector.client_manager.dao.client.Client"><span class="pre">Client</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.client.Client" title="csle_collector.client_manager.dao.client.Client"><span class="pre">Client</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.generate_commands">
+<span class="sig-name descname"><span class="pre">generate_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflows_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.generate_commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.generate_commands" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the commands for the client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>workflows_config</strong> – the workflows configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sampled list of commands for the client</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client.Client.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ClientDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client.html#Client.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client.Client.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.client_arrival_type">
+<span id="csle-collector-client-manager-dao-client-arrival-type-module"></span><h2>csle_collector.client_manager.dao.client_arrival_type module<a class="headerlink" href="#module-csle_collector.client_manager.dao.client_arrival_type" title="Permalink to this heading"></a></h2>
+<p>Type of process that generates new clients for an emulation</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.client_arrival_type.</span></span><span class="sig-name descname"><span class="pre">ClientArrivalType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/client_arrival_type.html#ClientArrivalType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing the different process types for generating client process in an emulation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.CONSTANT">
+<span class="sig-name descname"><span class="pre">CONSTANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.CONSTANT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.EPTMP">
+<span class="sig-name descname"><span class="pre">EPTMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.EPTMP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.PIECE_WISE_CONSTANT">
+<span class="sig-name descname"><span class="pre">PIECE_WISE_CONSTANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.PIECE_WISE_CONSTANT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SINE_MODULATED">
+<span class="sig-name descname"><span class="pre">SINE_MODULATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SINE_MODULATED" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SPIKING">
+<span class="sig-name descname"><span class="pre">SPIKING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#csle_collector.client_manager.dao.client_arrival_type.ClientArrivalType.SPIKING" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.constant_arrival_config">
+<span id="csle-collector-client-manager-dao-constant-arrival-config-module"></span><h2>csle_collector.client_manager.dao.constant_arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.constant_arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.constant_arrival_config.</span></span><span class="sig-name descname"><span class="pre">ConstantArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lamb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>DTO representing the configuration of a stationary poisson arrival process with exponential service times</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig" title="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig"><span class="pre">ConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstantArrivalConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig" title="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig"><span class="pre">ConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig" title="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig"><span class="pre">ConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConstantArrivalConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/constant_arrival_config.html#ConstantArrivalConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.eptmp_arrival_config">
+<span id="csle-collector-client-manager-dao-eptmp-arrival-config-module"></span><h2>csle_collector.client_manager.dao.eptmp_arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.eptmp_arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.eptmp_arrival_config.</span></span><span class="sig-name descname"><span class="pre">EPTMPArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gammas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omegas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>DTO representing the configuration of a homogenous poisson arrival process with an
+Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig" title="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig"><span class="pre">EPTMPArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EPTMPArrivalConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig" title="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig"><span class="pre">EPTMPArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig" title="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig"><span class="pre">EPTMPArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EPTMPArrivalConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/eptmp_arrival_config.html#EPTMPArrivalConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.piece_wise_constant_arrival_config">
+<span id="csle-collector-client-manager-dao-piece-wise-constant-arrival-config-module"></span><h2>csle_collector.client_manager.dao.piece_wise_constant_arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.piece_wise_constant_arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.piece_wise_constant_arrival_config.</span></span><span class="sig-name descname"><span class="pre">PieceWiseConstantArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakvalues</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
+<p>DTO representing the configuration of a piece-wise constant
+poisson arrival process with exponential service times</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig" title="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig"><span class="pre">PieceWiseConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PieceWiseConstantArrivalConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig" title="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig"><span class="pre">PieceWiseConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig" title="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig"><span class="pre">PieceWiseConstantArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PieceWiseConstantArrivalConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/piece_wise_constant_arrival_config.html#PieceWiseConstantArrivalConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.piece_wise_constant_arrival_config.PieceWiseConstantArrivalConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.sine_arrival_config">
+<span id="csle-collector-client-manager-dao-sine-arrival-config-module"></span><h2>csle_collector.client_manager.dao.sine_arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.sine_arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.sine_arrival_config.</span></span><span class="sig-name descname"><span class="pre">SineArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lamb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period_scaling_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>DTO representing the configuration of a sine-modulated poisson arrival process with exponential service times</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig" title="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig"><span class="pre">SineArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SineArrivalConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig" title="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig"><span class="pre">SineArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig" title="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig"><span class="pre">SineArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SineArrivalConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/sine_arrival_config.html#SineArrivalConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.spiking_arrival_config">
+<span id="csle-collector-client-manager-dao-spiking-arrival-config-module"></span><h2>csle_collector.client_manager.dao.spiking_arrival_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.spiking_arrival_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.spiking_arrival_config.</span></span><span class="sig-name descname"><span class="pre">SpikingArrivalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.client_manager.dao.arrival_config.ArrivalConfig" title="csle_collector.client_manager.dao.arrival_config.ArrivalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrivalConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>DTO representing the configuration of a poisson arrival process with spiking arrivals</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig" title="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig"><span class="pre">SpikingArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SpikingArrivalConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig" title="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig"><span class="pre">SpikingArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig" title="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig"><span class="pre">SpikingArrivalConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SpikingArrivalConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/spiking_arrival_config.html#SpikingArrivalConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.spiking_arrival_config.SpikingArrivalConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.workflow_markov_chain">
+<span id="csle-collector-client-manager-dao-workflow-markov-chain-module"></span><h2>csle_collector.client_manager.dao.workflow_markov_chain module<a class="headerlink" href="#module-csle_collector.client_manager.dao.workflow_markov_chain" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.workflow_markov_chain.</span></span><span class="sig-name descname"><span class="pre">WorkflowMarkovChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>A Markov chain representation of a workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">WorkflowMarkovChainDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.markov_next_state">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">markov_next_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.markov_next_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.markov_next_state" title="Permalink to this definition"></a></dt>
+<dd><p>Samples the next state of the Markov chain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> – a numpy array of probabilities that sum up to 1.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an integer from 0 to len(row)-1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the Markov chain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.step_forward">
+<span class="sig-name descname"><span class="pre">step_forward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.step_forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.step_forward" title="Permalink to this definition"></a></dt>
+<dd><p>Move t forward by one and possibly transition to a new state.
+Returns the new state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">WorkflowMarkovChainDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_markov_chain.html#WorkflowMarkovChain.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.workflow_service">
+<span id="csle-collector-client-manager-dao-workflow-service-module"></span><h2>csle_collector.client_manager.dao.workflow_service module<a class="headerlink" href="#module-csle_collector.client_manager.dao.workflow_service" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.workflow_service.</span></span><span class="sig-name descname"><span class="pre">WorkflowService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ips_and_commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>A service of the network.
+The service might be distributed across several network nodes.
+The service is defined by the series of commands that a client executes to make use of the service.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.create_execution_config">
+<span class="sig-name descname"><span class="pre">create_execution_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.create_execution_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.create_execution_config" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a new config for an execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip_first_octet</strong> – the first octet of the IP of the new execution</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new config</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">WorkflowServiceDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.get_commands">
+<span class="sig-name descname"><span class="pre">get_commands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.get_commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.get_commands" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of commands for the service</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.replace_first_octet_of_ip">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">replace_first_octet_of_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.replace_first_octet_of_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.replace_first_octet_of_ip" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for changing the first octet in an IP address</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the IP to modify</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet to insert</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new IP</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflow_service.WorkflowService.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">WorkflowServiceDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflow_service.html#WorkflowService.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao.workflows_config">
+<span id="csle-collector-client-manager-dao-workflows-config-module"></span><h2>csle_collector.client_manager.dao.workflows_config module<a class="headerlink" href="#module-csle_collector.client_manager.dao.workflows_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.client_manager.dao.workflows_config.</span></span><span class="sig-name descname"><span class="pre">WorkflowsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow_markov_chains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_services</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GRPCSerializable</span></code></p>
+<p>Workflows configuration</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.commands">
+<span class="sig-name descname"><span class="pre">commands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.commands" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the list of all commands across all services</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of commands</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.create_execution_config">
+<span class="sig-name descname"><span class="pre">create_execution_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.create_execution_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.create_execution_config" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a new config for an execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip_first_octet</strong> – the first octet of the IP of the new execution</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new config</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict representation to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_grpc_object">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grpc_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">WorkflowsConfigDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.from_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates the object from a GRPC DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object to instantiate from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig" title="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig"><span class="pre">WorkflowsConfig</span></a></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_mc">
+<span class="sig-name descname"><span class="pre">get_workflow_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain" title="csle_collector.client_manager.dao.workflow_markov_chain.WorkflowMarkovChain"><span class="pre">WorkflowMarkovChain</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.get_workflow_mc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_mc" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the workflow Markov chain with a specific id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> – the id of the MC</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the MC or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_service">
+<span class="sig-name descname"><span class="pre">get_workflow_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.client_manager.dao.workflow_service.WorkflowService" title="csle_collector.client_manager.dao.workflow_service.WorkflowService"><span class="pre">WorkflowService</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.get_workflow_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.get_workflow_service" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the workflow service with a specific id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> – the id of the service</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the service or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the object to a dict representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_grpc_object">
+<span class="sig-name descname"><span class="pre">to_grpc_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">WorkflowsConfigDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/client_manager/dao/workflows_config.html#WorkflowsConfig.to_grpc_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_grpc_object" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a GRPC serializable version of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_collector.client_manager.dao">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.client_manager.dao" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_collector.client_manager.html" class="btn btn-neutral float-left" title="csle_collector.client_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_collector.client_manager.threads.html" class="btn btn-neutral float-right" title="csle_collector.client_manager.threads package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

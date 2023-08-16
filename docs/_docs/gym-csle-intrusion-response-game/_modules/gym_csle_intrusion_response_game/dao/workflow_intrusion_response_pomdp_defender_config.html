@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
+  <title>gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config &mdash; gym-csle-intrusion-response-game 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -80,14 +80,14 @@
 
 
 <div class="viewcode-block" id="WorkflowIntrusionResponsePOMDPDefenderConfig"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig">[docs]</a><span class="k">class</span> <span class="nc">WorkflowIntrusionResponsePOMDPDefenderConfig</span><span class="p">(</span><span class="n">SimulationEnvInputConfig</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO representing the configuration of a workflow intrusion response POMDP when the defender faces a static</span>
 <span class="sd">    defender opponent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">game_config</span><span class="p">:</span> <span class="n">WorkflowIntrusionResponseGameConfig</span><span class="p">,</span>
                  <span class="n">attacker_strategies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes teh DTO</span>
 
 <span class="sd">        :param env_name: the name of the environment</span>
@@ -100,10 +100,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attacker_strategies</span> <span class="o">=</span> <span class="n">attacker_strategies</span>
 
 <div class="viewcode-block" id="WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;game_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacker_strategies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_strategies</span><span class="p">))</span>
@@ -111,7 +113,7 @@
 
 <div class="viewcode-block" id="WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;WorkflowIntrusionResponsePOMDPDefenderConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -134,7 +136,21 @@
         <span class="n">obj</span> <span class="o">=</span> <span class="n">WorkflowIntrusionResponsePOMDPDefenderConfig</span><span class="p">(</span>
             <span class="n">env_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_name&quot;</span><span class="p">],</span> <span class="n">game_config</span><span class="o">=</span><span class="n">WorkflowIntrusionResponseGameConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;game_config&quot;</span><span class="p">]),</span>
             <span class="n">attacker_strategies</span><span class="o">=</span><span class="n">attacker_strategies</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span></div></div>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="WorkflowIntrusionResponsePOMDPDefenderConfig.from_json_file"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config.WorkflowIntrusionResponsePOMDPDefenderConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;WorkflowIntrusionResponsePOMDPDefenderConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">WorkflowIntrusionResponsePOMDPDefenderConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

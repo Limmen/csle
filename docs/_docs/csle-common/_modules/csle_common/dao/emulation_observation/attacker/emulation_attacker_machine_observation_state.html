@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,8 +72,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.flag</span> <span class="kn">import</span> <span class="n">Flag</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.credential</span> <span class="kn">import</span> <span class="n">Credential</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.common.emulation_port_observation_state</span> <span class="kn">import</span> <span class="n">EmulationPortObservationState</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state</span> \
@@ -82,15 +83,16 @@
     <span class="kn">import</span> <span class="nn">EmulationConnectionObservationState</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_host_result</span> <span class="kn">import</span> <span class="n">NmapHostResult</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action_result.nmap_trace</span> <span class="kn">import</span> <span class="n">NmapTrace</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationAttackerMachineObservationState"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represent&#39;s the attacker&#39;s belief state of a component in the emulation</span>
+<div class="viewcode-block" id="EmulationAttackerMachineObservationState"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the attacker&#39;s belief state of a component in the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the state</span>
 
 <span class="sd">        :param ips: the ip of the machine</span>
@@ -106,7 +108,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">backdoor_credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logged_in</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flags_found</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flags_found</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Flag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filesystem_searched</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">untried_credentials</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -115,7 +117,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logged_in_services</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_services</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostnames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span> <span class="n">NmapTrace</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NmapTrace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">telnet_brute_tried</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_brute_tried</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ftp_brute_tried</span> <span class="o">=</span> <span class="kc">False</span>
@@ -140,7 +142,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reachable</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ips:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="si">}</span><span class="s2">, os:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">os</span><span class="si">}</span><span class="s2">, shell_access:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_access</span><span class="si">}</span><span class="s2">, logged_in:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">logged_in</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -168,7 +170,7 @@
                <span class="sa">f</span><span class="s2">&quot;flags_found:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flags_found</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.sort_ports"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.sort_ports">[docs]</a>    <span class="k">def</span> <span class="nf">sort_ports</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sorts the list of ports</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -177,7 +179,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.sort_cve_vuln"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.sort_cve_vuln">[docs]</a>    <span class="k">def</span> <span class="nf">sort_cve_vuln</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vuln_lookup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sorts the list of vulnerabilities</span>
 
 <span class="sd">        :param vuln_lookup: a lookup table for converting vulnerabilities between ids and names</span>
@@ -187,7 +189,7 @@
                                 <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.sort_shell_access"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.sort_shell_access">[docs]</a>    <span class="k">def</span> <span class="nf">sort_shell_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_lookup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sorts the list of shell access credentials</span>
 
 <span class="sd">        :param service_lookup: a lookup table for converting between service names and service ids</span>
@@ -198,8 +200,8 @@
             <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">service_lookup</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">service</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">service</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
             <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_vuln_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lookup_table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_vuln_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lookup_table</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Looks up the id of a vulnerability in a lookup table</span>
 
 <span class="sd">        :param name: the name of the vulnerability</span>
@@ -212,7 +214,7 @@
             <span class="k">return</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">&quot;unknown&quot;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.sort_osvdb_vuln"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.sort_osvdb_vuln">[docs]</a>    <span class="k">def</span> <span class="nf">sort_osvdb_vuln</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sorts the OSVDB vulnerabilities</span>
 
 <span class="sd">        :return: None</span>
@@ -220,7 +222,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">osvdb_vulns</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">osvdb_vulns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">osvdb_id</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.cleanup"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans up environment state. This method is particularly useful in emulation mode where there are</span>
 <span class="sd">        SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.</span>
 
@@ -234,7 +236,7 @@
             <span class="n">c</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.copy"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerMachineObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m_copy</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
@@ -283,11 +285,17 @@
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.from_nmap_result"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.from_nmap_result">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_nmap_result</span><span class="p">(</span><span class="n">nmap_host_result</span><span class="p">:</span> <span class="n">NmapHostResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerMachineObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the NmapHostResultDTO into a AttackerMachineObservationState</span>
 
 <span class="sd">        :return: the created AttackerMachineObservationState</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">ports</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">vulnerabilities</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">credentials</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">hostnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NMapHostResult is incomplete, at least one attribute is None&quot;</span><span class="p">)</span>
         <span class="n">m_obs</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">nmap_host_result</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
         <span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_obs</span><span class="p">(),</span> <span class="n">nmap_host_result</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
         <span class="n">m_obs</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="n">ports</span>
@@ -305,7 +313,7 @@
         <span class="k">return</span> <span class="n">m_obs</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.ips_match"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.ips_match">[docs]</a>    <span class="k">def</span> <span class="nf">ips_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a list of ips overlap with the ips of this machine</span>
 
 <span class="sd">        :param ips: the list of ips to check</span>
@@ -320,7 +328,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerMachineObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -368,10 +376,12 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">os</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
@@ -416,31 +426,9 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;reachable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reachable</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
-<div class="viewcode-block" id="EmulationAttackerMachineObservationState.to_json_str"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the DTO into a json string</span>
-
-<span class="sd">        :return: the json string representation of the DTO</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json_str</span></div>
-
-<div class="viewcode-block" id="EmulationAttackerMachineObservationState.to_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saves the DTO to a json file</span>
-
-<span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="n">json_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_json_str</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.from_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerMachineObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>
@@ -453,7 +441,7 @@
         <span class="k">return</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.num_attributes"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: number of attributes of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">attributes_per_emulation_port_obs_state</span> <span class="o">=</span> <span class="mi">0</span>
@@ -488,7 +476,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerMachineObservationState.schema"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state.EmulationAttackerMachineObservationState.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerMachineObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
@@ -497,7 +485,7 @@
         <span class="n">dto</span><span class="o">.</span><span class="n">osvdb_vulns</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationVulnerabilityObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">shell_access_credentials</span> <span class="o">=</span> <span class="p">[</span><span class="n">Credential</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">backdoor_credentials</span> <span class="o">=</span> <span class="p">[</span><span class="n">Credential</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>
-        <span class="n">dto</span><span class="o">.</span><span class="n">flags_found</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">dto</span><span class="o">.</span><span class="n">flags_found</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Flag</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">ssh_connections</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">ftp_connections</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">telnet_connections</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>

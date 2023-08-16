@@ -1,24 +1,17 @@
 csle\_collector.ossec\_ids\_manager package
 ===========================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   csle_collector.ossec_ids_manager.dao
+   csle_collector.ossec_ids_manager.threads
+
 Submodules
 ----------
-
-csle\_collector.ossec\_ids\_manager.ossec\_ids\_alert module
-------------------------------------------------------------
-
-.. automodule:: csle_collector.ossec_ids_manager.ossec_ids_alert
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-csle\_collector.ossec\_ids\_manager.ossec\_ids\_alert\_counters module
-----------------------------------------------------------------------
-
-.. automodule:: csle_collector.ossec_ids_manager.ossec_ids_alert_counters
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 csle\_collector.ossec\_ids\_manager.ossec\_ids\_manager module
 --------------------------------------------------------------

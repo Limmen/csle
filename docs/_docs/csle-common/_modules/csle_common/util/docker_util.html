@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.docker_util &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.util.docker_util &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -74,6 +74,7 @@
   <h1>Source code for csle_common.util.docker_util</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">docker</span>
+<span class="kn">from</span> <span class="nn">docker.models.containers</span> <span class="kn">import</span> <span class="n">Container</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.docker.docker_container_metadata</span> <span class="kn">import</span> <span class="n">DockerContainerMetadata</span>
@@ -83,63 +84,67 @@
 
 
 <div class="viewcode-block" id="DockerUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil">[docs]</a><span class="k">class</span> <span class="nc">DockerUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Utility class for extracting information from running emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DockerUtil.parse_runnning_emulation_infos"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_runnning_emulation_infos</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerEnvMetadata</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of all running emulation environments</span>
 
 <span class="sd">        :return: a list of environment DTOs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-        <span class="n">client_2</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
+        <span class="n">client_1</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+        <span class="n">client_2</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
         <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
-        <span class="n">emulations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">emulation</span><span class="p">,</span> <span class="n">parsed_containers</span><span class="p">))))</span>
+        <span class="n">emulations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">emulation</span><span class="p">,</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+                                                                                <span class="n">parsed_containers</span><span class="p">)))))</span>
         <span class="n">parsed_envs</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_emulation_envs</span><span class="p">(</span><span class="n">emulations</span><span class="o">=</span><span class="n">emulations</span><span class="p">,</span> <span class="n">containers</span><span class="o">=</span><span class="n">parsed_containers</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parsed_envs</span></div>
 
 <div class="viewcode-block" id="DockerUtil.get_container_hex_id"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.get_container_hex_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_container_hex_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries the docker engine for the id of a container with a given name</span>
 
 <span class="sd">        :return: the id</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-        <span class="n">client_2</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
-        <span class="n">containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
+        <span class="n">client_1</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+        <span class="n">client_2</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">UNIX_DOCKER_SOCK_URL</span><span class="p">)</span>
+        <span class="n">containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="o">=</span><span class="n">client_1</span><span class="p">,</span>
+                                                                                        <span class="n">client_2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">container</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="n">id</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="DockerUtil.parse_running_containers"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_running_containers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client_2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">parse_running_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">,</span> <span class="n">client_2</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of all running containers</span>
 
 <span class="sd">        :param client_1: docker client 1</span>
 <span class="sd">        :param client_2:  docker client 2</span>
 <span class="sd">        :return: list of parsed running containers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">containers</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+        <span class="n">containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Container</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
         <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="o">=</span><span class="n">containers</span><span class="p">,</span> <span class="n">client2</span><span class="o">=</span><span class="n">client_2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parsed_containers</span></div>
 
 <div class="viewcode-block" id="DockerUtil.parse_stopped_containers"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_stopped_containers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">parse_stopped_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">,</span> <span class="n">client2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">parse_stopped_containers</span><span class="p">(</span><span class="n">client_1</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">,</span> <span class="n">client2</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of all stopped csle containers</span>
 
 <span class="sd">        :param client_1: docker client 1</span>
 <span class="sd">        :param client2: docker client 2</span>
 <span class="sd">        :return: list of parsed containers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">containers</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">stopped_containers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
+        <span class="n">containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">docker</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">stopped_containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">docker</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINER_EXIT_STATUS</span>
                        <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINER_CREATED_STATUS</span><span class="p">),</span> <span class="n">containers</span><span class="p">))</span>
         <span class="n">parsed_containers</span> <span class="o">=</span> <span class="n">DockerUtil</span><span class="o">.</span><span class="n">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="o">=</span><span class="n">stopped_containers</span><span class="p">,</span> <span class="n">client2</span><span class="o">=</span><span class="n">client2</span><span class="p">)</span>
@@ -148,7 +153,7 @@
 <div class="viewcode-block" id="DockerUtil.parse_running_emulation_envs"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_running_emulation_envs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_running_emulation_envs</span><span class="p">(</span><span class="n">emulations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerEnvMetadata</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of all active emulation environments</span>
 
 <span class="sd">        :param emulations: list of csle emulations</span>
@@ -174,8 +179,9 @@
         <span class="k">return</span> <span class="n">parsed_envs</span></div>
 
 <div class="viewcode-block" id="DockerUtil.parse_containers"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.parse_containers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="p">,</span> <span class="n">client2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">parse_containers</span><span class="p">(</span><span class="n">containers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">docker</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">client2</span><span class="p">:</span> <span class="n">docker</span><span class="o">.</span><span class="n">APIClient</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DockerContainerMetadata</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries docker to get a list of running or stopped csle containers</span>
 
 <span class="sd">        :param containers: list of containers to parse</span>
@@ -193,10 +199,10 @@
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORK_SETTINGS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORKS</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">net</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORK_SETTINGS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORKS</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">labels</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">labels</span>
-                <span class="n">config_path</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">dir_path</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">emulation</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">kafka_config</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">config_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">dir_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">emulation</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">kafka_config</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CFG</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
                     <span class="n">config_path</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CFG</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONTAINER_CONFIG_DIR</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
@@ -205,12 +211,11 @@
                     <span class="n">emulation</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">EMULATION</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
                     <span class="n">kafka_config</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="p">]</span>
-
                 <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">network_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                 <span class="n">gateway</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">mac</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="n">ip_prefix_len</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">ip_prefix_len</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">if</span> <span class="n">net</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">ip</span> <span class="o">=</span> <span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORK_SETTINGS</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">NETWORKS</span><span class="p">][</span><span class="n">net</span><span class="p">][</span>
                         <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">IP_ADDRESS_INFO</span><span class="p">]</span>
@@ -226,14 +231,10 @@
                     <span class="n">name</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">short_id</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">short_id</span><span class="p">,</span> <span class="n">image_short_id</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">short_id</span><span class="p">,</span>
                     <span class="n">image_tags</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                     <span class="n">created</span><span class="o">=</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CREATED_INFO</span><span class="p">],</span>
-                    <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
-                    <span class="n">network_id</span><span class="o">=</span><span class="n">network_id</span><span class="p">,</span>
-                    <span class="n">gateway</span><span class="o">=</span><span class="n">gateway</span><span class="p">,</span>
-                    <span class="n">mac</span><span class="o">=</span><span class="n">mac</span><span class="p">,</span>
-                    <span class="n">ip_prefix_len</span><span class="o">=</span><span class="n">ip_prefix_len</span><span class="p">,</span>
+                    <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="n">network_id</span><span class="p">,</span> <span class="n">gateway</span><span class="o">=</span><span class="n">gateway</span><span class="p">,</span> <span class="n">mac</span><span class="o">=</span><span class="n">mac</span><span class="p">,</span> <span class="n">ip_prefix_len</span><span class="o">=</span><span class="n">ip_prefix_len</span><span class="p">,</span>
                     <span class="n">name2</span><span class="o">=</span><span class="n">container_name_2</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
                     <span class="n">hostname</span><span class="o">=</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">HOSTNAME_INFO</span><span class="p">],</span>
-                    <span class="n">image_name</span><span class="o">=</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">][</span><span class="s2">&quot;Image&quot;</span><span class="p">],</span>
+                    <span class="n">image_name</span><span class="o">=</span><span class="n">inspect_info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">IMAGE</span><span class="p">],</span>
                     <span class="n">net</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
                     <span class="n">container_handle</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">kafka_container</span><span class="o">=</span><span class="n">kafka_config</span><span class="p">)</span>
                 <span class="n">parsed_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed_c</span><span class="p">)</span>
@@ -241,7 +242,7 @@
 
 <div class="viewcode-block" id="DockerUtil.get_docker_gw_bridge_ip"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.docker_util.DockerUtil.get_docker_gw_bridge_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_docker_gw_bridge_ip</span><span class="p">(</span><span class="n">container_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the docker gw bridge ip of a container</span>
 
 <span class="sd">        :param container_id: the id of the container</span>

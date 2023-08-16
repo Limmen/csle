@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.client_manager.client_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.client_manager.client_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -73,250 +73,38 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_collector.client_manager.client_manager</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">threading</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">poisson</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span>
-<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
-<span class="kn">import</span> <span class="nn">socket</span>
-<span class="kn">import</span> <span class="nn">netifaces</span>
-<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.client</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.threads.arrival_thread</span> <span class="kn">import</span> <span class="n">ArrivalThread</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.threads.producer_thread</span> <span class="kn">import</span> <span class="n">ProducerThread</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.workflows_config</span> <span class="kn">import</span> <span class="n">WorkflowsConfig</span>
 <span class="kn">import</span> <span class="nn">csle_collector.client_manager.client_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.client_manager.client_manager_pb2</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 
 
-<div class="viewcode-block" id="ClientThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientThread">[docs]</a><span class="k">class</span> <span class="nc">ClientThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Thread representing a client</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the client</span>
-
-<span class="sd">        :param service_time: the service time of the client</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">service_time</span> <span class="o">=</span> <span class="n">service_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="n">commands</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
-
-<div class="viewcode-block" id="ClientThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The main function of the client</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">cmd_index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">cmd_index</span><span class="p">]</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-            <span class="n">time_lapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-            <span class="k">if</span> <span class="n">time_lapsed</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_time</span><span class="p">:</span>
-                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">cmd_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">cmd_index</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">cmd_index</span> <span class="o">=</span> <span class="mi">0</span></div></div>
-
-
-<div class="viewcode-block" id="ArrivalThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread">[docs]</a><span class="k">class</span> <span class="nc">ArrivalThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Thread that generates client arrivals (starts client threads according to a Poisson process)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                 <span class="n">num_commands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sine_modulated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">time_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">period_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                 <span class="n">exponents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">factors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spiking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">piece_wise_constant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">breakpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">breakvalues</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the arrival thread</span>
-
-<span class="sd">        :param commands: the list of commands that clients can use</span>
-<span class="sd">        :param time_step_len_seconds: the number of seconds that one time-unit of the Poisson process corresponds to</span>
-<span class="sd">        :param lamb: the lambda parameter of the Poisson process for arrivals</span>
-<span class="sd">        :param mu: the mu parameter of the service times of the clients</span>
-<span class="sd">        :param num_commands: the number of commands per client</span>
-<span class="sd">        :param sine_modulated: boolean flag whether the rate of the arrival process is sine-modulated or not</span>
-<span class="sd">        :param time_scaling_factor: parameter for sine-modulated rate</span>
-<span class="sd">        :param period_scaling_factor: parameter for sine-modulated rate</span>
-<span class="sd">        :param exponents: parameters for spiking rate</span>
-<span class="sd">        :param factors: parameters for spiking rate</span>
-<span class="sd">        :param spiking: boolean flag indicating whether spiking rate should be used</span>
-<span class="sd">        :param piece_wise_constant: boolean flag indicating whether spiking piece-wise constant rate should be used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_threads</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lamb</span> <span class="o">=</span> <span class="n">lamb</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="n">commands</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_commands</span> <span class="o">=</span> <span class="n">num_commands</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sine_modulated</span> <span class="o">=</span> <span class="n">sine_modulated</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamb</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_scaling_factor</span> <span class="o">=</span> <span class="n">time_scaling_factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">period_scaling_factor</span> <span class="o">=</span> <span class="n">period_scaling_factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exponents</span> <span class="o">=</span> <span class="n">exponents</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factors</span> <span class="o">=</span> <span class="n">factors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spiking</span> <span class="o">=</span> <span class="n">spiking</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">piece_wise_constant</span> <span class="o">=</span> <span class="n">piece_wise_constant</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span> <span class="o">=</span> <span class="n">breakpoints</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span> <span class="o">=</span> <span class="n">breakvalues</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting arrival thread, lambda:</span><span class="si">{</span><span class="n">lamb</span><span class="si">}</span><span class="s2">, mu:</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">, num_commands:</span><span class="si">{</span><span class="n">num_commands</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;commands:</span><span class="si">{</span><span class="n">commands</span><span class="si">}</span><span class="s2">, sine_modulated: </span><span class="si">{</span><span class="n">sine_modulated</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;time_scaling_factor: </span><span class="si">{</span><span class="n">time_scaling_factor</span><span class="si">}</span><span class="s2">, period_scaling_factor: </span><span class="si">{</span><span class="n">period_scaling_factor</span><span class="si">}</span><span class="s2">,&quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;spiking: </span><span class="si">{</span><span class="n">spiking</span><span class="si">}</span><span class="s2">, exponents: </span><span class="si">{</span><span class="n">exponents</span><span class="si">}</span><span class="s2">, factors: </span><span class="si">{</span><span class="n">factors</span><span class="si">}</span><span class="s2">, breakpoints: </span><span class="si">{</span><span class="n">breakpoints</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;breakvalues: </span><span class="si">{</span><span class="n">breakvalues</span><span class="si">}</span><span class="s2">, piece_wise_constant: </span><span class="si">{</span><span class="n">piece_wise_constant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ArrivalThread.piece_wise_constant_rate"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.piece_wise_constant_rate">[docs]</a>    <span class="k">def</span> <span class="nf">piece_wise_constant_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function that returns the rate of a piece-wise constant Poisson process</span>
-
-<span class="sd">        :param t: the time-step</span>
-<span class="sd">        :return: the rate</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">rate</span></div>
-
-<div class="viewcode-block" id="ArrivalThread.spiking_poisson_arrival_rate"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.spiking_poisson_arrival_rate">[docs]</a>    <span class="k">def</span> <span class="nf">spiking_poisson_arrival_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function that returns the rate of a spiking Poisson process</span>
-
-<span class="sd">        :param t: the time-step</span>
-<span class="sd">        :return: the rate</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamb</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exponents</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exponents</span><span class="p">)):</span>
-            <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponents</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">rate</span></div>
-
-<div class="viewcode-block" id="ArrivalThread.sine_modulated_poisson_rate"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.sine_modulated_poisson_rate">[docs]</a>    <span class="k">def</span> <span class="nf">sine_modulated_poisson_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function that returns the rate of a sine-modulated Poisson process</span>
-
-<span class="sd">        :param t: the time-step</span>
-<span class="sd">        :return: the rate</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lamb</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">period_scaling_factor</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scaling_factor</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ArrivalThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ArrivalThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Runs the arrival generator, generates new clients dynamically according to a Poisson process</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopped</span><span class="p">:</span>
-            <span class="n">new_client_threads</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">ct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_threads</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ct</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
-                    <span class="n">new_client_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client_threads</span> <span class="o">=</span> <span class="n">new_client_threads</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sine_modulated</span><span class="p">:</span>
-                <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sine_modulated_poisson_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span>
-                <span class="n">new_clients</span> <span class="o">=</span> <span class="n">poisson</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">new_clients</span> <span class="o">=</span> <span class="n">poisson</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamb</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_clients</span><span class="p">):</span>
-                <span class="n">commands</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_commands</span><span class="p">)</span>
-                <span class="n">service_time</span> <span class="o">=</span> <span class="n">expon</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">thread</span> <span class="o">=</span> <span class="n">ClientThread</span><span class="p">(</span><span class="n">service_time</span><span class="o">=</span><span class="n">service_time</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span>
-                                      <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-                <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">client_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="ProducerThread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ProducerThread">[docs]</a><span class="k">class</span> <span class="nc">ProducerThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Thread that pushes statistics to Kafka</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrival_thread</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the thread</span>
-
-<span class="sd">        :param arrival_thread: the thread that manages the client arrivals, used to extract statistics</span>
-<span class="sd">        :param time_step_len_seconds: the length between pushing statistics to Kafka</span>
-<span class="sd">        :param ip: the ip of the Kafka server</span>
-<span class="sd">        :param port: the port of the Kafka server</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="n">arrival_thread</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">time_step_len_seconds</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="n">ip</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting producer thread, ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">, kafka port:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;time_step_len:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">, kafka_ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ProducerThread.run"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ProducerThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Main loop of the thread, pushes data to Kafka periodically</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopped</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
-                <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">rate</span>
-                <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">mu</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_NAME</span><span class="p">,</span>
-                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">num_clients</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div></div>
-
-
 <div class="viewcode-block" id="ClientManagerServicer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">ClientManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing the running clients. Allows to start/stop clients remotely and also to query the</span>
 <span class="sd">    state of the clients.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ArrivalThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ProducerThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ClientManagerServicer.getClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.getClients">[docs]</a>    <span class="k">def</span> <span class="nf">getClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">GetClientsMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -324,8 +112,8 @@
 <span class="sd">        :return: a clients DTO with the state of the clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -340,13 +128,13 @@
 
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span>
-            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="n">clients_time_step_len_seconds</span><span class="p">,</span>
-            <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="n">producer_time_step_len_seconds</span><span class="p">)</span>
+            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
+            <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">producer_time_step_len_seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 <div class="viewcode-block" id="ClientManagerServicer.stopClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.stopClients">[docs]</a>    <span class="k">def</span> <span class="nf">stopClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StopClientsMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Poisson-process that generates new clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -355,10 +143,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping clients&quot;</span><span class="p">)</span>
 
-        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="kc">None</span>
@@ -370,99 +159,88 @@
 
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span>
-            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="n">clients_time_step_len_seconds</span><span class="p">,</span>
-            <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="n">producer_time_step_len_seconds</span><span class="p">)</span></div>
+            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
+            <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">producer_time_step_len_seconds</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ClientManagerServicer.startClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startClients">[docs]</a>    <span class="k">def</span> <span class="nf">startClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StartClientsMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Starts/Restarts the Poisson process that generates clients</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts/Restarts the Poisson process(es) that generate(s) clients</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a clients DTO with the state of the clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting clients, commands:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">commands</span><span class="si">}</span><span class="s2">, lamb: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">lamb</span><span class="si">}</span><span class="s2">, mu: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">mu</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;sine_modulated: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">sine_modulated</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;time_scaling_factor: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;period_scaling_factor: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">period_scaling_factor</span><span class="si">}</span><span class="s2">, spiking: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">spiking</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;piece_wise_constant: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">piece_wise_constant</span><span class="si">}</span><span class="s2">, exponents: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">exponents</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;factors: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">factors</span><span class="si">}</span><span class="s2">, breakvalues: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">breakvalues</span><span class="si">}</span><span class="s2">, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;breakpoints: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">breakpoints</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
+        <span class="n">clients</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Client</span><span class="o">.</span><span class="n">from_grpc_object</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">clients</span><span class="p">))</span>
+        <span class="n">workflows_config</span> <span class="o">=</span> <span class="n">WorkflowsConfig</span><span class="o">.</span><span class="n">from_grpc_object</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">workflows_config</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting clients, num clients:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">clients</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;num workflows: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_markov_chains</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;num services: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_services</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;client types: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">clients</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;workflow markov chains: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_markov_chains</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;workflow services: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_services</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> commands: </span><span class="si">{</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">commands</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="n">ArrivalThread</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">commands</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
-                                       <span class="n">lamb</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">lamb</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="n">sine_modulated</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">sine_modulated</span><span class="p">,</span>
-                                       <span class="n">time_scaling_factor</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="p">,</span>
-                                       <span class="n">period_scaling_factor</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">period_scaling_factor</span><span class="p">,</span>
-                                       <span class="n">piece_wise_constant</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">piece_wise_constant</span><span class="p">,</span> <span class="n">breakvalues</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">,</span>
-                                       <span class="n">breakpoints</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">factors</span><span class="p">,</span>
-                                       <span class="n">exponents</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span> <span class="n">spiking</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">spiking</span><span class="p">)</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="n">ArrivalThread</span><span class="p">(</span><span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">,</span> <span class="n">clients</span><span class="o">=</span><span class="n">clients</span><span class="p">,</span>
+                                       <span class="n">workflows_config</span><span class="o">=</span><span class="n">workflows_config</span><span class="p">)</span>
         <span class="n">arrival_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="n">arrival_thread</span>
         <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
-
         <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
-
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">),</span> <span class="n">client_process_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span> <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="n">clients_time_step_len_seconds</span><span class="p">,</span>
+            <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span> <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
             <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="n">producer_time_step_len_seconds</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 <div class="viewcode-block" id="ClientManagerServicer.startProducer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startProducer">[docs]</a>    <span class="k">def</span> <span class="nf">startProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StartProducerMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts/Restarts the producer thread that pushes data to Kafka</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a clients DTO with the state of the clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting producer, time-step:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting producer, time-step len:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">s, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;arrival_thread: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot start producer if the arrival thread is not started&quot;</span><span class="p">)</span>
         <span class="n">producer_thread</span> <span class="o">=</span> <span class="n">ProducerThread</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="p">,</span>
                                          <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
                                          <span class="n">ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="n">producer_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="o">=</span> <span class="n">producer_thread</span>
-
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
             <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
-
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="n">clients_time_step_len_seconds</span><span class="p">,</span>
+            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
             <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 <div class="viewcode-block" id="ClientManagerServicer.stopProducer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.stopProducer">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StopProducerMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the producer thread that pushes data to Kafka</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -470,30 +248,26 @@
 <span class="sd">        :return: a clients DTO with the state of the clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping producer&quot;</span><span class="p">)</span>
-
-        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-
+        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="o">=</span> <span class="kc">None</span>
-
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
             <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
-
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="n">clients_time_step_len_seconds</span><span class="p">,</span> <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span> <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clients_dto</span></div></div>
 
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50044</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;client_manager.log&quot;</span><span class="p">,</span>
           <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing clients</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

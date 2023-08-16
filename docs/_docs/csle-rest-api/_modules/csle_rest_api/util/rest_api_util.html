@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.util.rest_api_util &mdash; csle-rest-api 0.0.1 documentation</title>
+  <title>csle_rest_api.util.rest_api_util &mdash; csle-rest-api 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -69,15 +69,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_rest_api.util.rest_api_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">jsonify</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.management.management_user</span> <span class="kn">import</span> <span class="n">ManagementUser</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.management.management_user</span> <span class="kn">import</span> <span class="n">ManagementUser</span>
 
 
-<div class="viewcode-block" id="check_if_user_is_authorized"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.check_if_user_is_authorized">[docs]</a><span class="k">def</span> <span class="nf">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="check_if_user_is_authorized"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.check_if_user_is_authorized">[docs]</a><span class="k">def</span> <span class="nf">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if a user request is authorized</span>
 
 <span class="sd">    :param request: the request to check</span>
@@ -106,8 +108,9 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="check_if_user_edit_is_authorized"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized">[docs]</a><span class="k">def</span> <span class="nf">check_if_user_edit_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">ManagementUser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="check_if_user_edit_is_authorized"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized">[docs]</a><span class="k">def</span> <span class="nf">check_if_user_edit_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">ManagementUser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ManagementUser</span><span class="p">,</span>
+                                                                             <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if a user is authorized to edit another user</span>
 
 <span class="sd">    :param request: the request to extract the user from</span>
@@ -117,7 +120,9 @@
     <span class="c1"># Extract token and check if user is authorized</span>
     <span class="n">token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">TOKEN_QUERY_PARAM</span><span class="p">)</span>
     <span class="n">token_obj</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_session_token_metadata</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-    <span class="n">request_user</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_management_user_by_username</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">token_obj</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+    <span class="n">request_user</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">token_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">request_user</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_management_user_by_username</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">token_obj</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">token_obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">token_obj</span><span class="o">.</span><span class="n">expired</span><span class="p">(</span><span class="n">valid_length_hours</span><span class="o">=</span><span class="n">api_constants</span><span class="o">.</span><span class="n">SESSION_TOKENS</span><span class="o">.</span><span class="n">EXPIRE_TIME_HOURS</span><span class="p">)</span> \
             <span class="ow">or</span> <span class="n">request_user</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">request_user</span><span class="o">.</span><span class="n">admin</span> <span class="ow">and</span> <span class="n">request_user</span><span class="o">.</span><span class="n">username</span> <span class="o">!=</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">token_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -127,6 +132,39 @@
         <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">UNAUTHORIZED_STATUS_CODE</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">request_user</span></div>
+
+
+<div class="viewcode-block" id="set_container_terminal_winsize"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.set_container_terminal_winsize">[docs]</a><span class="k">def</span> <span class="nf">set_container_terminal_winsize</span><span class="p">(</span><span class="n">ssh_channel</span><span class="p">:</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">Channel</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xpix</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ypix</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set shell window size of the host terminal</span>
+
+<span class="sd">    :param ssh_channel: the ssh_channel of the shell</span>
+<span class="sd">    :param row: the number of rows of the new window size</span>
+<span class="sd">    :param col: the number of cols of the new window size</span>
+<span class="sd">    :param xpix: the number of x pixels of the new size</span>
+<span class="sd">    :param ypix: the number of y pixels of the new size</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ssh_channel</span><span class="o">.</span><span class="n">resize_pty</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">width_pixels</span><span class="o">=</span><span class="n">xpix</span><span class="p">,</span> <span class="n">height_pixels</span><span class="o">=</span><span class="n">ypix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ssh_connect"><a class="viewcode-back" href="../../../csle_rest_api.util.html#csle_rest_api.util.rest_api_util.ssh_connect">[docs]</a><span class="k">def</span> <span class="nf">ssh_connect</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets up an SSH connection to a given IP using the CSLE admin account</span>
+
+<span class="sd">    :param ip: the IP to connect to</span>
+<span class="sd">    :return: the created ssh connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_USER</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE_ADMIN</span><span class="o">.</span><span class="n">SSH_PW</span><span class="p">)</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not connect with SSH&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">conn</span></div>
 </pre></div>
 
            </div>

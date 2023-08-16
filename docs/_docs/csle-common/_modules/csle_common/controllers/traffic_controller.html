@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.traffic_controller &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.controllers.traffic_controller &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -91,18 +91,17 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.traffic_managers_info</span> <span class="kn">import</span> <span class="n">TrafficManagersInfo</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_container_config</span> <span class="kn">import</span> <span class="n">NodeContainerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.client_population_process_type</span> <span class="kn">import</span> <span class="n">ClientPopulationProcessType</span>
 
 
 <div class="viewcode-block" id="TrafficController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController">[docs]</a><span class="k">class</span> <span class="nc">TrafficController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class managing traffic generators in the emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TrafficController.start_traffic_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_traffic_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_traffic_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for checking if the traffic manager is running and starting it if it is not running</span>
 <span class="sd">        on every node</span>
 
@@ -123,7 +122,7 @@
     <span class="k">def</span> <span class="nf">start_traffic_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                               <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting traffic manager on a specific container</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -163,7 +162,7 @@
 <div class="viewcode-block" id="TrafficController.stop_traffic_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_traffic_managers">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_traffic_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping traffic managers on a given server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -179,7 +178,7 @@
 <div class="viewcode-block" id="TrafficController.stop_traffic_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_traffic_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_traffic_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping a specific traffic manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -201,7 +200,7 @@
 
 <div class="viewcode-block" id="TrafficController.start_client_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method starting the client manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -245,7 +244,7 @@
 
 <div class="viewcode-block" id="TrafficController.stop_client_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method starting the client manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -266,7 +265,7 @@
 
 <div class="viewcode-block" id="TrafficController.stop_client_population"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_population">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_population</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function for stopping the client arrival process of an emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -287,14 +286,15 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">query_clients</span><span class="o">.</span><span class="n">stop_clients</span><span class="p">(</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrafficController.start_client_producer"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_producer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_producer</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                               <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the Kafka producer for client metrics</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -318,7 +318,8 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
                 <span class="c1"># Start the producer thread</span>
@@ -330,7 +331,7 @@
 <div class="viewcode-block" id="TrafficController.stop_client_producer"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_client_producer">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_client_producer</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the Kafka producer for client metrics</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -356,7 +357,8 @@
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
                 <span class="c1"># Stop the producer thread</span>
@@ -365,7 +367,7 @@
 <div class="viewcode-block" id="TrafficController.start_client_population"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_client_population">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_client_population</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the arrival process of clients</span>
 
 <span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
@@ -375,32 +377,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Starting client population on container: &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">reachable_containers</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Collect commands and reachable containers</span>
-        <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">ips_and_networks</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">net2</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">networks</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">net</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">net2</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                        <span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">break</span>
-            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">ip2</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">():</span>
-                    <span class="n">reachable_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ip2</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">node_traffic_cfg</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">node_traffic_configs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">node_traffic_cfg</span><span class="o">.</span><span class="n">ip</span> <span class="ow">in</span> <span class="n">reachable_containers</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">node_traffic_cfg</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
-                    <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_traffic_cfg</span><span class="o">.</span><span class="n">ip</span><span class="p">))</span>
-
-        <span class="k">for</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">networks</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">DEFAULT_COMMANDS</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">CLIENT_1_SUBNET</span><span class="p">]:</span>
-                <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">subnet_mask</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting client population on container: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">TrafficController</span><span class="o">.</span><span class="n">start_client_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
@@ -412,7 +390,8 @@
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
             <span class="c1"># Stop the client population if it is already running</span>
@@ -421,58 +400,25 @@
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
             <span class="c1"># Start the client population</span>
-            <span class="n">sine_modulated</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_process_type</span> <span class="o">==</span>
-                    <span class="n">ClientPopulationProcessType</span><span class="o">.</span><span class="n">SINE_MODULATED_POISSON</span><span class="p">):</span>
-                <span class="n">sine_modulated</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">spiking</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_process_type</span> <span class="o">==</span>
-                    <span class="n">ClientPopulationProcessType</span><span class="o">.</span><span class="n">SPIKING</span><span class="p">):</span>
-                <span class="n">spiking</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">piece_wise_constant</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_process_type</span> <span class="o">==</span>
-                    <span class="n">ClientPopulationProcessType</span><span class="o">.</span><span class="n">PIECE_WISE_CONSTANT</span><span class="p">):</span>
-                <span class="n">piece_wise_constant</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time_step_len</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">client_time_step_len_seconds</span>
+            <span class="n">num_workflows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_markov_chains</span><span class="p">)</span>
+            <span class="n">num_services</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_services</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Starting the client population, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;mu: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">mu</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;lamb: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">lamb</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;time_step_len_seconds: </span><span class="si">{</span><span class="n">time_step_len</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;commands: </span><span class="si">{</span><span class="n">commands</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;num_commands: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">num_commands</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;sine_modulated: </span><span class="si">{</span><span class="n">sine_modulated</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;time_scaling_factor:&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;period_scaling_factor: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">period_scaling_factor</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;spiking: </span><span class="si">{</span><span class="n">spiking</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2"> piece_wise_constant: </span><span class="si">{</span><span class="n">piece_wise_constant</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;exponents: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">exponents</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;factors: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">factors</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;breakvalues: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">breakvalues</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;breakpoints: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">breakpoints</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+                <span class="sa">f</span><span class="s2">&quot;num client profiles: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;num workflows: </span><span class="si">{</span><span class="n">num_workflows</span><span class="si">}</span><span class="s2">, num_services: </span><span class="si">{</span><span class="n">num_services</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">query_clients</span><span class="o">.</span><span class="n">start_clients</span><span class="p">(</span>
-                <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span>
-                <span class="n">lamb</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">lamb</span><span class="p">,</span>
-                <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len</span><span class="p">,</span>
-                <span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span>
-                <span class="n">num_commands</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">num_commands</span><span class="p">,</span>
-                <span class="n">sine_modulated</span><span class="o">=</span><span class="n">sine_modulated</span><span class="p">,</span>
-                <span class="n">time_scaling_factor</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="p">,</span>
-                <span class="n">period_scaling_factor</span><span class="o">=</span><span class="p">(</span>
-                    <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">period_scaling_factor</span><span class="p">),</span>
-                <span class="n">spiking</span><span class="o">=</span><span class="n">spiking</span><span class="p">,</span> <span class="n">piece_wise_constant</span><span class="o">=</span><span class="n">piece_wise_constant</span><span class="p">,</span>
-                <span class="n">exponents</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span>
-                <span class="n">factors</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">factors</span><span class="p">,</span>
-                <span class="n">breakvalues</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">,</span>
-                <span class="n">breakpoints</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">breakpoints</span>
-            <span class="p">)</span></div>
+                <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len</span><span class="p">,</span>
+                <span class="n">workflows_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">workflows_config</span><span class="p">,</span>
+                <span class="n">clients</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">client_population_config</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrafficController.get_num_active_clients"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_num_active_clients">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_num_active_clients</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the number of active clients</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
@@ -490,7 +436,7 @@
 <div class="viewcode-block" id="TrafficController.get_clients_dto_by_ip_and_port"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_clients_dto_by_ip_and_port">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_clients_dto_by_ip_and_port</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the ClientManager on a specific container</span>
 <span class="sd">        to get its status</span>
 
@@ -498,8 +444,7 @@
 <span class="sd">        :return: the status of the clientmanager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Open a gRPC session</span>
-        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">query_clients</span><span class="o">.</span><span class="n">get_clients</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">status</span></div>
@@ -507,7 +452,7 @@
 <div class="viewcode-block" id="TrafficController.stop_internal_traffic_generators"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_internal_traffic_generators">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_internal_traffic_generators</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
                                          <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -524,7 +469,7 @@
 <div class="viewcode-block" id="TrafficController.stop_internal_traffic_generator"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.stop_internal_traffic_generator">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_internal_traffic_generator</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                         <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping a specific internal traffic generator</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -539,14 +484,15 @@
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">traffic_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">traffic_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">query_traffic_manager</span><span class="o">.</span><span class="n">stop_traffic</span><span class="p">(</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrafficController.start_internal_traffic_generators"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.start_internal_traffic_generators">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_internal_traffic_generators</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -573,7 +519,7 @@
     <span class="k">def</span> <span class="nf">start_internal_traffic_generator</span><span class="p">(</span>
             <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">node_traffic_config</span><span class="p">:</span> <span class="n">NodeTrafficConfig</span><span class="p">,</span>
             <span class="n">container</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting internal traffic generators</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
@@ -582,8 +528,6 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">node_traffic_config</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
         <span class="n">TrafficController</span><span class="o">.</span><span class="n">start_traffic_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
                                                 <span class="n">node_traffic_config</span><span class="o">=</span><span class="n">node_traffic_config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting traffic generator script, &quot;</span>
@@ -612,14 +556,15 @@
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">traffic_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">node_traffic_config</span><span class="o">.</span><span class="n">traffic_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">query_traffic_manager</span><span class="o">.</span><span class="n">start_traffic</span><span class="p">(</span><span class="n">stub</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span>
                                                                                <span class="n">sleep_time</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrafficController.get_client_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the Client managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -629,7 +574,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_client_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Client managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -640,7 +585,7 @@
 <div class="viewcode-block" id="TrafficController.get_client_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_client_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_client_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                  <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the Client managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
@@ -682,7 +627,7 @@
 <div class="viewcode-block" id="TrafficController.get_traffic_manager_status_by_port_and_ip"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_manager_status_by_port_and_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_manager_status_by_port_and_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the TrafficManager on a specific container</span>
 <span class="sd">        to get its status</span>
 
@@ -690,15 +635,14 @@
 <span class="sd">        :return: the status of the traffic manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Open a gRPC session</span>
-        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">query_traffic_manager</span><span class="o">.</span><span class="n">get_traffic_status</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">status</span></div>
 
 <div class="viewcode-block" id="TrafficController.get_traffic_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ips of the traffic managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -711,7 +655,7 @@
 
 <div class="viewcode-block" id="TrafficController.get_traffic_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.traffic_controller.TrafficController.get_traffic_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_traffic_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the Traffic managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -726,7 +670,7 @@
     <span class="k">def</span> <span class="nf">get_traffic_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                   <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">TrafficManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the traffic managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>

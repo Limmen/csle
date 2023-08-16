@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.client_manager.dao.eptmp_arrival_config &mdash; csle-collector 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.client_manager.dao.eptmp_arrival_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.client_manager.dao.eptmp_arrival_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">csle_base.grpc_serializable</span> <span class="kn">import</span> <span class="n">GRPCSerializable</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.arrival_config</span> <span class="kn">import</span> <span class="n">ArrivalConfig</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.client_arrival_type</span> <span class="kn">import</span> <span class="n">ClientArrivalType</span>
+<span class="kn">import</span> <span class="nn">csle_collector.client_manager.client_manager_pb2</span>
+
+
+<div class="viewcode-block" id="EPTMPArrivalConfig"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig">[docs]</a><span class="k">class</span> <span class="nc">EPTMPArrivalConfig</span><span class="p">(</span><span class="n">ArrivalConfig</span><span class="p">,</span> <span class="n">JSONSerializable</span><span class="p">,</span> <span class="n">GRPCSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO representing the configuration of a homogenous poisson arrival process with an</span>
+<span class="sd">    Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thetas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">gammas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">phis</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">omegas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the object</span>
+
+<span class="sd">        :param thetas: represent the overall trend in frequency of events over a long time frame</span>
+<span class="sd">        :param gammas: amplitudes</span>
+<span class="sd">        :param phis: period shifts</span>
+<span class="sd">        :param omegas: frequencies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span> <span class="o">=</span> <span class="n">thetas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gammas</span> <span class="o">=</span> <span class="n">gammas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phis</span> <span class="o">=</span> <span class="n">phis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omegas</span> <span class="o">=</span> <span class="n">omegas</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EPTMPArrivalConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">client_arrival_type</span><span class="o">=</span><span class="n">ClientArrivalType</span><span class="o">.</span><span class="n">EPTMP</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Arrival type: Poisson process with EPTMP rate function, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;thetas: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">thetas</span><span class="si">}</span><span class="s2">, gammas: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gammas</span><span class="si">}</span><span class="s2">, phis: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phis</span><span class="si">}</span><span class="s2">, omegas: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">omegas</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;client_arrival_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_arrival_type</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="EPTMPArrivalConfig.to_dict"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;thetas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetas</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;gammas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gammas</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;phis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phis</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;omegas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omegas</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_arrival_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_arrival_type</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="EPTMPArrivalConfig.from_dict"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EPTMPArrivalConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of the object to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">EPTMPArrivalConfig</span><span class="p">(</span><span class="n">thetas</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;thetas&quot;</span><span class="p">],</span> <span class="n">gammas</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;gammas&quot;</span><span class="p">],</span> <span class="n">phis</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;phis&quot;</span><span class="p">],</span> <span class="n">omegas</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;omegas&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="EPTMPArrivalConfig.to_grpc_object"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.to_grpc_object">[docs]</a>    <span class="k">def</span> <span class="nf">to_grpc_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">EPTMPArrivalConfigDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a GRPC serializable version of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">EPTMPArrivalConfigDTO</span><span class="p">(</span>
+            <span class="n">thetas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">thetas</span><span class="p">,</span> <span class="n">gammas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gammas</span><span class="p">,</span> <span class="n">phis</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phis</span><span class="p">,</span> <span class="n">omegas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">omegas</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EPTMPArrivalConfig.from_grpc_object"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_grpc_object">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_grpc_object</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">EPTMPArrivalConfigDTO</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="s2">&quot;EPTMPArrivalConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates the object from a GRPC DTO</span>
+
+<span class="sd">        :param obj: the object to instantiate from</span>
+<span class="sd">        :return: the instantiated object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EPTMPArrivalConfig</span><span class="p">(</span><span class="n">thetas</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">thetas</span><span class="p">),</span> <span class="n">gammas</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">gammas</span><span class="p">),</span> <span class="n">phis</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">phis</span><span class="p">),</span>
+                                  <span class="n">omegas</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">omegas</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EPTMPArrivalConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.eptmp_arrival_config.EPTMPArrivalConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EPTMPArrivalConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EPTMPArrivalConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

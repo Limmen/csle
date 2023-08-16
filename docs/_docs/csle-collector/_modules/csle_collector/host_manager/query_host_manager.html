@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.host_manager.query_host_manager &mdash; csle-collector 0.0.1 documentation</title>
+  <title>csle_collector.host_manager.query_host_manager &mdash; csle-collector 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -83,7 +83,7 @@
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Queries the Host manager for the status of the Host monitor thread</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -92,7 +92,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">get_host_monitor_status_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">GetHostStatusMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getHostStatus</span><span class="p">(</span><span class="n">get_host_monitor_status_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> \
+        <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getHostStatus</span><span class="p">(</span><span class="n">get_host_monitor_status_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -100,7 +101,7 @@
                        <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start the Host monitor thread</span>
 
 <span class="sd">    :param kafka_ip: the ip of the Kafka server</span>
@@ -113,14 +114,15 @@
     <span class="n">start_host_monitor_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartHostMonitorMsg</span><span class="p">(</span>
         <span class="n">kafka_ip</span><span class="o">=</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span>
     <span class="p">)</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startHostMonitor</span><span class="p">(</span><span class="n">start_host_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startHostMonitor</span><span class="p">(</span><span class="n">start_host_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_host_monitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_host_monitor">[docs]</a><span class="k">def</span> <span class="nf">stop_host_monitor</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop the Host monitor thread</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -129,14 +131,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_host_monitor_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopHostMonitorMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopHostMonitor</span><span class="p">(</span><span class="n">stop_host_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopHostMonitor</span><span class="p">(</span><span class="n">stop_host_monitor_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="start_filebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_filebeat">[docs]</a><span class="k">def</span> <span class="nf">start_filebeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start filebeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -145,14 +148,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_filebeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartFilebeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startFilebeat</span><span class="p">(</span><span class="n">start_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> \
+        <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startFilebeat</span><span class="p">(</span><span class="n">start_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_filebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_filebeat">[docs]</a><span class="k">def</span> <span class="nf">stop_filebeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop filebeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -161,7 +165,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_filebeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopFilebeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopFilebeat</span><span class="p">(</span><span class="n">stop_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopFilebeat</span><span class="p">(</span><span class="n">stop_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -171,7 +176,7 @@
         <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">filebeat_modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kafka</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">CONFIG_TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to update the filebeat configuration</span>
 
 <span class="sd">    :param log_files_paths: the list of log files that filebeat should monitor</span>
@@ -196,7 +201,8 @@
             <span class="n">elastic_port</span><span class="o">=</span><span class="n">elastic_port</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">num_elastic_shards</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="o">=</span><span class="n">reload_enabled</span><span class="p">,</span>
             <span class="n">kafka</span><span class="o">=</span><span class="n">kafka</span><span class="p">,</span> <span class="n">kafka_port</span><span class="o">=</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="o">=</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">kafka_topics</span><span class="o">=</span><span class="n">kafka_topics</span><span class="p">,</span>
             <span class="n">filebeat_modules</span><span class="o">=</span><span class="n">filebeat_modules</span><span class="p">)</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">configFilebeat</span><span class="p">(</span><span class="n">config_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> \
+        <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">configFilebeat</span><span class="p">(</span><span class="n">config_filebeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -204,7 +210,7 @@
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span> <span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Queries the Host manager for the data of the Host metrics from given timestamps</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -216,14 +222,15 @@
     <span class="n">get_host_metrics_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="p">(</span>
             <span class="n">failed_auth_last_ts</span><span class="o">=</span><span class="n">failed_auth_last_ts</span><span class="p">,</span> <span class="n">login_last_ts</span><span class="o">=</span><span class="n">login_last_ts</span><span class="p">)</span>
-    <span class="n">host_metrics_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getHostMetrics</span><span class="p">(</span><span class="n">get_host_metrics_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_metrics_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">getHostMetrics</span><span class="p">(</span><span class="n">get_host_metrics_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_metrics_dto</span></div>
 
 
 <div class="viewcode-block" id="start_packetbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_packetbeat">[docs]</a><span class="k">def</span> <span class="nf">start_packetbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start packetbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -232,14 +239,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_packetbeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartPacketbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startPacketbeat</span><span class="p">(</span><span class="n">start_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startPacketbeat</span><span class="p">(</span><span class="n">start_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_packetbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_packetbeat">[docs]</a><span class="k">def</span> <span class="nf">stop_packetbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop packetbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -248,7 +256,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_packetbeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopPacketbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopPacketbeat</span><span class="p">(</span><span class="n">stop_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopPacketbeat</span><span class="p">(</span><span class="n">stop_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -257,7 +266,7 @@
         <span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">CONFIG_TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to update the packetbeat configuration</span>
 
 <span class="sd">    :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -273,14 +282,15 @@
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigPacketbeatMsg</span><span class="p">(</span>
             <span class="n">kibana_ip</span><span class="o">=</span><span class="n">kibana_ip</span><span class="p">,</span> <span class="n">kibana_port</span><span class="o">=</span><span class="n">kibana_port</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="o">=</span><span class="n">elastic_ip</span><span class="p">,</span>
             <span class="n">elastic_port</span><span class="o">=</span><span class="n">elastic_port</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">num_elastic_shards</span><span class="p">)</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">configPacketbeat</span><span class="p">(</span><span class="n">config_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">configPacketbeat</span><span class="p">(</span><span class="n">config_packetbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="start_metricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_metricbeat">[docs]</a><span class="k">def</span> <span class="nf">start_metricbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start metricbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -289,14 +299,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_metricbeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartMetricbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startMetricbeat</span><span class="p">(</span><span class="n">start_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startMetricbeat</span><span class="p">(</span><span class="n">start_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_metricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_metricbeat">[docs]</a><span class="k">def</span> <span class="nf">stop_metricbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop metricbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -305,7 +316,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_metricbeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopMetricbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopMetricbeat</span><span class="p">(</span><span class="n">stop_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopMetricbeat</span><span class="p">(</span><span class="n">stop_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -315,7 +327,7 @@
         <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metricbeat_modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">CONFIG_TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to update the metricbeat configuration</span>
 
 <span class="sd">    :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -336,14 +348,15 @@
             <span class="n">kibana_ip</span><span class="o">=</span><span class="n">kibana_ip</span><span class="p">,</span> <span class="n">kibana_port</span><span class="o">=</span><span class="n">kibana_port</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="o">=</span><span class="n">elastic_ip</span><span class="p">,</span>
             <span class="n">elastic_port</span><span class="o">=</span><span class="n">elastic_port</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">num_elastic_shards</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="o">=</span><span class="n">reload_enabled</span><span class="p">,</span>
             <span class="n">kafka_port</span><span class="o">=</span><span class="n">kafka_port</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="o">=</span><span class="n">kafka_ip</span><span class="p">,</span> <span class="n">metricbeat_modules</span><span class="o">=</span><span class="n">metricbeat_modules</span><span class="p">)</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">configMetricbeat</span><span class="p">(</span><span class="n">config_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">configMetricbeat</span><span class="p">(</span><span class="n">config_metricbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="start_heartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_heartbeat">[docs]</a><span class="k">def</span> <span class="nf">start_heartbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start heartbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -351,14 +364,15 @@
 <span class="sd">    :return: a HostDTO describing the host status</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_heartbeat_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartHeartbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startHeartbeat</span><span class="p">(</span><span class="n">start_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startHeartbeat</span><span class="p">(</span><span class="n">start_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_heartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_heartbeat">[docs]</a><span class="k">def</span> <span class="nf">stop_heartbeat</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop heartbeat</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -367,7 +381,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_heartbeat_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopHeartbeatMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopHeartbeat</span><span class="p">(</span><span class="n">stop_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopHeartbeat</span><span class="p">(</span><span class="n">stop_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
@@ -377,7 +392,7 @@
         <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">hosts_to_monitor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">CONFIG_TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to update the heartbeat configuration</span>
 
 <span class="sd">    :param kibana_ip: the IP of Kibana where the data should be visualized</span>
@@ -394,14 +409,15 @@
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">ConfigHeartbeatMsg</span><span class="p">(</span>
             <span class="n">kibana_ip</span><span class="o">=</span><span class="n">kibana_ip</span><span class="p">,</span> <span class="n">kibana_port</span><span class="o">=</span><span class="n">kibana_port</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="o">=</span><span class="n">elastic_ip</span><span class="p">,</span>
             <span class="n">elastic_port</span><span class="o">=</span><span class="n">elastic_port</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="o">=</span><span class="n">num_elastic_shards</span><span class="p">,</span> <span class="n">hosts_to_monitor</span><span class="o">=</span><span class="n">hosts_to_monitor</span><span class="p">)</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">configHeartbeat</span><span class="p">(</span><span class="n">config_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">configHeartbeat</span><span class="p">(</span><span class="n">config_heartbeat_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="start_spark"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_spark">[docs]</a><span class="k">def</span> <span class="nf">start_spark</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to start spark</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -409,14 +425,15 @@
 <span class="sd">    :return: a HostDTO describing the host status</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_spark_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StartSparkMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startSpark</span><span class="p">(</span><span class="n">start_spark_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">startSpark</span><span class="p">(</span><span class="n">start_spark_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_spark"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_spark">[docs]</a><span class="k">def</span> <span class="nf">stop_spark</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sends a request to the Host manager to stop spark</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -425,7 +442,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_spark_msg</span> <span class="o">=</span> \
         <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">StopSparkMsg</span><span class="p">()</span>
-    <span class="n">host_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopSpark</span><span class="p">(</span><span class="n">stop_spark_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span> <span class="o">=</span> \
+        <span class="n">stub</span><span class="o">.</span><span class="n">stopSpark</span><span class="p">(</span><span class="n">stop_spark_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">host_dto</span></div>
 </pre></div>
 

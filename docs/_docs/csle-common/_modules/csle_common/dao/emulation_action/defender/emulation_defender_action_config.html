@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_action.defender.emulation_defender_action_config &mdash; csle-common 0.0.1 documentation</title>
+  <title>csle_common.dao.emulation_action.defender.emulation_defender_action_config &mdash; csle-common 0.3.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,23 +72,25 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_action.defender.emulation_defender_action_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_id</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionId</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</span> \
     <span class="kn">import</span> <span class="nn">EmulationDefenderStoppingActions</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 
 
-<div class="viewcode-block" id="EmulationDefenderActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderActionConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationDefenderActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderActionConfig</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configuration of the action space for the defender</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">multiple_stop_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">multiple_stop_actions_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">multiple_stop_actions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">multiple_stop_actions_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class constructor</span>
 
 <span class="sd">        :param num_indices: max num machine indexes allowed</span>
@@ -98,42 +100,54 @@
 <span class="sd">        :param multiple_stop_actions_ids: if it is a multiple stopping environment, this defines the ids of</span>
 <span class="sd">                                          the stop actions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Thera are no actions&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span> <span class="o">=</span> <span class="n">num_indices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_actions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d_val</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d_val</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
+        <span class="k">if</span> <span class="n">actions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">action_lookup_d_val</span><span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span> <span class="o">=</span> <span class="n">action</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;actions is None and thus not iterable&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span> <span class="o">=</span> <span class="n">stopping_action_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions</span> <span class="o">=</span> <span class="n">multiple_stop_actions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions_ids</span> <span class="o">=</span> <span class="n">multiple_stop_actions_ids</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There are no number of node-specific actions&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.print_actions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.print_actions">[docs]</a>    <span class="k">def</span> <span class="nf">print_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for printing the list of actions</span>
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Defender Actions:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
-            <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">tag</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;self.actions is not iterable&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">):</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">action</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">tag</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.get_continue_action_idx"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.get_continue_action_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_continue_action_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the index of the continue action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;self.actions is None and thus has no length&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">EmulationDefenderActionId</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">i</span>
@@ -141,7 +155,7 @@
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.all_actions_config"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.all_actions_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">all_actions_config</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">subnet_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderActionConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an action configuration for the defender with all actions</span>
 
 <span class="sd">        :param num_nodes: the number of nodes in the environment</span>
@@ -164,7 +178,60 @@
         <span class="p">]</span>
         <span class="n">defender_action_config</span> <span class="o">=</span> <span class="n">EmulationDefenderActionConfig</span><span class="p">(</span>
             <span class="n">num_indices</span><span class="o">=</span><span class="n">num_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="n">defender_actions</span><span class="p">,</span> <span class="n">stopping_action_ids</span><span class="o">=</span><span class="n">stopping_action_ids</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">defender_action_config</span></div></div>
+        <span class="k">return</span> <span class="n">defender_action_config</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;num_indices: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span><span class="si">}</span><span class="s2">, actions: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;stopping_action_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;multiple_stop_actions: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;multiple_stop_actions_ids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions_ids</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="EmulationDefenderActionConfig.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+<span class="sd">        </span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_indices</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopping_action_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_action_ids</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;multiple_stop_actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;multiple_stop_actions_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiple_stop_actions_ids</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderActionConfig.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderActionConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderActionConfig</span><span class="p">(</span>
+            <span class="n">num_indices</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_indices&quot;</span><span class="p">],</span> <span class="n">actions</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">stopping_action_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;stopping_action_ids&quot;</span><span class="p">],</span>
+            <span class="n">multiple_stop_actions</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;multiple_stop_actions&quot;</span><span class="p">],</span>
+            <span class="n">multiple_stop_actions_ids</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;multiple_stop_actions_ids&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="EmulationDefenderActionConfig.from_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderActionConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderActionConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>
