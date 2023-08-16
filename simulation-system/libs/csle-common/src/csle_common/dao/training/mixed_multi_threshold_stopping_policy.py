@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union, Optional
+from typing import List, Dict, Tuple, Union, Optional, Any
 import random
 import numpy as np
 import csle_common.constants.constants as constants
@@ -69,13 +69,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             a, _ = self._defender_action(o=o)
             return a
         else:
+            if self.opponent_strategy is None:
+                raise ValueError("The opponent_strategy is None")
             a1, defender_stop_probability = self.opponent_strategy._defender_action(o=o)
             if a1 == 0:
                 defender_stop_probability = 1 - defender_stop_probability
             a, _ = self._attacker_action(o=o, defender_stop_probability=defender_stop_probability)
             return a
 
-    def _attacker_action(self, o: List, defender_stop_probability: float) -> Tuple[int, float]:
+    def _attacker_action(self, o: List[Union[int, float]], defender_stop_probability: float) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the attacker
 
@@ -134,11 +136,11 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         else:
             return 1, stop_probability
 
-    def to_dict(self) -> Dict[str, List[float]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["Theta"] = self.Theta
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
@@ -156,7 +158,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MixedMultiThresholdStoppingPolicy":
+    def from_dict(d: Dict[str, Any]) -> "MixedMultiThresholdStoppingPolicy":
         """
         Converst a dict representation of the object to an instance
 
@@ -172,7 +174,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         obj.id = d["id"]
         return obj
 
-    def update_Theta(self, new_thresholds: List[List[List[float]]]) -> None:
+    def update_Theta(self, new_thresholds: List[List[float]]) -> None:
         """
         Updates the threshold buffer
 
@@ -194,8 +196,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         for a_thresholds in new_thresholds:
             for s in range(2):
                 for l in range(self.L):
-                    if self.Theta[s][l] == 0:
-                        self.Theta[s][l] = [[a_thresholds[s][l]], [1]]
+                    if self.Theta[s][l] == [0]:
+                        self.Theta[s][l] = [[a_thresholds[s][l], 1.0]]
                     else:
                         if a_thresholds[s][l] in self.Theta[s][l][0]:
                             i = self.Theta[s][l][0].index(a_thresholds[s][l])
@@ -213,15 +215,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         """
         for defender_theta in new_thresholds:
             for l in range(self.L):
-                if self.Theta[l] == 0:
-                    self.Theta[l] = [[defender_theta[l]], [1]]
+                if self.Theta[l] == [[0]]:
+                    self.Theta[l] = [[defender_theta[l], 1.0]]
                 else:
                     if defender_theta[l] in self.Theta[l][0]:
                         i = self.Theta[l][0].index(defender_theta[l])
                         self.Theta[l][1][i] = self.Theta[l][1][i] + 1
                     else:
                         self.Theta[l][0].append(defender_theta[l])
-                        self.Theta[l][1].append(1)
+                        self.Theta[l][1].append(1.0)
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
         """
