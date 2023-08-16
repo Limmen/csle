@@ -1,4 +1,4 @@
-from typing import List, Set, Dict, Any
+from typing import List, Set, Dict, Any, Optional
 import copy
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.credential import Credential
@@ -43,7 +43,7 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
         self.logged_in_services: List[str] = []
         self.root_services: List[str] = []
         self.hostnames: List[str] = []
-        self.trace: NmapTrace = None
+        self.trace: Optional[NmapTrace] = None
         self.telnet_brute_tried = False
         self.ssh_brute_tried = False
         self.ftp_brute_tried = False
@@ -126,7 +126,7 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
             key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
             reverse=False)
 
-    def _vuln_lookup(self, name, lookup_table) -> int:
+    def _vuln_lookup(self, name: str, lookup_table: Dict[str, int]) -> int:
         """
         Looks up the id of a vulnerability in a lookup table
 
@@ -216,6 +216,12 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
 
         :return: the created AttackerMachineObservationState
         """
+        if nmap_host_result.ips is None or \
+            nmap_host_result.ports is None or \
+                nmap_host_result.vulnerabilities is None or \
+                    nmap_host_result.credentials is None or \
+                        nmap_host_result.hostnames is None:
+            raise ValueError("NMapHostResult is incomplete, at least one attribute is None")
         m_obs = EmulationAttackerMachineObservationState(ips=nmap_host_result.ips)
         ports = list(map(lambda x: x.to_obs(), nmap_host_result.ports))
         m_obs.ports = ports
@@ -301,7 +307,7 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = self.ips
         d["os"] = self.os
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
@@ -405,7 +411,7 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
         dto.osvdb_vulns = [EmulationVulnerabilityObservationState.schema()]
         dto.shell_access_credentials = [Credential.schema()]
         dto.backdoor_credentials = [Credential.schema()]
-        dto.flags_found.add("")
+        dto.flags_found.add(Flag.schema())
         dto.ssh_connections = [EmulationConnectionObservationState.schema()]
         dto.ftp_connections = [EmulationConnectionObservationState.schema()]
         dto.telnet_connections = [EmulationConnectionObservationState.schema()]
