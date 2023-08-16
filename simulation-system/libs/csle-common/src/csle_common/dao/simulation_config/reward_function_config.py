@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 
 import numpy as np
+from numpy.typing import NDArray
 
 from csle_base.json_serializable import JSONSerializable
 
@@ -10,7 +11,7 @@ class RewardFunctionConfig(JSONSerializable):
     DTO containing the reward tensor of a simulation
     """
 
-    def __init__(self, reward_tensor: List):
+    def __init__(self, reward_tensor: NDArray[Any]):
         """
         Initalizes the DTO
 
@@ -33,8 +34,8 @@ class RewardFunctionConfig(JSONSerializable):
         """
         :return: a dict representation  of the object
         """
-        d = {}
-        if isinstance(self.reward_tensor, np.ndarray):
+        d: Dict[str, Any] = {}
+        if isinstance(self.reward_tensor, type(NDArray[Any])):
             tensor = self.reward_tensor.tolist()
         else:
             tensor = self.reward_tensor
