@@ -52,10 +52,10 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         self.ossec_ids_alert_counters = ossec_ids_alert_counters
         if self.ossec_ids_alert_counters is None:
             self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
-        self.host_metrics_consumer_thread = None
-        self.docker_stats_consumer_thread = None
-        self.snort_ids_log_consumer_thread = None
-        self.ossec_ids_log_consumer_thread = None
+        self.host_metrics_consumer_thread: Optional[HostMetricsConsumerThread] = None
+        self.docker_stats_consumer_thread: Optional[DockerHostStatsConsumerThread] = None
+        self.snort_ids_log_consumer_thread: Optional[SnortIdsLogConsumerThread] = None
+        self.ossec_ids_log_consumer_thread: Optional[OSSECIdsLogConsumerThread] = None
 
     def start_monitor_threads(self) -> None:
         """
@@ -114,6 +114,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             ossec_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
         else:
             ossec_alert_counters = OSSECIdsAlertCounters()
+        if kafka_config is None:
+            raise ValueError("KafkaConfig is None")
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
@@ -131,7 +133,14 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        if self.ports == [] or self.ssh_connections == []:
+            raise ValueError("At least one of the list items is empty")
+        if self.host_metrics is None or \
+            self.docker_stats is None or \
+                self.ossec_ids_alert_counters is None or \
+                    self.snort_ids_ip_alert_counters is None:
+            raise ValueError("At least one of the items is None")
+        d: Dict[str, Any] = {}
         d["ips"] = self.ips
         d["os"] = self.os
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
@@ -173,6 +182,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
 
         :return: None
         """
+        if self.ossec_ids_alert_counters is None:
+            raise ValueError("OSSECIdsAlertCounters is None")
         if self.docker_stats_consumer_thread is not None:
             self.docker_stats_consumer_thread.running = False
             self.docker_stats_consumer_thread.consumer.close()
@@ -192,6 +203,12 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         """
         :return: a copy of the object
         """
+        if self.host_metrics is None or \
+            self.docker_stats is None or \
+                self.host_metrics is None or self.ports == [] or \
+                    self.snort_ids_ip_alert_counters is None or \
+                        self.ossec_ids_alert_counters is None:
+            raise ValueError("EmulationDefenderMachineObservationState incomplete for copy")
         m_copy = EmulationDefenderMachineObservationState(
             ips=self.ips, kafka_config=self.kafka_config, host_metrics=self.host_metrics.copy(),
             docker_stats=self.docker_stats.copy())
