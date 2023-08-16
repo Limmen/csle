@@ -164,7 +164,11 @@ class EmulationUtil:
             target_conn = paramiko.SSHClient()
             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel)
-            target_conn.get_transport().set_keepalive(5)
+            transport = target_conn.get_transport()
+            if transport is not None:
+                transport.set_keepalive(5)
+            else:
+                raise ValueError(f"Connection failed, ip: {target_ip}, user: {user}, pw: {pw}")
             connection_dto = EmulationConnectionObservationState(
                 conn=target_conn, credential=cr, root=root, service=constants.SSH.SERVICE_NAME,
                 port=constants.SSH.DEFAULT_PORT, proxy=proxy_conn, ip=target_ip)
@@ -255,7 +259,7 @@ class EmulationUtil:
         output = channel.recv(constants.COMMON.LARGE_RECV_SIZE)
         output_str = output.decode("utf-8")
         output_str = constants.NMAP.SHELL_ESCAPE.sub("", output_str)
-        return output_str
+        return str(output_str)
 
     @staticmethod
     def is_emulation_defense_action_legal(defense_action_id: int, env_config: EmulationEnvConfig,
@@ -430,7 +434,7 @@ class EmulationUtil:
         :return: True if it is running otherwise false.
         """
         try:
-            return psutil.Process(pid).is_running()
+            return bool(psutil.Process(pid).is_running())
         except Exception:
             return False
 

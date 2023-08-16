@@ -198,9 +198,12 @@ class EmulationStatistics(JSONSerializable):
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] = 1
 
         # Host metrics
-        aggregated_host_metrics_deltas, aggregated_host_metrics_labels = \
-            s.defender_obs_state.avg_aggregated_host_metrics.get_deltas(
-                stats_prime=s_prime.defender_obs_state.avg_aggregated_host_metrics)
+        if s.defender_obs_state is not None and s.defender_obs_state.avg_aggregated_host_metrics is not None:
+            aggregated_host_metrics_deltas, aggregated_host_metrics_labels = \
+                s.defender_obs_state.avg_aggregated_host_metrics.get_deltas(
+                    stats_prime=s_prime.defender_obs_state.avg_aggregated_host_metrics)
+        else:
+            raise ValueError("Machine is None")
         for i in range(len(aggregated_host_metrics_deltas)):
             if aggregated_host_metrics_deltas[i] in d[aggregated_host_metrics_labels[i]]:
                 d[aggregated_host_metrics_labels[i]][aggregated_host_metrics_deltas[i]] += 1
@@ -540,8 +543,9 @@ class EmulationStatistics(JSONSerializable):
         """
         num_samples = 0
         for k, v in self.conditionals_counts.items():
-            for k, v in v.items():
-                num_samples += v
+            for k2, v2 in v.items():
+                for k3, v3 in v2.items():
+                    num_samples += v3
         return num_samples
 
     def merge(self, second_statistic: "EmulationStatistics") -> None:

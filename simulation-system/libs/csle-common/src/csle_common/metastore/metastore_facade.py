@@ -1009,7 +1009,7 @@ class MetastoreFacade:
                 return list(map(lambda x: MetastoreFacade._convert_experiment_execution_record_to_dto(x), records))
 
     @staticmethod
-    def list_experiment_executions_ids() -> List[Tuple[int, str]]:
+    def list_experiment_executions_ids() -> List[Tuple[int, str, str]]:
         """
         :return: A list of experiment execution ids in the metastore
         """

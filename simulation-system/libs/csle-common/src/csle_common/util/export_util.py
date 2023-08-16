@@ -251,7 +251,10 @@ class ExportUtil:
             metadata_dict[constants.DATASETS.SCHEMA_PROPERTY] = {}
             metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY] = num_traces_per_file
             metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY] = added_by
-            metadata_dict[constants.DATASETS.COLUMNS_PROPERTY] = ",".join(columns)
+            if columns is not None:
+                metadata_dict[constants.DATASETS.COLUMNS_PROPERTY] = ",".join(list(map(lambda x: str(x), columns)))
+            else:
+                metadata_dict[constants.DATASETS.COLUMNS_PROPERTY] = ""
             f.write(json.dumps(metadata_dict, indent=4, sort_keys=True))
         ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
         Logger.__call__().get_logger().info(f"Export of emulation traces to disk complete, "

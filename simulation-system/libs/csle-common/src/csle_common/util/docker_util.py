@@ -182,7 +182,8 @@ class DockerUtil:
         if container_id in containers:
             container = containers[container_id]
             ip = container[constants.DOCKER.IPV4_KEY]
-            ip = ip.split("/")[0]
-            return ip
+            if isinstance(ip, str):
+                ip = ip.split("/")[0]
+                return ip
         raise ValueError(f"The container with id:{container_id} does not have an IP in the docker gw bridge network. "
                          f"Containers: {containers}")

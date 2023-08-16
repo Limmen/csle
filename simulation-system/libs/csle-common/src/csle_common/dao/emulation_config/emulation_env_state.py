@@ -15,6 +15,12 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
     EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
 from csle_base.json_serializable import JSONSerializable
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 
 
 class EmulationEnvState(JSONSerializable):
@@ -101,7 +107,11 @@ class EmulationEnvState(JSONSerializable):
                     self.defender_cached_ssh_connections[(c.ip, c.credential.username, c.port)] = c
         else:
             self.defender_obs_state = EmulationDefenderObservationState(
-                kafka_config=self.emulation_env_config.kafka_config)
+                kafka_config=self.emulation_env_config.kafka_config,
+                client_population_metrics=ClientPopulationMetrics(),
+                docker_stats=DockerStats(), snort_ids_alert_counters=SnortIdsAlertCounters(),
+                snort_ids_rule_counters=SnortIdsRuleCounters(), ossec_ids_alert_counters=OSSECIdsAlertCounters(),
+                aggregated_host_metrics=HostMetrics(), defender_actions=[], attacker_actions=[])
 
     def cleanup(self) -> None:
         """

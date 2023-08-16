@@ -21,10 +21,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
     Represents the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips: List[str], kafka_config: KafkaConfig,
-                 host_metrics: Optional[HostMetrics] = None, docker_stats: Optional[DockerStats] = None,
-                 snort_ids_ip_alert_counters: Optional[SnortIdsIPAlertCounters] = None,
-                 ossec_ids_alert_counters: Optional[OSSECIdsAlertCounters] = None):
+    def __init__(self, ips: List[str], kafka_config: KafkaConfig, host_metrics: HostMetrics, docker_stats: DockerStats,
+                 snort_ids_ip_alert_counters: SnortIdsIPAlertCounters, ossec_ids_alert_counters: OSSECIdsAlertCounters):
         """
         Initializes the DTO
 
@@ -41,17 +39,9 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         self.ssh_connections: List[EmulationConnectionObservationState] = []
         self.kafka_config = kafka_config
         self.host_metrics = host_metrics
-        if self.host_metrics is None:
-            self.host_metrics = HostMetrics()
         self.docker_stats = docker_stats
-        if self.docker_stats is None:
-            self.docker_stats = DockerStats()
         self.snort_ids_ip_alert_counters = snort_ids_ip_alert_counters
-        if self.snort_ids_ip_alert_counters is None:
-            self.snort_ids_ip_alert_counters = SnortIdsIPAlertCounters()
         self.ossec_ids_alert_counters = ossec_ids_alert_counters
-        if self.ossec_ids_alert_counters is None:
-            self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
         self.host_metrics_consumer_thread: Optional[HostMetricsConsumerThread] = None
         self.docker_stats_consumer_thread: Optional[DockerHostStatsConsumerThread] = None
         self.snort_ids_log_consumer_thread: Optional[SnortIdsLogConsumerThread] = None
@@ -90,7 +80,9 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         :return: the created instance
         """
         obj = EmulationDefenderMachineObservationState(ips=container.get_ips(), kafka_config=kafka_config,
-                                                       host_metrics=None, docker_stats=None)
+                                                       host_metrics=HostMetrics(), docker_stats=DockerStats(),
+                                                       ossec_ids_alert_counters=OSSECIdsAlertCounters(),
+                                                       snort_ids_ip_alert_counters=SnortIdsIPAlertCounters())
         obj.os = container.os
         return obj
 
@@ -198,8 +190,10 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         """
         m_copy = EmulationDefenderMachineObservationState(
             ips=self.ips, kafka_config=self.kafka_config,
-            host_metrics=self.host_metrics.copy() if self.host_metrics is not None else self.host_metrics,
-            docker_stats=self.docker_stats.copy() if self.docker_stats is not None else self.docker_stats)
+            host_metrics=self.host_metrics.copy(),
+            docker_stats=self.docker_stats.copy(),
+            ossec_ids_alert_counters=self.ossec_ids_alert_counters.copy(),
+            snort_ids_ip_alert_counters=self.snort_ids_ip_alert_counters.copy())
         m_copy.os = self.os
         if self.ports == []:
             m_copy.ports = self.ports

@@ -26,6 +26,12 @@ from csle_common.dao.emulation_observation.attacker.emulation_attacker_observati
     EmulationAttackerObservationState
 from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
     EmulationDefenderObservationState
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -157,11 +163,11 @@ class TestResourcesDataCollectionSuite:
                                              descr="null", ips=["JohnDoeIPs"], index=10,
                                              action_outcome=EmulationDefenderActionOutcome.GAME_END,
                                              alt_cmds=["JDoeCommands"], execution_time=0.1, ts=1.1)
-        e_d_o_state = EmulationDefenderObservationState(kafka_config=k_config,
-                                                        client_population_metrics=None, docker_stats=None,
-                                                        snort_ids_alert_counters=None, ossec_ids_alert_counters=None,
-                                                        aggregated_host_metrics=None, defender_actions=None,
-                                                        attacker_actions=None, snort_ids_rule_counters=None)
+        e_d_o_state = EmulationDefenderObservationState(
+            kafka_config=k_config,  client_population_metrics=ClientPopulationMetrics(),
+            docker_stats=DockerStats(), snort_ids_alert_counters=SnortIdsAlertCounters(),
+            snort_ids_rule_counters=SnortIdsRuleCounters(), ossec_ids_alert_counters=OSSECIdsAlertCounters(),
+            aggregated_host_metrics=HostMetrics(), defender_actions=[], attacker_actions=[])
         e_trace = EmulationTrace(
             initial_attacker_observation_state=EmulationAttackerObservationState(catched_flags=7, agent_reachable=None),
             initial_defender_observation_state=e_d_o_state,

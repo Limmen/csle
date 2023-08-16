@@ -39,7 +39,7 @@ class EmulationSimulationTrace(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["emulation_trace"] = self.emulation_trace.to_dict()
         d["simulation_trace"] = self.simulation_trace.to_dict()
         d["id"] = self.id

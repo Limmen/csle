@@ -188,7 +188,7 @@ class EmulationTrace(JSONSerializable):
         return dto
 
     def to_csv_record(self, max_time_steps: int, max_nodes: int, max_ports: int, max_vulns: int,
-                      null_value: int = -1) -> Tuple[List[str], List[Union[str, int, float]]]:
+                      null_value: int = -1) -> Tuple[List[Union[str, int, float]], List[str]]:
         """
         Converts the trace into a csv row
 
@@ -456,27 +456,27 @@ class EmulationTrace(JSONSerializable):
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_num_failed_login_attempts")
-            if len(defender_observations) > t:
+            if len(defender_observations) > t and defender_observations[t].avg_aggregated_host_metrics is not None:
                 values.append(defender_observations[t].avg_aggregated_host_metrics.num_failed_login_attempts)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_num_open_connections")
-            if len(defender_observations) > t:
+            if len(defender_observations) > t and defender_observations[t].avg_aggregated_host_metrics is not None:
                 values.append(defender_observations[t].avg_aggregated_host_metrics.num_open_connections)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_num_login_events")
-            if len(defender_observations) > t:
+            if len(defender_observations) > t and defender_observations[t].avg_aggregated_host_metrics is not None:
                 values.append(defender_observations[t].avg_aggregated_host_metrics.num_login_events)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_num_processes")
-            if len(defender_observations) > t:
+            if len(defender_observations) > t and defender_observations[t].avg_aggregated_host_metrics is not None:
                 values.append(defender_observations[t].avg_aggregated_host_metrics.num_processes)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_num_users")
-            if len(defender_observations) > t:
+            if len(defender_observations) > t and defender_observations[t].avg_aggregated_host_metrics is not None:
                 values.append(defender_observations[t].avg_aggregated_host_metrics.num_users)
             else:
                 values.append(null_value)

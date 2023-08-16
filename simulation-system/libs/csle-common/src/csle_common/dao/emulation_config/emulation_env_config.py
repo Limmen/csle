@@ -87,7 +87,7 @@ class EmulationEnvConfig(JSONSerializable):
         self.kafka_config = kafka_config
         self.services_config = services_config
         self.connections: Dict[str, paramiko.SSHClient] = {}
-        self.producer = None
+        self.producer: Union[None, Any] = None
         self.hostname = socket.gethostname()
         self.port_forward_port = 1900
         self.running = False

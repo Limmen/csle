@@ -37,6 +37,10 @@ class EnvDynamicsUtil:
         merged_obs_state.catched_flags = max(old_obs_state.catched_flags, new_obs_state.catched_flags)
         merged_obs_state.machines = EnvDynamicsUtil.merge_new_obs_with_old(
             old_obs_state.machines, new_obs_state.machines, emulation_env_config=emulation_env_config, action=None)
+        if old_obs_state.agent_reachable is None:
+            old_obs_state.agent_reachable = set()
+        if new_obs_state.agent_reachable is None:
+            new_obs_state.agent_reachable = set()
         merged_obs_state.agent_reachable = old_obs_state.agent_reachable.union(new_obs_state.agent_reachable)
         return merged_obs_state
 
@@ -632,10 +636,10 @@ class EnvDynamicsUtil:
         :param s: the current state
         :return: None
         """
-        if s.attacker_obs_state is None:
+        if s.defender_obs_state is None:
             raise ValueError("EmulationAttackerObservationState is None")
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
-        s.defender_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+        s.defender_obs_state.actions_tried.add((int(a.id.value), a.index, logged_in_ips_str))
 
     @staticmethod
     def logged_in_ips_str(emulation_env_config: EmulationEnvConfig, s: EmulationEnvState) -> str:

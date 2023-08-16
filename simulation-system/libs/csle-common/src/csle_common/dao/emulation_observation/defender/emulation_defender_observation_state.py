@@ -28,16 +28,11 @@ class EmulationDefenderObservationState(JSONSerializable):
     Represents the defender's agent's current belief state of the emulation
     """
 
-    def __init__(self, kafka_config: Union[KafkaConfig, None],
-                 client_population_metrics: Optional[ClientPopulationMetrics] = None,
-                 docker_stats: Optional[DockerStats] = None,
-                 snort_ids_alert_counters: Optional[SnortIdsAlertCounters] = None,
-                 ossec_ids_alert_counters: Optional[OSSECIdsAlertCounters] = None,
-                 aggregated_host_metrics: Optional[HostMetrics] = None,
-                 defender_actions: Optional[List[EmulationDefenderAction]] = None,
-                 attacker_actions: Optional[List[EmulationAttackerAction]] = None,
-                 snort_ids_rule_counters: Optional[SnortIdsRuleCounters] = None
-                 ):
+    def __init__(self, kafka_config: Union[KafkaConfig, None], client_population_metrics: ClientPopulationMetrics,
+                 docker_stats: DockerStats, snort_ids_alert_counters: SnortIdsAlertCounters,
+                 ossec_ids_alert_counters: OSSECIdsAlertCounters, aggregated_host_metrics: HostMetrics,
+                 defender_actions: List[EmulationDefenderAction], attacker_actions: List[EmulationAttackerAction],
+                 snort_ids_rule_counters: SnortIdsRuleCounters):
         """
         Initializes the DTO
 
@@ -53,37 +48,21 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         self.kafka_config = kafka_config
         self.machines: List[EmulationDefenderMachineObservationState] = []
-        self.actions_tried: Set[List[Tuple[int, int, str]]] = set()
+        self.actions_tried: Set[Tuple[int, int, str]] = set()
         self.client_population_metrics = client_population_metrics
-        if self.client_population_metrics is None:
-            self.client_population_metrics = ClientPopulationMetrics()
         self.avg_client_population_metrics = self.client_population_metrics.copy()
         self.docker_stats = docker_stats
-        if self.docker_stats is None:
-            self.docker_stats = DockerStats()
         self.avg_docker_stats = self.docker_stats.copy()
         self.snort_ids_alert_counters = snort_ids_alert_counters
-        if self.snort_ids_alert_counters is None:
-            self.snort_ids_alert_counters = SnortIdsAlertCounters()
         self.avg_snort_ids_alert_counters = self.snort_ids_alert_counters.copy()
         self.snort_ids_rule_counters = snort_ids_rule_counters
-        if self.snort_ids_rule_counters is None:
-            self.snort_ids_rule_counters = SnortIdsRuleCounters()
         self.avg_snort_ids_rule_counters = self.snort_ids_rule_counters.copy()
         self.ossec_ids_alert_counters = ossec_ids_alert_counters
-        if self.ossec_ids_alert_counters is None:
-            self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
         self.avg_ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         self.attacker_actions = attacker_actions
-        if self.attacker_actions is None:
-            self.attacker_actions = []
         self.defender_actions = defender_actions
-        if self.defender_actions is None:
-            self.defender_actions = []
         self.aggregated_host_metrics = aggregated_host_metrics
-        if aggregated_host_metrics is None:
-            self.aggregated_host_metrics = HostMetrics()
-        self.avg_aggregated_host_metrics: Optional[HostMetrics] = self.aggregated_host_metrics.copy()
+        self.avg_aggregated_host_metrics: HostMetrics = self.aggregated_host_metrics.copy()
         self.docker_stats_consumer_thread: Optional[DockerStatsConsumerThread] = None
         self.client_population_consumer_thread: Optional[ClientPopulationConsumerThread] = None
         self.aggregated_snort_ids_log_consumer_thread: Optional[AggregatedSnortIdsLogConsumerThread] = None
@@ -163,20 +142,23 @@ class EmulationDefenderObservationState(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
+        kafka_config: Union[None, KafkaConfig] = None
         try:
-            obj = EmulationDefenderObservationState(kafka_config=KafkaConfig.from_dict(d["kafka_config"]))
+            kafka_config=KafkaConfig.from_dict(d["kafka_config"])
         except Exception:
-            obj = EmulationDefenderObservationState(kafka_config=None)
+            pass
+        obj = EmulationDefenderObservationState(
+            kafka_config=kafka_config,
+            client_population_metrics=ClientPopulationMetrics.from_dict(d["client_population_metrics"]),
+            docker_stats=DockerStats.from_dict(d["docker_stats"]),
+            ossec_ids_alert_counters=OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"]),
+            aggregated_host_metrics=HostMetrics.from_dict(d["aggregated_host_metrics"]),
+            defender_actions=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"])),
+            attacker_actions=list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"])),
+            snort_ids_rule_counters=SnortIdsRuleCounters.from_dict(d["snort_ids_rule_counters"]),
+            snort_ids_alert_counters=SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"]))
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
         obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
-        obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
-        obj.docker_stats = DockerStats.from_dict(d["docker_stats"])
-        obj.snort_ids_alert_counters = SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"])
-        obj.snort_ids_rule_counters = SnortIdsRuleCounters.from_dict(d["snort_ids_rule_counters"])
-        obj.ossec_ids_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
-        obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
-        obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
-        obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
