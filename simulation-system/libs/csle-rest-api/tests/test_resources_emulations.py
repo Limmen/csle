@@ -2,6 +2,7 @@ import json
 from typing import List, Tuple
 import pytest
 import pytest_mock
+import logging
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO, RunningEmulationsDTO
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
@@ -234,7 +235,7 @@ class TestResourcesEmulationsSuite:
         """
 
         def create_execution(emulation_env_config: EmulationEnvConfig,
-                             physical_servers: List[str]) -> EmulationExecution:
+                             physical_servers: List[str], logger: logging.Logger, id: int = -1) -> EmulationExecution:
             em_env = get_ex_em_env
             em_ex = EmulationExecution(emulation_name="JohbnDoeEmulation", timestamp=1.5, ip_first_octet=-1,
                                        emulation_env_config=em_env, physical_servers=["JohnDoeServer"])

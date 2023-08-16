@@ -24,12 +24,10 @@ def statistics_datasets() -> Tuple[Response, int]:
 
     :return: A list of statistics datasets or a list of ids of the statistics datasets or deletes the datasets
     """
-    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-        requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-    if authorized is not None:
-        return authorized
+        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+        if authorized is not None:
+            return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole list of statistics datasets
