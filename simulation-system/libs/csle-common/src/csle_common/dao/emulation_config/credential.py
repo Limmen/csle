@@ -8,7 +8,7 @@ class Credential(JSONSerializable):
     A DTO Class to represent a credential to a service of some component in the infrastructure
     """
 
-    def __init__(self, username: str, pw: str, port: Optional[int] = None, protocol: Optional[TransportProtocol] = None,
+    def __init__(self, username: str, pw: str, port: int = -1, protocol: Optional[TransportProtocol] = None,
                  service: Optional[str] = None, root: bool = False):
         """
         Initializes the DTO
@@ -33,7 +33,7 @@ class Credential(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["username"] = self.username
         d["pw"] = self.pw
         d["port"] = self.port

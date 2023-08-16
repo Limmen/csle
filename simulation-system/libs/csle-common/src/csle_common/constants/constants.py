@@ -1,8 +1,10 @@
 """
 Constants for csle-common
 """
-
+from typing import Union
 import re
+from csle_common.dao.emulation_config.config import Config
+
 
 
 class GENERAL:
@@ -39,7 +41,7 @@ class CONFIG_FILE:
     """
     CSLE_HOME_ENV_PARAM = "CSLE_HOME"
     CONFIG_FILE_NAME = "config.json"
-    PARSED_CONFIG = None
+    PARSED_CONFIG: Union[None, Config] = None
 
 
 class CONTAINER_IMAGES:

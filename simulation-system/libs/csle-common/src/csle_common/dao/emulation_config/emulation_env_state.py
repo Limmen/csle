@@ -11,6 +11,9 @@ from csle_common.dao.emulation_observation.defender.emulation_defender_machine_o
     import EmulationDefenderMachineObservationState
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_config import EmulationAttackerActionConfig
 from csle_common.dao.emulation_action.defender.emulation_defender_action_config import EmulationDefenderActionConfig
+from csle_common.dao.emulation_observation.common.emulation_connection_observation_state import \
+    EmulationConnectionObservationState
+from csle_common.dao.emulation_config.credential import Credential
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -45,10 +48,10 @@ class EmulationEnvState(JSONSerializable):
         self.attacker_obs_state: Union[EmulationAttackerObservationState, None] = None
         self.defender_obs_state: Union[EmulationDefenderObservationState, None] = None
         self.attacker_cached_ssh_connections: Dict[Any, Any] = {}
-        self.attacker_cached_telnet_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
-        self.attacker_cached_ftp_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
-        self.attacker_cached_backdoor_credentials: Dict[Any, EmulationAttackerMachineObservationState] = {}
-        self.defender_cached_ssh_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
+        self.attacker_cached_telnet_connections: Dict[Any, EmulationConnectionObservationState] = {}
+        self.attacker_cached_ftp_connections: Dict[Any, EmulationConnectionObservationState] = {}
+        self.defender_cached_ssh_connections: Dict[Any, EmulationConnectionObservationState] = {}
+        self.attacker_cached_backdoor_credentials: Dict[Any, Credential] = {}
         self.reset()
 
     def initialize_defender_machines(self) -> None:
