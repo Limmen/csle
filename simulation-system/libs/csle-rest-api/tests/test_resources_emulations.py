@@ -490,7 +490,7 @@ class TestResourcesEmulationsSuite:
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.traffic_config.client_population_config.workflows_config.workflow_services[0].ips_and_commands[0] \
                 = (problematic_ipc_type[0], problematic_ipc_type[1])
         e_e_data_dict = e_e_data.to_dict()
@@ -529,7 +529,7 @@ class TestResourcesEmulationsSuite:
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.traffic_config.client_population_config.workflows_config.workflow_services[0].ips_and_commands[0] \
                 = (problematic_ipc_type[0], problematic_ipc_type[1])
         e_e_data_dict = e_e_data.to_dict()
@@ -656,7 +656,7 @@ class TestResourcesEmulationsSuite:
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.traffic_config.client_population_config.workflows_config. \
                 workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0],
                                                             problematic_ipc_type[1])
@@ -673,7 +673,7 @@ class TestResourcesEmulationsSuite:
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.traffic_config.client_population_config.workflows_config.workflow_services[0].ips_and_commands[0] \
                 = (problematic_ipc_type[0], problematic_ipc_type[1])
         e_e_data_dict = e_e_data.to_dict()
@@ -790,7 +790,7 @@ class TestResourcesEmulationsSuite:
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.traffic_config.client_population_config.workflows_config. \
                 workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
         e_e_data_dict = e_e_data.to_dict()
@@ -841,7 +841,7 @@ class TestResourcesEmulationsSuite:
             test_exec_dict = test_exec.to_dict()
             problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config. \
                 workflows_config.workflow_services[0].ips_and_commands[0]
-            if type(problematic_ipc_type) == list:
+            if isinstance(problematic_ipc_type, list):
                 e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
                     workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
             e_e_data_dict = e_e_data.to_dict()
@@ -863,7 +863,7 @@ class TestResourcesEmulationsSuite:
             problematic_ipc_type = \
                 e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
                 workflow_services[0].ips_and_commands[0]
-            if type(problematic_ipc_type) == list:
+            if isinstance(problematic_ipc_type, list):
                 e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
                     workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
             e_e_data_dict = e_e_data.to_dict()
@@ -918,7 +918,7 @@ class TestResourcesEmulationsSuite:
         test_exec_dict = test_exec.to_dict()
         problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
             workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
+        if isinstance(problematic_ipc_type, list):
             e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
                 workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
         e_e_data_dict = e_e_data.to_dict()

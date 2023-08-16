@@ -140,8 +140,10 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict() if self.host_metrics is not None else None
         d["docker_stats"] = self.docker_stats.to_dict() if self.docker_stats is not None else None
-        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict() if self.ossec_ids_alert_counters is not None else None
-        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict() if self.snort_ids_ip_alert_counters is not None else None
+        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict() \
+            if self.ossec_ids_alert_counters is not None else None
+        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict() \
+            if self.snort_ids_ip_alert_counters is not None else None
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
