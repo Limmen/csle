@@ -4,6 +4,7 @@ CSLE runner
 To see options, run:
 `csle --help`
 """
+import logging
 from typing import List, Tuple, Union
 import click
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -413,11 +414,12 @@ def shell(container: str) -> None:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
 
 
-def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool) -> None:
+def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool, id: int = -1) -> None:
     """
     Runs an emulation with the given config
 
     :param emulation_env_config: the config of the emulation to run
+    :param id: the id of the execution to create (if not specified the an available id will be automatically assigned)
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :param no_clients: a boolean parameter that is True if the client_population should be skipped
     :return: None
@@ -428,7 +430,8 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     ip = GeneralUtil.get_host_ip()
     physical_servers = [ip]
     execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config,
-                                                        physical_servers=physical_servers)
+                                                        physical_servers=physical_servers, logger=logging.getLogger(),
+                                                        id=id)
     ClusterController.run_emulation(execution=execution, no_traffic=no_traffic, no_clients=no_clients,
                                     physical_servers=physical_servers)
 
@@ -1116,7 +1119,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
-                run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients)
+                run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients, id=id)
                 emulation_started = True
             else:
                 emulation_started = False
@@ -1405,7 +1408,7 @@ def clean(entity: str, id: int = -1) -> None:
     elif entity == "emulation_executions":
         clean_emulation_executions()
     else:
-        clean_name(name=entity)
+        clean_name(name=entity, id=id)
 
 
 def install_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -2010,11 +2013,11 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     click.secho("CSLE emulations:", fg="magenta", bold=True)
     emulations = MetastoreFacade.list_emulations()
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
-    if all or not stopped:
+    if (all or running) or not stopped:
         for em in running_emulations:
             click.secho(em + f" {click.style('[running]', fg='green')}", bold=False)
 
-    if (all or stopped) and not running:
+    if (all or stopped) or not running:
         for em in stopped_emulations:
             click.secho(em + f" {click.style('[stopped]', fg='red')}", bold=False)
 
@@ -2313,11 +2316,12 @@ def rm_name(name: str) -> None:
                     click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
-def clean_name(name: str) -> None:
+def clean_name(name: str, id: int = -1) -> None:
     """
     Cleans a given container or emulation
 
     :param name: the name of the container or emulation to clean
+    :param id: the id of the container or emulation to clean
     :return: None
     """
     import csle_common.constants.constants as constants
@@ -2338,7 +2342,10 @@ def clean_name(name: str) -> None:
     else:
         em = MetastoreFacade.get_emulation_by_name(name=name)
         if em is not None:
-            clean_all_emulation_executions(emulation_env_config=em)
+            if id == -1:
+                clean_all_emulation_executions(emulation_env_config=em)
+            else:
+                clean_emulation_execution(emulation_env_config=em, execution_id=id)
         else:
             try:
                 executions = MetastoreFacade.list_emulation_executions_by_id(id=int(name))

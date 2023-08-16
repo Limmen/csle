@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /emulations resource
 """
+import logging
 from typing import List, Tuple
 import base64
 from flask import Blueprint, jsonify, request, Response
@@ -160,7 +161,7 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
                 else:
                     physical_servers = [GeneralUtil.get_host_ip()]
                     emulation_execution = EmulationEnvController.create_execution(
-                        emulation_env_config=em, physical_servers=physical_servers)
+                        emulation_env_config=em, physical_servers=physical_servers, logger=logging.getLogger())
                     ClusterController.run_emulation(execution=emulation_execution,
                                                     no_traffic=False, no_clients=False,
                                                     physical_servers=physical_servers)

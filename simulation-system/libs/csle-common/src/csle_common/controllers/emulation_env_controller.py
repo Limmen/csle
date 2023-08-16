@@ -302,12 +302,15 @@ class EmulationEnvController:
                 ContainerController.remove_network(name=net.name, logger=logger)
 
     @staticmethod
-    def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
+    def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str], logger: logging.Logger,
+                         id: int = -1) -> EmulationExecution:
         """
         Creates a new emulation execution
 
         :param emulation_env_config: the emulation configuration
         :param physical_servers: the physical servers to deploy the containers on
+        :param id: the id of the execution (if not specified the next available id will be used)
+        :param logger: the logger to use for logging
         :return: a DTO representing the execution
         """
         timestamp = float(time.time())
@@ -317,6 +320,12 @@ class EmulationEnvController:
                                     emulation_name=emulation_env_config.name)))
         available_subnets = list(filter(lambda x: x not in used_subnets, total_subnets))
         ip_first_octet = available_subnets[0]
+        if id != -1 and id not in available_subnets:
+            logger.warning(f"The specified execution ID: {id} is not valid or is already taken. "
+                           f"Using ID: {ip_first_octet} instead")
+        elif id != -1 and id in available_subnets:
+            ip_first_octet = id
+
         em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet,
                                                                  physical_servers=physical_servers)
         emulation_execution = EmulationExecution(emulation_name=emulation_env_config.name,
