@@ -86,7 +86,7 @@ class EmulationEnvConfig(JSONSerializable):
         self.resources_config = resources_config
         self.kafka_config = kafka_config
         self.services_config = services_config
-        self.connections = {}
+        self.connections: Dict[str, paramiko.SSHClient] = {}
         self.producer = None
         self.hostname = socket.gethostname()
         self.port_forward_port = 1900
@@ -151,7 +151,7 @@ class EmulationEnvConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = self.name
         d["containers_config"] = self.containers_config.to_dict()
         d["users_config"] = self.users_config.to_dict()
@@ -210,7 +210,11 @@ class EmulationEnvConfig(JSONSerializable):
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         conn.connect(ip, username=username, password=pw)
-        conn.get_transport().set_keepalive(5)
+        transport = conn.get_transport()
+        if transport is not None:
+            transport.set_keepalive(5)
+        else:
+            raise Exception("Connection Failed")
         self.connections[ip] = conn
         if self.producer is None and create_producer:
             self.create_producer()
@@ -228,7 +232,7 @@ class EmulationEnvConfig(JSONSerializable):
         if ip in self.connections and EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip]):
             return self.connections[ip]
         else:
-            raise ConnectionError(f"Connection to ip:{ip} is not activep")
+            raise ConnectionError(f"Connection to ip:{ip} is not active")
 
     def get_hacker_connection(self) -> paramiko.SSHClient:
         """
@@ -236,7 +240,11 @@ class EmulationEnvConfig(JSONSerializable):
 
         :return: SSH connection to the hacker
         """
-        hacker_ip = self.containers_config.get_agent_container().docker_gw_bridge_ip
+        container = self.containers_config.get_container()
+        if container is None:
+            raise ValueError("No container obtained")
+        else:
+            hacker_ip = container.docker_gw_bridge_ip
         if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():
@@ -288,8 +296,11 @@ class EmulationEnvConfig(JSONSerializable):
         :return: true or false
         """
         alive = False
-        if conn.get_transport() is not None:
-            alive = conn.get_transport().is_active()
+        transport = conn.get_transport()
+        if transport is not None:
+            alive = transport.is_active()
+        else:
+            raise ValueError("Could not obtain transport")
         return alive
 
     def get_port_forward_port(self) -> int:
