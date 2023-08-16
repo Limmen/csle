@@ -242,7 +242,7 @@ class EmulationEnvConfig(JSONSerializable):
         """
         container = self.containers_config.get_agent_container()
         if container is None:
-            raise ValueError("No agent container obtained")
+            raise ValueError("No agent_container obtained")
         else:
             hacker_ip = container.docker_gw_bridge_ip
         if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
