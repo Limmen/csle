@@ -1,5 +1,4 @@
 # OS
-# Debian 10.2
 FROM debian:10.2
 USER root
 

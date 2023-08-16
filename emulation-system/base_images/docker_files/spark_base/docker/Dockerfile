@@ -1,5 +1,5 @@
 # OS
-FROM kimham/csle_ubuntu_22_base:0.2.0
+FROM kimham/csle_ubuntu_22_base:0.3.0
 USER root
 
 # Spark

@@ -328,6 +328,7 @@ build:
 	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/shellshock_debian_wheezy_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/web_dvwa_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/debian_10_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_debian_10_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -343,7 +344,6 @@ build:
 	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/spark_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
-	docker build . --no-cache -f ./docker_files/web_dvwa_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 
 # Remove all base images
 rm_image:
@@ -355,6 +355,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_debian_10_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -370,7 +371,6 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
-	-docker rmi $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 
 
 # Push all base images
