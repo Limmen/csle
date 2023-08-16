@@ -80,11 +80,11 @@ class EmulationExecutionInfo(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
-        Converts the object to a dict representation
+        Converts the object to a dictionary representation
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["emulation_name"] = self.emulation_name
         d["execution_id"] = self.execution_id
         d["snort_ids_managers_info"] = self.snort_ids_managers_info.to_dict()

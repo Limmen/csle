@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state import \
     EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
@@ -38,7 +38,9 @@ class NmapVuln(JSONSerializable):
 
         :return: the created VulnerabilityObservationState
         """
-        service = ""
+        service: Optional[str] = ""
+        if self.credentials is None:
+            raise ValueError("self.credentials is None")
         if len(self.credentials) > 0:
             service = self.credentials[0].service
         vuln = EmulationVulnerabilityObservationState(name=self.name, port=self.port, protocol=self.protocol,
@@ -74,7 +76,7 @@ class NmapVuln(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = self.name
         d["port"] = self.port
         d["protocol"] = self.protocol
