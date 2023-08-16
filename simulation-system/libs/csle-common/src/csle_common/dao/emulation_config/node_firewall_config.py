@@ -78,7 +78,7 @@ class NodeFirewallConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["hostname"] = self.hostname
         d["ips_gw_default_policy_networks"] = list(map(lambda x: x.to_dict(), self.ips_gw_default_policy_networks))
         d["output_accept"] = list(self.output_accept)
@@ -171,5 +171,5 @@ class NodeFirewallConfig(JSONSerializable):
         dto.output_drop.add("")
         dto.input_drop.add("")
         dto.forward_drop.add("")
-        dto.routes.add("")
+        dto.routes.add(("", ""))
         return dto
