@@ -69,6 +69,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             a, _ = self._defender_action(o=o)
             return a
         else:
+            if self.opponent_strategy is None:
+                raise ValueError("Must specify the opponent strategy")
             a1, defender_stop_probability = self.opponent_strategy._defender_action(o=o)
             if a1 == 0:
                 defender_stop_probability = 1 - defender_stop_probability
@@ -194,7 +196,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         for a_thresholds in new_thresholds:
             for s in range(2):
                 for l in range(self.L):
-                    if self.Theta[s][l] == 0:
+                    if len(self.Theta[s][l]) == 0:
                         self.Theta[s][l] = [[a_thresholds[s][l]], [1]]
                     else:
                         if a_thresholds[s][l] in self.Theta[s][l][0]:
