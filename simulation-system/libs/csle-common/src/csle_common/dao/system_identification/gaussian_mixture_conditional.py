@@ -33,9 +33,9 @@ class GaussianMixtureConditional(JSONSerializable):
         self.mixture_weights = mixture_weights
         self.metric_name = metric_name
         self.sample_space = sample_space
-        self.weighted_mixture_distributions = []
+        self.weighted_mixture_distributions: List[List[float]] = []
         self.generate_distributions()
-        self.combined_distribution = []
+        self.combined_distribution: List[float] = []
 
     def generate_distributions(self) -> None:
         """
@@ -71,11 +71,11 @@ class GaussianMixtureConditional(JSONSerializable):
         for density_dist in dists:
             d_arr = np.array(density_dist)
             combined_density_dist = combined_density_dist + d_arr
-        combined_density_dist = list(combined_density_dist)
+        combined_density_dist_1 = list(combined_density_dist)
         if normalize:
-            combined_prob_dist = list(np.array(combined_density_dist) * (1 / sum(combined_density_dist)))
+            combined_prob_dist = list(np.array(combined_density_dist_1) * (1 / sum(combined_density_dist_1)))
         else:
-            combined_prob_dist = combined_density_dist
+            combined_prob_dist = combined_density_dist_1
         return combined_prob_dist
 
     @staticmethod
@@ -99,7 +99,7 @@ class GaussianMixtureConditional(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_name"] = self.conditional_name
         d["dim"] = self.dim
         d["num_mixture_components"] = self.num_mixture_components
