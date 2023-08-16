@@ -13,7 +13,7 @@ from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config i
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-020")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-030")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
     experiment_config = ExperimentConfig(

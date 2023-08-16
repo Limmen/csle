@@ -1,5 +1,6 @@
+
 # OS
-FROM kimham/csle_spark_base:0.2.0
+FROM kimham/csle_spark_base:0.3.0
 USER root
 
 # Add start script
