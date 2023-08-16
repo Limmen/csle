@@ -136,7 +136,7 @@ class SimulationEnvConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = self.name
         d["descr"] = self.descr
         d["simulation_env_input_config"] = self.simulation_env_input_config.to_dict()
