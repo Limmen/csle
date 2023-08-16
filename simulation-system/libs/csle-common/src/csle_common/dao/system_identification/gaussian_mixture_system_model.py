@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set
 import math
 from scipy.special import rel_entr
 from csle_common.dao.system_identification.gaussian_mixture_conditional import GaussianMixtureConditional
@@ -23,10 +23,10 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         super(GaussianMixtureSystemModel, self).__init__(descr=descr, model_type=SystemModelType.GAUSSIAN_MIXTURE)
         self.conditional_metric_distributions = conditional_metric_distributions
-        complete_sample_space = set()
+        complete_sample_space: Set[List[int]] = set()
         for conds in self.conditional_metric_distributions:
             for cond in conds:
-                complete_sample_space = complete_sample_space.union(set(cond.sample_space))
+                complete_sample_space = complete_sample_space.union(cond.sample_space)
         for conds in self.conditional_metric_distributions:
             for cond in conds:
                 cond.sample_space = list(complete_sample_space)
@@ -34,7 +34,7 @@ class GaussianMixtureSystemModel(SystemModel):
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
         self.id = -1
-        self.conditionals_kl_divergences = {}
+        self.conditionals_kl_divergences: Dict[Dict[Dict[str, float]]] = {}
         self.compute_kl_divergences()
 
     def compute_kl_divergences(self) -> None:
@@ -85,7 +85,7 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_metric_distributions"] = list(map(lambda x: list(map(lambda y: y.to_dict(), x)),
                                                          self.conditional_metric_distributions))
         d["emulation_env_name"] = self.emulation_env_name
