@@ -52,10 +52,10 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         self.ossec_ids_alert_counters = ossec_ids_alert_counters
         if self.ossec_ids_alert_counters is None:
             self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
-        self.host_metrics_consumer_thread = None
-        self.docker_stats_consumer_thread = None
-        self.snort_ids_log_consumer_thread = None
-        self.ossec_ids_log_consumer_thread = None
+        self.host_metrics_consumer_thread: Optional[HostMetricsConsumerThread] = None
+        self.docker_stats_consumer_thread: Optional[DockerHostStatsConsumerThread] = None
+        self.snort_ids_log_consumer_thread: Optional[SnortIdsLogConsumerThread] = None
+        self.ossec_ids_log_consumer_thread: Optional[OSSECIdsLogConsumerThread] = None
 
     def start_monitor_threads(self) -> None:
         """
@@ -114,6 +114,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             ossec_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
         else:
             ossec_alert_counters = OSSECIdsAlertCounters()
+        if kafka_config is None:
+            raise ValueError("KafkaConfig is None")
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
@@ -131,15 +133,15 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = self.ips
         d["os"] = self.os
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
-        d["host_metrics"] = self.host_metrics.to_dict()
-        d["docker_stats"] = self.docker_stats.to_dict()
-        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
-        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict()
+        d["host_metrics"] = self.host_metrics.to_dict() if self.host_metrics is not None else None
+        d["docker_stats"] = self.docker_stats.to_dict() if self.docker_stats is not None else None
+        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict() if self.ossec_ids_alert_counters is not None else None
+        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict() if self.snort_ids_ip_alert_counters is not None else None
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
@@ -183,7 +185,7 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             self.snort_ids_log_consumer_thread.running = False
             self.snort_ids_log_consumer_thread.consumer.close()
         if self.ossec_ids_log_consumer_thread is not None:
-            self.ossec_ids_alert_counters.running = False
+            self.ossec_ids_log_consumer_thread.running = False
             self.ossec_ids_log_consumer_thread.consumer.close()
         for c in self.ssh_connections:
             c.cleanup()
@@ -193,15 +195,26 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         :return: a copy of the object
         """
         m_copy = EmulationDefenderMachineObservationState(
-            ips=self.ips, kafka_config=self.kafka_config, host_metrics=self.host_metrics.copy(),
-            docker_stats=self.docker_stats.copy())
+            ips=self.ips, kafka_config=self.kafka_config,
+            host_metrics=self.host_metrics.copy() if self.host_metrics is not None else self.host_metrics,
+            docker_stats=self.docker_stats.copy() if self.docker_stats is not None else self.docker_stats)
         m_copy.os = self.os
-        m_copy.ports = list(map(lambda x: x.copy(), self.ports))
-        m_copy.ssh_connections = self.ssh_connections
-        m_copy.host_metrics = self.host_metrics.copy()
-        m_copy.docker_stats = self.docker_stats.copy()
-        m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
-        m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
+        if self.ports == []:
+            m_copy.ports = self.ports
+        else:
+            m_copy.ports = list(map(lambda x: x.copy(), self.ports))
+        if self.ssh_connections == []:
+            m_copy.ssh_connections = self.ssh_connections
+        else:
+            m_copy.ssh_connections = list(map(lambda x: x.copy(), self.ssh_connections))
+        if self.snort_ids_ip_alert_counters is None:
+            m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters
+        else:
+            m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
+        if self.ossec_ids_alert_counters is None:
+            m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters
+        else:
+            m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         return m_copy
 
     @staticmethod
