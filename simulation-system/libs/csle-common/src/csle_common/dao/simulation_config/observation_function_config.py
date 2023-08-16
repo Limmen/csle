@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 import numpy as np
+from numpy.typing import NDArray
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -8,7 +9,7 @@ class ObservationFunctionConfig(JSONSerializable):
     DTO representing the configuration of the observation function of a simulation
     """
 
-    def __init__(self, observation_tensor: List, component_observation_tensors: Dict[str, List]):
+    def __init__(self, observation_tensor: NDArray[Any], component_observation_tensors: Dict[str, NDArray[Any]]):
         """
         Initializes the DTO
         :param observation_tensor: the observation tensor
@@ -34,8 +35,8 @@ class ObservationFunctionConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
-        if isinstance(self.observation_tensor, np.ndarray):
+        d: Dict[str, Any] = {}
+        if isinstance(self.observation_tensor, type(NDArray[Any])):
             tensor = self.observation_tensor.tolist()
         else:
             tensor = self.observation_tensor
