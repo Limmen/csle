@@ -76,7 +76,7 @@ class SDNControllerConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["container"] = self.container.to_dict()
         d["resources"] = self.resources.to_dict()
         d["time_step_len_seconds"] = self.time_step_len_seconds
@@ -105,7 +105,7 @@ class SDNControllerConfig(JSONSerializable):
                f"manager_log_dir: {self.manager_log_dir}, manager_max_workers: {self.manager_max_workers}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> "SDNControllerConfig":
+    def from_json_file(json_file_path: str) -> Union["SDNControllerConfig", None]:
         """
         Reads a json file and converts it to a DTO
 
@@ -118,7 +118,7 @@ class SDNControllerConfig(JSONSerializable):
             json_str = f.read()
         return SDNControllerConfig.from_dict(json.loads(json_str))
 
-    def copy(self) -> "SDNControllerConfig":
+    def copy(self) -> Union["SDNControllerConfig", None]:
         """
         :return: a copy of the DTO
         """
@@ -133,6 +133,8 @@ class SDNControllerConfig(JSONSerializable):
         :return: the new config
         """
         config = self.copy()
+        if config is None:
+            raise ValueError("Obtained None and not SDNControllerConfig")
         config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet,
                                                                     physical_servers=physical_servers)
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
