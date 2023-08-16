@@ -81,7 +81,7 @@ class AlphaVectorsPolicy(Policy):
         return a == self.action(o=o)
 
     @staticmethod
-    def from_dict(d: Dict) -> "AlphaVectorsPolicy":
+    def from_dict(d: Dict[str, Any]) -> "AlphaVectorsPolicy":
         """
         Converts a dict representation to an instance
 
@@ -98,11 +98,11 @@ class AlphaVectorsPolicy(Policy):
             dto.id = d["id"]
         return dto
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: A dict representation of the function
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["agent_type"] = self.agent_type
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
