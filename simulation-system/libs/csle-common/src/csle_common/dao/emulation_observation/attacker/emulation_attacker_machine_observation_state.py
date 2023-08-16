@@ -217,10 +217,10 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
         :return: the created AttackerMachineObservationState
         """
         if nmap_host_result.ips is None or \
-            nmap_host_result.ports is None or \
+                nmap_host_result.ports is None or \
                 nmap_host_result.vulnerabilities is None or \
-                    nmap_host_result.credentials is None or \
-                        nmap_host_result.hostnames is None:
+                nmap_host_result.credentials is None or \
+                nmap_host_result.hostnames is None:
             raise ValueError("NMapHostResult is incomplete, at least one attribute is None")
         m_obs = EmulationAttackerMachineObservationState(ips=nmap_host_result.ips)
         ports = list(map(lambda x: x.to_obs(), nmap_host_result.ports))

@@ -49,6 +49,7 @@ class EmulationDefenderActionConfig(JSONSerializable):
             self.num_node_specific_actions = len(self.action_ids)
         else:
             raise ValueError("There are no number of node-specific actions")
+
     def print_actions(self) -> None:
         """
         Utility function for printing the list of actions
