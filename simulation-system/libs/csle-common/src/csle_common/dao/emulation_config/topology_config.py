@@ -39,7 +39,7 @@ class TopologyConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["subnetwork_masks"] = self.subnetwork_masks
         d["node_configs"] = list(map(lambda x: x.to_dict(), self.node_configs))
         return d
