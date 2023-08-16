@@ -73,7 +73,7 @@ class ElkConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["container"] = self.container.to_dict()
         d["resources"] = self.resources.to_dict()
         d["elastic_port"] = self.elastic_port
