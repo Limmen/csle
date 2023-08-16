@@ -49,16 +49,18 @@ class AlphaVectorsPolicy(Policy):
         """
         b = o
         max_a_v = -np.inf
-        max_a = 0
+        # max_a = 0
         for a in self.actions:
             v_a = 0
             for s in self.states:
                 for s_prime in self.states:
-                    transition_prob = (b[s.id] * self.reward_tensor[a.id][s.id] *
+                    b_1 = b[s.id] if type(b) == list else b
+                    transition_prob = (b_1 * self.reward_tensor[a.id][s.id] *
                                        self.transition_tensor[a.id][s.id][s_prime.id])
                     max_alpha_v = -np.inf
                     for alpha in self.alpha_vectors:
-                        v = np.dot(np.array(alpha), np.array(b[0:len(alpha)]))
+                        b_2 = b[0:len(alpha)] if type(b) == list else b
+                        v = np.dot(np.array(alpha), np.array(b_2))
                         if v > max_alpha_v:
                             max_alpha_v = v
                     v_a += max_alpha_v * transition_prob
@@ -81,7 +83,7 @@ class AlphaVectorsPolicy(Policy):
         return a == self.action(o=o)
 
     @staticmethod
-    def from_dict(d: Dict) -> "AlphaVectorsPolicy":
+    def from_dict(d: Dict[str, Any]) -> "AlphaVectorsPolicy":
         """
         Converts a dict representation to an instance
 
@@ -98,11 +100,11 @@ class AlphaVectorsPolicy(Policy):
             dto.id = d["id"]
         return dto
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: A dict representation of the function
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["agent_type"] = self.agent_type
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
