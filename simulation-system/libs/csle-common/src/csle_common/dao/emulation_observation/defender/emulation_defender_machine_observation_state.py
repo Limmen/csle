@@ -133,22 +133,15 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        if self.ports == [] or self.ssh_connections == []:
-            raise ValueError("At least one of the list items is empty")
-        if self.host_metrics is None or \
-            self.docker_stats is None or \
-                self.ossec_ids_alert_counters is None or \
-                    self.snort_ids_ip_alert_counters is None:
-            raise ValueError("At least one of the items is None")
         d: Dict[str, Any] = {}
         d["ips"] = self.ips
         d["os"] = self.os
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
-        d["host_metrics"] = self.host_metrics.to_dict()
-        d["docker_stats"] = self.docker_stats.to_dict()
-        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
-        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict()
+        d["host_metrics"] = self.host_metrics.to_dict() if self.host_metrics is not None else None
+        d["docker_stats"] = self.docker_stats.to_dict() if self.docker_stats is not None else None
+        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict() if self.ossec_ids_alert_counters is not None else None
+        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict() if self.snort_ids_ip_alert_counters is not None else None
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
@@ -182,8 +175,6 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
 
         :return: None
         """
-        if self.ossec_ids_alert_counters is None:
-            raise ValueError("OSSECIdsAlertCounters is None")
         if self.docker_stats_consumer_thread is not None:
             self.docker_stats_consumer_thread.running = False
             self.docker_stats_consumer_thread.consumer.close()
@@ -194,7 +185,7 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             self.snort_ids_log_consumer_thread.running = False
             self.snort_ids_log_consumer_thread.consumer.close()
         if self.ossec_ids_log_consumer_thread is not None:
-            self.ossec_ids_alert_counters.running = False
+            self.ossec_ids_log_consumer_thread.running = False
             self.ossec_ids_log_consumer_thread.consumer.close()
         for c in self.ssh_connections:
             c.cleanup()
@@ -203,22 +194,27 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
         """
         :return: a copy of the object
         """
-        if self.host_metrics is None or \
-            self.docker_stats is None or \
-                self.host_metrics is None or self.ports == [] or \
-                    self.snort_ids_ip_alert_counters is None or \
-                        self.ossec_ids_alert_counters is None:
-            raise ValueError("EmulationDefenderMachineObservationState incomplete for copy")
         m_copy = EmulationDefenderMachineObservationState(
-            ips=self.ips, kafka_config=self.kafka_config, host_metrics=self.host_metrics.copy(),
-            docker_stats=self.docker_stats.copy())
+            ips=self.ips, kafka_config=self.kafka_config,
+            host_metrics=self.host_metrics.copy() if self.host_metrics is not None else self.host_metrics,
+            docker_stats=self.docker_stats.copy() if self.docker_stats is not None else self.docker_stats)
         m_copy.os = self.os
-        m_copy.ports = list(map(lambda x: x.copy(), self.ports))
-        m_copy.ssh_connections = self.ssh_connections
-        m_copy.host_metrics = self.host_metrics.copy()
-        m_copy.docker_stats = self.docker_stats.copy()
-        m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
-        m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
+        if self.ports == []:
+            m_copy.ports = self.ports
+        else:
+            m_copy.ports = list(map(lambda x: x.copy(), self.ports))
+        if self.ssh_connections == []:
+            m_copy.ssh_connections = self.ssh_connections
+        else:
+            m_copy.ssh_connections = list(map(lambda x: x.copy(), self.ssh_connections))
+        if self.snort_ids_ip_alert_counters is None:
+            m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters
+        else:
+            m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
+        if self.ossec_ids_alert_counters is None:
+            m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters
+        else:
+            m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         return m_copy
 
     @staticmethod
