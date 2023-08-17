@@ -37,15 +37,14 @@ class ExperimentConfig(JSONSerializable):
         self.br_log_every = br_log_every
 
     @staticmethod
-    def from_dict(d: Optional[Dict[str, Any]]) -> Optional["ExperimentConfig"]:
+    def from_dict(d: Dict[str, Any]) -> "ExperimentConfig":
         """
         Converts a dict representation to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        if d is None:
-            return None
+
         h_d = {}
         for k, v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
@@ -86,7 +85,7 @@ class ExperimentConfig(JSONSerializable):
                f"player_type: {self.player_type}, player_idx: {self.player_idx}, br_log_every: {self.br_log_every}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> Optional["ExperimentConfig"]:
+    def from_json_file(json_file_path: str) -> "ExperimentConfig":
         """
         Reads a json file and converts it to a DTO
 
