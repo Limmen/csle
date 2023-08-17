@@ -4,7 +4,7 @@ import grpc
 import time
 import csle_collector.ryu_manager.ryu_manager_pb2_grpc
 import csle_collector.ryu_manager.ryu_manager_pb2
-import csle_collector.ryu_manager.query_ryu_server
+import csle_collector.ryu_manager.query_ryu_manager
 import csle_collector.ryu_manager.ryu_manager_util
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig

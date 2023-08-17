@@ -8,7 +8,7 @@ from csle_collector.elk_manager.elk_manager import ElkManagerServicer
 
 class TestElkManagerSuite(object):
     """
-    Test suite for the Host manager
+    Test suite for the ELK manager
     """
 
     @pytest.fixture(scope='module')
@@ -57,21 +57,21 @@ class TestElkManagerSuite(object):
         assert not response.logstashRunning
         mocker.patch('csle_collector.elk_manager.elk_manager.ElkManagerServicer._get_elk_status',
                      return_value=(True, False, False))
-        response: ElkDTO = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
+        response = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
         assert response.elasticRunning
         assert not response.kibanaRunning
         assert not response.logstashRunning
 
         mocker.patch('csle_collector.elk_manager.elk_manager.ElkManagerServicer._get_elk_status',
                      return_value=(True, False, True))
-        response: ElkDTO = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
+        response = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
         assert response.elasticRunning
         assert not response.kibanaRunning
         assert response.logstashRunning
 
         mocker.patch('csle_collector.elk_manager.elk_manager.ElkManagerServicer._get_elk_status',
                      return_value=(True, True, True))
-        response: ElkDTO = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
+        response = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub=grpc_stub)
         assert response.elasticRunning
         assert response.kibanaRunning
         assert response.logstashRunning
