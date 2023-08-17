@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import pulp
 import itertools
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -180,7 +181,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         alpha_vectors, widths, excesses = self.hsvi(
             O=np.array(O), Z=np.array(Z), R=np.array(R), T=np.array(T), A1=np.array(A1), A2=np.array(A2),
             S=np.array(S), gamma=discount_factor, b0=np.array(b0),
-            epsilon=epsilon, prune_frequency=prune_frequency, D=None)
+            epsilon=epsilon, prune_frequency=prune_frequency, D=-1.0)
         exp_result.all_metrics[seed][agents_constants.HSVI_OS_POSG.WIDTHS] = widths
         exp_result.all_metrics[seed][agents_constants.HSVI_OS_POSG.EXCESSES] = excesses
         alpha_vec_policy = AlphaVectorsPolicy(
@@ -193,10 +194,9 @@ class HSVIOSPOSGAgent(BaseAgent):
         exp_result.policies[seed] = alpha_vec_policy
         return exp_result
 
-    def hsvi(self, O: np.ndarray, Z: np.ndarray, R: np.ndarray, T: np.ndarray, A1: np.ndarray,
-             A2: np.ndarray, S: np.ndarray, gamma: float, b0: np.ndarray,
-             epsilon: float, prune_frequency: int = 10,
-             D: float = None):
+    def hsvi(self, O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
+             A1: npt.NDArray[Any], A2: npt.NDArray[Any], S: npt.NDArray[Any], gamma: float,
+             b0: npt.NDArray[Any], epsilon: float, prune_frequency: int = 10, D: float = -1.0):
         """
         Heuristic Search Value Iteration for zero-sum OS-POSGs (Horak, Bosansky, Pechoucek, 2017)
 
@@ -221,7 +221,7 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         delta = self.compute_delta(S=S, A1=A1, A2=A2, gamma=gamma, R=R)
 
-        if D is None:
+        if D == -1.0:
             D = self.sample_D(gamma=gamma, epsilon=epsilon, delta=delta)
 
         excess_val, w = self.excess(lower_bound=lower_bound, upper_bound=upper_bound, b=b0, S=S, epsilon=epsilon,
@@ -244,7 +244,7 @@ class HSVIOSPOSGAgent(BaseAgent):
             excesses.append(excess_val)
 
             if iteration > 1 and iteration % prune_frequency == 0:
-                lower_bound = pruning.prune_lower_bound(lower_bound=lower_bound, S=S)
+                lower_bound = pruning.prune_lower_bound(lower_bound=np.array(lower_bound), S=S)
                 upper_bound = self.prune_upper_bound(upper_bound=upper_bound, delta=delta, S=S)
 
             initial_belief_V_star_upper = self.upper_bound_value(upper_bound=upper_bound, b=b0, delta=delta, S=S)
@@ -260,7 +260,8 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return lower_bound, widths, excesses
 
-    def compute_delta(self, S: np.ndarray, A1: np.ndarray, A2: np.ndarray, gamma: float, R: np.ndarray) -> float:
+    def compute_delta(self, S: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any], gamma: float,
+                      R: npt.NDArray[Any]) -> float:
         """
         The optimal value function V* of a OS-POSG is delta-Lipschitz continuous.
         To prove convergence of HSVI, we require that V_UB and V_LB are delta-Lipschitz continuous as well.
@@ -282,7 +283,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         L = min(temp)
         U = max(temp)
         delta = (U - L) / 2
-        return delta
+        return float(delta)
 
     def sample_D(self, gamma: float, epsilon: float, delta: float) -> float:
         """
@@ -301,9 +302,10 @@ class HSVIOSPOSGAgent(BaseAgent):
         return (max_val - min_val) / 2
 
     def obtain_equilibrium_strategy_profiles_in_stage_game(
-            self, lower_bound: List, upper_bound: List, b: np.ndarray, delta: float, S: np.ndarray, A1: np.ndarray,
-            A2: np.ndarray, gamma: float, R: np.ndarray, O: np.ndarray, Z: np.ndarray, T: np.ndarray) \
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+            self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], delta: float, S: npt.NDArray[Any],
+            A1: npt.NDArray[Any], A2: npt.NDArray[Any], gamma: float, R: npt.NDArray[Any], O: npt.NDArray[Any],
+            Z: npt.NDArray[Any], T: npt.NDArray[Any]) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Computes equilibrium strategy profiles in the stage game constructed from the lower and upper
         bound value functions
@@ -333,15 +335,15 @@ class HSVIOSPOSGAgent(BaseAgent):
             policy[0][p[0]] = 1
             policy[1][p[1]] = 1
             p2_policies.append(policy)
-        p2_policies = np.array(p2_policies)
+        p2_policies_np = np.array(p2_policies)
 
         for a1 in A1:
-            for i, pi_2 in enumerate(p2_policies):
-                immediate_reward = 0
-                expected_future_reward_upper_bound = 0
-                expected_future_reward_lower_bound = 0
-                payoff_upper_bound = 0
-                payoff_lower_bound = 0
+            for i, pi_2 in enumerate(p2_policies_np):
+                immediate_reward = 0.0
+                expected_future_reward_upper_bound = 0.0
+                expected_future_reward_lower_bound = 0.0
+                payoff_upper_bound = 0.0
+                payoff_lower_bound = 0.0
                 for s in S:
                     a2 = int(np.argmax(pi_2[s]))
                     immediate_reward += b[s] * R[a1][a2][s]
@@ -368,14 +370,15 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         pi_1_upper_bound, temp = upper_bound_equlibrium_strategies
         pi_2_upper_bound = self.combine_weights_and_pure_strategies_into_mixed_strategy(weights=temp,
-                                                                                        strategies=p2_policies)
+                                                                                        strategies=p2_policies_np)
         pi_1_lower_bound, temp = lower_bound_equlibrium_strategies
         pi_2_lower_bound = self.combine_weights_and_pure_strategies_into_mixed_strategy(weights=temp,
-                                                                                        strategies=p2_policies)
+                                                                                        strategies=p2_policies_np)
 
         return pi_1_upper_bound, pi_2_upper_bound, pi_1_lower_bound, pi_2_lower_bound
 
-    def combine_weights_and_pure_strategies_into_mixed_strategy(self, weights: np.ndarray, strategies: np.ndarray):
+    def combine_weights_and_pure_strategies_into_mixed_strategy(self, weights: npt.NDArray[Any],
+                                                                strategies: npt.NDArray[Any]):
         """
         Uses a set of mixture weights and strategies to compute a mixed strategy
 
@@ -388,8 +391,8 @@ class HSVIOSPOSGAgent(BaseAgent):
             mixed_strategy = mixed_strategy + strategies[i] * weights[i]
         return mixed_strategy
 
-    def compute_equilibrium_strategies_in_matrix_game(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray) \
-            -> Tuple[np.ndarray, np.ndarray]:
+    def compute_equilibrium_strategies_in_matrix_game(self, A: npt.NDArray[Any], A1: npt.NDArray[Any],
+                                                      A2: npt.NDArray[Any]) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Computes equilibrium strategies in a matrix game
 
@@ -402,8 +405,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         v2, minimax_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=False)
         return maximin_strategy, minimax_strategy
 
-    def compute_matrix_game_value(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray, maximizer: bool = True) \
-            -> Tuple[any, np.ndarray]:
+    def compute_matrix_game_value(self, A: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                                  maximizer: bool = True) -> Tuple[Any, npt.NDArray[Any]]:
         """
         Uses LP to compute the value of a a matrix game, also computes the maximin or minimax strategy
 
@@ -461,10 +464,10 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return value, optimal_strategy
 
-    def explore(self, b: np.ndarray, epsilon: float, t: int, lower_bound: List, upper_bound: List,
-                gamma: float, S: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray,
-                T: np.ndarray, A1: np.ndarray, A2: np.ndarray, delta: float, D: float) \
-            -> Tuple[List, List]:
+    def explore(self, b: npt.NDArray[Any], epsilon: float, t: int, lower_bound: List[Any], upper_bound: List[Any],
+                gamma: float, S: npt.NDArray[Any], O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any],
+                T: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                delta: float, D: float) -> Tuple[List[Any], List[Any]]:
         """
         Explores the OS-POSG tree
 
@@ -506,11 +509,12 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return lower_bound, upper_bound
 
-    def choose_a_o_for_exploration(self, A1: np.ndarray, O: np.ndarray, t: int, b: np.ndarray,
-                                   pi_1_upper_bound: np.ndarray, pi_2_lower_bound: np.ndarray,
-                                   lower_bound: List, upper_bound: List, gamma: float, epsilon: float, delta: float,
-                                   D: float, S: np.ndarray, Z: np.ndarray, A2: np.ndarray, T: np.ndarray) \
-            -> Tuple[int, int, float, float, float, np.ndarray]:
+    def choose_a_o_for_exploration(self, A1: npt.NDArray[Any], O: npt.NDArray[Any], t: int, b: npt.NDArray[Any],
+                                   pi_1_upper_bound: npt.NDArray[Any], pi_2_lower_bound: npt.NDArray[Any],
+                                   lower_bound: List[Any], upper_bound: List[Any], gamma: float, epsilon: float,
+                                   delta: float, D: float, S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                                   A2: npt.NDArray[Any], T: npt.NDArray[Any]) \
+            -> Tuple[int, int, float, float, float, npt.NDArray[Any]]:
         """
         Selects the action a* and observation * for exploration according to the heuristic:
 
@@ -561,11 +565,11 @@ class HSVIOSPOSGAgent(BaseAgent):
         return (a_star, o_star, weighted_excess_values[max_index], excess_values[max_index],
                 widths[max_index], new_beliefs[max_index])
 
-    def weighted_excess_gap(self, lower_bound: List, upper_bound: List, a1: int, o: int, b: np.ndarray, t: int,
+    def weighted_excess_gap(self, lower_bound: List[Any], upper_bound: List[Any], a1: int, o: int, b: npt.NDArray[Any], t: int,
                             gamma: float, pi_1_upper_bound, pi_2_lower_bound,
-                            epsilon: float, delta: float, D: float, S: np.ndarray, Z: np.ndarray, A1: np.ndarray,
-                            A2: np.ndarray, T: np.ndarray) \
-            -> Tuple[float, float, float, np.ndarray]:
+                            epsilon: float, delta: float, D: float, S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                            A1: npt.NDArray[Any], A2: npt.NDArray[Any], T: npt.NDArray[Any]) \
+            -> Tuple[float, float, float, npt.NDArray[Any]]:
         """
         Computes the weighted excess gap
 
@@ -595,8 +599,8 @@ class HSVIOSPOSGAgent(BaseAgent):
                                             A2=A2, T=T)
         return weight * excess_val, excess_val, w, new_belief
 
-    def initialize_lower_bound(self, S: np.ndarray, A1: np.ndarray, A2: np.ndarray, gamma: float, b0: np.ndarray,
-                               R: np.ndarray, T: np.ndarray) -> List:
+    def initialize_lower_bound(self, S: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any], gamma: float,
+                               b0: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any]) -> List[Any]:
         """
         Initializes the lower bound by computing the state-values of the POMDP induced by player 1 playing a uniform
         strategy
@@ -618,9 +622,9 @@ class HSVIOSPOSGAgent(BaseAgent):
         lower_bound.append(alpha_vector)
         return lower_bound
 
-    def value_of_p1_strategy_static(self, S: np.ndarray, A1: np.ndarray, A2: np.ndarray, gamma: float,
-                                    P1_strategy: np.ndarray, b0: np.ndarray, R: np.ndarray, T: np.ndarray) \
-            -> Tuple[np.ndarray, float]:
+    def value_of_p1_strategy_static(self, S: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any], gamma: float,
+                                    P1_strategy: npt.NDArray[Any], b0: npt.NDArray[Any], R: npt.NDArray[Any],
+                                    T: npt.NDArray[Any]) -> Tuple[npt.NDArray[Any], float]:
         """
         Computes the value of PI's strategy P1_strategy, assuming that P1's strategy is static and independent of
         observations/actions/beliefs in the game. For example a uniform strategy.
@@ -637,14 +641,15 @@ class HSVIOSPOSGAgent(BaseAgent):
         :param T: the transition tensor
         :return: the value vector and the value given the initial belief b0.
         """
-        R_mdp = self.mdp_reward_matrix_p2(P1_strategy=P1_strategy, A1=A1, R=R)
-        T_mdp = self.mdp_transition_tensor_p2(P1_strategy=P1_strategy, A1=A1, T=T)
+        R_mdp = self.mdp_reward_matrix_p2(P1_strategy=P1_strategy, A1=list(A1.tolist()), R=R)
+        T_mdp = self.mdp_transition_tensor_p2(P1_strategy=P1_strategy, A1=list(A1.tolist()), T=T)
         V, _ = self.vi(T=T_mdp, num_states=len(S), num_actions=len(A2), R=R_mdp, theta=0.0001, discount_factor=gamma)
         V = np.array(V)
         b0 = np.array(b0)
         return V, b0.dot(V)
 
-    def mdp_reward_matrix_p2(self, R: np.ndarray, P1_strategy: np.ndarray, A1: List) -> np.ndarray:
+    def mdp_reward_matrix_p2(self, R: npt.NDArray[Any], P1_strategy: npt.NDArray[Any], A1: List[Any]) \
+            -> npt.NDArray[Any]:
         """
         Creates the reward matrix of player 2 induced by a fixed policy of player 1 (a MDP)
 
@@ -657,7 +662,8 @@ class HSVIOSPOSGAgent(BaseAgent):
             R_mdp = R_mdp + R_i
         return R_mdp
 
-    def mdp_transition_tensor_p2(self, T: np.ndarray, P1_strategy: np.ndarray, A1: List) -> np.ndarray:
+    def mdp_transition_tensor_p2(self, T: npt.NDArray[Any], P1_strategy: npt.NDArray[Any], A1: List[float]) \
+            -> npt.NDArray[Any]:
         """
         Creates the transition tensor induced by a fixed policy of player 1 (MDP)
 
@@ -665,15 +671,16 @@ class HSVIOSPOSGAgent(BaseAgent):
         """
         T_mdp = np.zeros(T[0].shape)
         for a1 in A1:
-            T_i = T[a1]
-            T_i = T_i * P1_strategy[a1]
+            T_i = float(T[int(a1)])
+            T_i = T_i * P1_strategy[int(a1)]
             T_mdp = T_mdp + T_i
 
         return T_mdp
 
-    def valcomp(self, pi_1: np.ndarray, alpha_bar: np.ndarray, s: int, A1: np.ndarray, A2: np.ndarray,
-                O: np.ndarray, S: np.ndarray, Z: np.ndarray,
-                T: np.ndarray, R: np.ndarray, gamma: float, substituted_alpha: bool = False) -> float:
+    def valcomp(self, pi_1: npt.NDArray[Any], alpha_bar: npt.NDArray[Any], s: int, A1: npt.NDArray[Any],
+                A2: npt.NDArray[Any],
+                O: npt.NDArray[Any], S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                T: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float, substituted_alpha: bool = False) -> float:
         """
         Computes the value of a compositional strategy of player 1 in a given state s.
         The compositional strategy consists of the one-stage strategy pi_1 (a probability distribution over A1)
@@ -700,7 +707,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         for a2 in A2:
             for a1 in A1:
                 immediate_reward = R[a1][a2][s]
-                expected_future_reward = 0
+                expected_future_reward = 0.0
                 for o in O:
                     for s_prime in S:
                         expected_future_reward += (Z[a1][a2][s_prime][o] * T[a1][a2][s][s_prime] *
@@ -712,10 +719,10 @@ class HSVIOSPOSGAgent(BaseAgent):
                 total_value = immediate_reward + expected_future_reward
                 values.append(total_value)
         val = min(values)
-        return val
+        return float(val)
 
-    def initialize_upper_bound(self, T: np.ndarray, R: np.ndarray, A1: np.ndarray, A2: np.ndarray,
-                               S: np.ndarray, gamma: float) -> List:
+    def initialize_upper_bound(self, T: npt.NDArray[Any], R: npt.NDArray[Any], A1: npt.NDArray[Any],
+                               A2: npt.NDArray[Any], S: npt.NDArray[Any], gamma: float) -> List[Any]:
         """
         Initializes the upper bound by computing the values of the fully observed version of the OS-POSG using
         Shapley iteration.
@@ -736,8 +743,8 @@ class HSVIOSPOSGAgent(BaseAgent):
             point_set.append([b, V[s]])
         return point_set
 
-    def delta_lipschitz_envelope_of_upper_bound_value(self, upper_bound: List, b: np.ndarray, delta: float,
-                                                      S: np.ndarray) -> float:
+    def delta_lipschitz_envelope_of_upper_bound_value(self, upper_bound: List[Any], b: npt.NDArray[Any], delta: float,
+                                                      S: npt.NDArray[Any]) -> float:
         """
         This function computes the delta-Lipschitz envelop of the upper bound value at a given belief point b.
 
@@ -805,13 +812,13 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         # Extract solution
         projected_lamb_coefficients = []
-        belief_value = 0
+        belief_value = 0.0
         for i in range(len(upper_bound)):
             projected_lamb_coefficients.append(lamb[i].varValue)
             belief_value += projected_lamb_coefficients[i] * upper_bound[i][1]
 
         state_deltas_coefficients = []
-        state_deltas_sum = 0
+        state_deltas_sum = 0.0
         for s in range(len(b)):
             state_deltas_coefficients.append(state_deltas[s].varValue)
             state_deltas_sum += state_deltas_coefficients[s]
@@ -821,9 +828,10 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return belief_value
 
-    def maxcomp_shapley_bellman_operator(self, Gamma: np.ndarray, A1: np.ndarray, S: np.ndarray, O: np.ndarray,
-                                         A2: np.ndarray, gamma: float, b: np.ndarray, R, T, Z) \
-            -> Tuple[np.ndarray, np.ndarray]:
+    def maxcomp_shapley_bellman_operator(self, Gamma: npt.NDArray[Any], A1: npt.NDArray[Any], S: npt.NDArray[Any],
+                                         O: npt.NDArray[Any],
+                                         A2: npt.NDArray[Any], gamma: float, b: npt.NDArray[Any], R, T, Z) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         A dear child with many names: Maxcomp/Shapley/Bellman operator that computes [HV](b) where V is represented by
         the pointwise maximum over the convex hull of a set of alpha vectors Gamma.
@@ -903,11 +911,11 @@ class HSVIOSPOSGAgent(BaseAgent):
         # State-Value function constraints
         for s in S:
             for a2 in A2:
-                immediate_reward = 0
+                immediate_reward = 0.0
                 for a1 in A1:
                     immediate_reward += pi_1[a1] * R[a1][a2][s]
 
-                expected_future_reward = 0
+                expected_future_reward = 0.0
                 for a1 in A1:
                     for o in O:
                         for s_prime in S:
@@ -922,11 +930,11 @@ class HSVIOSPOSGAgent(BaseAgent):
         for a1 in A1:
             for o in O:
                 for s_prime in S:
-                    weighted_alpha_sum = 0
+                    weighted_alpha_sum = 0.0
                     for i in range(len(Gamma)):
                         weighted_alpha_sum += lamb[a1][o][i] * Gamma[i][s_prime]
                     problem += weighted_alpha_sum == (alpha_bar[a1][o][s_prime], "AlphaBarConstraint_" +
-                                                      str(s_prime) + "_" + str(a1) + "_" + str(o))
+                                                      str(s_prime) + "_" + str(a1) + "_" + str(o)) # type: ignore
 
         # Lambda constraints
         for a1 in A1:
@@ -938,7 +946,7 @@ class HSVIOSPOSGAgent(BaseAgent):
                 problem += lambda_sum == pi_1[a1], "Lambconstraint_" + str(a1) + "_" + str(o)
 
         # Strategy constraints
-        strategy_weights_sum = 0
+        strategy_weights_sum = 0.0
         for i in range(len(pi_1)):
             strategy_weights_sum += pi_1[i]
         problem += strategy_weights_sum == 1, "probabilities sum"
@@ -975,7 +983,7 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return np.array(pi_1_val), np.array(alpha_bar_val)
 
-    def generate_corner_belief(self, s: int, S: np.ndarray):
+    def generate_corner_belief(self, s: int, S: npt.NDArray[Any]):
         """
         Generate the corner of the simplex that corresponds to being in some state with probability 1
 
@@ -987,10 +995,10 @@ class HSVIOSPOSGAgent(BaseAgent):
         b[s] = 1
         return b
 
-    def local_updates(self, lower_bound: List, upper_bound: List, b: np.ndarray, A1: np.ndarray,
-                      A2: np.ndarray, S: np.ndarray,
-                      O: np.ndarray, R: np.ndarray, T: np.ndarray, gamma: float, Z: np.ndarray, delta: float) \
-            -> Tuple[List, List]:
+    def local_updates(self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any],
+                      A2: npt.NDArray[Any], S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any],
+                      T: npt.NDArray[Any], gamma: float, Z: npt.NDArray[Any], delta: float) \
+            -> Tuple[List[Any], List[Any]]:
         """
         Perform local updates to the upper and  lower bounds for the given belief in the heuristic-search-exploration
 
@@ -1012,11 +1020,12 @@ class HSVIOSPOSGAgent(BaseAgent):
                                                         S=S, O=O, R=R, T=T, gamma=gamma, Z=Z, delta=delta)
         new_lower_bound = self.local_lower_bound_update(lower_bound=lower_bound, b=b, Z=Z, A1=A1, A2=A2, O=O, S=S,
                                                         T=T, R=R, gamma=gamma)
-        return new_lower_bound, new_upper_bound
+        return list(new_lower_bound.tolist()), list(new_upper_bound.tolist())
 
-    def local_upper_bound_update(self, upper_bound: List, b: np.ndarray, A1: np.ndarray, A2: np.ndarray,
-                                 S: np.ndarray, O: np.ndarray, R: np.ndarray, T: np.ndarray,
-                                 gamma: float, Z: np.ndarray, delta: float) -> np.ndarray:
+    def local_upper_bound_update(self, upper_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any],
+                                 A2: npt.NDArray[Any],
+                                 S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
+                                 gamma: float, Z: npt.NDArray[Any], delta: float) -> npt.NDArray[Any]:
         """
         Performs a local update to the upper bound during the heuristic-search exploration
 
@@ -1035,11 +1044,11 @@ class HSVIOSPOSGAgent(BaseAgent):
         new_val = self.upper_bound_backup(upper_bound=upper_bound, b=b, A1=A1, A2=A2, S=S,
                                           Z=Z, O=O, R=R, T=T, gamma=gamma, delta=delta)
         upper_bound.append([b, new_val])
-        return upper_bound
+        return np.array(upper_bound)
 
-    def local_lower_bound_update(self, lower_bound: List, b: np.ndarray, A1: np.ndarray,
-                                 A2: np.ndarray, O: np.ndarray, Z: np.ndarray, S: np.ndarray,
-                                 T: np.ndarray, R: np.ndarray, gamma: float) -> np.ndarray:
+    def local_lower_bound_update(self, lower_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any],
+                                 A2: npt.NDArray[Any], O: npt.NDArray[Any], Z: npt.NDArray[Any], S: npt.NDArray[Any],
+                                 T: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float) -> npt.NDArray[Any]:
         """
         Performs a local update to the lower bound given a belief point in the heuristic search.
 
@@ -1059,13 +1068,13 @@ class HSVIOSPOSGAgent(BaseAgent):
         """
         alpha_vec = self.lower_bound_backup(lower_bound=lower_bound, b=b, A1=A1, Z=Z, O=O, S=S, T=T, R=R,
                                             gamma=gamma, A2=A2)
-        if not pruning.check_duplicate(lower_bound, alpha_vec):
+        if not pruning.check_duplicate(np.array(lower_bound), alpha_vec):
             lower_bound.append(alpha_vec)
-        return lower_bound
+        return np.array(lower_bound)
 
-    def lower_bound_backup(self, lower_bound: List, b: np.ndarray, A1: np.ndarray, O: np.ndarray,
-                           Z: np.ndarray, S: np.ndarray, T: np.ndarray, R: np.ndarray,
-                           gamma: float, A2: np.ndarray) -> np.ndarray:
+    def lower_bound_backup(self, lower_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any], O: npt.NDArray[Any],
+                           Z: npt.NDArray[Any], S: npt.NDArray[Any], T: npt.NDArray[Any], R: npt.NDArray[Any],
+                           gamma: float, A2: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """
         Generates a new alpha-vector for the lower bound
 
@@ -1083,19 +1092,20 @@ class HSVIOSPOSGAgent(BaseAgent):
         """
 
         # Shapley operator to obtain optimal value composition
-        pi_1_LB, alpha_bar_LB = self.maxcomp_shapley_bellman_operator(Gamma=lower_bound, A1=A1, S=S, O=O, A2=A2,
-                                                                      gamma=gamma, b=b, R=R, T=T, Z=Z)
+        pi_1_LB, alpha_bar_LB = self.maxcomp_shapley_bellman_operator(Gamma=np.array(lower_bound), A1=A1, S=S, O=O,
+                                                                      A2=A2, gamma=gamma, b=b, R=R, T=T, Z=Z)
         alpha_vec = []
         for s in S:
             s_val = self.valcomp(pi_1=pi_1_LB, alpha_bar=alpha_bar_LB, s=s, A1=A1, A2=A2, O=O, S=S, Z=Z, T=T, R=R,
                                  gamma=gamma, substituted_alpha=True)
             alpha_vec.append(s_val)
 
-        return alpha_vec
+        return np.array(alpha_vec)
 
-    def upper_bound_backup(self, upper_bound: List, b: np.ndarray, A1: np.ndarray, A2: np.ndarray, S: np.ndarray,
-                           O: np.ndarray, Z: np.ndarray, R: np.ndarray, T: np.ndarray, gamma: float, delta: float) \
-            -> Tuple[np.ndarray, float]:
+    def upper_bound_backup(self, upper_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                           S: npt.NDArray[Any],
+                           O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
+                           gamma: float, delta: float) -> float:
         """
         Adds a point to the upper bound
 
@@ -1200,12 +1210,12 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         # Value constraints
         for a1 in A1:
-            sum = 0
-            weighted_immediate_rew_sum = 0
+            sum = 0.0
+            weighted_immediate_rew_sum = 0.0
             for a2 in A2:
                 for s in S:
                     weighted_immediate_rew_sum += b[s] * pi_2[s][a2] * R[a1][a2][s]
-            future_val_sum = 0
+            future_val_sum = 0.0
             for o in O:
                 future_val_sum += V_hat[a1][o]
             future_val_sum = gamma * future_val_sum
@@ -1234,10 +1244,10 @@ class HSVIOSPOSGAgent(BaseAgent):
         # V hat constraints
         for a1 in A1:
             for o in O:
-                sum = 0
+                sum = 0.0
                 for i, point in enumerate(upper_bound):
                     sum += lamb[a1][o][i] * point[1]
-                deltas_sum = 0
+                deltas_sum = 0.0
                 for s_prime in S:
                     deltas_sum += state_action_observation_deltas[a1][o][s_prime]
                 deltas_sum = delta * deltas_sum
@@ -1248,7 +1258,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         for a1 in A1:
             for o in O:
                 for s_prime in S:
-                    sum = 0
+                    sum = 0.0
                     for i, point in enumerate(upper_bound):
                         sum += lamb[a1][o][i] * point[0][s_prime]
                     problem += sum == b_prime[a1][o][s_prime], ("b_prime constraint_" + str(a1) + "_" + str(o)
@@ -1268,11 +1278,11 @@ class HSVIOSPOSGAgent(BaseAgent):
         # Lambda constraints
         for a1 in A1:
             for o in O:
-                lambdas_sum = 0
+                lambdas_sum = 0.0
                 for i, point in enumerate(upper_bound):
                     lambdas_sum += lamb[a1][o][i]
 
-                tau_hat_sum = 0
+                tau_hat_sum = 0.0
                 for s_prime in S:
                     tau_hat_sum += tau_hat[a1][o][s_prime]
 
@@ -1283,9 +1293,9 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         # Obtain solution
         belief_value_var = V.varValue
-        return belief_value_var
+        return float(belief_value_var)
 
-    def upper_bound_value(self, upper_bound: List, b: np.ndarray, delta: float, S: np.ndarray) -> float:
+    def upper_bound_value(self, upper_bound: List[Any], b: npt.NDArray[Any], delta: float, S: npt.NDArray[Any]) -> float:
         """
         Computes the upper bound value of a given belief point
 
@@ -1298,7 +1308,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         """
         return self.delta_lipschitz_envelope_of_upper_bound_value(upper_bound=upper_bound, b=b, delta=delta, S=S)
 
-    def lower_bound_value(self, lower_bound: List, b: np.ndarray, S: np.ndarray) -> float:
+    def lower_bound_value(self, lower_bound: List[Any], b: npt.NDArray[Any], S: npt.NDArray[Any]) -> float:
         """
         Computes the lower bound value of a given belief point
 
@@ -1315,8 +1325,8 @@ class HSVIOSPOSGAgent(BaseAgent):
             alpha_vals.append(sum)
         return max(alpha_vals)
 
-    def next_belief(self, o: int, a1: int, b: np.ndarray, S: np.ndarray, Z: np.ndarray, T: np.ndarray, pi_2: np.ndarray,
-                    A2: np.ndarray) -> np.ndarray:
+    def next_belief(self, o: int, a1: int, b: npt.NDArray[Any], S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                    T: npt.NDArray[Any], pi_2: npt.NDArray[Any], A2: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -1337,8 +1347,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         assert round(sum(b_prime), 5) == 1
         return b_prime
 
-    def bayes_filter(self, s_prime: int, o: int, a1: int, b: np.ndarray, S: np.ndarray, Z: np.ndarray,
-                     T: np.ndarray, pi_2: np.ndarray, A2: np.ndarray) -> float:
+    def bayes_filter(self, s_prime: int, o: int, a1: int, b: npt.NDArray[Any], S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                     T: npt.NDArray[Any], pi_2: npt.NDArray[Any], A2: npt.NDArray[Any]) -> float:
         """
         A Bayesian filter to compute the belief of player 1
         of being in s_prime when observing o after taking action a in belief b given that the opponent follows
@@ -1375,8 +1385,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         assert b_prime_s_prime <= 1
         return b_prime_s_prime
 
-    def p_o_given_b_a1_a2(self, o: int, b: np.ndarray, a1: int, a2: int, S: np.ndarray, Z: np.ndarray, T: np.ndarray) \
-            -> float:
+    def p_o_given_b_a1_a2(self, o: int, b: npt.NDArray[Any], a1: int, a2: int, S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                          T: npt.NDArray[Any]) -> float:
         """
         Computes P[o|a,b]
 
@@ -1396,8 +1406,9 @@ class HSVIOSPOSGAgent(BaseAgent):
         assert prob <= 1
         return prob
 
-    def p_o_given_b_pi_1_pi_2(self, o: int, b: np.ndarray, pi_1: np.ndarray, pi_2: np.ndarray, S: np.ndarray,
-                              Z: np.ndarray, A1: np.ndarray, A2: np.ndarray, T: np.ndarray) -> float:
+    def p_o_given_b_pi_1_pi_2(self, o: int, b: npt.NDArray[Any], pi_1: npt.NDArray[Any], pi_2: npt.NDArray[Any],
+                              S: npt.NDArray[Any], Z: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                              T: npt.NDArray[Any]) -> float:
         """
         Computes P[o|a,b]
 
@@ -1419,7 +1430,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         assert prob < 1
         return prob
 
-    def excess(self, lower_bound: List, upper_bound: List, b: np.ndarray, S: np.ndarray,
+    def excess(self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], S: npt.NDArray[Any],
                epsilon: float, gamma: float, t: int, delta: float, D: float) -> Tuple[float, float]:
         """
         Computes the excess gap and width (Horak, Bosansky, Pechoucek, 2017)
@@ -1458,7 +1469,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         else:
             return (self.rho(t=t - 1, epsilon=epsilon, gamma=gamma, delta=delta, D=D) - 2 * delta * D) / gamma
 
-    def width(self, lower_bound: List, upper_bound: List, b: np.ndarray, S: np.ndarray, delta: float) -> float:
+    def width(self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], S: npt.NDArray[Any],
+              delta: float) -> float:
         """
         Computes the bounds width (Trey Smith and Reid Simmons, 2004)
 
@@ -1473,7 +1485,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         lb = self.lower_bound_value(lower_bound=lower_bound, b=b, S=S)
         return ub - lb
 
-    def prune_upper_bound(self, upper_bound: List, delta: float, S: np.ndarray) -> List:
+    def prune_upper_bound(self, upper_bound: List[Any], delta: float, S: npt.NDArray[Any]) -> List[Any]:
         """
         Prunes the points in the upper bound
 
@@ -1491,8 +1503,8 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return pruned_upper_bound_point_set
 
-    def auxillary_game(self, V: np.ndarray, gamma: float, S: np.ndarray, s: int, A1: np.ndarray, A2: np.ndarray,
-                       R: np.ndarray, T: np.ndarray) -> np.ndarray:
+    def auxillary_game(self, V: npt.NDArray[Any], gamma: float, S: npt.NDArray[Any], s: int, A1: npt.NDArray[Any],
+                       A2: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """
         Creates an auxillary matrix game based on the value function V
 
@@ -1510,16 +1522,17 @@ class HSVIOSPOSGAgent(BaseAgent):
         for a1 in A1:
             for a2 in A2:
                 immediate_reward = R[a1][a2][s]
-                expected_future_reward = 0
+                expected_future_reward = 0.0
                 for s_prime in S:
                     expected_future_reward += T[a1][a2][s][s_prime] * V[s_prime]
                 expected_future_reward = expected_future_reward * gamma
                 A[a1][a2] = immediate_reward + expected_future_reward
         return A
 
-    def si(self, S: np.ndarray, A1: np.ndarray, A2: np.ndarray, R: np.ndarray, T: np.ndarray, gamma: float = 1,
+    def si(self, S: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any], R: npt.NDArray[Any],
+           T: npt.NDArray[Any], gamma: float = 1,
            max_iterations: int = 500, delta_threshold: float = 0.1, log: bool = False) \
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Shapley Iteration (L. Shapley 1953)
 
@@ -1567,8 +1580,7 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return V, np.array(maximin_strategies), np.array(minimax_strategies), np.array(auxillary_games)
 
-    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) \
-            -> np.ndarray:
+    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) -> npt.NDArray[Any]:
         """
         Performs a one-step lookahead for value iteration
         :param state: the current state
@@ -1589,8 +1601,8 @@ class HSVIOSPOSGAgent(BaseAgent):
                 A[a] += prob * (reward + discount_factor * V[next_state])
         return A
 
-    def vi(self, T: np.ndarray, num_states: int, num_actions: int, R: np.ndarray, theta: float = 0.0001,
-           discount_factor: float = 1.0) -> Tuple[np.ndarray, np.ndarray]:
+    def vi(self, T: npt.NDArray[Any], num_states: int, num_actions: int, R: npt.NDArray[Any], theta: float = 0.0001,
+           discount_factor: float = 1.0) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         An implementation of the Value Iteration algorithm
         :param T: the transition kernel T

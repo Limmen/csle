@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import pulp
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -189,8 +190,9 @@ class ShapleyIterationAgent(BaseAgent):
         exp_result.policies[seed + 1] = tabular_policy_p2
         return exp_result
 
-    def auxillary_game(self, V: np.ndarray, gamma: float, S: np.ndarray, s: int, A1: np.ndarray, A2: np.ndarray,
-                       R: np.ndarray, T: np.ndarray) -> np.ndarray:
+    def auxillary_game(self, V: npt.NDArray[Any], gamma: float, S: npt.NDArray[Any], s: int,
+                       A1: npt.NDArray[Any], A2: npt.NDArray[Any], R: npt.NDArray[Any],
+                       T: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """
         Creates an auxillary matrix game based on the value function V
 
@@ -208,14 +210,15 @@ class ShapleyIterationAgent(BaseAgent):
         for a1 in A1:
             for a2 in A2:
                 immediate_reward = R[a1][a2][s]
-                expected_future_reward = 0
+                expected_future_reward = 0.0
                 for s_prime in S:
                     expected_future_reward += T[a1][a2][s][s_prime] * V[s_prime]
                 expected_future_reward = expected_future_reward * gamma
                 A[a1][a2] = immediate_reward + expected_future_reward
         return A
 
-    def compute_matrix_game_value(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray, maximizer: bool = True):
+    def compute_matrix_game_value(self, A: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                                  maximizer: bool = True):
         """
 
         :param A: the matrix game
@@ -270,9 +273,9 @@ class ShapleyIterationAgent(BaseAgent):
         value = v.varValue
         return value, optimal_strategy
 
-    def si(self, S: np.ndarray, A1: np.ndarray, A2: np.ndarray, R: np.ndarray, T: np.ndarray,
-           gamma: float = 1, max_iterations: int = 500, delta_threshold: float = 0.1) \
-            -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, List[float]]:
+    def si(self, S: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any], R: npt.NDArray[Any],
+           T: npt.NDArray[Any], gamma: float = 1, max_iterations: int = 500, delta_threshold: float = 0.1) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], List[float]]:
         """
         Shapley Iteration (L. Shapley 1953)
 

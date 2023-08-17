@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -14,6 +15,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
@@ -27,7 +29,7 @@ class VIAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the value iteration agent
 
@@ -75,7 +77,7 @@ class VIAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=None, simulation_traces=[],
+                emulation_env_name="", simulation_traces=[],
                 num_cached_traces=0,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -194,8 +196,7 @@ class VIAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) \
-            -> np.ndarray:
+    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) -> npt.NDArray[Any]:
         """
         Performs a one-step lookahead for value iteration
         :param state: the current state
@@ -216,8 +217,9 @@ class VIAgent(BaseAgent):
                 A[a] += prob * (reward + discount_factor * V[next_state])
         return A
 
-    def vi(self, T: np.ndarray, num_states: int, num_actions: int, R: np.ndarray,
-           theta=0.0001, discount_factor=1.0) -> Tuple[np.ndarray, np.ndarray, List, List, List]:
+    def vi(self, T: npt.NDArray[Any], num_states: int, num_actions: int, R: npt.NDArray[Any],
+           theta=0.0001, discount_factor=1.0) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], List[Any], List[Any], List[Any]]:
         """
         An implementation of the Value Iteration algorithm
         :param T: the transition kernel T
@@ -251,7 +253,7 @@ class VIAgent(BaseAgent):
 
             deltas.append(delta)
 
-            avg_return = -1
+            avg_return = -1.0
             if iteration % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 policy = self.create_policy_from_value_function(num_states=num_states, num_actions=num_actions, V=V,
                                                                 T=T, discount_factor=discount_factor, R=R)
@@ -276,7 +278,7 @@ class VIAgent(BaseAgent):
                                                         discount_factor=discount_factor, R=R)
         return V, policy, deltas, average_returns, running_average_returns
 
-    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -284,6 +286,8 @@ class VIAgent(BaseAgent):
         :param eval_batch_size: the batch size
         :return: None
         """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False
@@ -301,8 +305,9 @@ class VIAgent(BaseAgent):
         avg_return = np.mean(returns)
         return float(avg_return)
 
-    def create_policy_from_value_function(self, num_states: int, num_actions: int, V: np.ndarray, T: np.ndarray,
-                                          discount_factor: float, R: np.ndarray) -> np.ndarray:
+    def create_policy_from_value_function(self, num_states: int, num_actions: int, V: npt.NDArray[Any],
+                                          T: npt.NDArray[Any], discount_factor: float, R: npt.NDArray[Any]) \
+            -> npt.NDArray[Any]:
         """
         Creates a tabular policy from a value function
 

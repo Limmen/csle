@@ -1,3 +1,4 @@
+from typing import Union
 import torch
 from torch.distributions import MultivariateNormal
 from fnn_w_gaussian import FNNwithGaussian
@@ -11,7 +12,8 @@ class ActorCriticNet(torch.nn.Module):
     Sub-classing the torch.nn.Module to be able to use high-level API for creating the custom network
     """
     def __init__(self, input_dim: int, output_dim: int, hidden_dim: int, num_hidden_layers: int = 2,
-                 hidden_activation: str = "ReLU", actor: torch.nn.Module = None, critic: torch.nn.Module = None):
+                 hidden_activation: str = "ReLU", actor: Union[torch.nn.Module, None] = None,
+                 critic: Union[None, torch.nn.Module] = None):
         """
         Builds the model
 
@@ -77,6 +79,10 @@ class ActorCriticNet(torch.nn.Module):
         :param x: input tensor
         :return: Output prediction
         """
+        if self.actor is None:
+            raise ValueError("Actor cannot be None")
+        if self.critic is None:
+            raise ValueError("Critic cannot be None")
         y = x
         for i in range(len(self.layers)):
             y = self.layers[i](y)

@@ -48,12 +48,12 @@ def prune_lower_bound(lower_bound: npt.NDArray[Any], S: npt.NDArray[Any]) -> Lis
     while F:
         alpha_vec = F.pop()  # just to get a reference
         F.add(alpha_vec)
-        x = check_dominance_lp(alpha_vec, np.array(Q))
+        x = check_dominance_lp(np.array(alpha_vec), np.array(Q))
         if x is None:
             F.remove(alpha_vec)
         else:
             max_alpha_val = -np.inf
-            max_alpha_vec = None
+            max_alpha_vec = np.array([])
             for phi in F:
                 phi_vec = np.array(list(phi))
                 if phi_vec.dot(alpha_vec) > max_alpha_val:
@@ -61,7 +61,7 @@ def prune_lower_bound(lower_bound: npt.NDArray[Any], S: npt.NDArray[Any]) -> Lis
                     max_alpha_vec = phi_vec
             Q.append(max_alpha_vec)
             F.remove(tuple(list(max_alpha_vec)))
-    return list(Q.tolist())
+    return Q
 
 
 def check_dominance_lp(alpha_vec: npt.NDArray[Any], Q: npt.NDArray[Any]):

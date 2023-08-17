@@ -101,7 +101,7 @@ def test() -> None:
     batch_size = 64
 
     # Create model
-    model = FNNwithGaussian(input_dim, output_dim, hidden_dim, num_hidden_layers=2, log_std_init=0.0)
+    model = FNNwithGaussian(input_dim, output_dim, hidden_dim, num_hidden_layers=2)
 
     # Create random Tensors to hold inputs and outputs
     x = torch.randn(batch_size, input_dim)
