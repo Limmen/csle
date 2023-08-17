@@ -56,7 +56,7 @@ class StatisticsDataset(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["name"] = self.name
         d["description"] = self.description

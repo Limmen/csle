@@ -46,7 +46,7 @@ class MCMCSystemModel(SystemModel):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["posteriors"] = list(map(lambda y: y.to_dict(), self.posteriors))
         d["emulation_env_name"] = self.emulation_env_name
         d["emulation_statistic_id"] = self.emulation_statistic_id

@@ -25,15 +25,13 @@ class SystemIdentificationConfig(JSONSerializable):
         self.log_every = log_every
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "Optional[SystemIdentificationConfig]":
+    def from_dict(d: Dict[str, Any]) -> "SystemIdentificationConfig":
         """
         Converts a dict representation to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        if d is None:
-            return None
         h_d = {}
         for k, v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
@@ -47,7 +45,7 @@ class SystemIdentificationConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d_h = {}
         for k, v in self.hparams.items():
             d_h[k] = v.to_dict()
