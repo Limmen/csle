@@ -38,7 +38,7 @@ class NmapHop(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ttl"] = self.ttl
         d["ipaddr"] = self.ipaddr
         d["rtt"] = self.rtt
