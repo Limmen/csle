@@ -52,5 +52,5 @@ rm: rm_emulations rm_derived_images rm_base_images
 push: push_base_images push_derived_images
 
 # Pull all images from DockerHub
-push: pull_base_images pull_derived_images
+pull: pull_base_images pull_derived_images
 
