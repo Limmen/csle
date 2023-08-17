@@ -18,7 +18,6 @@ class TestEmpiricalAlgorithmSuite:
 
         :return: None
         """
-        sys_id_job_config = None
         sys_id_config = SystemIdentificationConfig(
             output_dir="test_dir", title="test init", model_type=SystemModelType.EMPIRICAL_DISTRIBUTION,
             log_every=1, hparams={
