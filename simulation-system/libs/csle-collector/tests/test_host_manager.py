@@ -7,7 +7,7 @@ from csle_collector.host_manager.host_manager import HostManagerServicer
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 
 
-class TestHostManagerSuite(object):
+class TestHostManagerSuite:
     """
     Test suite for the Host manager
     """

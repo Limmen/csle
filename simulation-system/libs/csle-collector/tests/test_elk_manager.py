@@ -6,7 +6,7 @@ from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
 from csle_collector.elk_manager.elk_manager import ElkManagerServicer
 
 
-class TestElkManagerSuite(object):
+class TestElkManagerSuite:
     """
     Test suite for the ELK manager
     """

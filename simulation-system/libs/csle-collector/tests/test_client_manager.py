@@ -15,7 +15,7 @@ from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArri
 from csle_collector.client_manager.dao.piece_wise_constant_arrival_config import PieceWiseConstantArrivalConfig
 
 
-class TestClientManagerSuite(object):
+class TestClientManagerSuite:
     """
     Test suite for the Client manager
     """

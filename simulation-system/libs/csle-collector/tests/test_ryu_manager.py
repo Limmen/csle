@@ -7,7 +7,7 @@ from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
 from csle_collector.ryu_manager.ryu_manager import RyuManagerServicer
 
 
-class TestRyuManagerSuite(object):
+class TestRyuManagerSuite:
     """
     Test suite for the Ryu manager
     """

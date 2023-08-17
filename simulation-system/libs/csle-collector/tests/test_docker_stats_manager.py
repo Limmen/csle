@@ -6,7 +6,7 @@ from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerS
 from csle_collector.docker_stats_manager.docker_stats_manager import DockerStatsManagerServicer
 
 
-class TestDockerStatsManagerSuite(object):
+class TestDockerStatsManagerSuite:
     """
     Test suite for the Docker stats manager
     """

@@ -11,7 +11,7 @@ import csle_collector.snort_ids_manager.query_snort_ids_manager
 import csle_collector.constants.constants as constants
 
 
-class TestSnortIDSManagerSuite(object):
+class TestSnortIDSManagerSuite:
     """
     Test suite for the Snort IDS manager
     """

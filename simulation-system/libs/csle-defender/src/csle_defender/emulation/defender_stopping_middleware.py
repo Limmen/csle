@@ -1,7 +1,4 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 
 
 class DefenderStoppingMiddleware:
@@ -10,9 +7,7 @@ class DefenderStoppingMiddleware:
     """
 
     @staticmethod
-    def stop_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
-                     attacker_action: EmulationAttackerAction,
-                     emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def stop_monitor(s: EmulationEnvState) -> EmulationEnvState:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -23,13 +18,12 @@ class DefenderStoppingMiddleware:
         :return: s_prime
         """
         s_prime = s
-        s_prime.defender_obs_state.stopped = True
+        if s.defender_obs_state is not None:
+            s_prime.defender_obs_state.stopped = True
         return s_prime
 
     @staticmethod
-    def continue_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
-                         attacker_action: EmulationAttackerAction,
-                         emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def continue_monitor(s: EmulationEnvState) -> EmulationEnvState:
         """
         Performs a "continue" action for the defender (continues monitoring)
 

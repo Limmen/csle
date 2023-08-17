@@ -42,13 +42,9 @@ class EmulatedDefender:
         :return: s'
         """
         if defender_action.id == EmulationDefenderActionId.STOP:
-            return DefenderStoppingMiddleware.stop_monitor(s=s, defender_action=defender_action,
-                                                           attacker_action=attacker_action,
-                                                           emulation_env_config=s.emulation_env_config)
+            return DefenderStoppingMiddleware.stop_monitor(s=s)
         elif defender_action.id == EmulationDefenderActionId.CONTINUE:
-            return DefenderStoppingMiddleware.continue_monitor(s=s, defender_action=defender_action,
-                                                               attacker_action=attacker_action,
-                                                               emulation_env_config=s.emulation_env_config)
+            return DefenderStoppingMiddleware.continue_monitor(s=s)
         else:
             raise ValueError("Stopping action id:{},name:{} "
                              "not recognized".format(defender_action.id, defender_action.name))

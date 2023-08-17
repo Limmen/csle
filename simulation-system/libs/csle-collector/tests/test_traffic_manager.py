@@ -6,7 +6,7 @@ from csle_collector.traffic_manager.traffic_manager_pb2 import TrafficDTO
 from csle_collector.traffic_manager.traffic_manager import TrafficManagerServicer
 
 
-class TestTrafficManagerSuite(object):
+class TestTrafficManagerSuite:
     """
     Test suite for the Traffic manager
     """

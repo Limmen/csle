@@ -8,7 +8,7 @@ from csle_collector.ossec_ids_manager.ossec_ids_manager import OSSECIdsManagerSe
 import csle_collector.ossec_ids_manager.query_ossec_ids_manager
 
 
-class TestOSSECIDSManagerSuite(object):
+class TestOSSECIDSManagerSuite:
     """
     Test suite for the OSSEC IDS manager
     """
