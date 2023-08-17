@@ -88,3 +88,38 @@ class TestClusterManagerSuite:
         assert response.nodeExporterRunning == True
         assert response.postgreSQLRunning == True
         assert response.dockerEngineRunning == True
+
+        mocker.patch('csle_common.util.cluster_util.ClusterUtil.am_i_leader', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_cadvisor_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_prometheus_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_grafana_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_pgadmin_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_nginx_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_flask_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_statsmanager_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_node_exporter_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_docker_engine_running', return_value=False)
+        response = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
+        assert response.ip == ip
+        assert response.leader == False
+        assert response.cAdvisorRunning == False
+        assert response.prometheusRunning == False
+        assert response.grafanaRunning == False
+        assert response.pgAdminRunning == False
+        assert response.nginxRunning == False
+        assert response.flaskRunning == False
+        assert response.dockerStatsManagerRunning == False
+        assert response.nodeExporterRunning == False
+        assert response.postgreSQLRunning == False
+        assert response.dockerEngineRunning == False

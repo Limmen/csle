@@ -3,7 +3,7 @@ import pytest
 from csle_common.util.general_util import GeneralUtil
 
 
-class TestShellUtilSuite(object):
+class TestShellUtilSuite:
     """
     Test suite for general_util.py
     """
