@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_base.json_serializable import JSONSerializable
 
@@ -39,7 +39,7 @@ class State(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, int, StateType]] = {}
         d["id"] = self.id
         d["name"] = self.name
         d["descr"] = self.descr

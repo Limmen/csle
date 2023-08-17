@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any
+from typing import Union, Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -37,7 +37,7 @@ class Observation(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["descr"] = self.descr
         d["val"] = self.val

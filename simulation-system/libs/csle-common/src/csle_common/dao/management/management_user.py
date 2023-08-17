@@ -31,13 +31,13 @@ class ManagementUser(JSONSerializable):
         self.organization = organization
         self.id = -1
 
-    def to_dict(self) -> Dict[str, Union[str, bool]]:
+    def to_dict(self) -> Dict[str, Union[str, bool, int]]:
         """
         Converts the object to a dict representation
         
         :return: a dict representation of the object
         """
-        d: Dict[str, Union[str, bool]] = {}
+        d: Dict[str, Union[str, bool, int]] = {}
         d["username"] = self.username
         d["password"] = self.password
         d["salt"] = self.salt
