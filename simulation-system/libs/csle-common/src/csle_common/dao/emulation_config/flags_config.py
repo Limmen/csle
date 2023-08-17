@@ -53,7 +53,7 @@ class FlagsConfig(JSONSerializable):
         :param ips: the list of ip addresses to get flags for
         :return: the list of flags
         """
-        flags = []
+        flags: List[Flag] = []
         for node_flag_config in self.node_flag_configs:
             if node_flag_config.ip in ips:
                 flags = flags + node_flag_config.flags

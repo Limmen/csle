@@ -2,7 +2,7 @@ from csle_common.dao.emulation_action.defender.emulation_defender_action import 
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
 from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
-
+from typing import List
 
 class EmulationDefenderStoppingActions:
     """
@@ -18,8 +18,8 @@ class EmulationDefenderStoppingActions:
         :return: the action
         """
         id = EmulationDefenderActionId.STOP
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationDefenderAction(id=id, name="Report Intrusion", cmds=cmd,
                                        type=EmulationDefenderActionType.STOP,
                                        descr="Reports an ongoing intrusion to the infrastructure and stops",
@@ -35,8 +35,8 @@ class EmulationDefenderStoppingActions:
         :return: the action
         """
         id = EmulationDefenderActionId.CONTINUE
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationDefenderAction(
             id=id, name="Continue", cmds=cmd, type=EmulationDefenderActionType.CONTINUE,
             descr="A 'continue' action, the defender chooses to not make any action", index=index, ips=[],
@@ -52,8 +52,8 @@ class EmulationDefenderStoppingActions:
         :return: the action
         """
         id = EmulationDefenderActionId.RESET_USERS
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationDefenderAction(
             id=id, name="Reset Users", cmds=cmd, type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
             descr="A non terminal stop action the defender resets all user accounts, which means that "
@@ -69,8 +69,8 @@ class EmulationDefenderStoppingActions:
         :return: the action
         """
         id = EmulationDefenderActionId.ENABLE_DPI
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationDefenderAction(id=id, name="Enable DPI", cmds=cmd,
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action, the defender enables DPI by starting the IDS",
@@ -88,8 +88,8 @@ class EmulationDefenderStoppingActions:
         :return: the action
         """
         id = EmulationDefenderActionId.BLACKLIST_IPS
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationDefenderAction(
             id=id, name="Blacklist IPs", cmds=cmd,
             type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,

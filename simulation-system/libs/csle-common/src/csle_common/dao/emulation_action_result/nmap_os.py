@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -42,13 +42,13 @@ class NmapOs(JSONSerializable):
                 best_os = os
         return best_os
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, int]]:
         """
         Converts the object to a dict representation
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, int]] = {}
         d["name"] = self.name
         d["vendor"] = self.vendor
         d["osfamily"] = self.osfamily

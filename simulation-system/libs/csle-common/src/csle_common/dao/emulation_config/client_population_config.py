@@ -92,7 +92,7 @@ class ClientPopulationConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["networks"] = list(map(lambda x: x.to_dict(), self.networks))
         d["client_manager_port"] = self.client_manager_port
