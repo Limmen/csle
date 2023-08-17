@@ -1,4 +1,5 @@
 from typing import Optional, List, Dict, Any
+import random
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.credential import Credential
@@ -40,7 +41,7 @@ class NetworkService(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["protocol"] = self.protocol
         d["port"] = self.port
         d["name"] = self.name
@@ -102,9 +103,16 @@ class NetworkService(JSONSerializable):
 
         :return: the network service representation
         """
-        service = NetworkService(protocol=credential.protocol, port=credential.port,
-                                 name=credential.service,
-                                 credentials=[credential])
+        if credential.protocol is None:
+            protocol = TransportProtocol(random.choice([0, 1]))
+        else:
+            protocol = credential.protocol
+        if credential.service is None:
+            name = ""
+        else:
+            name = credential.service
+        service = NetworkService(protocol=protocol, port=credential.port,
+                                 name=name, credentials=[credential])
         return service
 
     @staticmethod
