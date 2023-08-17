@@ -59,7 +59,7 @@ class NodeResourcesConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["container_name"] = self.container_name
         d["ips_and_network_configs"] = list(map(lambda x: (x[0], None if x[1] is None else x[1].to_dict()),
                                                 self.ips_and_network_configs))

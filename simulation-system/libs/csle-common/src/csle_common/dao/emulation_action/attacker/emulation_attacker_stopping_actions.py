@@ -2,7 +2,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action import 
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerActionOutcome
-
+from typing import List
 
 class EmulationAttackerStoppingActions:
     """
@@ -17,9 +17,9 @@ class EmulationAttackerStoppingActions:
         :param index: index of the machine to apply the action to
         :return: the action
         """
-        id = EmulationAttackerActionId.STOP
-        cmd = []
-        alt_cmd = []
+        id: int = EmulationAttackerActionId.STOP
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationAttackerAction(id=id, name="Abort Intrusion", cmds=cmd,
                                        type=EmulationAttackerActionType.STOP,
                                        descr="Aborts an ongoing intrusion",
@@ -35,8 +35,8 @@ class EmulationAttackerStoppingActions:
         :return: the action
         """
         id = EmulationAttackerActionId.CONTINUE
-        cmd = []
-        alt_cmd = []
+        cmd: List[str] = []
+        alt_cmd: List[str] = []
         return EmulationAttackerAction(id=id, name="Continue", cmds=cmd,
                                        type=EmulationAttackerActionType.CONTINUE,
                                        descr="A 'continue' action, the attacker chooses to not make any action",

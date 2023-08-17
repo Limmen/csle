@@ -12,7 +12,7 @@ class TabularPolicy(Policy):
     Object representing a tabular policy
     """
 
-    def __init__(self, player_type: PlayerType, actions: List[Action], lookup_table: List[Any],
+    def __init__(self, player_type: PlayerType, actions: List[Action], lookup_table: List[List[float]],
                  agent_type: AgentType, simulation_name: str, avg_R: float,
                  value_function: Optional[List[Any]] = None, q_table: Optional[List[Any]] = None) -> None:
         """
@@ -36,7 +36,7 @@ class TabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.TABULAR
 
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
+    def action(self, o: Union[int, float]) -> Union[int, float]:
         """
         Selects the next action
 
@@ -45,7 +45,7 @@ class TabularPolicy(Policy):
         """
         return np.random.choice(np.arange(0, len(self.lookup_table[int(o)])), p=self.lookup_table[int(o)])
 
-    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
+    def probability(self, o: Union[int, float], a: int) -> float:
         """
         Calculates the probability of taking a given action for a given observation
 
@@ -53,7 +53,7 @@ class TabularPolicy(Policy):
         :param a: the action
         :return: p(a|o)
         """
-        return self.lookup_table[o][a]
+        return self.lookup_table[int(o)][a]
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "TabularPolicy":
