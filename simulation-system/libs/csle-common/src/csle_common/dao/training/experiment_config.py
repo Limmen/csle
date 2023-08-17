@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.hparam import HParam
@@ -44,8 +44,7 @@ class ExperimentConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        if d is None:
-            return None
+
         h_d = {}
         for k, v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
@@ -62,7 +61,7 @@ class ExperimentConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["output_dir"] = self.output_dir
         d["title"] = self.title
         d["random_seeds"] = self.random_seeds

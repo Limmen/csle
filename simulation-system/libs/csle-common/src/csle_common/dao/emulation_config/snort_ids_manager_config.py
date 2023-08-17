@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -41,13 +41,13 @@ class SnortIDSManagerConfig(JSONSerializable):
                                     snort_ids_manager_log_file=d["snort_ids_manager_log_file"])
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, int]]:
         """
         Converts the object to a dict representation
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, int]] = {}
         d["snort_ids_manager_port"] = self.snort_ids_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version

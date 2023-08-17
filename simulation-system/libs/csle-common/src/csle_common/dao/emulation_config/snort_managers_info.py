@@ -49,7 +49,7 @@ class SnortIdsManagersInfo(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["snort_ids_managers_running"] = self.snort_ids_managers_running
         d["ips"] = self.ips
         d["ports"] = self.ports

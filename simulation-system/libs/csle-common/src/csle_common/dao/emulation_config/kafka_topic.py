@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -43,7 +43,7 @@ class KafkaTopic(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, int, List[str]]] = {}
         d["name"] = self.name
         d["num_partitions"] = self.num_partitions
         d["num_replicas"] = self.num_replicas

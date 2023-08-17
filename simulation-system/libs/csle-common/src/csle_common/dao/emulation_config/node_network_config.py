@@ -1,7 +1,7 @@
 """
 Network configuration of a container in the emulation
 """
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 import csle_common.constants.constants as constants
@@ -110,15 +110,13 @@ class NodeNetworkConfig(JSONSerializable):
         self.cell_overhead_bytes = cell_overhead_bytes
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> Union[None, "NodeNetworkConfig"]:
+    def from_dict(d: Dict[str, Any]) -> "NodeNetworkConfig":
         """
         Converts a dict representation to an instance
 
         :param d: the dict to convert
         :return: the converted instance
         """
-        if d is None:
-            return None
         obj = NodeNetworkConfig(
             interface=d["interface"],
             limit_packets_queue=d["limit_packets_queue"],
@@ -157,7 +155,7 @@ class NodeNetworkConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["interface"] = self.interface
         d["limit_packets_queue"] = self.limit_packets_queue
         d["packet_delay_ms"] = self.packet_delay_ms
