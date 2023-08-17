@@ -16,18 +16,18 @@ class SimulationTrace(JSONSerializable):
         Initializes the DTO
         """
         self.simulation_env = simulation_env
-        self.attacker_rewards = []
-        self.defender_rewards = []
-        self.attacker_observations = []
-        self.defender_observations = []
-        self.infos = []
-        self.dones = []
-        self.attacker_actions = []
-        self.defender_actions = []
-        self.states = []
-        self.beliefs = []
-        self.infrastructure_metrics = []
-        self.id = -1
+        self.attacker_rewards:List[float] = []
+        self.defender_rewards: List[float] = []
+        self.attacker_observations: List[Any] = []
+        self.defender_observations: List[Any] = []
+        self.infos: List[Any] = []
+        self.dones: List[Any] = []
+        self.attacker_actions: List[Any] = []
+        self.defender_actions: List[Any] = []
+        self.states: List[Any] = []
+        self.beliefs: List[Any] = []
+        self.infrastructure_metrics: List[Any] = []
+        self.id: int = -1
 
     def __str__(self) -> str:
         """
