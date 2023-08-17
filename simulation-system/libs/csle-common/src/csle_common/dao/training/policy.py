@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from abc import abstractmethod
+from numpy.typing import NDArray
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_base.json_serializable import JSONSerializable
@@ -21,7 +22,7 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Any) -> Any:
+    def action(self, o: Any) -> NDArray[Any]:
         """
         Calculates the next action
 
@@ -61,7 +62,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def probability(self, o: Any, a: int) -> float:
+    def probability(self, o: Any, a: int) -> Union[int, float]:
         """
         Calculates the probability of a given action for a given observation
 
