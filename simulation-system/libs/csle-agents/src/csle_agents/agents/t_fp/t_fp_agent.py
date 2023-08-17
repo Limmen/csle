@@ -409,7 +409,7 @@ class TFPAgent(BaseAgent):
         """
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
-                       config=self.attacker_simulation_env_config.simulation_env_input_config)
+                                config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         attacker_strategy.opponent_strategy = env.static_defender_strategy
         return self._eval_env(
@@ -438,7 +438,7 @@ class TFPAgent(BaseAgent):
             avg_R=-1, agent_type=AgentType.NONE)
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
-                       config=self.attacker_simulation_env_config.simulation_env_input_config)
+                                config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         attacker_policy.opponent_strategy = env.static_defender_strategy
         return self._eval_env(
@@ -539,7 +539,7 @@ class TFPAgent(BaseAgent):
         self.attacker_experiment_config.output_dir = str(self.root_output_dir)
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
-                       config=self.attacker_simulation_env_config.simulation_env_input_config)
+                                config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                            simulation_env_config=self.attacker_simulation_env_config,

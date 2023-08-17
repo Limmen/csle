@@ -11,6 +11,7 @@ class ActorCriticNet(torch.nn.Module):
 
     Sub-classing the torch.nn.Module to be able to use high-level API for creating the custom network
     """
+
     def __init__(self, input_dim: int, output_dim: int, hidden_dim: int, num_hidden_layers: int = 2,
                  hidden_activation: str = "ReLU", actor: Union[torch.nn.Module, None] = None,
                  critic: Union[None, torch.nn.Module] = None):

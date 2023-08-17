@@ -335,7 +335,6 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             self.viewer.close()
             self.viewer = None
 
-
     def set_model(self, model) -> None:
         """
         Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract

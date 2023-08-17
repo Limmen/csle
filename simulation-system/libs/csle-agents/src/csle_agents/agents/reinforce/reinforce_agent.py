@@ -5,7 +5,6 @@ import gymnasium as gym
 import os
 import torch
 import numpy as np
-import numpy.typing as npt
 import gym_csle_stopping_game.constants.constants as env_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -286,9 +285,9 @@ class ReinforceAgent(BaseAgent):
 
             # Perform Batch Policy Gradient updates
             loss_tensor = self.training_step(saved_rewards=rewards_batch, saved_log_probs=log_probs_batch,
-                                      policy_network=policy_network,
-                                      optimizer=optimizer,
-                                      gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value)
+                                             policy_network=policy_network,
+                                             optimizer=optimizer,
+                                             gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value)
             loss = loss_tensor.item()
 
             # Log metrics
@@ -358,7 +357,7 @@ class ReinforceAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"progress: {round(progress*100,2)}%")
+                    f"progress: {round(progress * 100, 2)}%")
 
         ts = time.time()
         save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"

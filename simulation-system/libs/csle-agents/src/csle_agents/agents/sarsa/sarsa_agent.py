@@ -192,7 +192,7 @@ class SARSAAgent(BaseAgent):
 
     def train_sarsa(self, A: List[int], S: List[int], gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
             -> Tuple[List[float], List[float], List[int], Union[npt.NDArray[Any], npt.NDArray[Any]],
-            Union[npt.NDArray[Any], npt.NDArray[Any]]]:
+                     Union[npt.NDArray[Any], npt.NDArray[Any]]]:
         """
         Runs the Q learning algorithm
 

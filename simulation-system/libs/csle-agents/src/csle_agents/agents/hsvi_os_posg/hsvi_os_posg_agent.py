@@ -302,7 +302,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         return (max_val - min_val) / 2
 
     def obtain_equilibrium_strategy_profiles_in_stage_game(
-            self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], delta: float, S: npt.NDArray[Any],
+            self, lower_bound: List[Any], upper_bound: List[Any], b: npt.NDArray[Any], delta: float,
+            S: npt.NDArray[Any],
             A1: npt.NDArray[Any], A2: npt.NDArray[Any], gamma: float, R: npt.NDArray[Any], O: npt.NDArray[Any],
             Z: npt.NDArray[Any], T: npt.NDArray[Any]) \
             -> Tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]]:
@@ -391,8 +392,9 @@ class HSVIOSPOSGAgent(BaseAgent):
             mixed_strategy = mixed_strategy + strategies[i] * weights[i]
         return mixed_strategy
 
-    def compute_equilibrium_strategies_in_matrix_game(self, A: npt.NDArray[Any], A1: npt.NDArray[Any],
-                                                      A2: npt.NDArray[Any]) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
+    def compute_equilibrium_strategies_in_matrix_game(
+            self, A: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any]) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Computes equilibrium strategies in a matrix game
 
@@ -565,7 +567,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         return (a_star, o_star, weighted_excess_values[max_index], excess_values[max_index],
                 widths[max_index], new_beliefs[max_index])
 
-    def weighted_excess_gap(self, lower_bound: List[Any], upper_bound: List[Any], a1: int, o: int, b: npt.NDArray[Any], t: int,
+    def weighted_excess_gap(self, lower_bound: List[Any], upper_bound: List[Any], a1: int, o: int, b: npt.NDArray[Any],
+                            t: int,
                             gamma: float, pi_1_upper_bound, pi_2_lower_bound,
                             epsilon: float, delta: float, D: float, S: npt.NDArray[Any], Z: npt.NDArray[Any],
                             A1: npt.NDArray[Any], A2: npt.NDArray[Any], T: npt.NDArray[Any]) \
@@ -671,7 +674,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         """
         T_mdp = np.zeros(T[0].shape)
         for a1 in A1:
-            T_i = float(T[int(a1)])
+            T_i = T[int(a1)]
             T_i = T_i * P1_strategy[int(a1)]
             T_mdp = T_mdp + T_i
 
@@ -934,7 +937,7 @@ class HSVIOSPOSGAgent(BaseAgent):
                     for i in range(len(Gamma)):
                         weighted_alpha_sum += lamb[a1][o][i] * Gamma[i][s_prime]
                     problem += weighted_alpha_sum == (alpha_bar[a1][o][s_prime], "AlphaBarConstraint_" +
-                                                      str(s_prime) + "_" + str(a1) + "_" + str(o)) # type: ignore
+                                                      str(s_prime) + "_" + str(a1) + "_" + str(o))  # type: ignore
 
         # Lambda constraints
         for a1 in A1:
@@ -1102,7 +1105,8 @@ class HSVIOSPOSGAgent(BaseAgent):
 
         return np.array(alpha_vec)
 
-    def upper_bound_backup(self, upper_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+    def upper_bound_backup(self, upper_bound: List[Any], b: npt.NDArray[Any], A1: npt.NDArray[Any],
+                           A2: npt.NDArray[Any],
                            S: npt.NDArray[Any],
                            O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
                            gamma: float, delta: float) -> float:
@@ -1295,7 +1299,8 @@ class HSVIOSPOSGAgent(BaseAgent):
         belief_value_var = V.varValue
         return float(belief_value_var)
 
-    def upper_bound_value(self, upper_bound: List[Any], b: npt.NDArray[Any], delta: float, S: npt.NDArray[Any]) -> float:
+    def upper_bound_value(self, upper_bound: List[Any], b: npt.NDArray[Any], delta: float,
+                          S: npt.NDArray[Any]) -> float:
         """
         Computes the upper bound value of a given belief point
 

@@ -227,8 +227,7 @@ class HSVIAgent(BaseAgent):
              A: npt.NDArray[Any], S: npt.NDArray[Any], gamma: float, b0: npt.NDArray[Any],
              epsilon: float, lp: bool = False, prune_frequency: int = 10,
              simulation_frequency: int = 10, simulate_horizon: int = 10, number_of_simulations: int = 10) \
-            -> Tuple[List[List[float]], List[float], List[float], List[float],
-            List[int], List[int], List[float]]:
+            -> Tuple[List[List[float]], List[float], List[float], List[float], List[int], List[int], List[float]]:
         """
         Heuristic Search Value Iteration for POMDPs (Trey Smith and Reid Simmons, 2004)
 
@@ -450,9 +449,10 @@ class HSVIAgent(BaseAgent):
                                                         R=R, gamma=gamma)
         return new_lower_bound, new_upper_bound
 
-    def local_upper_bound_update(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any], A: npt.NDArray[Any],
-                                 S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
-                                 gamma: float, Z: npt.NDArray[Any], lp: bool) -> Tuple[List[Any], List[Any]]:
+    def local_upper_bound_update(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any],
+                                 A: npt.NDArray[Any], S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any],
+                                 T: npt.NDArray[Any], gamma: float, Z: npt.NDArray[Any], lp: bool) \
+            -> Tuple[List[Any], List[Any]]:
         """
         Performs a local update to the upper bound during the heuristic-search exploration
 
@@ -496,9 +496,9 @@ class HSVIAgent(BaseAgent):
                 new_corner_points.append(cp)
         return new_corner_points
 
-    def local_lower_bound_update(self, lower_bound: List[Any], b: npt.NDArray[Any], A: npt.NDArray[Any], O: npt.NDArray[Any],
-                                 Z: npt.NDArray[Any], S: npt.NDArray[Any], T: npt.NDArray[Any], R: npt.NDArray[Any],
-                                 gamma: float) -> List[Any]:
+    def local_lower_bound_update(self, lower_bound: List[Any], b: npt.NDArray[Any], A: npt.NDArray[Any],
+                                 O: npt.NDArray[Any], Z: npt.NDArray[Any], S: npt.NDArray[Any], T: npt.NDArray[Any],
+                                 R: npt.NDArray[Any], gamma: float) -> List[Any]:
         """
         Performs a local update to the lower bound given a belief point in the heuristic search
 
@@ -968,8 +968,8 @@ class HSVIAgent(BaseAgent):
         cumulative_r = 0.0
         while t < horizon:
             q_values = list(map(lambda a: self.q(
-                b=b, a=a, lower_bound=list(lower_bound.tolist()), upper_bound=([], []), S=S, O=O, Z=Z, R=R, gamma=gamma, T=T,
-                upper=False, lp=False), A))
+                b=b, a=a, lower_bound=list(lower_bound.tolist()), upper_bound=([], []), S=S, O=O, Z=Z,
+                R=R, gamma=gamma, T=T, upper=False, lp=False), A))
             a = int(np.argmax(np.array(q_values)))
             r = 0
             for s in S:
