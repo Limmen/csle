@@ -52,7 +52,7 @@ class UsersConfig(JSONSerializable):
         :param ips: the list of ips to get the root usernames for
         :return: the list of root usernames
         """
-        root_usernames = []
+        root_usernames: List[str] = []
         for users_config in self.users_configs:
             if users_config.ip in ips:
                 root_usernames = root_usernames + users_config.users

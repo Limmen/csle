@@ -52,7 +52,7 @@ class BeatsConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["node_beats_configs"] = list(map(lambda x: x.to_dict(), self.node_beats_configs))
         d["num_elastic_shards"] = self.num_elastic_shards
         d["reload_enabled"] = self.reload_enabled

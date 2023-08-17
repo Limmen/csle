@@ -48,7 +48,7 @@ class DefaultNetworkFirewallConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["default_gw"] = self.default_gw
         d["default_input"] = self.default_input
