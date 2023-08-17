@@ -17,5 +17,4 @@ class TestDefenderStoppingMiddlewareSuite:
         s = EmulationEnvState(emulation_env_config=get_ex_em_env)
         s_prime = DefenderStoppingMiddleware.stop_monitor(s=s)
         if s_prime.defender_obs_state is not None:
-            assert s_prime.defender_obs_state.stopped == True
-
+            assert s_prime.defender_obs_state.stopped

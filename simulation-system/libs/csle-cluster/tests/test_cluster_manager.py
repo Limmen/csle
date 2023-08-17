@@ -77,17 +77,17 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.is_docker_engine_running', return_value=True)
         response: NodeStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
         assert response.ip == ip
-        assert response.leader == True
-        assert response.cAdvisorRunning == True
-        assert response.prometheusRunning == True
-        assert response.grafanaRunning == True
-        assert response.pgAdminRunning == True
-        assert response.nginxRunning == True
-        assert response.flaskRunning == True
-        assert response.dockerStatsManagerRunning == True
-        assert response.nodeExporterRunning == True
-        assert response.postgreSQLRunning == True
-        assert response.dockerEngineRunning == True
+        assert response.leader
+        assert response.cAdvisorRunning
+        assert response.prometheusRunning
+        assert response.grafanaRunning
+        assert response.pgAdminRunning
+        assert response.nginxRunning
+        assert response.flaskRunning
+        assert response.dockerStatsManagerRunning
+        assert response.nodeExporterRunning
+        assert response.postgreSQLRunning
+        assert response.dockerEngineRunning
 
         mocker.patch('csle_common.util.cluster_util.ClusterUtil.am_i_leader', return_value=False)
         mocker.patch('csle_common.controllers.management_system_controller.'
@@ -112,14 +112,14 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.is_docker_engine_running', return_value=False)
         response = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
         assert response.ip == ip
-        assert response.leader == False
-        assert response.cAdvisorRunning == False
-        assert response.prometheusRunning == False
-        assert response.grafanaRunning == False
-        assert response.pgAdminRunning == False
-        assert response.nginxRunning == False
-        assert response.flaskRunning == False
-        assert response.dockerStatsManagerRunning == False
-        assert response.nodeExporterRunning == False
-        assert response.postgreSQLRunning == False
-        assert response.dockerEngineRunning == False
+        assert not response.leader
+        assert not response.cAdvisorRunning
+        assert not response.prometheusRunning
+        assert not response.grafanaRunning
+        assert not response.pgAdminRunning
+        assert not response.nginxRunning
+        assert not response.flaskRunning
+        assert not response.dockerStatsManagerRunning
+        assert not response.nodeExporterRunning
+        assert not response.postgreSQLRunning
+        assert not response.dockerEngineRunning

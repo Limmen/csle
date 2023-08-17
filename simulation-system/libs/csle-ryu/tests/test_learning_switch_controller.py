@@ -19,4 +19,3 @@ class TestLearningSwitchControllerSuite:
         controller = LearningSwitchController(wsgi=wsgi)
         assert controller.mac_to_port == {}
         assert controller.controller_type == RYUControllerType.LEARNING_SWITCH
-

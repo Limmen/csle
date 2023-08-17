@@ -30,4 +30,4 @@ class TestShellUtilSuite:
         s_prime = ShellUtil.execute_service_login_helper(s=s, a=a)
         for m in s_prime.attacker_obs_state.machines:
             if m.ips == a.ips:
-                assert m.untried_credentials == False
+                assert not m.untried_credentials

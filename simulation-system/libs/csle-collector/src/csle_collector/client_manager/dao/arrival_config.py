@@ -51,4 +51,3 @@ class ArrivalConfig(JSONSerializable, GRPCSerializable):
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
         return ArrivalConfig.from_dict(json.loads(json_str))
-
