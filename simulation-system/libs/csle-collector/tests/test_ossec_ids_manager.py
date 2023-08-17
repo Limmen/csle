@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any
 import pytest
 import pytest_mock
 from subprocess import CompletedProcess
@@ -14,7 +14,7 @@ class TestOSSECIDSManagerSuite(object):
     """
 
     @pytest.fixture(scope='module')
-    def grpc_add_to_server(self) -> Callable:
+    def grpc_add_to_server(self) -> Any:
         """
         Necessary fixture for pytest-grpc
 
@@ -103,7 +103,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.squid_alerts == 0
         assert response.apache_alerts == 0
         assert response.syslog_alerts == 0
-        response: OSSECIdsLogDTO = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts(
+        response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts(
             stub=grpc_stub, timestamp=1, log_file_path="")
         assert response.total_alerts == 300
         assert response.warning_alerts == 200
@@ -133,7 +133,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.ossec_ids_running
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_ossec_running',
                      return_value=False)
-        response: OSSECIdsMonitorDTO = csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids_monitor(
+        response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids_monitor(
             stub=grpc_stub, kafka_ip=kafka_ip, kafka_port=kafka_port, log_file_path=log_file_path,
             time_step_len_seconds=time_step_len_seconds)
         assert response.monitor_running
@@ -155,7 +155,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.ossec_ids_running
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_ossec_running',
                      return_value=False)
-        response: OSSECIdsMonitorDTO = csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids_monitor(
+        response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids_monitor(
             stub=grpc_stub)
         assert not response.monitor_running
         assert not response.ossec_ids_running
@@ -178,7 +178,7 @@ class TestOSSECIDSManagerSuite(object):
         assert not response.ossec_ids_running
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_monitor_running',
                      return_value=True)
-        response: OSSECIdsMonitorDTO = csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids(
+        response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids(
             stub=grpc_stub)
         assert response.monitor_running
         assert not response.ossec_ids_running
@@ -201,7 +201,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.ossec_ids_running
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_monitor_running',
                      return_value=True)
-        response: OSSECIdsMonitorDTO = csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids(
+        response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids(
             stub=grpc_stub)
         assert response.monitor_running
         assert response.ossec_ids_running
@@ -227,7 +227,7 @@ class TestOSSECIDSManagerSuite(object):
                      return_value=True)
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_monitor_running',
                      return_value=False)
-        response: OSSECIdsMonitorDTO = \
+        response = \
             csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=grpc_stub)
         assert not response.monitor_running
         assert response.ossec_ids_running
@@ -236,7 +236,7 @@ class TestOSSECIDSManagerSuite(object):
                      return_value=False)
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_monitor_running',
                      return_value=True)
-        response: OSSECIdsMonitorDTO = \
+        response = \
             csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=grpc_stub)
         assert response.monitor_running
         assert not response.ossec_ids_running
@@ -245,7 +245,7 @@ class TestOSSECIDSManagerSuite(object):
                      return_value=True)
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer._is_monitor_running',
                      return_value=True)
-        response: OSSECIdsMonitorDTO = \
+        response = \
             csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=grpc_stub)
         assert response.monitor_running
         assert response.ossec_ids_running

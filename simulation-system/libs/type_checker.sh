@@ -18,3 +18,9 @@ echo "Running type checker for csle-system-identification"
 cd csle-system-identification; mypy src tests; cd ../
 echo "Running type checker for gym-csle-stopping-game"
 cd gym-csle-stopping-game; mypy src tests; cd ../
+echo "Running type checker for gym-csle-intrusion-response-game"
+cd gym-csle-intrusion-response-game; mypy src tests; cd ../
+echo "Running type checker for csle-base"
+cd csle-base; mypy src tests; cd ../
+echo "Running type checker for csle-cli"
+cd csle-cli; mypy src tests; cd ../

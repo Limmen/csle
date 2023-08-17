@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, List
 import pytest
 import pytest_mock
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
@@ -8,13 +8,13 @@ import csle_collector.kafka_manager.query_kafka_server
 import csle_collector.constants.constants as constants
 
 
-class TestKafkaManagerSuite(object):
+class TestKafkaManagerSuite:
     """
     Test suite for kafka_manager.py
     """
 
     @pytest.fixture(scope='module')
-    def grpc_add_to_server(self) -> Callable:
+    def grpc_add_to_server(self) -> Any:
         """
         Necessary fixture for pytest-grpc
 
@@ -68,7 +68,7 @@ class TestKafkaManagerSuite(object):
         :return: None
         """
         running = False
-        topics = []
+        topics: List[str] = []
         mocker.patch('os.system', return_value=True)
         response: KafkaDTO = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub=grpc_stub)
         assert response.running == running
@@ -83,7 +83,7 @@ class TestKafkaManagerSuite(object):
         :return: None
         """
         running = True
-        topics = []
+        topics: List[str] = []
         mocker.patch('os.system', return_value=True)
         response: KafkaDTO = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub=grpc_stub)
         assert response.running == running

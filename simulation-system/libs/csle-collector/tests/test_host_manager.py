@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any
 import pytest
 import pytest_mock
 import csle_collector.host_manager.query_host_manager
@@ -13,7 +13,7 @@ class TestHostManagerSuite(object):
     """
 
     @pytest.fixture(scope='module')
-    def grpc_add_to_server(self) -> Callable:
+    def grpc_add_to_server(self) -> Any:
         """
         Necessary fixture for pytest-grpc
 
@@ -86,7 +86,7 @@ class TestHostManagerSuite(object):
                      return_value=False)
         mocker.patch('csle_collector.host_manager.host_manager.HostManagerServicer._is_monitor_running',
                      return_value=False)
-        response: HostStatusDTO = csle_collector.host_manager.query_host_manager.start_host_monitor(
+        response = csle_collector.host_manager.query_host_manager.start_host_monitor(
             stub=grpc_stub, kafka_ip=kafka_ip, kafka_port=kafka_port, time_step_len_seconds=time_step_len_seconds)
         assert response.monitor_running
         assert not response.filebeat_running
@@ -134,7 +134,7 @@ class TestHostManagerSuite(object):
                      return_value=False)
         mocker.patch('csle_collector.host_manager.host_manager.HostManagerServicer._is_monitor_running',
                      return_value=False)
-        response: HostStatusDTO = csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=grpc_stub)
+        response = csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=grpc_stub)
         assert not response.monitor_running
         assert not response.filebeat_running
         assert not response.packetbeat_running
