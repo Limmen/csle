@@ -1,12 +1,10 @@
 from typing import Dict, Any, List
-from csle_base.grpc_serializable import GRPCSerializable
-from csle_base.json_serializable import JSONSerializable
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 import csle_collector.client_manager.client_manager_pb2
 
 
-class EPTMPArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
+class EPTMPArrivalConfig(ArrivalConfig):
     """
     DTO representing the configuration of a homogenous poisson arrival process with an
     Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities

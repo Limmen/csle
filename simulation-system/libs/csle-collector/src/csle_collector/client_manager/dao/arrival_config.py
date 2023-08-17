@@ -1,9 +1,10 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_base.json_serializable import JSONSerializable
+from csle_base.grpc_serializable import GRPCSerializable
 
 
-class ArrivalConfig(JSONSerializable):
+class ArrivalConfig(JSONSerializable, GRPCSerializable):
     """
     Abstract arrival configuration class
     """
@@ -50,3 +51,4 @@ class ArrivalConfig(JSONSerializable):
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
         return ArrivalConfig.from_dict(json.loads(json_str))
+
