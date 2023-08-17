@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, Tuple
 import subprocess
 import docker
 import psutil
@@ -42,8 +42,8 @@ class ManagementSystemController:
                + constants.COMMANDS.SPACE_DELIM + "prometheus")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        output = str(output)
-        return constants.COMMANDS.SEARCH_PROMETHEUS in str(output) and str(pid) in output
+        output_1 = str(output)
+        return constants.COMMANDS.SEARCH_PROMETHEUS in output_1 and str(pid) in output_1
 
     @staticmethod
     def is_node_exporter_running() -> bool:
@@ -60,8 +60,8 @@ class ManagementSystemController:
                constants.COMMANDS.SEARCH_NODE_EXPORTER)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        output = str(output)
-        return constants.COMMANDS.SEARCH_NODE_EXPORTER in output and str(pid) in output
+        output_1 = str(output)
+        return constants.COMMANDS.SEARCH_NODE_EXPORTER in output_1 and str(pid) in output_1
 
     @staticmethod
     def is_nginx_running() -> bool:
@@ -111,8 +111,8 @@ class ManagementSystemController:
                constants.COMMANDS.SEARCH_MONITOR)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        output = str(output)
-        return constants.COMMANDS.SEARCH_MONITOR in output and str(pid) in output
+        output_1 = str(output)
+        return constants.COMMANDS.SEARCH_MONITOR in output_1 and str(pid) in output_1
 
     @staticmethod
     def start_node_exporter(logger: logging.Logger) -> bool:
@@ -147,10 +147,12 @@ class ManagementSystemController:
         logger.info(f"Building the web app with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to NoneType")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -223,7 +225,7 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def stop_prometheus(logger: logging.getLogger()) -> bool:
+    def stop_prometheus(logger: logging.RootLogger) -> bool:
         """
         Stops Prometheus
 
@@ -317,7 +319,7 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def start_postgresql(logger: logging.Logger) -> (bool, Any, Any):
+    def start_postgresql(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Starts PostgreSQL
 
@@ -333,7 +335,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_postgresql(logger: logging.Logger) -> (bool, Any, Any):
+    def stop_postgresql(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Stops PostgreSQL
 
@@ -349,7 +351,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_nginx(logger: logging.Logger) -> (bool, Any, Any):
+    def start_nginx(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Starts Nginx
 
@@ -365,7 +367,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_nginx(logger: logging.Logger) -> (bool, Any, Any):
+    def stop_nginx(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Stops Nginx
 
@@ -381,7 +383,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_docker_engine(logger: logging.Logger) -> (bool, Any, Any):
+    def start_docker_engine(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Starts the Docker engine
 
@@ -397,7 +399,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_docker_engine(logger: logging.Logger) -> (bool, Any, Any):
+    def stop_docker_engine(logger: logging.RootLogger) -> Tuple[bool, Any, Any]:
         """
         Stops the Docker engine
 
@@ -413,7 +415,7 @@ class ManagementSystemController:
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_pgadmin(logger: logging.Logger) -> bool:
+    def start_pgadmin(logger: logging.RootLogger) -> bool:
         """
         Starts pgAdmin
 
@@ -454,7 +456,7 @@ class ManagementSystemController:
         return False
 
     @staticmethod
-    def start_grafana(logger: logging.Logger) -> bool:
+    def start_grafana(logger: logging.RootLogger) -> bool:
         """
         Starts Grafana
 
@@ -506,8 +508,8 @@ class ManagementSystemController:
                constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        output = str(output)
-        return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output and str(pid) in output
+        output_1 = str(output)
+        return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output_1 and str(pid) in output_1
 
     @staticmethod
     def start_docker_stats_manager(logger: logging.Logger, log_file: str = "docker_stats_manager.log",
