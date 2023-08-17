@@ -44,10 +44,15 @@ class NodeResourcesConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
+        ips_and_network_configs = []
+        for ip, cfg in d["ips_and_network_configs"]:
+            parsed_cfg = None
+            if cfg is not None:
+                parsed_cfg = NodeNetworkConfig.from_dict(cfg)
+            ips_and_network_configs.append((ip, parsed_cfg))
         obj = NodeResourcesConfig(
             container_name=d["container_name"],
-            ips_and_network_configs=list(map(lambda x: (x[0], NodeNetworkConfig.from_dict(x[1])),
-                                             d["ips_and_network_configs"])),
+            ips_and_network_configs=ips_and_network_configs,
             num_cpus=d["num_cpus"], available_memory_gb=d["available_memory_gb"],
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"]
         )
