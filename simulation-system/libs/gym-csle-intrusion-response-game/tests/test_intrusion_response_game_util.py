@@ -1,4 +1,5 @@
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
+import numpy as np
 
 
 class TestIntrusionResponseGameUtilSuite(object):
@@ -12,7 +13,7 @@ class TestIntrusionResponseGameUtilSuite(object):
 
         :return: None
         """
-        assert IntrusionResponseGameUtil.is_local_state_terminal([-1, -1])
-        assert not IntrusionResponseGameUtil.is_local_state_terminal([0, -1])
-        assert not IntrusionResponseGameUtil.is_local_state_terminal([-1, 0])
-        assert not IntrusionResponseGameUtil.is_local_state_terminal([0, 0])
+        assert IntrusionResponseGameUtil.is_local_state_terminal(np.array([-1, -1]))
+        assert not IntrusionResponseGameUtil.is_local_state_terminal(np.array([0, -1]))
+        assert not IntrusionResponseGameUtil.is_local_state_terminal(np.array([-1, 0]))
+        assert not IntrusionResponseGameUtil.is_local_state_terminal(np.array([0, 0]))
