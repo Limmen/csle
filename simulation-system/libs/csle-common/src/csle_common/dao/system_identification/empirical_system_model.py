@@ -26,7 +26,7 @@ class EmpiricalSystemModel(SystemModel):
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
         self.id = -1
-        self.conditionals_kl_divergences = {}
+        self.conditionals_kl_divergences: Dict[str, Dict[str, Dict[str, float]]] = {}
         self.compute_kl_divergences()
 
     def compute_kl_divergences(self) -> None:
@@ -75,7 +75,7 @@ class EmpiricalSystemModel(SystemModel):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_metric_distributions"] = list(map(lambda x: list(map(lambda y: y.to_dict(), x)),
                                                          self.conditional_metric_distributions))
         d["emulation_env_name"] = self.emulation_env_name

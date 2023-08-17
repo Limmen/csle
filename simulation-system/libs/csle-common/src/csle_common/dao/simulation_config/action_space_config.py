@@ -49,7 +49,7 @@ class ActionSpaceConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
         d["action_type"] = self.action_type
         d["descr"] = self.descr

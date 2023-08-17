@@ -56,7 +56,7 @@ class EmulationConnectionObservationState(JSONSerializable):
         """
         :return: a dict represnetation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["credential"] = self.credential.to_dict()
         d["root"] = self.root
         d["port"] = self.port

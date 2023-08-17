@@ -7,7 +7,7 @@ class Observation(JSONSerializable):
     DTO class representing an observation in a simulation
     """
 
-    def __init__(self, id: Union[int, float], val: int, descr: str):
+    def __init__(self, id: int, val: int, descr: str):
         """
         Initializes the DTO
 
