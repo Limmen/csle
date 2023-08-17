@@ -7,7 +7,7 @@ from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 import csle_common.constants.constants as constants
 import csle_collector.elk_manager.elk_manager_pb2_grpc
 import csle_collector.elk_manager.elk_manager_pb2
-import csle_collector.elk_manager.query_elk_server
+import csle_collector.elk_manager.query_elk_manager
 import csle_collector.elk_manager.elk_manager_util
 from csle_common.util.emulation_util import EmulationUtil
 
