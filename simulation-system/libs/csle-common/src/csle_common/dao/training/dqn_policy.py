@@ -1,5 +1,6 @@
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Optional
 import numpy as np
+from numpy.typing import NDArray
 import torch
 from stable_baselines3 import DQN
 from csle_common.dao.training.policy import Policy
@@ -18,7 +19,7 @@ class DQNPolicy(Policy):
     A neural network policy learned with DQN
     """
 
-    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
+    def __init__(self, model: Optional[DQN], simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
@@ -49,23 +50,27 @@ class DQNPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.DQN
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray[Any, Any]]:
+    def action(self, o: List[float]) -> NDArray[Any]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
         :return: the selected action
         """
-        a, _ = self.model.predict(np.array(o), deterministic=False)
+        if self.model is None:
+            raise ValueError("The model i None")
+        a = self.model.predict(np.array(o), deterministic=False)[0]
         return a
 
-    def probability(self, o: List[float], a) -> Union[int, List[int], np.ndarray[Any, Any]]:
+    def probability(self, o: List[float], a) -> int:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
         :return: the selected action
         """
+        if self.model is None:
+            raise ValueError("The model is None")
         actions = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
         action = actions[0]
         if action == a:
@@ -142,6 +147,8 @@ class DQNPolicy(Policy):
         :param obs: the observation to condition on
         :return: the conditional ation distribution
         """
+        if self.model is None:
+            raise ValueError("The model is None")
         obs = np.array([obs])
         actions = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
         action = actions[0]

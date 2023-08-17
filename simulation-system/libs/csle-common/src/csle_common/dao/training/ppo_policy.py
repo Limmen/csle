@@ -1,5 +1,6 @@
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Optional
 import numpy as np
+from numpy.typing import NDArray
 import torch
 import math
 import iteround
@@ -19,7 +20,7 @@ class PPOPolicy(Policy):
     A neural network policy learned with PPO
     """
 
-    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
+    def __init__(self, model: Optional[PPO], simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
@@ -50,14 +51,16 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> Union[int, List[int], np.ndarray[Any, Any]]:
+    def action(self, o: Union[List[float], List[int]]) -> NDArray[Any]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
         :return: the selected action
         """
-        a, _ = self.model.predict(np.array(o), deterministic=False)
+        if self.model is None:
+            raise ValueError("The model is None")
+        a = self.model.predict(np.array(o), deterministic=False)[0]
         return a
 
     def probability(self, o: Union[List[float], List[int]], a: int) -> float:
@@ -68,6 +71,8 @@ class PPOPolicy(Policy):
         :param o: the action
         :return: the probability of the action
         """
+        if self.model is None:
+            raise ValueError("The model is None")
         prob = math.exp(self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
             actions=torch.tensor(a)).item())
         return prob
@@ -134,6 +139,8 @@ class PPOPolicy(Policy):
         :return: the conditional ation distribution
         """
         obs = np.array([obs])
+        if self.model is None:
+            raise ValueError("The model is None")
         actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
         action = actions[0]
         if action == 1:
