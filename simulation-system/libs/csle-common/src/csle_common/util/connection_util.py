@@ -572,7 +572,8 @@ class ConnectionUtil:
                                 raise ValueError("Could not obtain EmulationAttackerObservationState")
                             Logger.__call__().get_logger().warning(f"FTP exception: {str(e)}, {repr(e)}")
                             Logger.__call__().get_logger().warning(
-                                f"Target ip in agent reacahble {a.ips_match(list(s.attacker_obs_state.agent_reachable))}")
+                                f"Target ip in agent reachable "
+                                f"{a.ips_match(list(s.attacker_obs_state.agent_reachable))}")
                             Logger.__call__().get_logger().warning(f"Agent reachable: "
                                                                    f"{s.attacker_obs_state.agent_reachable}")
                     else:

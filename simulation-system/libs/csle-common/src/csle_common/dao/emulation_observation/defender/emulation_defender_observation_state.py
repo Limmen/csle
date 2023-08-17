@@ -144,7 +144,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         kafka_config: Union[None, KafkaConfig] = None
         try:
-            kafka_config=KafkaConfig.from_dict(d["kafka_config"])
+            kafka_config = KafkaConfig.from_dict(d["kafka_config"])
         except Exception:
             pass
         obj = EmulationDefenderObservationState(
@@ -357,7 +357,7 @@ class EmulationDefenderObservationState(JSONSerializable):
                f"avg_docker_stats: {self.avg_docker_stats}," \
                f"avg_aggregated_host_metrics: {self.avg_aggregated_host_metrics}," \
                f"avg_client_population_metrics: {self.avg_client_population_metrics}" \
-               + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+            + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "EmulationDefenderObservationState":

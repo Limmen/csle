@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential

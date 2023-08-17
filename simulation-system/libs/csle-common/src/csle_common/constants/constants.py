@@ -6,7 +6,6 @@ import re
 from csle_common.dao.emulation_config.config import Config
 
 
-
 class GENERAL:
     """
     General constants

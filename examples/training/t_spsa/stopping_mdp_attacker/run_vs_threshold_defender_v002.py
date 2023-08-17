@@ -66,24 +66,16 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
-    # simulation_env_config.simulation_env_input_config.defender_strategy = MultiThresholdStoppingPolicy(
-    #     actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
-    #     simulation_name=simulation_env_config.name,
-    #     L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-    #     states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
-    #     experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-    #     theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.01),
-    #            MultiThresholdStoppingPolicy.inverse_sigmoid(0.01),
-    #            MultiThresholdStoppingPolicy.inverse_sigmoid(0.01)])
     simulation_env_config.simulation_env_input_config.defender_strategy = MixedMultiThresholdStoppingPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         simulation_name=simulation_env_config.name,
         L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
         states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
         experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-        Theta=[[[0.01], [1]],
-               [[0.01], [1]],
-               [[0.01], [1]]])
+        defender_Theta=[
+            [[0.01], [1.0]],
+            [[0.01], [1.0]],
+            [[0.01], [1.0]]], attacker_Theta=[])
 
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=3))

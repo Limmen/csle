@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union, Optional
+from typing import List, Dict, Tuple, Union, Optional, Any
 import random
 import numpy as np
 import csle_common.constants.constants as constants
@@ -18,14 +18,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
     A mixed multi-threshold stopping policy
     """
 
-    def __init__(self, Theta: Union[List[List[List[float]]], List[List[List[List[float]]]]],
+    def __init__(self, defender_Theta: List[List[List[float]]], attacker_Theta: List[List[List[List[float]]]],
                  simulation_name: str, L: int, states: List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
                  agent_type: AgentType, opponent_strategy: Optional["MixedMultiThresholdStoppingPolicy"] = None):
         """
         Initializes the policy
 
-        :param Theta: the buffer with threshold vectors
+        :param defender_Theta: the buffer with threshold vectors for the defender
+        :param attacker_Theta: the buffer with threshold vectors for the attacker
         :param simulation_name: the simulation name
         :param attacker: whether it is an attacker or not
         :param L: the number of stop actions
@@ -37,7 +38,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         :param opponent_strategy: the opponent's strategy
         """
         super(MixedMultiThresholdStoppingPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
-        self.Theta = Theta
+        self.attacker_Theta = attacker_Theta
+        self.defender_Theta = defender_Theta
         self.id = -1
         self.simulation_name = simulation_name
         self.L = L
@@ -77,7 +79,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             a, _ = self._attacker_action(o=o, defender_stop_probability=defender_stop_probability)
             return a
 
-    def _attacker_action(self, o: List, defender_stop_probability: float) -> Tuple[int, float]:
+    def _attacker_action(self, o: List[float], defender_stop_probability: float) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the attacker
 
@@ -87,10 +89,10 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         """
         s = int(o[2])
         l = int(o[0])
-        thresholds = self.Theta[s][l - 1][0]
-        counts = self.Theta[s][l - 1][1]
+        thresholds = self.attacker_Theta[s][l - 1][0]
+        counts = self.attacker_Theta[s][l - 1][1]
 
-        mixture_weights = np.array(counts) / sum(self.Theta[s][l - 1][1])
+        mixture_weights = np.array(counts) / sum(self.attacker_Theta[s][l - 1][1])
         prob = 0
         for i in range(len(thresholds)):
             if defender_stop_probability >= thresholds[i]:
@@ -121,9 +123,9 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         """
         b1 = o[1]
         l = int(o[0])
-        thresholds = self.Theta[l - 1][0]
-        counts = self.Theta[l - 1][1]
-        mixture_weights = np.array(counts) / sum(self.Theta[l - 1][1])
+        thresholds = self.defender_Theta[l - 1][0]
+        counts = self.defender_Theta[l - 1][1]
+        mixture_weights = np.array(counts) / sum(self.defender_Theta[l - 1][1])
         stop_probability = 0
         for i, thresh in enumerate(thresholds):
             if b1 >= thresh:
@@ -136,12 +138,17 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         else:
             return 1, stop_probability
 
-    def to_dict(self) -> Dict[str, List[float]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
-        d["Theta"] = self.Theta
+        d: Dict[str, Any] = {}
+        d["attacker_Theta"] = self.attacker_Theta
+        d["defender_Theta"] = self.attacker_Theta
+        if self.player_type == PlayerType.ATTACKER:
+            d["Theta"] = self.attacker_Theta
+        if self.player_type == PlayerType.DEFENDER:
+            d["Theta"] = self.defender_Theta
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
@@ -158,7 +165,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MixedMultiThresholdStoppingPolicy":
+    def from_dict(d: Dict[str, Any]) -> "MixedMultiThresholdStoppingPolicy":
         """
         Converst a dict representation of the object to an instance
 
@@ -166,7 +173,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         :return: the created instance
         """
         obj = MixedMultiThresholdStoppingPolicy(
-            Theta=d["Theta"], simulation_name=d["simulation_name"], L=d["L"],
+            defender_Theta=d["defender_Theta"], attacker_Theta=d["attacker_Theta"],
+            simulation_name=d["simulation_name"], L=d["L"],
             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
             actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
             experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"],
@@ -174,19 +182,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         obj.id = d["id"]
         return obj
 
-    def update_Theta(self, new_thresholds: List[List[List[float]]]) -> None:
-        """
-        Updates the threshold buffer
-
-        :param new_thresholds: the new thresholds to add
-        :return: None
-        """
-        if not self.player_type == PlayerType.ATTACKER:
-            self._update_Theta_defender(new_thresholds=new_thresholds)
-        else:
-            self._update_Theta_attacker(new_thresholds=new_thresholds)
-
-    def _update_Theta_attacker(self, new_thresholds: List[List[float]]) -> None:
+    def _update_Theta_attacker(self, new_thresholds: List[List[List[float]]]) -> None:
         """
         Updates the Theta buffer with new attacker thresholds
 
@@ -196,15 +192,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         for a_thresholds in new_thresholds:
             for s in range(2):
                 for l in range(self.L):
-                    if len(self.Theta[s][l]) == 0:
-                        self.Theta[s][l] = [[a_thresholds[s][l]], [1]]
+                    if len(self.attacker_Theta[s][l]) == 0:
+                        self.attacker_Theta[s][l] = [[a_thresholds[s][l]], [1]]
                     else:
-                        if a_thresholds[s][l] in self.Theta[s][l][0]:
-                            i = self.Theta[s][l][0].index(a_thresholds[s][l])
-                            self.Theta[s][l][1][i] = self.Theta[s][l][1][i] + 1
+                        if a_thresholds[s][l] in self.attacker_Theta[s][l][0]:
+                            i = self.attacker_Theta[s][l][0].index(a_thresholds[s][l])
+                            self.attacker_Theta[s][l][1][i] = self.attacker_Theta[s][l][1][i] + 1
                         else:
-                            self.Theta[s][l][0].append(a_thresholds[s][l])
-                            self.Theta[s][l][1].append(1)
+                            self.attacker_Theta[s][l][0].append(a_thresholds[s][l])
+                            self.attacker_Theta[s][l][1].append(1)
 
     def _update_Theta_defender(self, new_thresholds: List[List[float]]) -> None:
         """
@@ -215,17 +211,17 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         """
         for defender_theta in new_thresholds:
             for l in range(self.L):
-                if self.Theta[l] == 0:
-                    self.Theta[l] = [[defender_theta[l]], [1]]
+                if len(self.defender_Theta[l]) == 0:
+                    self.defender_Theta[l] = [[defender_theta[l]], [1]]
                 else:
-                    if defender_theta[l] in self.Theta[l][0]:
-                        i = self.Theta[l][0].index(defender_theta[l])
-                        self.Theta[l][1][i] = self.Theta[l][1][i] + 1
+                    if defender_theta[l] in self.defender_Theta[l][0]:
+                        i = self.defender_Theta[l][0].index(defender_theta[l])
+                        self.defender_Theta[l][1][i] = self.defender_Theta[l][1][i] + 1
                     else:
-                        self.Theta[l][0].append(defender_theta[l])
-                        self.Theta[l][1].append(1)
+                        self.defender_Theta[l][0].append(defender_theta[l])
+                        self.defender_Theta[l][1].append(1)
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: List[Union[int, float]]) -> List[List[float]]:
         """
         Returns the stage policy for a given observation
 
@@ -244,6 +240,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             return stage_policy
         else:
             stage_policy = []
+            if self.opponent_strategy is None:
+                raise ValueError("Opponent strategy is None and must be specified.")
             a1, defender_stop_probability = self.opponent_strategy._defender_action(o=o)
             if a1 == 0:
                 defender_stop_probability = 1 - defender_stop_probability
@@ -265,15 +263,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                     stage_policy.append([0.5, 0.5])
             return stage_policy
 
-    def stop_distributions(self) -> Dict[str, Dict[str, List[float]]]:
+    def stop_distributions(self) -> Dict[str, List[float]]:
         """
         :return: the stop distributions and their names
         """
-        distributions = {}
+        distributions: Dict[str, List[float]] = {}
         if self.player_type == PlayerType.DEFENDER:
             belief_space = np.linspace(0, 1, num=100)
             for l in range(1, self.L + 1):
-                stop_dist = []
+                stop_dist: List[float] = []
                 for b in belief_space:
                     a1, prob = self._defender_action(o=[l, b])
                     if a1 == 1:
@@ -293,16 +291,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                                 stop_dist.append(round(prob, 3))
                             else:
                                 stop_dist.append(round(1 - prob, 3))
-                            distributions[constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] \
-                                = stop_dist
-
+                            distributions[constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] = stop_dist
         return distributions
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"Theta: {self.Theta}, id: {self.id}, simulation_name: {self.simulation_name}, " \
+        return f"defender_Theta: {self.defender_Theta}, attacker_theta: {self.attacker_Theta}" \
+               f"id: {self.id}, simulation_name: {self.simulation_name}, " \
                f"player_type: {self.player_type}, " \
                f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
                f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}, policy_type: {self.policy_type}"

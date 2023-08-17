@@ -241,7 +241,7 @@ class MultiThresholdStoppingPolicy(Policy):
     @staticmethod
     def from_dict(d: Dict) -> "MultiThresholdStoppingPolicy":
         """
-        Converst a dict representation of the object to an instance
+        Convert a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created instance

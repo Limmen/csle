@@ -75,8 +75,10 @@ class TestResourcesDataCollectionSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def remove_data_collection_job(data_collection_job: DataCollectionJobConfig) -> None:
             return None
+
         remove_data_collection_job_mocker = mocker.MagicMock(side_effect=remove_data_collection_job)
         return remove_data_collection_job_mocker
 
@@ -88,8 +90,10 @@ class TestResourcesDataCollectionSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def start_data_collection_job_in_background(data_collection_job: DataCollectionJobConfig) -> None:
             return None
+
         start_data_collection_job_in_background_mocker = mocker.MagicMock(
             side_effect=start_data_collection_job_in_background)
         return start_data_collection_job_in_background_mocker
@@ -102,6 +106,7 @@ class TestResourcesDataCollectionSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def get_data_collection_job_config(id: int) -> DataCollectionJobConfig:
             policy = TestResourcesDataCollectionSuite.get_example_job()
             return policy
@@ -164,7 +169,7 @@ class TestResourcesDataCollectionSuite:
                                              action_outcome=EmulationDefenderActionOutcome.GAME_END,
                                              alt_cmds=["JDoeCommands"], execution_time=0.1, ts=1.1)
         e_d_o_state = EmulationDefenderObservationState(
-            kafka_config=k_config,  client_population_metrics=ClientPopulationMetrics(),
+            kafka_config=k_config, client_population_metrics=ClientPopulationMetrics(),
             docker_stats=DockerStats(), snort_ids_alert_counters=SnortIdsAlertCounters(),
             snort_ids_rule_counters=SnortIdsRuleCounters(), ossec_ids_alert_counters=OSSECIdsAlertCounters(),
             aggregated_host_metrics=HostMetrics(), defender_actions=[], attacker_actions=[])

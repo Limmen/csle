@@ -163,8 +163,13 @@ class TFPAgent(BaseAgent):
                 seed_values = []
                 for seed_idx in range(len(self.experiment_config.random_seeds)):
                     seed_values.append(value_vectors[seed_idx][i])
-                avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
-                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[1])
+                try:
+                    avg_metrics.append(
+                        ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
+                    std_metrics.append(
+                        ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[1])
+                except Exception:
+                    pass
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -197,7 +202,8 @@ class TFPAgent(BaseAgent):
 
         # Initialize policies
         defender_policy = MixedMultiThresholdStoppingPolicy(
-            Theta=np.zeros((self.experiment_config.hparams[constants.T_SPSA.L].value,)).tolist(),
+            defender_Theta=np.zeros((self.experiment_config.hparams[constants.T_SPSA.L].value, 2, 1)).tolist(),
+            attacker_Theta=[],
             simulation_name=self.defender_simulation_env_config.name,
             states=self.defender_simulation_env_config.state_space_config.states,
             player_type=PlayerType.DEFENDER,
@@ -207,7 +213,8 @@ class TFPAgent(BaseAgent):
             experiment_config=self.defender_experiment_config, avg_R=-1,
             agent_type=AgentType.T_FP)
         attacker_policy = MixedMultiThresholdStoppingPolicy(
-            Theta=np.zeros((2, self.experiment_config.hparams[constants.T_SPSA.L].value)).tolist(),
+            attacker_Theta=np.zeros((2, self.experiment_config.hparams[constants.T_SPSA.L].value, 2, 1)).tolist(),
+            defender_Theta=[],
             simulation_name=self.attacker_simulation_env_config.name,
             states=self.attacker_simulation_env_config.state_space_config.states,
             player_type=PlayerType.ATTACKER,
@@ -217,32 +224,16 @@ class TFPAgent(BaseAgent):
             experiment_config=self.attacker_experiment_config, avg_R=-1,
             agent_type=AgentType.T_FP, opponent_strategy=defender_policy)
 
-        # Update average policies with initial thresholds
-        # initial_attacker_thresholds = [
-        #     [[0]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
-        #      [0]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
-        #      ]*10
-        # ]
-        initial_attacker_thresholds = []
-        initial_defender_thresholds = []
+        initial_attacker_thresholds: List[List[List[float]]] = []
+        initial_defender_thresholds: List[List[float]] = []
         initial_attacker_thresholds.append(
-            [[0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
-             [1] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
-             ]
-        )
-        initial_defender_thresholds.append(
-            [0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value)
-        # for i in range(1):
-        #     initial_attacker_thresholds.append(
-        #         [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
-        #          [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
-        #          ]
-        #     )
-        #     initial_defender_thresholds.append(
-        #         [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[constants.T_SPSA.L].value)
+            [[0.0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value,
+             [1.0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value
+             ])
+        initial_defender_thresholds.append([0.0] * self.attacker_experiment_config.hparams[constants.T_SPSA.L].value)
 
-        attacker_policy.update_Theta(new_thresholds=initial_attacker_thresholds)
-        defender_policy.update_Theta(new_thresholds=initial_defender_thresholds)
+        attacker_policy._update_Theta_attacker(new_thresholds=initial_attacker_thresholds)
+        defender_policy._update_Theta_defender(new_thresholds=initial_defender_thresholds)
         attacker_policy.opponent_strategy = defender_policy
 
         for i in range(self.experiment_config.hparams[agents_constants.T_FP.N_2].value):
@@ -266,22 +257,10 @@ class TFPAgent(BaseAgent):
             defender_val = round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val = round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
-            attacker_policy.update_Theta(new_thresholds=[attacker_thresholds])
-            defender_policy.update_Theta(new_thresholds=[defender_thresholds])
+            attacker_policy._update_Theta_attacker(new_thresholds=[attacker_thresholds])
+            defender_policy._update_Theta_defender(new_thresholds=[defender_thresholds])
             val_attacker_exp = attacker_val
             val_defender_exp = defender_val
-
-            # # Update empirical strategies
-            # if attacker_val > -defender_val:
-            #     attacker_policy.update_Theta(new_thresholds=[attacker_thresholds])
-            #     val_attacker_exp= attacker_val
-            # else:
-            #     val_attacker_exp = -defender_val
-            # if defender_val > -attacker_val:
-            #     defender_policy.update_Theta(new_thresholds=[defender_thresholds])
-            #     val_defender_exp=defender_val
-            # else:
-            #     val_defender_exp = -attacker_val
 
             attacker_policy.opponent_strategy = defender_policy
 
@@ -311,8 +290,10 @@ class TFPAgent(BaseAgent):
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.T_FP.ATTACKER_THRESHOLDS].append(attacker_policy.Theta)
-            exp_result.all_metrics[seed][agents_constants.T_FP.DEFENDER_THRESHOLDS].append(defender_policy.Theta)
+            exp_result.all_metrics[seed][agents_constants.T_FP.ATTACKER_THRESHOLDS].append(
+                attacker_policy.attacker_Theta)
+            exp_result.all_metrics[seed][agents_constants.T_FP.DEFENDER_THRESHOLDS].append(
+                defender_policy.defender_Theta)
 
             # Log stop distributions
             for k, v in attacker_policy.stop_distributions().items():
@@ -697,9 +678,9 @@ class TFPAgent(BaseAgent):
         """
         if len(x) >= N:
             y = np.copy(x)
-            y[N - 1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
         else:
             N = len(x)
             y = np.copy(x)
-            y[N - 1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
         return y.tolist()
