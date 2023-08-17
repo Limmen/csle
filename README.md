@@ -5,8 +5,8 @@
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
-    <a href="https://img.shields.io/badge/version-0.2.0-blue">
-        <img src="https://img.shields.io/badge/version-0.2.0-blue" /></a>
+    <a href="https://img.shields.io/badge/version-0.3.0-blue">
+        <img src="https://img.shields.io/badge/version-0.3.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
@@ -58,11 +58,12 @@ Documentation, installation instructions, and usage examples are available [here
 
 | Release                                                       | Build Status | Last date of support |
 |---------------------------------------------------------------|--------------|----------------------|
-| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2024-06-06           |
-| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-12-06           |
+| [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | -            | 2025-01-17            |
+| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2024-01-06           |
+| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-06-06           |
 
 Maintenance releases have a stable API and dependency tree, and receive bug fixes and critical improvements but not new
-features. We currently support each release for a window of 12 months.
+features. We currently support each release for a window of 6 months.
 
 ## Supported Platforms
 
