@@ -10,7 +10,7 @@ class NiktoVuln(JSONSerializable):
     DTO representing a vulnerability found with a Nikto scan
     """
 
-    def __init__(self, id: str, osvdb_id: Union[int, None], method: str, iplink: str,
+    def __init__(self, id: str, osvdb_id: int, method: str, iplink: str,
                  namelink: str, uri: str, description: str):
         """
         Initializes the object
@@ -37,7 +37,7 @@ class NiktoVuln(JSONSerializable):
 
         :return: the created VulnerabilityObservationState object
         """
-        vuln = EmulationVulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=None,
+        vuln = EmulationVulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=-1,
                                                       protocol=TransportProtocol.TCP,
                                                       cvss=0, osvdbid=self.osvdb_id, description=self.description,
                                                       service="http")
@@ -56,7 +56,7 @@ class NiktoVuln(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["osvdb"] = self.osvdb_id
         d["method"] = self.method

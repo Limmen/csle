@@ -69,7 +69,7 @@ class NodeContainerConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = self.name
         d["ips_and_networks"] = list(map(lambda x: (x[0], x[1].to_dict()), self.ips_and_networks))
         d["version"] = self.version
