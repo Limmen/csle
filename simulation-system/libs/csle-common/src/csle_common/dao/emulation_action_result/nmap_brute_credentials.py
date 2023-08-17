@@ -65,7 +65,7 @@ class NmapBruteCredentials(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["username"] = self.username
         d["pw"] = self.pw
         d["state"] = self.state

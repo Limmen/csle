@@ -29,7 +29,7 @@ class NodeFlagsConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["flags"] = list(map(lambda x: x.to_dict(), self.flags))
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip

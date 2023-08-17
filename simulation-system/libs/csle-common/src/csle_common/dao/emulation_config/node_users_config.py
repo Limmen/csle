@@ -44,7 +44,7 @@ class NodeUsersConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["users"] = list(map(lambda x: x.to_dict(), self.users))
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip

@@ -54,7 +54,7 @@ class OvsSwitchConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: List[str, Any] = {}
         d["ip"] = self.ip
         d["container_name"] = self.container_name
         d["openflow_protocols"] = self.openflow_protocols
