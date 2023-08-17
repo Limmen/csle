@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -23,13 +23,13 @@ class ClusterNode(JSONSerializable):
         self.gpus = gpus
         self.RAM = RAM
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, bool, int]]:
         """
         Converts the object to a dict representation
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, bool, int]] = {}
         d["ip"] = self.ip
         d["leader"] = self.leader
         d["cpus"] = self.cpus

@@ -50,7 +50,7 @@ class DockerStatsManagersInfo(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["docker_stats_managers_running"] = self.docker_stats_managers_running
         d["ips"] = self.ips
         d["emulation_name"] = self.emulation_name
