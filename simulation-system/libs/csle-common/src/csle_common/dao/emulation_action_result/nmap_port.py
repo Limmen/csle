@@ -96,14 +96,14 @@ class NmapPort(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["port_id"] = self.port_id
         d["protocol"] = self.protocol
         d["status"] = self.status
         d["service_name"] = self.service_name
-        d["http_enum"] = self.http_enum.to_dict()
-        d["http_grep"] = self.http_grep.to_dict()
-        d["vulscan"] = self.vulscan.to_dict()
+        d["http_enum"] = self.http_enum.to_dict() if self.http_enum is not None else self.http_enum
+        d["http_grep"] = self.http_grep.to_dict() if self.http_grep is not None else self.http_grep
+        d["vulscan"] = self.vulscan.to_dict() if self.vulscan is not None else self.vulscan
         d["service_version"] = self.service_version
         d["service_fp"] = self.service_fp
         return d

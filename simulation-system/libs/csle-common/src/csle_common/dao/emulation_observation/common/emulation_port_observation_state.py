@@ -9,7 +9,7 @@ class EmulationPortObservationState(JSONSerializable):
     DTO Representation a port observation in the emulation
     """
 
-    def __init__(self, port: int, open: bool, service: int, protocol: TransportProtocol, http_enum: str = "",
+    def __init__(self, port: int, open: bool, service: str, protocol: TransportProtocol, http_enum: str = "",
                  http_grep: str = "", vulscan: str = "", version: str = "", fingerprint: str = ""):
         """
         Initializes the DTO
