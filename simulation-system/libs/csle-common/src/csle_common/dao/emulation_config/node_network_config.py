@@ -1,7 +1,7 @@
 """
 Network configuration of a container in the emulation
 """
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 import csle_common.constants.constants as constants
@@ -110,7 +110,7 @@ class NodeNetworkConfig(JSONSerializable):
         self.cell_overhead_bytes = cell_overhead_bytes
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> Union[None, "NodeNetworkConfig"]:
+    def from_dict(d: Optional[Dict[str, Any]]) -> Union[None, "NodeNetworkConfig"]:
         """
         Converts a dict representation to an instance
 
@@ -157,7 +157,7 @@ class NodeNetworkConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["interface"] = self.interface
         d["limit_packets_queue"] = self.limit_packets_queue
         d["packet_delay_ms"] = self.packet_delay_ms
@@ -217,7 +217,7 @@ class NodeNetworkConfig(JSONSerializable):
                f"cell_overhead_bytes:{self.cell_overhead_bytes}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> "NodeNetworkConfig":
+    def from_json_file(json_file_path: str) -> Optional["NodeNetworkConfig"]:
         """
         Reads a json file and converts it to a DTO
 
@@ -230,7 +230,7 @@ class NodeNetworkConfig(JSONSerializable):
             json_str = f.read()
         return NodeNetworkConfig.from_dict(json.loads(json_str))
 
-    def copy(self) -> "NodeNetworkConfig":
+    def copy(self) -> Optional["NodeNetworkConfig"]:
         """
         :return: a copy of the DTO
         """
