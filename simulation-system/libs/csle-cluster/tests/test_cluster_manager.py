@@ -1,3 +1,10 @@
+from typing import Any
+import pytest
+import pytest_mock
+from csle_cluster.cluster_manager.cluster_manager import ClusterManagerServicer
+from csle_common.dao.emulation_config.config import Config
+import csle_cluster.cluster_manager.query_cluster_manager
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
 
 
 class TestClusterManagerSuite:
@@ -5,10 +12,79 @@ class TestClusterManagerSuite:
     Test suite for cluster_manager.py
     """
 
-    def test_get_cluster_manager_status(self) -> None:
+    @pytest.fixture(scope='module')
+    def grpc_add_to_server(self) -> Any:
         """
-        Tests the _get_cluster_manager_status function
+        Necessary fixture for pytest-grpc
 
+        :return: the add_servicer_to_server function
+        """
+        from csle_cluster.cluster_manager.cluster_manager_pb2_grpc import add_ClusterManagerServicer_to_server
+        return add_ClusterManagerServicer_to_server
+
+    @pytest.fixture(scope='module')
+    def grpc_servicer(self) -> ClusterManagerServicer:
+        """
+        Necessary fixture for pytest-grpc
+
+        :return: the host manager servicer
+        """
+        return ClusterManagerServicer()
+
+    @pytest.fixture(scope='module')
+    def grpc_stub_cls(self, grpc_channel):
+        """
+        Necessary fixture for pytest-grpc
+
+        :param grpc_channel: the grpc channel for testing
+        :return: the stub to the service
+        """
+        from csle_cluster.cluster_manager.cluster_manager_pb2_grpc import ClusterManagerStub
+        return ClusterManagerStub
+
+    def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the getNodeStatus grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
         :return: None
         """
-        assert True
+        mocker.patch('time.sleep', return_value=None)
+        ip = "7.7.7.7"
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', return_value=ip)
+        mocker.patch('csle_common.util.cluster_util.ClusterUtil.get_config', return_value=example_config)
+        mocker.patch('csle_common.util.cluster_util.ClusterUtil.am_i_leader', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_cadvisor_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_prometheus_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_grafana_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_pgadmin_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_nginx_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_flask_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_statsmanager_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_node_exporter_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_docker_engine_running', return_value=True)
+        response: NodeStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
+        assert response.ip == ip
+        assert response.leader == True
+        assert response.cAdvisorRunning == True
+        assert response.prometheusRunning == True
+        assert response.grafanaRunning == True
+        assert response.pgAdminRunning == True
+        assert response.nginxRunning == True
+        assert response.flaskRunning == True
+        assert response.dockerStatsManagerRunning == True
+        assert response.nodeExporterRunning == True
+        assert response.postgreSQLRunning == True
+        assert response.dockerEngineRunning == True
