@@ -1,5 +1,5 @@
 import time
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -20,13 +20,13 @@ class SessionToken(JSONSerializable):
         self.timestamp = timestamp
         self.username = username
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, float]]:
         """
         Converts the object to a dict representation
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, float]] = {}
         d["username"] = self.username
         d["timestamp"] = self.timestamp
         d["token"] = self.token

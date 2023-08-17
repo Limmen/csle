@@ -40,7 +40,7 @@ class User(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, bool]] = {}
         d["username"] = self.username
         d["pw"] = self.pw
         d["root"] = self.root
