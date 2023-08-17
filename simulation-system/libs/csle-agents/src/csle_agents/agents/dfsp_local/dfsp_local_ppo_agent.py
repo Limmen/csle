@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Tuple, Optional
+from typing import Union, List, Dict, Tuple, Optional, Any
 import time
 import gymnasium as gym
 import os
@@ -25,6 +25,7 @@ from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 import gym_csle_stopping_game.constants.constants as env_constants
+from csle_common.dao.simulation_config.base_env import BaseEnv
 
 
 class DFSPLocalPPOAgent(BaseAgent):
@@ -106,10 +107,13 @@ class DFSPLocalPPOAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
 
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -149,21 +153,23 @@ class DFSPLocalPPOAgent(BaseAgent):
             exp_result.std_metrics[metric] = std_metrics
 
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
         exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
                                             descr=descr, log_file_path=self.training_job.log_file_path)
-        traces = env.get_traces()
+        traces = []
+        if isinstance(env, BaseEnv):
+            traces = env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
         MetastoreFacade.remove_training_job(self.training_job)
         return exp_execution
 
-    def local_dfsp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
-                   training_job: TrainingJobConfig, random_seeds: List[int]) -> None:
+    def local_dfsp(self, exp_result: ExperimentResult, seed: int, env: BaseEnv,
+                   training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Implements the local DFSP training logic
 
@@ -318,6 +324,7 @@ class DFSPLocalPPOAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+        return exp_result
 
     def evaluate_defender_policy(self, defender_strategy: Policy,
                                  attacker_strategy: Policy) -> Dict[str, Union[float, int]]:
@@ -420,7 +427,7 @@ class DFSPLocalPPOAgent(BaseAgent):
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
         return policy, val
 
-    def _eval_env(self, env: gym.Env, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
+    def _eval_env(self, env: BaseEnv, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
         """
 
         :param env: the environment to use for evaluation
@@ -428,7 +435,7 @@ class DFSPLocalPPOAgent(BaseAgent):
         :param num_iterations: number of iterations to evaluate
         :return: the average reward
         """
-        metrics = {}
+        metrics: Dict[str, Any] = {}
         for j in range(num_iterations):
             done = False
             o, _ = env.reset()
@@ -660,4 +667,4 @@ class DFSPLocalPPOAgent(BaseAgent):
             N = len(x)
             y = np.copy(x)
             y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
-        return y.tolist()
+        return list(y.tolist())

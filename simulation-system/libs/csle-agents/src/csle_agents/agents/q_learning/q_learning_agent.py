@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -15,6 +16,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -27,7 +29,7 @@ class QLearningAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the q-learning agent
 
@@ -75,7 +77,7 @@ class QLearningAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=None, simulation_traces=[],
+                emulation_env_name="", simulation_traces=[],
                 num_cached_traces=0,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -189,7 +191,7 @@ class QLearningAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def train_q_learning(self, A: List, S: List, gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
+    def train_q_learning(self, A: List[int], S: List[int], gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
             -> Tuple[List[float], List[float], List[float], List[List[float]], List[List[float]]]:
         """
         Runs the Q learning algorithm
@@ -201,9 +203,11 @@ class QLearningAgent(BaseAgent):
         :param epsilon: the exploration parameter
         :return: the average returns, the running average returns, the initial state values, the q table, policy
         """
-        init_state_values = []
-        average_returns = []
-        running_average_returns = []
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run Q-learning")
+        init_state_values: List[float] = []
+        average_returns: List[float] = []
+        running_average_returns: List[float] = []
 
         Logger.__call__().get_logger().info("Starting Q Learning, gamma:{}, n_iter:{}, eps:{}".format(gamma, N,
                                                                                                       epsilon))
@@ -258,9 +262,10 @@ class QLearningAgent(BaseAgent):
                     s = o
 
         policy = self.create_policy_from_q_table(num_states=len(S), num_actions=len(A), q_table=q_table)
-        return average_returns, running_average_returns, init_state_values, q_table, policy
+        return (average_returns, running_average_returns, init_state_values, list(q_table.tolist()),
+                list(policy.tolist()))
 
-    def initialize_q_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
+    def initialize_q_table(self, n_states: int = 256, n_actions: int = 5) -> npt.NDArray[Any]:
         """
         Initializes the Q table
 
@@ -271,7 +276,7 @@ class QLearningAgent(BaseAgent):
         q_table = np.zeros((n_states, n_actions))
         return q_table
 
-    def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
+    def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> npt.NDArray[Any]:
         """
         Initializes the count table
 
@@ -282,7 +287,7 @@ class QLearningAgent(BaseAgent):
         count_table = np.zeros((n_states, n_actions))
         return count_table
 
-    def eps_greedy(self, q_table: np.ndarray, A: List, s: int, epsilon: float = 0.2) -> int:
+    def eps_greedy(self, q_table: npt.NDArray[Any], A: List[int], s: int, epsilon: float = 0.2) -> int:
         """
         Selects an action according to the epsilon-greedy strategy
 
@@ -296,7 +301,7 @@ class QLearningAgent(BaseAgent):
             a = np.random.choice(A)
         else:
             a = np.argmax(q_table[s])
-        return a
+        return int(a)
 
     def step_size(self, n: int) -> float:
         """
@@ -307,8 +312,9 @@ class QLearningAgent(BaseAgent):
         """
         return float(1) / math.pow(n, 2 / 3)
 
-    def q_learning_update(self, q_table: np.ndarray, count_table: np.ndarray,
-                          s: int, a: int, r: float, s_prime: int, gamma: float) -> Tuple[np.ndarray, np.ndarray]:
+    def q_learning_update(self, q_table: npt.NDArray[Any], count_table: npt.NDArray[Any],
+                          s: int, a: int, r: float, s_prime: int, gamma: float) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Watkin's Q-learning update
 
@@ -326,7 +332,8 @@ class QLearningAgent(BaseAgent):
         q_table[s][a] = q_table[s][a] + alpha * ((r + gamma * np.max(q_table[s_prime])) - q_table[s][a])
         return q_table, count_table
 
-    def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: np.ndarray) -> np.ndarray:
+    def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: npt.NDArray[Any]) \
+            -> npt.NDArray[Any]:
         """
         Creates a tabular policy from a q table
 
@@ -344,7 +351,7 @@ class QLearningAgent(BaseAgent):
             policy[s][best_action] = 1.0
         return policy
 
-    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -352,6 +359,8 @@ class QLearningAgent(BaseAgent):
         :param eval_batch_size: the batch size
         :return: None
         """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False

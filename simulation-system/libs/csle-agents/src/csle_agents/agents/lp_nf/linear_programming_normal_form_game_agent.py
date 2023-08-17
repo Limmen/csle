@@ -1,9 +1,10 @@
+from typing import Union, List, Dict, Optional, Tuple, Any
 import math
-from typing import Union, List, Dict, Optional, Tuple
 import time
 import gymnasium as gym
 import os
 import numpy as np
+import numpy.typing as npt
 import pulp
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -18,6 +19,7 @@ from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -28,7 +30,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
+                 experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
@@ -90,7 +92,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=None, simulation_traces=[],
+                emulation_env_name="", simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -216,7 +218,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         progress = 1
         training_job.progress_percentage = progress
         training_job.experiment_result = exp_result
-        if len(self.env.get_traces()) > 0:
+        if self.env is not None and len(self.env.get_traces()) > 0:
             training_job.simulation_traces.append(self.env.get_traces()[-1])
         if len(training_job.simulation_traces) > training_job.num_cached_traces:
             training_job.simulation_traces = training_job.simulation_traces[1:]
@@ -253,8 +255,9 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             MetastoreFacade.save_vector_policy(vector_policy=p2_policy)
         return exp_result
 
-    def compute_equilibrium_strategies_in_matrix_game(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray) \
-            -> Tuple[np.ndarray, np.ndarray, float]:
+    def compute_equilibrium_strategies_in_matrix_game(self, A: npt.NDArray[Any], A1: npt.NDArray[Any],
+                                                      A2: npt.NDArray[Any]) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], float]:
         """
         Computes equilibrium strategies in a matrix game
 
@@ -267,8 +270,8 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         v2, minimax_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=False)
         return maximin_strategy, minimax_strategy, v1
 
-    def compute_matrix_game_value(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray, maximizer: bool = True) \
-            -> Tuple[any, np.ndarray]:
+    def compute_matrix_game_value(self, A: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
+                                  maximizer: bool = True) -> Tuple[Any, npt.NDArray[Any]]:
         """
         Uses LP to compute the value of a a matrix game, also computes the maximin or minimax strategy
 

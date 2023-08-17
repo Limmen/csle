@@ -1,5 +1,5 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
@@ -15,6 +15,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 from scipy.optimize import linprog
@@ -29,7 +30,7 @@ class SondikVIAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the Sondik-VI agent
 
@@ -227,7 +228,7 @@ class SondikVIAgent(BaseAgent):
 
     def sondik_vi(self, P, Z, R, T, gamma, n_states, n_actions, n_obs, b0, eval_batch_size: int,
                   use_pruning: bool = True) \
-            -> Tuple[List[float], List[float], List[float], List[float], List[float]]:
+            -> Tuple[List[Any], List[int], List[float], List[float], List[float]]:
         """
 
         :param P: The transition probability matrix
@@ -248,11 +249,11 @@ class SondikVIAgent(BaseAgent):
         # a set of values
         alepth_t_plus_1.add(zero_alpha_vec)
         first = True
-        num_alpha_vectors = []
+        num_alpha_vectors: List[int] = []
         num_alpha_vectors.append(len(alepth_t_plus_1))
-        initial_values = []
-        average_returns = []
-        average_running_returns = []
+        initial_values: List[float] = []
+        average_returns: List[float] = []
+        average_running_returns: List[float] = []
 
         # Backward induction
         for t in range(T):
@@ -324,7 +325,7 @@ class SondikVIAgent(BaseAgent):
                 if v > max_v:
                     max_v = v
             initial_values.append(max_v)
-            avg_R = -1
+            avg_R = -1.0
             if len(average_returns) > 0:
                 avg_R = average_returns[-1]
             alpha_vec_policy = AlphaVectorsPolicy(
@@ -340,8 +341,8 @@ class SondikVIAgent(BaseAgent):
             running_avg_J = ExperimentUtil.running_average(
                 average_returns, self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             average_running_returns.append(running_avg_J)
-
-        return (list(map(lambda x: x[1], list(aleph_t))), num_alpha_vectors, initial_values, average_returns,
+        vectors: List[Any] = list(map(lambda x: x[1], list(aleph_t)))
+        return (vectors, num_alpha_vectors, initial_values, average_returns,
                 average_running_returns)
 
     def prune(self, n_states, aleph):
@@ -427,6 +428,8 @@ class SondikVIAgent(BaseAgent):
         :param eval_batch_size: the batch size
         :return: None
         """
+        if self.env is None:
+            raise ValueError("An environment must be specified to run policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False

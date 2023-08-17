@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Tuple, Optional
+from typing import Union, List, Dict, Tuple, Optional, Any
 import time
 import gymnasium as gym
 import os
@@ -24,6 +24,7 @@ from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
 from csle_agents.agents.ppo.ppo_agent import PPOAgent
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.simulation_config.base_env import BaseEnv
 import csle_common.constants.constants as constants
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
@@ -153,10 +154,13 @@ class DFSPLocalAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
 
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -168,7 +172,7 @@ class DFSPLocalAgent(BaseAgent):
             self.training_job.experiment_result = exp_result
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
         config = self.simulation_env_config.simulation_env_input_config
-        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.local_dfsp(exp_result=exp_result, seed=seed, env=env, training_job=self.training_job,
@@ -196,7 +200,7 @@ class DFSPLocalAgent(BaseAgent):
             exp_result.std_metrics[metric] = std_metrics
 
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
@@ -209,8 +213,8 @@ class DFSPLocalAgent(BaseAgent):
         MetastoreFacade.remove_training_job(self.training_job)
         return exp_execution
 
-    def local_dfsp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
-                   training_job: TrainingJobConfig, random_seeds: List[int]) -> None:
+    def local_dfsp(self, exp_result: ExperimentResult, seed: int, env: BaseEnv,
+                   training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Implements the logic of the local DFSP algorithm
 
@@ -221,7 +225,6 @@ class DFSPLocalAgent(BaseAgent):
         :param random_seeds: the random seeds for the experiment
         :return: None
         """
-
         # Initialize policies
         defender_strategy = MixedLinearTabularPolicy(
             simulation_name=self.defender_simulation_env_config.name,
@@ -363,6 +366,7 @@ class DFSPLocalAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+        return exp_result
 
     def evaluate_defender_policy(self, defender_strategy: LinearTabularPolicy,
                                  attacker_strategy: MixedPPOPolicy) -> Dict[str, Union[float, int]]:
@@ -514,7 +518,7 @@ class DFSPLocalAgent(BaseAgent):
         val = round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
         return policy, val
 
-    def _eval_env(self, env: gym.Env, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
+    def _eval_env(self, env: BaseEnv, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
         """
 
         :param env: the environment to use for evaluation
@@ -522,7 +526,7 @@ class DFSPLocalAgent(BaseAgent):
         :param num_iterations: number of iterations to evaluate
         :return: the average reward
         """
-        metrics = {}
+        metrics: Dict[str, Any] = {}
         for j in range(num_iterations):
             done = False
             o, _ = env.reset()
@@ -660,4 +664,4 @@ class DFSPLocalAgent(BaseAgent):
             N = len(x)
             y = np.copy(x)
             y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
-        return y.tolist()
+        return list(y.tolist())

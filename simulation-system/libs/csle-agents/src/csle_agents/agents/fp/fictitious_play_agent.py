@@ -1,9 +1,10 @@
+from typing import Union, List, Dict, Optional, Tuple, Any
 import math
-from typing import Union, List, Dict, Optional, Tuple
 import time
 import gymnasium as gym
 import os
 import numpy as np
+import numpy.typing as npt
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -17,6 +18,7 @@ from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -27,7 +29,7 @@ class FictitiousPlayAgent(BaseAgent):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
+                 experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
@@ -126,7 +128,7 @@ class FictitiousPlayAgent(BaseAgent):
 
             # Save latest trace
             if self.save_to_metastore:
-                if len(self.env.get_traces()) > 0:
+                if self.env is not None and len(self.env.get_traces()) > 0:
                     MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
             self.env.reset_traces()
 
@@ -215,7 +217,7 @@ class FictitiousPlayAgent(BaseAgent):
         p2_counts_list.append(p2_prior)
         p1_empirical_strategy = p1_prior
         p2_empirical_strategy = p2_prior
-        J = 0
+        J = 0.0
         for i in range(N):
             p1_empirical_strategy = self.compute_empirical_strategy(p1_counts_list[-1])
             p2_empirical_strategy = self.compute_empirical_strategy(p2_counts_list[-1])
@@ -254,7 +256,7 @@ class FictitiousPlayAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if len(self.env.get_traces()) > 0:
+                if self.env is not None and len(self.env.get_traces()) > 0:
                     training_job.simulation_traces.append(self.env.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
@@ -304,7 +306,8 @@ class FictitiousPlayAgent(BaseAgent):
             s.append(counts[i] / counts_sum)
         return s
 
-    def best_response(self, p: List[float], A: np.ndarray, maximize: bool = True) -> Tuple[np.ndarray, float]:
+    def best_response(self, p: List[float], A: npt.NDArray[Any], maximize: bool = True) \
+            -> Tuple[int, float]:
         """
         Computes a best response against p
 
@@ -316,11 +319,11 @@ class FictitiousPlayAgent(BaseAgent):
         if maximize:
             payoffs = A.dot(np.array(p))
             br = np.argmax(payoffs)
-            return br, payoffs[br]
+            return int(br), payoffs[int(br)]
         else:
             payoffs = np.array(p).transpose().dot(A)
             br = np.argmin(payoffs)
-            return br, payoffs[br]
+            return int(br), payoffs[int(br)]
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \

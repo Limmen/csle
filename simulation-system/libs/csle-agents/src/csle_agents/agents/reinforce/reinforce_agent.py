@@ -1,10 +1,11 @@
+from typing import Union, List, Dict, Optional, Any
 import math
-from typing import Union, List, Dict, Optional
 import time
 import gymnasium as gym
 import os
 import torch
 import numpy as np
+import numpy.typing as npt
 import gym_csle_stopping_game.constants.constants as env_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -20,6 +21,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.models.fnn_w_softmax import FNNwithSoftmax
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -31,7 +33,7 @@ class ReinforceAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
-                 experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
+                 experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Reinforce Agent
@@ -92,10 +94,13 @@ class ReinforceAgent(BaseAgent):
 
         # Initialize training job
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -111,7 +116,7 @@ class ReinforceAgent(BaseAgent):
 
         # Initialize execution result
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
@@ -202,6 +207,8 @@ class ReinforceAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run Reinforce")
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.REINFORCE.N].value
 
@@ -217,6 +224,7 @@ class ReinforceAgent(BaseAgent):
         # Setup device
         policy_network.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
+        optimizer: Union[torch.optim.Adam, torch.optim.SGD, None] = None
         # Setup optimizer
         if self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value == agents_constants.COMMON.ADAM:
             optimizer = torch.optim.Adam(
@@ -230,16 +238,10 @@ class ReinforceAgent(BaseAgent):
             raise ValueError(f"Optimizer: {self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value}"
                              f" not recognized")
 
-        # Setup LR decay
-        # if self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_EXP_DECAY].value:
-        #     lr_decay = torch.optim.lr_scheduler.ExponentialLR(
-        #         optimizer=optimizer,
-        #         gamma=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_DECAY_RATE].value)
-
         for i in range(N):
             rewards_batch = []
             log_probs_batch = []
-            metrics = {}
+            metrics: Dict[str, Any] = {}
             ts = time.time()
             save_path = f"{self.experiment_config.output_dir}/reinforce_policy_seed_{seed}_{ts}.zip"
             policy = FNNWithSoftmaxPolicy(
@@ -283,11 +285,11 @@ class ReinforceAgent(BaseAgent):
             avg_metrics = ReinforceAgent.compute_avg_metrics(metrics=metrics)
 
             # Perform Batch Policy Gradient updates
-            loss = self.training_step(saved_rewards=rewards_batch, saved_log_probs=log_probs_batch,
+            loss_tensor = self.training_step(saved_rewards=rewards_batch, saved_log_probs=log_probs_batch,
                                       policy_network=policy_network,
                                       optimizer=optimizer,
                                       gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value)
-            loss = loss.item()
+            loss = loss_tensor.item()
 
             # Log metrics
             J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
@@ -435,8 +437,8 @@ class ReinforceAgent(BaseAgent):
         num_batches = len(saved_rewards)
 
         for batch in range(num_batches):
-            R = 0
-            returns = []
+            R = 0.0
+            returns: List[float] = []
 
             # Create discounted returns. When episode is finished we can go back and compute the observed cumulative
             # discounted reward by using the observed rewards
@@ -446,16 +448,16 @@ class ReinforceAgent(BaseAgent):
             num_rewards = len(returns)
 
             # convert list to torch tensor
-            returns = torch.tensor(returns)
+            returns_tensor = torch.tensor(returns)
 
             # normalize
-            std = returns.std()
+            std = float(returns_tensor.std())
             if num_rewards < 2:
-                std = 0
-            returns = (returns - returns.mean()) / (std + self.machine_eps)
+                std = 0.0
+            returns_tensor = (returns_tensor - returns_tensor.mean()) / (std + self.machine_eps)
 
             # Compute PG "loss" which in reality is the expected reward, which we want to maximize with gradient ascent
-            for log_prob, R in zip(saved_log_probs[batch], returns):
+            for log_prob, R in zip(saved_log_probs[batch], returns_tensor):
                 # negative log prob since we are doing gradient descent (not ascent)
                 policy_loss.append(-log_prob * R)
 
@@ -464,12 +466,9 @@ class ReinforceAgent(BaseAgent):
         optimizer.zero_grad()
         # expected loss over the batch
         policy_loss_total = torch.stack(policy_loss).sum()
-        policy_loss = policy_loss_total / num_batches
+        policy_loss_val = policy_loss_total / num_batches
         # perform backprop
-        policy_loss.backward()
-        # maybe clip gradient
-        if self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value:
-            torch.nn.utils.clip_grad_norm_(policy_network.parameters(), 1)
+        policy_loss_val.backward()
         # gradient descent step
         optimizer.step()
-        return policy_loss
+        return policy_loss_val

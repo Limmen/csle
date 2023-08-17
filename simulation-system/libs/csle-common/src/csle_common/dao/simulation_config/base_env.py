@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from abc import ABC, abstractmethod
 import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -30,6 +30,16 @@ class BaseEnv(gym.Env, ABC):
         """
         An interactive loop for manual play of the environment
 
+        :return: None
+        """
+        pass
+
+    @abstractmethod
+    def set_model(self, model: Any) -> None:
+        """
+        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract
+
+        :param model: the model
         :return: None
         """
         pass

@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -15,6 +16,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -27,7 +29,7 @@ class PIAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the value iteration agent
 
@@ -190,7 +192,8 @@ class PIAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def transition_probability_under_policy(self, P: np.ndarray, policy: np.ndarray, num_states: int) -> np.ndarray:
+    def transition_probability_under_policy(self, P: npt.NDArray[Any], policy: npt.NDArray[Any],
+                                            num_states: int) -> npt.NDArray[Any]:
         """
         Utility function for computing the state transition probabilities under the current policy.
         Assumes a deterministic policy (probability 1 of selecting an action in a state)
@@ -212,8 +215,8 @@ class PIAgent(BaseAgent):
             assert sum(P_pi[i]) == 1  # stochastic
         return P_pi
 
-    def expected_reward_under_policy(self, P: np.ndarray, R: np.ndarray, policy: np.ndarray, num_states: int,
-                                     num_actions: int) -> np.ndarray:
+    def expected_reward_under_policy(self, P: npt.NDArray[Any], R: npt.NDArray[Any], policy: npt.NDArray[Any],
+                                     num_states: int, num_actions: int) -> npt.NDArray[Any]:
         """
         Utility function for computing the expected immediate reward for each state
         in the MDP given a policy.
@@ -236,8 +239,8 @@ class PIAgent(BaseAgent):
                                      for y in range(0, num_states)])for x in range(0, num_actions)])
         return r
 
-    def policy_evaluation(self, P: np.ndarray, policy: np.ndarray, R: np.ndarray, gamma: float,
-                          num_states: int, num_actions: int) -> np.ndarray:
+    def policy_evaluation(self, P: npt.NDArray[Any], policy: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float,
+                          num_states: int, num_actions: int) -> npt.NDArray[Any]:
         """
         Implements the policy evaluation step in the policy iteration dynamic programming algorithm.
         Uses the linear algebra interpretation of policy evaluation, solving it as a linear system.
@@ -257,10 +260,10 @@ class PIAgent(BaseAgent):
         r_pi = self.expected_reward_under_policy(P, R, policy, num_states=num_states, num_actions=num_actions)
         I = np.identity(num_states)
         v = np.dot(np.linalg.inv(I - (np.dot(gamma, P_pi))), r_pi)
-        return v
+        return np.array(v)
 
-    def policy_improvement(self, P: np.ndarray, R: np.ndarray, gamma: float, v: np.ndarray,
-                           pi: np.ndarray, num_states: int, num_actions: int) -> np.ndarray:
+    def policy_improvement(self, P: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float, v: npt.NDArray[Any],
+                           pi: npt.NDArray[Any], num_states: int, num_actions: int) -> npt.NDArray[Any]:
         """
         Implements the policy improvement step in the policy iteration dynamic programming algorithm.
 
@@ -290,8 +293,8 @@ class PIAgent(BaseAgent):
                 pi_prime[s][best_action] = 1
         return pi_prime
 
-    def pi(self, P: np.ndarray, policy: np.ndarray, N: int, gamma: float, R: np.ndarray, num_states: int,
-           num_actions: int) -> Tuple[np.ndarray, np.ndarray, List[float], List[float]]:
+    def pi(self, P: npt.NDArray[Any], policy: npt.NDArray[Any], N: int, gamma: float, R: npt.NDArray[Any],
+           num_states: int, num_actions: int) -> Tuple[npt.NDArray[Any], npt.NDArray[Any], List[float], List[float]]:
         """
         The policy iteration algorithm, interleaves policy evaluation and policy improvement for N iterations.
         Guaranteed to converge to the optimal policy and value function.
@@ -327,7 +330,7 @@ class PIAgent(BaseAgent):
 
         return policy, v, average_returns, running_average_returns
 
-    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -335,6 +338,8 @@ class PIAgent(BaseAgent):
         :param eval_batch_size: the batch size
         :return: None
         """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run the policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False

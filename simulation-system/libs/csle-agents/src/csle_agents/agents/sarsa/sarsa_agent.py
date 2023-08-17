@@ -1,8 +1,9 @@
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, Any
 import math
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -15,6 +16,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -26,7 +28,7 @@ class SARSAAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig, experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the SARSA agent
 
@@ -188,8 +190,9 @@ class SARSAAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def train_sarsa(self, A: List, S: List, gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
-            -> Tuple[List[float], list, List[np.ndarray], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
+    def train_sarsa(self, A: List[int], S: List[int], gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
+            -> Tuple[List[float], List[float], List[int], Union[npt.NDArray[Any], npt.NDArray[Any]],
+            Union[npt.NDArray[Any], npt.NDArray[Any]]]:
         """
         Runs the Q learning algorithm
 
@@ -200,18 +203,19 @@ class SARSAAgent(BaseAgent):
         :param epsilon: the exploration parameter
         :return: the average returns, the running average returns, the initial state values, the q table, policy
         """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run SARSA")
         init_state_values = []
-        average_returns = []
-        running_average_returns = []
+        average_returns: List[float] = []
+        running_average_returns: List[float] = []
 
-        Logger.__call__().get_logger().info("Starting Q Learning, gamma:{}, n_iter:{}, eps:{}".format(gamma, N,
-                                                                                                      epsilon))
+        Logger.__call__().get_logger().info(f"Starting SARSA, gamma:{gamma}, n_iter:{N}, eps:{epsilon}")
         q_table = self.initialize_q_table(n_states=len(S), n_actions=len(A))
         count_table = self.initialize_count_table(n_states=256, n_actions=5)
         steps = []
-        prog = 0
+        prog = 0.0
         state_val = 0
-        avg_return = 0
+        avg_return = 0.0
 
         o, _ = self.env.reset()
         if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
@@ -263,7 +267,7 @@ class SARSAAgent(BaseAgent):
         policy = self.create_policy_from_q_table(num_states=len(S), num_actions=len(A), q_table=q_table)
         return average_returns, running_average_returns, init_state_values, q_table, policy
 
-    def initialize_q_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
+    def initialize_q_table(self, n_states: int = 256, n_actions: int = 5) -> npt.NDArray[Any]:
         """
         Initializes the Q table
 
@@ -274,7 +278,7 @@ class SARSAAgent(BaseAgent):
         q_table = np.zeros((n_states, n_actions))
         return q_table
 
-    def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
+    def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> npt.NDArray[Any]:
         """
         Initializes the count table
 
@@ -285,7 +289,7 @@ class SARSAAgent(BaseAgent):
         count_table = np.zeros((n_states, n_actions))
         return count_table
 
-    def eps_greedy(self, q_table: np.ndarray, A: List, s: int, epsilon: float = 0.2) -> int:
+    def eps_greedy(self, q_table: npt.NDArray[Any], A: List[int], s: int, epsilon: float = 0.2) -> int:
         """
         Selects an action according to the epsilon-greedy strategy
 
@@ -299,7 +303,7 @@ class SARSAAgent(BaseAgent):
             a = np.random.choice(A)
         else:
             a = np.argmax(q_table[s])
-        return a
+        return int(a)
 
     def step_size(self, n: int) -> float:
         """
@@ -310,8 +314,8 @@ class SARSAAgent(BaseAgent):
         """
         return float(1) / math.pow(n, 2 / 3)
 
-    def sarsa_update(self, q_table: np.ndarray, count_table: np.ndarray, s: int, a: int, r: float, s_prime: int,
-                     gamma: float, a1: int) -> Tuple[np.ndarray, np.ndarray]:
+    def sarsa_update(self, q_table: npt.NDArray[Any], count_table: npt.NDArray[Any], s: int, a: int, r: float,
+                     s_prime: int, gamma: float, a1: int) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         SARSA update
 
@@ -330,7 +334,8 @@ class SARSAAgent(BaseAgent):
         q_table[s][a] = q_table[s][a] + alpha * ((r + gamma * q_table[s_prime][a1]) - q_table[s][a])
         return q_table, count_table
 
-    def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: np.ndarray) -> np.ndarray:
+    def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: npt.NDArray[Any]) \
+            -> npt.NDArray[Any]:
         """
         Creates a tabular policy from a q table
 
@@ -348,7 +353,7 @@ class SARSAAgent(BaseAgent):
             policy[s][best_action] = 1.0
         return policy
 
-    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -356,6 +361,8 @@ class SARSAAgent(BaseAgent):
         :param eval_batch_size: the batch size
         :return: None
         """
+        if self.env is None:
+            raise ValueError("An environment need to be specified to run policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False

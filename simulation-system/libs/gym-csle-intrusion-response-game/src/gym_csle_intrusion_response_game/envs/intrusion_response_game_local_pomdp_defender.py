@@ -428,3 +428,12 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             S_A=self.config.local_intrusion_response_game_config.S_A,
             a1=a1, zone=zone, O=self.config.local_intrusion_response_game_config.O
         )
+
+    def set_model(self, model) -> None:
+        """
+        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract
+
+        :param model: the model
+        :return: None
+        """
+        self.model = model

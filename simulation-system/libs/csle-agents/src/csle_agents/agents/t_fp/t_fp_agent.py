@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Tuple, Optional
+from typing import Union, List, Dict, Tuple, Optional, Any
 import time
 import gymnasium as gym
 import os
@@ -20,6 +20,7 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 from csle_common.dao.training.policy import Policy
 import csle_common.constants.constants as constants
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
@@ -126,10 +127,13 @@ class TFPAgent(BaseAgent):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -141,7 +145,7 @@ class TFPAgent(BaseAgent):
             self.training_job.experiment_result = exp_result
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
         config = self.simulation_env_config.simulation_env_input_config
-        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.t_fp(exp_result=exp_result, seed=seed, env=env, training_job=self.training_job,
@@ -174,7 +178,7 @@ class TFPAgent(BaseAgent):
             exp_result.std_metrics[metric] = std_metrics
 
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
@@ -187,7 +191,7 @@ class TFPAgent(BaseAgent):
         MetastoreFacade.remove_training_job(self.training_job)
         return exp_execution
 
-    def t_fp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
+    def t_fp(self, exp_result: ExperimentResult, seed: int, env: BaseEnv,
              training_job: TrainingJobConfig, random_seeds: List[int]):
         """
         Runs the T-FP algorithm (Hammar, Stadler 2023)
@@ -404,7 +408,7 @@ class TFPAgent(BaseAgent):
         :return: the average reward
         """
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
-        env = gym.make(self.attacker_simulation_env_config.gym_env_name,
+        env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                        config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         attacker_strategy.opponent_strategy = env.static_defender_strategy
@@ -433,7 +437,7 @@ class TFPAgent(BaseAgent):
                 self.attacker_experiment_config.player_idx].actions, experiment_config=self.attacker_experiment_config,
             avg_R=-1, agent_type=AgentType.NONE)
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
-        env = gym.make(self.attacker_simulation_env_config.gym_env_name,
+        env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                        config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         attacker_policy.opponent_strategy = env.static_defender_strategy
@@ -443,7 +447,7 @@ class TFPAgent(BaseAgent):
                 agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS].value)
 
     def defender_best_response(self, seed: int, attacker_strategy: MixedMultiThresholdStoppingPolicy) \
-            -> Tuple[List, float]:
+            -> Tuple[List[float], float]:
         """
         Learns a best response for the defender against a given attacker strategy
 
@@ -467,7 +471,7 @@ class TFPAgent(BaseAgent):
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
         return thresholds, val
 
-    def _eval_env(self, env: gym.Env, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
+    def _eval_env(self, env: BaseEnv, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
         """
 
         :param env: the environment to use for evaluation
@@ -475,7 +479,7 @@ class TFPAgent(BaseAgent):
         :param num_iterations: number of iterations to evaluate
         :return: the average reward
         """
-        metrics = {}
+        metrics: Dict[str, Any] = {}
         for j in range(num_iterations):
             done = False
             o, _ = env.reset()
@@ -522,8 +526,7 @@ class TFPAgent(BaseAgent):
         return avg_metrics
 
     def attacker_best_response(self, seed: int, defender_strategy: MixedMultiThresholdStoppingPolicy,
-                               attacker_strategy: MixedMultiThresholdStoppingPolicy) \
-            -> Tuple[List, float]:
+                               attacker_strategy: MixedMultiThresholdStoppingPolicy) -> Tuple[List[List[float]], float]:
         """
         Learns a threshold best response strategy for the attacker against a given defender strategy
 
@@ -535,7 +538,7 @@ class TFPAgent(BaseAgent):
         self.attacker_experiment_config.random_seeds = [seed]
         self.attacker_experiment_config.output_dir = str(self.root_output_dir)
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
-        env = gym.make(self.attacker_simulation_env_config.gym_env_name,
+        env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                        config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
@@ -683,4 +686,4 @@ class TFPAgent(BaseAgent):
             N = len(x)
             y = np.copy(x)
             y[N - 1:] = np.convolve(x, np.ones((N,)) / N, mode='valid')
-        return y.tolist()
+        return list(y.tolist())

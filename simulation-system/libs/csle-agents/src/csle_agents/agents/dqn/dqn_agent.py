@@ -24,6 +24,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -65,10 +66,13 @@ class DQNAgent(BaseAgent):
 
         # Setup training job
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -82,7 +86,7 @@ class DQNAgent(BaseAgent):
 
         # Setup experiment execution
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
@@ -95,7 +99,7 @@ class DQNAgent(BaseAgent):
 
         # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
-        orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
         env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
                            n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
@@ -234,7 +238,7 @@ class DQNTrainingCallback(BaseCallback):
                  training_job: TrainingJobConfig, exp_execution: ExperimentExecution,
                  max_steps: int, simulation_name: str,
                  states: List[State], actions: List[Action], player_type: PlayerType,
-                 env: gym.Env, experiment_config: ExperimentConfig, verbose=0,
+                 env: BaseEnv, experiment_config: ExperimentConfig, verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = "",
                  L: int = 3, gym_env_name: str = ""):
         """
@@ -276,7 +280,7 @@ class DQNTrainingCallback(BaseCallback):
         self.actions = actions
         self.save_every = save_every
         self.save_dir = save_dir
-        self.env = env
+        self.env: BaseEnv = env
         self.experiment_config = experiment_config
         self.L = L
         self.gym_env_name = gym_env_name

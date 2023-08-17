@@ -1,9 +1,10 @@
+from typing import Union, List, Dict, Optional, Any
 import math
-from typing import Union, List, Dict, Optional
 import time
 import gymnasium as gym
 import os
 import numpy as np
+import numpy.typing as npt
 from bayes_opt import BayesianOptimization
 from bayes_opt import UtilityFunction
 import gym_csle_stopping_game.constants.constants as env_constants
@@ -22,6 +23,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -33,7 +35,7 @@ class BayesOptAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
-                 experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
+                 experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Bayesian Optimization Agent
@@ -109,6 +111,9 @@ class BayesOptAgent(BaseAgent):
 
         # Initialize training job
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
@@ -128,7 +133,7 @@ class BayesOptAgent(BaseAgent):
 
         # Initialize execution result
         ts = time.time()
-        emulation_name = None
+        emulation_name = ""
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
@@ -357,7 +362,7 @@ class BayesOptAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if len(self.env.get_traces()) > 0:
+                if self.env is not None and len(self.env.get_traces()) > 0:
                     training_job.simulation_traces.append(self.env.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
@@ -387,15 +392,17 @@ class BayesOptAgent(BaseAgent):
         return exp_result
 
     def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
-                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
+                   max_steps: int = 200) -> Dict[str, Any]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
         :return: the average metrics of the evaluation
         """
+        if self.env is None:
+            raise ValueError("An environment need to specified to run the evaluation")
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
-        metrics = {}
+        metrics: Dict[str, Any] = {}
         for j in range(eval_batch_size):
             done = False
             o, _ = self.env.reset()
@@ -404,7 +411,7 @@ class BayesOptAgent(BaseAgent):
             t = 1
             r = 0
             a = 0
-            info = {}
+            info: Dict[str, Any] = {}
             while not done and t <= max_steps:
                 Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
                 if self.experiment_config.player_type == PlayerType.ATTACKER:
@@ -452,7 +459,7 @@ class BayesOptAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def initial_theta(L: int) -> np.ndarray:
+    def initial_theta(L: int) -> npt.NDArray[Any]:
         """
         Initializes theta randomly
 
@@ -462,8 +469,7 @@ class BayesOptAgent(BaseAgent):
         theta_1 = []
         for k in range(L):
             theta_1.append(np.random.uniform(-3, 3))
-        theta_1 = np.array(theta_1)
-        return theta_1
+        return np.array(theta_1)
 
     @staticmethod
     def round_vec(vec) -> List[float]:

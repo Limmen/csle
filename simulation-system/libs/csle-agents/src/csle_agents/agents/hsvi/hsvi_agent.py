@@ -1,8 +1,9 @@
+from typing import List, Optional, Tuple, Any
 import math
-from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 import pulp
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -16,6 +17,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 import csle_agents.common.pruning as pruning
@@ -29,7 +31,7 @@ class HSVIAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[gym.Env] = None):
+                 env: Optional[BaseEnv] = None):
         """
         Initializes the HSVI agent
 
@@ -221,10 +223,12 @@ class HSVIAgent(BaseAgent):
         exp_result.policies[seed] = alpha_vec_policy
         return exp_result
 
-    def hsvi(self, O: np.ndarray, Z: np.ndarray, R: np.ndarray, T: np.ndarray, A: np.ndarray, S: np.ndarray,
-             gamma: float, b0: np.ndarray, epsilon: float, lp: bool = False, prune_frequency: int = 10,
+    def hsvi(self, O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
+             A: npt.NDArray[Any], S: npt.NDArray[Any], gamma: float, b0: npt.NDArray[Any],
+             epsilon: float, lp: bool = False, prune_frequency: int = 10,
              simulation_frequency: int = 10, simulate_horizon: int = 10, number_of_simulations: int = 10) \
-            -> Tuple[List[List[float]], List[float], List[float], List[float], List[float], List[float], List[float]]:
+            -> Tuple[List[List[float]], List[float], List[float], List[float],
+            List[int], List[int], List[float]]:
         """
         Heuristic Search Value Iteration for POMDPs (Trey Smith and Reid Simmons, 2004)
 
@@ -251,12 +255,12 @@ class HSVIAgent(BaseAgent):
         # Initialize state
         w = self.width(lower_bound=lower_bound, upper_bound=upper_bound, b=b0, S=S, lp=lp)
         iteration = 0
-        cumulative_r = 0
-        average_rewards = []
+        cumulative_r = 0.0
+        average_rewards: List[float] = []
         widths = []
         ub_sizes = []
         lb_sizes = []
-        average_running_rewards = []
+        average_running_rewards: List[float] = []
         initial_belief_value = []
 
         # HSVI iterations
@@ -268,16 +272,16 @@ class HSVIAgent(BaseAgent):
             w = self.width(lower_bound=lower_bound, upper_bound=upper_bound, b=b0, S=S, lp=lp)
 
             if iteration % simulation_frequency == 0:
-                r = 0
+                r = 0.0
                 for i in range(number_of_simulations):
-                    r += self.simulate(horizon=simulate_horizon, b0=b0, lower_bound=lower_bound, Z=Z,
+                    r += self.simulate(horizon=simulate_horizon, b0=b0, lower_bound=np.array(lower_bound), Z=Z,
                                        R=R, gamma=gamma, T=T, A=A, O=O, S=S)
                 cumulative_r = r / number_of_simulations
 
             if iteration > 1 and iteration % prune_frequency == 0:
                 size_before_lower_bound = len(lower_bound)
                 size_before_upper_bound = len(upper_bound[0])
-                lower_bound = pruning.prune_lower_bound(lower_bound=lower_bound, S=S)
+                lower_bound = pruning.prune_lower_bound(lower_bound=np.array(lower_bound), S=S)
                 upper_bound = self.prune_upper_bound(upper_bound=upper_bound, S=S, lp=lp)
                 Logger.__call__().get_logger().debug(
                     f"[HSVI] Pruning, LB before:{size_before_lower_bound}, after:{len(lower_bound)}, "
@@ -306,9 +310,10 @@ class HSVIAgent(BaseAgent):
         return (list(lower_bound), average_rewards, average_running_rewards, widths, ub_sizes, lb_sizes,
                 initial_belief_value)
 
-    def explore(self, b: np.ndarray, epsilon: float, t: int, lower_bound: List, upper_bound: Tuple[List, List],
-                gamma: float, S: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, T: np.ndarray, A: np.ndarray,
-                lp: bool) -> Tuple[List, Tuple[List, List]]:
+    def explore(self, b: npt.NDArray[Any], epsilon: float, t: int, lower_bound: List[int],
+                upper_bound: Tuple[List[int], List[int]],
+                gamma: float, S: npt.NDArray[Any], O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any],
+                T: npt.NDArray[Any], A: npt.NDArray[Any], lp: bool) -> Tuple[List[int], Tuple[List[int], List[int]]]:
         """
         Explores the POMDP tree
 
@@ -364,7 +369,8 @@ class HSVIAgent(BaseAgent):
 
         return lower_bound, upper_bound
 
-    def initialize_lower_bound(self, R: np.ndarray, S: np.ndarray, A: np.ndarray, gamma: float) -> List:
+    def initialize_lower_bound(self, R: npt.NDArray[Any], S: npt.NDArray[Any], A: npt.NDArray[Any],
+                               gamma: float) -> List[Any]:
         """
         Initializes the lower bound
 
@@ -387,8 +393,8 @@ class HSVIAgent(BaseAgent):
         lower_bound.append(alpha_vector)
         return lower_bound
 
-    def initialize_upper_bound(self, T: np.ndarray, A: np.ndarray, S: np.ndarray, gamma: float, R: np.ndarray) \
-            -> Tuple[List, List]:
+    def initialize_upper_bound(self, T: npt.NDArray[Any], A: npt.NDArray[Any], S: npt.NDArray[Any], gamma: float,
+                               R: npt.NDArray[Any]) -> Tuple[List[Any], List[Any]]:
         """
         Initializes the upper bound
 
@@ -406,7 +412,7 @@ class HSVIAgent(BaseAgent):
             point_set.append([b, V[s]])
         return (point_set, point_set.copy())
 
-    def generate_corner_belief(self, s: int, S: np.ndarray):
+    def generate_corner_belief(self, s: int, S: npt.NDArray[Any]):
         """
         Generate the corner of the simplex that corresponds to being in some state with probability 1
 
@@ -418,9 +424,10 @@ class HSVIAgent(BaseAgent):
         b[s] = 1
         return b
 
-    def local_updates(self, lower_bound: List, upper_bound: Tuple[List, List], b: np.ndarray, A: np.ndarray,
-                      S: np.ndarray, O: np.ndarray, R: np.ndarray, T: np.ndarray, gamma: float, Z: np.ndarray,
-                      lp: bool) -> Tuple[List, Tuple[List, List]]:
+    def local_updates(self, lower_bound: List[Any], upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any],
+                      A: npt.NDArray[Any], S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any],
+                      T: npt.NDArray[Any], gamma: float,
+                      Z: npt.NDArray[Any], lp: bool) -> Tuple[List[Any], Tuple[List[Any], List[Any]]]:
         """
         Perform local updates to the upper and  lower bounds for the given belief in the heuristic-search-exploration
 
@@ -443,9 +450,9 @@ class HSVIAgent(BaseAgent):
                                                         R=R, gamma=gamma)
         return new_lower_bound, new_upper_bound
 
-    def local_upper_bound_update(self, upper_bound: Tuple[List, List], b: np.ndarray, A: np.ndarray,
-                                 S: np.ndarray, O: np.ndarray, R: np.ndarray, T: np.ndarray,
-                                 gamma: float, Z: np.ndarray, lp: bool) -> Tuple[List, List]:
+    def local_upper_bound_update(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any], A: npt.NDArray[Any],
+                                 S: npt.NDArray[Any], O: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any],
+                                 gamma: float, Z: npt.NDArray[Any], lp: bool) -> Tuple[List[Any], List[Any]]:
         """
         Performs a local update to the upper bound during the heuristic-search exploration
 
@@ -469,7 +476,7 @@ class HSVIAgent(BaseAgent):
         upper_bound = (upper_bound_point_set, new_corner_points)
         return upper_bound
 
-    def update_corner_points(self, corner_points: List, new_point: Tuple[np.ndarray, float]) -> List:
+    def update_corner_points(self, corner_points: List[Any], new_point: Tuple[npt.NDArray[Any], float]) -> List[Any]:
         """
         (Maybe) update the corner points of the upper bound
 
@@ -489,9 +496,9 @@ class HSVIAgent(BaseAgent):
                 new_corner_points.append(cp)
         return new_corner_points
 
-    def local_lower_bound_update(self, lower_bound: List, b: np.ndarray, A: np.ndarray, O: np.ndarray,
-                                 Z: np.ndarray, S: np.ndarray,
-                                 T: np.ndarray, R: np.ndarray, gamma: float) -> List:
+    def local_lower_bound_update(self, lower_bound: List[Any], b: npt.NDArray[Any], A: npt.NDArray[Any], O: npt.NDArray[Any],
+                                 Z: npt.NDArray[Any], S: npt.NDArray[Any], T: npt.NDArray[Any], R: npt.NDArray[Any],
+                                 gamma: float) -> List[Any]:
         """
         Performs a local update to the lower bound given a belief point in the heuristic search
 
@@ -507,12 +514,13 @@ class HSVIAgent(BaseAgent):
         :return: the updated lower bound
         """
         beta = self.lower_bound_backup(lower_bound=lower_bound, b=b, A=A, Z=Z, O=O, S=S, T=T, R=R, gamma=gamma)
-        if not pruning.check_duplicate(lower_bound, beta):
+        if not pruning.check_duplicate(np.array(lower_bound), beta):
             lower_bound.append(beta)
         return lower_bound
 
-    def lower_bound_backup(self, lower_bound: List, b: np.ndarray, A: np.ndarray, O: np.ndarray, Z: np.ndarray,
-                           S: np.ndarray, T: np.ndarray, R: np.ndarray, gamma: float) -> np.ndarray:
+    def lower_bound_backup(self, lower_bound: List[Any], b: npt.NDArray[Any], A: npt.NDArray[Any], O: npt.NDArray[Any],
+                           Z: npt.NDArray[Any], S: npt.NDArray[Any], T: npt.NDArray[Any], R: npt.NDArray[Any],
+                           gamma: float) -> npt.NDArray[Any]:
         """
         Generates a new alpha-vector for the lower bound
 
@@ -547,9 +555,9 @@ class HSVIAgent(BaseAgent):
             beta_a_vec = []
             for s in S:
                 o_idx = 0
-                beta_a_s_val = 0
+                beta_a_s_val = 0.0
                 beta_a_s_val += R[a][s]
-                expected_future_vals = 0
+                expected_future_vals = 0.0
                 for o in O:
                     if self.observation_possible(o=o, b=b, Z=Z, T=T, S=S, a=a):
                         for s_prime in S:
@@ -568,11 +576,11 @@ class HSVIAgent(BaseAgent):
                 max_val = val
                 beta = beta_a_vec
 
-        return beta
+        return np.array(beta)
 
-    def upper_bound_backup(self, upper_bound: Tuple[List, List], b: np.ndarray, A: np.ndarray, S: np.ndarray,
-                           O: np.ndarray, Z: np.ndarray, R: np.ndarray, T: np.ndarray,
-                           gamma: float, lp: bool) -> Tuple[np.ndarray, float]:
+    def upper_bound_backup(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any], A: npt.NDArray[Any],
+                           S: npt.NDArray[Any], O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any],
+                           T: npt.NDArray[Any], gamma: float, lp: bool) -> Tuple[npt.NDArray[Any], float]:
         """
         Adds a point to the upper bound
 
@@ -606,7 +614,8 @@ class HSVIAgent(BaseAgent):
         new_val = max(q_vals)
         return b, new_val
 
-    def lp_convex_hull_projection_lp(self, upper_bound: Tuple[List, List], b: np.ndarray, S: np.ndarray) -> float:
+    def lp_convex_hull_projection_lp(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any],
+                                     S: npt.NDArray[Any]) -> float:
         """
         Reference: (Hauskreht 2000)
 
@@ -661,7 +670,8 @@ class HSVIAgent(BaseAgent):
 
         return belief_value
 
-    def approximate_projection_sawtooth(self, upper_bound: Tuple[List, List], b: np.ndarray, S: np.ndarray) -> float:
+    def approximate_projection_sawtooth(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any],
+                                        S: npt.NDArray[Any]) -> float:
         """
         Reference: (Hauskreht 2000)
 
@@ -682,8 +692,8 @@ class HSVIAgent(BaseAgent):
                                                                          alpha_corner=alpha_corner, S=S))
         return min(interior_belief_values)
 
-    def interior_point_belief_val(self, interior_point: Tuple[np.ndarray, float], b: np.ndarray,
-                                  alpha_corner: np.ndarray, S: np.ndarray) -> float:
+    def interior_point_belief_val(self, interior_point: Tuple[npt.NDArray[Any], float], b: npt.NDArray[Any],
+                                  alpha_corner: npt.NDArray[Any], S: npt.NDArray[Any]) -> float:
         """
         Computes the value induced on the belief point b projected onto the convex hull by a given interior belief point
 
@@ -707,10 +717,10 @@ class HSVIAgent(BaseAgent):
 
         interior_alpha_corner_dot = alpha_corner.dot(interior_point[0])
 
-        return interior_alpha_corner_dot + min_ratio * (interior_point[1] - interior_alpha_corner_dot)
+        return float(interior_alpha_corner_dot + min_ratio * (interior_point[1] - interior_alpha_corner_dot))
 
-    def upper_bound_value(self, upper_bound: Tuple[List, List], b: np.ndarray, S: np.ndarray, lp: bool = False) \
-            -> float:
+    def upper_bound_value(self, upper_bound: Tuple[List[Any], List[Any]], b: npt.NDArray[Any], S: npt.NDArray[Any],
+                          lp: bool = False) -> float:
         """
         Computes the upper bound value of a given belief point
 
@@ -726,7 +736,7 @@ class HSVIAgent(BaseAgent):
         else:
             return self.approximate_projection_sawtooth(upper_bound=upper_bound, b=b, S=S)
 
-    def lower_bound_value(self, lower_bound: List, b: np.ndarray, S: np.ndarray) -> float:
+    def lower_bound_value(self, lower_bound: List[Any], b: npt.NDArray[Any], S: npt.NDArray[Any]) -> float:
         """
         Computes the lower bound value of a given belief point
 
@@ -743,7 +753,8 @@ class HSVIAgent(BaseAgent):
             alpha_vals.append(sum)
         return max(alpha_vals)
 
-    def next_belief(self, o: int, a: int, b: List, S: List, Z: List, T: List) -> List:
+    def next_belief(self, o: int, a: int, b: npt.NDArray[Any], S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                    T: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -761,7 +772,8 @@ class HSVIAgent(BaseAgent):
         assert round(sum(b_prime), 5) == 1
         return b_prime
 
-    def bayes_filter(self, s_prime: int, o: int, a: int, b: List, S: List, Z: List, T: List) -> float:
+    def bayes_filter(self, s_prime: int, o: int, a: int, b: npt.NDArray[Any], S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                     T: npt.NDArray[Any]) -> float:
         """
         A Bayesian filter to compute the belief of being in s_prime when observing o after taking action a in belief b
 
@@ -788,7 +800,8 @@ class HSVIAgent(BaseAgent):
         assert b_prime <= 1
         return b_prime
 
-    def p_o_given_b_a(self, o: int, b: np.ndarray, a: int, S: np.ndarray, Z: np.ndarray, T: np.ndarray) -> float:
+    def p_o_given_b_a(self, o: int, b: npt.NDArray[Any], a: int, S: npt.NDArray[Any], Z: npt.NDArray[Any],
+                      T: npt.NDArray[Any]) -> float:
         """
         Computes P[o|a,b]
 
@@ -808,8 +821,9 @@ class HSVIAgent(BaseAgent):
         assert round(prob, 3) <= 1
         return prob
 
-    def excess(self, lower_bound: List, upper_bound: Tuple[List, List], b: np.ndarray,
-               S: np.ndarray, epsilon: float, gamma: float, t: int, lp: bool) -> float:
+    def excess(self, lower_bound: List[Any], upper_bound: Tuple[List[Any], List[Any]],
+               b: npt.NDArray[Any], S: npt.NDArray[Any],
+               epsilon: float, gamma: float, t: int, lp: bool) -> float:
         """
         Computes the excess uncertainty  (Trey Smith and Reid Simmons, 2004)
 
@@ -829,7 +843,9 @@ class HSVIAgent(BaseAgent):
         else:
             return w - epsilon * math.pow(gamma, -(t))
 
-    def width(self, lower_bound: List, upper_bound: Tuple[List, List], b: np.ndarray, S: np.ndarray, lp: bool) -> float:
+    def width(self, lower_bound: List[Any], upper_bound: Tuple[List[Any], List[Any]],
+              b: npt.NDArray[Any], S: npt.NDArray[Any],
+              lp: bool) -> float:
         """
         Computes the bounds width (Trey Smith and Reid Simmons, 2004)
 
@@ -844,9 +860,9 @@ class HSVIAgent(BaseAgent):
         lb = self.lower_bound_value(lower_bound=lower_bound, b=b, S=S)
         return ub - lb
 
-    def q_hat_interval(self, b: np.ndarray, a: int, S: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray,
-                       T: np.ndarray, gamma: float, lower_bound: List, upper_bound: Tuple[List, List], lp: bool) \
-            -> List:
+    def q_hat_interval(self, b: npt.NDArray[Any], a: int, S: npt.NDArray[Any], O: npt.NDArray[Any],
+                       Z: npt.NDArray[Any], R: npt.NDArray[Any], T: npt.NDArray[Any], gamma: float,
+                       lower_bound: List[int], upper_bound: Tuple[List[Any], List[Any]], lp: bool) -> List[float]:
         """
         Computes the interval (Trey Smith and Reid Simmons, 2004)
 
@@ -869,8 +885,9 @@ class HSVIAgent(BaseAgent):
                          R=R, gamma=gamma, T=T, upper=False, lp=lp)
         return [lower_Q, upper_Q]
 
-    def q(self, b: np.ndarray, a: int, lower_bound: List, upper_bound: Tuple[List, List], S: np.ndarray, O: np.ndarray,
-          Z: np.ndarray, R: np.ndarray, gamma: float, T: np.ndarray, upper: bool = True, lp: bool = False) -> float:
+    def q(self, b: npt.NDArray[Any], a: int, lower_bound: List[int], upper_bound: Tuple[List[int], List[int]],
+          S: npt.NDArray[Any], O: npt.NDArray[Any], Z: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float,
+          T: npt.NDArray[Any], upper: bool = True, lp: bool = False) -> float:
         """
         Applies the Bellman equation to compute Q values
 
@@ -906,7 +923,8 @@ class HSVIAgent(BaseAgent):
             Q_val += immediate_r + expected_future_rew * gamma
         return Q_val
 
-    def prune_upper_bound(self, upper_bound: Tuple[List, List], S: np.ndarray, lp: bool) -> Tuple[List, List]:
+    def prune_upper_bound(self, upper_bound: Tuple[List[Any], List[Any]], S: npt.NDArray[Any], lp: bool) \
+            -> Tuple[List[Any], List[Any]]:
         """
         Prunes the points in the upper bound
 
@@ -926,9 +944,9 @@ class HSVIAgent(BaseAgent):
 
         return pruned_upper_bound_point_set, corner_points
 
-    def simulate(self, horizon: int, b0: List, lower_bound: List, Z: np.ndarray, R: np.ndarray, gamma: float,
-                 T: np.ndarray, A: np.ndarray,
-                 O: np.ndarray, S: np.ndarray) -> float:
+    def simulate(self, horizon: int, b0: npt.NDArray[Any], lower_bound: npt.NDArray[Any],
+                 Z: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float,
+                 T: npt.NDArray[Any], A: npt.NDArray[Any], O: npt.NDArray[Any], S: npt.NDArray[Any]) -> float:
         """
         Simulates the POMDP to estimate the reward of the greedy policy with respect to the value function represented
         by the lower bound
@@ -947,10 +965,10 @@ class HSVIAgent(BaseAgent):
         """
         t = 0
         b = b0
-        cumulative_r = 0
+        cumulative_r = 0.0
         while t < horizon:
             q_values = list(map(lambda a: self.q(
-                b=b, a=a, lower_bound=lower_bound, upper_bound=([], []), S=S, O=O, Z=Z, R=R, gamma=gamma, T=T,
+                b=b, a=a, lower_bound=list(lower_bound.tolist()), upper_bound=([], []), S=S, O=O, Z=Z, R=R, gamma=gamma, T=T,
                 upper=False, lp=False), A))
             a = int(np.argmax(np.array(q_values)))
             r = 0
@@ -970,8 +988,7 @@ class HSVIAgent(BaseAgent):
 
         return cumulative_r
 
-    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) \
-            -> np.ndarray:
+    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) -> npt.NDArray[Any]:
         """
         Performs a one-step lookahead for value iteration
         :param state: the current state
@@ -992,8 +1009,8 @@ class HSVIAgent(BaseAgent):
                 A[a] += prob * (reward + discount_factor * V[next_state])
         return A
 
-    def vi(self, T: np.ndarray, num_states: int, num_actions: int, R: np.ndarray,
-           theta=0.0001, discount_factor=1.0) -> Tuple[np.ndarray, np.ndarray]:
+    def vi(self, T: npt.NDArray[Any], num_states: int, num_actions: int, R: npt.NDArray[Any],
+           theta=0.0001, discount_factor=1.0) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         An implementation of the Value Iteration algorithm
         :param T: the transition kernel T

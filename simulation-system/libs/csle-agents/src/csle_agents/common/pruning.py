@@ -1,9 +1,10 @@
-from typing import List
+from typing import Any, List
 import numpy as np
+import numpy.typing as npt
 import pulp
 
 
-def check_duplicate(alpha_set: np.ndarray, alpha: np.ndarray) -> bool:
+def check_duplicate(alpha_set: npt.NDArray[Any], alpha: npt.NDArray[Any]) -> bool:
     """
     Check whether alpha vector av is already in set a
 
@@ -17,7 +18,7 @@ def check_duplicate(alpha_set: np.ndarray, alpha: np.ndarray) -> bool:
     return False
 
 
-def prune_lower_bound(lower_bound: List, S: np.ndarray) -> np.ndarray:
+def prune_lower_bound(lower_bound: npt.NDArray[Any], S: npt.NDArray[Any]) -> List[Any]:
     """
     Lark's filtering algorithm to prune the lower bound, (Cassandra, Littman, Zhang, 1997)
 
@@ -60,10 +61,10 @@ def prune_lower_bound(lower_bound: List, S: np.ndarray) -> np.ndarray:
                     max_alpha_vec = phi_vec
             Q.append(max_alpha_vec)
             F.remove(tuple(list(max_alpha_vec)))
-    return Q
+    return list(Q.tolist())
 
 
-def check_dominance_lp(alpha_vec: np.ndarray, Q: np.ndarray):
+def check_dominance_lp(alpha_vec: npt.NDArray[Any], Q: npt.NDArray[Any]):
     """
     Uses LP to check whether a given alpha vector is dominated or not (Cassandra, Littman, Zhang, 1997)
 

@@ -316,6 +316,15 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             self.viewer.close()
             self.viewer = None
 
+    def set_model(self, model) -> None:
+        """
+        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract
+
+        :param model: the model
+        :return: None
+        """
+        self.model = model
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

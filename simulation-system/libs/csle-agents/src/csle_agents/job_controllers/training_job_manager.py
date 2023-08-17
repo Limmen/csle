@@ -27,13 +27,13 @@ class TrainingJobManager:
         if job_config.simulation_env_name is not None:
             simulation_env_config = MetastoreFacade.get_simulation_by_name(name=job_config.simulation_env_name)
         if job_config.experiment_config.agent_type == AgentType.T_SPSA:
-            agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+            tspsa_agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                                experiment_config=job_config.experiment_config, training_job=job_config)
-            agent.train()
+            tspsa_agent.train()
         elif job_config.experiment_config.agent_type == AgentType.PPO:
-            agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+            ppo_agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                              experiment_config=job_config.experiment_config, training_job=job_config)
-            experiment_execution = agent.train()
+            experiment_execution = ppo_agent.train()
             for policy in experiment_execution.result.policies.values():
                 MetastoreFacade.save_ppo_policy(ppo_policy=policy)
         else:
