@@ -110,15 +110,13 @@ class NodeNetworkConfig(JSONSerializable):
         self.cell_overhead_bytes = cell_overhead_bytes
 
     @staticmethod
-    def from_dict(d: Optional[Dict[str, Any]]) -> Union[None, "NodeNetworkConfig"]:
+    def from_dict(d: Dict[str, Any]) -> "NodeNetworkConfig":
         """
         Converts a dict representation to an instance
 
         :param d: the dict to convert
         :return: the converted instance
         """
-        if d is None:
-            return None
         obj = NodeNetworkConfig(
             interface=d["interface"],
             limit_packets_queue=d["limit_packets_queue"],
@@ -217,7 +215,7 @@ class NodeNetworkConfig(JSONSerializable):
                f"cell_overhead_bytes:{self.cell_overhead_bytes}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> Optional["NodeNetworkConfig"]:
+    def from_json_file(json_file_path: str) -> "NodeNetworkConfig":
         """
         Reads a json file and converts it to a DTO
 
@@ -230,7 +228,7 @@ class NodeNetworkConfig(JSONSerializable):
             json_str = f.read()
         return NodeNetworkConfig.from_dict(json.loads(json_str))
 
-    def copy(self) -> Optional["NodeNetworkConfig"]:
+    def copy(self) -> "NodeNetworkConfig":
         """
         :return: a copy of the DTO
         """
