@@ -7,7 +7,7 @@ class Action(JSONSerializable):
     DTO representing an action in a simulation environment
     """
 
-    def __init__(self, id: Union[int, float], descr: str):
+    def __init__(self, id: int, descr: str):
         """
         Initializes the DTO
 

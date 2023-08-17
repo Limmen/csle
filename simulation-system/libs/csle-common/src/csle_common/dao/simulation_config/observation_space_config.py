@@ -11,8 +11,8 @@ class ObservationSpaceConfig(JSONSerializable):
 
     def __init__(self, observations: List[Observation], observation_type: ValueType, descr: str,
                  player_id: int, observation_component_name_to_index: Dict[str, int],
-                 observation_id_to_observation_id_vector: Dict[int, List],
-                 observation_id_to_observation_vector: Dict[int, List],
+                 observation_id_to_observation_id_vector: Dict[int, List[int]],
+                 observation_id_to_observation_vector: Dict[int, List[int]],
                  component_observations: Dict[str, List[Observation]]):
         """
         Initializes the DTO
@@ -75,7 +75,7 @@ class ObservationSpaceConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["observations"] = list(map(lambda x: x.to_dict(), self.observations))
         d["observation_type"] = self.observation_type
         d["descr"] = self.descr
