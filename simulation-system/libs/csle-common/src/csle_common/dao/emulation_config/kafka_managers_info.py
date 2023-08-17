@@ -48,7 +48,7 @@ class KafkaManagersInfo(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["kafka_managers_running"] = self.kafka_managers_running
         d["ips"] = self.ips
         d["ports"] = self.ports

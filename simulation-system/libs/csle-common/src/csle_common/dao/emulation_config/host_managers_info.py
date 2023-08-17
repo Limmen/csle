@@ -48,7 +48,7 @@ class HostManagersInfo(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["host_managers_running"] = self.host_managers_running
         d["ips"] = self.ips
         d["emulation_name"] = self.emulation_name

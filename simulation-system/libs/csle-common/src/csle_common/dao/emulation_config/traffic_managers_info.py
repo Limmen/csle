@@ -48,7 +48,7 @@ class TrafficManagersInfo(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["traffic_managers_running"] = self.traffic_managers_running
         d["ips"] = self.ips
         d["emulation_name"] = self.emulation_name
