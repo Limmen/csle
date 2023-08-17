@@ -180,7 +180,7 @@ class Config(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["management_admin_username_default"] = self.management_admin_username_default
         d["management_admin_password_default"] = self.management_admin_password_default
         d[
@@ -249,7 +249,7 @@ class Config(JSONSerializable):
         """
         :return: a param-dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["parameters"] = []
         d["parameters"].append(
             {
