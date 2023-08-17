@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -43,13 +43,13 @@ class OSSECIDSManagerConfig(JSONSerializable):
                                     ossec_ids_manager_max_workers=d["ossec_ids_manager_max_workers"])
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, int]]:
         """
         Converts the object to a dict representation
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[str, int]] = {}
         d["ossec_ids_manager_port"] = self.ossec_ids_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version

@@ -49,7 +49,7 @@ class OSSECIDSManagersInfo(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ossec_ids_managers_running"] = self.ossec_ids_managers_running
         d["ips"] = self.ips
         d["ports"] = self.ports

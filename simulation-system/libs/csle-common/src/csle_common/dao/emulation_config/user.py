@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -34,7 +34,7 @@ class User(JSONSerializable):
         )
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Union[str, bool]]:
         """
         Converts the object to a dict representation
 
