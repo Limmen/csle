@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -52,8 +51,6 @@ class TestVISuite:
     """
     Test suite for the VIAgent
     """
-
-    pytest.logger = logging.getLogger("vi_tests")
 
     @pytest.fixture
     def experiment_config(self, example_attacker_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -172,9 +169,7 @@ class TestVISuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the VI Agent")
         VIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        mdp_config: StoppingGameAttackerMdpConfig) -> None:
@@ -212,9 +207,7 @@ class TestVISuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = VIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the VI Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

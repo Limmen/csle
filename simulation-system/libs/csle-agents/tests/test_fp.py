@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -20,8 +19,6 @@ class TestFPSuite:
     """
     Test suite for the FPAgent
     """
-
-    pytest.logger = logging.getLogger("fp_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -126,10 +123,8 @@ class TestFPSuite:
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the FP Agent")
         FictitiousPlayAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                             experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -167,9 +162,7 @@ class TestFPSuite:
         agent = FictitiousPlayAgent(emulation_env_config=emulation_env_config,
                                     simulation_env_config=simulation_env_config,
                                     experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the Fictitious Play Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

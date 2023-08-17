@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -77,8 +76,6 @@ class TestHSVISuite(object):
     """
     Test suite for the HSVIAgent
     """
-
-    pytest.logger = logging.getLogger("hsvi_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -229,9 +226,7 @@ class TestHSVISuite(object):
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the HSVI Agent")
         HSVIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -267,9 +262,7 @@ class TestHSVISuite(object):
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = HSVIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the HSVI Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

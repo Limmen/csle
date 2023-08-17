@@ -1,3 +1,4 @@
+from typing import Dict, Any
 import numpy as np
 import pytest
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -174,7 +175,7 @@ def default_joint_observation_space_config(min_alerts_weighted_by_priority: int 
     observation_id_to_observation_id_vector = {}
     observation_id_to_observation_vector = {}
     defender_observations = []
-    component_observations = {}
+    component_observations: Dict[str, Any] = {}
     component_observations["alerts_weighted_by_priority"] = []
     for val in range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority):
         component_observations["alerts_weighted_by_priority"].append(Observation(

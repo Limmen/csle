@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -21,8 +20,6 @@ class TestKieferWolfowitzSuite(object):
     """
     Test suite for the KieferWolfoWitzAgent
     """
-
-    pytest.logger = logging.getLogger("kieer_wolfowitz_agent")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -124,10 +121,8 @@ class TestKieferWolfowitzSuite(object):
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the KieferWolfowitzAgent")
         KieferWolfowitzAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                              experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -166,9 +161,7 @@ class TestKieferWolfowitzSuite(object):
         agent = KieferWolfowitzAgent(emulation_env_config=emulation_env_config,
                                      simulation_env_config=simulation_env_config,
                                      experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the KieferWolfowitz Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

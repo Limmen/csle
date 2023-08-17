@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -21,8 +20,6 @@ class TestQLearningSuite:
     """
     Test suite for the QLearningAgent
     """
-
-    pytest.logger = logging.getLogger("q_learning_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -140,9 +137,7 @@ class TestQLearningSuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the Q-learning Agent")
         QLearningAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        mdp_config: StoppingGameAttackerMdpConfig,
@@ -182,9 +177,7 @@ class TestQLearningSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = QLearningAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the Q-learning Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -77,8 +76,6 @@ class TestSondikVISuite:
     """
     Test suite for the Sondik VI Agent
     """
-
-    pytest.logger = logging.getLogger("sondik_vi_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -217,9 +214,7 @@ class TestSondikVISuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the SondikVI Agent")
         SondikVIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -256,9 +251,7 @@ class TestSondikVISuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = SondikVIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the SondikVI Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

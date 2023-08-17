@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -16,8 +15,6 @@ class TestLPNFSuite:
     """
     Test suite for the LPNFAgent
     """
-
-    pytest.logger = logging.getLogger("lp_nf_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -77,10 +74,8 @@ class TestLPNFSuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the LP-NF Agent")
         LinearProgrammingNormalFormGameAgent(simulation_env_config=simulation_env_config,
                                              experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        example_simulation_config: SimulationEnvConfig) -> None:
@@ -104,9 +99,7 @@ class TestLPNFSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_vector_policy', return_value=True)
         agent = LinearProgrammingNormalFormGameAgent(simulation_env_config=example_simulation_config,
                                                      experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the LP-NF Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

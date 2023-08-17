@@ -1,6 +1,6 @@
-from typing import Tuple
+from typing import Tuple, Any, Dict
 import numpy as np
-import logging
+import numpy.typing as npt
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -13,35 +13,35 @@ from csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent import HSVIOSPOSGAgent
 import csle_agents.constants.constants as agents_constants
 
 
-def states() -> Tuple[np.ndarray, dict]:
+def states() -> Tuple[npt.NDArray[Any], Dict[int, str]]:
     """
     :return: the set of states and a lookup dict
     """
     return np.array([0, 1]), {0: "NO_INTRUSION", 1: "INTRUSION", 2: "TERMINAL"}
 
 
-def player_1_actions() -> Tuple[np.ndarray, dict]:
+def player_1_actions() -> Tuple[npt.NDArray[Any], Dict[int, str]]:
     """
     :return: the set of actions of player 1 and a lookup dict
     """
     return np.array([0, 1]), {0: "CONTINUE", 1: "STOP"}
 
 
-def player_2_actions() -> Tuple[np.ndarray, dict]:
+def player_2_actions() -> Tuple[npt.NDArray[Any], Dict[int, str]]:
     """
     :return: the set of actions of player 2 and a lookup dict
     """
     return np.array([0, 1]), {0: "CONTINUE", 1: "STOP"}
 
 
-def observations() -> Tuple[np.ndarray, dict]:
+def observations() -> Tuple[npt.NDArray[Any], Dict[int, str]]:
     """
     :return: the set of observations and a lookup dict
     """
     return np.array([0, 1, 2]), {0: "NO ALERT", 1: "ONE ALERT", 2: "TERMINAL"}
 
 
-def observation_tensor() -> np.ndarray:
+def observation_tensor() -> npt.NDArray[Any]:
     """
     :return:  a |A1|x|A2|x|S|x|O| tensor
     """
@@ -73,7 +73,7 @@ def observation_tensor() -> np.ndarray:
     return O
 
 
-def reward_tensor() -> np.ndarray:
+def reward_tensor() -> npt.NDArray[Any]:
     """
     :return: return a |A1|x|A2|x|S| tensor
     """
@@ -96,7 +96,7 @@ def reward_tensor() -> np.ndarray:
     return R
 
 
-def transition_tensor() -> np.ndarray:
+def transition_tensor() -> npt.NDArray[Any]:
     """
     :return: a |A1|x|A2||S|^2 tensor
     """
@@ -127,7 +127,7 @@ def transition_tensor() -> np.ndarray:
     )
 
 
-def initial_belief() -> np.ndarray:
+def initial_belief() -> npt.NDArray[Any]:
     """
     :return: the initial belief point
     """
@@ -138,8 +138,6 @@ class TestHSVISuite(object):
     """
     Test suite for the HSVIAgent
     """
-
-    pytest.logger = logging.getLogger("hsvi_os_posg_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -231,9 +229,7 @@ class TestHSVISuite(object):
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the HSVI-OS-POSG Agent")
         HSVIOSPOSGAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
@@ -258,9 +254,7 @@ class TestHSVISuite(object):
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = HSVIOSPOSGAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the HSVI-OS-POSG Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

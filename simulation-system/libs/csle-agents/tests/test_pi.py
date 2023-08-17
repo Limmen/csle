@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import random
@@ -53,8 +52,6 @@ class TestPISuite:
     """
     Test suite for the PIAgent
     """
-
-    pytest.logger = logging.getLogger("pi_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -181,9 +178,7 @@ class TestPISuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the PI Agent")
         PIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        mdp_config: StoppingGameAttackerMdpConfig) -> None:
@@ -218,9 +213,7 @@ class TestPISuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = PIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the PI Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

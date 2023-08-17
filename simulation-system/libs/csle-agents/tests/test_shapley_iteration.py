@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -20,8 +19,6 @@ class TestShapleyIterationSuite:
     """
     Test suite for the ShapleyIterationAgent
     """
-
-    pytest.logger = logging.getLogger("shapley_iteration_tests")
 
     @pytest.fixture
     def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
@@ -138,9 +135,7 @@ class TestShapleyIterationSuite:
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the Shapley Iteration Agent")
         ShapleyIterationAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -176,9 +171,7 @@ class TestShapleyIterationSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace', return_value=True)
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_vector_policy', return_value=True)
         agent = ShapleyIterationAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the Shapley Iteration Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

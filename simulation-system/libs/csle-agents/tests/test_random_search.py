@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -21,8 +20,6 @@ class TestRandomSearchSuite:
     """
     Test suite for the RandomSearchAgent
     """
-
-    pytest.logger = logging.getLogger("random_search_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -118,10 +115,8 @@ class TestRandomSearchSuite:
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the Random Search Agent")
         RandomSearchAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                           experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -158,9 +153,7 @@ class TestRandomSearchSuite:
         agent = RandomSearchAgent(emulation_env_config=emulation_env_config,
                                   simulation_env_config=simulation_env_config,
                                   experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the Random Search Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None

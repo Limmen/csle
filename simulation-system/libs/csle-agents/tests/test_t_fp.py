@@ -1,4 +1,3 @@
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -17,8 +16,6 @@ class TestTFPSuite:
     """
     Test suite for the TFPAgent
     """
-
-    pytest.logger = logging.getLogger("t_fp_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -106,11 +103,9 @@ class TestTFPSuite:
         :return: None
         """
         emulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the T-FP Agent")
         TFPAgent(emulation_env_config=emulation_env_config,
                  attacker_simulation_env_config=example_attacker_simulation_config,
                  defender_simulation_env_config=example_defender_simulation_config, experiment_config=experiment_config)
-        pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        example_attacker_simulation_config: SimulationEnvConfig,
@@ -154,9 +149,7 @@ class TestTFPSuite:
                          attacker_simulation_env_config=example_attacker_simulation_config,
                          defender_simulation_env_config=example_defender_simulation_config,
                          experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the T-FP Agent")
         experiment_execution = agent.train()
-        pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
         assert experiment_execution.id is not None
