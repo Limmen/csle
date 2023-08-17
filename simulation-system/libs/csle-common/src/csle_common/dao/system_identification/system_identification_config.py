@@ -25,7 +25,7 @@ class SystemIdentificationConfig(JSONSerializable):
         self.log_every = log_every
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "Optional[SystemIdentificationConfig]":
+    def from_dict(d: Optional[Dict[str, Any]]) -> "Optional[SystemIdentificationConfig]":
         """
         Converts a dict representation to an instance
 
@@ -47,7 +47,7 @@ class SystemIdentificationConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d_h = {}
         for k, v in self.hparams.items():
             d_h[k] = v.to_dict()
@@ -66,7 +66,7 @@ class SystemIdentificationConfig(JSONSerializable):
                f"title: {self.title}, log_every: {self.log_every}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> "SystemIdentificationConfig":
+    def from_json_file(json_file_path: str) -> Optional["SystemIdentificationConfig"]:
         """
         Reads a json file and converts it to a DTO
 

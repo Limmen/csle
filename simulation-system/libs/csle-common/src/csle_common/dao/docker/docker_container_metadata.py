@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from docker.models.containers import Container
 from csle_base.json_serializable import JSONSerializable
 
@@ -8,7 +8,7 @@ class DockerContainerMetadata(JSONSerializable):
     DTO Object representing a running or stopped Docker container
     """
 
-    def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: list, id: str,
+    def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: List[str], id: str,
                  created: str, ip: str, network_id: int, gateway: str, mac: str, ip_prefix_len: int,
                  name2: str, level: str, hostname: str, image_name: str, net: str,
                  dir: str, config_path: str, container_handle: Container, emulation: str, kafka_container: str) -> None:
@@ -101,7 +101,7 @@ class DockerContainerMetadata(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = self.name
         d["status"] = self.status
         d["short_id"] = self.short_id

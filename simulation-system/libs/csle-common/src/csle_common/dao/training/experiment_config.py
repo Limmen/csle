@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.hparam import HParam
@@ -37,7 +37,7 @@ class ExperimentConfig(JSONSerializable):
         self.br_log_every = br_log_every
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "ExperimentConfig":
+    def from_dict(d: Optional[Dict[str, Any]]) -> Optional["ExperimentConfig"]:
         """
         Converts a dict representation to an instance
 
@@ -62,7 +62,7 @@ class ExperimentConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["output_dir"] = self.output_dir
         d["title"] = self.title
         d["random_seeds"] = self.random_seeds
@@ -86,7 +86,7 @@ class ExperimentConfig(JSONSerializable):
                f"player_type: {self.player_type}, player_idx: {self.player_idx}, br_log_every: {self.br_log_every}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> "ExperimentConfig":
+    def from_json_file(json_file_path: str) -> Optional["ExperimentConfig"]:
         """
         Reads a json file and converts it to a DTO
 

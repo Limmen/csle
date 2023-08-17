@@ -34,13 +34,9 @@ class EmulationDefenderAction(JSONSerializable):
         self.id = id
         self.name = name
         self.cmds = cmds
-        if self.cmds is None:
-            self.cmds = []
         self.type = type
         self.descr = descr
         self.ips = ips
-        if self.ips is None:
-            self.ips = []
         self.action_outcome = action_outcome
         self.alt_cmds = alt_cmds
         if self.alt_cmds is None:
@@ -74,7 +70,7 @@ class EmulationDefenderAction(JSONSerializable):
         """
         :return: a dicr representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["name"] = self.name
         d["cmds"] = list(self.cmds)
