@@ -66,7 +66,7 @@ class NodeBeatsConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["log_files_paths"] = self.log_files_paths
         d["filebeat_modules"] = self.filebeat_modules

@@ -56,7 +56,7 @@ class NodeTrafficConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["commands"] = self.commands
         d["traffic_manager_port"] = self.traffic_manager_port
