@@ -1,6 +1,7 @@
-from typing import Union, List, Dict, Optional, Tuple
+from typing import Union, List, Dict, Optional, Tuple, Any
 import random
 import numpy as np
+from numpy.typing import NDArray
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
@@ -27,7 +28,7 @@ class RandomPolicy(Policy):
         self.stage_policy_tensor = stage_policy_tensor
         self.policy_type = PolicyType.RANDOM
 
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
+    def action(self, o: Union[List[Union[int, float]], int, float]) -> int:
         """
         Selects the next action
 
@@ -58,7 +59,7 @@ class RandomPolicy(Policy):
         return 1 / len(self.actions)
 
     @staticmethod
-    def from_dict(d: Dict) -> "RandomPolicy":
+    def from_dict(d: Dict[str, Any]) -> "RandomPolicy":
         """
         Converts a dict representation to an instance
 
@@ -68,11 +69,11 @@ class RandomPolicy(Policy):
         return RandomPolicy(actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                             stage_policy_tensor=d["stage_policy_tensor"], player_type=d["player_type"])
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: A dict representation of the function
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["agent_type"] = self.agent_type
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
@@ -80,7 +81,7 @@ class RandomPolicy(Policy):
         d["policy_type"] = self.policy_type
         return d
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> NDArray[Any]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 

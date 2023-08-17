@@ -77,7 +77,7 @@ class MixedLinearTabularPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MixedLinearTabularPolicy":
+    def from_dict(d: Dict[str, Any]) -> "MixedLinearTabularPolicy":
         """
         Converst a dict representation of the object to an instance
 

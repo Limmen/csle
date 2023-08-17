@@ -65,13 +65,13 @@ class VectorPolicy(Policy):
             dto.id = d["id"]
         return dto
 
-    def to_dict(self) -> Dict[str, Union[int, List[int], List[float], str, float]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Gets a dict representation of the object
 
         :return: A dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["agent_type"] = self.agent_type
         d["player_type"] = self.player_type
         d["actions"] = self.actions
