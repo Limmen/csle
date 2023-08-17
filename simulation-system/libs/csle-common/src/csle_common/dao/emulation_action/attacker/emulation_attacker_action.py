@@ -38,13 +38,9 @@ class EmulationAttackerAction(JSONSerializable):
         self.id = id
         self.name = name
         self.cmds = cmds
-        if self.cmds is None:
-            self.cmds = []
         self.descr = descr
         self.index = index
         self.ips = ips
-        if self.ips is None:
-            self.ips = []
         self.vulnerability = vulnerability
         self.action_outcome = action_outcome
         self.backdoor = backdoor
@@ -136,7 +132,7 @@ class EmulationAttackerAction(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["name"] = self.name
         d["cmds"] = list(self.cmds)
@@ -146,7 +142,7 @@ class EmulationAttackerAction(JSONSerializable):
         d["index"] = self.index
         d["action_outcome"] = self.action_outcome
         d["vulnerability"] = self.vulnerability
-        d["alt_cmds"] = list(self.alt_cmds)
+        d["alt_cmds"] = list(self.alt_cmds) if self.alt_cmds is not None else self.alt_cmds
         d["backdoor"] = self.backdoor
         d["execution_time"] = self.execution_time
         d["ts"] = self.ts
