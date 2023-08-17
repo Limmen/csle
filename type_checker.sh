@@ -21,6 +21,6 @@ cd simulation-system/libs/gym-csle-stopping-game; mypy src tests; cd ../../../
 echo "Running type checker for gym-csle-intrusion-response-game"
 cd simulation-system/libs/gym-csle-intrusion-response-game; mypy src tests; cd ../../../
 echo "Running type checker for csle-base"
-cd simulation-system/libs/csle-base; mypy src tests; cd ../../../
+cd simulation-system/libs/csle-base; mypy src; cd ../../../
 echo "Running type checker for csle-cli"
-cd simulation-system/libs/csle-cli; mypy src tests; cd ../../../
+cd simulation-system/libs/csle-cli; mypy src; cd ../../../

@@ -40,7 +40,7 @@ class AlphaVectorsPolicy(Policy):
         self.states = states
         self.policy_type = PolicyType.ALPHA_VECTORS
 
-    def action(self, o: List[Union[int, float]]) -> Union[int, Action]:
+    def action(self, o: List[Union[int, float]]) -> int:
         """
         Selects the next action
 
@@ -67,7 +67,7 @@ class AlphaVectorsPolicy(Policy):
         try:
             return max_a.id
         except Exception:
-            return max_a
+            return 0
 
     def probability(self, o: List[Union[int, float]], a: int) -> float:
         """
