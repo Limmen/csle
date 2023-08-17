@@ -156,15 +156,13 @@ class ReadEmulationStatisticsUtil:
                         agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME:
                         metrics = HostMetrics.from_kafka_record(record=msg.value().decode())
-                        if emulation_env_config.get_container_from_ip(metrics.ip) is None:
-                            raise ValueError("NodeContainerConfig is None")
-                        c = emulation_env_config.get_container_from_ip(metrics.ip)
+                        c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
                         host_metrics[c.get_full_name()].append(metrics)
                         host_metrics_counter += 1
                         total_host_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME:
                         metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.get_container_from_ip(metrics.ip)
+                        c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
                         ossec_host_ids_metrics[c.get_full_name()].append(metrics)
                         ossec_host_metrics_counter += 1
                         total_ossec_metrics.append(metrics)
@@ -174,17 +172,17 @@ class ReadEmulationStatisticsUtil:
                         defender_actions.append(EmulationDefenderAction.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME:
                         stats = DockerStats.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.get_container_from_ip(stats.ip)
+                        c_1 = emulation_env_config.get_container_from_ip(stats.ip)
                         docker_host_stats[c.get_full_name()].append(stats)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME:
                         metrics = SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.get_container_from_ip(metrics.ip)
+                        c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
                         snort_alert_metrics_per_ids[c.get_full_name()].append(metrics)
                         snort_metrics_counter += 1
                         total_snort_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME:
                         metrics = SnortIdsRuleCounters.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.get_container_from_ip(metrics.ip)
+                        c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
                         snort_rule_metrics_per_ids[c.get_full_name()].append(metrics)
                         snort_rule_metrics_counter += 1
                         total_snort_rule_metrics.append(metrics)
@@ -227,8 +225,8 @@ class ReadEmulationStatisticsUtil:
                             agg_flow_statistics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME:
                         metrics = SnortIdsIPAlertCounters.from_kafka_record(record=msg.value().decode())
-                        c = emulation_env_config.get_container_from_ip(metrics.alert_ip)
-                        if c is not None:
+                        c_1 = emulation_env_config.get_container_from_ip(metrics.alert_ip)
+                        if c_1 is not None:
                             snort_ids_ip_metrics[c.get_full_name()].append(metrics)
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
                         agg_host_metrics_dto = ReadEmulationStatisticsUtil.average_host_metrics(
