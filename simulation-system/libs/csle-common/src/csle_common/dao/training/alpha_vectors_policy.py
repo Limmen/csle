@@ -40,7 +40,7 @@ class AlphaVectorsPolicy(Policy):
         self.states = states
         self.policy_type = PolicyType.ALPHA_VECTORS
 
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
+    def action(self, o: List[Union[int, float]]) -> Union[int, Action]:
         """
         Selects the next action
 
@@ -49,7 +49,6 @@ class AlphaVectorsPolicy(Policy):
         """
         b = o
         max_a_v = -np.inf
-        max_a = 0
         for a in self.actions:
             v_a = 0
             for s in self.states:
@@ -70,7 +69,7 @@ class AlphaVectorsPolicy(Policy):
         except Exception:
             return max_a
 
-    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
+    def probability(self, o: List[Union[int, float]], a: int) -> float:
         """
         Calculates the probability of taking a given action for a given observation
 

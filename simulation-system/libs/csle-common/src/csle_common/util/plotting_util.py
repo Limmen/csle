@@ -1,5 +1,6 @@
-from typing import Tuple
+from typing import Tuple, Any
 import numpy as np
+from numpy.typing import NDArray
 import scipy.stats as stats
 
 
@@ -9,7 +10,7 @@ class PlottingUtil:
     """
 
     @staticmethod
-    def running_average(x: np.ndarray, N: int) -> np.ndarray:
+    def running_average(x: NDArray[Any], N: int) -> NDArray[Any]:
         """
         Function used to compute the running average of the last N elements of a vector x
 
@@ -25,7 +26,7 @@ class PlottingUtil:
         return y
 
     @staticmethod
-    def running_average_list(x: np.ndarray, N: int) -> np.ndarray:
+    def running_average_list(x: NDArray[Any], N: int) -> NDArray[Any]:
         """
         Function used to compute the running average of the last N elements of a vector x
 
@@ -41,7 +42,7 @@ class PlottingUtil:
         return y
 
     @staticmethod
-    def mean_confidence_interval(data: np.ndarray, confidence=0.95) -> Tuple[float, float]:
+    def mean_confidence_interval(data: NDArray[Any], confidence=0.95) -> Tuple[float, float]:
         """
         Compute confidence intervals
 
@@ -56,7 +57,7 @@ class PlottingUtil:
         return m, h
 
     @staticmethod
-    def min_max_norm(vec: np.ndarray, max_val: float, min_val: float) -> np.ndarray:
+    def min_max_norm(vec: NDArray[Any], max_val: float, min_val: float) -> NDArray[Any]:
         """
         Min-max normalization of a vector
 

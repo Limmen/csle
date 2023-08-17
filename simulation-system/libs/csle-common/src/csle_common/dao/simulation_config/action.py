@@ -34,7 +34,7 @@ class Action(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["descr"] = self.descr
         return d

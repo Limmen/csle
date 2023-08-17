@@ -17,10 +17,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/envs/ && make install"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -39,10 +41,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/envs/ && make install_{emulation_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -61,6 +65,7 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/envs/ && make uninstall_{emulation_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
@@ -81,10 +86,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/envs/ && make uninstall"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -104,7 +111,7 @@ class InstallationController:
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -122,10 +129,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/simulation-system/envs/ && make install_{simulation_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -143,10 +152,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/simulation-system/envs/ && make uninstall_{simulation_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -163,10 +174,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/simulation-system/envs/ && make uninstall"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -183,10 +196,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/derived_images/ && make build"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -204,10 +219,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/derived_images/ && make {image_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -224,10 +241,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/derived_images/ && make rm_image"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -245,10 +264,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/derived_images/ && make rm_{image_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -265,10 +286,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/base_images/ && make build"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -286,10 +309,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/base_images/ && make {image_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -306,10 +331,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/emulation-system/base_images/ && make rm_image"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -327,10 +354,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/base_images/ && make rm_{image_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -347,10 +376,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/metastore/ && make clean"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if st(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -367,10 +398,12 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/metastore/ && make build"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("Cannot read due to None type")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:

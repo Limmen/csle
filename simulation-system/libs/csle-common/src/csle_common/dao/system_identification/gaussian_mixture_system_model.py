@@ -23,7 +23,7 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         super(GaussianMixtureSystemModel, self).__init__(descr=descr, model_type=SystemModelType.GAUSSIAN_MIXTURE)
         self.conditional_metric_distributions = conditional_metric_distributions
-        complete_sample_space: Set[List[int]] = set()
+        complete_sample_space: Set[int] = set()
         for conds in self.conditional_metric_distributions:
             for cond in conds:
                 complete_sample_space = complete_sample_space.union(cond.sample_space)
