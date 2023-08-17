@@ -16,7 +16,7 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
 from csle_common.dao.emulation_config.credential import Credential
 from csle_base.json_serializable import JSONSerializable
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
-from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters

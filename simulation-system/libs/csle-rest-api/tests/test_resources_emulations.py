@@ -6,7 +6,7 @@ import logging
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO, RunningEmulationsDTO
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
-from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters

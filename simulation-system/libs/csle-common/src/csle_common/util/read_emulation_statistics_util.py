@@ -15,7 +15,7 @@ from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortId
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
-from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction

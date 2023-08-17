@@ -1,6 +1,6 @@
 from typing import Tuple, Union, Dict, Any
 import csle_collector.constants.constants as constants
-from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 
 
