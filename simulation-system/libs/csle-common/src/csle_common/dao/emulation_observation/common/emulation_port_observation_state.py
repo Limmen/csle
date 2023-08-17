@@ -40,7 +40,7 @@ class EmulationPortObservationState(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["port"] = self.port
         d["open"] = self.open
         d["service"] = self.service
@@ -53,7 +53,7 @@ class EmulationPortObservationState(JSONSerializable):
         return d
 
     @staticmethod
-    def from_dict(d: Union[Dict[str, Any], None]) -> "EmulationPortObservationState":
+    def from_dict(d: Union[Dict[str, Any], None]) -> Union[None, "EmulationPortObservationState"]:
         """
         Converts a dict representation of the object to an instance
 
@@ -93,7 +93,7 @@ class EmulationPortObservationState(JSONSerializable):
         return service
 
     @staticmethod
-    def from_network_service(network_service: NetworkService, service_lookup: dict) -> "EmulationPortObservationState":
+    def from_network_service(network_service: NetworkService, service_lookup: Dict[str, str]) -> "EmulationPortObservationState":
         """
         Converts a network service into a port observation state
 
@@ -145,5 +145,5 @@ class EmulationPortObservationState(JSONSerializable):
         """
         :return: get the schema of the DTO
         """
-        return EmulationPortObservationState(port=-1, open=True, service=-1, protocol=TransportProtocol.TCP,
+        return EmulationPortObservationState(port=-1, open=True, service="", protocol=TransportProtocol.TCP,
                                              http_enum="", http_grep="", vulscan="", version="", fingerprint="")
