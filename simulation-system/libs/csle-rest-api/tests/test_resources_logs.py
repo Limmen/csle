@@ -4,9 +4,8 @@ import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.client import Client
-from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
@@ -503,7 +502,7 @@ class TestResourcesLogsSuite:
                                                 docker_gw_bridge_ip="123.456.78.99",
                                                 physical_host_ip="123.456.78.99")
             client = Client(id=1, workflow_distribution=[1.0],
-                            arrival_config=ArrivalConfig(client_arrival_type=ClientArrivalType(0)),
+                            arrival_config=ConstantArrivalConfig(lamb=10),
                             mu=4, exponential_service_time=False)
             wf_m_chain = WorkflowMarkovChain(transition_matrix=[[1.0]], initial_state=1, id=1)
             wf_service = WorkflowService(ips_and_commands=[("null", "null")], id=1)
