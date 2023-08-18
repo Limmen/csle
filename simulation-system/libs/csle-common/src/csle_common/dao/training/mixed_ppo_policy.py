@@ -37,7 +37,7 @@ class MixedPPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_PPO_POLICY
 
-    def action(self, o: List[float]) -> NDArray[Any]:
+    def action(self, o: List[float]) -> int:
         """
         Multi-threshold stopping policy
 
@@ -48,7 +48,7 @@ class MixedPPOPolicy(Policy):
         a = policy.action(o=o)
         return a
 
-    def probability(self, o: List[float], a: int) -> int:
+    def probability(self, o: List[float], a: int) -> float:
         """
         Probability of a given action
 
@@ -56,7 +56,7 @@ class MixedPPOPolicy(Policy):
         :param a: a given action
         :return: the probability of a
         """
-        return self.action(o=o) == a
+        return float(self.action(o=o) == a)
 
     def to_dict(self) -> Dict[str, Any]:
         """

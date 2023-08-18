@@ -51,7 +51,7 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> NDArray[Any]:
+    def action(self, o: Union[List[float], List[int]]) -> int:
         """
         Multi-threshold stopping policy
 
@@ -129,7 +129,8 @@ class PPOPolicy(Policy):
                 stage_strategy[i][j] = self.probability(o=o, a=j)
             stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
             assert round(sum(stage_strategy[i]), 3) == 1
-        return stage_strategy.tolist()
+        stage_strategy.tolist()
+        return list(stage_strategy.tolist())
 
     def _get_attacker_dist(self, obs) -> List[float]:
         """
