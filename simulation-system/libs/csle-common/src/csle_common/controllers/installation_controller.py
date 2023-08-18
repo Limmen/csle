@@ -65,11 +65,12 @@ class InstallationController:
         cmd = f"cd $CSLE_HOME/emulation-system/envs/ && make uninstall_{emulation_name}"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
-
+            if p.stdout is None:
+                raise ValueError("stdout is None")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if out != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:
@@ -108,6 +109,8 @@ class InstallationController:
         cmd = "cd $CSLE_HOME/simulation-system/envs/ && make install"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
+            if p.stdout is None:
+                raise ValueError("stdout is None")
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
@@ -381,7 +384,7 @@ class InstallationController:
             out = p.stdout.read(1)
             if p.poll() is not None:
                 break
-            if st(out) != '':
+            if str(out) != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
                 except Exception:

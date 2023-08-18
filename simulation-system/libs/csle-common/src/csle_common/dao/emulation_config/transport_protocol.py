@@ -18,8 +18,7 @@ class TransportProtocol(IntEnum):
         :param protocol_str: the string to create the object from
         :return: the created object
         """
-        if protocol_str is None:
-            return None
+
         if protocol_str.lower() == "tcp":
             return TransportProtocol.TCP
         elif protocol_str.lower() == "udp":
