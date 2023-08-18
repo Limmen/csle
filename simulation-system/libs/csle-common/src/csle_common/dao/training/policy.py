@@ -22,7 +22,7 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Any) -> NDArray[Any]:
+    def action(self, o: Any) -> Union[int, NDArray[Any]]:
         """
         Calculates the next action
 
