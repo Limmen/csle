@@ -41,7 +41,7 @@ class EmpiricalConditional(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_name"] = self.conditional_name
         d["metric_name"] = self.metric_name
         d["sample_space"] = self.sample_space
