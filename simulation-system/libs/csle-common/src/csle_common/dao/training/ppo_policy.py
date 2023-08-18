@@ -74,7 +74,7 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         prob = math.exp(self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
-            actions=torch.tensor(a)).item())
+            x=torch.tensor(a)).item())
         return prob
 
     def to_dict(self) -> Dict[str, Any]:

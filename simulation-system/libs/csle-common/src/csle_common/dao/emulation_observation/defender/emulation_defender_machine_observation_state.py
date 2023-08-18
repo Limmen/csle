@@ -136,10 +136,7 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             if self.ossec_ids_alert_counters is not None else None
         d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict() \
             if self.snort_ids_ip_alert_counters is not None else None
-        if self.kafka_config is not None:
-            d["kafka_config"] = self.kafka_config.to_dict()
-        else:
-            d["kafka_config"] = None
+        d["kafka_config"] = self.kafka_config.to_dict() if self.kafka_config is not None else None
         return d
 
     def __str__(self) -> str:

@@ -53,15 +53,13 @@ class EmulationPortObservationState(JSONSerializable):
         return d
 
     @staticmethod
-    def from_dict(d: Union[Dict[str, Any], None]) -> Union[None, "EmulationPortObservationState"]:
+    def from_dict(d: Dict[str, Any]) -> "EmulationPortObservationState":
         """
         Converts a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created object instance
         """
-        if d is None:
-            return None
         obj = EmulationPortObservationState(
             port=d["port"],
             open=d["open"],
