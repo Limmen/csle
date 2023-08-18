@@ -12,7 +12,7 @@ class EmulationAttackerAction(JSONSerializable):
     """
     Class representing an action of the attacker in the emulation
     """
-    def __init__(self, id: EmulationAttackerActionId, name: str, cmds: List[str],
+    def __init__(self, id: EmulationAttackerActionId.value, name: str, cmds: List[str],
                  type: EmulationAttackerActionType, descr: str, ips: List[str], index: int,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
                  vulnerability: Optional[str] = None, alt_cmds: Optional[List[str]] = None, backdoor: bool = False,
