@@ -22,7 +22,7 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Any) -> Union[int, NDArray[Any]]:
+    def action(self, o: Any) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Calculates the next action
 
@@ -41,7 +41,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def stage_policy(self, o: Any) -> List[List[float]]:
+    def stage_policy(self, o: Any) -> Union[List[List[float]], List[float]]:
         """
         Returns a stage policy (see Horak & Bosansky 2019)
 

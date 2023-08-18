@@ -38,7 +38,7 @@ class MixedLinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> Union[int, List[int], NDArray[Any]]:
+    def action(self, o: List[float]) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
@@ -47,7 +47,7 @@ class MixedLinearTabularPolicy(Policy):
         """
         policy = np.random.choice(self.linear_tabular_policies)
         a = policy.action(o=o)
-        return a
+        return float(a)
 
     def probability(self, o: List[float], a: int) -> int:
         """
@@ -140,4 +140,4 @@ class MixedLinearTabularPolicy(Policy):
                 stage_strategy[i][j] = sum([stage_policies[k][i][j]
                                             for k in range(len(stage_policies))]) / len(stage_policies)
             stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
-        return stage_strategy.tolist()
+        return list(stage_strategy.tolist())

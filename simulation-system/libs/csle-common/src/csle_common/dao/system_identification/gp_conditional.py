@@ -95,7 +95,7 @@ class GPConditional(JSONSerializable):
         self.sample_space.sort()
         self.distribution = list(self.generate_distributions_for_samples(samples=self.sample_space).tolist())
 
-    def generate_distributions_for_samples(self, samples) -> NDArray[Any]:
+    def generate_distributions_for_samples(self, samples) -> Any:
         """
         Generates distributions for a given sample
 
