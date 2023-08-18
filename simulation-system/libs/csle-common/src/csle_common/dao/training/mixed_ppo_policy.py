@@ -1,5 +1,6 @@
 from typing import List, Dict, Union, Any
 import numpy as np
+from numpy.typing import NDArray
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -36,7 +37,7 @@ class MixedPPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_PPO_POLICY
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray[Any, Any]]:
+    def action(self, o: List[float]) -> NDArray[Any]:
         """
         Multi-threshold stopping policy
 
@@ -120,7 +121,7 @@ class MixedPPOPolicy(Policy):
         """
         return self.from_dict(self.to_dict())
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[int], List[float]]) -> List[List[float]]:
         """
         Returns the stage policy for a given observation
 
