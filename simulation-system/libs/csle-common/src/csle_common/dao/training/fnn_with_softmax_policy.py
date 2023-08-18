@@ -51,16 +51,23 @@ class FNNWithSoftmaxPolicy(Policy):
         self.policy_type = PolicyType.FNN_W_SOFTMAX
         if self.policy_network is None and self.save_path != "":
             try:
+                hidden_dim = \
+                    self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+                hidden_layers = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
+                activation = self.experiment_config.hparams[constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION].value
+                if not isinstance(hidden_dim, int):
+                    raise ValueError(f"The number of neurons must be an integer, got type: {type(hidden_dim)}")
+                if not isinstance(hidden_layers, int):
+                    raise ValueError(f"The number of layers must be an integer, got type: {type(hidden_layers)}")
+                if not isinstance(activation, str):
+                    raise ValueError(f"The type of the actvation function must be a string, "
+                                     f"got type: {type(activation)}")
                 self.policy_network = FNNwithSoftmax(
                     input_dim=input_dim,
                     output_dim=output_dim,
-                    hidden_dim=self.experiment_config.hparams[
-                        constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value,
-                    num_hidden_layers=self.experiment_config.hparams[
-                        constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value,
-                    hidden_activation=self.experiment_config.hparams[
-                        constants.NEURAL_NETWORKS.ACTIVATION_FUNCTION].value
-                )
+                    hidden_dim=hidden_dim,
+                    num_hidden_layers=hidden_layers,
+                    hidden_activation=activation)
                 self.policy_network = self.policy_network.load_state_dict(torch.load(self.save_path))
             except Exception as e:
                 Logger.__call__().get_logger().warning(
@@ -75,7 +82,10 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: the selected action
         """
         state = torch.from_numpy(o).float()
-        state1 = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
+        device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
+        if not isinstance(device, str):
+            raise ValueError(f"Device must be a str, got type: {type(device)}")
+        state1 = state.to(str(torch.device(device)))
 
         # Forward pass using the current policy network to predict P(a|s)
         action_probs = self.policy_network(state1).squeeze()
@@ -101,7 +111,10 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: The sampled action id and the log probability
         """
         state1 = torch.from_numpy(state.flatten()).float()
-        state2 = state1.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
+        device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
+        if not isinstance(device, str):
+            raise ValueError(f"Device must be a str, got type: {type(device)}")
+        state2 = state1.to(torch.device(device))
 
         # Forward pass using the current policy network to predict P(a|s)
         action_probs = self.policy_network(state2).squeeze()

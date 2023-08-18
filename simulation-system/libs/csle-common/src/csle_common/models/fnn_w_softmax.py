@@ -11,9 +11,8 @@ class FNNwithSoftmax(torch.nn.Module):
     Sub-classing the torch.nn.Module to be able to use high-level API for creating the custom network
     """
 
-    def __init__(self, input_dim: int, output_dim: int, hidden_dim: Union[int, float, str, List[Any]],
-                 num_hidden_layers: Union[int, float, str, List[Any]] = 2,
-                 hidden_activation: Union[int, float, str, List[Any]] = "ReLU"):
+    def __init__(self, input_dim: int, output_dim: int, hidden_dim: int, num_hidden_layers: int = 2,
+                 hidden_activation: str = "ReLU"):
         """
         Builds the model
 
