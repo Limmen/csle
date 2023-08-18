@@ -262,7 +262,8 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
         """
         obj = EmulationAttackerMachineObservationState(ips=d["ips"])
         obj.os = d["os"]
-        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
+        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"])) if d["ports"] \
+            is not [] else d["ports"]
         obj.cve_vulns = list(map(lambda x: EmulationVulnerabilityObservationState.from_dict(x), d["cve_vulns"]))
         obj.osvdb_vulns = list(map(lambda x: EmulationVulnerabilityObservationState.from_dict(x), d["osvdb_vulns"]))
         obj.shell_access = d["shell_access"]

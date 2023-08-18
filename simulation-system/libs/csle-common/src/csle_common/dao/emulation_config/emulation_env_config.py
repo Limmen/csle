@@ -431,7 +431,7 @@ class EmulationEnvConfig(JSONSerializable):
         config.static_attacker_sequences = static_attacker_sequences
         return config
 
-    def get_network_by_name(self, net_name: str) -> ContainerNetwork:
+    def get_network_by_name(self, net_name: str) -> Optional[ContainerNetwork]:
         """
         Gets the network by name from the config
 
@@ -441,3 +441,5 @@ class EmulationEnvConfig(JSONSerializable):
         for c in self.containers_config.networks:
             if c.name == net_name:
                 return c
+            
+        return None
