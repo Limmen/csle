@@ -46,10 +46,11 @@ class NodeResourcesConfig(JSONSerializable):
         """
         ips_and_network_configs = []
         for ip, cfg in d["ips_and_network_configs"]:
-            parsed_cfg = None
             if cfg is not None:
                 parsed_cfg = NodeNetworkConfig.from_dict(cfg)
-            ips_and_network_configs.append((ip, parsed_cfg))
+            else:
+                parsed_cfg = NodeNetworkConfig()
+            ips_and_network_configs.append((str(ip), parsed_cfg))
         obj = NodeResourcesConfig(
             container_name=d["container_name"],
             ips_and_network_configs=ips_and_network_configs,

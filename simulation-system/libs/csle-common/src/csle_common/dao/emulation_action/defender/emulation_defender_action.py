@@ -79,7 +79,7 @@ class EmulationDefenderAction(JSONSerializable):
         d["ips"] = list(self.ips)
         d["index"] = self.index
         d["action_outcome"] = self.action_outcome
-        d["alt_cmds"] = list(self.alt_cmds)
+        d["alt_cmds"] = list(self.alt_cmds) if self.alt_cmds is not None else []
         d["execution_time"] = self.execution_time
         d["ts"] = self.ts
         return d
@@ -106,7 +106,7 @@ class EmulationDefenderAction(JSONSerializable):
         ts = time.time()
         record = f"{ts},{self.id},{self.descr},{self.index},{self.name}," \
                  f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type}," \
-                 f"{self.action_outcome},{'_'.join(self.alt_cmds)}"
+                 f"{self.action_outcome},{'_'.join(self.alt_cmds) if self.alt_cmds is not None else []}"
         return record
 
     @staticmethod

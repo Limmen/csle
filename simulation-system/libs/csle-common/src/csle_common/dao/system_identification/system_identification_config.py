@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 from csle_base.json_serializable import JSONSerializable

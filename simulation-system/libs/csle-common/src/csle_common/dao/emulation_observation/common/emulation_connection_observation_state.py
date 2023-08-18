@@ -25,8 +25,6 @@ class EmulationConnectionObservationState(JSONSerializable):
         :param proxy: a proxy for the connection
         :param ip: the ip of the connection
         """
-        if proxy is not None:
-            assert ip != proxy.ip
         self.conn = conn
         self.credential = credential
         self.root = root

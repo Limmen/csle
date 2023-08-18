@@ -196,7 +196,7 @@ class EmulationAttackerActionConfig(JSONSerializable):
             attacker_actions.append(EmulationAttackerNMAPActions.HTTP_ENUM(index=idx))
             attacker_actions.append(EmulationAttackerNMAPActions.HTTP_GREP(index=idx))
             attacker_actions.append(EmulationAttackerNMAPActions.VULSCAN(index=idx))
-            attacker_actions.append(EmulationAttackerNMAPActions.FINGER(index=idx)),
+            attacker_actions.append(EmulationAttackerNMAPActions.FINGER(index=idx))
             attacker_actions.append(EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=idx))
             attacker_actions.append(EmulationAttackerShellActions.SHELLSHOCK_EXPLOIT(index=idx))
             attacker_actions.append(EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=idx))

@@ -71,7 +71,7 @@ class LinearTabularPolicy(Policy):
         taken_action = self.action(o=o)
         return taken_action == a
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> Any:
+    def stage_policy(self, o: Any) -> Any:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 

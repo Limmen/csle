@@ -1,5 +1,3 @@
-import logging
-import pytest
 from csle_common.util.general_util import GeneralUtil
 
 
@@ -7,8 +5,6 @@ class TestShellUtilSuite:
     """
     Test suite for general_util.py
     """
-
-    pytest.logger = logging.getLogger("general_util_tests")
 
     def test_execute_service_login_helper(self) -> None:
         """

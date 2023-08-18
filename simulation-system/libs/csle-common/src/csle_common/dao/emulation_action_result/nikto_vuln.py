@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any
+from typing import Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state \
     import EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol

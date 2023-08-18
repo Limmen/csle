@@ -22,8 +22,7 @@ class EmulationAttackerNetworkServiceActions:
         if ips is None:
             ips = []
         id = EmulationAttackerActionId.NETWORK_SERVICE_LOGIN
-        cmd = []
-        return EmulationAttackerAction(id=id, name="Network service login", cmds=cmd,
+        return EmulationAttackerAction(id=id, name="Network service login", cmds=[],
                                        type=EmulationAttackerActionType.POST_EXPLOIT,
                                        descr="Uses known credentials to login to network services on a server",
                                        index=index,

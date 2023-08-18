@@ -21,9 +21,9 @@ class SingletonType(type):
         :param kwargs: keyword arguments
         :return: the instance
         """
-        if cls not in cls._instances:
-            cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+        if cls not in cls._instances:  # type: ignore
+            cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)  # type: ignore
+        return cls._instances[cls]  # type: ignore
 
 
 class Logger(metaclass=SingletonType):
@@ -49,14 +49,14 @@ class Logger(metaclass=SingletonType):
         log_path = os.path.join(log_dir, (str(log_file_name)))
 
         # Create logger object and set the format for logging and other attributes
-        logger = logging.Logger(log_file_name)
-        logger.setLevel(logging.INFO)
+        self.logger = logging.Logger(log_file_name)
+        self.logger.setLevel(logging.INFO)
 
         try:
-            self.setup_logfile(log_path=log_path, logger=logger)
+            self.setup_logfile(log_path=log_path, logger=self.logger)
         except Exception:
             log_path = os.path.join(".", (str(log_file_name)))
-            self.setup_logfile(log_path=log_path, logger=logger)
+            self.setup_logfile(log_path=log_path, logger=self.logger)
 
     def setup_logfile(self, log_path, logger) -> None:
         """
@@ -71,7 +71,7 @@ class Logger(metaclass=SingletonType):
         handler.setFormatter(
             CustomFormatter('%(asctime)s - %(levelname)-10s - %(filename)s - %(funcName)s - %(message)s'))
         logger.addHandler(handler)
-        handler = logging.StreamHandler(sys.stdout)
+        handler = logging.StreamHandler(sys.stdout)  # type: ignore
         logger.addHandler(handler)
         self.logger = logger
         self._log_path = log_path

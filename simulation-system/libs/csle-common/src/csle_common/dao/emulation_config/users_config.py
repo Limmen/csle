@@ -55,7 +55,9 @@ class UsersConfig(JSONSerializable):
         root_usernames: List[str] = []
         for users_config in self.users_configs:
             if users_config.ip in ips:
-                root_usernames = root_usernames + users_config.users
+                for user in users_config.users:
+                    if user.root:
+                        root_usernames.append(user.username)
         return root_usernames
 
     @staticmethod

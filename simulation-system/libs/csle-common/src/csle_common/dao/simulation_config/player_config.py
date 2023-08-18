@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union
+from typing import Dict, Any
 from csle_base.json_serializable import JSONSerializable
 
 

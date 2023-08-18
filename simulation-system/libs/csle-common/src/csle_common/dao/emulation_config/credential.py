@@ -52,7 +52,10 @@ class Credential(JSONSerializable):
 
         :return: a dto representation of the object
         """
-        dto = Credential(username=d["username"], port=d["port"], protocol=TransportProtocol._from_str(d["protocol"]),
+        protocol = None
+        if d["protocol"] is not None:
+            protocol = TransportProtocol._from_str(d["protocol"])
+        dto = Credential(username=d["username"], port=d["port"], protocol=protocol,
                          pw=d["pw"], service=d["service"], root=d["root"])
         return dto
 

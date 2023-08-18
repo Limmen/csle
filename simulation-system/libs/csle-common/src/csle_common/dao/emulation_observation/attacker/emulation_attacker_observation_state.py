@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Set[str] = set()):
+    def __init__(self, catched_flags: int, agent_reachable: Set[str]):
         """
         Initializes the state
 

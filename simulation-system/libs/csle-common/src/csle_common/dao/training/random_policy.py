@@ -1,7 +1,5 @@
 from typing import Union, List, Dict, Optional, Tuple, Any
 import random
-import numpy as np
-from numpy.typing import NDArray
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
@@ -81,14 +79,16 @@ class RandomPolicy(Policy):
         d["policy_type"] = self.policy_type
         return d
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> NDArray[Any]:
+    def stage_policy(self, o: Any) -> Union[List[List[float]], List[float]]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
         :param o: the latest observation
         :return: the |S|x|A| stage policy
         """
-        return np.array(self.stage_policy_tensor)
+        if self.stage_policy_tensor is None:
+            raise ValueError("Stage policy is None")
+        return self.stage_policy_tensor
 
     def __str__(self) -> str:
         """

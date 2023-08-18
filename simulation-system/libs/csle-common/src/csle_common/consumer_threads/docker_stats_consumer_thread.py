@@ -1,3 +1,4 @@
+from typing import List
 import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
@@ -26,7 +27,7 @@ class DockerStatsConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.docker_stats = docker_stats
-        self.docker_stats_list = []
+        self.docker_stats_list: List[DockerStats] = []
         self.auto_offset_reset = auto_offset_reset
         self.ts = time.time()
         self.kafka_conf = {

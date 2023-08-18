@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Dict, Any
 import numpy as np
 from numpy.typing import NDArray
 from csle_base.json_serializable import JSONSerializable
@@ -35,10 +35,7 @@ class TransitionOperatorConfig(JSONSerializable):
         :return: a dict representation of the object
         """
         d: Dict[str, Any] = {}
-        if isinstance(self.transition_tensor, type(NDArray[Any])):
-            tensor = self.transition_tensor.tolist()
-        else:
-            tensor = self.transition_tensor
+        tensor = list(self.transition_tensor)
         for i in range(len(tensor)):
             if isinstance(tensor[i], np.ndarray):
                 tensor[i] = tensor[i].tolist()

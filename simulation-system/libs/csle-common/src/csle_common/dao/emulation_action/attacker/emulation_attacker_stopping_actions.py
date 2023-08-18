@@ -4,6 +4,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id impo
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 from typing import List
 
+
 class EmulationAttackerStoppingActions:
     """
     Class implementing stopping actions for the attacker in the emulation
@@ -17,10 +18,9 @@ class EmulationAttackerStoppingActions:
         :param index: index of the machine to apply the action to
         :return: the action
         """
-        id: int = EmulationAttackerActionId.STOP
         cmd: List[str] = []
         alt_cmd: List[str] = []
-        return EmulationAttackerAction(id=id, name="Abort Intrusion", cmds=cmd,
+        return EmulationAttackerAction(id=EmulationAttackerActionId.STOP, name="Abort Intrusion", cmds=cmd,
                                        type=EmulationAttackerActionType.STOP,
                                        descr="Aborts an ongoing intrusion",
                                        index=index,

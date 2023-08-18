@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -35,10 +35,7 @@ class RewardFunctionConfig(JSONSerializable):
         :return: a dict representation  of the object
         """
         d: Dict[str, Any] = {}
-        if isinstance(self.reward_tensor, type(NDArray[Any])):
-            tensor = self.reward_tensor.tolist()
-        else:
-            tensor = self.reward_tensor
+        tensor = list(self.reward_tensor)
         for i in range(len(tensor)):
             if isinstance(tensor[i], np.ndarray):
                 tensor[i] = tensor[i].tolist()

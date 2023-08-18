@@ -1,7 +1,7 @@
 """
 Network configuration of a container in the emulation
 """
-from typing import Dict, Any, Union, Optional
+from typing import Dict, Any
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 import csle_common.constants.constants as constants

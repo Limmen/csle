@@ -34,7 +34,7 @@ class GaussianMixtureSystemModel(SystemModel):
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
         self.id = -1
-        self.conditionals_kl_divergences: Dict[Dict[Dict[str, float]]] = {}
+        self.conditionals_kl_divergences: Dict[str, Dict[str, Dict[str, float]]] = {}
         self.compute_kl_divergences()
 
     def compute_kl_divergences(self) -> None:
@@ -57,8 +57,7 @@ class GaussianMixtureSystemModel(SystemModel):
                             self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                                 metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
                         self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
-                            metric_distributions_condition_2[0].conditional_name][
-                            metric_dist.metric_name] = "inf"
+                            metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name] = math.inf
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GaussianMixtureSystemModel":

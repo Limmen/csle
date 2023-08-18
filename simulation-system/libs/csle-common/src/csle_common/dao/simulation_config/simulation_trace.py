@@ -16,7 +16,7 @@ class SimulationTrace(JSONSerializable):
         Initializes the DTO
         """
         self.simulation_env = simulation_env
-        self.attacker_rewards:List[float] = []
+        self.attacker_rewards: List[float] = []
         self.defender_rewards: List[float] = []
         self.attacker_observations: List[Any] = []
         self.defender_observations: List[Any] = []
@@ -109,11 +109,11 @@ class SimulationTrace(JSONSerializable):
         """
         if traces_file is None:
             traces_file = constants.SYSTEM_IDENTIFICATION.SIMULATION_TRACES_FILE
-        traces = list(map(lambda x: x.to_dict(), traces))
+        traces_dicts = list(map(lambda x: x.to_dict(), traces))
         if not os.path.exists(traces_save_dir):
             os.makedirs(traces_save_dir)
         with open(traces_save_dir + constants.COMMANDS.SLASH_DELIM + traces_file, 'w') as fp:
-            json.dump({"traces": traces}, fp, cls=NpEncoder)
+            json.dump({"traces": traces_dicts}, fp, cls=NpEncoder)
 
     @staticmethod
     def load_traces(traces_save_dir: str, traces_file: Optional[str] = None) -> List["SimulationTrace"]:
@@ -130,9 +130,8 @@ class SimulationTrace(JSONSerializable):
         if os.path.exists(path):
             with open(path, 'r') as fp:
                 d = json.load(fp)
-                traces = d["traces"]
-                traces = list(map(lambda x: SimulationTrace.from_dict(x), traces))
-                return traces
+                traces: List[Dict[str, Any]] = d["traces"]
+                return list(map(lambda x: SimulationTrace.from_dict(x), traces))
         else:
             print("Warning: Could not read traces file, path does not exist:{}".format(path))
             return []

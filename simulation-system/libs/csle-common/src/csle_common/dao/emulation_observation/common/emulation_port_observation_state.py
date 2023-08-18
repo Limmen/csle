@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union
+from typing import Dict, Any
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_base.json_serializable import JSONSerializable
@@ -91,7 +91,8 @@ class EmulationPortObservationState(JSONSerializable):
         return service
 
     @staticmethod
-    def from_network_service(network_service: NetworkService, service_lookup: Dict[str, str]) -> "EmulationPortObservationState":
+    def from_network_service(network_service: NetworkService,
+                             service_lookup: Dict[str, str]) -> "EmulationPortObservationState":
         """
         Converts a network service into a port observation state
 

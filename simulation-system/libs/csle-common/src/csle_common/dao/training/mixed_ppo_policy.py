@@ -1,6 +1,5 @@
 from typing import List, Dict, Union, Any
 import numpy as np
-from numpy.typing import NDArray
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType

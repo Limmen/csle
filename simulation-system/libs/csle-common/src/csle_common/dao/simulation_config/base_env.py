@@ -4,7 +4,7 @@ import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 
 
-class BaseEnv(gym.Env, ABC):
+class BaseEnv(gym.Env, ABC):  # type: ignore
     """
     Abstract class representing a csle Environment
     """

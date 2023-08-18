@@ -47,8 +47,7 @@ class NmapBruteCredentials(JSONSerializable):
         :param other: the object to compare with
         :return: True if equal otherwise False
         """
-        return (self.username == other.username and
-                self.pw == other.pw)
+        return bool(self.username == other.username and self.pw == other.pw)
 
     def to_obs(self) -> Credential:
         """

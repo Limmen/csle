@@ -16,7 +16,7 @@ class GeneralUtil:
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
-        return s.getsockname()[0]
+        return str(s.getsockname()[0])
 
     @staticmethod
     def replace_first_octet_of_ip(ip: str, ip_first_octet: int) -> str:

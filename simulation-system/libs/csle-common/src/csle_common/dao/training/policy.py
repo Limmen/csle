@@ -32,7 +32,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Converts the object to a dict representation
 
@@ -52,7 +52,7 @@ class Policy(JSONSerializable):
 
     @staticmethod
     @abstractmethod
-    def from_dict(d: Dict) -> "Policy":
+    def from_dict(d: Dict[str, Any]) -> "Policy":
         """
         Converts a dict representation of the object to an instance
 

@@ -1,3 +1,4 @@
+from typing import List
 import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
@@ -26,7 +27,7 @@ class ClientPopulationConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.client_population_metrics = client_population_metrics
-        self.client_population_metrics_list = []
+        self.client_population_metrics_list: List[ClientPopulationMetrics] = []
         self.ts = time.time()
         self.auto_offset_reset = auto_offset_reset
         self.kafka_conf = {

@@ -44,13 +44,13 @@ class TrafficConfig(JSONSerializable):
             client_population_config=ClientPopulationConfig.from_dict(d["client_population_config"]))
         return obj
 
-    def to_dict(self) -> Dict[str, Union[List[NodeTrafficConfig], ClientPopulationConfig]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Converts the object to a dict representation
         
         :return: a dict representation of the object
         """
-        d: Dict[str, Union[List[NodeTrafficConfig], ClientPopulationConfig]] = {}
+        d: Dict[str, Any] = {}
         d["node_traffic_configs"] = list(map(lambda x: x.to_dict(), self.node_traffic_configs))
         d["client_population_config"] = self.client_population_config.to_dict()
         return d

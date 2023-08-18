@@ -66,7 +66,7 @@ class NodeFirewallConfig(JSONSerializable):
             output_drop=set(d["output_drop"]),
             input_drop=set(d["input_drop"]),
             forward_drop=set(d["forward_drop"]),
-            routes=set(list(map(lambda x: tuple(x), d["routes"]))),
+            routes=set(list(map(lambda x: (str(x[0]), str(x[1])), d["routes"]))),
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"],
             physical_host_ip=d["physical_host_ip"]
         )

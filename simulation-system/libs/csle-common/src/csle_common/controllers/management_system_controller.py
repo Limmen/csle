@@ -159,7 +159,7 @@ class ManagementSystemController:
                     pass
                 sys.stdout.flush()
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
-        cmd = cmd.replace("python", shutil.which("python"))
+        cmd = cmd.replace("python", str(shutil.which("python")))
         cmd = cmd.replace(f"${constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM}",
                           os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM])
         logger.info(f"Starting flask with the command: {cmd}")
@@ -575,7 +575,7 @@ class ManagementSystemController:
         :return: True if it is running, false otherwise
         """
         logger.info(f"Checking if PID: {pid} is running")
-        return psutil.pid_exists(pid)
+        return bool(psutil.pid_exists(pid))
 
     @staticmethod
     def stop_pid(pid, logger: logging.Logger) -> bool:

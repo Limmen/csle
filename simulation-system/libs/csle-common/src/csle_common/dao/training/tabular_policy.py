@@ -44,7 +44,7 @@ class TabularPolicy(Policy):
         :param o: the input observation
         :return: the next action and its probability
         """
-        return np.random.choice(np.arange(0, len(self.lookup_table[int(o)])), p=self.lookup_table[int(o)])
+        return int(np.random.choice(np.arange(0, len(self.lookup_table[int(o)])), p=self.lookup_table[int(o)]))
 
     def probability(self, o: Union[int, float], a: int) -> float:
         """

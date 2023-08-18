@@ -55,7 +55,7 @@ class ContainersConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["agent_ip"] = self.agent_ip
         d["router_ip"] = self.router_ip
         d["networks"] = list(map(lambda x: x.to_dict(), self.networks))
@@ -105,6 +105,8 @@ class ContainersConfig(JSONSerializable):
         :return: list of ips reachable for the attacker agent
         """
         agent_container = self.get_agent_container()
+        if agent_container is None:
+            raise ValueError("Agent container is None")
         return self.get_reachable_ips(container=agent_container)
 
     def get_container_from_ip(self, ip: str) -> Union[NodeContainerConfig, None]:

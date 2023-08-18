@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Set, Union
+from typing import List, Dict, Any, Set
 import math
 from scipy.special import rel_entr
 from csle_common.dao.system_identification.gp_conditional import GPConditional

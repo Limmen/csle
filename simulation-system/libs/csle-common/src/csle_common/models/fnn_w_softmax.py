@@ -2,7 +2,7 @@
 A FNN model with Softmax output defined in PyTorch
 """
 import torch
-from typing import Union, Any, List 
+
 
 class FNNwithSoftmax(torch.nn.Module):
     """

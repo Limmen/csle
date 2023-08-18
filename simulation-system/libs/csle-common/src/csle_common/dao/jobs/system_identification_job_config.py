@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
@@ -74,12 +74,12 @@ class SystemIdentificationJobConfig(JSONSerializable):
         :return: the created instance
         """
         # system_model = None
-        parse_models = [GaussianMixtureSystemModel, EmpiricalSystemModel,
-                        GPSystemModel, MCMCSystemModel]
-        system_model = None
+        parse_models = [GaussianMixtureSystemModel.from_dict, EmpiricalSystemModel.from_dict,
+                        GPSystemModel.from_dict, MCMCSystemModel.from_dict]
+        system_model: Union[None, SystemModel] = None
         for parse_model in parse_models:
             try:
-                system_model = parse_model.from_dict(d['system_model'])
+                system_model = parse_model(d['system_model'])
                 break
             except Exception:
                 pass

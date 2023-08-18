@@ -174,7 +174,8 @@ class TestResourcesDataCollectionSuite:
             snort_ids_rule_counters=SnortIdsRuleCounters(), ossec_ids_alert_counters=OSSECIdsAlertCounters(),
             aggregated_host_metrics=HostMetrics(), defender_actions=[], attacker_actions=[])
         e_trace = EmulationTrace(
-            initial_attacker_observation_state=EmulationAttackerObservationState(catched_flags=7, agent_reachable=None),
+            initial_attacker_observation_state=EmulationAttackerObservationState(catched_flags=7,
+                                                                                 agent_reachable=set()),
             initial_defender_observation_state=e_d_o_state,
             emulation_name="JohnDoeEmulation")
         obj = DataCollectionJobConfig(emulation_env_name="JDoe_env", num_collected_steps=10,

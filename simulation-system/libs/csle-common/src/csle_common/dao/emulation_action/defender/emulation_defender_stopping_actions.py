@@ -4,6 +4,7 @@ from csle_common.dao.emulation_action.defender.emulation_defender_action_id impo
 from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
 from typing import List
 
+
 class EmulationDefenderStoppingActions:
     """
     Class implementing stopping actions for the defender

@@ -245,15 +245,16 @@ class EmulationEnvConfig(JSONSerializable):
             raise ValueError("No agent_container obtained")
         else:
             hacker_ip = container.docker_gw_bridge_ip
-        if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
-                and self.connections[hacker_ip].get_transport() is not None \
-                and self.connections[hacker_ip].get_transport().is_active():
-            try:
-                SSHUtil.execute_ssh_cmds(cmds=["ls > /dev/null"], conn=self.connections[hacker_ip])
-            except Exception as e:
-                Logger.__call__().get_logger().info(f"Reconnecting attacker, {str(e), repr(e)}")
-                self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=False)
-        else:
+        connected = False
+        if hacker_ip in self.connections and self.connections[hacker_ip] is not None:
+            transport = self.connections[hacker_ip].get_transport()
+            if transport is not None and transport.is_active():
+                try:
+                    SSHUtil.execute_ssh_cmds(cmds=["ls > /dev/null"], conn=self.connections[hacker_ip])
+                    connected = True
+                except Exception:
+                    pass
+        if not connected:
             self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=False)
         return self.connections[hacker_ip]
 

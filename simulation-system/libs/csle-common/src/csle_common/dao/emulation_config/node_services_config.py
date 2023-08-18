@@ -24,7 +24,7 @@ class NodeServicesConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["services"] = list(map(lambda x: x.to_dict(), self.services))
         d["ip"] = self.ip
         return d

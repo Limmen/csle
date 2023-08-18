@@ -19,8 +19,8 @@ class DQNPolicy(Policy):
     A neural network policy learned with DQN
     """
 
-    def __init__(self, model: Optional[DQN], simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
-                 actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
+    def __init__(self, model: Optional[DQN], simulation_name: str, save_path: str, player_type: PlayerType,
+                 states: List[State], actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
 

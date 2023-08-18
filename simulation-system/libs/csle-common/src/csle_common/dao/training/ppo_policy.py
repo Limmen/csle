@@ -1,6 +1,5 @@
 from typing import List, Dict, Union, Any, Optional
 import numpy as np
-from numpy.typing import NDArray
 import torch
 import math
 import iteround
@@ -20,7 +19,8 @@ class PPOPolicy(Policy):
     A neural network policy learned with PPO
     """
 
-    def __init__(self, model: Optional[PPO], simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
+    def __init__(self, model: Optional[PPO], simulation_name: str, save_path: str, player_type: PlayerType,
+                 states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy

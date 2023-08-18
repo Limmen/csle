@@ -49,8 +49,7 @@ class EmpiricalSystemModel(SystemModel):
                             self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                                 metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
                         self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
-                            metric_distributions_condition_2[0].conditional_name][
-                            metric_dist.metric_name] = "inf"
+                            metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name] = math.inf
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmpiricalSystemModel":
