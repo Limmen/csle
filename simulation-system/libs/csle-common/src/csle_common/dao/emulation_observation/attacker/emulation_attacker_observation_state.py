@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Set[str]):
+    def __init__(self, catched_flags: int, agent_reachable: Set[str] = set()):
         """
         Initializes the state
 
@@ -188,8 +188,8 @@ class EmulationAttackerObservationState(JSONSerializable):
         :return: a copy of the state
         """
         c = EmulationAttackerObservationState(catched_flags=self.catched_flags,
-                                              agent_reachable=self.agent_reachable.copy())
-        c.actions_tried = self.actions_tried.copy()
+                                              agent_reachable=self.agent_reachable)
+        c.actions_tried = self.actions_tried
         for m in self.machines:
             c.machines.append(m.copy())
         return c

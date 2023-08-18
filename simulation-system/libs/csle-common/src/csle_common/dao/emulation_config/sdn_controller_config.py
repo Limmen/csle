@@ -57,8 +57,6 @@ class SDNControllerConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        if d is None:
-            return None
         obj = SDNControllerConfig(
             container=NodeContainerConfig.from_dict(d["container"]),
             resources=NodeResourcesConfig.from_dict(d["resources"]),

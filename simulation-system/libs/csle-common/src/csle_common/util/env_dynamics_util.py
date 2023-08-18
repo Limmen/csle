@@ -37,10 +37,6 @@ class EnvDynamicsUtil:
         merged_obs_state.catched_flags = max(old_obs_state.catched_flags, new_obs_state.catched_flags)
         merged_obs_state.machines = EnvDynamicsUtil.merge_new_obs_with_old(
             old_obs_state.machines, new_obs_state.machines, emulation_env_config=emulation_env_config, action=None)
-        if old_obs_state.agent_reachable is None:
-            old_obs_state.agent_reachable = set()
-        if new_obs_state.agent_reachable is None:
-            new_obs_state.agent_reachable = set()
         merged_obs_state.agent_reachable = old_obs_state.agent_reachable.union(new_obs_state.agent_reachable)
         return merged_obs_state
 
