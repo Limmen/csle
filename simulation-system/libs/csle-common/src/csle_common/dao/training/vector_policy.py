@@ -37,7 +37,7 @@ class VectorPolicy(Policy):
         :param o: the input observation
         :return: the next action and its probability
         """
-        return np.random.choice(np.arange(0, len(self.policy_vector)), p=self.policy_vector)
+        return float(np.random.choice(np.arange(0, len(self.policy_vector)), p=self.policy_vector))
 
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         """
