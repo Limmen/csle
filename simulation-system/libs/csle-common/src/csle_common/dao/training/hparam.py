@@ -7,7 +7,7 @@ class HParam(JSONSerializable):
     DTO class representing a hyperparameter
     """
 
-    def __init__(self, value: Union[int, float, str, List], name: str, descr: str):
+    def __init__(self, value: Union[int, float, str, List[Any]], name: str, descr: str):
         """
         Initializes the DTO
 
