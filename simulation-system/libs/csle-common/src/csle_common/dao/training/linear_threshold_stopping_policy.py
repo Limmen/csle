@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union, Optional
+from typing import List, Dict, Tuple, Union, Optional, Any
 import math
 import numpy as np
 from csle_common.dao.training.policy import Policy
@@ -57,7 +57,7 @@ class LinearThresholdStoppingPolicy(Policy):
         else:
             raise NotImplementedError("Attacker not implemented yet")
 
-    def probability(self, o: List[float], a: int) -> int:
+    def probability(self, o: List[float], a: int) -> float:
         """
         Probability of a given action
 
@@ -102,11 +102,11 @@ class LinearThresholdStoppingPolicy(Policy):
         else:
             return 0, 1
 
-    def to_dict(self) -> Dict[str, List[float]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["theta"] = self.theta
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
@@ -124,7 +124,7 @@ class LinearThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "LinearThresholdStoppingPolicy":
+    def from_dict(d: Dict[str, Any]) -> "LinearThresholdStoppingPolicy":
         """
         Converst a dict representation of the object to an instance
 

@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union, Optional
+from typing import List, Dict, Tuple, Union, Optional, Any
 import math
 import random
 import numpy as np
@@ -61,7 +61,7 @@ class MultiThresholdStoppingPolicy(Policy):
             a, _ = self._attacker_action(o=o)
             return a
 
-    def probability(self, o: List[float], a: int) -> int:
+    def probability(self, o: List[float], a: int) -> float:
         """
         Probability of a given action
 
@@ -88,6 +88,8 @@ class MultiThresholdStoppingPolicy(Policy):
         l = int(o[0])
         theta_val = self.theta[int(s * self.L + l - 1)]
         if defender_stopping_prob is None:
+            if self.opponent_strategy is None:
+                raise ValueError("The opponent strateg is None")
             a1, prob = self.opponent_strategy._defender_action(o=o)
             if a1 == 1:
                 defender_stopping_prob = prob
@@ -105,7 +107,7 @@ class MultiThresholdStoppingPolicy(Policy):
             raise ValueError(f"Invalid state: {s}, valid states are: 0 and 1")
         return a, attacker_action_prob
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[int], List[float]]) -> List[List[float]]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
@@ -124,6 +126,8 @@ class MultiThresholdStoppingPolicy(Policy):
             return stage_policy
         else:
             stage_policy = []
+            if self.opponent_strategy is None:
+                raise ValueError("The opponent strategy is None")
             a1, defender_stopping_probability = self.opponent_strategy._defender_action(o=o)
             if a1 == 0:
                 defender_stopping_probability = 1 - defender_stopping_probability
@@ -205,22 +209,22 @@ class MultiThresholdStoppingPolicy(Policy):
         :return: the stopping probability
         """
         if (1 - round(b1, 2)) == 0:
-            return 1
+            return 1.0
         if round(b1, 2) == 0:
-            return 0
+            return 0.0
         if (threshold * (1 - b1)) > 0 and (b1 * (1 - threshold)) / (threshold * (1 - b1)) > 0:
             try:
                 return math.pow(1 + math.pow(((b1 * (1 - threshold)) / (threshold * (1 - b1))), k), -1)
             except Exception:
-                return 0
+                return 0.0
         else:
-            return 0
+            return 0.0
 
-    def to_dict(self) -> Dict[str, List[float]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["theta"] = self.theta
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
@@ -239,7 +243,7 @@ class MultiThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MultiThresholdStoppingPolicy":
+    def from_dict(d: Dict[str, Any]) -> "MultiThresholdStoppingPolicy":
         """
         Convert a dict representation of the object to an instance
 
@@ -261,7 +265,7 @@ class MultiThresholdStoppingPolicy(Policy):
         """
         return list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3), self.theta))
 
-    def stop_distributions(self) -> Dict[str, Dict[str, List[float]]]:
+    def stop_distributions(self) -> Dict[str, List[float]]:
         """
         :return: the stop distributions and their names
         """
