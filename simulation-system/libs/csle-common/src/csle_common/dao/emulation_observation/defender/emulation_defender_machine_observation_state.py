@@ -114,7 +114,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             docker_stats=DockerStats.from_dict(d["docker_stats"]),
             snort_ids_ip_alert_counters=ip_alert_counters, ossec_ids_alert_counters=ossec_alert_counters)
         obj.os = d["os"]
-        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
+        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"])) if \
+            d["ports"] is not None else d["ports"]
         obj.ssh_connections = list(map(lambda x: EmulationConnectionObservationState.from_dict(x),
                                        d["ssh_connections"]))
         return obj
