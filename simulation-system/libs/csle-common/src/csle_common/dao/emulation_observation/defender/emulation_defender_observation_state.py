@@ -158,7 +158,7 @@ class EmulationDefenderObservationState(JSONSerializable):
             snort_ids_rule_counters=SnortIdsRuleCounters.from_dict(d["snort_ids_rule_counters"]),
             snort_ids_alert_counters=SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"]))
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
-        obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
+        obj.actions_tried = set(list(map(lambda x: x, d["actions_tried"])))
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
@@ -175,7 +175,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         d: Dict[str, Any] = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
-        d["actions_tried"] = list(self.actions_tried)
+        d["actions_tried"] = self.actions_tried
         if self.client_population_metrics is None or self.docker_stats is None \
                 or self.snort_ids_alert_counters is None or self.snort_ids_rule_counters is None or \
                 self.ossec_ids_alert_counters is None:
