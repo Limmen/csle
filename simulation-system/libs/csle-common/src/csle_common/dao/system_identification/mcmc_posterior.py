@@ -37,7 +37,7 @@ class MCMCPosterior(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["posterior_name"] = self.posterior_name
         d["samples"] = self.samples
         d["densities"] = self.densities

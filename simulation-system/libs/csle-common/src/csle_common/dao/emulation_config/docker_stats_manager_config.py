@@ -49,7 +49,7 @@ class DockerStatsManagerConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["docker_stats_manager_port"] = self.docker_stats_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
