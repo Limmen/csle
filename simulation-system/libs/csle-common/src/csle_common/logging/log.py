@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import Dict
 import datetime
 import sys
 import csle_common.constants.constants as constants
@@ -10,7 +11,7 @@ class SingletonType(type):
     """
     Singleton type class
     """
-    _instances = {}
+    _instances: Dict[str, str] = {}
 
     def __call__(cls, *args, **kwargs):
         """

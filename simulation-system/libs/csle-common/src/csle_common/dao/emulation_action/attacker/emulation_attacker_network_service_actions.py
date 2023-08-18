@@ -2,7 +2,7 @@ from typing import Optional, List
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerActionOutcome
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 
 
 class EmulationAttackerNetworkServiceActions:
