@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Optional[Set[str]] = None):
+    def __init__(self, catched_flags: int, agent_reachable: Set[str]):
         """
         Initializes the state
 
@@ -24,8 +24,6 @@ class EmulationAttackerObservationState(JSONSerializable):
         self.catched_flags = catched_flags
         self.actions_tried: Set[Tuple[int, int, str]] = set()
         self.agent_reachable = agent_reachable
-        if agent_reachable is None:
-            self.agent_reachable = set()
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationAttackerObservationState":
@@ -189,8 +187,6 @@ class EmulationAttackerObservationState(JSONSerializable):
         """
         :return: a copy of the state
         """
-        if self.agent_reachable is None:
-            raise ValueError("agent_reachable is None")
         c = EmulationAttackerObservationState(catched_flags=self.catched_flags,
                                               agent_reachable=self.agent_reachable.copy())
         c.actions_tried = self.actions_tried.copy()
@@ -234,8 +230,6 @@ class EmulationAttackerObservationState(JSONSerializable):
         :return: get the schema of the DTO
         """
         dto = EmulationAttackerObservationState(catched_flags=0, agent_reachable=set())
-        if dto.agent_reachable is None:
-            raise ValueError("agent_reachable is None")
         dto.agent_reachable.add("")
         dto.actions_tried.add((-1, -1, ""))
         dto.machines = [EmulationAttackerMachineObservationState.schema()]

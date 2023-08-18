@@ -61,7 +61,7 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         a = self.model.predict(np.array(o), deterministic=False)[0]
-        return a
+        return int(a)
 
     def probability(self, o: Union[List[float], List[int]], a: int) -> float:
         """

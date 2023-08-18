@@ -81,7 +81,7 @@ class EmulationEnvState(JSONSerializable):
 
         :return: None
         """
-        agent_reachable = None
+        agent_reachable = set()
         if self.attacker_obs_state is not None:
             agent_reachable = self.attacker_obs_state.agent_reachable
             for m in self.attacker_obs_state.machines:
