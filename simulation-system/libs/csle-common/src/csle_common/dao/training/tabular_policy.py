@@ -1,5 +1,6 @@
 from typing import Union, List, Dict, Any, Optional
 import numpy as np
+from numpy.typing import NDArray
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
@@ -36,7 +37,7 @@ class TabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.TABULAR
 
-    def action(self, o: Union[int, float]) -> Union[int, float]:
+    def action(self, o: Union[int, float]) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Selects the next action
 

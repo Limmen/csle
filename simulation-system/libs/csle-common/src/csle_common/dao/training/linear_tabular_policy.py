@@ -1,6 +1,7 @@
 from typing import List, Dict, Union, Optional, Any
 import iteround
 import numpy as np
+from numpy.typing import NDArray
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
@@ -46,7 +47,7 @@ class LinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> Union[int, float]:
+    def action(self, o: List[float]) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Multi-threshold stopping policy
 

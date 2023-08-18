@@ -219,7 +219,7 @@ class ExperimentUtil:
         :return: the default output dir
         """
         script_dir = ExperimentUtil.get_script_path()
-        return script_dir
+        return str(script_dir)
 
     @staticmethod
     def default_emulation_config_path(out_dir: Optional[str] = None) -> str:
