@@ -67,6 +67,8 @@ class NmapVuln(JSONSerializable):
         """
         :return: a string representation of the object
         """
+        if self.credentials is None:
+            raise ValueError("Credential list is None")
         return f"name:{self.name}, port:{self.port}, protocol:{self.protocol}, cvss:{self.cvss}, " \
                f"service:{self.service}, credentials:{list(map(lambda x: str(x), self.credentials))}"
 
@@ -82,7 +84,8 @@ class NmapVuln(JSONSerializable):
         d["protocol"] = self.protocol
         d["cvss"] = self.cvss
         d["service"] = self.service
-        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials)) if \
+            self.credentials is not None else self.credentials
         return d
 
     @staticmethod

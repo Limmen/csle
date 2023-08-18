@@ -64,7 +64,7 @@ class NmapPort(JSONSerializable):
         :param other: the object to compare with
         :return: True if equal otherwise False
         """
-        return (self.port_id == other.port_id)
+        return bool(self.port_id == other.port_id)
 
     def to_obs(self) -> EmulationPortObservationState:
         """

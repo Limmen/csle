@@ -51,7 +51,7 @@ class ServicesConfig(JSONSerializable):
         :param ips: the list of ips
         :return: the list of services
         """
-        services = []
+        services: List[NetworkService] = []
         for service_config in self.services_configs:
             if service_config.ip in ips:
                 services = services + service_config.services
