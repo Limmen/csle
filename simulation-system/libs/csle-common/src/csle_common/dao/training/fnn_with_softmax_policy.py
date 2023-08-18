@@ -176,7 +176,7 @@ class FNNWithSoftmaxPolicy(Policy):
         obj.id = d["id"]
         return obj
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[int], List[float]]) -> List[List[float]]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
