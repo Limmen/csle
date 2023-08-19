@@ -122,7 +122,7 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_env_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation with name: {emulation_env_name}")
-    simulation_name = "csle-stopping-mdp-attacker-010"
+    simulation_name = "csle-stopping-mdp-attacker-001"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
@@ -150,7 +150,7 @@ if __name__ == '__main__':
             constants.T_SPSA.EPSILON: HParam(
                 value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.L: HParam(value=7, name=constants.T_SPSA.L,
+            constants.T_SPSA.L: HParam(value=3, name=constants.T_SPSA.L,
                                        descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=5,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -184,19 +184,18 @@ if __name__ == '__main__':
         L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
         states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
         experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-        attacker_Theta=[
-            [[[0.99], [1.0]], [[0.99], [1.0]], [[0.99], [1.0]]],
-            [[[0.99], [1.0]], [[0.99], [1.0]], [[0.99], [1.0]]],
-            [[[0.99], [1.0]], [[0.99], [1.0]], [[0.99], [1.0]]]
-        ], defender_Theta=[])
+        defender_Theta=[
+            [[0.01], [1.0]],
+            [[0.01], [1.0]],
+            [[0.01], [1.0]]], attacker_Theta=[])
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=7))
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.d_b1 = np.array([0.99, 0.01, 0])
     Z, O = get_obs_tensor()
     simulation_env_config.simulation_env_input_config.stopping_game_config.Z = Z
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = O
     simulation_env_config.simulation_env_input_config.stopping_game_config.gamma = 0.99
-    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 7
+    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 3
 
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)

@@ -239,6 +239,11 @@ class BayesOptAgent(BaseAgent):
 
         # Initial eval
         policy = self.get_policy(theta=list(theta), L=L)
+        if self.env is not None:
+            if self.experiment_config.player_type == PlayerType.DEFENDER:
+                self.env.static_defender_strategy = policy
+            if self.experiment_config.player_type == PlayerType.ATTACKER:
+                self.env.static_attacker_strategy = policy
         avg_metrics = self.eval_theta(
             policy=policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)

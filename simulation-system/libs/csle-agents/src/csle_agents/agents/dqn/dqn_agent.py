@@ -68,10 +68,13 @@ class DQNAgent(BaseAgent):
 
         # Setup training job
         if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=emulation_name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -86,9 +89,12 @@ class DQNAgent(BaseAgent):
         # Setup experiment execution
         ts = time.time()
         simulation_name = self.simulation_env_config.name
+        emulation_name = ""
+        if self.emulation_env_config is not None:
+            emulation_name = self.emulation_env_config.name
         self.exp_execution = ExperimentExecution(
             result=exp_result, config=self.experiment_config, timestamp=ts,
-            emulation_name=self.emulation_env_config.name, simulation_name=simulation_name,
+            emulation_name=emulation_name, simulation_name=simulation_name,
             descr=descr, log_file_path=self.training_job.log_file_path)
         exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id

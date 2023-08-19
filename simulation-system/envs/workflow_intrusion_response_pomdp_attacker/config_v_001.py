@@ -381,13 +381,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     gw_reachable = np.array([0, 1, 2])
     adjacency_matrix = [
-        [1, 0, 0, 1, 1, 0, 0],
-        [0, 1, 0, 1, 0, 1, 0],
-        [0, 0, 1, 0, 1, 1, 0],
-        [0, 0, 0, 1, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 0, 0, 1, 1]
+        [1, 0, 0, 1, 1, 0],
+        [0, 1, 0, 1, 0, 1],
+        [0, 0, 1, 0, 1, 1],
+        [0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 1]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     config = default_config(name="csle-intrusion-response-game-workflow-pomdp-attacker-001", version="0.0.1",

@@ -12,6 +12,8 @@ from gym_csle_intrusion_response_game.util.intrusion_response_game_util import I
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.policy_type import PolicyType
+from gym_csle_intrusion_response_game.envs.intrusion_response_game_local_stopping_pomdp_defender import \
+    IntrusionResponseGameLocalStoppingPOMDPDefenderEnv
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -131,8 +133,9 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
+    env = IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(config=simulation_env_config.simulation_env_input_config)
     agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                          experiment_config=experiment_config)
+                          experiment_config=experiment_config, env=env)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

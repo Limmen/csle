@@ -150,11 +150,14 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
                 O=self.config.local_intrusion_response_game_config.O,
                 T=self.T,
                 A2=self.config.local_intrusion_response_game_config.A2, a2=a2, s=self.s)
-            pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
-            self.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
-                o=o, a1=a1, a_b=self.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
-                a2=a2, s_d=self.zone, s_a_prime=self.s,
-                s_a=s_a)
+            try:
+                pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
+                self.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
+                    o=o, a1=a1, a_b=self.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
+                    a2=a2, s_d=self.zone, s_a_prime=self.s,
+                    s_a=s_a)
+            except Exception:
+                pass
 
         # Update metrics
         self.t += 1

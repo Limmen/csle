@@ -229,7 +229,6 @@ class QLearningAgent(BaseAgent):
                 s_prime = o
             q_table, count_table = self.q_learning_update(q_table=q_table, count_table=count_table,
                                                           s=s, a=a, r=r, s_prime=s_prime, gamma=gamma)
-            print(self.simulation_env_config.initial_state_distribution_config.initial_state_distribution)
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 steps.append(i)
                 state_val = np.sum(

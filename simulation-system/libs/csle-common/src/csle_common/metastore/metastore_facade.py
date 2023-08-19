@@ -1274,7 +1274,7 @@ class MetastoreFacade:
                 id = GeneralUtil.get_latest_table_id(cur=cur,
                                                      table_name=constants.METADATA_STORE.TRAINING_JOBS_TABLE)
                 training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
-                emulation_name = training_job.emulation_env_name
+                emulation_name: Union[str, None] = training_job.emulation_env_name
                 if emulation_name == "":
                     emulation_name = None
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "

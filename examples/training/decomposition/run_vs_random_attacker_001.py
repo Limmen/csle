@@ -347,7 +347,7 @@ if __name__ == '__main__':
                 agent = DifferentialEvolutionAgent(
                     emulation_env_config=emulation_env_config, simulation_env_config=cfg,
                     experiment_config=experiment_config, save_to_metastore=False)
-                p = Process(target=optimize_stopping_policy, args=(i,agent, zone, zone2, return_dict))
+                p = Process(target=optimize_stopping_policy, args=(i, agent, zone, zone2, return_dict))
                 p.start()
                 processes.append(p)
 

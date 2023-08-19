@@ -7,6 +7,7 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.t_fp.t_fp_agent import TFPAgent
 import csle_agents.constants.constants as agents_constants
+from csle_common.dao.training.policy_type import PolicyType
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from sklearn.mixture import GaussianMixture
 from scipy.stats import norm
@@ -121,11 +122,11 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_env_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation with name: {emulation_env_name}")
-    defender_simulation_name = "csle-stopping-pomdp-defender-010"
+    defender_simulation_name = "csle-stopping-pomdp-defender-001"
     defender_simulation_env_config = MetastoreFacade.get_simulation_by_name(defender_simulation_name)
     if defender_simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {defender_simulation_name}")
-    attacker_simulation_name = "csle-stopping-mdp-attacker-010"
+    attacker_simulation_name = "csle-stopping-mdp-attacker-001"
     attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name(attacker_simulation_name)
     if attacker_simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {attacker_simulation_name}")
@@ -183,7 +184,10 @@ if __name__ == '__main__':
                 descr="number of iterations to evaluate best response strategies when calculating exploitability"),
             agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS: HParam(
                 value=300, name=agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS,
-                descr="number of iterations to evaluate equilibrium strategies in each iteration")
+                descr="number of iterations to evaluate equilibrium strategies in each iteration"),
+            agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
+                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
+                descr="policy type for the execution")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

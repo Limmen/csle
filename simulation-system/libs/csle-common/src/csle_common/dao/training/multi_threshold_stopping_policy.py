@@ -89,7 +89,7 @@ class MultiThresholdStoppingPolicy(Policy):
         theta_val = self.theta[int(s * self.L + l - 1)]
         if defender_stopping_prob is None:
             if self.opponent_strategy is None:
-                raise ValueError("The opponent strateg is None")
+                raise ValueError("The opponent strategy is None")
             a1, prob = self.opponent_strategy._defender_action(o=o)
             if a1 == 1:
                 defender_stopping_prob = prob

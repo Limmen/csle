@@ -22,7 +22,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
-    num_nodes = 8
+    num_nodes = 6
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
@@ -129,12 +129,12 @@ if __name__ == '__main__':
         agent_type=AgentType.RANDOM, avg_R=-1)
     gw_reachable = np.array([0, 1, 2])
     adjacency_matrix = [
-        [1, 0, 0, 1, 1, 0, 0],
-        [0, 1, 0, 1, 0, 1, 0],
-        [0, 0, 1, 0, 1, 1, 0],
-        [0, 0, 0, 1, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 1]
+        [1, 0, 0, 1, 1, 0],
+        [0, 1, 0, 1, 0, 1],
+        [0, 0, 1, 0, 1, 1],
+        [0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 1, 0]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     nodes = np.array(list(range(num_nodes)))
