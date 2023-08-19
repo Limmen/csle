@@ -10,8 +10,14 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    simulation_name = "csle-stopping-pomdp-defender-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}random_search_test", title="Random search test",
         random_seeds=[399, 98912, 999, 555],

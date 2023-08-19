@@ -1,4 +1,4 @@
-from typing import Union, List, Optional
+from typing import List, Optional
 import time
 import gymnasium as gym
 import os
@@ -34,8 +34,8 @@ class DQNAgent(BaseAgent):
     A DQN agent using the implementation from OpenAI baselines
     """
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None) -> None:
+                 emulation_env_config: Optional[EmulationEnvConfig], experiment_config: ExperimentConfig,
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True) -> None:
         """
         Initializes the agent
 
@@ -43,12 +43,14 @@ class DQNAgent(BaseAgent):
         :param emulation_env_config: the emulation environment configuration
         :param experiment_config: the experiment configuration
         :param training_job: the training job configuration
+        :param save_to_metastore: boolean flag indicating whether job information should be saved to the metastore
         """
         super(DQNAgent, self).__init__(simulation_env_config=simulation_env_config,
                                        emulation_env_config=emulation_env_config,
                                        experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.DQN
         self.training_job = training_job
+        self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
@@ -66,13 +68,10 @@ class DQNAgent(BaseAgent):
 
         # Setup training job
         if self.training_job is None:
-            emulation_name = ""
-            if self.emulation_env_config is not None:
-                emulation_name = self.emulation_env_config.name
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=emulation_name, simulation_traces=[],
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
@@ -86,13 +85,10 @@ class DQNAgent(BaseAgent):
 
         # Setup experiment execution
         ts = time.time()
-        emulation_name = ""
-        if self.emulation_env_config is not None:
-            emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
         self.exp_execution = ExperimentExecution(
             result=exp_result, config=self.experiment_config, timestamp=ts,
-            emulation_name=emulation_name, simulation_name=simulation_name,
+            emulation_name=self.emulation_env_config.name, simulation_name=simulation_name,
             descr=descr, log_file_path=self.training_job.log_file_path)
         exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id

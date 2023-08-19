@@ -8,7 +8,10 @@ from csle_agents.agents.shapley_iteration.shapley_iteration_agent import Shapley
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+    simulation_name = "csle-stopping-game-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     state_space = simulation_env_config.state_space_config.states_ids()
     action_space_player_1 = simulation_env_config.joint_action_space_config.action_spaces[0].actions_ids()
     action_space_player_2 = simulation_env_config.joint_action_space_config.action_spaces[1].actions_ids()

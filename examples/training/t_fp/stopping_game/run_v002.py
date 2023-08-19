@@ -10,9 +10,18 @@ import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
-    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
-    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    defender_simulation_name = "csle-stopping-pomdp-defender-002"
+    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name(defender_simulation_name)
+    if defender_simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {defender_simulation_name}")
+    attacker_simulation_name = "csle-stopping-mdp-attacker-002"
+    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name(attacker_simulation_name)
+    if attacker_simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {attacker_simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tfp_test",
         title="T-FP training attacker and defender through self-play to approximate a Nash equilibrium",

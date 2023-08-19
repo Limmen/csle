@@ -14,9 +14,14 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-defender-001")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    simulation_name = "csle-intrusion-response-game-local-pomdp-defender-001"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     number_of_zones = 6
     X_max = 100
     eta = 0.5

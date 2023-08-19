@@ -58,10 +58,20 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
 
 
 if __name__ == '__main__':
-    emulation_executions = [
-        MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-003")
-    ]
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
+    execution_names = ["csle-level4-003"]
+    execution_ids = [15]
+    emulation_executions = []
+    for i in range(len(execution_names)):
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_ids[i],
+                                                            emulation_name=execution_names[i])
+        if execution is None:
+            raise ValueError(f"Could not find an execution with emulation: {execution_names[i]} "
+                             f"and id: {execution_ids[i]}")
+        emulation_executions.append(execution)
+    simulation_name = "csle-stopping-pomdp-defender-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dynasec_test", title="DynaSec test",
         random_seeds=[399],

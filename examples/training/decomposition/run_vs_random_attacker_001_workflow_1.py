@@ -105,9 +105,14 @@ def reduce_R(R, strategy):
 if __name__ == '__main__':
 
     # Workflow Env Config
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-workflow-pomdp-defender-001")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    simulation_name = "csle-intrusion-response-game-workflow-pomdp-defender-001"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     num_nodes = 15
     number_of_zones = 6
     X_max = 100

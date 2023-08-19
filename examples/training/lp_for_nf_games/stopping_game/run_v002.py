@@ -26,7 +26,10 @@ if __name__ == '__main__':
     A = game_matrix()
     A1 = list(range(3))
     A2 = list(range(4))
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+    simulation_name = "csle-stopping-game-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}fp_test",
         title="Linear programming for normal-form games to approximate a Nash equilibrium",

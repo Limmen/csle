@@ -9,8 +9,14 @@ from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    simulation_name = "csle-stopping-mdp-attacker-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912], agent_type=AgentType.PPO,
@@ -71,7 +77,10 @@ if __name__ == '__main__':
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                              descr="the number of stop actions")
+                                              descr="the number of stop actions"),
+            agents_constants.COMMON.RUNNING_AVERAGE: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                descr="the number of samples to include when computing the running avg")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

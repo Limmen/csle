@@ -119,6 +119,9 @@ class EmulationEnvConfig(JSONSerializable):
         static_attacker_sequences = {}
         for k, v in d["static_attacker_sequences"].items():
             static_attacker_sequences[k] = list(map(lambda x: EmulationAttackerAction.from_dict(x), v))
+        sdn_controller_config = None
+        if d["sdn_controller_config"] is not None:
+            sdn_controller_config = SDNControllerConfig.from_dict(d["sdn_controller_config"])
         obj = EmulationEnvConfig(
             name=d["name"], containers_config=ContainersConfig.from_dict(d["containers_config"]),
             users_config=UsersConfig.from_dict(d["users_config"]),
@@ -131,7 +134,7 @@ class EmulationEnvConfig(JSONSerializable):
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
             ovs_config=OVSConfig.from_dict(d["ovs_config"]),
-            sdn_controller_config=SDNControllerConfig.from_dict(d["sdn_controller_config"]),
+            sdn_controller_config=sdn_controller_config,
             level=d["level"], execution_id=d["execution_id"], version=d["version"],
             host_manager_config=HostManagerConfig.from_dict(d["host_manager_config"]),
             ossec_ids_manager_config=OSSECIDSManagerConfig.from_dict(d["ossec_ids_manager_config"]),

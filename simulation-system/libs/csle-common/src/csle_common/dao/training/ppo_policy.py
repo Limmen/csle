@@ -1,5 +1,6 @@
 from typing import List, Dict, Union, Any, Optional
 import numpy as np
+import numpy.typing as npt
 import torch
 import math
 import iteround
@@ -51,7 +52,7 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> int:
+    def action(self, o: Union[List[float], List[int]]) -> Union[int, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
@@ -61,7 +62,10 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         a = self.model.predict(np.array(o), deterministic=False)[0]
-        return int(a)
+        try:
+            return int(a)
+        except Exception:
+            return a
 
     def probability(self, o: Union[List[float], List[int]], a: int) -> float:
         """

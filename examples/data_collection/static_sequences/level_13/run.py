@@ -82,7 +82,7 @@ def passive_attacker_sequence(length: int, emulation_env_config: EmulationEnvCon
 
 def run() -> None:
     """
-    Runs two static action sequences in the emulation csle-level9-003
+    Runs two static action sequences in the emulation csle-level9-030
 
     :return: None
     """

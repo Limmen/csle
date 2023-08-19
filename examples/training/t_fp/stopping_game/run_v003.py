@@ -117,9 +117,18 @@ def get_obs_tensor():
 
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
-    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-010")
-    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-010")
+    emulation_env_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_env_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation with name: {emulation_env_name}")
+    defender_simulation_name = "csle-stopping-pomdp-defender-010"
+    defender_simulation_env_config = MetastoreFacade.get_simulation_by_name(defender_simulation_name)
+    if defender_simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {defender_simulation_name}")
+    attacker_simulation_name = "csle-stopping-mdp-attacker-010"
+    attacker_simulation_env_config = MetastoreFacade.get_simulation_by_name(attacker_simulation_name)
+    if attacker_simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {attacker_simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tfp_test",
         title="T-FP training attacker and defender through self-play to approximate a Nash equilibrium",

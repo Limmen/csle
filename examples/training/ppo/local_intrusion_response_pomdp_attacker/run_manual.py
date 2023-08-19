@@ -9,9 +9,10 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 
 if __name__ == '__main__':
-    simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-attacker-001")
-
+    simulation_name = "csle-intrusion-response-game-local-pomdp-attacker-001"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     number_of_zones = 5
     X_max = 10
     eta = 0.5

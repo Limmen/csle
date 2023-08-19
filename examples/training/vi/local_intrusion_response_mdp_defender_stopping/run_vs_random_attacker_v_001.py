@@ -54,8 +54,10 @@ def reduce_R(R, strategy):
 
 
 if __name__ == '__main__':
-    simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-defender-001")
+    simulation_name = "csle-intrusion-response-game-local-pomdp-defender-001"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     number_of_zones = 6
     X_max = 100
     eta = 0.5

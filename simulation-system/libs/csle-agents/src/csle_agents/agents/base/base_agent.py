@@ -15,7 +15,7 @@ class BaseAgent(ABC):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig) -> None:
+                 emulation_env_config: Union[EmulationEnvConfig, None], experiment_config: ExperimentConfig) -> None:
         """
         Initializes the agent
 

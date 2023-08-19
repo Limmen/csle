@@ -23,10 +23,17 @@ def game_matrix() -> np.ndarray:
 
 
 if __name__ == '__main__':
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
     A = game_matrix()
     p1_prior = [1, 1, 1]
     p2_prior = [1, 1, 1, 1]
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+    simulation_name = "csle-stopping-game-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}fp_test",
         title="Fictitious Play to approximate a Nash equilibrium",
@@ -66,7 +73,8 @@ if __name__ == '__main__':
         player_type=PlayerType.SELF_PLAY, player_idx=1
     )
     agent = FictitiousPlayAgent(simulation_env_config=simulation_env_config,
-                                experiment_config=experiment_config, save_to_metastore=True)
+                                experiment_config=experiment_config, save_to_metastore=True,
+                                emulation_env_config=emulation_env_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

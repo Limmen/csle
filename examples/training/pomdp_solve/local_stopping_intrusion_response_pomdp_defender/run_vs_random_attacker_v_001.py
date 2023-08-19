@@ -7,18 +7,21 @@ import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from csle_common.dao.training.tabular_policy import TabularPolicy
-import gymnasium as gym
+from gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender import \
+    IntrusionResponseGameLocalPOMDPDefenderEnv
 
 if __name__ == '__main__':
-    simulation_env_config = MetastoreFacade.get_simulation_by_name(
-        "csle-intrusion-response-game-local-pomdp-defender-001")
+    simulation_name = "csle-intrusion-response-game-local-pomdp-defender-001"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     number_of_zones = 5
     X_max = 5
     eta = 0.5
     reachable = True
     beta = 3
     gamma = 0.99
-    initial_zone = 30
+    initial_zone = 2
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
     Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
@@ -71,7 +74,7 @@ if __name__ == '__main__':
         )
     simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
-    env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
+    env = IntrusionResponseGameLocalPOMDPDefenderEnv(config=simulation_env_config.simulation_env_input_config)
     T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
     R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
     Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)

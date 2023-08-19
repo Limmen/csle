@@ -156,7 +156,10 @@ if __name__ == '__main__':
     O, _ = observations()
     S, _ = states()
     b0 = initial_belief()
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+    simulation_name = "csle-stopping-game-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}hsvi_os_posg_iteration_test",
         title="HSVI for OS-POSGs to approximate a Nash equilibrium",

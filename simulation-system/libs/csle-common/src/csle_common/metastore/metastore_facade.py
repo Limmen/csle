@@ -1185,7 +1185,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
-                            f"(policy, sigmulation_name) "
+                            f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str,
                                                               multi_threshold_stopping_policy.simulation_name))
                 record = cur.fetchone()
@@ -1274,11 +1274,13 @@ class MetastoreFacade:
                 id = GeneralUtil.get_latest_table_id(cur=cur,
                                                      table_name=constants.METADATA_STORE.TRAINING_JOBS_TABLE)
                 training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
+                emulation_name = training_job.emulation_env_name
+                if emulation_name == "":
+                    emulation_name = None
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
                             f"(id, config, simulation_name, emulation_name, pid) "
                             f"VALUES (%s, %s, %s, %s, %s) RETURNING id",
-                            (id, training_job_str, training_job.simulation_env_name,
-                             training_job.emulation_env_name, training_job.pid))
+                            (id, training_job_str, training_job.simulation_env_name, emulation_name, training_job.pid))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:

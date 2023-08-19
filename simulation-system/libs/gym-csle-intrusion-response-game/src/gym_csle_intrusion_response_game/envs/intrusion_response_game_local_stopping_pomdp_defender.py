@@ -143,7 +143,6 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             done = True
 
         if not done:
-            # S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
             S = self.config.local_intrusion_response_game_config.S_A
             # Update the beliefs
             self.b = IntrusionResponseGameUtil.next_stopping_belief(

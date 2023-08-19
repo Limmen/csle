@@ -8,8 +8,14 @@ from csle_agents.agents.dqn.dqn_agent import DQNAgent
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
+    emulation_name = "csle-level9-030"
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
+    simulation_name = "csle-stopping-pomdp-defender-002"
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dqn_test",
         title="DQN test", random_seeds=[399, 98912, 999], agent_type=AgentType.DQN,
@@ -91,7 +97,7 @@ if __name__ == '__main__':
     )
     # simulation_env_config.simulation_env_input_config
     agent = DQNAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                     experiment_config=experiment_config)
+                     experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
