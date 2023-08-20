@@ -103,7 +103,7 @@ Thanks go to these people!
   </tbody>
 </table>
 
-Technical advisors: Prof. Rolf Stadler & Prof. Pontus Johnson. 
+Technical advisors: [Prof. Rolf Stadler](https://www.kth.se/profile/stadler)  & [Prof. Pontus Johnson.](https://www.kth.se/profile/pontusj) 
 
 ## Copyright and license
 
