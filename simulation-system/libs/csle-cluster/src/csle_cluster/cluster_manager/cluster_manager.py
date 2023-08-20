@@ -387,8 +387,11 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Getting log file: {request.name}")
         data = []
         if os.path.exists(request.name):
-            with open(request.name, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+            try:
+                with open(request.name, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+            except Exception as e:
+                logging.info(f"Exception reading log file: {request.name}. Stacktrace: {str(e)}, {repr(e)}")
         logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -407,9 +410,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         path = config.flask_log_file
         logs = []
         if os.path.exists(path):
-            with open(path, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                logs = data
+            try:
+                with open(path, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
+            except Exception as e:
+                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPostrgreSQLLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
@@ -430,9 +436,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             item = os.path.join(path, f)
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item and \
                     constants.FILE_PATTERNS.GZ_SUFFIX not in item:
-                with open(item, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
+                try:
+                    with open(item, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
@@ -479,9 +488,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             item = os.path.join(path, f)
             if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
                     and constants.FILE_PATTERNS.GZ_SUFFIX not in item:
-                with open(item, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
+                try:
+                    with open(item, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = logs + data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getGrafanaLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
@@ -556,9 +568,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         path = config.node_exporter_log_file
         logs = []
         if os.path.exists(path):
-            with open(path, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                logs = data
+            try:
+                with open(path, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
+            except Exception as e:
+                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPrometheusLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
@@ -576,9 +591,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         path = config.prometheus_log_file
         logs = []
         if os.path.exists(path):
-            with open(path, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                logs = data
+            try:
+                with open(path, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
+            except Exception as e:
+                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerStatsManagerLogs(
@@ -596,9 +614,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
         logs = []
         if os.path.exists(path):
-            with open(path, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                logs = data
+            try:
+                with open(path, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
+            except Exception as e:
+                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getCsleLogFiles(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
@@ -4429,9 +4450,12 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         path = config.cluster_manager_log_file
         logs = []
         if os.path.exists(path):
-            with open(path, 'r') as fp:
-                data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                logs = data
+            try:
+                with open(path, 'r') as fp:
+                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                    logs = data
+            except Exception as e:
+                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getExecutionTimeSeriesData(
