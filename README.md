@@ -15,7 +15,7 @@
         <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
 </p>
 
-# What is the Cyber Security Learning Environment (CSLE)?
+# The Cyber Security Learning Environment (CSLE)
 
 CSLE is a platform for evaluating and developing reinforcement learning agents for control problems in cyber security.
 It can be considered as a cyber range specifically designed for reinforcement learning agents. Everything from network
