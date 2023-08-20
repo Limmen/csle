@@ -102,7 +102,6 @@ Thanks go to these people!
       <td align="center" valign="top" width="14.28%"><a href="https://se.linkedin.com/in/jakob-stymne"><img src="https://media.licdn.com/dms/image/D4D03AQFZ6TfYDIob5Q/profile-displayphoto-shrink_800_800/0/1673357973617?e=2147483647&v=beta&t=MR6uDgRDFcgvHzuMaTNW2SUpf3Hx4T2Spy9e4RpplLw" width="100px;" alt="Jakob Stymne"/><br /><sub><b>Jakob Stymne</b></sub></a></td>
     </tr>
     <tr>
-      
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Arvid Lagerqvist"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nforsg"><img src="https://github.com/nforsg.png" width="100px;" alt="Nils Forsgren"/><br /><sub><b>Nils Forsgren</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/foroughsh"><img src="https://github.com/foroughsh.png" width="100px;" alt="Forough Shahab Samani"/><br /><sub><b>Forough Shahab Samani</b></sub></a></td>
