@@ -26,6 +26,7 @@ const EmulationTrace = (props) => {
     const [defenderObservationsOpen, setDefenderObservationsOpen] = useState(false);
     const [selectedDefenderMachine, setSelectedDefenderMachine] = useState(defMachines[0]);
     const [defenderMachines, setDefenderMachines] = useState(defMachines);
+    setDefenderMachines(defMachines)
 
     const updateSelectedDefenderMachine = (selectedDefMachine) => {
         setSelectedDefenderMachine(selectedDefMachine)

@@ -11,7 +11,6 @@ import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import convertListToCommaSeparatedString from "../../../../Common/convertListToCommaSeparatedString";
-import serverIp from "../../../../Common/serverIp";
 import serverPort from "../../../../Common/serverPort";
 import {
     HTTP_PREFIX,
@@ -31,7 +30,6 @@ const DataCollectionJob = (props) => {
     const [logsOpen, setLogsOpen] = useState(false);
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState(null);
-    const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
@@ -94,7 +92,8 @@ const DataCollectionJob = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, [navigate, alert, ip, port, props.job.log_file_path, props.sessionData.token, setSessionData]);
+    }, [navigate, alert, port, props.job.log_file_path, props.sessionData.token, setSessionData,
+        props.job.physical_host_ip]);
 
     const getMaxSteps = () => {
         return (props.job.attacker_sequence.length) * props.job.repeat_times

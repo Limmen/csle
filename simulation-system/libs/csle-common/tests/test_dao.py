@@ -59,7 +59,7 @@ class TestDaoSuite:
         :return: None
         """
         container_metadata = DockerContainerMetadata(
-            name = "cont1", status="test", short_id="shortid", image_short_id="imgshort", image_tags=[], id="testid",
+            name="cont1", status="test", short_id="shortid", image_short_id="imgshort", image_tags=[], id="testid",
             created="1 Aug", ip="testIp", network_id=5, gateway="gw", mac="mymac", ip_prefix_len=16,
             name2="secondname", level="level1", hostname="host1", image_name="img1", net="mynet", dir="mydir",
             config_path="mycfg", container_handle=None, kafka_container="kafkacont", emulation="myem")
@@ -75,7 +75,7 @@ class TestDaoSuite:
         :return: None
         """
         container = DockerContainerMetadata(
-            name = "cont1", status="test", short_id="shortid", image_short_id="imgshort", image_tags=[], id="testid",
+            name="cont1", status="test", short_id="shortid", image_short_id="imgshort", image_tags=[], id="testid",
             created="1 Aug", ip="testIp", network_id=5, gateway="gw", mac="mymac", ip_prefix_len=16,
             name2="secondname", level="level1", hostname="host1", image_name="img1", net="mynet", dir="mydir",
             config_path="mycfg", container_handle=None, kafka_container="kafkacont", emulation="myem")
@@ -94,7 +94,7 @@ class TestDaoSuite:
         :return: None
         """
         emulation_attacker_action = EmulationAttackerAction(
-            id = EmulationAttackerActionId.CONTINUE, name="test", cmds=["cmd1"],
+            id=EmulationAttackerActionId.CONTINUE, name="test", cmds=["cmd1"],
             type=EmulationAttackerActionType.CONTINUE, descr="testtest", ips=["ip1"], index=0,
             action_outcome=EmulationAttackerActionOutcome.CONTINUE, vulnerability="test", alt_cmds=["altcmd1"],
             backdoor=False, execution_time=0.0, ts=0.0
@@ -113,7 +113,7 @@ class TestDaoSuite:
         :return: None
         """
         emulation_attacker_action = EmulationAttackerAction(
-            id = EmulationAttackerActionId.CONTINUE, name="test", cmds=["cmd1"],
+            id=EmulationAttackerActionId.CONTINUE, name="test", cmds=["cmd1"],
             type=EmulationAttackerActionType.CONTINUE, descr="testtest", ips=["ip1"], index=0,
             action_outcome=EmulationAttackerActionOutcome.CONTINUE, vulnerability="test", alt_cmds=["altcmd1"],
             backdoor=False, execution_time=0.0, ts=0.0
@@ -133,7 +133,6 @@ class TestDaoSuite:
                emulation_attacker_action_config.to_dict()
         assert EmulationAttackerActionConfig.from_dict(emulation_attacker_action_config.to_dict()) == \
                emulation_attacker_action_config
-
 
     def test_emulation_defender_action(self) -> None:
         """

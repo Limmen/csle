@@ -34,7 +34,6 @@ class NmapBruteCredentials(JSONSerializable):
         return f"username:{self.username},pw:{self.pw},state:{self.statef},port:{self.port},protocol:{self.protocol}," \
                f"service:{self.service}"
 
-
     def to_obs(self) -> Credential:
         """
         Converts the Object into a Credential Object

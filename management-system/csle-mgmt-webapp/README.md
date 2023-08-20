@@ -9,6 +9,10 @@ Tested with node v16.13.1.
 
 In the project directory, you can run:
 
+### `npx eslint . --quiet`
+
+Runs the linter
+
 ### `npm start`
 
 Runs the app in the development mode.\
@@ -21,6 +25,11 @@ You may also see any lint errors in the console.
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+You can also run without interactive mode using the command:
+```bash
+npm test -- --watchAll=false
+```
 
 ### `npm run build`
 
