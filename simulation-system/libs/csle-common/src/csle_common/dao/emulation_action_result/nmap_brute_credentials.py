@@ -31,23 +31,9 @@ class NmapBruteCredentials(JSONSerializable):
         """
         :return: a string representation of the object
         """
-        return "username:{},pw:{},state:{},port:{},protocol:{},service:{}".format(
-            self.username, self.pw, self.state, self.port, self.protocol, self.service)
+        return f"username:{self.username},pw:{self.pw},state:{self.statef},port:{self.port},protocol:{self.protocol}," \
+               f"service:{self.service}"
 
-    def __hash__(self) -> int:
-        """
-        :return: a hash of the object
-        """
-        return hash(self.username) + 31 * hash(self.pw)
-
-    def __eq__(self, other) -> bool:
-        """
-        Checks equality with another object
-
-        :param other: the object to compare with
-        :return: True if equal otherwise False
-        """
-        return bool(self.username == other.username and self.pw == other.pw)
 
     def to_obs(self) -> Credential:
         """

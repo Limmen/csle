@@ -59,3 +59,15 @@ class JSONSerializable(ABC):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Compares equality with another object
+
+        :param other: the object to compare with
+        :return: True if equals, False otherwise
+        """
+        if not isinstance(other, JSONSerializable):
+            return False
+        else:
+            return self.to_dict() == other.to_dict()

@@ -7,7 +7,7 @@ class StatisticsDataset(JSONSerializable):
     DTO representing a dataset of statistics
     """
 
-    def __init__(self, name: str, description: str, download_count: int, file_path: str, url: str, date_added,
+    def __init__(self, name: str, description: str, download_count: int, file_path: str, url: str, date_added: float,
                  num_measurements: int, num_metrics: int, size_in_gb: float, compressed_size_in_gb: float,
                  citation: str, num_files: int, file_format: str, added_by: str, conditions: str, metrics: str,
                  num_conditions: int):
