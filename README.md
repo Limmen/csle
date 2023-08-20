@@ -103,6 +103,8 @@ Thanks go to these people!
   </tbody>
 </table>
 
+Technical advisors: Prof. Rolf Stadler & Prof. Pontus Johnson. 
+
 ## Copyright and license
 
 <p>
