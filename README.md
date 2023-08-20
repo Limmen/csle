@@ -56,14 +56,20 @@ Documentation, installation instructions, and usage examples are available [here
 
 ## Supported Releases
 
-| Release                                                       | Build Status | Last date of support |
-|---------------------------------------------------------------|--------------|----------------------|
-| [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | -            | 2024-01-17           |
-| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2023-10-30           |
-| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-06-06           |
+| Release                                                         | Last date of support |
+|-----------------------------------------------------------------|----------------------|
+| [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0)   | 2024-01-17           |
+| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0)   | 2023-10-30           |
+| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0)   | -2023-06-06          |
 
 Maintenance releases have a stable API and dependency tree, and receive bug fixes and critical improvements but not new
 features. We currently support each release for a window of 6 months.
+
+## Build Status
+
+| Workflow                                                                                     | Status                                                                                             |
+|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| [csle-agents](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml/badge.svg) |
 
 ## Supported Platforms
 
