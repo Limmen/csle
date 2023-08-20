@@ -28,6 +28,8 @@ should be on the list but is not):
 
 - Kim Hammar, creator and main developer.
 - Rolf Stadler, technical advisor.
+- Pontus Johnson, technical advisor.
+- Antonio Frederico Nesti Lopes, software development.
 - Jakob Stymne, software development. 
 - Arvid Lagerqvist, software development.
 - Nils Forsgren, software development.
