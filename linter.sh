@@ -6,4 +6,4 @@ flake8 emulation-system/envs
 flake8 examples/
 
 echo "Running JavaScript Linter"
-cd management-system/csle-mgmt-webapp; npx eslint . --quiet
+cd management-system/csle-mgmt-webapp; npx eslint . --quiet; cd ../../
