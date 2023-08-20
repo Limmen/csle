@@ -44,8 +44,9 @@ processes and Markov games. It is built in Python and can be integrated with sta
 
 ### **Management System**
 
-CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API or
-through a web interface. The management system allows a) to start/stop emulations/simulations; b) real-time monitoring
+CSLE includes a system for managing emulations and simulations which can be accessed either through 
+Command-Line Interface (CLI), through a REST API, through Python libraries, or through a web interface. 
+The management system allows a) to start/stop emulations/simulations; b) real-time monitoring
 of emulation and simulation processes; and c), shell access to components of emulations.
 
 ![](docs/img/web_ui.gif)
