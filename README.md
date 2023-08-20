@@ -58,8 +58,8 @@ Documentation, installation instructions, and usage examples are available [here
 
 | Release                                                       | Build Status | Last date of support |
 |---------------------------------------------------------------|--------------|----------------------|
-| [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | -            | 2025-01-17            |
-| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2024-01-06           |
+| [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | -            | 2024-01-17           |
+| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2023-10-30           |
 | [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-06-06           |
 
 Maintenance releases have a stable API and dependency tree, and receive bug fixes and critical improvements but not new
