@@ -67,9 +67,20 @@ features. We currently support each release for a window of 6 months.
 
 ## Build Status
 
-| Workflow                                                                                     | Status                                                                                             |
-|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| [csle-agents](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml/badge.svg) |
+| Workflow                                                                                                                                     | Status                                                                                                                  |
+|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| [csle-agents](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml)                                                 | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml/badge.svg)                      |
+| [csle-attacker](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml/badge.svg)                    |
+| [csle-collector](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml)                                           | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml/badge.svg)                   |
+| [csle-common](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml)                                                 | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml/badge.svg)                      |
+| [csle-defender](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml/badge.svg)                    |
+| [csle-ryu](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml)                                                       | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml/badge.svg)                         |
+| [csle-base](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml)                                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml/badge.svg)                        |
+| [csle-system-identification](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml)                   | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml/badge.svg)       |
+| [gym-csle-stopping-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml)                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml/badge.svg)           |
+| [gym-csle-intrusion-response-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml/badge.svg) |
+| [python-linter](https://github.com/Limmen/csle/actions/workflows/python-linter.yml)                                                          | ![status](https://github.com/Limmen/csle/actions/workflows/python-linter.yml/badge.svg)                                 |
+| [management-system](https://github.com/Limmen/csle/actions/workflows/management-system-build)                                                | ![status](https://github.com/Limmen/csle/actions/workflows/management-system-build.yml/badge.svg)                       |
 
 ## Supported Platforms
 
