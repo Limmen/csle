@@ -2451,6 +2451,73 @@ def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
                 fg="yellow", bold=True)
 
 
+@click.command("help", help="lists all commands")
+def help() -> None:
+    """
+    Prints list of all commands
+
+    :return: None
+    """
+    click.secho(f"{click.style('init', fg='magenta')} Initializes CSLE and sets up mgmt accounts ",
+                bold=False)
+    click.secho(f"{click.style('ls', fg='magenta')} Lists information about CSLE ", bold=False)
+    click.secho(f"{click.style('start', fg='magenta')} Starts en emulation, a job,"
+                f" or a container ", bold=False)
+    click.secho(f"{click.style('stop', fg='magenta')} Stops en entity, eg. emulation, a job,"
+                f" or a container ", bold=False)
+    click.secho(f"{click.style('rm', fg='magenta')} Removes a container, a network, an image, "
+                f"all networks, all images, or all containers ", bold=False)
+    click.secho(
+        f"{click.style('install', fg='magenta')} Installs emulations and simulations in the metastore"
+        f" and creates Docker images ",
+        bold=False)
+    click.secho(
+        f"{click.style('uninstall', fg='magenta')} Uninstall emulations and simulations from the"
+        f" metastore and removes Docker images ",
+        bold=False)
+    click.secho(
+        f"{click.style('clean', fg='magenta')} Removes a container, a network, an image, all networks, "
+        f"all images, all containers, all traces, or all statistics ",
+        bold=False)
+    click.secho(
+        f"{click.style('shell', fg='magenta')} Command for opening a shell inside a running container ",
+        bold=False)
+    click.secho(
+        f"{click.style('em', fg='magenta')} Extracts status information of a given emulation ",
+        bold=False)
+    click.secho(
+        f"{click.style('datacollectionjob', fg='magenta')} Starts a data collection job with "
+        f"the given id ",
+        bold=False)
+    click.secho(
+        f"{click.style('systemidentificationjob', fg='magenta')} "
+        f"Starts a system identification job with the given id ",
+        bold=False)
+    click.secho(
+        f"{click.style('trainingjob', fg='magenta')} Starts a training job with the given id ",
+        bold=False)
+    click.secho(
+        f"{click.style('clustermanager', fg='magenta')} Starts the clustermanager locally ",
+        bold=False)
+    click.secho(
+        f"{click.style('statsmanager', fg='magenta')} Starts the statsmanager locally ",
+        bold=False)
+    click.secho(
+        f"{click.style('start_traffic', fg='magenta')} "
+        f"Starts the traffic and client population on a given emulation ",
+        bold=False)
+    click.secho(
+        f"{click.style('stop_traffic', fg='magenta')} Stops the traffic and "
+        f"client population on a given emulation ",
+        bold=False)
+    click.secho(
+        f"{click.style('attacker', fg='magenta')} Opens an attacker shell in the given "
+        f"emulation execution ",
+        bold=False)
+    click.secho("* For more information about each command, run csle [command] --help",
+                fg="white", bold=False)
+
+
 # Adds the commands to the group
 commands.add_command(ls)
 commands.add_command(rm)
@@ -2469,3 +2536,4 @@ commands.add_command(systemidentificationjob)
 commands.add_command(install)
 commands.add_command(uninstall)
 commands.add_command(init)
+commands.add_command(help)
