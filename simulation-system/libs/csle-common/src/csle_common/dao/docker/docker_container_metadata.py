@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from docker.models.containers import Container
 from csle_base.json_serializable import JSONSerializable
 
@@ -11,7 +11,8 @@ class DockerContainerMetadata(JSONSerializable):
     def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: List[str], id: str,
                  created: str, ip: str, network_id: int, gateway: str, mac: str, ip_prefix_len: int,
                  name2: str, level: str, hostname: str, image_name: str, net: str,
-                 dir: str, config_path: str, container_handle: Container, emulation: str, kafka_container: str) -> None:
+                 dir: str, config_path: str, container_handle: Optional[Container],
+                 emulation: str, kafka_container: str) -> None:
         """
         Initializes the DTO
 
@@ -122,6 +123,8 @@ class DockerContainerMetadata(JSONSerializable):
         d["config_path"] = self.config_path
         d["emulation"] = self.emulation
         d["kafka_container"] = self.kafka_container
+        d["dir"] = self.dir
+        d["container_handle"] = None
         return d
 
     def __str__(self):

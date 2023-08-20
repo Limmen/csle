@@ -40,11 +40,16 @@ class DockerEnvMetadata(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
+        config = None
+        kafka_config = None
+        if d["config"] is not None:
+            config = EmulationEnvConfig.from_dict(d["config"])
+        if d["kafka_config"] is not None:
+            config = KafkaConfig.from_dict(d["kafka_config"])
         obj = DockerEnvMetadata(
             containers=list(map(lambda x: DockerContainerMetadata.from_dict(x), d["containers"])),
             name=d["name"], subnet_prefix=d["subnet_prefix"], subnet_mask=d["subnet_mask"],
-            level=d["level"], config=d["config"], kafka_config=KafkaConfig.from_dict(d["kafka_config"])
-        )
+            level=d["level"], config=config, kafka_config=kafka_config)
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -63,11 +68,11 @@ class DockerEnvMetadata(JSONSerializable):
         if self.config is not None:
             d["config"] = self.config.to_dict()
         else:
-            d["config"] = {}
+            d["config"] = None
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
-            d["kafka_config"] = {}
+            d["kafka_config"] = None
         return d
 
     @staticmethod
