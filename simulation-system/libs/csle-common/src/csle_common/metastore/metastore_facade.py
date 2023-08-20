@@ -297,9 +297,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
+                    # Need to manually set the ID since CITUS does not handle serial columns
+                    # on distributed tables properly
+                    id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
-                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
-                                f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (id, name, config) "
+                                f"VALUES (%s, %s, %s) RETURNING id", (id, config.name, config_json_str))
                     record = cur.fetchone()
                     id_of_new_row = None
                     if record is not None:
@@ -346,10 +350,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
+                    # Need to manually set the ID since CITUS does not handle serial columns
+                    # on distributed tables properly
+                    id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
-                                f"(name, config) "
-                                f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
+                                f"(id, name, config) "
+                                f"VALUES (%s, %s, %s) RETURNING id", (id, config.name, config_json_str))
                     record = cur.fetchone()
                     id_of_new_row = None
                     if record is not None:
@@ -731,9 +739,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (gym_env, trace) "
-                            f"VALUES (%s, %s) RETURNING id", (simulation_trace.simulation_env, config_json_str))
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (id, gym_env, trace) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, simulation_trace.simulation_env, config_json_str))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -766,10 +778,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
-                            f"(emulation_trace, simulation_trace) "
-                            f"VALUES (%s, %s) RETURNING id", (emulation_trace_id, simulation_trace_id))
+                            f"(id, emulation_trace, simulation_trace) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace_id, simulation_trace_id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(
                     f"Emulation-Simulation trace for "
@@ -828,8 +844,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
+                    # Need to manually set the ID since CITUS does not handle serial columns
+                    # on distributed tables properly
+                    id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} "
-                                f"(emulation_name, image) VALUES (%s, %s) RETURNING id", (emulation_name, img))
+                                f"(id, emulation_name, image) VALUES (%s, %s, %s) RETURNING id", (id,
+                                                                                                  emulation_name, img))
                     record = cur.fetchone()
                     id_of_new_row = None
                     if record is not None:
@@ -912,8 +933,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
+                    # Need to manually set the ID since CITUS does not handle serial columns
+                    # on distributed tables properly
+                    id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
-                                f"(simulation_name, image) VALUES (%s, %s) RETURNING id", (simulation_name, img))
+                                f"(id, simulation_name, image) VALUES (%s, %s, %s) RETURNING id",
+                                (id, simulation_name, img))
                     record = cur.fetchone()
                     id_of_new_row = None
                     if record is not None:
@@ -977,11 +1003,15 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 config_json_str = json.dumps(experiment_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
-                            f"(execution, simulation_name, emulation_name) "
-                            f"VALUES (%s, %s, %s) RETURNING id",
-                            (config_json_str, experiment_execution.simulation_name,
+                            f"(id, execution, simulation_name, emulation_name) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id",
+                            (id, config_json_str, experiment_execution.simulation_name,
                              experiment_execution.emulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
@@ -1183,11 +1213,15 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str,
-                                                              multi_threshold_stopping_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str,
+                                                                  multi_threshold_stopping_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -1592,10 +1626,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, ppo_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str, ppo_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -1684,13 +1722,17 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
                             f"(config, emulation_name, pid) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (system_identification_job_json,
-                                                                  system_identification_job.emulation_env_name,
-                                                                  system_identification_job.pid))
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, system_identification_job_json,
+                                                                      system_identification_job.emulation_env_name,
+                                                                      system_identification_job.pid))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -1827,12 +1869,16 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 gaussian_mixture_system_model_json = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4,
                                                                 sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
-                            f"(model, emulation_name, emulation_statistic_id) "
-                            f"VALUES (%s, %s, %s) RETURNING id",
-                            (gaussian_mixture_system_model_json,
+                            f"(id, model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id",
+                            (id, gaussian_mixture_system_model_json,
                              gaussian_mixture_system_model.emulation_env_name,
                              gaussian_mixture_system_model.emulation_statistic_id))
                 record = cur.fetchone()
@@ -1986,10 +2032,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(tabular_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, tabular_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str, tabular_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2093,10 +2143,15 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(alpha_vec_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, alpha_vec_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id,
+                                                                  policy_json_str, alpha_vec_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2200,10 +2255,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(dqn_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DQN_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, dqn_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str, dqn_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2310,10 +2369,16 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(fnn_w_softmax_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, fnn_w_softmax_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id,
+                                                                  policy_json_str,
+                                                                  fnn_w_softmax_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2417,10 +2482,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(vector_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, vector_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str, vector_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2561,13 +2630,17 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 emulation_execution_str = \
                     json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
-                            f"(ip_first_octet, emulation_name, info) "
-                            f"VALUES (%s, %s, %s)", (emulation_execution.ip_first_octet,
-                                                     emulation_execution.emulation_name,
-                                                     emulation_execution_str))
+                            f"(id, ip_first_octet, emulation_name, info) "
+                            f"VALUES (%s, %s, %s, %s)", (id, emulation_execution.ip_first_octet,
+                                                         emulation_execution.emulation_name,
+                                                         emulation_execution_str))
                 conn.commit()
                 Logger.__call__().get_logger().debug("emulation execution saved successfully")
                 return None
@@ -2682,13 +2755,17 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 empirical_system_model_json = json.dumps(empirical_system_model.to_dict(), indent=4, sort_keys=True,
                                                          cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
-                            f"(model, emulation_name, emulation_statistic_id) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (empirical_system_model_json,
-                                                                  empirical_system_model.emulation_env_name,
-                                                                  empirical_system_model.emulation_statistic_id))
+                            f"(id, model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, empirical_system_model_json,
+                                                                      empirical_system_model.emulation_env_name,
+                                                                      empirical_system_model.emulation_statistic_id))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2818,13 +2895,17 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 mcmc_system_model_json = json.dumps(mcmc_system_model.to_dict(),
                                                     indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
-                            f"(model, emulation_name, emulation_statistic_id) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (mcmc_system_model_json,
-                                                                  mcmc_system_model.emulation_env_name,
-                                                                  mcmc_system_model.emulation_statistic_id))
+                            f"(id, model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, mcmc_system_model_json,
+                                                                      mcmc_system_model.emulation_env_name,
+                                                                      mcmc_system_model.emulation_statistic_id))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -2956,12 +3037,16 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 gp_system_model_json = json.dumps(gp_system_model.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
-                            f"(model, emulation_name, emulation_statistic_id) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (gp_system_model_json,
-                                                                  gp_system_model.emulation_env_name,
-                                                                  gp_system_model.emulation_statistic_id))
+                            f"(id, model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, gp_system_model_json,
+                                                                      gp_system_model.emulation_env_name,
+                                                                      gp_system_model.emulation_statistic_id))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -3094,10 +3179,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
-                            f"(username, password, email, first_name, last_name, organization, admin, salt) "
-                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                            (management_user.username, management_user.password, management_user.email,
+                            f"(id, username, password, email, first_name, last_name, organization, admin, salt) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            (id, management_user.username, management_user.password, management_user.email,
                              management_user.first_name, management_user.last_name, management_user.organization,
                              management_user.admin, management_user.salt))
                 record = cur.fetchone()
@@ -3237,10 +3326,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
+                    # Need to manually set the ID since CITUS does not handle serial columns
+                    # on distributed tables properly
+                    id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
-                                f"(token, timestamp, username) "
-                                f"VALUES (%s, %s, %s) RETURNING token",
-                                (session_token.token, ts, session_token.username))
+                                f"(id, token, timestamp, username) "
+                                f"VALUES (%s, %s, %s, %s) RETURNING token",
+                                (id, session_token.token, ts, session_token.username))
                     record = cur.fetchone()
                     token_of_new_row = None
                     if record is not None:
@@ -3430,12 +3523,17 @@ class MetastoreFacade:
                 schema_json_str = ""
                 if traces_dataset.data_schema is not None:
                     schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
-                            f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
+                            f"(id, name, description, data_schema, download_count, "
+                            f"file_path, url, date_added, num_traces, "
                             f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files, "
                             f"file_format, added_by, columns) "
-                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                            (traces_dataset.name, traces_dataset.description, schema_json_str,
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            (id, traces_dataset.name, traces_dataset.description, schema_json_str,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step,
@@ -3612,12 +3710,17 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
-                            f"(name, description, download_count, file_path, url, date_added, num_measurements, "
+                            f"(id, name, description, download_count, file_path, url, date_added, num_measurements, "
                             f"num_metrics, size_in_gb, compressed_size_in_gb, citation, num_files, "
                             f"file_format, added_by, conditions, metrics, num_conditions) "
-                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                            (statistics_dataset.name, statistics_dataset.description,
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+                            f"RETURNING id",
+                            (id, statistics_dataset.name, statistics_dataset.description,
                              statistics_dataset.download_count, statistics_dataset.file_path, statistics_dataset.url,
                              statistics_dataset.date_added, statistics_dataset.num_measurements,
                              statistics_dataset.num_metrics,
@@ -3924,11 +4027,15 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns
+                # on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 policy_json_str = json.dumps(linear_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str,
-                                                              linear_threshold_stopping_policy.simulation_name))
+                            f"(id, policy, simulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str,
+                                                                  linear_threshold_stopping_policy.simulation_name))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
