@@ -2,10 +2,13 @@ from typing import Any
 import pytest
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager import ClusterManagerServicer
+from csle_cluster.cluster_manager.cluster_manager_pb2 import ServiceStatusDTO
 from csle_common.dao.emulation_config.config import Config
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
+import logging
 
+logger = logging.getLogger()
 
 class TestClusterManagerSuite:
     """
@@ -45,7 +48,7 @@ class TestClusterManagerSuite:
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
         Tests the getNodeStatus grpc
-        
+
         :param grpc_stub: the stub for the GRPC server to make the request to
         :param mocker: the mocker object to mock functions with external dependencies
         :return: None
@@ -76,6 +79,7 @@ class TestClusterManagerSuite:
         mocker.patch('csle_common.controllers.management_system_controller.'
                      'ManagementSystemController.is_docker_engine_running', return_value=True)
         response: NodeStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
+        logger.info(response)
         assert response.ip == ip
         assert response.leader
         assert response.cAdvisorRunning
@@ -111,6 +115,7 @@ class TestClusterManagerSuite:
         mocker.patch('csle_common.controllers.management_system_controller.'
                      'ManagementSystemController.is_docker_engine_running', return_value=False)
         response = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub=grpc_stub)
+        logger.info(response)
         assert response.ip == ip
         assert not response.leader
         assert not response.cAdvisorRunning
@@ -123,3 +128,24 @@ class TestClusterManagerSuite:
         assert not response.nodeExporterRunning
         assert not response.postgreSQLRunning
         assert not response.dockerEngineRunning
+
+    def test_startPosgtreSQL(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the startPosgtreSQL grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_postgresql', return_value=(False, None, None))
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=True)
+        response =  csle_cluster.cluster_manager.query_cluster_manager.start_postgresql(stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_postgresql', return_value=(True, "PIPE", "PIPE"))
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=False)
+        response =  csle_cluster.cluster_manager.query_cluster_manager.start_postgresql(stub=grpc_stub)
+        assert response.running
