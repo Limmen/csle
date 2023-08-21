@@ -7,7 +7,7 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import LogsDTO
 from csle_common.dao.emulation_config.config import Config
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-
+import logging
 
 class TestClusterManagerSuite:
     """
@@ -549,4 +549,23 @@ class TestClusterManagerSuite:
         mocker.patch('builtins.open', return_value=None)
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub=grpc_stub,
                                                                                             log_file_name="abcdef")
+        assert response.logs == []
+
+    def test_getFlaskLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getFlaskLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('builtins.open', return_value=None)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub=grpc_stub)
         assert response.logs == []
