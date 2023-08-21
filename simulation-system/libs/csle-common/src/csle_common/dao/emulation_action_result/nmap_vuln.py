@@ -47,22 +47,6 @@ class NmapVuln(JSONSerializable):
                                                       cvss=self.cvss, credentials=self.credentials, service=service)
         return vuln
 
-    def __hash__(self) -> int:
-        """
-        :return: a hash representation of the object
-        """
-        return hash(self.name) + 31 * hash(self.port)
-
-    def __eq__(self, other):
-        """
-        Compares equality of the object with another object
-
-        :param other: the object to compare with
-        :return: True if equal otherwise False
-        """
-        return (self.name == other.name and
-                self.port == other.kafka_port)
-
     def __str__(self) -> str:
         """
         :return: a string representation of the object

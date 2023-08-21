@@ -58,7 +58,7 @@ class NiktoVuln(JSONSerializable):
         """
         d: Dict[str, Any] = {}
         d["id"] = self.id
-        d["osvdb"] = self.osvdb_id
+        d["osvdb_id"] = self.osvdb_id
         d["method"] = self.method
         d["iplink"] = self.iplink
         d["namelink"] = self.namelink
