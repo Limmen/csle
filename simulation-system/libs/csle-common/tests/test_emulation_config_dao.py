@@ -250,14 +250,14 @@ class TestEmulationConfigDaoSuite:
         :return: None
         """
         node_network_config = NodeNetworkConfig(
-            interface="eth0", limit_packets_queue=3000, packet_delay_ms = 0.1,
-            packet_delay_jitter_ms = 0.025, packet_delay_correlation_percentage = 25,
-            packet_delay_distribution = PacketDelayDistributionType.PARETO,
-            packet_loss_type = PacketLossType.GEMODEL, packet_loss_rate_random_percentage = 2,
-            packet_loss_random_correlation_percentage = 25, loss_state_markov_chain_p13 = 0.1,
-            loss_state_markov_chain_p31 = 0.1, loss_state_markov_chain_p32 = 0.1, loss_state_markov_chain_p23 = 0.1,
-            loss_state_markov_chain_p14 = 0.1, loss_gemodel_p = 0.0001, loss_gemodel_r = 0.999,
-            loss_gemodel_h = 0.0001, loss_gemodel_k= 0.9999)
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms=0.1,
+            packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+            packet_delay_distribution=PacketDelayDistributionType.PARETO,
+            packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=2,
+            packet_loss_random_correlation_percentage=25, loss_state_markov_chain_p13=0.1,
+            loss_state_markov_chain_p31=0.1, loss_state_markov_chain_p32=0.1, loss_state_markov_chain_p23=0.1,
+            loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+            loss_gemodel_h=0.0001, loss_gemodel_k=0.9999)
         assert isinstance(node_network_config.to_dict(), dict)
         assert isinstance(NodeNetworkConfig.from_dict(node_network_config.to_dict()),
                           NodeNetworkConfig)
