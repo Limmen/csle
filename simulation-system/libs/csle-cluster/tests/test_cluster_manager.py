@@ -145,3 +145,24 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.is_postgresql_running', return_value=False)
         response = csle_cluster.cluster_manager.query_cluster_manager.start_postgresql(stub=grpc_stub)
         assert response.running
+
+    def test_stopPostgreSQL(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopPosgtreSQL grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_postgresql', return_value=(False, None, None))
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql(stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_postgresql', return_value=(True, "PIPE", "PIPE"))
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_postgresql_running', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql(stub=grpc_stub)
+        assert not response.running
