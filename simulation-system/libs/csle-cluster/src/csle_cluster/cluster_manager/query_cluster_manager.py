@@ -157,7 +157,7 @@ def start_flask(
     return service_status_dto
 
 
-def start_docker_statsmanager(
+def start_docker_stats_manager(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
@@ -327,7 +327,7 @@ def stop_flask(
     return service_status_dto
 
 
-def stop_docker_statsmanager(
+def stop_docker_stats_manager(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:

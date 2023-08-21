@@ -385,7 +385,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with logs
         """
-        logging.info("Getting log file: {request.name}")
+        logging.info(f"Getting log file: {request.name}")
         data = []
         if os.path.exists(request.name):
             try:
