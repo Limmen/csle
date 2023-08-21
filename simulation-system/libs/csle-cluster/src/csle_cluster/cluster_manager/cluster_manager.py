@@ -357,7 +357,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Starting the docker statsmanager")
-        ManagementSystemController.start_docker_stats_manager(logger=logging.getLogger())
+        ManagementSystemController.start_docker_statsmanager(logger=logging.getLogger())
         logging.info("Started the docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -372,7 +372,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Stopping the Docker statsmanager")
-        ManagementSystemController.stop_docker_stats_manager(logger=logging.getLogger())
+        ManagementSystemController.stop_docker_statsmanager(logger=logging.getLogger())
         logging.info("Stopped the Docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -385,7 +385,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DTO with logs
         """
-        logging.info("Getting log file: {request.name}")
+        logging.info(f"Getting log file: {request.name}")
         data = []
         if os.path.exists(request.name):
             try:
@@ -462,7 +462,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         output_str = output_bytes.decode("utf-8")
         output = output_str.split("\n")[-100:]
         logs = output
-        if len(logs) == 0:
+        if logs == ['']:
             alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
             p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True)
             (output_bytes, err) = p.communicate()

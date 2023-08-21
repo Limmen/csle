@@ -512,7 +512,7 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output_1 and str(pid) in output_1
 
     @staticmethod
-    def start_docker_stats_manager(logger: logging.Logger, log_file: str = "docker_stats_manager.log",
+    def start_docker_statsmanager(logger: logging.Logger, log_file: str = "docker_stats_manager.log",
                                    log_dir: str = "/var/log/csle", max_workers: int = 10,
                                    port: int = 50046) -> bool:
         """
@@ -535,7 +535,7 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def stop_docker_stats_manager(logger: logging.Logger) -> bool:
+    def stop_docker_statsmanager(logger: logging.Logger) -> bool:
         """
         Stops the statsmanager
 

@@ -3,10 +3,11 @@ import pytest
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager import ClusterManagerServicer
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ServiceStatusDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import LogsDTO
 from csle_common.dao.emulation_config.config import Config
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-
+import logging
 
 class TestClusterManagerSuite:
     """
@@ -42,6 +43,17 @@ class TestClusterManagerSuite:
         """
         from csle_cluster.cluster_manager.cluster_manager_pb2_grpc import ClusterManagerStub
         return ClusterManagerStub
+
+    @staticmethod
+    def with_class():
+        class A:
+            def __init__(self):
+                pass
+            def __enter__(self):
+                pass
+            def __exit__(self, exc_type, exc_value, traceback):
+                pass
+        return A()
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -366,3 +378,230 @@ class TestClusterManagerSuite:
         response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_grafana(
             stub=grpc_stub)
         assert not response.running
+
+    def test_startPrometheus(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startPrometheus grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_prometheus', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_prometheus(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_prometheus', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_prometheus(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopPrometheus(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopPrometheus grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_prometheus', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_prometheus(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_prometheus', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_prometheus(
+            stub=grpc_stub)
+        assert not response.running
+
+    def test_startPgAdmin(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startPgAdmin grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_pgadmin', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_pgadmin(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_pgadmin', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_pgadmin(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopPgAdmin(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopPgAdmin grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_pgadmin', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_pgadmin(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_pgadmin', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_pgadmin(
+            stub=grpc_stub)
+        assert not response.running
+
+    def test_startFlask(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startFlask grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_flask', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_flask(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_flask', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_flask(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopFlask(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startFlask grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_flask', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_flask(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_flask', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_flask(
+            stub=grpc_stub)
+        assert not response.running
+
+    def test_startDockerStatsManager(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startDockerStatsManager grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_docker_statsmanager', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_docker_statsmanager', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopDockerStatsManager(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopDockerStatsManager grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_docker_statsmanager', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_docker_statsmanager', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(
+            stub=grpc_stub)
+        assert not response.running
+
+    def test_getLogFile(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the getLogFile grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub=grpc_stub,
+                                                                                            log_file_name="abcdef")
+        assert response.logs == ['abcdef']
+        mocker.patch('builtins.open', return_value=None)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub=grpc_stub,
+                                                                                            log_file_name="abcdef")
+        assert response.logs == []
+
+    def test_getFlaskLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getFlaskLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('builtins.open', return_value=None)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getPostrgreSQLLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getPostrgreSQLLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :param examople_config: an example Config object, obtained from the conftest.py file
+        :return: None
+        """
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('builtins.open', return_value=None)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getDockerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getDockerLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('subprocess.Popen.communicate', return_value=(b'abcdef', None))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('subprocess.Popen.communicate', return_value=(b'', None))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['']
+
