@@ -8,7 +8,13 @@ from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
+from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
+from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
+from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 
 
 class TestEmulationConfigDaoSuite:
@@ -201,3 +207,60 @@ class TestEmulationConfigDaoSuite:
         assert DefaultNetworkFirewallConfig.from_dict(default_net_fw_config.to_dict()).to_dict() == \
                default_net_fw_config.to_dict()
         assert DefaultNetworkFirewallConfig.from_dict(default_net_fw_config.to_dict()) == default_net_fw_config
+
+    def test_docker_stats_manager_config(self) -> None:
+        """
+        Tests creation and dict conversion of the DockerStatsManagerConfig DTO
+
+        :return: None
+        """
+        docker_statsmanager_config = DockerStatsManagerConfig(
+            docker_stats_manager_log_file="testlog", docker_stats_manager_log_dir="logdir",
+            docker_stats_manager_max_workers=10, time_step_len_seconds=30, docker_stats_manager_port=19, version="0.0.1"
+        )
+        assert isinstance(docker_statsmanager_config.to_dict(), dict)
+        assert isinstance(DockerStatsManagerConfig.from_dict(docker_statsmanager_config.to_dict()),
+                          DockerStatsManagerConfig)
+        assert DockerStatsManagerConfig.from_dict(docker_statsmanager_config.to_dict()).to_dict() == \
+               docker_statsmanager_config.to_dict()
+        assert DockerStatsManagerConfig.from_dict(docker_statsmanager_config.to_dict()) == docker_statsmanager_config
+
+    def test_docker_stats_managers_info(self) -> None:
+        """
+        Tests creation and dict conversion of the DockerStatsManagersInfo DTO
+
+        :return: None
+        """
+        docker_stats_monitor_dto = DockerStatsMonitorDTO(num_monitors=1, emulations=["testem"],
+                                                         emulation_executions=[15])
+        docker_statsmanagers_info = DockerStatsManagersInfo(
+            ips=["192.168.1.1"], ports=[3333], emulation_name="testem", execution_id=15,
+            docker_stats_managers_statuses=[docker_stats_monitor_dto], docker_stats_managers_running=[True])
+        assert isinstance(docker_statsmanagers_info.to_dict(), dict)
+        assert isinstance(DockerStatsManagersInfo.from_dict(docker_statsmanagers_info.to_dict()),
+                          DockerStatsManagersInfo)
+        assert DockerStatsManagersInfo.from_dict(docker_statsmanagers_info.to_dict()).to_dict() == \
+               docker_statsmanagers_info.to_dict()
+        assert DockerStatsManagersInfo.from_dict(docker_statsmanagers_info.to_dict()) == docker_statsmanagers_info
+
+    def test_node_network_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeNetworkConfig DTO
+
+        :return: None
+        """
+        node_network_config = NodeNetworkConfig(
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms = 0.1,
+            packet_delay_jitter_ms = 0.025, packet_delay_correlation_percentage = 25,
+            packet_delay_distribution = PacketDelayDistributionType.PARETO,
+            packet_loss_type = PacketLossType.GEMODEL, packet_loss_rate_random_percentage = 2,
+            packet_loss_random_correlation_percentage = 25, loss_state_markov_chain_p13 = 0.1,
+            loss_state_markov_chain_p31 = 0.1, loss_state_markov_chain_p32 = 0.1, loss_state_markov_chain_p23 = 0.1,
+            loss_state_markov_chain_p14 = 0.1, loss_gemodel_p = 0.0001, loss_gemodel_r = 0.999,
+            loss_gemodel_h = 0.0001, loss_gemodel_k= 0.9999)
+        assert isinstance(node_network_config.to_dict(), dict)
+        assert isinstance(NodeNetworkConfig.from_dict(node_network_config.to_dict()),
+                          NodeNetworkConfig)
+        assert NodeNetworkConfig.from_dict(node_network_config.to_dict()).to_dict() == \
+               node_network_config.to_dict()
+        assert NodeNetworkConfig.from_dict(node_network_config.to_dict()) == node_network_config
