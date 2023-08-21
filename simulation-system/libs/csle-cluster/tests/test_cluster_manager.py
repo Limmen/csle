@@ -166,3 +166,24 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.is_postgresql_running', return_value=False)
         response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql(stub=grpc_stub)
         assert not response.running
+
+    def test_startDockerEngine(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startDockerEngine grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_docker_engine_running', return_value=True)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_docker_engine', return_value=(False, None, None))
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_engine(stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_docker_engine_running', return_value=False)
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_docker_engine', return_value=(True, "PIPE", "PIPE"))
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_engine(stub=grpc_stub)
+        assert response.running
