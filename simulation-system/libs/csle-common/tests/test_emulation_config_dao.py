@@ -4,6 +4,10 @@ from csle_common.dao.emulation_config.client_managers_info import ClientManagers
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
+from csle_common.dao.emulation_config.config import Config
+from csle_common.dao.emulation_config.credential import Credential
+from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
 
 
@@ -101,3 +105,99 @@ class TestEmulationConfigDaoSuite:
         assert isinstance(ClusterConfig.from_dict(cluster_config.to_dict()), ClusterConfig)
         assert ClusterConfig.from_dict(cluster_config.to_dict()).to_dict() == cluster_config.to_dict()
         assert ClusterConfig.from_dict(cluster_config.to_dict()) == cluster_config
+
+    def test_config(self) -> None:
+        """
+        Tests creation and dict conversion of the Config DTO
+
+        :return: None
+        """
+        cluster_node = ClusterNode(ip="192.168.5.1", leader=False, cpus=123, gpus=5, RAM=128)
+        cluster_config = ClusterConfig(cluster_nodes=[cluster_node])
+        config = Config(
+            management_admin_email_default="admin",
+            management_admin_username_default="admin",
+            management_admin_password_default="admin",
+            management_admin_first_name_default="admin",
+            management_admin_last_name_default="admin",
+            management_admin_organization_default="admin",
+            management_guest_username_default="admin",
+            management_guest_password_default="admin",
+            management_guest_first_name_default="admin",
+            management_guest_last_name_default="admin",
+            management_guest_email_default="admin",
+            management_guest_organization_default="admin",
+            ssh_admin_username="admin",
+            ssh_admin_password="admin",
+            ssh_agent_username="admin",
+            ssh_agent_password="admin",
+            metastore_user="admin",
+            metastore_password="admin",
+            metastore_database_name="admin",
+            metastore_ip="admin",
+            node_exporter_port=23,
+            grafana_port=23,
+            management_system_port=23,
+            cadvisor_port=23,
+            prometheus_port=23,
+            node_exporter_pid_file="admin",
+            pgadmin_port=23,
+            csle_mgmt_webapp_pid_file="admin",
+            docker_stats_manager_log_file="admin",
+            docker_stats_manager_log_dir="admin",
+            docker_stats_manager_port=23,
+            docker_stats_manager_max_workers=23,
+            docker_stats_manager_outfile="admin",
+            docker_stats_manager_pidfile="admin",
+            prometheus_pid_file="admin",
+            prometheus_log_file="admin",
+            prometheus_config_file="admin",
+            default_log_dir="admin",
+            cluster_config=cluster_config,
+            node_exporter_log_file="admin",
+            allow_registration=True,
+            grafana_username="admin",
+            grafana_password="admin",
+            pgadmin_username="admin",
+            pgadmin_password="admin",
+            postgresql_log_dir="admin",
+            nginx_log_dir="admin",
+            flask_log_file="admin",
+            cluster_manager_log_file="admin"
+        )
+        assert isinstance(config.to_dict(), dict)
+        assert isinstance(Config.from_dict(config.to_dict()), Config)
+        assert Config.from_dict(config.to_dict()).to_dict() == config.to_dict()
+        assert Config.from_dict(config.to_dict()) == config
+
+    def test_credential(self) -> None:
+        """
+        Tests creation and dict conversion of the Credential DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        assert isinstance(credential.to_dict(), dict)
+        assert isinstance(Credential.from_dict(credential.to_dict()), Credential)
+        assert Credential.from_dict(credential.to_dict()).to_dict() == credential.to_dict()
+        assert Credential.from_dict(credential.to_dict()) == credential
+
+    def test_default_network_firewall_config(self) -> None:
+        """
+        Tests creation and dict conversion of the DefaultNetworkFirewallConfig DTO
+
+        :return: None
+        """
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        default_net_fw_config = DefaultNetworkFirewallConfig(
+            ip="192.168.5.1", default_gw="192.168.5.29", default_output="ACCEPT", default_input="DROP",
+            default_forward="ACCEPT", network=container_network
+        )
+        assert isinstance(default_net_fw_config.to_dict(), dict)
+        assert isinstance(DefaultNetworkFirewallConfig.from_dict(default_net_fw_config.to_dict()),
+                          DefaultNetworkFirewallConfig)
+        assert DefaultNetworkFirewallConfig.from_dict(default_net_fw_config.to_dict()).to_dict() == \
+               default_net_fw_config.to_dict()
+        assert DefaultNetworkFirewallConfig.from_dict(default_net_fw_config.to_dict()) == default_net_fw_config
