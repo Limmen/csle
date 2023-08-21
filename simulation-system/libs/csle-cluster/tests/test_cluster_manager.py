@@ -576,6 +576,7 @@ class TestClusterManagerSuite:
         
         :param grpc_stub: the stub for the GRPC server to make the request to
         :param mocker: the mocker object to mock functions with external dependencies
+        :param examople_config: an example Config object, obtained from the conftest.py file
         :return: None
         """
         mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
@@ -588,4 +589,19 @@ class TestClusterManagerSuite:
         mocker.patch('builtins.open', return_value=None)
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
         assert response.logs == []
-    
+
+    def test_getDockerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getDockerLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('subprocess.Popen.communicate', return_value=(b'abcdef', None))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('subprocess.Popen.communicate', return_value=(b'', None))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['']
+

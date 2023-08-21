@@ -462,7 +462,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         output_str = output_bytes.decode("utf-8")
         output = output_str.split("\n")[-100:]
         logs = output
-        if len(logs) == 0:
+        if logs == ['']:
             alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
             p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True)
             (output_bytes, err) = p.communicate()
