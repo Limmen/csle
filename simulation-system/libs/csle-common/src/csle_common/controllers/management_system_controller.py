@@ -300,6 +300,7 @@ class ManagementSystemController:
         :param logger: the logger to use for logging
         :return: True if cadvisor was started, otherwise False
         """
+        logger.info("allt bra här eller ")
         if ManagementSystemController.is_cadvisor_running():
             logger.info("cAdvisor is already running")
             return False
