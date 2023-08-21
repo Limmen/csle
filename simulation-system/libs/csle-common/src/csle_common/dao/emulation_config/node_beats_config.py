@@ -14,7 +14,7 @@ class NodeBeatsConfig(JSONSerializable):
                  start_filebeat_automatically: bool = False, start_packetbeat_automatically: bool = False,
                  start_metricbeat_automatically: bool = False, start_heartbeat_automatically: bool = False):
         """
-        Intializes the DTO
+        Initializes the DTO
 
         :param ip: the ip of the nod
         :param log_files_paths: list of log files to ingest to elastic through filebeat
