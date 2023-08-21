@@ -502,32 +502,32 @@ class TestClusterManagerSuite:
         :return: None
         """
         mocker.patch('csle_common.controllers.management_system_controller.'
-                     'ManagementSystemController.start_docker_stats_manager', return_value=False)
-        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_stats_manager(
+                     'ManagementSystemController.start_docker_statsmanager', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(
             stub=grpc_stub)
         assert response.running
         mocker.patch('csle_common.controllers.management_system_controller.'
-                     'ManagementSystemController.start_docker_stats_manager', return_value=True)
-        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_stats_manager(
+                     'ManagementSystemController.start_docker_statsmanager', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(
             stub=grpc_stub)
         assert response.running
 
     def test_stopDockerStatsManager(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the stopDockerStatsManager grpc
-        
+
         :param grpc_stub: the stub for the GRPC server to make the request to
         :param mocker: the mocker object to mock functions with external dependencies
         :return: None
         """
         mocker.patch('csle_common.controllers.management_system_controller.'
-                     'ManagementSystemController.stop_docker_stats_manager', return_value=False)
-        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager(
+                     'ManagementSystemController.stop_docker_statsmanager', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(
             stub=grpc_stub)
         assert not response.running
         mocker.patch('csle_common.controllers.management_system_controller.'
-                     'ManagementSystemController.stop_docker_stats_manager', return_value=True)
-        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager(
+                     'ManagementSystemController.stop_docker_statsmanager', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(
             stub=grpc_stub)
         assert not response.running
 
@@ -569,3 +569,23 @@ class TestClusterManagerSuite:
         mocker.patch('builtins.open', return_value=None)
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub=grpc_stub)
         assert response.logs == []
+
+    def test_getPostrgreSQLLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getPostrgreSQLLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('builtins.open', return_value=None)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
+        assert response.logs == []
+    

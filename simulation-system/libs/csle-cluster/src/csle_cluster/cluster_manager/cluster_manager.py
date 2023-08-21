@@ -357,7 +357,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Starting the docker statsmanager")
-        ManagementSystemController.start_docker_stats_manager(logger=logging.getLogger())
+        ManagementSystemController.start_docker_statsmanager(logger=logging.getLogger())
         logging.info("Started the docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -372,7 +372,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Stopping the Docker statsmanager")
-        ManagementSystemController.stop_docker_stats_manager(logger=logging.getLogger())
+        ManagementSystemController.stop_docker_statsmanager(logger=logging.getLogger())
         logging.info("Stopped the Docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 

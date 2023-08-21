@@ -213,7 +213,7 @@ class ClusterController:
             return service_status_dto
 
     @staticmethod
-    def start_docker_stats_manager(ip: str, port: int) \
+    def start_docker_statsmanager(ip: str, port: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts Docker statsmanager on a cluster node
@@ -225,7 +225,7 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_stats_manager(stub)
+            service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(stub)
             return service_status_dto
 
     @staticmethod
@@ -364,7 +364,7 @@ class ClusterController:
             return service_status_dto
 
     @staticmethod
-    def stop_docker_stats_manager(ip: str, port: int) \
+    def stop_docker_statsmanager(ip: str, port: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Stops Docker statsmanager on a cluster node
@@ -376,7 +376,7 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager(stub)
+            service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(stub)
             return service_status_dto
 
     @staticmethod
