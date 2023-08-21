@@ -75,7 +75,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             dockerEngineRunning=docker_engine_running
         )
 
-    def startPosgtreSQL(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPostgreSQLMsg,
+    def startPostgreSQL(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartPostgreSQLMsg,
                         context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
@@ -87,6 +87,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         """
         logging.info(f"Starting postgresql with command: {constants.COMMANDS.POSTGRESQL_START}")
         operation_status, stdout, stderr = ManagementSystemController.start_postgresql(logger=logging.getLogger())
+
         logging.info(f"Started postgresql, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
