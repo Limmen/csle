@@ -290,3 +290,79 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.stop_cadvisor', return_value=True)
         response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_cadvisor(stub=grpc_stub)
         assert not response.running
+
+    def test_startNodeExporter(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startNodeExporter grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_node_exporter', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_node_exporter(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_node_exporter', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_node_exporter(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopNodeExporter(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopNodeExporter grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_node_exporter', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_node_exporter(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_node_exporter', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_node_exporter(
+            stub=grpc_stub)
+        assert not response.running
+
+    def test_startGrafana(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startGrafana grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_grafana', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_grafana(
+            stub=grpc_stub)
+        assert response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.start_grafana', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.start_grafana(
+            stub=grpc_stub)
+        assert response.running
+
+    def test_stopGrafana(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopGrafana grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_grafana', return_value=False)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_grafana(
+            stub=grpc_stub)
+        assert not response.running
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_grafana', return_value=True)
+        response: ServiceStatusDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_grafana(
+            stub=grpc_stub)
+        assert not response.running
