@@ -1130,3 +1130,276 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_generators(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         assert response.outcome == False
+
+    def test_startClientPopulation(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startClientPopulation grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.traffic_controller.TrafficController.start_client_population",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_client_population(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_client_population(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startKafkaClientProducer(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startKafkaClientProducer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.traffic_controller.TrafficController.start_client_producer",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_client_producer(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_client_producer(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_stopKafkaClientProducer(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopKafkaClientProducer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.traffic_controller.TrafficController.stop_client_producer",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_client_producer(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_client_producer(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startSnortIdses(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startSnortIdses grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startSnortIdsesMonitorThreads(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startSnortIdsesMonitorThreads grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+                     "start_snort_idses_monitor_threads", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses_monitor_threads(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses_monitor_threads(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startOssecIdses(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startOssecIdses grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController."
+                     "start_ossec_idses", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startOssecIdsesMonitorThreads(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startOssecIdsesMonitorThreads grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController."
+                     "start_ossec_idses_monitor_threads", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses_monitor_threads(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses_monitor_threads(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startElkStack(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startElkStack grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.elk_controller.ELKController.start_elk_stack",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_elk_stack(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_elk_stack(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_startHostManagers(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startHostManagers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller.HostController.start_host_monitor_threads",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_host_managers(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_host_managers(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_applyFileBeatsConfig(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the applyFileBeatsConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller.HostController.config_filebeats",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_filebeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_filebeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_applyPacketBeatsConfig(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the applyPacketBeatsConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller.HostController.config_packetbeats",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_packetbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_packetbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_applyMetricBeatsConfig(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the applyMetricBeatsConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller.HostController.config_metricbeats",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_metricbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_metricbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
+
+    def test_applyHeartBeatsConfig(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the applyHeartBeatsConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller.HostController.config_heartbeats",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_heartbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == True
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_heartbeats_config(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome == False
