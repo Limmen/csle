@@ -1,5 +1,7 @@
 from typing import Any
 import pytest
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
 import csle_common.constants.constants as constants
@@ -9,7 +11,7 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import LogsDTO
 from csle_common.dao.emulation_config.config import Config
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-
+import logging
 
 class TestClusterManagerSuite:
     """
@@ -45,6 +47,24 @@ class TestClusterManagerSuite:
         """
         from csle_cluster.cluster_manager.cluster_manager_pb2_grpc import ClusterManagerStub
         return ClusterManagerStub
+
+    @pytest.fixture
+    def st_ryu(self, mocker):
+        """
+        Pytest fixture for mocking the start_ryu method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ryu(emulation_env_config: EmulationEnvConfig,
+                      physical_server_ip: str,
+                      logger: logging.RootLogger):
+            ryu = RyuDTO(ryu_running=True, monitor_running=True, port=4, web_port=4,
+                         controller="null", kafka_ip="123.456.78.99", kafka_port = 7,
+                         time_step_len=4)
+            return ryu
+        start_ryu_mocker = mocker.MagicMock(side_effect=start_ryu)
+        return start_ryu_mocker
 
     @staticmethod
     def with_class():
@@ -857,3 +877,20 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.apply_kafka_config(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         assert not response.outcome
+
+    def test_startSdnController(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
+                                st_ryu) -> None:
+        """
+        Tests the startSdnController grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager.start_ryu",
+                     side_effect=st_ryu)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
