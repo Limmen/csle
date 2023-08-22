@@ -1,6 +1,8 @@
 from typing import Any
 import pytest
 import pytest_mock
+
+import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager import ClusterManagerServicer
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ServiceStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import LogsDTO
@@ -590,18 +592,68 @@ class TestClusterManagerSuite:
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
         assert response.logs == []
 
-    def test_getDockerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+    def test_getDockerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the getDockerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        Popen_mock = mocker.MagicMock()
+        mocker.patch('subprocess.Popen', return_value=Popen_mock)
+        Popen_mock.configure_mock(**{"communicate.return_value": (b'abcdef', None)})
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+
+        Popen_mock.configure_mock(**{"communicate.return_value": (b'', None)})
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        assert response.logs == ['']
+
+    def test_getNginxLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getNginxLogs grpc
         
         :param grpc_stub: the stub for the GRPC server to make the request to
         :param mocker: the mocker object to mock functions with external dependencies
         :return: None
         """
-        mocker.patch('subprocess.Popen.communicate', return_value=(b'abcdef', None))
-        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
+        mocker.patch('os.listdir', return_value=[constants.FILE_PATTERNS.LOG_SUFFIX])
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('os.path.isfile', return_value=True)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail', return_value="abcdef")
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_nginx_logs(stub=grpc_stub)
         assert response.logs == ['abcdef']
-        mocker.patch('subprocess.Popen.communicate', return_value=(b'', None))
-        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub=grpc_stub)
-        assert response.logs == ['']
+        mocker.patch('os.listdir', return_value="null")
+        mocker.patch('os.path.isfile', return_value=False)
+        response = csle_cluster.cluster_manager.query_cluster_manager.get_nginx_logs(stub=grpc_stub)
+        assert response.logs == []
 
+    def test_getGrafanaLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getGrafanaLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        Popen_mock = mocker.MagicMock()
+        mocker.patch('subprocess.Popen', return_value=Popen_mock)
+        Popen_mock.configure_mock(**{"communicate.return_value": (b'abcdef', None)})
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_grafana_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+
+    def test_getPgAdminLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getPgAdminLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        Popen_mock = mocker.MagicMock()
+        mocker.patch('subprocess.Popen', return_value=Popen_mock)
+        Popen_mock.configure_mock(**{"communicate.return_value": (b'abcdef', None)})
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_pgadmin_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
