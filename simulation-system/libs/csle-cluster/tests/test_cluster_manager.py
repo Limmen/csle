@@ -657,3 +657,102 @@ class TestClusterManagerSuite:
         Popen_mock.configure_mock(**{"communicate.return_value": (b'abcdef', None)})
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_pgadmin_logs(stub=grpc_stub)
         assert response.logs == ['abcdef']
+
+    def test_getCadvisorLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getCadvisorLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        Popen_mock = mocker.MagicMock()
+        mocker.patch('subprocess.Popen', return_value=Popen_mock)
+        Popen_mock.configure_mock(**{"communicate.return_value": (b'abcdef', None)})
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_cadvisor_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+
+    def test_getNodeExporterLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getNodeExporterLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('os.listdir', return_value=[constants.FILE_PATTERNS.LOG_SUFFIX])
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('os.path.exists', return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail', return_value="abcdef")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_node_exporter_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('os.path.exists', return_value=False)
+        response = csle_cluster.cluster_manager.query_cluster_manager.get_node_exporter_logs(stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getPrometheusLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getPrometheusLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('os.listdir', return_value=[constants.FILE_PATTERNS.LOG_SUFFIX])
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch('os.path.exists', return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail', return_value="abcdef")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_prometheus_logs(stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('os.path.exists', return_value=False)
+        response = csle_cluster.cluster_manager.query_cluster_manager.get_prometheus_logs(stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getDockerStatsManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getDockerStatsManagerLogs grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('os.listdir', return_value=[constants.FILE_PATTERNS.LOG_SUFFIX])
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config',
+                     return_value=example_config)
+        mocker.patch('os.path.exists', return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail', return_value="abcdef")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_docker_statsmanager_logs(
+            stub=grpc_stub)
+        assert response.logs == ['abcdef']
+        mocker.patch('os.path.exists', return_value=False)
+        response = csle_cluster.cluster_manager.query_cluster_manager.get_docker_statsmanager_logs(
+            stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getCsleLogFiles(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
+        """
+        Tests the getCsleLogFiles grpc
+        
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('os.listdir', return_value=['1', '2', '3', '4', '5', '6', '8', '9', '0', '8', '7',
+                                                 '5', '4', '3', '2', '6', '8', '87', '6', '1', '2'])
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config',
+                     return_value=example_config)
+        mocker.patch('os.path.isfile', return_value=True)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(
+            stub=grpc_stub)
+        assert len(response.logs) == 20
+        mocker.patch('os.listdir', return_value=['abcdef'])
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(
+            stub=grpc_stub)
+        assert response.logs == [f"{example_config.default_log_dir}{constants.COMMANDS.SLASH_DELIM}abcdef"]
+        mocker.patch('os.path.isfile', return_value=False)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(
+            stub=grpc_stub)
+        assert response.logs == []
