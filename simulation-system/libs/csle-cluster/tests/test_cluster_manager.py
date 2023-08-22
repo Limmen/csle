@@ -1,7 +1,7 @@
 from typing import Any
 import pytest
 import pytest_mock
-
+from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager import ClusterManagerServicer
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ServiceStatusDTO
@@ -756,3 +756,27 @@ class TestClusterManagerSuite:
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(
             stub=grpc_stub)
         assert response.logs == []
+
+    def test_startContainersInExecution(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config,
+                                        get_ex_exec) -> None:
+        """
+        Tests the startContainersInExecution grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController.run_containers",
+                     return_value=None)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
