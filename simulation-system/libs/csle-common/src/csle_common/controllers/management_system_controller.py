@@ -513,8 +513,8 @@ class ManagementSystemController:
 
     @staticmethod
     def start_docker_statsmanager(logger: logging.Logger, log_file: str = "docker_stats_manager.log",
-                                   log_dir: str = "/var/log/csle", max_workers: int = 10,
-                                   port: int = 50046) -> bool:
+                                  log_dir: str = "/var/log/csle", max_workers: int = 10,
+                                  port: int = 50046) -> bool:
         """
         Starts the docker stats manager on the docker host if it is not already started
 
