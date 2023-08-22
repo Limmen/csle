@@ -894,3 +894,8 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
