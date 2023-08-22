@@ -11,7 +11,7 @@ class ResourceConstraintsController:
 
     @staticmethod
     def apply_resource_constraints(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
-                                   logger: logging.Logger):
+                                   logger: logging.Logger) -> None:
         """
         Creates users in an emulation environment according to a specified users-configuration
 
