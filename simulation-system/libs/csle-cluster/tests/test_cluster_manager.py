@@ -2813,3 +2813,30 @@ class TestClusterManagerSuite:
             start_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
                                ip_first_octet=1, container_ip="123.456.78.99")
         assert not response.outcome
+
+    def test_stopHostManager(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopHostManager grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_host_manager", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
+                               ip_first_octet=1, container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
+                               ip_first_octet=1, container_ip="123.456.78.99")
+        assert not response.outcome
