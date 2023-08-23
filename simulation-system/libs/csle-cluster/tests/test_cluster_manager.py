@@ -2063,9 +2063,9 @@ class TestClusterManagerSuite:
             stop_all_running_containers(stub=grpc_stub)
         assert response.outcome
 
-    def test_stop_container(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+    def test_stopContainer(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
-        Tests the stop_container grpc
+        Tests the stopContainer grpc
 
         :param grpc_stub: the stub for the GRPC server to make the request to
         :param mocker: the mocker object to mock functions with external dependencies
@@ -2081,3 +2081,71 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
             stop_container(stub=grpc_stub, container_name="JohnDoeContainer")
         assert not response.outcome
+
+    def test_removeAllStoppedContainers(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the removeAllStoppedContainers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "rm_all_stopped_containers", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_all_stopped_containers(stub=grpc_stub)
+        assert response.outcome
+
+    def test_removeContainer(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the removeContainer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController.rm_container",
+                     return_value=True)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert response.outcome
+        mocker.patch("csle_common.controllers.container_controller.ContainerController.rm_container",
+                    return_value=False)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert not response.outcome
+
+    def test_removeAllContainerImages(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the removeAllContainerImages grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController.rm_all_images",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_all_container_images(stub=grpc_stub)
+        assert response.outcome
+
+    def test_removeContainerImage(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the removeContainerImage grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController.rm_image",
+                     return_value=True)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_container_image(stub=grpc_stub, image_name="JohnDoeImage")
+        assert response.outcome
+
+        mocker.patch("csle_common.controllers.container_controller.ContainerController.rm_image",
+                     return_value=False)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            remove_container_image(stub=grpc_stub, image_name="JohnDoeImage")
+        assert not response.outcome
+        

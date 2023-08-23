@@ -1861,9 +1861,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Removing container image: {request.name}")
-        ContainerController.rm_image(name=request.name)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.rm_image(name=request.name)
+        if outcome:
+            logging.info(f"Removing container image: {request.name}")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def listAllContainerImages(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllContainerImagesMsg,
