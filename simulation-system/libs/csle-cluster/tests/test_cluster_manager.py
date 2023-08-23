@@ -1,6 +1,8 @@
 from typing import Any, List
 import pytest
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ElkManagersInfoDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerStatsManagersInfoDTO
@@ -220,6 +222,19 @@ class TestClusterManagerSuite:
                                        local_kibana_port=-1,
                                        physical_server_ip="123.456.78.99")
         return elk_mng_info
+
+    @staticmethod
+    def get_ex_nc_conf():
+        c_net = ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
+                                 subnet_prefix="null", interface="eth0")
+        nc_conf = NodeContainerConfig(name="Container1",
+                                      ips_and_networks=[("123.456.78.99", c_net)],
+                                      version="null", level="null",
+                                      restart_policy="JDoePolicy", suffix="null",
+                                      os="null", execution_ip_first_octet=-1,
+                                      docker_gw_bridge_ip="123.456.78.99",
+                                      physical_host_ip="123.456.78.99")
+        return nc_conf
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -2771,3 +2786,30 @@ class TestClusterManagerSuite:
             stop_containers_of_execution(stub=grpc_stub, emulation="JDoeEmulation",
                                          ip_first_octet=1)
         assert response.outcome
+
+    def test_startHostManager(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startHostManager grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_host_manager", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
+                               ip_first_octet=1, container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
+                               ip_first_octet=1, container_ip="123.456.78.99")
+        assert not response.outcome
