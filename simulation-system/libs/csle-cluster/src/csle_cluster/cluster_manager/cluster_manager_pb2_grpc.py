@@ -438,7 +438,7 @@ class ClusterManagerStub(object):
         self.getTrafficManagersInfo = channel.unary_unary(
                 '/ClusterManager/getTrafficManagersInfo',
                 request_serializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
+                response_deserializer=cluster__manager__pb2.TrafficManagersInfoDTO.FromString,
                 )
         self.stopAllRunningContainers = channel.unary_unary(
                 '/ClusterManager/stopAllRunningContainers',

@@ -1230,6 +1230,7 @@ class ClusterManagerUtil:
         :param traffic_managers_dto: the DTO to convert
         :return: the converted DTO
         """
+        
         if traffic_managers_dto is None:
             return ClusterManagerUtil.get_empty_traffic_managers_info_dto()
         return cluster_manager_pb2.TrafficManagersInfoDTO(

@@ -1746,7 +1746,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is not None and \
                 execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
                 == GeneralUtil.get_host_ip():
-            logging.info("kommer jag hit då")
+
             client_managers_dto = TrafficController.get_client_managers_info(
                 emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
                 active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))

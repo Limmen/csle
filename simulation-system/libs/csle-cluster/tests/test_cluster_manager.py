@@ -1,7 +1,10 @@
 from typing import Any, List
 import pytest
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_cluster.cluster_manager.cluster_manager_pb2 import TrafficManagersInfoDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ClientManagersInfoDTO
+from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
+from csle_collector.traffic_manager.traffic_manager_pb2 import TrafficDTO
 from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import GetNumClientsDTO
@@ -105,14 +108,27 @@ class TestClusterManagerSuite:
                                      producer_active=True,
                                      clients_time_step_len_seconds=4,
                                      producer_time_step_len_seconds=5)
-            client_mng_info = ClientManagersInfo(ips=["123.456.78.99"], ports=[1],
+            client_manage_info = ClientManagersInfo(ips=["123.456.78.99"], ports=[1],
                                                  emulation_name="JohnDoeEmulation",
                                                  execution_id=1,
                                                  client_managers_statuses=[clients_dto],
-                                                 client_managers_running=[bool])
-            return client_mng_info
+                                                 client_managers_running=[True])
+            return client_manage_info
         get_client_managers_info_mocker = mocker.MagicMock(side_effect=get_client_managers_info)
         return get_client_managers_info_mocker
+
+    @pytest.fixture
+    def active_ips(self, mocker):
+        """
+        Pytest fixture for mocking the ClusterManagerUtil.get_active_ips method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_active_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
+            return ["123.456.78.99"]
+        get_active_ips_mocker = mocker.MagicMock(side_effect=get_active_ips)
+        return get_active_ips_mocker
 
     @pytest.fixture
     def st_ryu(self, mocker):
@@ -131,6 +147,26 @@ class TestClusterManagerSuite:
             return ryu
         start_ryu_mocker = mocker.MagicMock(side_effect=start_ryu)
         return start_ryu_mocker
+
+    @pytest.fixture
+    def traffic_mng_info(self, mocker):
+        """
+        Pytest fixture for mocking the TrafficController.get_traffic_managers_info method
+        
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
+                                      physical_host_ip: str, logger: logging.Logger) -> TrafficManagersInfo:
+            traffic_dto = TrafficDTO(running=True, script="null")
+            traffic_manage_info = TrafficManagersInfo(ips=["123.456.78.99"], ports=[1],
+                                                      emulation_name="JohnDoeEmulation", execution_id=1,
+                                                      traffic_managers_statuses=[traffic_dto],
+                                                      traffic_managers_running=[True])
+            return traffic_manage_info
+        get_traffic_managers_info_mocker = mocker.MagicMock(side_effect=get_traffic_managers_info)
+        return get_traffic_managers_info_mocker
 
     @staticmethod
     def with_class():
@@ -673,7 +709,8 @@ class TestClusterManagerSuite:
         mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
         mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
                      return_value="abcdef")
-        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch("os.listdir", return_value=[constants.FILE_PATTERNS.LOG_SUFFIX])
+        mocker.patch("os.path.isfile", return_value=True)
         mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub=grpc_stub)
         assert response.logs == ['abcdef']
@@ -1625,10 +1662,12 @@ class TestClusterManagerSuite:
         :param mocker: the mocker object to mock functions with external dependencies
         :return: None
         """
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
         mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController."
                      "stop_all_executions", return_value=None)
-        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_execution(
-            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.stop_all_executions(
+            stub=grpc_stub)
         assert response.outcome
 
     def test_cleanAllExecutions(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config) -> None:
@@ -1949,7 +1988,7 @@ class TestClusterManagerSuite:
         assert not response.outcome
 
     def test_getClientManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
-                                   client_mng_info) -> None:
+                                   client_mng_info, active_ips) -> None:
         """
         Tests the getClientManagersInfo grpc
 
@@ -1963,6 +2002,8 @@ class TestClusterManagerSuite:
                      return_value="123.456.78.99")
         mocker.patch("csle_common.controllers.traffic_controller.TrafficController.get_client_managers_info",
                      side_effect=client_mng_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
         response: ClientManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         logging.info(response)
@@ -1970,3 +2011,73 @@ class TestClusterManagerSuite:
         response: ClientManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         logging.info(response)
+
+    def test_getTrafficManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
+                                    traffic_mng_info, active_ips) -> None:
+        """
+        Tests the getTrafficManagersInfo grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.traffic_controller.TrafficController."
+                     "get_traffic_managers_info", side_effect=traffic_mng_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
+        response: TrafficManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_managers_info(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.ips == ['123.456.78.99']
+        assert response.ports == [1]
+        assert response.emulationName == "JohnDoeEmulation"
+        assert response.executionId == 1
+        assert response.trafficManagersRunning
+        assert response.trafficManagersStatuses[0].running
+        assert response.trafficManagersStatuses[0].script == "null"
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: TrafficManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_managers_info(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.ips == []
+        assert response.ports == []
+        assert response.emulationName == ""
+        assert response.executionId == -1
+        assert response.trafficManagersRunning == []
+        assert response.trafficManagersStatuses == []
+
+    def test_stopAllRunningContainers(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopAllRunningContainers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "stop_all_running_containers", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_all_running_containers(stub=grpc_stub)
+        assert response.outcome
+
+    def test_stop_container(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stop_container grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "stop_container", return_value=True)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert response.outcome
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "stop_container", return_value=False)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert not response.outcome
