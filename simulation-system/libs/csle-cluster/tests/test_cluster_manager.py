@@ -1,6 +1,7 @@
 from typing import Any, List
 import pytest
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImagesDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerNetworksDTO
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_cluster.cluster_manager.cluster_manager_pb2 import TrafficManagersInfoDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ClientManagersInfoDTO
@@ -2175,3 +2176,51 @@ class TestClusterManagerSuite:
         assert response.images[0].os == "null"
         assert response.images[0].architecture == "null"
         assert response.images[0].size == 1
+
+    def test_listAllDockerNetworks(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the listAllDockerNetworks grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "list_docker_networks", return_value=(["null"], [1]))
+        response: DockerNetworksDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            list_all_docker_networks(stub=grpc_stub)
+        response.networks == ["null"]
+        response.network_ids == [1]
+
+    def test_startAllStoppedContainers(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startAllStoppedContainers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "start_all_stopped_containers", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_all_stopped_containers(stub=grpc_stub)
+        assert response.outcome
+
+    def test_startContainer(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the startContainer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "start_container", return_value=True)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert response.outcome
+        mocker.patch("csle_common.controllers.container_controller.ContainerController."
+                     "start_container", return_value=False)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_container(stub=grpc_stub, container_name="JohnDoeContainer")
+        assert not response.outcome
