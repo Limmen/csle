@@ -1,9 +1,13 @@
 from typing import Any, List
 import pytest
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
+from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
+from csle_cluster.cluster_manager.cluster_manager_pb2 import ElkManagersInfoDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerStatsManagersInfoDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerStatsMonitorStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImagesDTO
+from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import ElkStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import RunningContainersDTO
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import StoppedContainersDTO
@@ -203,6 +207,19 @@ class TestClusterManagerSuite:
                                                                            )],
                                                  docker_stats_managers_running=[True])
         return docker_sm_info
+
+    @staticmethod
+    def get_elk_mng_info():
+        elk_mng_info = ELKManagersInfo(ips=["123.456.78.99"], ports=[1],
+                                       emulation_name="JohnDoeEmulation",
+                                       execution_id=1,
+                                       elk_managers_statuses=[ElkDTO(elasticRunning=True,
+                                                                     kibanaRunning=True,
+                                                                     logstashRunning=True)],
+                                       elk_managers_running=[True],
+                                       local_kibana_port=-1,
+                                       physical_server_ip="123.456.78.99")
+        return elk_mng_info
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -2449,3 +2466,308 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
             stop_elk_manager(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         assert not response.outcome
+
+    def test_startElkManager(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startElkManager grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "start_elk_manager", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_elk_manager(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_elk_manager(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_getElkStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the getElkStatus grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController.get_elk_status",
+                     return_value=ElkDTO(elasticRunning=True,
+                                         kibanaRunning=True,
+                                         logstashRunning=True))
+        response: ElkStatusDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_status(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.kibanaRunning
+        assert response.elasticRunning
+        assert response.logstashRunning
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: ElkStatusDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_status(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.kibanaRunning
+        assert not response.elasticRunning
+        assert not response.logstashRunning
+
+    def test_stopElkStack(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopElkStack grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "stop_elk_stack", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_elk_stack(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_elk_stack(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_startElastic(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startElastic grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "start_elastic", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_elastic(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_elastic(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopElastic(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopElastic grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "stop_elastic", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_elastic(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_elastic(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_startKibana(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startKibana grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "start_kibana", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_kibana(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_kibana(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopKibana(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopKibana grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "stop_kibana", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_kibana(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_kibana(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_startLogstash(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startLogstash grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "start_logstash", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_logstash(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_logstash(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopLogstash(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopLogstash grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.elk_controller.ELKController."
+                     "stop_logstash", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_logstash(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_logstash(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_getElkManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                get_ex_exec, active_ips) -> None:
+        """
+        Tests the getElkManagersInfo grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.elk_controller.ELKController.get_elk_managers_info",
+                     return_value=TestClusterManagerSuite.get_elk_mng_info())
+        response: ElkManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.ips == ["123.456.78.99"]
+        assert response.ports == [1]
+        assert response.emulationName == "JohnDoeEmulation"
+        assert response.executionId == 1
+        assert response.elkManagersRunning
+        assert response.elkManagersStatuses[0].elasticRunning
+        assert response.elkManagersStatuses[0].kibanaRunning
+        assert response.elkManagersStatuses[0].logstashRunning
+
+    def test_startContainersOfExecution(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the startContainersOfExecution grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController."
+                     "start_containers_of_execution", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_containers_of_execution(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_emulation_execution", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_containers_of_execution(stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_runContainer(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the runContainer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+
+        mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController."
+                     "run_container", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            run_container(stub=grpc_stub, image="JDoeImage",
+                          name="JohnDoe", memory=1,
+                          num_cpus=10, create_network=True,
+                          version="null")
+        assert response.outcome
+
+    def test_stopContainersOfExecution(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopContainersOfExecution grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController."
+                     "start_containers_of_execution", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_containers_of_execution(stub=grpc_stub, emulation="JDoeEmulation",
+                                         ip_first_octet=1)
+        assert response.outcome
