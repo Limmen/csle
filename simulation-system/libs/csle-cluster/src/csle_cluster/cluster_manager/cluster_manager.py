@@ -1349,7 +1349,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def startDockerStatsManagerThread(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerStatsManagerThreadMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Starts the docker stats manager
 
@@ -1362,11 +1362,11 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         if execution is None:
-            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
+            return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
         ContainerController.start_docker_stats_thread(execution=execution,
                                                       physical_server_ip=GeneralUtil.get_host_ip(),
                                                       logger=logging.getLogger())
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
     def stopAllExecutionsOfEmulation(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopAllExecutionsOfEmulationMsg,

@@ -1300,7 +1300,7 @@ def start_docker_statsmanager_thread(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
-        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
     """
     Starts a docker stats manager thread for a given execution
 
@@ -1313,9 +1313,9 @@ def start_docker_statsmanager_thread(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StartDockerStatsManagerThreadMsg(
         emulation=emulation, ipFirstOctet=ip_first_octet
     )
-    operation_outcome_dto: csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO = \
+    service_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO = \
         stub.startDockerStatsManagerThread(operation_msg, timeout=timeout)
-    return operation_outcome_dto
+    return service_status_dto
 
 
 def stop_all_executions_of_emulation(

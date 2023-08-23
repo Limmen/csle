@@ -1202,7 +1202,7 @@ class ClusterController:
 
     @staticmethod
     def start_docker_statsmanager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO:
         """
         Sends a request to start a docker statsmanager thread for a given execution
 
