@@ -1646,3 +1646,26 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.clean_execution(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
         assert not response.outcome
+
+    def test_startTrafficManager_(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, example_config) -> None:
+        """
+        Tests the startTrafficManager grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.traffic_controller.TrafficController.start_traffic_manager",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_manager(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1, container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_manager(
+            stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1, container_ip="123.456.78.99")
+        assert not response.outcome
