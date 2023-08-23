@@ -1650,6 +1650,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                                    logger=logging.getLogger())
             return ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(clients_dto=clients_dto)
         else:
+   
             return ClusterManagerUtil.get_empty_get_num_clients_dto()
 
     def stopTrafficGenerators(
@@ -1745,9 +1746,11 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is not None and \
                 execution.emulation_env_config.traffic_config.client_population_config.physical_host_ip \
                 == GeneralUtil.get_host_ip():
+
             client_managers_dto = TrafficController.get_client_managers_info(
                 emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
                 active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config))
+
             return ClusterManagerUtil.convert_client_info_dto(client_managers_dto=client_managers_dto)
         else:
             return ClusterManagerUtil.get_empty_client_managers_info_dto()
@@ -1858,9 +1861,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Removing container image: {request.name}")
-        ContainerController.rm_image(name=request.name)
-        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+        outcome = ContainerController.rm_image(name=request.name)
+        if outcome:
+            logging.info(f"Removing container image: {request.name}")
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
 
     def listAllContainerImages(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.ListAllContainerImagesMsg,

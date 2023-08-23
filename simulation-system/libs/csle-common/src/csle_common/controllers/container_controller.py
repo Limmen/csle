@@ -162,7 +162,7 @@ class ContainerController:
         return False
 
     @staticmethod
-    def list_all_images() -> List[Tuple[str, str, str, str, str]]:
+    def list_all_images() -> List[Tuple[str, str, str, str, int]]:
         """
         A utility function for listing all csle images
 

@@ -223,7 +223,7 @@ def get_ex_em_env() -> EmulationEnvConfig:
                                        workflows_config=wf_config,
                                        client_time_step_len_seconds=1,
                                        docker_gw_bridge_ip="null",
-                                       physical_host_ip="null")
+                                       physical_host_ip="123.456.78.99")
     res_conf = ResourcesConfig(node_resources_configurations=[node_res_conf])
     traf_conf = TrafficConfig(node_traffic_configs=[node_traf_conf],
                               client_population_config=cp_config)
