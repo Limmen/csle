@@ -12,13 +12,13 @@ class ClusterUtil:
     """
 
     @staticmethod
-    def am_i_leader(ip: str, config: Config):
+    def am_i_leader(ip: str, config: Config) -> bool:
         """
         Checks if a given IP is leader or not
 
         :param ip: the ip to check
         :param config: the cluster configuration
-        :return: True if leader, false otherwise
+        :return: True if leader, False otherwise
         """
         leader = False
         for node in config.cluster_config.cluster_nodes:
