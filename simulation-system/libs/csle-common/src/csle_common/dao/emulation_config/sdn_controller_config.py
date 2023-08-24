@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union, List
+from typing import Dict, Any, List
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
