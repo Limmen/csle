@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import cluster_manager_pb2 as cluster__manager__pb2
+import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
 
 
 class ClusterManagerStub(object):
