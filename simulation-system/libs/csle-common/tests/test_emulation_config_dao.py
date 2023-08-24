@@ -18,6 +18,11 @@ from csle_common.dao.emulation_config.node_resources_config import NodeResources
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
+from csle_common.dao.emulation_config.services_config import ServicesConfig
+from csle_common.dao.emulation_config.users_config import UsersConfig
+from csle_common.dao.emulation_config.traffic_config import TrafficConfig
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
@@ -32,6 +37,8 @@ from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
+from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
+from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.ovs_switch_config import OvsSwitchConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
@@ -46,6 +53,11 @@ from csle_collector.snort_ids_manager.snort_ids_manager_pb2 import SnortIdsMonit
 from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO
 from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
+from csle_collector.client_manager.dao.client import Client
+from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
+from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
+from csle_collector.client_manager.dao.workflow_service import WorkflowService
+from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 
 
 class TestEmulationConfigDaoSuite:
@@ -749,7 +761,7 @@ class TestEmulationConfigDaoSuite:
 
     def test_resources_config(self) -> None:
         """
-        Tests creation and dict conversion of the OVSConfig DTO
+        Tests creation and dict conversion of the ResourcesConfig DTO
 
         :return: None
         """
@@ -771,3 +783,227 @@ class TestEmulationConfigDaoSuite:
         assert isinstance(ResourcesConfig.from_dict(resources_config.to_dict()), ResourcesConfig)
         assert ResourcesConfig.from_dict(resources_config.to_dict()).to_dict() == resources_config.to_dict()
         assert ResourcesConfig.from_dict(resources_config.to_dict()) == resources_config
+
+    def test_sdn_controller_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ResourcesConfig DTO
+
+        :return: None
+        """
+        node_network_config = NodeNetworkConfig(
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms=0.1,
+            packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+            packet_delay_distribution=PacketDelayDistributionType.PARETO,
+            packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=2,
+            packet_loss_random_correlation_percentage=25, loss_state_markov_chain_p13=0.1,
+            loss_state_markov_chain_p31=0.1, loss_state_markov_chain_p32=0.1, loss_state_markov_chain_p23=0.1,
+            loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+            loss_gemodel_h=0.0001, loss_gemodel_k=0.9999)
+        node_resources_config = NodeResourcesConfig(
+            container_name="my_container", num_cpus=10, available_memory_gb=100,
+            ips_and_network_configs=[("net_1", node_network_config)], docker_gw_bridge_ip="docker_gw",
+            physical_host_ip="192.168.1.1")
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        default_net_fw_config = DefaultNetworkFirewallConfig(
+            ip="192.168.5.1", default_gw="192.168.5.29", default_output="ACCEPT", default_input="DROP",
+            default_forward="ACCEPT", network=container_network
+        )
+        node_container_config = NodeContainerConfig(
+            name="node_name", ips_and_networks=[("net_1", container_network)], version="1.0.0", level="4",
+            restart_policy="always", suffix="_2", os="Ubuntu", execution_ip_first_octet=15,
+            docker_gw_bridge_ip="7.7.7.7", physical_host_ip="8.8.8.8"
+        )
+        route = ("8.8.8.8", "7.7.7.7")
+        routes = set()
+        routes.add(route)
+        node_firewall_config = NodeFirewallConfig(
+            hostname="my_hostname", output_accept=set("8.8.8.8"), input_accept=set("8.8.8.8"),
+            forward_accept=set("8.8.8.8"), output_drop=set("8.8.8.8"), input_drop=set("8.8.8.8"),
+            forward_drop=set("8.8.8.8"), routes=routes, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="192.172.1.1", ips_gw_default_policy_networks=[default_net_fw_config]
+        )
+        sdn_controller_config = SDNControllerConfig(
+            manager_port=50042, version="0.0.1", time_step_len_seconds=15, manager_max_workers=10, manager_log_dir="/",
+            manager_log_file="sdn.log", controller_port=7070, controller_module_name="learning_switch",
+            controller_type=SDNControllerType.RYU, firewall_config=node_firewall_config,
+            resources=node_resources_config, container=node_container_config, controller_web_api_port=6060
+        )
+        assert isinstance(sdn_controller_config.to_dict(), dict)
+        assert isinstance(SDNControllerConfig.from_dict(sdn_controller_config.to_dict()), SDNControllerConfig)
+        assert SDNControllerConfig.from_dict(sdn_controller_config.to_dict()).to_dict() == \
+               sdn_controller_config.to_dict()
+        assert SDNControllerConfig.from_dict(sdn_controller_config.to_dict()) == sdn_controller_config
+
+    def test_services_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ServicesConfig DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        network_service = NetworkService(protocol=TransportProtocol.UDP, port=3000, name="testservice",
+                                         credentials=[credential])
+        node_services_config = NodeServicesConfig(ip="8.8.8.8", services=[network_service])
+        services_config = ServicesConfig(services_configs=[node_services_config])
+        assert isinstance(services_config.to_dict(), dict)
+        assert isinstance(ServicesConfig.from_dict(services_config.to_dict()), ServicesConfig)
+        assert ServicesConfig.from_dict(services_config.to_dict()).to_dict() == services_config.to_dict()
+        assert ServicesConfig.from_dict(services_config.to_dict()) == services_config
+
+    def test_users_config(self) -> None:
+        """
+        Tests creation and dict conversion of the UsersConfig DTO
+
+        :return: None
+        """
+        user = User(username="testuser", pw="mypw", root=True)
+        node_users_config = NodeUsersConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7", users=[user])
+        users_config = UsersConfig(users_configs=[node_users_config])
+        assert isinstance(users_config.to_dict(), dict)
+        assert isinstance(UsersConfig.from_dict(users_config.to_dict()), UsersConfig)
+        assert UsersConfig.from_dict(users_config.to_dict()).to_dict() == users_config.to_dict()
+        assert UsersConfig.from_dict(users_config.to_dict()) == users_config
+
+    def test_arrival_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ArrivalConfig DTO
+
+        :return: None
+        """
+        arrival_config = ConstantArrivalConfig(lamb=10.0)
+        assert isinstance(arrival_config.to_dict(), dict)
+        assert isinstance(ConstantArrivalConfig.from_dict(arrival_config.to_dict()), ConstantArrivalConfig)
+        assert ConstantArrivalConfig.from_dict(arrival_config.to_dict()).to_dict() == arrival_config.to_dict()
+        assert ConstantArrivalConfig.from_dict(arrival_config.to_dict()) == arrival_config
+
+    def test_client(self) -> None:
+        """
+        Tests creation and dict conversion of the Client DTO
+
+        :return: None
+        """
+        arrival_config = ConstantArrivalConfig(lamb=10.0)
+        client = Client(id=10, workflow_distribution=[1], arrival_config=arrival_config, mu=4.0,
+                        exponential_service_time=True)
+        assert isinstance(client.to_dict(), dict)
+        assert isinstance(Client.from_dict(client.to_dict()), Client)
+        assert Client.from_dict(client.to_dict()).to_dict() == client.to_dict()
+        assert Client.from_dict(client.to_dict()) == client
+
+    def test_workflows_service(self) -> None:
+        """n
+        Tests creation and dict conversion of the WorkflowService DTO
+
+        :return: None
+        """
+        workflows_service = WorkflowService(ips_and_commands=[("8.8.8.8", ["ls"])], id=10)
+        assert isinstance(workflows_service.to_dict(), dict)
+        assert isinstance(WorkflowService.from_dict(workflows_service.to_dict()), WorkflowService)
+        assert WorkflowService.from_dict(workflows_service.to_dict()).to_dict() == workflows_service.to_dict()
+        assert WorkflowService.from_dict(workflows_service.to_dict()) == workflows_service
+
+    def test_workflow_markov_chain(self) -> None:
+        """n
+        Tests creation and dict conversion of the WorkflowMarkovChain DTO
+
+        :return: None
+        """
+        workflow_mc = WorkflowMarkovChain(transition_matrix=[[0.2, 0.8]], initial_state=10, id=1)
+        assert isinstance(workflow_mc.to_dict(), dict)
+        assert isinstance(WorkflowMarkovChain.from_dict(workflow_mc.to_dict()), WorkflowMarkovChain)
+        assert WorkflowMarkovChain.from_dict(workflow_mc.to_dict()).to_dict() == workflow_mc.to_dict()
+        assert WorkflowMarkovChain.from_dict(workflow_mc.to_dict()) == workflow_mc
+
+    def test_workflows_config(self) -> None:
+        """n
+        Tests creation and dict conversion of the WorkflowsConfig DTO
+
+        :return: None
+        """
+        workflow_mc = WorkflowMarkovChain(transition_matrix=[[0.2, 0.8]], initial_state=10, id=1)
+        workflows_service = WorkflowService(ips_and_commands=[("8.8.8.8", ["ls"])], id=10)
+        workflows_config = WorkflowsConfig(workflow_markov_chains=[workflow_mc], workflow_services=[workflows_service])
+        assert isinstance(workflows_config.to_dict(), dict)
+        assert isinstance(WorkflowsConfig.from_dict(workflows_config.to_dict()), WorkflowsConfig)
+        assert WorkflowsConfig.from_dict(workflows_config.to_dict()).to_dict() == workflows_config.to_dict()
+        assert WorkflowsConfig.from_dict(workflows_config.to_dict()) == workflows_config
+
+    def test_client_population_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ClientPopulationConfig DTO
+
+        :return: None
+        """
+        workflow_mc = WorkflowMarkovChain(transition_matrix=[[0.2, 0.8]], initial_state=10, id=1)
+        workflows_service = WorkflowService(ips_and_commands=[("8.8.8.8", ["ls"])], id=10)
+        workflows_config = WorkflowsConfig(workflow_markov_chains=[workflow_mc], workflow_services=[workflows_service])
+        arrival_config = ConstantArrivalConfig(lamb=10.0)
+        client = Client(id=10, workflow_distribution=[1], arrival_config=arrival_config, mu=4.0,
+                        exponential_service_time=True)
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        client_population_config = ClientPopulationConfig(
+            ip="8.8.8.8", networks=[container_network], client_manager_port=2020,
+            client_manager_log_file="client_manager.log",
+            client_manager_log_dir="/", client_manager_max_workers=10, clients=[client],
+            workflows_config=workflows_config,
+            client_time_step_len_seconds=30, docker_gw_bridge_ip="7.7.7.7", physical_host_ip="1.1.1.1",
+        )
+        assert isinstance(client_population_config.to_dict(), dict)
+        assert isinstance(ClientPopulationConfig.from_dict(client_population_config.to_dict()), ClientPopulationConfig)
+        assert ClientPopulationConfig.from_dict(client_population_config.to_dict()).to_dict() == \
+               client_population_config.to_dict()
+        assert ClientPopulationConfig.from_dict(client_population_config.to_dict()) == client_population_config
+
+    def test_traffic_config(self) -> None:
+        """
+        Tests creation and dict conversion of the TrafficConfig DTO
+
+        :return: None
+        """
+        workflow_mc = WorkflowMarkovChain(transition_matrix=[[0.2, 0.8]], initial_state=10, id=1)
+        workflows_service = WorkflowService(ips_and_commands=[("8.8.8.8", ["ls"])], id=10)
+        workflows_config = WorkflowsConfig(workflow_markov_chains=[workflow_mc], workflow_services=[workflows_service])
+        arrival_config = ConstantArrivalConfig(lamb=10.0)
+        client = Client(id=10, workflow_distribution=[1], arrival_config=arrival_config, mu=4.0,
+                        exponential_service_time=True)
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        client_population_config = ClientPopulationConfig(
+            ip="8.8.8.8", networks=[container_network], client_manager_port=2020,
+            client_manager_log_file="client_manager.log",
+            client_manager_log_dir="/", client_manager_max_workers=10, clients=[client],
+            workflows_config=workflows_config,
+            client_time_step_len_seconds=30, docker_gw_bridge_ip="7.7.7.7", physical_host_ip="1.1.1.1"
+        )
+        node_traffic_config = NodeTrafficConfig(
+            ip="8.8.8.8", commands=["ls"], traffic_manager_log_file="traffic_manager.log", traffic_manager_log_dir="/",
+            traffic_manager_port=3000, traffic_manager_max_workers=10, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="7.7.7.7")
+        traffic_config = TrafficConfig(node_traffic_configs=[node_traffic_config],
+                                       client_population_config=client_population_config)
+        assert isinstance(traffic_config.to_dict(), dict)
+        assert isinstance(TrafficConfig.from_dict(traffic_config.to_dict()), TrafficConfig)
+        assert TrafficConfig.from_dict(traffic_config.to_dict()).to_dict() == traffic_config.to_dict()
+        assert TrafficConfig.from_dict(traffic_config.to_dict()) == traffic_config
+
+    def test_vulnerabilities_config(self) -> None:
+        """
+        Tests creation and dict conversion of the VulnerabilitiesConfig DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        node_vuln_config = NodeVulnerabilityConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7",
+            vuln_type=VulnType.RCE, protocol=TransportProtocol.TCP, credentials=[credential], cvss=2.0, cve="test_cve",
+            service="myserv", root=True, name="testname", port=2510)
+        vuln_config = VulnerabilitiesConfig(node_vulnerability_configs=[node_vuln_config])
+        assert isinstance(vuln_config.to_dict(), dict)
+        assert isinstance(VulnerabilitiesConfig.from_dict(vuln_config.to_dict()), VulnerabilitiesConfig)
+        assert VulnerabilitiesConfig.from_dict(vuln_config.to_dict()).to_dict() == vuln_config.to_dict()
+        assert VulnerabilitiesConfig.from_dict(vuln_config.to_dict()) == vuln_config
