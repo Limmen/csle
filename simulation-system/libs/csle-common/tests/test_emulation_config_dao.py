@@ -15,13 +15,29 @@ from csle_common.dao.emulation_config.node_network_config import NodeNetworkConf
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
+from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
+from csle_common.dao.emulation_config.user import User
+from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
+from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
+from csle_common.dao.emulation_config.flag import Flag
+from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
 from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManagersInfo
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
+from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
+from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
+from csle_common.dao.emulation_config.ovs_config import OVSConfig
+from csle_common.dao.emulation_config.ovs_switch_config import OvsSwitchConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
+from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
+from csle_common.dao.emulation_config.vulnerability_type import VulnType
+from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
@@ -29,6 +45,7 @@ from csle_collector.host_manager.host_manager_pb2 import HostStatusDTO
 from csle_collector.snort_ids_manager.snort_ids_manager_pb2 import SnortIdsMonitorDTO
 from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO
 from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
+from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
 
 
 class TestEmulationConfigDaoSuite:
@@ -486,3 +503,271 @@ class TestEmulationConfigDaoSuite:
         assert HostManagersInfo.from_dict(host_managers_info.to_dict()).to_dict() == \
                host_managers_info.to_dict()
         assert HostManagersInfo.from_dict(host_managers_info.to_dict()) == host_managers_info
+
+    def test_kafka_managers_info(self) -> None:
+        """
+        Tests creation and dict conversion of the KafkaManagersInfo DTO
+
+        :return: None
+        """
+        kafka_dto = KafkaDTO(running=True, topics=["topic1"])
+        kafka_managers_info = KafkaManagersInfo(
+            ips=["192.168.1.1"], ports=[3333], emulation_name="testem", execution_id=15,
+            kafka_managers_statuses=[kafka_dto], kafka_managers_running=[True])
+        assert isinstance(kafka_managers_info.to_dict(), dict)
+        assert isinstance(KafkaManagersInfo.from_dict(kafka_managers_info.to_dict()),
+                          KafkaManagersInfo)
+        assert KafkaManagersInfo.from_dict(kafka_managers_info.to_dict()).to_dict() == \
+               kafka_managers_info.to_dict()
+        assert KafkaManagersInfo.from_dict(kafka_managers_info.to_dict()) == kafka_managers_info
+
+    def test_kafka_topic(self) -> None:
+        """
+        Tests creation and dict conversion of the KafkaTopic DTO
+
+        :return: None
+        """
+        kafka_topic = KafkaTopic(name="testname", num_replicas=10, num_partitions=15, attributes=["attr1"],
+                                 retention_time_hours=10)
+        assert isinstance(kafka_topic.to_dict(), dict)
+        assert isinstance(KafkaTopic.from_dict(kafka_topic.to_dict()), KafkaTopic)
+        assert KafkaTopic.from_dict(kafka_topic.to_dict()).to_dict() == kafka_topic.to_dict()
+        assert KafkaTopic.from_dict(kafka_topic.to_dict()) == kafka_topic
+
+    def test_kafka_config(self) -> None:
+        """
+        Tests creation and dict conversion of the KafkaConfig DTO
+
+        :return: None
+        """
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        node_container_config = NodeContainerConfig(
+            name="node_name", ips_and_networks=[("net_1", container_network)], version="1.0.0", level="4",
+            restart_policy="always", suffix="_2", os="Ubuntu", execution_ip_first_octet=15,
+            docker_gw_bridge_ip="7.7.7.7", physical_host_ip="8.8.8.8"
+        )
+        node_network_config = NodeNetworkConfig(
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms=0.1,
+            packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+            packet_delay_distribution=PacketDelayDistributionType.PARETO,
+            packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=2,
+            packet_loss_random_correlation_percentage=25, loss_state_markov_chain_p13=0.1,
+            loss_state_markov_chain_p31=0.1, loss_state_markov_chain_p32=0.1, loss_state_markov_chain_p23=0.1,
+            loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+            loss_gemodel_h=0.0001, loss_gemodel_k=0.9999)
+        node_resources_config = NodeResourcesConfig(
+            container_name="my_container", num_cpus=10, available_memory_gb=100,
+            ips_and_network_configs=[("net_1", node_network_config)], docker_gw_bridge_ip="docker_gw",
+            physical_host_ip="192.168.1.1")
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        default_net_fw_config = DefaultNetworkFirewallConfig(
+            ip="192.168.5.1", default_gw="192.168.5.29", default_output="ACCEPT", default_input="DROP",
+            default_forward="ACCEPT", network=container_network
+        )
+        route = ("8.8.8.8", "7.7.7.7")
+        routes = set()
+        routes.add(route)
+        node_firewall_config = NodeFirewallConfig(
+            hostname="my_hostname", output_accept=set("8.8.8.8"), input_accept=set("8.8.8.8"),
+            forward_accept=set("8.8.8.8"), output_drop=set("8.8.8.8"), input_drop=set("8.8.8.8"),
+            forward_drop=set("8.8.8.8"), routes=routes, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="192.172.1.1", ips_gw_default_policy_networks=[default_net_fw_config]
+        )
+        kafka_topic = KafkaTopic(name="testname", num_replicas=10, num_partitions=15, attributes=["attr1"],
+                                 retention_time_hours=10)
+        kafka_config = KafkaConfig(
+            container=node_container_config, resources=node_resources_config, firewall_config=node_firewall_config,
+            kafka_manager_log_file="elk_manager.log", kafka_manager_log_dir="/", kafka_manager_max_workers=10,
+            time_step_len_seconds=15, kafka_manager_port=50045, version="0.0.1", topics=[kafka_topic])
+        assert isinstance(kafka_config.to_dict(), dict)
+        assert isinstance(KafkaConfig.from_dict(kafka_config.to_dict()), KafkaConfig)
+        assert KafkaConfig.from_dict(kafka_config.to_dict()).to_dict() == kafka_config.to_dict()
+        assert KafkaConfig.from_dict(kafka_config.to_dict()) == kafka_config
+
+    def test_network_service(self) -> None:
+        """
+        Tests creation and dict conversion of the NetworkService DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        network_service = NetworkService(protocol=TransportProtocol.UDP, port=3000, name="testservice",
+                                         credentials=[credential])
+        assert isinstance(network_service.to_dict(), dict)
+        assert isinstance(NetworkService.from_dict(network_service.to_dict()), NetworkService)
+        assert NetworkService.from_dict(network_service.to_dict()).to_dict() == network_service.to_dict()
+        assert NetworkService.from_dict(network_service.to_dict()) == network_service
+
+    def test_flag(self) -> None:
+        """
+        Tests creation and dict conversion of the Flag DTO
+
+        :return: None
+        """
+        flag = Flag(name="testflag", dir="/", id=10, path="/test.txt", requires_root=False, score=10)
+        assert isinstance(flag.to_dict(), dict)
+        assert isinstance(Flag.from_dict(flag.to_dict()), Flag)
+        assert Flag.from_dict(flag.to_dict()).to_dict() == flag.to_dict()
+        assert Flag.from_dict(flag.to_dict()) == flag
+
+    def test_node_flags_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeFlagsConfig DTO
+
+        :return: None
+        """
+        flag = Flag(name="testflag", dir="/", id=10, path="/test.txt", requires_root=False, score=10)
+        node_flags_config = NodeFlagsConfig(
+            ip="8.8.8.8", flags=[flag], docker_gw_bridge_ip="9.9.9.9", physical_host_ip="168.22.11.2")
+        assert isinstance(node_flags_config.to_dict(), dict)
+        assert isinstance(NodeFlagsConfig.from_dict(node_flags_config.to_dict()), NodeFlagsConfig)
+        assert NodeFlagsConfig.from_dict(node_flags_config.to_dict()).to_dict() == node_flags_config.to_dict()
+        assert NodeFlagsConfig.from_dict(node_flags_config.to_dict()) == node_flags_config
+
+    def test_node_services_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeServicesConfig DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        network_service = NetworkService(protocol=TransportProtocol.UDP, port=3000, name="testservice",
+                                         credentials=[credential])
+        node_services_config = NodeServicesConfig(ip="8.8.8.8", services=[network_service])
+        assert isinstance(node_services_config.to_dict(), dict)
+        assert isinstance(NodeServicesConfig.from_dict(node_services_config.to_dict()), NodeServicesConfig)
+        assert NodeServicesConfig.from_dict(node_services_config.to_dict()).to_dict() == node_services_config.to_dict()
+        assert NodeServicesConfig.from_dict(node_services_config.to_dict()) == node_services_config
+
+    def test_node_traffic_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeTrafficConfig DTO
+
+        :return: None
+        """
+        node_traffic_config = NodeTrafficConfig(
+            ip="8.8.8.8", commands=["ls"], traffic_manager_log_file="traffic_manager.log", traffic_manager_log_dir="/",
+            traffic_manager_port=3000, traffic_manager_max_workers=10, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="7.7.7.7")
+        assert isinstance(node_traffic_config.to_dict(), dict)
+        assert isinstance(NodeTrafficConfig.from_dict(node_traffic_config.to_dict()), NodeTrafficConfig)
+        assert NodeTrafficConfig.from_dict(node_traffic_config.to_dict()).to_dict() == node_traffic_config.to_dict()
+        assert NodeTrafficConfig.from_dict(node_traffic_config.to_dict()) == node_traffic_config
+
+    def test_user(self) -> None:
+        """
+        Tests creation and dict conversion of the User DTO
+
+        :return: None
+        """
+        user = User(username="testuser", pw="mypw", root=True)
+        assert isinstance(user.to_dict(), dict)
+        assert isinstance(User.from_dict(user.to_dict()), User)
+        assert User.from_dict(user.to_dict()).to_dict() == user.to_dict()
+        assert User.from_dict(user.to_dict()) == user
+
+    def test_node_users_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeUsersConfig DTO
+
+        :return: None
+        """
+        user = User(username="testuser", pw="mypw", root=True)
+        node_users_config = NodeUsersConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7", users=[user])
+        assert isinstance(node_users_config.to_dict(), dict)
+        assert isinstance(NodeUsersConfig.from_dict(node_users_config.to_dict()), NodeUsersConfig)
+        assert NodeUsersConfig.from_dict(node_users_config.to_dict()).to_dict() == node_users_config.to_dict()
+        assert NodeUsersConfig.from_dict(node_users_config.to_dict()) == node_users_config
+
+    def test_node_vulnerability_config(self) -> None:
+        """
+        Tests creation and dict conversion of the NodeVulnerabilitiesConfig DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        node_vuln_config = NodeVulnerabilityConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7",
+            vuln_type=VulnType.RCE, protocol=TransportProtocol.TCP, credentials=[credential], cvss=2.0, cve="test_cve",
+            service="myserv", root=True, name="testname", port=2510)
+        assert isinstance(node_vuln_config.to_dict(), dict)
+        assert isinstance(NodeVulnerabilityConfig.from_dict(node_vuln_config.to_dict()), NodeVulnerabilityConfig)
+        assert NodeVulnerabilityConfig.from_dict(node_vuln_config.to_dict()).to_dict() == node_vuln_config.to_dict()
+        assert NodeVulnerabilityConfig.from_dict(node_vuln_config.to_dict()) == node_vuln_config
+
+    def test_ossec_ids_manager_config(self) -> None:
+        """
+        Tests creation and dict conversion of the OSSECIDSManagerConfig DTO
+
+        :return: None
+        """
+        ossec_ids_manager_config = OSSECIDSManagerConfig(
+            ossec_ids_manager_log_file="ossec.log", ossec_ids_manager_log_dir="/", ossec_ids_manager_max_workers=10,
+            time_step_len_seconds=30,  ossec_ids_manager_port=1515, version="0.0.1")
+        assert isinstance(ossec_ids_manager_config.to_dict(), dict)
+        assert isinstance(OSSECIDSManagerConfig.from_dict(ossec_ids_manager_config.to_dict()), OSSECIDSManagerConfig)
+        assert OSSECIDSManagerConfig.from_dict(ossec_ids_manager_config.to_dict()).to_dict() == \
+               ossec_ids_manager_config.to_dict()
+        assert OSSECIDSManagerConfig.from_dict(ossec_ids_manager_config.to_dict()) == ossec_ids_manager_config
+
+    def test_ovs_switch_config(self) -> None:
+        """
+        Tests creation and dict conversion of the OVSConfig DTO
+
+        :return: None
+        """
+        ovs_switch_config = OvsSwitchConfig(
+            container_name="testcontainer", ip="8.8.8.8", openflow_protocols=["v1.0.0"], controller_ip="8.8.8.8",
+            controller_port=3000, controller_transport_protocol="UDP", docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="168.156.2.2")
+        assert isinstance(ovs_switch_config.to_dict(), dict)
+        assert isinstance(OvsSwitchConfig.from_dict(ovs_switch_config.to_dict()), OvsSwitchConfig)
+        assert OvsSwitchConfig.from_dict(ovs_switch_config.to_dict()).to_dict() == ovs_switch_config.to_dict()
+        assert OvsSwitchConfig.from_dict(ovs_switch_config.to_dict()) == ovs_switch_config
+
+    def test_ovs_config(self) -> None:
+        """
+        Tests creation and dict conversion of the OVSConfig DTO
+
+        :return: None
+        """
+        ovs_switch_config = OvsSwitchConfig(
+            container_name="testcontainer", ip="8.8.8.8", openflow_protocols=["v1.0.0"], controller_ip="8.8.8.8",
+            controller_port=3000, controller_transport_protocol="UDP", docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="168.156.2.2")
+        ovs_config = OVSConfig(switch_configs=[ovs_switch_config])
+        assert isinstance(ovs_config.to_dict(), dict)
+        assert isinstance(OVSConfig.from_dict(ovs_config.to_dict()), OVSConfig)
+        assert OVSConfig.from_dict(ovs_config.to_dict()).to_dict() == ovs_config.to_dict()
+        assert OVSConfig.from_dict(ovs_config.to_dict()) == ovs_config
+
+    def test_resources_config(self) -> None:
+        """
+        Tests creation and dict conversion of the OVSConfig DTO
+
+        :return: None
+        """
+        node_network_config = NodeNetworkConfig(
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms=0.1,
+            packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+            packet_delay_distribution=PacketDelayDistributionType.PARETO,
+            packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=2,
+            packet_loss_random_correlation_percentage=25, loss_state_markov_chain_p13=0.1,
+            loss_state_markov_chain_p31=0.1, loss_state_markov_chain_p32=0.1, loss_state_markov_chain_p23=0.1,
+            loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+            loss_gemodel_h=0.0001, loss_gemodel_k=0.9999)
+        node_resources_config = NodeResourcesConfig(
+            container_name="my_container", num_cpus=10, available_memory_gb=100,
+            ips_and_network_configs=[("net_1", node_network_config)], docker_gw_bridge_ip="docker_gw",
+            physical_host_ip="192.168.1.1")
+        resources_config = ResourcesConfig(node_resources_configurations=[node_resources_config])
+        assert isinstance(resources_config.to_dict(), dict)
+        assert isinstance(ResourcesConfig.from_dict(resources_config.to_dict()), ResourcesConfig)
+        assert ResourcesConfig.from_dict(resources_config.to_dict()).to_dict() == resources_config.to_dict()
+        assert ResourcesConfig.from_dict(resources_config.to_dict()) == resources_config
