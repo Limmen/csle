@@ -93,7 +93,7 @@ set -gx CSLE_HOME "/path/to/csle"
 ```
 
 <p class="captionFig">
-Listing 8: Line to add to the fish configuration file to set the \texttt{CSLE\_HOME} environment variable.
+Listing 8: Line to add to the fish configuration file to set the `CSLE_HOME` environment variable.
 </p>
 
 After performing the steps above, you should have the directory layout shown in Fig. 27.
@@ -295,7 +295,7 @@ pip install csle-collector
 ```
 
 <p class="captionFig">
-Listing 23: Command to install `csle-collector` from PyPi.
+Listing 25: Command to install `csle-collector` from PyPi.
 </p>
 
 
@@ -308,7 +308,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 24: Commands to install `csle-collector` from source.
+Listing 26: Commands to install `csle-collector` from source.
 </p>
 
 Next, install `csle-ryu` from PyPi by running the command:
@@ -318,7 +318,7 @@ pip install csle-ryu
 ```
 
 <p class="captionFig">
-Listing 25: Command to install `csle-ryu` from PyPi.
+Listing 27: Command to install `csle-ryu` from PyPi.
 </p>
 
 Alternatively, install `csle-ryu` from source by running the commands:
@@ -330,7 +330,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 26: Commands to install `csle-ryu` from source. 
+Listing 28: Commands to install `csle-ryu` from source. 
 </p>
 
 Next, install `csle-common` from PyPi by running the command:
@@ -340,7 +340,7 @@ pip install csle-common
 ```
 
 <p class="captionFig">
-Listing 27: Command to install `csle-common` from PyPi.
+Listing 29: Command to install `csle-common` from PyPi.
 </p>
 
 Alternatively, install `csle-common` from source by running the commands:
@@ -352,7 +352,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 28: Commands to install `csle-common` from source.
+Listing 30: Commands to install `csle-common` from source.
 </p>
 
 Next, install `csle-attacker` from PyPi by running the command:
@@ -362,7 +362,7 @@ pip install csle-attacker
 ```
 
 <p class="captionFig">
-Listing 29: Command to install `csle-attacker` from PyPi.
+Listing 31: Command to install `csle-attacker` from PyPi.
 </p>
 
 Alternatively, install `csle-attacker` from source by running the commands:
@@ -374,7 +374,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 30: Commands to install `csle-attacker` from source.
+Listing 32: Commands to install `csle-attacker` from source.
 </p>
 
 Next, install `csle-defender` from PyPi by running the command:
@@ -384,7 +384,7 @@ pip install csle-defender
 ```
 
 <p class="captionFig">
-Listing 31: Command to install `csle-defender` from PyPi.
+Listing 33: Command to install `csle-defender` from PyPi.
 </p>
 
 Alternatively, install `csle-defender` from source by running the commands:
@@ -396,7 +396,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 32: Commands to install `csle-defender` from source.
+Listing 34: Commands to install `csle-defender` from source.
 </p>
 
 Next, install `csle-system-identification` from PyPi by running the command:
@@ -405,7 +405,7 @@ Next, install `csle-system-identification` from PyPi by running the command:
 pip install csle-system-identification
 ```
 <p class="captionFig">
-Listing 33: Command to install `csle-system-identification` from PyPi.
+Listing 35: Command to install `csle-system-identification` from PyPi.
 </p>
 
 Alternatively, install `csle-system-identification` from source by running the commands:
@@ -417,7 +417,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 34: Commands to install `csle-system-identification` from source.
+Listing 36: Commands to install `csle-system-identification` from source.
 </p>
 
 Next, install `gym-csle-stopping-game` from PyPi by running the command:
@@ -427,7 +427,7 @@ pip install gym-csle-stopping-game
 ```
 
 <p class="captionFig">
-Listing 35: Command to install `gym-csle-stopping-game` from PyPi.
+Listing 37: Command to install `gym-csle-stopping-game` from PyPi.
 </p>
 
 Alternatively, install `gym-csle-stopping-game` from source by running the commands:
@@ -439,7 +439,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 36: Commands to install `gym-csle-stopping-game` from source.
+Listing 38: Commands to install `gym-csle-stopping-game` from source.
 </p>
 
 Next, install `csle-agents` from PyPi by running the command:
@@ -449,7 +449,7 @@ Next, install `csle-agents` from PyPi by running the command:
 ```
 
 <p class="captionFig">
-Listing 37: Command to install `csle-agents` from PyPi. 
+Listing 39: Command to install `csle-agents` from PyPi. 
 </p>
 
 Alternatively, install `csle-agents` from source by running the commands:
@@ -461,7 +461,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 38: Commands to install `csle-agents` from source.
+Listing 40: Commands to install `csle-agents` from source.
 </p>
 
 Next, install `csle-rest-api` from PyPi by running the command:
@@ -470,7 +470,7 @@ Next, install `csle-rest-api` from PyPi by running the command:
 pip install csle-rest-api
 ```
 <p class="captionFig">
-Listing 39: Command to install `csle-rest-api` from PyPi. 
+Listing 41: Command to install `csle-rest-api` from PyPi. 
 </p>
 
 Alternatively, install `csle-rest-api` from source by running the commands:
@@ -482,7 +482,7 @@ cd ../../../
 ```
 
 <p class="captionFig">
-Listing 40: Commands to install `csle-rest-api` from source.
+Listing 42: Commands to install `csle-rest-api` from source.
 </p>
 
 Next, install `csle-cli` from PyPi by running the command:
@@ -490,7 +490,7 @@ Next, install `csle-cli` from PyPi by running the command:
 pip install csle-cli
 ```
 <p class="captionFig">
-Listing 41: Command to install `csle-cli` from PyPi.
+Listing 43: Command to install `csle-cli` from PyPi.
 </p>
 
 Alternatively, install `csle-cli` from source by running the commands:
@@ -500,7 +500,7 @@ pip install -e .
 cd ../../../
 ```
 <p class="captionFig">
-Listing 42: {Commands to install `csle-cli` from source.
+Listing 44: {Commands to install `csle-cli` from source.
 </p>
 
 Next, install `csle-cluster` from PyPi by running the command:
@@ -508,7 +508,7 @@ Next, install `csle-cluster` from PyPi by running the command:
 pip install csle-cluster
 ```
 <p class="captionFig">
-Listing 43: Command to install `csle-cluster` from PyPi.
+Listing 45: Command to install `csle-cluster` from PyPi.
 </p>
 
 Alternatively, install `csle-cluster` from source by running the commands:
@@ -518,7 +518,7 @@ pip install -e .
 cd ../../../
 ```
 <p class="captionFig">
-Listing 44: {Commands to install `csle-cluster` from source.
+Listing 46: {Commands to install `csle-cluster` from source.
 </p>
 
 Next, install `gym-csle-intrusion-response-game` from PyPi by running the command:
@@ -526,7 +526,7 @@ Next, install `gym-csle-intrusion-response-game` from PyPi by running the comman
 pip install gym-csle-intrusion-response-game
 ```
 <p class="captionFig">
-Listing 45: Command to install `gym-csle-intrusion-response-game` from PyPi.
+Listing 47: Command to install `gym-csle-intrusion-response-game` from PyPi.
 </p>
 
 Alternatively, install `gym-csle-intrusion-response-game` from source by running the commands:
@@ -536,7 +536,7 @@ pip install -e .
 cd ../../../
 ```
 <p class="captionFig">
-Listing 46: {Commands to install `gym-csle-intrusion-response-game` from source.
+Listing 48: {Commands to install `gym-csle-intrusion-response-game` from source.
 </p>
 
 Finally, **on the leader node only**, insert the simulation configurations into the metastore by running the commands:
@@ -548,7 +548,7 @@ cd ../../
 ```
 
 <p class="captionFig">
-Listing 47: Commands to insert simulation configurations into the metastore.
+Listing 49: Commands to insert simulation configurations into the metastore.
 </p>
 
 ### Installing the Emulation System
@@ -568,7 +568,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 <p class="captionFig">
-Listing 48: Commands to add Docker's official GPG key to Ubuntu's package manager.
+Listing 50: Commands to add Docker's official GPG key to Ubuntu's package manager.
 </p>
 
 Next, install Docker by running the commands:
@@ -579,7 +579,7 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 <p class="captionFig">
-Listing 49: Commands to install Docker.
+Listing 51: Commands to install Docker.
 </p>
 
 Next, setup a docker swarm by running the following command on the leader:
@@ -587,7 +587,7 @@ Next, setup a docker swarm by running the following command on the leader:
 swarm init --advertise-addr <ip address of the leader>
 ```
 <p class="captionFig">
-Listing 50: Command to initialize a Docker swarm.
+Listing 52: Command to initialize a Docker swarm.
 </p>
 
 After running the above command, a secret token will be returned. Use this token to run the following command on each worker to add it to the swarm:
@@ -595,7 +595,7 @@ After running the above command, a secret token will be returned. Use this token
 docker swarm join --token <my_roken> leader_ip:2377
 ```
 <p class="captionFig">
-Listing 51: Commands to add a worker node to the Docker swarm.
+Listing 53: Commands to add a worker node to the Docker swarm.
 </p>
 
 
@@ -607,7 +607,7 @@ make pull
 cd ../../
 ```
 <p class="captionFig">
-Listing 52: Commands to pull CSLE base images from DockerHub.
+Listing 524: Commands to pull CSLE base images from DockerHub.
 </p>
 
 Alternatively, you can build the base images locally (this takes several hours) by running the commands:
@@ -618,7 +618,7 @@ make build
 cd ../../
 ```
 <p class="captionFig">
-Listing 53: Commands to build CSLE base images.
+Listing 55: Commands to build CSLE base images.
 </p>
 
 Next, pull the derived images of CSLE from DockerHub by running the commands:
@@ -630,7 +630,7 @@ cd ../../
 ```
 
 <p class="captionFig">
-Listing 54: Commands to pull CSLE derived images from DockerHub.
+Listing 56: Commands to pull CSLE derived images from DockerHub.
 </p>
 
 Alternatively, you can build the derived images locally by running the commands:
@@ -642,7 +642,7 @@ cd ../../
 ```
 
 <p class="captionFig">
-Listing 55: Commands to build CSLE derived images.
+Listing 57: Commands to build CSLE derived images.
 </p>
 
 Next, insert the emulation configurations into the metastore by running the commands **on the leader node only**:
@@ -653,7 +653,7 @@ make install
 cd ../../
 ```
 <p class="captionFig">
-Listing 56: Commands to insert emulation configurations into the metastore.
+Listing 58: Commands to insert emulation configurations into the metastore.
 </p>
 
 Alternatively, you can install the base images, the derived images, and the emulation configurations all at once by running the commands:
@@ -665,7 +665,7 @@ cd ../
 ```
 
 <p class="captionFig">
-Listing 57: Commands to install base images, derived images, and emulation environments.
+Listing 59: Commands to install base images, derived images, and emulation environments.
 </p>
 
 A few configuration parameters of the kernel need to be updated to be able to execute emulations. 
@@ -678,7 +678,7 @@ Update `max_map_count` by editing the file `/etc/sysctl.conf` and add the follow
 vm.max_map_count=262144
 ```
 <p class="captionFig">
-Listing 58: Line to add to `/etc/sysctl.conf`.
+Listing 60: Line to add to `/etc/sysctl.conf`.
 </p>
 
 Alternatively, for a non-persistent configuration, run the command:
@@ -688,7 +688,7 @@ sysctl -w vm.max_map_count=262144
 ```
 
 <p class="captionFig">
-Listing 59: Command to update the configuration variable `max_map_count`.
+Listing 61: Command to update the configuration variable `max_map_count`.
 </p>
 
 
@@ -699,7 +699,7 @@ sysctl vm.max_map_count
 ```
 
 <p class="captionFig">
-Listing 60: Command to check the configuration of "`max_map_count`".
+Listing 62: Command to check the configuration of "`max_map_count`".
 </p>
 
 Finally, update `max_user_watches` by running the command:
@@ -711,7 +711,7 @@ echo fs.inotify.max_user_watches=524288 | \
 ```
 
 <p class="captionFig">
-Listing 61: Command to set the configuration variable `max_user_watches`.
+Listing 63: Command to set the configuration variable `max_user_watches`.
 </p>
 
 ### Installing the Management System
@@ -729,7 +729,7 @@ chmod u+rwx nvm.sh
 ```
 
 <p class="captionFig">
-Listing 62: Commands to install `node.js`, `nvm`, and `npm`.
+Listing 64: Commands to install `node.js`, `nvm`, and `npm`.
 </p>
 
 Then setup the `nvm` environment variables by adding the following lines to `.bashrc`:
@@ -740,7 +740,7 @@ export NVM_DIR="$HOME/.nvm"
 ```
 
 <p class="captionFig">
-Listing 63: Commands to setup NVM environment variables.
+Listing 65: Commands to setup NVM environment variables.
 </p>
 
 Then you can install `node.js` and `npm` using the commands (again on the leader only):
@@ -753,7 +753,7 @@ npm -v # Verify version of npm
 ```
 
 <p class="captionFig">
-Listing 64: Commands to install `node.js` and `npm`.
+Listing 66: Commands to install `node.js` and `npm`.
 </p>
 
 Next, install and start `pgadmin` **on the leader** by running the following commands:
@@ -763,7 +763,7 @@ docker run -p 7778:80 -e "PGADMIN_DEFAULT_EMAIL=user@domain.com" -e "PGADMIN_DEF
 ```
 
 <p class="captionFig">
-Listing 65: Commands to start `pgadmin`.
+Listing 67: Commands to start `pgadmin`.
 </p>
 
 Next, configure Nginx on the leader by editing the file:
@@ -772,7 +772,7 @@ Next, configure Nginx on the leader by editing the file:
 ```
 
 <p class="captionFig">
-Listing 66: Nginx configuration file.
+Listing 68: Nginx configuration file.
 </p>
 
 Replace the current configuration with the following:
@@ -805,7 +805,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 67: Content of `/etc/nginx/sites-available/default` on the leader.
+Listing 69: Content of `/etc/nginx/sites-available/default` on the leader.
 </p>
 Restart Nginx on the leader by running the command:
 
@@ -814,7 +814,7 @@ sudo service nginx restart
 ```
 
 <p class="captionFig">
-Listing 68: Command to restart Nginx.
+Listing 70: Command to restart Nginx.
 </p>
 
 If you have HTTPS enabled on the REST API and have certificates you can configure them in Nginx on the leader by editing the file:
@@ -824,7 +824,7 @@ If you have HTTPS enabled on the REST API and have certificates you can configur
 ```
 
 <p class="captionFig">
-Listing 69: Nginx configuration file.
+Listing 71: Nginx configuration file.
 </p>
 
 as follows:
@@ -864,7 +864,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 70: Contents of the file `/etc/nginx/sites-available/default` on the leader to allow HTTPS traffic to the web interface.
+Listing 72: Contents of the file `/etc/nginx/sites-available/default` on the leader to allow HTTPS traffic to the web interface.
 </p>
 
 Next, configure Nginx on the workers by editing the following file:
@@ -873,7 +873,7 @@ Next, configure Nginx on the workers by editing the following file:
 ```
 
 <p class="captionFig">
-Listing 71: Nginx configuration file.
+Listing 73: Nginx configuration file.
 </p>
 
 Open the file on each worker and replace the current configuration with the following (replace `leader-ip` with the actual ip):
@@ -903,7 +903,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 72: Content of `/etc/nginx/sites-available/default` on a worker.
+Listing 74: Content of `/etc/nginx/sites-available/default` on a worker.
 </p>
 
 Next make the Nginx log files readable by your user by running the commands:
@@ -914,7 +914,7 @@ sudo chown -R my_user /var/log/nginx
 ```
 
 <p class="captionFig">
-Listing 73: Commands to make the Nginx log files readable for a given user.
+Listing 75: Commands to make the Nginx log files readable for a given user.
 </p>
 
 Lastly, restart Nginx on each worker and on the leader by running the command:
@@ -924,7 +924,7 @@ sudo service nginx restart
 ```
 
 <p class="captionFig">
-Listing 74: Command to restart Nginx.
+Listing 76: Command to restart Nginx.
 </p>
 
 
@@ -938,7 +938,7 @@ chmod u+x install.sh
 ```
 
 <p class="captionFig">
-Listing 75: Commands to install the management system and associated tools.
+Listing 77: Commands to install the management system and associated tools.
 </p>
 
 Next, configure the IP of the leader by editing the following file on the leader:
@@ -948,7 +948,7 @@ csle/management-system/csle-mgmt-webapp/src
 ```
 
 <p class="captionFig">
-Listing 76: File to configure the IPs of servers in the management system.
+Listing 78: File to configure the IPs of servers in the management system.
 </p>
 
 Next, configure the port of the web interface on the leader by editing the file:
@@ -959,7 +959,7 @@ Next, configure the port of the web interface on the leader by editing the file:
 ```
 
 <p class="captionFig">
-Listing 77: File to configure the port of the web interface.
+Listing 79: File to configure the port of the web interface.
 </p>
 
 To start and stop the monitoring systems using the CSLE CLI, their binaries need to be added to the system path.
@@ -971,7 +971,7 @@ export PATH=/path/to/csle/management-system/prometheus/:$PATH
 ```
 
 <p class="captionFig">
-Listing 78: Line to add to `.bashrc` to add Prometheus to the path.
+Listing 80: Line to add to `.bashrc` to add Prometheus to the path.
 </p>
 
 If you have fish shell instead of bash, add the following line to the configuration file of fish:
@@ -981,7 +981,7 @@ fish_add_path /path/to/csle/management-system/prometheus/
 ```
 
 <p class="captionFig">
-Listing 79: Line to add to the configuration file of fish to add Prometheus to the path.
+Listing 81: Line to add to the configuration file of fish to add Prometheus to the path.
 </p>
 
 Similarly, to add the Node exporter binary to the path, add the following line to `.bashrc` on all nodes:
@@ -991,7 +991,7 @@ export PATH=/path/to/csle/management-system/node_exporter/:$PATH
 ```
 
 <p class="captionFig">
-Listing 80: Line to add to `.bashrc` to add Node exporter to the path.
+Listing 82: Line to add to `.bashrc` to add Node exporter to the path.
 </p>
 
 If you have fish shell instead of bash, add the following line to the configuration file of fish:
@@ -1001,7 +1001,7 @@ fish_add_path /path/to/csle/management-system/node_exporter/
 ```
 
 <p class="captionFig">
-Listing 81: Line to add to the configuration file of fish shell to add Node exporter to the path.
+Listing 83: Line to add to the configuration file of fish shell to add Node exporter to the path.
 </p>
 
 Finally, start the csle daemons and setup the management user account with administrator privileges by running the following command on all nodes:
@@ -1010,5 +1010,5 @@ csle init
 ```
 
 <p class="captionFig">
-Listing 82: Command to setup the management user account with administrator privileges.
+Listing 84: Command to setup the management user account with administrator privileges.
 </p>

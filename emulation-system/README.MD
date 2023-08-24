@@ -6,6 +6,10 @@ This directory contains scripts, configurations, and tools related to emulation 
 - **Derived images** ([derived images](./derived_images)): this directory contains derived (from the base images) Docker images for emulating computer infrastructures.
 - **Environments** ([envs](./envs)): this directory contains pre-configured emulation environments
 
+> **Note**
+> The emulation system is mainly designed to run on a distributed system, e.g. a compute cluster.
+> It can run on a laptop as well, but then only small emulations can be created.
+
 <p align="center">
 <img src="docs/config_space.png" width="600">
 </p>
@@ -81,13 +85,18 @@ For more detailed information about installation of images, see ([README](./base
 
 #### Install Base Docker images
 
-To install the base docker images, you have two options: (i) pull the images from DockerHub; or (ii), build the images locally.
+To install the base docker images, you have two options: (i) pull the images from DockerHub; 
+or (ii), build the images locally.
 To build the images locally, run (this may take a while, e.g. an hour):
 ```bash
 cd base_images
 make build
 cd ../
 ```     
+> **Warning**
+> Installing base images locally can take several hours
+
+
 To pull the base images from DockerHub, run:
 ```bash
 cd base_images

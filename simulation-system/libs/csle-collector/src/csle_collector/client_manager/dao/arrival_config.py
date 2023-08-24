@@ -1,10 +1,9 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_base.json_serializable import JSONSerializable
-from csle_base.grpc_serializable import GRPCSerializable
 
 
-class ArrivalConfig(JSONSerializable, GRPCSerializable):
+class ArrivalConfig(JSONSerializable):
     """
     Abstract arrival configuration class
     """
