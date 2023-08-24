@@ -4,6 +4,7 @@ import grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
 
 
+
 class ClusterManagerStub(object):
     """Interface exported by the server
     """
