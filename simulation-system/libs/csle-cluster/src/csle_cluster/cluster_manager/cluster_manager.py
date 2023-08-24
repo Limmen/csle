@@ -3644,7 +3644,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Stopping the Snort IDS on the container with ip: {request.containerIp}  "
+        logging.info(f"Stopping the Snort IDS monitor thread on the container with ip: {request.containerIp}  "
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
