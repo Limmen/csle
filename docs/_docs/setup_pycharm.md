@@ -6,7 +6,7 @@ permalink: /docs/setup-pycharm/
 ## Setup PyCharm for Remote Development
 
 The best way to debug and implement new features to the emulation system involves three steps: 
-(1) Deploy the latest version of the emulation system on your target cluster; 
+(1) deploy the latest version of the emulation system on your target cluster; 
 (2) clone the latest source code both on the server and on your local machine (e.g. your laptop); 
 (3) connect your Integrated Development Environment (IDE) to the cluster so that you can edit code directly on the cluster. 
 This appendix walks through the steps of setting up the PyCharm IDE for remote development.
