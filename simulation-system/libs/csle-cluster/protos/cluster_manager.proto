@@ -86,7 +86,7 @@ service ClusterManager {
   rpc stopTrafficGenerators(StopTrafficGeneratorsMsg) returns (OperationOutcomeDTO) {}
   rpc stopTrafficGenerator(StopTrafficGeneratorMsg) returns (OperationOutcomeDTO) {}
   rpc getClientManagersInfo(GetClientManagersInfoMsg) returns (ClientManagersInfoDTO) {}
-  rpc getTrafficManagersInfo(GetTrafficManagersInfoMsg) returns (TrafficManagerInfoDTO) {}
+  rpc getTrafficManagersInfo(GetTrafficManagersInfoMsg) returns (TrafficManagersInfoDTO) {}
   rpc stopAllRunningContainers(StopAllRunningContainersMsg) returns (OperationOutcomeDTO) {}
   rpc stopContainer(StopContainerMsg) returns (OperationOutcomeDTO) {}
   rpc removeAllStoppedContainers(RemoveAllStoppedContainersMsg) returns (OperationOutcomeDTO) {}

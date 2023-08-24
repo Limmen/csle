@@ -1,6 +1,7 @@
 from typing import Any, List, Tuple
 import pytest
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OSSECIdsMonitorThreadStatusesDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import RyuManagerStatusDTO
 from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO
@@ -177,6 +178,23 @@ class TestClusterManagerSuite:
         return start_ryu_mocker
 
     @pytest.fixture
+    def stp_ryu(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ryu method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ryu(emulation_env_config: EmulationEnvConfig,
+                     logger: logging.RootLogger):
+            ryu = RyuDTO(ryu_running=True, monitor_running=True, port=4, web_port=4,
+                         controller="null", kafka_ip="123.456.78.99", kafka_port=7,
+                         time_step_len=4)
+            return ryu
+        stop_ryu_mocker = mocker.MagicMock(side_effect=stop_ryu)
+        return stop_ryu_mocker
+
+    @pytest.fixture
     def rye_status(self, mocker):
         """
         Pytest fixture for mocking the get_ryu_status method
@@ -344,6 +362,18 @@ class TestClusterManagerSuite:
                                                                      ossec_ids_running=True)],
                                               ossec_ids_managers_running=[True])
         return ossec_mng_info
+
+    @staticmethod
+    def ryu_mng_info():
+        ryu_mng_info = [RyuManagersInfo(ips=["123.456.78.99"],
+                                       ports=[1],
+                                       emulation_name="JDoeEmulation", execution_id=1,
+                                       ryu_managers_statuses=[RyuDTO(ryu_running=True, monitor_running=True, port=4, web_port=4,
+                                                                     controller="null", kafka_ip="123.456.78.99", kafka_port=7,
+                                                                     time_step_len=4)],
+                                       ryu_managers_running=[True], local_controller_web_port=10,
+                                       physical_server_ip="123.456.78.99")]
+        return ryu_mng_info
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -2177,11 +2207,25 @@ class TestClusterManagerSuite:
                      side_effect=active_ips)
         response: ClientManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
-        logging.info(response)
+        assert response.ips == ["123.456.78.99"]
+        assert response.ports == [1]
+        assert response.emulationName == "JohnDoeEmulation"
+        assert response.executionId == 1
+        assert response.clientManagersRunning
+        assert response.clientManagersStatuses[0].num_clients == 4
+        assert response.clientManagersStatuses[0].client_process_active
+        assert response.clientManagersStatuses[0].producer_active
+        assert response.clientManagersStatuses[0].clients_time_step_len_seconds == 4
+        assert response.clientManagersStatuses[0].producer_time_step_len_seconds == 5
         mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip", return_value="99.87.654.321")
         response: ClientManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
             stub=grpc_stub, emulation="JohnDoeEmulation", ip_first_octet=1)
-        logging.info(response)
+        assert response.ips == []
+        assert response.ports == []
+        assert response.emulationName == ""
+        assert response.executionId == -1
+        assert not response.clientManagersRunning
+        assert response.clientManagersStatuses == []
 
     def test_getTrafficManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
                                     traffic_mng_info, active_ips) -> None:
@@ -4230,3 +4274,112 @@ class TestClusterManagerSuite:
         assert response.kafka_ip == ""
         assert response.kafka_port == -1
         assert response.time_step_len == -1
+
+    def test_startRyu_(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, st_ryu):
+        """
+        Tests the startRyu grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager."
+                     "start_ryu", side_effect=st_ryu)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_ryu(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_ryu(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopRyu_(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, stp_ryu):
+        """
+        Tests the stopRyu grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager."
+                     "stop_ryu", side_effect=stp_ryu)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_ryu(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_ryu(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_getRyuManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, rye_status,
+                                active_ips):
+        """
+        Tests the getRyuManagersInfo grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager."
+                     "get_ryu_managers_info", side_effect=TestClusterManagerSuite.ryu_mng_info())
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
+        response: RyuManagerStatusDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ryu_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.ips == ["123.456.78.99"]
+        assert response.ports == [1]
+        assert response.emulationName == "JDoeEmulation"
+        assert response.ryuManagersRunning == [True]
+        assert response.ryuManagersStatuses[0].ryu_running
+        assert response.ryuManagersStatuses[0].monitor_running
+        assert response.ryuManagersStatuses[0].port == 4
+        assert response.ryuManagersStatuses[0].web_port == 4
+        assert response.ryuManagersStatuses[0].controller == "null"
+        assert response.ryuManagersStatuses[0].kafka_ip == "123.456.78.99"
+        assert response.ryuManagersStatuses[0].kafka_port == 7
+        assert response.ryuManagersStatuses[0].time_step_len == 4
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: RyuManagerStatusDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ryu_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.ips == []
+        assert response.ports == []
+        assert response.emulationName == ""
+        assert response.ryuManagersRunning == []
+        assert response.ryuManagersStatuses == []
+
+
+    def test_stopSnortIdses(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, stp_ryu):
+        """
+        Tests the stopSnortIdses grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+                     "stop_snort_idses", side_effect=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_snort_idses(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_snort_idses(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
