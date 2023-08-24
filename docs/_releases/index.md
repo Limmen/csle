@@ -13,7 +13,7 @@ The following is a list of official releases of of the Cyber Security Learning E
 **Release Date:** 16/8 2023
 
 **Description:** The third beta release of CSLE. Notable features: (1) added support for MCMC for system identification;
-(2) Mypy integration; (3) Unit tests; and (4), Bugfixes.
+(2) MyPy integration; (3) unit tests; and (4), bugfixes.
 
 **Download:** [https://github.com/Limmen/csle/releases/tag/v0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0)
 
