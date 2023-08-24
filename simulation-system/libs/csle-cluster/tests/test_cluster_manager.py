@@ -1,6 +1,8 @@
 from typing import Any, List, Tuple
 import pytest
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_cluster.cluster_manager.cluster_manager_pb2 import KafkaManagersInfoDTO
+from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import KafkaStatusDTO
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
@@ -282,6 +284,20 @@ class TestClusterManagerSuite:
                                     host_managers_statuses=[TestClusterManagerSuite.host_status_dto()[0]],
                                     host_managers_running=[True])
         return h_m_info
+
+    @staticmethod
+    def get_kafka_mng_info():
+        """
+        Pytest fixture for obtaining a KafkaManagersInfo object
+        
+
+        :return: a KafkaManagersInfo object
+        """
+        kafka_mng_info = KafkaManagersInfo(ips=["123.456.78.99"], ports=[1],
+                                           emulation_name="JDoeEmulation", execution_id=1,
+                                           kafka_managers_statuses=[KafkaDTO(running=True, topics=["null"])],
+                                           kafka_managers_running=[True])
+        return kafka_mng_info
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -3685,7 +3701,6 @@ class TestClusterManagerSuite:
             stop_kafka_server(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
         assert not response.outcome
 
-
     def test_startKafkaServer(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
         """
         Tests the startKafkaServer grpc
@@ -3710,3 +3725,25 @@ class TestClusterManagerSuite:
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
             start_kafka_server(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
         assert not response.outcome
+
+    def test_getKafkaManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
+                                  active_ips):
+        """
+        Tests the getKafkaManagersInfo grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.controllers.kafka_controller.KafkaController."
+                     "get_kafka_managers_info",
+                     return_value=TestClusterManagerSuite.get_kafka_mng_info())
+        response: KafkaManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        logging.info(response)
