@@ -47,7 +47,7 @@ processes and Markov games. It is built in Python and can be integrated with sta
 ![](docs/img/training.gif)
 
 > **Note**
-> The simulations are compatible with OpenAI Gym/Gymnasium. Hence you can integrate the environment interfaces
+> The simulations are compatible with OpenAI Gym/Gymnasium. Hence you can integrate the simulations
 > with your own implementations of reinforcement learning algorithms.
 
 ### **Management System**
