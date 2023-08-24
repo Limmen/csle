@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import csle_cluster.cluster_manager.cluster_manager_pb2 as cluster__manager__pb2
+import cluster_manager_pb2 as cluster__manager__pb2
 
 
 class ClusterManagerStub(object):
@@ -438,7 +438,7 @@ class ClusterManagerStub(object):
         self.getTrafficManagersInfo = channel.unary_unary(
                 '/ClusterManager/getTrafficManagersInfo',
                 request_serializer=cluster__manager__pb2.GetTrafficManagersInfoMsg.SerializeToString,
-                response_deserializer=cluster__manager__pb2.TrafficManagersInfoDTO.FromString,
+                response_deserializer=cluster__manager__pb2.TrafficManagerInfoDTO.FromString,
                 )
         self.stopAllRunningContainers = channel.unary_unary(
                 '/ClusterManager/stopAllRunningContainers',
