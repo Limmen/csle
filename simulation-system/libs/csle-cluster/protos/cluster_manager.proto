@@ -129,10 +129,10 @@ service ClusterManager {
   rpc stopHeartbeats(StopHeartbeatsMsg) returns (OperationOutcomeDTO) {}
   rpc startHostMonitorThreads(StartHostMonitorThreadsMsg) returns (OperationOutcomeDTO) {}
   rpc startHostMonitorThread(StartHostMonitorThreadMsg) returns (OperationOutcomeDTO) {}
-  rpc startFilebeat(StartFileBeatsMsg) returns (OperationOutcomeDTO) {}
-  rpc startPacketbeat(StartPacketBeatsMsg) returns (OperationOutcomeDTO) {}
-  rpc startMetricbeat(StartMetricBeatsMsg) returns (OperationOutcomeDTO) {}
-  rpc startHeartbeat(StartHeartBeatsMsg) returns (OperationOutcomeDTO) {}
+  rpc startFilebeat(StartFileBeatMsg) returns (OperationOutcomeDTO) {}
+  rpc startPacketbeat(StartPacketBeatMsg) returns (OperationOutcomeDTO) {}
+  rpc startMetricbeat(StartMetricBeatMsg) returns (OperationOutcomeDTO) {}
+  rpc startHeartbeat(StartHeartBeatMsg) returns (OperationOutcomeDTO) {}
   rpc stopFilebeat(StopFileBeatMsg) returns (OperationOutcomeDTO) {}
   rpc stopPacketbeat(StopPacketBeatMsg) returns (OperationOutcomeDTO) {}
   rpc stopMetricbeat(StopMetricBeatMsg) returns (OperationOutcomeDTO) {}
