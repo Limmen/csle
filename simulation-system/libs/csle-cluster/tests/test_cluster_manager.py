@@ -4458,3 +4458,81 @@ class TestClusterManagerSuite:
             stop_snort_ids(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
                            container_ip="123.456.78.99")
         assert not response.outcome
+
+    def test_stopSnortIdsMonitorThread(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, stp_ryu):
+        """
+        Tests the stopSnortIdsMonitorThread grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+                     "stop_snort_idses_monitor_thread", side_effect=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_snort_ids_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_snort_ids_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startSnortIds_(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, stp_ryu):
+        """
+        Tests the startSnortIds grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+                     "start_snort_ids", side_effect=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_snort_ids(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_snort_ids(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startSnortIdsMonitorThread(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec, stp_ryu):
+        """
+        Tests the startSnortIdsMonitorThread grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+                     "start_snort_idses_monitor_thread", side_effect=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_snort_ids_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_snort_ids_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
