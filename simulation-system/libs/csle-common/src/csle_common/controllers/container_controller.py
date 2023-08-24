@@ -475,7 +475,7 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.start_docker_stats_manager(
+            ManagementSystemController.start_docker_statsmanager(
                 logger=logger,
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
                 log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
@@ -521,7 +521,7 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.start_docker_stats_manager(
+            ManagementSystemController.start_docker_statsmanager(
                 logger=logger,
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,

@@ -5,6 +5,9 @@ from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.config import Config
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -14,6 +17,9 @@ from csle_common.dao.emulation_config.docker_stats_managers_info import DockerSt
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
+from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
+from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
@@ -24,11 +30,14 @@ from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
+from csle_common.dao.emulation_config.flags_config import FlagsConfig
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
@@ -39,12 +48,16 @@ from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersIn
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.ovs_switch_config import OvsSwitchConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.dao.emulation_config.network_service import NetworkService
+from csle_common.dao.emulation_observation.common.emulation_connection_observation_state import \
+    EmulationConnectionObservationState
+from csle_common.dao.emulation_config.connection_setup_dto import ConnectionSetupDTO
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
@@ -721,7 +734,7 @@ class TestEmulationConfigDaoSuite:
         """
         ossec_ids_manager_config = OSSECIDSManagerConfig(
             ossec_ids_manager_log_file="ossec.log", ossec_ids_manager_log_dir="/", ossec_ids_manager_max_workers=10,
-            time_step_len_seconds=30,  ossec_ids_manager_port=1515, version="0.0.1")
+            time_step_len_seconds=30, ossec_ids_manager_port=1515, version="0.0.1")
         assert isinstance(ossec_ids_manager_config.to_dict(), dict)
         assert isinstance(OSSECIDSManagerConfig.from_dict(ossec_ids_manager_config.to_dict()), OSSECIDSManagerConfig)
         assert OSSECIDSManagerConfig.from_dict(ossec_ids_manager_config.to_dict()).to_dict() == \
@@ -1007,3 +1020,287 @@ class TestEmulationConfigDaoSuite:
         assert isinstance(VulnerabilitiesConfig.from_dict(vuln_config.to_dict()), VulnerabilitiesConfig)
         assert VulnerabilitiesConfig.from_dict(vuln_config.to_dict()).to_dict() == vuln_config.to_dict()
         assert VulnerabilitiesConfig.from_dict(vuln_config.to_dict()) == vuln_config
+
+    def test_emulation_connection_obs_state(self) -> None:
+        """
+        Tests creation and dict conversion of the VulnerabilitiesConfig DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        emulation_connection_obs_state = EmulationConnectionObservationState(
+            conn=None, credential=credential, root=True, service="serv", port=3030, tunnel_port=4000,
+            tunnel_thread=None, interactive_shell=None, proxy=None, ip="8.8.8.8")
+        assert isinstance(emulation_connection_obs_state.to_dict(), dict)
+        assert isinstance(EmulationConnectionObservationState.from_dict(emulation_connection_obs_state.to_dict()),
+                          EmulationConnectionObservationState)
+        assert EmulationConnectionObservationState.from_dict(emulation_connection_obs_state.to_dict()).to_dict() \
+               == emulation_connection_obs_state.to_dict()
+        assert EmulationConnectionObservationState.from_dict(emulation_connection_obs_state.to_dict()) \
+               == emulation_connection_obs_state
+
+    def test_connection_setup_dto(self) -> None:
+        """
+        Tests creation and dict conversion of the ConnectionSetup DTO
+
+        :return: None
+        """
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        emulation_connection_obs_state = EmulationConnectionObservationState(
+            conn=None, credential=credential, root=True, service="serv", port=3030, tunnel_port=4000,
+            tunnel_thread=None, interactive_shell=None, proxy=None, ip="8.8.8.8")
+        conn_setup = ConnectionSetupDTO(
+            connected=True, credentials=[credential], target_connections=[], tunnel_threads=[], forward_ports=[1101],
+            ports=[3030], interactive_shells=[], non_failed_credentials=[credential],
+            proxies=[emulation_connection_obs_state], ip="5.5.5.5", total_time=0.0)
+        assert isinstance(conn_setup.to_dict(), dict)
+        assert isinstance(ConnectionSetupDTO.from_dict(conn_setup.to_dict()), ConnectionSetupDTO)
+        assert ConnectionSetupDTO.from_dict(conn_setup.to_dict()).to_dict() == conn_setup.to_dict()
+        assert ConnectionSetupDTO.from_dict(conn_setup.to_dict()) == conn_setup
+
+    def test_containers_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ContainersConfig DTO
+
+        :return: None
+        """
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        node_container_config = NodeContainerConfig(
+            name="node_name", ips_and_networks=[("net_1", container_network)], version="1.0.0", level="4",
+            restart_policy="always", suffix="_2", os="Ubuntu", execution_ip_first_octet=15,
+            docker_gw_bridge_ip="7.7.7.7", physical_host_ip="8.8.8.8"
+        )
+        containers_config = ContainersConfig(containers=[node_container_config], agent_ip="5.5.5.5",
+                                             router_ip="2.2.2.2",
+                                             networks=[container_network],
+                                             ids_enabled=True, vulnerable_nodes=None, agent_reachable_nodes=None)
+        assert isinstance(containers_config.to_dict(), dict)
+        assert isinstance(ContainersConfig.from_dict(containers_config.to_dict()), ContainersConfig)
+        assert ContainersConfig.from_dict(containers_config.to_dict()).to_dict() == containers_config.to_dict()
+        assert ContainersConfig.from_dict(containers_config.to_dict()) == containers_config
+
+    def test_flags_config(self) -> None:
+        """
+        Tests creation and dict conversion of the FlagsConfig DTO
+
+        :return: None
+        """
+        flag = Flag(name="testflag", dir="/", id=10, path="/test.txt", requires_root=False, score=10)
+        node_flags_config = NodeFlagsConfig(
+            ip="8.8.8.8", flags=[flag], docker_gw_bridge_ip="9.9.9.9", physical_host_ip="168.22.11.2")
+        flags_config = FlagsConfig(node_flag_configs=[node_flags_config])
+        assert isinstance(flags_config.to_dict(), dict)
+        assert isinstance(FlagsConfig.from_dict(flags_config.to_dict()), FlagsConfig)
+        assert FlagsConfig.from_dict(flags_config.to_dict()).to_dict() == flags_config.to_dict()
+        assert FlagsConfig.from_dict(flags_config.to_dict()) == flags_config
+
+    def test_topology_config(self) -> None:
+        """
+        Tests creation and dict conversion of the TopologyConfig DTO
+
+        :return: None
+        """
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        default_net_fw_config = DefaultNetworkFirewallConfig(
+            ip="192.168.5.1", default_gw="192.168.5.29", default_output="ACCEPT", default_input="DROP",
+            default_forward="ACCEPT", network=container_network
+        )
+        route = ("8.8.8.8", "7.7.7.7")
+        routes = set()
+        routes.add(route)
+        node_firewall_config = NodeFirewallConfig(
+            hostname="my_hostname", output_accept=set("8.8.8.8"), input_accept=set("8.8.8.8"),
+            forward_accept=set("8.8.8.8"), output_drop=set("8.8.8.8"), input_drop=set("8.8.8.8"),
+            forward_drop=set("8.8.8.8"), routes=routes, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="192.172.1.1", ips_gw_default_policy_networks=[default_net_fw_config]
+        )
+        topology_config = TopologyConfig(subnetwork_masks=["255.255.255.0"],
+                                         node_configs=[node_firewall_config])
+        assert isinstance(topology_config.to_dict(), dict)
+        assert isinstance(TopologyConfig.from_dict(topology_config.to_dict()), TopologyConfig)
+        assert TopologyConfig.from_dict(topology_config.to_dict()).to_dict() == topology_config.to_dict()
+        assert TopologyConfig.from_dict(topology_config.to_dict()) == topology_config
+
+    def test_host_manager_config(self) -> None:
+        """
+        Tests creation and dict conversion of the HostManagerConfig DTO
+
+        :return: None
+        """
+        host_manager_config = HostManagerConfig(
+            host_manager_log_file="host_manager.log", host_manager_log_dir="/", host_manager_max_workers=10,
+            time_step_len_seconds=30, host_manager_port=3000, version="0.0.1")
+        assert isinstance(host_manager_config.to_dict(), dict)
+        assert isinstance(HostManagerConfig.from_dict(host_manager_config.to_dict()), HostManagerConfig)
+        assert HostManagerConfig.from_dict(host_manager_config.to_dict()).to_dict() == host_manager_config.to_dict()
+        assert HostManagerConfig.from_dict(host_manager_config.to_dict()) == host_manager_config
+
+    def test_snort_ids_manager_config(self) -> None:
+        """
+        Tests creation and dict conversion of the SnortIDSManagerConfig DTO
+
+        :return: None
+        """
+        snort_ids_manager_config = SnortIDSManagerConfig(
+            snort_ids_manager_log_file="snort.log", snort_ids_manager_log_dir="/", snort_ids_manager_max_workers=10,
+            time_step_len_seconds=30, snort_ids_manager_port=4000, version="0.0.1")
+        assert isinstance(snort_ids_manager_config.to_dict(), dict)
+        assert isinstance(SnortIDSManagerConfig.from_dict(snort_ids_manager_config.to_dict()), SnortIDSManagerConfig)
+        assert SnortIDSManagerConfig.from_dict(snort_ids_manager_config.to_dict()).to_dict() == \
+               snort_ids_manager_config.to_dict()
+        assert SnortIDSManagerConfig.from_dict(snort_ids_manager_config.to_dict()) == snort_ids_manager_config
+
+    def test_emulation_env_config(self) -> None:
+        """
+        Tests creation and dict conversion of the EmulationEnvConfig DTO
+
+        :return: None
+        """
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        node_container_config = NodeContainerConfig(
+            name="node_name", ips_and_networks=[("net_1", container_network)], version="1.0.0", level="4",
+            restart_policy="always", suffix="_2", os="Ubuntu", execution_ip_first_octet=15,
+            docker_gw_bridge_ip="7.7.7.7", physical_host_ip="8.8.8.8"
+        )
+        containers_config = ContainersConfig(containers=[node_container_config], agent_ip="5.5.5.5",
+                                             router_ip="2.2.2.2",
+                                             networks=[container_network],
+                                             ids_enabled=True, vulnerable_nodes=None, agent_reachable_nodes=None)
+        user = User(username="testuser", pw="mypw", root=True)
+        node_users_config = NodeUsersConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7", users=[user])
+        users_config = UsersConfig(users_configs=[node_users_config])
+        flag = Flag(name="testflag", dir="/", id=10, path="/test.txt", requires_root=False, score=10)
+        node_flags_config = NodeFlagsConfig(
+            ip="8.8.8.8", flags=[flag], docker_gw_bridge_ip="9.9.9.9", physical_host_ip="168.22.11.2")
+        flags_config = FlagsConfig(node_flag_configs=[node_flags_config])
+        default_net_fw_config = DefaultNetworkFirewallConfig(
+            ip="192.168.5.1", default_gw="192.168.5.29", default_output="ACCEPT", default_input="DROP",
+            default_forward="ACCEPT", network=container_network
+        )
+        route = ("8.8.8.8", "7.7.7.7")
+        routes = set()
+        routes.add(route)
+        node_firewall_config = NodeFirewallConfig(
+            hostname="my_hostname", output_accept=set("8.8.8.8"), input_accept=set("8.8.8.8"),
+            forward_accept=set("8.8.8.8"), output_drop=set("8.8.8.8"), input_drop=set("8.8.8.8"),
+            forward_drop=set("8.8.8.8"), routes=routes, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="192.172.1.1", ips_gw_default_policy_networks=[default_net_fw_config]
+        )
+        topology_config = TopologyConfig(subnetwork_masks=["255.255.255.0"],
+                                         node_configs=[node_firewall_config])
+        credential = Credential(username="testuser", pw="testpw", port=9311, protocol=TransportProtocol.UDP,
+                                service="test", root=True)
+        node_vuln_config = NodeVulnerabilityConfig(
+            ip="8.8.8.8", docker_gw_bridge_ip="8.8.8.8", physical_host_ip="7.7.7.7",
+            vuln_type=VulnType.RCE, protocol=TransportProtocol.TCP, credentials=[credential], cvss=2.0, cve="test_cve",
+            service="myserv", root=True, name="testname", port=2510)
+        vuln_config = VulnerabilitiesConfig(node_vulnerability_configs=[node_vuln_config])
+        workflow_mc = WorkflowMarkovChain(transition_matrix=[[0.2, 0.8]], initial_state=10, id=1)
+        workflows_service = WorkflowService(ips_and_commands=[("8.8.8.8", ["ls"])], id=10)
+        workflows_config = WorkflowsConfig(workflow_markov_chains=[workflow_mc], workflow_services=[workflows_service])
+        arrival_config = ConstantArrivalConfig(lamb=10.0)
+        client = Client(id=10, workflow_distribution=[1], arrival_config=arrival_config, mu=4.0,
+                        exponential_service_time=True)
+        container_network = ContainerNetwork(
+            name="testnet", subnet_mask="/24", bitmask="255.255.255.0", subnet_prefix="192.168.5", interface="eth1")
+        client_population_config = ClientPopulationConfig(
+            ip="8.8.8.8", networks=[container_network], client_manager_port=2020,
+            client_manager_log_file="client_manager.log",
+            client_manager_log_dir="/", client_manager_max_workers=10, clients=[client],
+            workflows_config=workflows_config,
+            client_time_step_len_seconds=30, docker_gw_bridge_ip="7.7.7.7", physical_host_ip="1.1.1.1"
+        )
+        node_traffic_config = NodeTrafficConfig(
+            ip="8.8.8.8", commands=["ls"], traffic_manager_log_file="traffic_manager.log", traffic_manager_log_dir="/",
+            traffic_manager_port=3000, traffic_manager_max_workers=10, docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="7.7.7.7")
+        traffic_config = TrafficConfig(node_traffic_configs=[node_traffic_config],
+                                       client_population_config=client_population_config)
+        node_network_config = NodeNetworkConfig(
+            interface="eth0", limit_packets_queue=3000, packet_delay_ms=0.1,
+            packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+            packet_delay_distribution=PacketDelayDistributionType.PARETO,
+            packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=2,
+            packet_loss_random_correlation_percentage=25, loss_state_markov_chain_p13=0.1,
+            loss_state_markov_chain_p31=0.1, loss_state_markov_chain_p32=0.1, loss_state_markov_chain_p23=0.1,
+            loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+            loss_gemodel_h=0.0001, loss_gemodel_k=0.9999)
+        node_resources_config = NodeResourcesConfig(
+            container_name="my_container", num_cpus=10, available_memory_gb=100,
+            ips_and_network_configs=[("net_1", node_network_config)], docker_gw_bridge_ip="docker_gw",
+            physical_host_ip="192.168.1.1")
+        resources_config = ResourcesConfig(node_resources_configurations=[node_resources_config])
+        kafka_topic = KafkaTopic(name="testname", num_replicas=10, num_partitions=15, attributes=["attr1"],
+                                 retention_time_hours=10)
+        kafka_config = KafkaConfig(
+            container=node_container_config, resources=node_resources_config, firewall_config=node_firewall_config,
+            kafka_manager_log_file="elk_manager.log", kafka_manager_log_dir="/", kafka_manager_max_workers=10,
+            time_step_len_seconds=15, kafka_manager_port=50045, version="0.0.1", topics=[kafka_topic])
+        network_service = NetworkService(protocol=TransportProtocol.UDP, port=3000, name="testservice",
+                                         credentials=[credential])
+        node_services_config = NodeServicesConfig(ip="8.8.8.8", services=[network_service])
+        services_config = ServicesConfig(services_configs=[node_services_config])
+        ovs_switch_config = OvsSwitchConfig(
+            container_name="testcontainer", ip="8.8.8.8", openflow_protocols=["v1.0.0"], controller_ip="8.8.8.8",
+            controller_port=3000, controller_transport_protocol="UDP", docker_gw_bridge_ip="8.8.8.8",
+            physical_host_ip="168.156.2.2")
+        ovs_config = OVSConfig(switch_configs=[ovs_switch_config])
+        host_manager_config = HostManagerConfig(
+            host_manager_log_file="host_manager.log", host_manager_log_dir="/", host_manager_max_workers=10,
+            time_step_len_seconds=30, host_manager_port=3000, version="0.0.1")
+        elk_config = ElkConfig(
+            container=node_container_config, resources=node_resources_config, firewall_config=node_firewall_config,
+            elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10,
+            elastic_port=9200, kibana_port=5601, logstash_port=5044, time_step_len_seconds=15, elk_manager_port=50045,
+            version="0.0.1")
+        node_beats_config = NodeBeatsConfig(
+            ip="192.168.5.1", log_files_paths=["log1"], filebeat_modules=["mod1"], metricbeat_modules=["mod2"],
+            heartbeat_hosts_to_monitor=["192.168.5.7"], kafka_input=False, start_heartbeat_automatically=True,
+            start_packetbeat_automatically=True, start_metricbeat_automatically=True, start_filebeat_automatically=True
+        )
+        beats_config = BeatsConfig(
+            node_beats_configs=[node_beats_config], num_elastic_shards=19, reload_enabled=False
+        )
+        docker_statsmanager_config = DockerStatsManagerConfig(
+            docker_stats_manager_log_file="testlog", docker_stats_manager_log_dir="logdir",
+            docker_stats_manager_max_workers=10, time_step_len_seconds=30, docker_stats_manager_port=19, version="0.0.1"
+        )
+        snort_ids_manager_config = SnortIDSManagerConfig(
+            snort_ids_manager_log_file="snort.log", snort_ids_manager_log_dir="/", snort_ids_manager_max_workers=10,
+            time_step_len_seconds=30, snort_ids_manager_port=4000, version="0.0.1")
+        ossec_ids_manager_config = OSSECIDSManagerConfig(
+            ossec_ids_manager_log_file="ossec.log", ossec_ids_manager_log_dir="/", ossec_ids_manager_max_workers=10,
+            time_step_len_seconds=30, ossec_ids_manager_port=1515, version="0.0.1")
+        static_sequence = [
+            EmulationAttackerAction(
+                id=EmulationAttackerActionId.CONTINUE, name="test", cmds=["cmd1"],
+                type=EmulationAttackerActionType.CONTINUE, descr="testtest", ips=["ip1"], index=0,
+                action_outcome=EmulationAttackerActionOutcome.CONTINUE, vulnerability="test", alt_cmds=["altcmd1"],
+                backdoor=False, execution_time=0.0, ts=0.0
+            )
+        ]
+        em_config = EmulationEnvConfig(name="emulation", containers_config=containers_config,
+                                       users_config=users_config, flags_config=flags_config,
+                                       vuln_config=vuln_config, topology_config=topology_config,
+                                       traffic_config=traffic_config,
+                                       resources_config=resources_config,
+                                       kafka_config=kafka_config, services_config=services_config,
+                                       descr="testdescr", static_attacker_sequences={"t": static_sequence},
+                                       ovs_config=ovs_config,
+                                       sdn_controller_config=None, host_manager_config=host_manager_config,
+                                       snort_ids_manager_config=snort_ids_manager_config,
+                                       ossec_ids_manager_config=ossec_ids_manager_config,
+                                       docker_stats_manager_config=docker_statsmanager_config, elk_config=elk_config,
+                                       beats_config=beats_config,
+                                       level=10, version="0.0.1", execution_id=16, csle_collector_version="latest",
+                                       csle_ryu_version="latest")
+        assert isinstance(em_config.to_dict(), dict)
+        assert isinstance(EmulationEnvConfig.from_dict(em_config.to_dict()), EmulationEnvConfig)
+        assert EmulationEnvConfig.from_dict(em_config.to_dict()).to_dict() == em_config.to_dict()
+        assert EmulationEnvConfig.from_dict(em_config.to_dict()) == em_config
