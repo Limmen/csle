@@ -652,22 +652,22 @@ class ClusterManagerStub(object):
                 )
         self.startFilebeat = channel.unary_unary(
                 '/ClusterManager/startFilebeat',
-                request_serializer=cluster__manager__pb2.StartFileBeatsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartFileBeatMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startPacketbeat = channel.unary_unary(
                 '/ClusterManager/startPacketbeat',
-                request_serializer=cluster__manager__pb2.StartPacketBeatsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartPacketBeatMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startMetricbeat = channel.unary_unary(
                 '/ClusterManager/startMetricbeat',
-                request_serializer=cluster__manager__pb2.StartMetricBeatsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartMetricBeatMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.startHeartbeat = channel.unary_unary(
                 '/ClusterManager/startHeartbeat',
-                request_serializer=cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
+                request_serializer=cluster__manager__pb2.StartHeartBeatMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
                 )
         self.stopFilebeat = channel.unary_unary(
@@ -3015,22 +3015,22 @@ def add_ClusterManagerServicer_to_server(servicer, server):
             ),
             'startFilebeat': grpc.unary_unary_rpc_method_handler(
                     servicer.startFilebeat,
-                    request_deserializer=cluster__manager__pb2.StartFileBeatsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartFileBeatMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startPacketbeat': grpc.unary_unary_rpc_method_handler(
                     servicer.startPacketbeat,
-                    request_deserializer=cluster__manager__pb2.StartPacketBeatsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartPacketBeatMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startMetricbeat': grpc.unary_unary_rpc_method_handler(
                     servicer.startMetricbeat,
-                    request_deserializer=cluster__manager__pb2.StartMetricBeatsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartMetricBeatMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'startHeartbeat': grpc.unary_unary_rpc_method_handler(
                     servicer.startHeartbeat,
-                    request_deserializer=cluster__manager__pb2.StartHeartBeatsMsg.FromString,
+                    request_deserializer=cluster__manager__pb2.StartHeartBeatMsg.FromString,
                     response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
             'stopFilebeat': grpc.unary_unary_rpc_method_handler(
@@ -5630,7 +5630,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startFilebeat',
-            cluster__manager__pb2.StartFileBeatsMsg.SerializeToString,
+            cluster__manager__pb2.StartFileBeatMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5647,7 +5647,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startPacketbeat',
-            cluster__manager__pb2.StartPacketBeatsMsg.SerializeToString,
+            cluster__manager__pb2.StartPacketBeatMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5664,7 +5664,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startMetricbeat',
-            cluster__manager__pb2.StartMetricBeatsMsg.SerializeToString,
+            cluster__manager__pb2.StartMetricBeatMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -5681,7 +5681,7 @@ class ClusterManager(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/startHeartbeat',
-            cluster__manager__pb2.StartHeartBeatsMsg.SerializeToString,
+            cluster__manager__pb2.StartHeartBeatMsg.SerializeToString,
             cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

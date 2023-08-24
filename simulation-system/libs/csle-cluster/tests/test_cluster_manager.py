@@ -1,7 +1,11 @@
-from typing import Any, List
+from typing import Any, List, Tuple
 import pytest
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import HostManagerStatusesDTO
+from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
+from csle_collector.host_manager.host_manager_pb2 import HostStatusDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import HostManagersInfoDTO
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ElkManagersInfoDTO
@@ -198,7 +202,12 @@ class TestClusterManagerSuite:
         return A()
 
     @staticmethod
-    def get_dsm_info():
+    def get_dsm_info() -> DockerStatsManagersInfo:
+        """
+        Static help method for obtaining a DockerStatsManagersInfo object
+        
+        :return: a DockerStatsManagersInfo object
+        """
         docker_sm_info = DockerStatsManagersInfo(ips=["123.456.78.99"], ports=[1],
                                                  emulation_name="JDoeEmulation",
                                                  execution_id=1,
@@ -211,7 +220,12 @@ class TestClusterManagerSuite:
         return docker_sm_info
 
     @staticmethod
-    def get_elk_mng_info():
+    def get_elk_mng_info() -> ELKManagersInfo:
+        """
+        Static help metod for obtaining an ElkManagersInfo object
+        
+        :return: an ElkManagersInfo object
+        """
         elk_mng_info = ELKManagersInfo(ips=["123.456.78.99"], ports=[1],
                                        emulation_name="JohnDoeEmulation",
                                        execution_id=1,
@@ -224,7 +238,12 @@ class TestClusterManagerSuite:
         return elk_mng_info
 
     @staticmethod
-    def get_ex_nc_conf():
+    def get_ex_nc_conf() -> NodeContainerConfig:
+        """
+        Static help method for obtaining a NodeContainerConfig object
+        
+        :return: a NodeContainerConfig object
+        """
         c_net = ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
                                  subnet_prefix="null", interface="eth0")
         nc_conf = NodeContainerConfig(name="Container1",
@@ -235,6 +254,32 @@ class TestClusterManagerSuite:
                                       docker_gw_bridge_ip="123.456.78.99",
                                       physical_host_ip="123.456.78.99")
         return nc_conf
+
+    @staticmethod
+    def host_status_dto() -> List[Tuple[HostStatusDTO, str]]:
+        """
+        Staic help method for obtaining a replicated list of host monitor statuses
+        """
+        host_stat_dto = HostStatusDTO(monitor_running=True,
+                                      filebeat_running=True,
+                                      packetbeat_running=True,
+                                      metricbeat_running=True,
+                                      heartbeat_running=True)
+        lituple = [(host_stat_dto, "123.456.78.99")]
+        return lituple
+
+    @staticmethod
+    def get_host_mng_info() -> HostManagersInfo:
+        """
+        Static help method for obtaining a HostManagersInfo object
+        
+        :return: a HostManagersInfo
+        """
+        h_m_info = HostManagersInfo(ips=["123.456.78.99"], ports=[1],
+                                    emulation_name="JDoeEmulation", execution_id=1,
+                                    host_managers_statuses=[TestClusterManagerSuite.host_status_dto()[0]],
+                                    host_managers_running=[True])
+        return h_m_info
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -2814,8 +2859,7 @@ class TestClusterManagerSuite:
                                ip_first_octet=1, container_ip="123.456.78.99")
         assert not response.outcome
 
-    def test_stopHostManager(self, grpc_stub, mocker: pytest_mock.MockFixture,
-                              get_ex_exec, get_ex_em_env) -> None:
+    def test_stopHostManager(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
         """
         Tests the stopHostManager grpc
 
@@ -2832,11 +2876,686 @@ class TestClusterManagerSuite:
                      return_value=TestClusterManagerSuite.get_ex_nc_conf())
         response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
             stop_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
-                               ip_first_octet=1, container_ip="123.456.78.99")
+                              ip_first_octet=1, container_ip="123.456.78.99")
         assert response.outcome
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      return_value=None)
         response = csle_cluster.cluster_manager.query_cluster_manager. \
             stop_host_manager(stub=grpc_stub, emulation="JDoeEmulation",
-                               ip_first_octet=1, container_ip="123.456.78.99")
+                              ip_first_octet=1, container_ip="123.456.78.99")
         assert not response.outcome
+
+    def test_startHostMonitorThreads(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                     get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startHostMonitorThreads grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_host_monitor_threads", return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_monitor_threads(stub=grpc_stub, emulation="JDoeEmulation",
+                                       ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_monitor_threads(stub=grpc_stub, emulation="JDoeEmulation",
+                                       ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopFilebeats(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                           get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopFilebeats grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_filebeats", return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_filebeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_filebeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopPacketbeats(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                             get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopPacketbeats grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_packetbeats", return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_packetbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_packetbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopMetricbeats(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                             get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopMetricbeats grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_metricbeats", return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_metricbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_metricbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_stopHeartbeats(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopHeartbeats grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_heartbeats", return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_heartbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_heartbeats(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert not response.outcome
+
+    def test_startHostMonitorThread(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                    get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startHostMonitorThread grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_host_monitor_thread", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                      container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                      container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_host_monitor_thread(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                      container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startFilebeat_(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                            get_ex_exec) -> None:
+        """
+        Tests the startFilebeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_filebeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startPacketbeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                             get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startPacketbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_packetbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startMetricbeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                             get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startMetricbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_metricbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                             container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_startHeartbeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                            get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the startHeartbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.start_heartbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            start_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_stopFilebeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                          get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopFilebeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_filebeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                          container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                          container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_filebeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                          container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_stopPacketbeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                            get_ex_exec, get_ex_em_env) -> None:
+        """
+        Tests the stopPacketbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_packetbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_packetbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_stopMetricbeat(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                            get_ex_exec) -> None:
+        """
+        Tests the stopMetricbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_metricbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_metricbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                            container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_stopHeartbeat(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec) -> None:
+        """
+        Tests the stopHeartbeat grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.stop_heartbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config", return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            stop_heartbeat(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                           container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_applyFileBeatConfig(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                 get_ex_exec) -> None:
+        """
+        Tests the applyFileBeatConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.config_filebeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_filebeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                  container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_filebeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                  container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_filebeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                  container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_applyPacketBeatConfig(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                   get_ex_exec) -> None:
+        """
+        Tests the applyPacketBeatConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.config_packetbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_packetbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=None)
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_packetbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_packetbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_applyMetricBeatConfig(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                   get_ex_exec) -> None:
+        """
+        Tests the applyMetricBeatConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.config_metricbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_metricbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_metricbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_metricbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                    container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_applyHeartBeatConfig(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                  get_ex_exec) -> None:
+        """
+        Tests the applyHeartBeatConfig grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.config_heartbeat", return_value=None)
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_heartbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                   container_ip="123.456.78.99")
+        assert response.outcome
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: OperationOutcomeDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_heartbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                   container_ip="123.456.78.99")
+        assert not response.outcome
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util."
+                     "ClusterManagerUtil.get_container_config",
+                     return_value=TestClusterManagerSuite.get_ex_nc_conf())
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response = csle_cluster.cluster_manager.query_cluster_manager. \
+            apply_heartbeat_config(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                   container_ip="123.456.78.99")
+        assert not response.outcome
+
+    def test_getHostMonitorThreadsStatuses(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                           get_ex_exec) -> None:
+        """
+        Tests the getHostMonitorThreadsStatuses grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.get_host_monitor_threads_statuses",
+                     return_value=TestClusterManagerSuite.host_status_dto())
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: HostManagerStatusesDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_monitor_threads_statuses(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.hostManagerStatuses[0].monitor_running
+        assert response.hostManagerStatuses[0].filebeat_running
+        assert response.hostManagerStatuses[0].packetbeat_running
+        assert response.hostManagerStatuses[0].monitor_running
+        assert response.hostManagerStatuses[0].ip == "123.456.78.99"
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: HostManagerStatusesDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_monitor_threads_statuses(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.hostManagerStatuses == []
+
+    def test_getHostManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                                 get_ex_exec, active_ips) -> None:
+        """
+        Tests the getHostManagersInfo grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.controllers.host_controller."
+                     "HostController.get_host_managers_info",
+                     return_value=TestClusterManagerSuite.get_host_mng_info())
+        mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
+                     side_effect=active_ips)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: HostManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.ips == ["123.456.78.99"]
+        assert response.ports == [1]
+        assert response.emulationName == "JDoeEmulation"
+        assert response.executionId == 1
+        assert response.hostManagersRunning
+        assert response.hostManagersStatuses[0].monitor_running
+        assert response.hostManagersStatuses[0].filebeat_running
+        assert response.hostManagersStatuses[0].packetbeat_running
+        assert response.hostManagersStatuses[0].metricbeat_running
+        assert response.hostManagersStatuses[0].heartbeat_running
+        assert response.hostManagersStatuses[0].ip == "123.456.78.99"
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: HostManagersInfoDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_managers_info(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.ips == []
+        assert response.ports == []
+        assert response.emulationName == ""
+        assert response.executionId == -1
+        assert response.hostManagersRunning == []
+        assert response.hostManagersStatuses == []
