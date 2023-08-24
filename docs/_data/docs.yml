@@ -50,3 +50,8 @@
 - title: Frequently Asked Questions
   docs:
     - faq
+
+- title: Appendices
+  docs:
+    - setup-pycharm
+    - useful-git-commands

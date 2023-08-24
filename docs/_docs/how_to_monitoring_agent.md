@@ -11,14 +11,14 @@ To update the monitoring agents that run on the emulated devices, perform the fo
       csle/simulation-system/libs/csle-collector/src/
     ```
    <p class="captionFig">
-   Listing 159: Directory with source code of the monitoring agents in CSLE.
+   Listing 164: Directory with source code of the monitoring agents in CSLE.
    </p>
 2. Update the gRPC API by editing the protocol-buffer files in the directory:
     ```bash
       csle/simulation-system/libs/csle-collector/protos/
     ```
    <p class="captionFig">
-   Listing 160: Directory with protocol buffers for the monitoring agents in CSLE.
+   Listing 165: Directory with protocol buffers for the monitoring agents in CSLE.
    </p>
 3. Regenerate the gRPC Python files by running the commands:
     ```bash
@@ -33,5 +33,5 @@ To update the monitoring agents that run on the emulated devices, perform the fo
      python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ryu_manager/. ./protos/ryu_manager.proto
     ```
    <p class="captionFig">
-   Listing 161: Commands to generate gRPC Python files from protobuf files.
+   Listing 166: Commands to generate gRPC Python files from protobuf files.
    </p>

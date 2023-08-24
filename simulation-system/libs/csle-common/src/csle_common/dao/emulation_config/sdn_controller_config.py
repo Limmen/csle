@@ -1,4 +1,4 @@
-from typing import Dict, Any, Union, List
+from typing import Dict, Any, List
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -50,7 +50,7 @@ class SDNControllerConfig(JSONSerializable):
         self.manager_port = manager_port
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> Union["SDNControllerConfig", None]:
+    def from_dict(d: Dict[str, Any]) -> "SDNControllerConfig":
         """
         Converts a dict representation to an instance
 
@@ -103,7 +103,7 @@ class SDNControllerConfig(JSONSerializable):
                f"manager_log_dir: {self.manager_log_dir}, manager_max_workers: {self.manager_max_workers}"
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> Union["SDNControllerConfig", None]:
+    def from_json_file(json_file_path: str) -> "SDNControllerConfig":
         """
         Reads a json file and converts it to a DTO
 
@@ -116,7 +116,7 @@ class SDNControllerConfig(JSONSerializable):
             json_str = f.read()
         return SDNControllerConfig.from_dict(json.loads(json_str))
 
-    def copy(self) -> Union["SDNControllerConfig", None]:
+    def copy(self) -> "SDNControllerConfig":
         """
         :return: a copy of the DTO
         """

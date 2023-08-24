@@ -35,12 +35,20 @@ on Linux containers and can be used to collect traces and to evaluate security p
 
 ![](docs/img/cli.gif)
 
+> **Note**
+> The emulation system is mainly designed to run on a distributed system, e.g. a compute cluster. 
+> It can run on a laptop as well, but then only small emulations can be created.   
+
 ### **Simulation System**
 
 CSLE includes a simulation system for executing reinforcement learning algorithms and simulating Markov decision
 processes and Markov games. It is built in Python and can be integrated with standard machine learning libraries.
 
 ![](docs/img/training.gif)
+
+> **Note**
+> The simulations are compatible with OpenAI Gym/Gymnasium. Hence you can integrate the simulations
+> with your own implementations of reinforcement learning algorithms.
 
 ### **Management System**
 
@@ -54,6 +62,7 @@ of emulation and simulation processes; and c), shell access to components of emu
 ## Documentation
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/).
+PDF versions of the documentation for each release are available [here](./releases/)
 
 ## Supported Releases
 
