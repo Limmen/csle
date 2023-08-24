@@ -285,7 +285,7 @@ class SDNControllerManager:
 
     @staticmethod
     def get_ryu_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str],
-                              logger: logging.Logger, physical_server_ip: str) -> RyuManagersInfo:
+                              logger: logging.Logger, physical_server_ip: str) -> List[RyuManagersInfo]:
         """
         Extracts the information of the Ryu managers for a given emulation
 

@@ -1041,7 +1041,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ryu_info_dto(ryu_managers_info_dto: Union[None, RyuManagersInfo]) \
+    def convert_ryu_info_dto(ryu_managers_info_dto: Union[None, List[RyuManagersInfo]]) \
             -> cluster_manager_pb2.RyuManagersInfoDTO:
         """
         Converts a RyuManagersInfo into a RyuManagersInfoDTO
@@ -1230,7 +1230,7 @@ class ClusterManagerUtil:
         :param traffic_managers_dto: the DTO to convert
         :return: the converted DTO
         """
-        
+
         if traffic_managers_dto is None:
             return ClusterManagerUtil.get_empty_traffic_managers_info_dto()
         return cluster_manager_pb2.TrafficManagersInfoDTO(
