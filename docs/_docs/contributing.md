@@ -33,4 +33,4 @@ should be on the list but is not):
 - Jakob Stymne, software development. 
 - Arvid Lagerqvist, software development.
 - Nils Forsgren, software development.
-- Forough Shahab Samani, software development.
+- Forough Shahab Samani, software development and documentation.

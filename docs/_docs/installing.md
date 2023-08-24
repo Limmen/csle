@@ -93,7 +93,7 @@ set -gx CSLE_HOME "/path/to/csle"
 ```
 
 <p class="captionFig">
-Listing 8: Line to add to the fish configuration file to set the \texttt{CSLE\_HOME} environment variable.
+Listing 8: Line to add to the fish configuration file to set the `CSLE_HOME` environment variable.
 </p>
 
 After performing the steps above, you should have the directory layout shown in Fig. 27.
