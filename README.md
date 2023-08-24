@@ -35,7 +35,7 @@ on Linux containers and can be used to collect traces and to evaluate security p
 
 ![](docs/img/cli.gif)
 
-> ** Note **
+> **Note**
 > The emulation system is mainly designed to run on a distributed system, e.g. a compute cluster. 
 > It can run on a laptop as well, but then only small emulations can be created.   
 
@@ -46,7 +46,7 @@ processes and Markov games. It is built in Python and can be integrated with sta
 
 ![](docs/img/training.gif)
 
-> ** Note **
+> **Note**
 > The simulations are compatible with OpenAI Gym/Gymnasium. Hence you can integrate the environment interfaces
 > with your own implementations of reinforcement learning algorithms.
 
