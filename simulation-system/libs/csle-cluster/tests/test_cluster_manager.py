@@ -2227,7 +2227,7 @@ class TestClusterManagerSuite:
         assert not response.clientManagersRunning
         assert response.clientManagersStatuses == []
 
-    '''def test_getTrafficManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
+    def test_getTrafficManagersInfo(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
                                     traffic_mng_info, active_ips) -> None:
         """
         Tests the getTrafficManagersInfo grpc
@@ -2262,7 +2262,7 @@ class TestClusterManagerSuite:
         assert response.emulationName == ""
         assert response.executionId == -1
         assert response.trafficManagersRunning == []
-        assert response.trafficManagersStatuses == []'''
+        assert response.trafficManagersStatuses == []
 
     def test_stopAllRunningContainers(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
