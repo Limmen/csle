@@ -2419,7 +2419,6 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
-        logging.info(container_config)
         if container_config is not None:
             HostController.start_host_manager(emulation_env_config=execution.emulation_env_config,
                                               ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
@@ -4072,7 +4071,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Starting the Ryu monitor thread "
+        logging.info(f"Stopping the Ryu monitor thread "
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
