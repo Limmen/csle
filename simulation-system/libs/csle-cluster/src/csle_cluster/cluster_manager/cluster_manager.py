@@ -4484,6 +4484,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 execution.emulation_env_config.kafka_config.container.physical_host_ip != GeneralUtil.get_host_ip():
             return ClusterManagerUtil.get_empty_emulation_metrics_time_series_dto()
         else:
+
             time_series = ReadEmulationStatisticsUtil.read_all(emulation_env_config=execution.emulation_env_config,
                                                                time_window_minutes=request.minutes,
                                                                logger=logging.getLogger())

@@ -1,7 +1,29 @@
 from typing import Any, List, Tuple
 import pytest
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_cluster.cluster_manager.cluster_manager_pb2 import EmulationMetricsTimeSeriesDTO
+from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
+from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
+from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
+from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_ryu.dao.agg_flow_statistic import AggFlowStatistic
+from csle_ryu.dao.flow_statistic import FlowStatistic
+from csle_ryu.dao.port_statistic import PortStatistic
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
+from csle_common.dao.emulation_config.emulation_metrics_time_series import EmulationMetricsTimeSeries
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ExecutionInfoDTO
+from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
+from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
 from csle_cluster.cluster_manager.cluster_manager_pb2 import KibanaTunnelsDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import RyuTunnelsDTO
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
@@ -138,10 +160,10 @@ class TestClusterManagerSuite:
         :return: a ClientManagersInfo object
         """
         clients_dto = ClientsDTO(num_clients=4,
-                                    client_process_active=True,
-                                    producer_active=True,
-                                    clients_time_step_len_seconds=4,
-                                    producer_time_step_len_seconds=5)
+                                 client_process_active=True,
+                                 producer_active=True,
+                                 clients_time_step_len_seconds=4,
+                                 producer_time_step_len_seconds=5)
         client_manage_info = ClientManagersInfo(ips=["123.456.78.99"], ports=[1],
                                                 emulation_name="JohnDoeEmulation",
                                                 execution_id=1,
@@ -222,11 +244,10 @@ class TestClusterManagerSuite:
         """
         traffic_dto = TrafficDTO(running=True, script="null")
         traffic_manage_info = TrafficManagersInfo(ips=["123.456.78.99"], ports=[1],
-                                                    emulation_name="JohnDoeEmulation", execution_id=1,
-                                                    traffic_managers_statuses=[traffic_dto],
-                                                    traffic_managers_running=[True])
+                                                  emulation_name="JohnDoeEmulation", execution_id=1,
+                                                  traffic_managers_statuses=[traffic_dto],
+                                                  traffic_managers_running=[True])
         return traffic_manage_info
-
 
     @staticmethod
     def with_class():
@@ -412,13 +433,119 @@ class TestClusterManagerSuite:
                                                      running_containers=[TestClusterManagerSuite.get_ex_nc_conf()],
                                                      stopped_containers=[TestClusterManagerSuite.get_ex_nc_conf()],
                                                      traffic_managers_info=TestClusterManagerSuite.traffic_mng_info(),
-                                                     active_networks=[ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
-                                                                                       subnet_prefix="null", interface="eth0")],
-                                                     inactive_networks=[ContainerNetwork(name="Network1", subnet_mask="Subnet1",
-                                                                                         bitmask="null", subnet_prefix="null", interface="eth0")], 
+                                                     active_networks=[ContainerNetwork(name="Network1",
+                                                                                       subnet_mask="Subnet1",
+                                                                                       bitmask="null",
+                                                                                       subnet_prefix="null",
+                                                                                       interface="eth0")],
+                                                     inactive_networks=[ContainerNetwork(name="Network1",
+                                                                                         subnet_mask="Subnet1",
+                                                                                         bitmask="null",
+                                                                                         subnet_prefix="null",
+                                                                                         interface="eth0")],
                                                      elk_managers_info=TestClusterManagerSuite.get_elk_mng_info(),
                                                      ryu_managers_info=TestClusterManagerSuite.ryu_mng_info()[0])
         return emulation_exec_info
+
+    @staticmethod
+    def emulation_mts(get_ex_em_env):
+        """
+        Static help method for obtaining an EmulationMetricsTimeSeries object
+        
+        :return: an EmulationMetricsTimeSeries object
+        """
+        cp_metrics = ClientPopulationMetrics(ip="123.456.78.99",
+                                             ts=100.0, num_clients=10,
+                                             rate=2.0, service_time=4.5)
+        docker_stats = DockerStats(pids=10.0, timestamp="null",
+                                   cpu_percent=5.5, mem_current=4.3,
+                                   mem_total=2.8, mem_percent=1.7,
+                                   blk_read=2.3, blk_write=1.2,
+                                   net_rx=2.4, net_tx=5.3,
+                                   container_name="JDoeContainer", ip="123.456.78.99",
+                                   ts=1.2)
+        host_metrics = HostMetrics(num_logged_in_users=10, num_failed_login_attempts=2,
+                                   num_open_connections=4,
+                                   num_login_events=22, num_processes=14, num_users=100,
+                                   ip="123.456.78.99", ts=15.4)
+        e_d_action = EmulationDefenderAction(id=EmulationDefenderActionId(0), name="JohnDoe",
+                                             cmds=["JDoeCommands"],
+                                             type=EmulationDefenderActionType(0), descr="null",
+                                             ips=["123.456.78.99"], index=1,
+                                             action_outcome=EmulationDefenderActionOutcome.GAME_END,
+                                             alt_cmds=["JDoeCommands"],
+                                             execution_time=5.6, ts=10.2)
+        e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId(0),
+                                             name="JohnDoe", cmds=["JDoeCommands"],
+                                             type=EmulationAttackerActionType(0),
+                                             descr="null", ips=["123.456.78.99"], index=1,
+                                             action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING,
+                                             vulnerability="null", alt_cmds=["JDoeCommands"], backdoor=False,
+                                             execution_time=3.3, ts=41.1)
+        snort_ids = SnortIdsAlertCounters()
+        em_env_conf = get_ex_em_env
+        ossec_ids = OSSECIdsAlertCounters()
+        flow_stat = FlowStatistic(timestamp=10.5, datapath_id="null", in_port="null", out_port="null",
+                                  dst_mac_address="null", num_packets=10, num_bytes=4,
+                                  duration_nanoseconds=3, duration_seconds=4, hard_timeout=100,
+                                  idle_timeout=12, priority=1, cookie=3)
+        port_stat = PortStatistic(timestamp=12.5, datapath_id="null", port=1, num_received_packets=12,
+                                  num_received_bytes=34, num_received_errors=21, num_transmitted_packets=13,
+                                  num_transmitted_bytes=22, num_transmitted_errors=16, num_received_dropped=41,
+                                  num_transmitted_dropped=55, num_received_frame_errors=66,
+                                  num_received_overrun_errors=2, num_received_crc_errors=1,
+                                  num_collisions=5, duration_nanoseconds=8, duration_seconds=5)
+        avg_flow_stat = AvgFlowStatistic(timestamp=1.0, datapath_id="null",
+                                         total_num_packets=10, total_num_bytes=10,
+                                         avg_duration_nanoseconds=10, avg_duration_seconds=10,
+                                         avg_hard_timeout=10, avg_idle_timeout=10,
+                                         avg_priority=10, avg_cookie=10)
+        avg_port_stat = AvgPortStatistic(timestamp=1.0, datapath_id="null", total_num_received_packets=10,
+                                         total_num_received_bytes=10, total_num_received_errors=10,
+                                         total_num_transmitted_packets=10, total_num_transmitted_bytes=10,
+                                         total_num_transmitted_errors=10, total_num_received_dropped=10,
+                                         total_num_transmitted_dropped=10, total_num_received_frame_errors=10,
+                                         total_num_received_overrun_errors=10, total_num_received_crc_errors=10,
+                                         total_num_collisions=10, avg_duration_nanoseconds=5,
+                                         avg_duration_seconds=5)
+        agg_flow_stat = AggFlowStatistic(timestamp=4.3, datapath_id="null",
+                                         total_num_packets=2, total_num_bytes=10,
+                                         total_num_flows=10)
+        snort_ipa = SnortIdsIPAlertCounters()
+        snort_rule = SnortIdsRuleCounters()
+        emulation_metric_time_series = EmulationMetricsTimeSeries(client_metrics=[cp_metrics],
+                                                                  aggregated_docker_stats=[docker_stats],
+                                                                  docker_host_stats={"docker_stats": [docker_stats]},
+                                                                  host_metrics={"host_metrics": [host_metrics]},
+                                                                  aggregated_host_metrics=[host_metrics],
+                                                                  defender_actions=[e_d_action],
+                                                                  attacker_actions=[e_a_action],
+                                                                  agg_snort_ids_metrics=[snort_ids],
+                                                                  emulation_env_config=em_env_conf,
+                                                                  ossec_host_alert_counters={"ossec_host": [ossec_ids]},
+                                                                  aggregated_ossec_host_alert_counters=[ossec_ids],
+                                                                  openflow_flow_stats=[flow_stat],
+                                                                  openflow_port_stats=[port_stat],
+                                                                  avg_openflow_flow_stats=[avg_flow_stat],
+                                                                  avg_openflow_port_stats=[avg_port_stat],
+                                                                  openflow_flow_metrics_per_switch={
+                                                                      "openflow_metrics": [flow_stat]},
+                                                                  openflow_port_metrics_per_switch={
+                                                                      "openflow_flow_metrics": [port_stat]},
+                                                                  openflow_flow_avg_metrics_per_switch={
+                                                                      "openflow_avg_metrics": [avg_flow_stat]},
+                                                                  openflow_port_avg_metrics_per_switch={
+                                                                      "openflow_port_avg_metrics": [avg_port_stat]},
+                                                                  agg_openflow_flow_metrics_per_switch={
+                                                                      "agg_openflow_flow_metrics": [agg_flow_stat]},
+                                                                  agg_openflow_flow_stats=[agg_flow_stat],
+                                                                  snort_ids_ip_metrics={"snort_ids_ip": [snort_ipa]},
+                                                                  agg_snort_ids_rule_metrics=[snort_rule],
+                                                                  snort_alert_metrics_per_ids={
+                                                                      "snort_alert_metrics": [snort_ids]},
+                                                                  snort_rule_metrics_per_ids={
+                                                                      "snort_rule_metrics": [snort_rule]})
+        return emulation_metric_time_series
 
     def test_getNodeStatus(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
         """
@@ -5046,3 +5173,599 @@ class TestClusterManagerSuite:
         response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
             get_ryu_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
         assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ryu_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+
+    def test_getRyuControllerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getRyuControllerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ryu_controller_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ryu_controller_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+
+    def test_getElkLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getElkLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+
+    def test_getElkManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getElkManagerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_elk_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+
+    def test_getTrafficManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getTrafficManagerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_traffic_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                     container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_traffic_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                     container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+
+    def test_getHostManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getHostManagerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                  container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_host_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                  container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+
+    def test_getOSSECIdsLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getOSSECIdsLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ossec_ids_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                               container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ossec_ids_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                               container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+
+    def test_getOSSECIdsManagerLogsMsg(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getOSSECIdsManagerLogsMsg grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ossec_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ossec_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_ossec_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == []
+
+    def test_getSnortIdsLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getSnortIdsLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                               container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                               container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                               container_ip="123.456.78.99")
+        assert response.logs == []
+
+    def test_getSnortIdsManagerLogsMsg(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getSnortIdsManagerLogsMsg grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_snort_ids_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                       container_ip="123.456.78.99")
+        assert response.logs == []
+
+    def test_getKafkaLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getKafkaLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+
+    def test_getKafkaManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getKafkaManagerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_kafka_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+
+    def test_getClientManagerLogsMsg(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec):
+        """
+        Tests the getClientManagerLogsMsg grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_client_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_logs',
+                     return_value=LogsDTO(logs=["abcdef"]))
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_client_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == ["abcdef"]
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="99.87.654.321")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_client_manager_logs(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1)
+        assert response.logs == []
+
+    def test_getClusterManagerLogs(self, grpc_stub, mocker: pytest_mock.MockFixture, example_config):
+        """
+        Tests the getClusterManagerLogs grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', return_value=example_config)
+        mocker.patch("os.path.exists", return_value=True)
+        mocker.patch('builtins.open', return_value=TestClusterManagerSuite.with_class())
+        mocker.patch('csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.tail',
+                     return_value="abcdef")
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_cluster_manager_logs(stub=grpc_stub)
+        assert response.logs == ["abcdef"]
+        mocker.patch("os.path.exists", return_value=False)
+        response: LogsDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_cluster_manager_logs(stub=grpc_stub)
+        assert response.logs == []
+
+    def test_getExecutionTimeSeriesData(self, grpc_stub, mocker: pytest_mock.MockFixture, get_ex_exec,
+                                        get_ex_em_env):
+        """
+        Tests the getExecutionTimeSeriesData grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
+                     return_value="123.456.78.99")
+        mocker.patch("csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil"
+                     ".read_all", return_value=TestClusterManagerSuite.emulation_mts(get_ex_em_env))
+        response: EmulationMetricsTimeSeriesDTO = csle_cluster.cluster_manager.query_cluster_manager. \
+            get_execution_time_series_data(stub=grpc_stub, emulation="JDoeEmulation", ip_first_octet=1,
+                                           minutes=1)
+        # logging.info(response)
+        assert response.client_metrics[0].ip == "123.456.78.99"
+        assert response.client_metrics[0].ts == 100
+        assert response.client_metrics[0].num_clients == 10
+        assert response.client_metrics[0].rate == 2
+        assert response.client_metrics[0].service_time == 4.5
+
+        assert response.aggregated_docker_stats[0].pids == 10
+        assert response.aggregated_docker_stats[0].timestamp == "null"
+        assert response.aggregated_docker_stats[0].cpu_percent == 5.5
+        assert round(response.aggregated_docker_stats[0].mem_current, 2) == 4.3
+        assert round(response.aggregated_docker_stats[0].mem_total, 2) == 2.8
+        assert round(response.aggregated_docker_stats[0].mem_percent, 2) == 1.7
+        assert round(response.aggregated_docker_stats[0].blk_read, 2) == 2.3
+        assert round(response.aggregated_docker_stats[0].blk_write, 2) == 1.2
+        assert round(response.aggregated_docker_stats[0].net_rx, 2) == 2.4
+        assert round(response.aggregated_docker_stats[0].net_tx, 2) == 5.3
+        assert response.aggregated_docker_stats[0].container_name == "JDoeContainer"
+        assert response.aggregated_docker_stats[0].ip == "123.456.78.99"
+        assert round(response.aggregated_docker_stats[0].ts, 2) == 1.2
+
+        assert response.docker_host_stats[0].key == "docker_stats"
+        assert response.docker_host_stats[0].dtos[0].pids == 10
+        assert response.docker_host_stats[0].dtos[0].timestamp == "null"
+        assert round(response.docker_host_stats[0].dtos[0].cpu_percent, 2) == 5.5
+        assert round(response.docker_host_stats[0].dtos[0].mem_current, 2) == 4.3
+        assert round(response.docker_host_stats[0].dtos[0].mem_total, 2) == 2.8
+        assert round(response.docker_host_stats[0].dtos[0].mem_percent, 2) == 1.7
+        assert round(response.docker_host_stats[0].dtos[0].blk_read, 2) == 2.3
+        assert round(response.docker_host_stats[0].dtos[0].blk_write, 2) == 1.2
+        assert round(response.docker_host_stats[0].dtos[0].net_rx, 2) == 2.4
+        assert round(response.docker_host_stats[0].dtos[0].net_tx, 2) == 5.3
+        assert response.docker_host_stats[0].dtos[0].container_name == "JDoeContainer"
+        assert response.docker_host_stats[0].dtos[0].ip == "123.456.78.99"
+        assert round(response.docker_host_stats[0].dtos[0].ts, 2) == 1.2
+
+        assert response.host_metrics[0].key == "host_metrics"
+        assert response.host_metrics[0].dtos[0].num_logged_in_users == 10
+        assert response.host_metrics[0].dtos[0].num_failed_login_attempts == 2
+        assert response.host_metrics[0].dtos[0].num_open_connections == 4
+        assert response.host_metrics[0].dtos[0].num_login_events == 22
+        assert response.host_metrics[0].dtos[0].num_processes == 14
+        assert response.host_metrics[0].dtos[0].num_users == 100
+        assert response.host_metrics[0].dtos[0].ip == "123.456.78.99"
+        assert round(response.host_metrics[0].dtos[0].ts, 2) == 15.4
+
+        assert response.aggregated_host_metrics[0].num_logged_in_users == 10
+        assert response.aggregated_host_metrics[0].num_failed_login_attempts == 2
+        assert response.aggregated_host_metrics[0].num_open_connections == 4
+        assert response.aggregated_host_metrics[0].num_login_events == 22
+        assert response.aggregated_host_metrics[0].num_processes == 14
+        assert response.aggregated_host_metrics[0].num_users == 100
+        assert response.aggregated_host_metrics[0].ip == "123.456.78.99"
+        assert round(response.aggregated_host_metrics[0].ts, 2) == 15.4
+
+        assert response.defender_actions[0].name == "JohnDoe"
+        assert response.defender_actions[0].cmds == ["JDoeCommands"]
+        assert response.defender_actions[0].descr == "null"
+        assert response.defender_actions[0].ips == ["123.456.78.99"]
+        assert response.defender_actions[0].index == 1
+        assert response.defender_actions[0].alt_cmds == ["JDoeCommands"]
+        assert round(response.defender_actions[0].execution_time, 2) == 5.6
+        assert round(response.defender_actions[0].ts, 2) == 10.2
+
+        assert response.attacker_actions[0].name == "JohnDoe"
+        assert response.attacker_actions[0].cmds == ["JDoeCommands"]
+        assert response.attacker_actions[0].descr == "null"
+        assert response.attacker_actions[0].ips == ["123.456.78.99"]
+        assert response.attacker_actions[0].index == 1
+        assert response.attacker_actions[0].alt_cmds == ["JDoeCommands"]
+        assert round(response.attacker_actions[0].execution_time, 2) == 3.3
+        assert round(response.attacker_actions[0].ts, 3) == 41.1
+        assert response.attacker_actions[0].vulnerability == "null"
+
+        assert response.agg_snort_ids_metrics[0].priority_alerts == [0, 0, 0, 0]
+        assert response.agg_snort_ids_metrics[0].class_alerts == [0] * 34
+
+        assert response.emulation_id == -1
+
+        assert response.ossec_host_alert_counters[0].key == "ossec_host"
+        assert response.ossec_host_alert_counters[0].dtos[0].level_alerts == [0] * 16
+        assert response.ossec_host_alert_counters[0].dtos[0].group_alerts == [0] * 12
+
+        assert response.aggregated_ossec_host_alert_counters[0].level_alerts == [0] * 16
+        assert response.aggregated_ossec_host_alert_counters[0].group_alerts == [0] * 12
+
+        assert round(response.openflow_flow_stats[0].timestamp, 3) == 10.5
+        assert response.openflow_flow_stats[0].datapath_id == "null"
+        assert response.openflow_flow_stats[0].in_port == "null"
+        assert response.openflow_flow_stats[0].out_port == "null"
+        assert response.openflow_flow_stats[0].dst_mac_address == "null"
+        assert response.openflow_flow_stats[0].num_bytes == 4
+        assert response.openflow_flow_stats[0].num_packets == 10
+        assert response.openflow_flow_stats[0].duration_nanoseconds == 3
+        assert response.openflow_flow_stats[0].duration_seconds == 4
+        assert response.openflow_flow_stats[0].hard_timeout == 100
+        assert response.openflow_flow_stats[0].idle_timeout == 12
+        assert response.openflow_flow_stats[0].priority == 1
+        assert response.openflow_flow_stats[0].cookie == 3
+
+        assert round(response.openflow_port_stats[0].timestamp, 3) == 12.5
+        assert response.openflow_port_stats[0].datapath_id == "null"
+        assert response.openflow_port_stats[0].port == 1
+        assert response.openflow_port_stats[0].num_received_packets == 12
+        assert response.openflow_port_stats[0].num_received_errors == 21
+        assert response.openflow_port_stats[0].num_received_bytes == 34
+        assert response.openflow_port_stats[0].num_transmitted_packets == 13
+        assert response.openflow_port_stats[0].num_transmitted_bytes == 22
+        assert response.openflow_port_stats[0].num_transmitted_errors == 16
+        assert response.openflow_port_stats[0].num_received_dropped == 41
+        assert response.openflow_port_stats[0].num_transmitted_dropped == 55
+        assert response.openflow_port_stats[0].num_received_frame_errors == 66
+        assert response.openflow_port_stats[0].num_received_overrun_errors == 2
+        assert response.openflow_port_stats[0].num_received_crc_errors == 1
+        assert response.openflow_port_stats[0].num_collisions == 5
+        assert response.openflow_port_stats[0].duration_nanoseconds == 8
+        assert response.openflow_port_stats[0].duration_seconds == 5
+
+        assert response.avg_openflow_flow_stats[0].timestamp == 1
+        assert response.avg_openflow_flow_stats[0].datapath_id == "null"
+        assert response.avg_openflow_flow_stats[0].total_num_packets == 10
+        assert response.avg_openflow_flow_stats[0].total_num_bytes == 10
+        assert response.avg_openflow_flow_stats[0].avg_duration_nanoseconds == 10
+        assert response.avg_openflow_flow_stats[0].avg_duration_seconds == 10
+        assert response.avg_openflow_flow_stats[0].avg_hard_timeout == 10
+        assert response.avg_openflow_flow_stats[0].avg_idle_timeout == 10
+        assert response.avg_openflow_flow_stats[0].avg_priority == 10
+        assert response.avg_openflow_flow_stats[0].avg_cookie == 10
+
+        assert response.avg_openflow_port_stats[0].timestamp == 1
+        assert response.avg_openflow_port_stats[0].datapath_id == "null"
+        assert response.avg_openflow_port_stats[0].total_num_received_packets == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_bytes == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_errors == 10
+        assert response.avg_openflow_port_stats[0].total_num_transmitted_packets == 10
+        assert response.avg_openflow_port_stats[0].total_num_transmitted_bytes == 10
+        assert response.avg_openflow_port_stats[0].total_num_transmitted_errors == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_dropped == 10
+        assert response.avg_openflow_port_stats[0].total_num_transmitted_dropped == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_frame_errors == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_overrun_errors == 10
+        assert response.avg_openflow_port_stats[0].total_num_received_crc_errors == 10
+        assert response.avg_openflow_port_stats[0].total_num_collisions == 10
+        assert response.avg_openflow_port_stats[0].avg_duration_nanoseconds == 5
+        assert response.avg_openflow_port_stats[0].avg_duration_seconds == 5
+
+        assert response.openflow_flow_metrics_per_switch[0].key == "openflow_metrics"
+        assert round(response.openflow_flow_metrics_per_switch[0].dtos[0].timestamp, 3) == 10.5
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].datapath_id == "null"
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].in_port == "null"
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].out_port == "null"
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].dst_mac_address == "null"
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].num_packets == 10
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].num_bytes == 4
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].duration_nanoseconds == 3
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].duration_seconds == 4
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].hard_timeout == 100
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].idle_timeout == 12
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].priority == 1
+        assert response.openflow_flow_metrics_per_switch[0].dtos[0].cookie == 3
+
+        assert response.openflow_port_metrics_per_switch[0].key == "openflow_flow_metrics"
+        assert round(response.openflow_port_metrics_per_switch[0].dtos[0].timestamp, 3) == 12.5
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].datapath_id == "null"
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].port == 1
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_packets == 12
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_bytes == 34
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_errors == 21
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_transmitted_packets == 13
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_transmitted_bytes == 22
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_transmitted_errors == 16
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_dropped == 41
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_frame_errors == 66
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_overrun_errors == 2
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_received_crc_errors == 1
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].num_collisions == 5
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].duration_nanoseconds == 8
+        assert response.openflow_port_metrics_per_switch[0].dtos[0].duration_seconds == 5
+
+        assert response.openflow_flow_avg_metrics_per_switch[0].key == "openflow_avg_metrics"
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].timestamp == 1
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].datapath_id == "null"
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].total_num_packets == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].total_num_bytes == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_duration_nanoseconds == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_duration_seconds == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_hard_timeout == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_idle_timeout == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_priority == 10
+        assert response.openflow_flow_avg_metrics_per_switch[0].dtos[0].avg_cookie == 10
+
+        assert response.openflow_port_avg_metrics_per_switch[0].key == "openflow_port_avg_metrics"
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].timestamp == 1
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].datapath_id == "null"
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_packets == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_overrun_errors == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_collisions == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_bytes == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_crc_errors == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_transmitted_dropped == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_transmitted_errors == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_frame_errors == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_received_dropped == 10
+        assert response.openflow_port_avg_metrics_per_switch[0].dtos[0].total_num_transmitted_bytes == 10
+
+        assert response.agg_openflow_flow_metrics_per_switch[0].key == "agg_openflow_flow_metrics"
+        assert round(response.agg_openflow_flow_metrics_per_switch[0].dtos[0].timestamp, 2) == 4.3
+        assert response.agg_openflow_flow_metrics_per_switch[0].dtos[0].datapath_id == "null"
+        assert response.agg_openflow_flow_metrics_per_switch[0].dtos[0].total_num_packets == 2
+        assert response.agg_openflow_flow_metrics_per_switch[0].dtos[0].total_num_bytes == 10
+        assert response.agg_openflow_flow_metrics_per_switch[0].dtos[0].total_num_flows == 10
+
+        assert round(response.agg_openflow_flow_stats[0].timestamp, 2) == 4.3
+        assert response.agg_openflow_flow_stats[0].datapath_id == "null"
+        assert response.agg_openflow_flow_stats[0].total_num_packets == 2
+        assert response.agg_openflow_flow_stats[0].total_num_bytes == 10
+        assert response.agg_openflow_flow_stats[0].total_num_flows == 10
+
+        # assert response.agg_snort_ids_rule_metrics == []
+
+        assert response.snort_ids_ip_metrics[0].key == "snort_ids_ip"
+        assert response.snort_ids_ip_metrics[0].dtos[0].priority_alerts == [0] * 4
+
+        assert response.snort_ids_ip_metrics[0].dtos[0].class_alerts == [0] * 34
+
+        assert response.snort_alert_metrics_per_ids[0].key == "snort_alert_metrics"
+        assert response.snort_alert_metrics_per_ids[0].dtos[0].priority_alerts == [0] * 4
+        assert response.snort_alert_metrics_per_ids[0].dtos[0].class_alerts == [0] * 34
