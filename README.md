@@ -64,7 +64,7 @@ of emulation and simulation processes; and c), shell access to components of emu
 ## Documentation
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/).
-PDF versions of the documentation for each release are available [here](./releases/)
+A PDF version of the documentation is available [here](./releases/)
 
 ## Supported Releases
 

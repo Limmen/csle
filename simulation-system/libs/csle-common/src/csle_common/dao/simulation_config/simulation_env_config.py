@@ -10,17 +10,6 @@ from csle_common.dao.simulation_config.transition_operator_config import Transit
 from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
-from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
-    import IntrusionResponseGameLocalPOMDPDefenderConfig
-from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
-    import IntrusionResponseGameLocalPOMDPAttackerConfig
-from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config \
-    import WorkflowIntrusionResponsePOMDPDefenderConfig
-from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config \
-    import WorkflowIntrusionResponsePOMDPAttackerConfig
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -92,6 +81,17 @@ class SimulationEnvConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
+        from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+        from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
+        from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+        from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
+            import IntrusionResponseGameLocalPOMDPDefenderConfig
+        from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
+            import IntrusionResponseGameLocalPOMDPAttackerConfig
+        from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config \
+            import WorkflowIntrusionResponsePOMDPDefenderConfig
+        from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config \
+            import WorkflowIntrusionResponsePOMDPAttackerConfig
         input_config = None
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
