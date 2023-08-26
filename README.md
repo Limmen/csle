@@ -20,7 +20,9 @@
 CSLE is a platform for evaluating and developing reinforcement learning agents for control problems in cyber security.
 It can be considered as a cyber range specifically designed for reinforcement learning agents. Everything from network
 emulation, to simulation and implementation of network commands have been co-designed to provide an environment where it
-is possible to train and evaluate reinforcement learning agents on practical problems in cyber security.
+is possible to train and evaluate reinforcement learning agents on practical problems in cyber security. 
+The platform can also be used to combine reinforcement learning with other quantitative methods, e.g. dynamic programming,
+computational game theory, evolutionary methods, causal inference, and general optimization.
 
 <p align="center">
 <img src="docs/img/arch.png" width="600">
