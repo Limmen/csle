@@ -48,7 +48,6 @@ def docker_stats_manager_logs() -> Tuple[Response, int]:
 
     :return: The logs of the docker stats manager
     """
-
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:

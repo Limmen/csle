@@ -120,7 +120,7 @@ const ExecutionControlPlane = (props) => {
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
-                body: JSON.stringify({name: name})
+                body: JSON.stringify({name: name, ip: name})
             }
         )
             .then(res => {
