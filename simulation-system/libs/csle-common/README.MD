@@ -48,6 +48,8 @@ CSLE.
 - `sphinx-rtd-theme` (for API documentation)
 - `pytest-mock` (for mocking tests)
 - `pytest-grpc` (for grpc tests)
+- `gpytorch` (For system identification algorithms based on Gaussian processes)
+- `scikit-learn` (For statistical computations)
 
 ## Installation
 
