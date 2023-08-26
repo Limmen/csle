@@ -5940,3 +5940,147 @@ class TestClusterManagerSuite:
         assert response.snort_alert_metrics_per_ids[0].key == "snort_alert_metrics"
         assert response.snort_alert_metrics_per_ids[0].dtos[0].priority_alerts == [0] * 4
         assert response.snort_alert_metrics_per_ids[0].dtos[0].class_alerts == [0] * 34
+
+    def test_startSparkServer(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec: EmulationExecution) -> None:
+        """
+        Tests the startSparkServer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :param get_ex_exec: fixture that creates an example emulation execution DTO
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.controllers.host_controller.HostController.start_spark', return_value=None)
+        container_ip = get_ex_exec.emulation_env_config.containers_config.containers[0].get_ips()[0]
+        physical_host_ip = get_ex_exec.emulation_env_config.containers_config.containers[0].physical_host_ip
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', return_value=physical_host_ip)
+        response: OperationOutcomeDTO = query_cluster_manager.start_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.start_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert not response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', return_value="121.125.125.12")
+        response: OperationOutcomeDTO = query_cluster_manager.start_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert not response.outcome
+
+    def test_stopSparkServer(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec: EmulationExecution) -> None:
+        """
+        Tests the stopSparkServer grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :param get_ex_exec: fixture that creates an example emulation execution DTO
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.controllers.host_controller.HostController.stop_spark', return_value=None)
+        container_ip = get_ex_exec.emulation_env_config.containers_config.containers[0].get_ips()[0]
+        physical_host_ip = get_ex_exec.emulation_env_config.containers_config.containers[0].physical_host_ip
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', return_value=physical_host_ip)
+        response: OperationOutcomeDTO = query_cluster_manager.stop_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.stop_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert not response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', return_value="121.125.125.12")
+        response: OperationOutcomeDTO = query_cluster_manager.stop_spark_server(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet,
+            container_ip=container_ip)
+        assert not response.outcome
+
+
+    def test_startSparkServers(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec: EmulationExecution) -> None:
+        """
+        Tests the startSparkServers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :param get_ex_exec: fixture that creates an example emulation execution DTO
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.controllers.host_controller.HostController.start_sparks', return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.start_spark_servers(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.start_spark_servers(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet)
+        assert not response.outcome
+
+    def test_stopSparkServers(self, grpc_stub, mocker: pytest_mock.MockFixture,
+                              get_ex_exec: EmulationExecution) -> None:
+        """
+        Tests the stopSparkServers grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :param get_ex_exec: fixture that creates an example emulation execution DTO
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=get_ex_exec)
+        mocker.patch('csle_common.controllers.host_controller.HostController.stop_sparks', return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.stop_spark_servers(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet)
+        assert response.outcome
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.stop_spark_servers(
+            stub=grpc_stub, emulation=get_ex_exec.emulation_name, ip_first_octet=get_ex_exec.ip_first_octet)
+        assert not response.outcome
+
+    def test_checkPid(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the checkPid grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_pid_running', return_value=True)
+        response: OperationOutcomeDTO = query_cluster_manager.check_pid(stub=grpc_stub, pid=8888)
+        assert response.outcome
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.is_pid_running', return_value=False)
+        response: OperationOutcomeDTO = query_cluster_manager.check_pid(stub=grpc_stub, pid=8888)
+        assert not response.outcome
+
+    def test_stopPid(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the stopPid grpc
+
+        :param grpc_stub: the stub for the GRPC server to make the request to
+        :param mocker: the mocker object to mock functions with external dependencies
+        :return: None
+        """
+        mocker.patch('csle_common.controllers.management_system_controller.'
+                     'ManagementSystemController.stop_pid', return_value=None)
+        response: OperationOutcomeDTO = query_cluster_manager.stop_pid(stub=grpc_stub, pid=8888)
+        assert response.outcome
+
