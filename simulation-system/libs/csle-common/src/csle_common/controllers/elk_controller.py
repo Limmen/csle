@@ -117,7 +117,7 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.get_elk_status(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub)
             return elk_dto
 
     @staticmethod
@@ -139,7 +139,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.stop_elk(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.stop_elk(stub)
             return elk_dto
 
     @staticmethod
@@ -164,7 +164,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.start_elk(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.start_elk(stub)
             return elk_dto
 
     @staticmethod
@@ -187,7 +187,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.start_elastic(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.start_elastic(stub)
             return elk_dto
 
     @staticmethod
@@ -210,7 +210,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.start_kibana(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.start_kibana(stub)
             return elk_dto
 
     @staticmethod
@@ -233,7 +233,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.start_logstash(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.start_logstash(stub)
             return elk_dto
 
     @staticmethod
@@ -256,7 +256,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.stop_elastic(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.stop_elastic(stub)
             return elk_dto
 
     @staticmethod
@@ -279,7 +279,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.stop_kibana(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.stop_kibana(stub)
             return elk_dto
 
     @staticmethod
@@ -302,7 +302,7 @@ class ELKController:
                 f'{emulation_env_config.elk_config.elk_manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_server.stop_logstash(stub)
+            elk_dto = csle_collector.elk_manager.query_elk_manager.stop_logstash(stub)
             return elk_dto
 
     @staticmethod
