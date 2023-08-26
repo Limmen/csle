@@ -7,6 +7,10 @@ A webapp for managing and monitoring emulation environments created with csle
 
 ### Video demonstration
 
+#### V0.2.0
+[![CSLEv.0.2.0](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](https://www.youtube.com/watch?v=iE2KPmtIs2A& "The Cyber Security Learning Environment (CSLE) v.0.2.0 Demo")
+
+#### V0.1.0
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](http://www.youtube.com/watch?v=18P7MjPKNDg "A System for Interactive Examination of Learned Security Policies - Hammar & Stadler")
 
 ## Contents
