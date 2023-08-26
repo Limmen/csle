@@ -40,8 +40,8 @@ class ReadEmulationStatisticsUtil:
         """
         client_metrics: List[ClientPopulationMetrics] = []
         agg_docker_stats: List[DockerStats] = []
-        docker_host_stats: Dict[str, DockerStats] = {}
-        host_metrics: Dict[str, HostMetrics] = {}
+        docker_host_stats: Dict[str, List[DockerStats]] = {}
+        host_metrics: Dict[str, List[HostMetrics]] = {}
         aggregated_host_metrics: List[HostMetrics] = []
         defender_actions: List[EmulationDefenderAction] = []
         attacker_actions: List[EmulationAttackerAction] = []
@@ -60,8 +60,8 @@ class ReadEmulationStatisticsUtil:
         openflow_port_stats: List[PortStatistic] = []
         avg_openflow_flow_stats: List[AvgFlowStatistic] = []
         avg_openflow_port_stats: List[AvgPortStatistic] = []
-        openflow_flow_metrics_per_switch: Dict[str, AvgFlowStatistic] = {}
-        openflow_port_metrics_per_switch: Dict[str, AvgPortStatistic] = {}
+        openflow_flow_metrics_per_switch: Dict[str, List[FlowStatistic]] = {}
+        openflow_port_metrics_per_switch: Dict[str, List[PortStatistic]] = {}
         openflow_flow_avg_metrics_per_switch: Dict[str, List[AvgFlowStatistic]] = {}
         openflow_port_avg_metrics_per_switch: Dict[str, List[AvgPortStatistic]] = {}
         agg_openflow_flow_stats: List[AggFlowStatistic] = []
@@ -153,81 +153,94 @@ class ReadEmulationStatisticsUtil:
                 else:
                     topic = msg.topic()
                     if topic == collector_constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME:
-                        agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value().decode()))
+                        agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value(payload=None).decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME:
-                        metrics = HostMetrics.from_kafka_record(record=msg.value().decode())
+                        metrics = HostMetrics.from_kafka_record(record=msg.value(payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
-                        host_metrics[c.get_full_name()].append(metrics)
-                        host_metrics_counter += 1
-                        total_host_metrics.append(metrics)
+                        if c_1 is not None:
+                            host_metrics[c_1.get_full_name()].append(metrics)
+                            host_metrics_counter += 1
+                            total_host_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME:
-                        metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value().decode())
+                        metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value(payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
-                        ossec_host_ids_metrics[c.get_full_name()].append(metrics)
-                        ossec_host_metrics_counter += 1
-                        total_ossec_metrics.append(metrics)
+                        if c_1 is not None:
+                            ossec_host_ids_metrics[c_1.get_full_name()].append(metrics)
+                            ossec_host_metrics_counter += 1
+                            total_ossec_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME:
-                        attacker_actions.append(EmulationAttackerAction.from_kafka_record(record=msg.value().decode()))
+                        attacker_actions.append(EmulationAttackerAction.from_kafka_record(record=msg.value(
+                            payload=None).decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME:
-                        defender_actions.append(EmulationDefenderAction.from_kafka_record(record=msg.value().decode()))
+                        defender_actions.append(EmulationDefenderAction.from_kafka_record(record=msg.value(
+                            payload=None).decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME:
-                        stats = DockerStats.from_kafka_record(record=msg.value().decode())
+                        stats = DockerStats.from_kafka_record(record=msg.value(payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(stats.ip)
-                        docker_host_stats[c.get_full_name()].append(stats)
+                        if c_1 is not None:
+                            docker_host_stats[c_1.get_full_name()].append(stats)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME:
-                        metrics = SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode())
+                        metrics = SnortIdsAlertCounters.from_kafka_record(record=msg.value(payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
-                        snort_alert_metrics_per_ids[c.get_full_name()].append(metrics)
-                        snort_metrics_counter += 1
-                        total_snort_metrics.append(metrics)
+                        if c_1 is not None:
+                            snort_alert_metrics_per_ids[c_1.get_full_name()].append(metrics)
+                            snort_metrics_counter += 1
+                            total_snort_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME:
-                        metrics = SnortIdsRuleCounters.from_kafka_record(record=msg.value().decode())
+                        metrics = SnortIdsRuleCounters.from_kafka_record(record=msg.value(payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(metrics.ip)
-                        snort_rule_metrics_per_ids[c.get_full_name()].append(metrics)
-                        snort_rule_metrics_counter += 1
-                        total_snort_rule_metrics.append(metrics)
+                        if c_1 is not None:
+                            snort_rule_metrics_per_ids[c_1.get_full_name()].append(metrics)
+                            snort_rule_metrics_counter += 1
+                            total_snort_rule_metrics.append(metrics)
                     elif topic == collector_constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME:
-                        client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value().decode()))
+                        client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value(
+                            payload=None).decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME:
-                        flow_metrics_record = FlowStatistic.from_kafka_record(record=msg.value().decode())
+                        flow_metrics_record = FlowStatistic.from_kafka_record(record=msg.value(payload=None).decode())
                         openflow_flow_stats.append(flow_metrics_record)
                         if str(flow_metrics_record.datapath_id) not in openflow_flow_metrics_per_switch:
                             openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)] = []
                         openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)].append(
                             flow_metrics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME:
-                        port_metrics_record = PortStatistic.from_kafka_record(record=msg.value().decode())
+                        port_metrics_record = PortStatistic.from_kafka_record(record=msg.value(
+                            payload=None).decode())
                         openflow_port_stats.append(port_metrics_record)
                         if str(port_metrics_record.datapath_id) not in openflow_port_metrics_per_switch:
                             openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)] = []
                         openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)].append(
                             port_metrics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME:
-                        avg_flow_statistics_record = AvgFlowStatistic.from_kafka_record(record=msg.value().decode())
+                        avg_flow_statistics_record = AvgFlowStatistic.from_kafka_record(record=msg.value(
+                            payload=None).decode())
                         avg_openflow_flow_stats.append(avg_flow_statistics_record)
                         if str(avg_flow_statistics_record.datapath_id) not in openflow_flow_avg_metrics_per_switch:
                             openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)] = []
                         openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)].append(
                             avg_flow_statistics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME:
-                        avg_port_statistics_record = AvgPortStatistic.from_kafka_record(record=msg.value().decode())
+                        avg_port_statistics_record = AvgPortStatistic.from_kafka_record(record=msg.value(
+                            payload=None).decode())
                         avg_openflow_port_stats.append(avg_port_statistics_record)
                         if str(avg_port_statistics_record.datapath_id) not in openflow_port_avg_metrics_per_switch:
                             openflow_port_avg_metrics_per_switch[str(avg_port_statistics_record.datapath_id)] = []
                         openflow_port_avg_metrics_per_switch[str(avg_port_statistics_record.datapath_id)].append(
                             avg_port_statistics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME:
-                        agg_flow_statistics_record = AggFlowStatistic.from_kafka_record(record=msg.value().decode())
+                        agg_flow_statistics_record = AggFlowStatistic.from_kafka_record(record=msg.value(
+                            payload=None).decode())
                         agg_openflow_flow_stats.append(agg_flow_statistics_record)
                         if str(agg_flow_statistics_record.datapath_id) not in agg_openflow_flow_metrics_per_switch:
                             agg_openflow_flow_metrics_per_switch[str(agg_flow_statistics_record.datapath_id)] = []
                         agg_openflow_flow_metrics_per_switch[str(agg_flow_statistics_record.datapath_id)].append(
                             agg_flow_statistics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME:
-                        metrics = SnortIdsIPAlertCounters.from_kafka_record(record=msg.value().decode())
+                        metrics = SnortIdsIPAlertCounters.from_kafka_record(record=msg.value(
+                            payload=None).decode())
                         c_1 = emulation_env_config.get_container_from_ip(metrics.alert_ip)
                         if c_1 is not None:
-                            snort_ids_ip_metrics[c.get_full_name()].append(metrics)
+                            snort_ids_ip_metrics[c_1.get_full_name()].append(metrics)
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
                         agg_host_metrics_dto = ReadEmulationStatisticsUtil.average_host_metrics(
                             host_metrics=total_host_metrics)
