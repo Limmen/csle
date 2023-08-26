@@ -1,8 +1,8 @@
-csle-base==0.3.6
-csle-common==0.3.6
-csle-collector==0.3.6
-csle-ryu==0.3.6
-gym-csle-stopping-game==0.3.6
-gym-csle-intrusion-response-game==0.3.6
+csle-base==0.3.7
+csle-common==0.3.7
+csle-collector==0.3.7
+csle-ryu==0.3.7
+gym-csle-stopping-game==0.3.7
+gym-csle-intrusion-response-game==0.3.7
 grpcio==1.57.0
 grpcio-tools==1.57.0
