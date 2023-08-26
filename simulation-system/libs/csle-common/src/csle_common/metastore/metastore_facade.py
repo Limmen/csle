@@ -2636,7 +2636,7 @@ class MetastoreFacade:
                     json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"(ip_first_octet, emulation_name, info) "
-                            f"VALUES %s, %s, %s)", (emulation_execution.ip_first_octet,
+                            f"VALUES (%s, %s, %s)", (emulation_execution.ip_first_octet,
                                                     emulation_execution.emulation_name, emulation_execution_str))
                 conn.commit()
                 Logger.__call__().get_logger().debug("emulation execution saved successfully")

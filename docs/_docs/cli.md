@@ -88,49 +88,51 @@ Table 24: Commands available in the CSLE command-line interface (1/2).
 </p>
 
 
-| *Command*                                                         | *Description*                                          |
-|-------------------------------------------------------------------|--------------------------------------------------------|
-| `csle shell <containername> `                                     | Opens shell in a given container.                      |
-| `csle start prometheus `                                          | Starts prometheus.                                     |
-| `csle start node_exporter `                                       | Starts node exporter.                                  |
-| `csle start grafana `                                             | Starts grafana.                                        |
-| `csle start cadvisor `                                            | Starts cadvisor.                                       |
-| `csle start managementsystem `                                    | Starts the management system.                          |
-| `csle start <containername> `                                     | Starts the given container.                            |
-| `csle start <emulationname> `                                     | Starts the given emulation.                            |
-| `csle start <emulationname> --no_network`                         | Starts the given emulation without virtual networks.   |
-| `csle start <emulationname> --no_traffic`                         | Starts the given emulation without traffic generators. |
-| `csle start <emulationname> --no_clients`                         | Starts the given emulation without clients.            |
-| `csle start <emulationname> --id`                                 | Starts the given emulation with execution id.          |
-| `csle start all `                                                 | Starts everything.                                     |
-| `csle start all --id `                                            | Starts everything in an execution.                     |
-| `csle start statsmanager <port> <logdir> <logfile> <maxworkers> ` | Starts statsmanager.                                   |
-| `csle start <trainingjobid> `                                     | Starts trainingjob with a given id.                    |
-| `csle start <systemidjobid> `                                     | Starts system identification job with a given id.      |
-| `csle start <image> <containername> `                             | Starts a container with a given image and name.        |
-| `csle start_traffic <emulationname> <executionid> `               | Starts the traffic and clients in execution.           |
-| `csle statsmanager <port> <logdir> <logfile> <maxworkers>`        | Starts the statsmanager.                               |
-| `csle stop <emulationname> <execid>`                              | Stops the emulation execution.                         |
-| `csle stop <prometheus>`                                          | Stops prometheus.                                      |
-| `csle stop <cadvisor>`                                            | Stops cadvisor.                                        |
-| `csle stop <grafana>`                                             | Stops grafana.                                         |
-| `csle stop <managementsystem>`                                    | Stops the management system.                           |
-| `csle stop <containername> <execid>`                              | Stops the container.                                   |
-| `csle stop <statsmanager> `                                       | Stops the statsmanager.                                |
-| `csle stop emulation_executions `                                 | Stops all emulation executions.                        |
-| `csle stop all `                                                  | Stops everything that runs.                            |
-| `csle stop_traffic <emulationname> <execid>`                      | Stops client population and traffic in execution.      |
-| `csle systemidentificationjob <jobid>`                            | Starts job.                                            |
-| `csle trainingjob <jobid>`                                        | Starts job.                                            |
-| `csle datacollectionjob <jobid>`                                  | Starts job.                                            |
-| `csle uninstall emulations`                                       | Uninstalls emulation environments.                     |
-| `csle uninstall simulations`                                      | Uninstalls simulation environments.                    |
-| `csle uninstall <emname>`                                         | Uninstalls emulation.                                  |
-| `csle uninstall <simname>`                                        | Uninstalls simulation.                                 |
-| `csle uninstall derived_images`                                   | Uninstalls derived images.                             |
-| `csle uninstall base_images`                                      | Uninstalls base images.                                |
-| `csle uninstall metastore`                                        | Uninstalls metastore.                                  |
-| `csle uninstall all`                                              | Uninstalls everything.                                 |
+| *Command*                                                         | *Description*                                                  |
+|-------------------------------------------------------------------|----------------------------------------------------------------|
+| `csle shell <containername> `                                     | Opens shell in a given container.                              |
+| `csle start prometheus `                                          | Starts prometheus.                                             |
+| `csle start node_exporter `                                       | Starts node exporter.                                          |
+| `csle start grafana `                                             | Starts grafana.                                                |
+| `csle start cadvisor `                                            | Starts cadvisor.                                               |
+| `csle start managementsystem `                                    | Starts the management system.                                  |
+| `csle start <containername> `                                     | Starts the given container.                                    |
+| `csle start <emulationname> `                                     | Starts the given emulation.                                    |
+| `csle start <emulationname> --no_network`                         | Starts the given emulation without virtual networks.           |
+| `csle start <emulationname> --no_traffic`                         | Starts the given emulation without traffic generators.         |
+| `csle start <emulationname> --no_beats`                           | Starts the given emulation without configuring/starting beats. |
+| `csle start <emulationname> --no_clients`                         | Starts the given emulation without clients.                    |
+| `csle start <emulationname> --id`                                 | Starts the given emulation with execution id.                  |
+| `csle start all `                                                 | Starts everything.                                             |
+| `csle start all --id `                                            | Starts everything in an execution.                             |
+| `csle start statsmanager <port> <logdir> <logfile> <maxworkers> ` | Starts statsmanager.                                           |
+| `csle start <trainingjobid> `                                     | Starts trainingjob with a given id.                            |
+| `csle start <systemidjobid> `                                     | Starts system identification job with a given id.              |
+| `csle start <image> <containername> `                             | Starts a container with a given image and name.                |
+| `csle start_traffic <emulationname> <executionid> `               | Starts the traffic and clients in execution.                   |
+| `csle statsmanager <port> <logdir> <logfile> <maxworkers>`        | Starts the statsmanager.                                       |
+| `csle stop <emulationname> <execid>`                              | Stops the emulation execution.                                 |
+| `csle stop <prometheus>`                                          | Stops prometheus.                                              |
+| `csle stop <cadvisor>`                                            | Stops cadvisor.                                                |
+| `csle stop <grafana>`                                             | Stops grafana.                                                 |
+| `csle stop <managementsystem>`                                    | Stops the management system.                                   |
+| `csle stop <containername> <execid>`                              | Stops the container.                                           |
+| `csle stop <statsmanager> `                                       | Stops the statsmanager.                                        |
+| `csle stop emulation_executions `                                 | Stops all emulation executions.                                |
+| `csle stop all `                                                  | Stops everything that runs.                                    |
+| `csle stop_traffic <emulationname> <execid>`                      | Stops client population and traffic in execution.              |
+| `csle systemidentificationjob <jobid>`                            | Starts job.                                                    |
+| `csle trainingjob <jobid>`                                        | Starts job.                                                    |
+| `csle datacollectionjob <jobid>`                                  | Starts job.                                                    |
+| `csle uninstall emulations`                                       | Uninstalls emulation environments.                             |
+| `csle uninstall simulations`                                      | Uninstalls simulation environments.                            |
+| `csle uninstall <emname>`                                         | Uninstalls emulation.                                          |
+| `csle uninstall <simname>`                                        | Uninstalls simulation.                                         |
+| `csle uninstall derived_images`                                   | Uninstalls derived images.                                     |
+| `csle uninstall base_images`                                      | Uninstalls base images.                                        |
+| `csle uninstall metastore`                                        | Uninstalls metastore.                                          |
+| `csle uninstall all`                                              | Uninstalls everything.                                         |
+| `csle help`                                                       | Lists all available commands                                   |
 
 
 <p class="captionFig">

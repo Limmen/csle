@@ -414,7 +414,8 @@ def shell(container: str) -> None:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
 
 
-def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool, id: int = -1) -> None:
+def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool,
+                  no_beats: bool, id: int = -1) -> None:
     """
     Runs an emulation with the given config
 
@@ -422,6 +423,7 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     :param id: the id of the execution to create (if not specified the an available id will be automatically assigned)
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :param no_clients: a boolean parameter that is True if the client_population should be skipped
+    :param no_beats: a boolean parameter that is True if the configuration/starting of beats should be skipped
     :return: None
     """
     from csle_common.controllers.emulation_env_controller import EmulationEnvController
@@ -433,7 +435,7 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
                                                         physical_servers=physical_servers, logger=logging.getLogger(),
                                                         id=id)
     ClusterController.run_emulation(execution=execution, no_traffic=no_traffic, no_clients=no_clients,
-                                    physical_servers=physical_servers)
+                                    physical_servers=physical_servers, no_beats=no_beats)
 
 
 def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
@@ -1052,12 +1054,14 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
+@click.option('--no_beats', is_flag=True, help='skip starting and configuring beats')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job | nginx | postgresql | docker | clustermanager")
-def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str) -> None:
+def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
+          no_beats: bool) -> None:
     """
     Starts an entity, e.g. a container or the management system
 
@@ -1065,6 +1069,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :param no_clients: a boolean parameter that is True if the client population should be skipped
+    :param no_beats: a boolean parameter that is True if the configuration/starting of beats should be skipped
     :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
     :param id: (optional) an id parameter to identify the entity to start
     :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
@@ -1119,7 +1124,8 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
-                run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients, id=id)
+                run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients, id=id,
+                              no_beats=no_beats)
                 emulation_started = True
             else:
                 emulation_started = False
