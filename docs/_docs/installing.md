@@ -191,7 +191,7 @@ host all all ::1/128 trust
 host all all 172.31.212.0/24 trust
 ```
 <p class="captionFig">
-Listing 15: Lines to add to `pg_hba.conf`.
+Listing 15: Lines to add to `pg_hba.conf`; note: to allow external connections, change "127.0.0.1/32" to "0.0.0.0/0". 
 </p>
 2. Restart PostgreSQL with the command:
 ```bash

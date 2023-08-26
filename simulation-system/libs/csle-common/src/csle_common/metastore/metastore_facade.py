@@ -300,7 +300,7 @@ class MetastoreFacade:
                     # Need to manually set the ID since CITUS does not handle serial columns
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                         table_name=constants.METADATA_STORE.EMULATIONS_TABLE)
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (id, name, config) "
                                 f"VALUES (%s, %s, %s) RETURNING id", (id, config.name, config_json_str))
@@ -353,7 +353,7 @@ class MetastoreFacade:
                     # Need to manually set the ID since CITUS does not handle serial columns
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                         table_name=constants.METADATA_STORE.SIMULATIONS_TABLE)
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
                                 f"(id, name, config) "
@@ -742,7 +742,7 @@ class MetastoreFacade:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
                 id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                     table_name=constants.METADATA_STORE.SIMULATION_TRACES_TABLE)
                 config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (id, gym_env, trace) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, simulation_trace.simulation_env, config_json_str))
@@ -780,8 +780,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
                             f"(id, emulation_trace, simulation_trace) "
@@ -847,7 +847,7 @@ class MetastoreFacade:
                     # Need to manually set the ID since CITUS does not handle serial columns
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                         table_name=constants.METADATA_STORE.EMULATION_IMAGES_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} "
                                 f"(id, emulation_name, image) VALUES (%s, %s, %s) RETURNING id", (id,
                                                                                                   emulation_name, img))
@@ -936,7 +936,7 @@ class MetastoreFacade:
                     # Need to manually set the ID since CITUS does not handle serial columns
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                         table_name=constants.METADATA_STORE.SIMULATION_IMAGES_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
                                 f"(id, simulation_name, image) VALUES (%s, %s, %s) RETURNING id",
                                 (id, simulation_name, img))
@@ -1006,7 +1006,7 @@ class MetastoreFacade:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
                 id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                     table_name=constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE)
                 config_json_str = json.dumps(experiment_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
                             f"(id, execution, simulation_name, emulation_name) "
@@ -1215,8 +1215,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE)
                 policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -1629,7 +1629,7 @@ class MetastoreFacade:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
                 id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                                                     table_name=constants.METADATA_STORE.PPO_POLICIES_TABLE)
                 policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -1724,8 +1724,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE)
                 system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
@@ -1871,8 +1871,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE)
                 gaussian_mixture_system_model_json = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4,
                                                                 sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
@@ -2034,8 +2034,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.TABULAR_POLICIES_TABLE)
                 policy_json_str = json.dumps(tabular_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -2145,8 +2145,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE)
                 policy_json_str = json.dumps(alpha_vec_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -2257,8 +2257,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.DQN_POLICIES_TABLE)
                 policy_json_str = json.dumps(dqn_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DQN_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -2371,8 +2371,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE)
                 policy_json_str = json.dumps(fnn_w_softmax_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -2484,8 +2484,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.VECTOR_POLICIES_TABLE)
                 policy_json_str = json.dumps(vector_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
@@ -2632,15 +2632,12 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 emulation_execution_str = \
                     json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
-                            f"(id, ip_first_octet, emulation_name, info) "
-                            f"VALUES (%s, %s, %s, %s)", (id, emulation_execution.ip_first_octet,
-                                                         emulation_execution.emulation_name,
-                                                         emulation_execution_str))
+                            f"(ip_first_octet, emulation_name, info) "
+                            f"VALUES %s, %s, %s)", (emulation_execution.ip_first_octet,
+                                                    emulation_execution.emulation_name, emulation_execution_str))
                 conn.commit()
                 Logger.__call__().get_logger().debug("emulation execution saved successfully")
                 return None
@@ -2757,8 +2754,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE)
                 empirical_system_model_json = json.dumps(empirical_system_model.to_dict(), indent=4, sort_keys=True,
                                                          cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
@@ -2897,8 +2894,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE)
                 mcmc_system_model_json = json.dumps(mcmc_system_model.to_dict(),
                                                     indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
@@ -3039,8 +3036,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE)
                 gp_system_model_json = json.dumps(gp_system_model.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
                             f"(id, model, emulation_name, emulation_statistic_id) "
@@ -3181,8 +3178,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.MANAGEMENT_USERS_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
                             f"(id, username, password, email, first_name, last_name, organization, admin, salt) "
                             f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
@@ -3328,8 +3325,8 @@ class MetastoreFacade:
                 try:
                     # Need to manually set the ID since CITUS does not handle serial columns
                     # on distributed tables properly
-                    id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                         table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                    id = GeneralUtil.get_latest_table_id(
+                        cur=cur, table_name=constants.METADATA_STORE.SESSION_TOKENS_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
                                 f"(id, token, timestamp, username) "
                                 f"VALUES (%s, %s, %s, %s) RETURNING token",
@@ -3525,8 +3522,8 @@ class MetastoreFacade:
                     schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.TRACES_DATASETS_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(id, name, description, data_schema, download_count, "
                             f"file_path, url, date_added, num_traces, "
@@ -3712,8 +3709,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.STATISTICS_DATASETS_TABLE)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
                             f"(id, name, description, download_count, file_path, url, date_added, num_measurements, "
                             f"num_metrics, size_in_gb, compressed_size_in_gb, citation, num_files, "
@@ -4029,8 +4026,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns
                 # on distributed tables properly
-                id = GeneralUtil.get_latest_table_id(cur=cur,
-                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+                id = GeneralUtil.get_latest_table_id(
+                    cur=cur, table_name=constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE)
                 policy_json_str = json.dumps(linear_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
