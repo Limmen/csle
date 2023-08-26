@@ -1,5 +1,5 @@
-csle-base==0.3.3
-csle-collector==0.3.3
+csle-base==0.3.4
+csle-collector==0.3.4
 csle-ryu-fork==4.37.0.dev3357
 eventlet==0.33.2
 confluent-kafka==1.9.2
