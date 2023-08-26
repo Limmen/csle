@@ -14,9 +14,10 @@ class SnortIdsIPAlertCounters:
         """
         Initializes the DTO
         """
-        self.priority_alerts = list(np.zeros(4).astype(int).tolist())
-        self.class_alerts = list(np.zeros(len(set(
-            constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))).astype(int).tolist())
+        self.priority_alerts = [0] * 4
+        self.class_alerts = []
+        for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))):
+            self.class_alerts.append(0)
         self.severe_alerts = 0
         self.warning_alerts = 0
         self.total_alerts = 0

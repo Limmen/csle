@@ -1041,7 +1041,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ryu_info_dto(ryu_managers_info_dto: Union[None, List[RyuManagersInfo]]) \
+    def convert_ryu_info_dto(ryu_managers_info_dto: Union[None, RyuManagersInfo]) \
             -> cluster_manager_pb2.RyuManagersInfoDTO:
         """
         Converts a RyuManagersInfo into a RyuManagersInfoDTO
