@@ -15,7 +15,7 @@ class SnortIdsAlertCounters:
         """
         Initializes the DTO
         """
-        self.priority_alerts = [0]*4
+        self.priority_alerts = [0] * 4
         self.class_alerts = []
         for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))):
             self.class_alerts.append(0)

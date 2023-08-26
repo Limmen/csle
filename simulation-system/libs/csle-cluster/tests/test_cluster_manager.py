@@ -254,10 +254,12 @@ class TestClusterManagerSuite:
 
         :return: None
         """
+
         class A:
             """
             Auxillary class for mocking
             """
+
             def __init__(self):
                 pass
 
@@ -5976,7 +5978,7 @@ class TestClusterManagerSuite:
         assert not response.outcome
 
     def test_stopSparkServer(self, grpc_stub, mocker: pytest_mock.MockFixture,
-                              get_ex_exec: EmulationExecution) -> None:
+                             get_ex_exec: EmulationExecution) -> None:
         """
         Tests the stopSparkServer grpc
 
@@ -6009,9 +6011,8 @@ class TestClusterManagerSuite:
             container_ip=container_ip)
         assert not response.outcome
 
-
     def test_startSparkServers(self, grpc_stub, mocker: pytest_mock.MockFixture,
-                              get_ex_exec: EmulationExecution) -> None:
+                               get_ex_exec: EmulationExecution) -> None:
         """
         Tests the startSparkServers grpc
 
@@ -6083,4 +6084,3 @@ class TestClusterManagerSuite:
                      'ManagementSystemController.stop_pid', return_value=None)
         response: OperationOutcomeDTO = query_cluster_manager.stop_pid(stub=grpc_stub, pid=8888)
         assert response.outcome
-
