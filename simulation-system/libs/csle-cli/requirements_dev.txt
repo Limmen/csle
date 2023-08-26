@@ -12,6 +12,8 @@ types-protobuf==4.23.0.3
 types-requests==2.31.0.1
 types-urllib3==1.26.25.13
 types-PyYAML==6.0.12.11
+grpcio==1.57.0
+grpcio-tools==1.57.0
 pytest-grpc==0.8.0
 twine==4.0.2
 build==0.10.0

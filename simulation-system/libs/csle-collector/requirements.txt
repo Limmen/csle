@@ -1,5 +1,5 @@
 csle-base==0.3.1
-grcpio==1.57.0
+grpcio==1.57.0
 grpcio-tools==1.57.0
 scipy==1.9.3
 confluent-kafka==1.8.2
