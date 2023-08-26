@@ -2,7 +2,8 @@ from typing import List, Dict, Any, Union
 import gpytorch
 from numpy.typing import NDArray
 import torch
-from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
+from csle_common.dao.system_identification.gp_regression_model_with_gauissan_noise import \
+    GPRegressionModelWithGaussianNoise
 from csle_base.json_serializable import JSONSerializable
 
 

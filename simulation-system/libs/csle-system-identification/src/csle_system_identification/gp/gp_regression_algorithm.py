@@ -13,7 +13,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.logging.log import Logger
 from csle_common.util.general_util import GeneralUtil
 import csle_system_identification.constants.constants as system_identification_constants
-from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
+from csle_common.dao.system_identification.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
 
 
 class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
