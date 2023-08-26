@@ -84,11 +84,11 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         :return: the new config
         """
         config = self.copy()
-        for i in range(len(self.ips_and_commands)):
-            self.ips_and_commands[i] = \
-                (WorkflowService.replace_first_octet_of_ip(ip=self.ips_and_commands[i][0],
+        for i in range(len(config.ips_and_commands)):
+            config.ips_and_commands[i] = \
+                (WorkflowService.replace_first_octet_of_ip(ip=config.ips_and_commands[i][0],
                                                            ip_first_octet=ip_first_octet),
-                 self.ips_and_commands[i][1])
+                 config.ips_and_commands[i][1])
         return config
 
     def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO:
