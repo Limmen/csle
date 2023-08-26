@@ -370,16 +370,17 @@ class TestClusterManagerSuite:
         return ossec_mng_info
 
     @staticmethod
-    def ryu_mng_info() -> List[RyuManagersInfo]:
+    def ryu_mng_info() -> RyuManagersInfo:
         """
-        Static help method for obtaining a list of RyuManagersInfo
-        :return:
+        Static help method for obtaining a RyuManagersInfo
+
+        :return: a RyuManagersInfo object
         """
-        ryu_mng_info = [RyuManagersInfo(
+        ryu_mng_info = RyuManagersInfo(
             ips=["123.456.78.99"], ports=[1], emulation_name="JDoeEmulation", execution_id=1,
             ryu_managers_statuses=[RyuDTO(ryu_running=True, monitor_running=True, port=4, web_port=4, controller="null",
                                           kafka_ip="123.456.78.99", kafka_port=7, time_step_len=4)],
-            ryu_managers_running=[True], local_controller_web_port=10, physical_server_ip="123.456.78.99")]
+            ryu_managers_running=[True], local_controller_web_port=10, physical_server_ip="123.456.78.99")
         return ryu_mng_info
 
     @staticmethod
@@ -424,7 +425,7 @@ class TestClusterManagerSuite:
                                                 subnet_prefix="null",
                                                 interface="eth0")],
             elk_managers_info=TestClusterManagerSuite.get_elk_mng_info(),
-            ryu_managers_info=TestClusterManagerSuite.ryu_mng_info()[0])
+            ryu_managers_info=TestClusterManagerSuite.ryu_mng_info())
         return emulation_exec_info
 
     @staticmethod
@@ -4600,7 +4601,7 @@ class TestClusterManagerSuite:
         mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
                      return_value="123.456.78.99")
         mocker.patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager."
-                     "get_ryu_managers_info", side_effect=TestClusterManagerSuite.ryu_mng_info())
+                     "get_ryu_managers_info", return_value=TestClusterManagerSuite.ryu_mng_info())
         mocker.patch("csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_active_ips",
                      side_effect=active_ips)
         response: RyuManagerStatusDTO = query_cluster_manager. \
