@@ -40,7 +40,7 @@ class NiktoVuln(JSONSerializable):
         vuln = EmulationVulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=-1,
                                                       protocol=TransportProtocol.TCP,
                                                       cvss=0, osvdbid=self.osvdb_id, description=self.description,
-                                                      service="http")
+                                                      service="http", credentials=[])
         return vuln
 
     def __str__(self) -> str:
