@@ -20,13 +20,13 @@ const EmulationTrace = (props) => {
             label: `IPs: ${machine.ips.join(', ')}`
         }
     })
+
     const [attackerActionsOpen, setAttackerActionsOpen] = useState(false);
     const [defenderActionsOpen, setDefenderActionsOpen] = useState(false);
     const [attackerObservationsOpen, setAttackerObservationsOpen] = useState(false);
     const [defenderObservationsOpen, setDefenderObservationsOpen] = useState(false);
     const [selectedDefenderMachine, setSelectedDefenderMachine] = useState(defMachines[0]);
     const [defenderMachines, setDefenderMachines] = useState(defMachines);
-    setDefenderMachines(defMachines)
 
     const updateSelectedDefenderMachine = (selectedDefMachine) => {
         setSelectedDefenderMachine(selectedDefMachine)
@@ -34,7 +34,7 @@ const EmulationTrace = (props) => {
 
     const getDefenderMachineObs = (defenderObsState) => {
         for (let i = 0; i < defenderObsState.machines.length; i++) {
-            if(defenderObsState.machines[i].ips.includes(selectedDefenderMachine.value.ips[0])) {
+            if (defenderObsState.machines[i].ips.includes(selectedDefenderMachine.value.ips[0])) {
                 return defenderObsState.machines[i]
             }
         }
@@ -425,7 +425,7 @@ const EmulationTrace = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.emulationTrace.defender_observation_states.map((obs_state, index) => {
-                                        var machineObs = getDefenderMachineObs(obs_state)
+                                            var machineObs = getDefenderMachineObs(obs_state)
                                             return (<tr key={index}>
                                                 <td>{index + 1}</td>
                                                 <td>{machineObs.host_metrics.num_failed_login_attempts}</td>

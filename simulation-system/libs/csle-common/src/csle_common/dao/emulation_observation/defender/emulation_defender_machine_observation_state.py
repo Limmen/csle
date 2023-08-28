@@ -21,8 +21,9 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
     Represents the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips: List[str], kafka_config: KafkaConfig, host_metrics: HostMetrics, docker_stats: DockerStats,
-                 snort_ids_ip_alert_counters: SnortIdsIPAlertCounters, ossec_ids_alert_counters: OSSECIdsAlertCounters):
+    def __init__(self, ips: List[str], kafka_config: Optional[KafkaConfig], host_metrics: HostMetrics,
+                 docker_stats: DockerStats, snort_ids_ip_alert_counters: SnortIdsIPAlertCounters,
+                 ossec_ids_alert_counters: OSSECIdsAlertCounters):
         """
         Initializes the DTO
 
@@ -53,6 +54,8 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
 
         :return: None
         """
+        if self.kafka_config is None:
+            raise ValueError("Cannot start monitoring threads since the kafka config is None.")
         self.host_metrics_consumer_thread = HostMetricsConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port_external, host_metrics=self.host_metrics)
@@ -106,8 +109,6 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
             ossec_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
         else:
             ossec_alert_counters = OSSECIdsAlertCounters()
-        if kafka_config is None:
-            raise ValueError("KafkaConfig is None")
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),

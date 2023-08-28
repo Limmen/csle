@@ -147,6 +147,14 @@ class EmulationDefenderObservationState(JSONSerializable):
             kafka_config = KafkaConfig.from_dict(d["kafka_config"])
         except Exception:
             pass
+        if "snort_ids_rule_counters" not in d:
+            snort_ids_rule_counters = SnortIdsRuleCounters()
+        else:
+            snort_ids_rule_counters = SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"])
+        if "avg_snort_ids_rule_counters" not in d:
+            avg_snort_ids_rule_counters = SnortIdsRuleCounters()
+        else:
+            avg_snort_ids_rule_counters = SnortIdsRuleCounters.from_dict(d["avg_snort_ids_rule_counters"])
         obj = EmulationDefenderObservationState(
             kafka_config=kafka_config,
             client_population_metrics=ClientPopulationMetrics.from_dict(d["client_population_metrics"]),
@@ -155,7 +163,7 @@ class EmulationDefenderObservationState(JSONSerializable):
             aggregated_host_metrics=HostMetrics.from_dict(d["aggregated_host_metrics"]),
             defender_actions=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"])),
             attacker_actions=list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"])),
-            snort_ids_rule_counters=SnortIdsRuleCounters.from_dict(d["snort_ids_rule_counters"]),
+            snort_ids_rule_counters=snort_ids_rule_counters,
             snort_ids_alert_counters=SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"]))
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
         obj.actions_tried = set(list(map(lambda x: (int(x[0]), int(x[1]), str(x[2])), d["actions_tried"])))
@@ -163,7 +171,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
         obj.avg_snort_ids_alert_counters = SnortIdsAlertCounters.from_dict(d["avg_snort_ids_alert_counters"])
-        obj.avg_snort_ids_rule_counters = SnortIdsRuleCounters.from_dict(d["avg_snort_ids_rule_counters"])
+        obj.avg_snort_ids_rule_counters = avg_snort_ids_rule_counters
         obj.avg_ossec_ids_alert_counters = OSSECIdsAlertCounters.from_dict(d["avg_ossec_ids_alert_counters"])
         return obj
 

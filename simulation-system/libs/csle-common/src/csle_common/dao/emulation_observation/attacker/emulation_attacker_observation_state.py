@@ -33,11 +33,14 @@ class EmulationAttackerObservationState(JSONSerializable):
         :param d: the dict to convert
         :return: the instance
         """
-        obj = EmulationAttackerObservationState(
-            catched_flags=d["catched_flags"], agent_reachable=set(d["agent_reachable"]),
-        )
+        obj = EmulationAttackerObservationState(catched_flags=d["catched_flags"],
+                                                agent_reachable=set(d["agent_reachable"]))
         obj.machines = list(map(lambda x: EmulationAttackerMachineObservationState.from_dict(x), d["machines"]))
-        obj.actions_tried = set(d["actions_tried"])
+        actions_tried = set()
+        for i in range(len(d["actions_tried"])):
+            actions_tried.add((int(d["actions_tried"][i][0]), int(d["actions_tried"][i][1]),
+                               str(d["actions_tried"][i][2])))
+        obj.actions_tried = actions_tried
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
