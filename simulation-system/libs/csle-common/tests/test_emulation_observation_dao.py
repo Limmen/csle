@@ -37,10 +37,10 @@ class TestEmulationObservationDaoSuite:
 
     def test_emulation_attacker_machine_observation_state(self) -> None:
         """
-                Tests creation and dict conversion of the EmulationAttackerMachineObservationState DAO
+        Tests creation and dict conversion of the EmulationAttackerMachineObservationState DAO
 
-                :return: None
-                """
+        :return: None
+        """
 
         emulation_attack_machine_observation_state = (EmulationAttackerMachineObservationState
                                                       (ips=["172.31.212.1", "172.31.212.2"]))
@@ -59,10 +59,10 @@ class TestEmulationObservationDaoSuite:
 
     def test_emulation_attacker_observation_state(self) -> None:
         """
-                Tests creation and dict conversion of the EmulationAttackerObservationState DAO
+        Tests creation and dict conversion of the EmulationAttackerObservationState DAO
 
-                :return: None
-                """
+        :return: None
+        """
 
         emulation_attack_observation_state = (EmulationAttackerObservationState
                                               (catched_flags=1, agent_reachable=set(["test1", "test2"])))
@@ -81,10 +81,10 @@ class TestEmulationObservationDaoSuite:
 
     def test_emulation_connection_observation_state(self) -> None:
         """
-                Tests creation and dict conversion of the EmulationConnectionObservationState DAO
+        Tests creation and dict conversion of the EmulationConnectionObservationState DAO
 
-                :return: None
-                """
+        :return: None
+        """
         emulation_connection_observation_state = (EmulationConnectionObservationState
                                                   (conn=None, credential=Credential(username="shahab", pw="123"),
                                                    root=False, service="test1", port=123))
@@ -103,10 +103,10 @@ class TestEmulationObservationDaoSuite:
 
     def test_emulation_vulnerability_observation_state(self) -> None:
         """
-                Tests creation and dict conversion of the EmulationConnectionObservationState DAO
+        Tests creation and dict conversion of the EmulationConnectionObservationState DAO
 
-                :return: None
-                """
+        :return: None
+        """
         emulation_vulnerability_observation_state = (EmulationVulnerabilityObservationState
                                                      (name="test", port=123, protocol=TransportProtocol.TCP, cvss=0.1,
                                                       credentials=[]))
