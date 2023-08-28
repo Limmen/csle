@@ -83,12 +83,12 @@ class TestResourcesEmulationTracesSuite:
     @pytest.fixture
     def get_em_tr(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mocking the get_emulation_trace ethod
+        Pytest fixture for mocking the get_emulation_trace method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def get_emulation_trace() -> EmulationTrace:
+        def get_emulation_trace(id: int) -> EmulationTrace:
             em_tr = TestResourcesEmulationTracesSuite.get_ex_em_tr()
             return em_tr
         get_emulation_trace_mocker = mocker.MagicMock(side_effect=get_emulation_trace)
@@ -102,7 +102,7 @@ class TestResourcesEmulationTracesSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def get_emulation_trace() -> None:
+        def get_emulation_trace(id: int) -> None:
             return None
         get_emulation_trace_mocker = mocker.MagicMock(side_effect=get_emulation_trace)
         return get_emulation_trace_mocker
@@ -261,7 +261,7 @@ class TestResourcesEmulationTracesSuite:
         :param list_em_trac_ids: the list_em_trac_ids fixture
         :param list_em_trac: the list_em_trac fixture
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_traces_ids",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace",
                      side_effect=get_em_tr)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}/10")
@@ -277,7 +277,7 @@ class TestResourcesEmulationTracesSuite:
         ex_em_tr_dict = ex_em_tr.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == ex_em_tr_dict[k]
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_traces_ids",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace",
                      side_effect=get_em_tr_none)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")

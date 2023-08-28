@@ -150,7 +150,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         if "snort_ids_rule_counters" not in d:
             snort_ids_rule_counters = SnortIdsRuleCounters()
         else:
-            snort_ids_rule_counters = SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"])
+            snort_ids_rule_counters = SnortIdsRuleCounters.from_dict(d["snort_ids_rule_counters"])
         if "avg_snort_ids_rule_counters" not in d:
             avg_snort_ids_rule_counters = SnortIdsRuleCounters()
         else:
