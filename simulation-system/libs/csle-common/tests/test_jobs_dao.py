@@ -28,6 +28,12 @@ from csle_common.dao.jobs.system_identification_job_config import SystemIdentifi
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 from csle_common.dao.training.hparam import HParam
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.experiment_result import ExperimentResult
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.player_type import PlayerType
 
 
 class TestJobsDaoSuite:
@@ -142,3 +148,31 @@ class TestJobsDaoSuite:
                 system_identification_job_config.to_dict())
         assert (SystemIdentificationJobConfig.from_dict(system_identification_job_config.to_dict()) ==
                 system_identification_job_config)
+
+    def test_training_job_config(self) -> None:
+        """
+        Tests creation and dict conversion of the TrainingJobConfig DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(output_dir="test/test", title="test1", random_seeds=[1],
+                                             agent_type=AgentType.PPO, hparams=hparams, log_every=10,
+                                             player_type=PlayerType.DEFENDER, player_idx=2)
+
+        training_job_config = TrainingJobConfig(simulation_env_name="test", progress_percentage=0.5,
+                                                pid=1, emulation_env_name="test", num_cached_traces=1,
+                                                log_file_path="test/test", descr="test", physical_host_ip="1.1.1.1",
+                                                experiment_config=experiment_config,
+                                                experiment_result=ExperimentResult(),
+                                                simulation_traces=[SimulationTrace(simulation_env="test1")])
+
+        assert isinstance(training_job_config.to_dict(), dict)
+        assert isinstance(TrainingJobConfig.from_dict(training_job_config.to_dict()),
+                          TrainingJobConfig)
+        assert (TrainingJobConfig.from_dict(training_job_config.to_dict()).to_dict() ==
+                training_job_config.to_dict())
+        assert (TrainingJobConfig.from_dict(training_job_config.to_dict()) ==
+                training_job_config)
