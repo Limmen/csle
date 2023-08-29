@@ -5,6 +5,7 @@ from csle_common.dao.simulation_config.agent_log import AgentLog
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
+from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
 
 
 class TestSimulationConfigDaoSuite:
@@ -114,3 +115,22 @@ class TestSimulationConfigDaoSuite:
                 initial_state_distribution_config.to_dict())
         assert (InitialStateDistributionConfig.from_dict(initial_state_distribution_config.to_dict()) ==
                 initial_state_distribution_config)
+
+    def test_joint_action_space_config(self) -> None:
+        """
+        Tests creation and dict conversion of the JointActionSpaceConfig DAO
+
+        :return: None
+        """
+        
+        joint_action_space_config = JointActionSpaceConfig(
+            action_spaces=[ActionSpaceConfig(actions=[Action(id=1, descr="test")], player_id=1,
+                                             action_type=ValueType.INTEGER)])
+
+        assert isinstance(joint_action_space_config.to_dict(), dict)
+        assert isinstance(JointActionSpaceConfig.from_dict(joint_action_space_config.to_dict()),
+                          JointActionSpaceConfig)
+        assert (JointActionSpaceConfig.from_dict(joint_action_space_config.to_dict()).to_dict() ==
+                joint_action_space_config.to_dict())
+        assert (JointActionSpaceConfig.from_dict(joint_action_space_config.to_dict()) ==
+                joint_action_space_config)
