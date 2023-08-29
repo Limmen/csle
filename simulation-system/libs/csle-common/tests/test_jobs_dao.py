@@ -24,6 +24,10 @@ from csle_common.dao.emulation_action.defender.emulation_defender_action_type im
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_common.dao.training.hparam import HParam
 
 
 class TestJobsDaoSuite:
@@ -109,3 +113,32 @@ class TestJobsDaoSuite:
                 data_collection_jobs_config.to_dict())
         assert (DataCollectionJobConfig.from_dict(data_collection_jobs_config.to_dict()) ==
                 data_collection_jobs_config)
+
+    def test_system_identification_job_config(self) -> None:
+        """
+        Tests creation and dict conversion of the SystemIdentificationJobConfig DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+
+        system_identification_config = SystemIdentificationConfig(
+            model_type=SystemModelType.GAUSSIAN_MIXTURE, hparams=hparams,
+            output_dir="test/test", title="test", log_every=10)
+
+        system_identification_job_config = SystemIdentificationJobConfig(
+            emulation_env_name="test",
+            emulation_statistics_id=1, pid=123,
+            log_file_path="test/test",
+            system_identification_config=system_identification_config, physical_host_ip="1.1.1.1",
+            progress_percentage=0.5)
+
+        assert isinstance(system_identification_job_config.to_dict(), dict)
+        assert isinstance(SystemIdentificationJobConfig.from_dict(system_identification_job_config.to_dict()),
+                          SystemIdentificationJobConfig)
+        assert (SystemIdentificationJobConfig.from_dict(system_identification_job_config.to_dict()).to_dict() ==
+                system_identification_job_config.to_dict())
+        assert (SystemIdentificationJobConfig.from_dict(system_identification_job_config.to_dict()) ==
+                system_identification_job_config)

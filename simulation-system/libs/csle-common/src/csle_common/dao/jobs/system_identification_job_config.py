@@ -83,8 +83,6 @@ class SystemIdentificationJobConfig(JSONSerializable):
                 break
             except Exception:
                 pass
-        if system_model is None:
-            raise ValueError("could not parse system model")
         obj = SystemIdentificationJobConfig(
             emulation_env_name=d["emulation_env_name"], pid=d["pid"],
             progress_percentage=d["progress_percentage"], emulation_statistics_id=d["emulation_statistics_id"],
