@@ -410,3 +410,20 @@ class TestSimulationConfigDaoSuite:
                 simulation_trace.to_dict())
         assert (SimulationTrace.from_dict(simulation_trace.to_dict()) ==
                 simulation_trace)
+
+    def test_state(self) -> None:
+        """
+        Tests creation and dict conversion of the State DAO
+
+        :return: None
+        """
+
+        state = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+
+        assert isinstance(state.to_dict(), dict)
+        assert isinstance(State.from_dict(state.to_dict()),
+                          State)
+        assert (State.from_dict(state.to_dict()).to_dict() ==
+                state.to_dict())
+        assert (State.from_dict(state.to_dict()) ==
+                state)
