@@ -445,3 +445,20 @@ class TestSimulationConfigDaoSuite:
                 state_space_config.to_dict())
         assert (StateSpaceConfig.from_dict(state_space_config.to_dict()) ==
                 state_space_config)
+
+    def test_transition_operator_config(self) -> None:
+        """
+        Tests creation and dict conversion of the TransitionOperatorConfig DAO
+
+        :return: None
+        """
+
+        transition_operator_config = TransitionOperatorConfig(transition_tensor=numpy.array([1, 2, 3]))
+
+        assert isinstance(transition_operator_config.to_dict(), dict)
+        assert isinstance(TransitionOperatorConfig.from_dict(transition_operator_config.to_dict()),
+                          TransitionOperatorConfig)
+        assert (TransitionOperatorConfig.from_dict(transition_operator_config.to_dict()).to_dict() ==
+                transition_operator_config.to_dict())
+        assert (TransitionOperatorConfig.from_dict(transition_operator_config.to_dict()) ==
+                transition_operator_config)
