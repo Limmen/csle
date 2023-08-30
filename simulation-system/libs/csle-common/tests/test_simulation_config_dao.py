@@ -211,3 +211,35 @@ class TestSimulationConfigDaoSuite:
                 observation_function_config.to_dict())
         assert (ObservationFunctionConfig.from_dict(observation_function_config.to_dict()) ==
                 observation_function_config)
+
+    def test_observation_space_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ObservationSpaceConfig DAO
+
+        :return: None
+        """
+
+        observation = Observation(id=1, val=2, descr="test")
+        observation_component_name_to_index = dict()
+        observation_component_name_to_index["test"] = 1
+        observation_id_to_observation_id_vector = dict()
+        observation_id_to_observation_id_vector[0] = [1, 2, 3]
+        observation_id_to_observation_vector = dict()
+        observation_id_to_observation_vector[4] = [4, 5, 6]
+        component_observations = dict()
+        component_observations["test1"] = [observation]
+        observation_space_config = ObservationSpaceConfig(
+            observations=[observation], observation_type=ValueType.INTEGER, descr="test", player_id=2,
+            observation_component_name_to_index=observation_component_name_to_index,
+            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+            observation_id_to_observation_vector=observation_id_to_observation_vector,
+            component_observations=component_observations
+        )
+
+        assert isinstance(observation_space_config.to_dict(), dict)
+        assert isinstance(ObservationSpaceConfig.from_dict(observation_space_config.to_dict()),
+                          ObservationSpaceConfig)
+        assert (ObservationSpaceConfig.from_dict(observation_space_config.to_dict()).to_dict() ==
+                observation_space_config.to_dict())
+        assert (ObservationSpaceConfig.from_dict(observation_space_config.to_dict()) ==
+                observation_space_config)
