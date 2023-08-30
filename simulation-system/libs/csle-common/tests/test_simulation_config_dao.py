@@ -6,6 +6,9 @@ from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
+from csle_common.dao.simulation_config.joint_observation_space_config import JointObservationSpaceConfig
+from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
+from csle_common.dao.simulation_config.observation import Observation
 
 
 class TestSimulationConfigDaoSuite:
@@ -134,3 +137,36 @@ class TestSimulationConfigDaoSuite:
                 joint_action_space_config.to_dict())
         assert (JointActionSpaceConfig.from_dict(joint_action_space_config.to_dict()) ==
                 joint_action_space_config)
+
+    def test_joint_observation_space_config(self) -> None:
+        """
+        Tests creation and dict conversion of the JointObservationSpaceConfig DAO
+
+        :return: None
+        """
+
+        observation = Observation(id=1, val=2, descr="test")
+        observation_component_name_to_index = dict()
+        observation_component_name_to_index["test"] = 1
+        observation_id_to_observation_id_vector = dict()
+        observation_id_to_observation_id_vector[0] = [1, 2, 3]
+        observation_id_to_observation_vector = dict()
+        observation_id_to_observation_vector[4] = [4, 5, 6]
+        component_observations = dict()
+        component_observations["test1"] = [observation]
+        observation_space_config = ObservationSpaceConfig(
+            observations=[observation], observation_type=ValueType.INTEGER, descr="test", player_id=2,
+            observation_component_name_to_index=observation_component_name_to_index,
+            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+            observation_id_to_observation_vector=observation_id_to_observation_vector,
+            component_observations=component_observations)
+
+        joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=[observation_space_config])
+
+        assert isinstance(joint_observation_space_config.to_dict(), dict)
+        assert isinstance(JointObservationSpaceConfig.from_dict(joint_observation_space_config.to_dict()),
+                          JointObservationSpaceConfig)
+        assert (JointObservationSpaceConfig.from_dict(joint_observation_space_config.to_dict()).to_dict() ==
+                joint_observation_space_config.to_dict())
+        assert (JointObservationSpaceConfig.from_dict(joint_observation_space_config.to_dict()) ==
+                joint_observation_space_config)
