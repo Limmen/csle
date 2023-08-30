@@ -1,9 +1,12 @@
 name: python-linter
 run-name: ${{ github.actor }} python-linter
 on:
-  - push
-  - pull_request
-
+  push:
+    branches:
+      - "master"
+#  pull_request:
+#    branches:
+#      - "master"
 jobs:
   test:
     runs-on: ${{ matrix.os }}

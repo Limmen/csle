@@ -1,8 +1,12 @@
 name: python-gym-csle-intrusion-response-game-build
 run-name: ${{ github.actor }} python-gym-csle-intrusion-response-game-build
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - "master"
+#  pull_request:
+#    branches:
+#      - "master"
 
 jobs:
   test:

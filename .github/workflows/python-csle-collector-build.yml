@@ -1,8 +1,12 @@
 name: python-csle-collector-build
 run-name: ${{ github.actor }} python-csle-collector-build
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - "master"
+#  pull_request:
+#    branches:
+#      - "master"
 
 jobs:
   test:
