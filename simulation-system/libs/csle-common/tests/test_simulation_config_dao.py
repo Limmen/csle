@@ -427,3 +427,21 @@ class TestSimulationConfigDaoSuite:
                 state.to_dict())
         assert (State.from_dict(state.to_dict()) ==
                 state)
+
+    def test_state_space_config(self) -> None:
+        """
+        Tests creation and dict conversion of the StateSpaceConfig DAO
+
+        :return: None
+        """
+
+        state_space_config = StateSpaceConfig(states=[State(id=1, name="test", descr="test1",
+                                                            state_type=StateType.TERMINAL)])
+
+        assert isinstance(state_space_config.to_dict(), dict)
+        assert isinstance(StateSpaceConfig.from_dict(state_space_config.to_dict()),
+                          StateSpaceConfig)
+        assert (StateSpaceConfig.from_dict(state_space_config.to_dict()).to_dict() ==
+                state_space_config.to_dict())
+        assert (StateSpaceConfig.from_dict(state_space_config.to_dict()) ==
+                state_space_config)
