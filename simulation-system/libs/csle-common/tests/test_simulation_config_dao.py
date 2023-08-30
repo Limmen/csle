@@ -12,6 +12,7 @@ from csle_common.dao.simulation_config.joint_observation_space_config import Joi
 from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
 from csle_common.dao.simulation_config.observation import Observation
 from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
+from csle_common.dao.simulation_config.player_config import PlayerConfig
 
 
 class TestSimulationConfigDaoSuite:
@@ -243,3 +244,20 @@ class TestSimulationConfigDaoSuite:
                 observation_space_config.to_dict())
         assert (ObservationSpaceConfig.from_dict(observation_space_config.to_dict()) ==
                 observation_space_config)
+
+    def test_player_config(self) -> None:
+        """
+        Tests creation and dict conversion of the PlayerConfig DAO
+
+        :return: None
+        """
+
+        player_config = PlayerConfig(name="test", id=2)
+
+        assert isinstance(player_config.to_dict(), dict)
+        assert isinstance(PlayerConfig.from_dict(player_config.to_dict()),
+                          PlayerConfig)
+        assert (PlayerConfig.from_dict(player_config.to_dict()).to_dict() ==
+                player_config.to_dict())
+        assert (PlayerConfig.from_dict(player_config.to_dict()) ==
+                player_config)
