@@ -28,7 +28,7 @@ cd metastore; make clean
 ```
 
 <p class="captionFig">
-Listing 89: Commands to uninstall CSLE.
+Listing 90: Commands to uninstall CSLE.
 </p>
 
 Also remove the `CSLE_HOME` environment variable from `.bashrc`.

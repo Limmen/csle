@@ -65,7 +65,7 @@ csle/.flake8
 ```
 
 <p class="captionFig">
-Listing 109: Configuration file for the `flake8` Python linter.
+Listing 110: Configuration file for the `flake8` Python linter.
 </p>
 
 Configuration file for the `flake8` Python linter.
@@ -75,7 +75,7 @@ csle/management-system/csle-mgmt-webapp/.eslintrc.json
 ```
 
 <p class="captionFig">
-Listing 110: Configuration file for the `eslint` JavaScript linter.
+Listing 111: Configuration file for the `eslint` JavaScript linter.
 </p>
 
 
@@ -116,7 +116,7 @@ def stop_all_executions() -> None:
 ```
 
 <p class="captionFig">
-Listing 111: Example of a Python function with a comment.`
+Listing 112: Example of a Python function with a comment.`
 </p>
 
 Example of a comment to a JavaScript function:
@@ -143,7 +143,7 @@ const convertListToCommaSeparatedString = (listToConvert) => {
 ```
 
 <p class="captionFig">
-Listing 112: Example of a JavaScript function with a comment.
+Listing 113: Example of a JavaScript function with a comment.
 </p>
 
 ### Unit and Integration Testing

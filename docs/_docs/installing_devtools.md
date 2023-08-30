@@ -26,7 +26,7 @@ csle/simulation-system/libs/gym-csle-intrusion-response-game; pip install -r req
 ```
 
 <p class="captionFig">
-Listing 113: Command to install the Python build tool.
+Listing 114: Command to install the Python build tool.
 </p>
 
 Alternatively, install each development library separately by following the commands below.
@@ -39,7 +39,7 @@ pip install -q build
 ```
 
 <p class="captionFig">
-Listing 114: Command to install the Python build tool.
+Listing 115: Command to install the Python build tool.
 </p>
 
 The `twine` tool (a tool for publishing Python packages to PyPi) 
@@ -50,7 +50,7 @@ python3 -m pip install --upgrade twine
 ```
 
 <p class="captionFig">
-Listing 115: Command to install `twine`.
+Listing 116: Command to install `twine`.
 </p>
 
 The `flake8` Python linter can be installed by running the command:
@@ -60,7 +60,7 @@ python -m pip install flake8
 ```
 
 <p class="captionFig">
-Listing 116: Command to install `flake8`.
+Listing 117: Command to install `flake8`.
 </p>
 
 The `mypy` static type checker and associated type libraries for Python can be installed by running the command:
@@ -70,7 +70,7 @@ python3 -m pip install -U mypy mypy-extensions mypy-protobuf types-PyYAML types-
 ```
 
 <p class="captionFig">
-Listing 117: Command to install `mypy`.
+Listing 118: Command to install `mypy`.
 </p>
 
 The `pytest` and associated test libraries for Python can be installed by running the command:
@@ -80,7 +80,7 @@ pip install -U pytest mock pytest-mock pytest-cov pytest-grpc
 ```
 
 <p class="captionFig">
-Listing 118: Command to install `pytest` and `mock`.
+Listing 119: Command to install `pytest` and `mock`.
 </p>
 
 Ruby and its bundler, which are used to generate the CSLE 
@@ -92,7 +92,7 @@ sudo gem install bundler
 ```
 
 <p class="captionFig">
-Listing 119: Commands to install Ruby and its bundler.
+Listing 120: Commands to install Ruby and its bundler.
 </p>
 
 The `sphinx` Python library for automatic generation of API documentation 
@@ -103,7 +103,7 @@ The `sphinx` Python library for automatic generation of API documentation can be
 ```
 
 <p class="captionFig">
-Listing 120: Commands to install `sphinx`.
+Listing 121: Commands to install `sphinx`.
 </p>
 
 Lastly, the `tox` Python library for automatic testing can be installed by running the command:
@@ -113,6 +113,6 @@ pip install tox
 ```
 
 <p class="captionFig">
-Listing 121: Command to install `tox`.
+Listing 122: Command to install `tox`.
 </p>
 

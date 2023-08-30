@@ -29,7 +29,7 @@ simulation-system/libs/unit_tests.sh
 ```
 
 <p class="captionFig">
-Listing 125: Command to run the Python unit tests.
+Listing 126: Command to run the Python unit tests.
 </p>
 
 When adding new Python unit tests note that:
@@ -45,7 +45,7 @@ csle/management-system/csle-mgmt-webapp/src/
 ```
 
 <p class="captionFig">
-Listing 126: Directory with the JavaScript unit tests.
+Listing 127: Directory with the JavaScript unit tests.
 </p>
 
 To run the JavaScript unit tests, execute the command:
@@ -55,7 +55,7 @@ cd management-system/csle-mgmt-webapp; npm test
 ```
 
 <p class="captionFig">
-Listing 127: Command to run the JavaScript unit tests.
+Listing 128: Command to run the JavaScript unit tests.
 </p>
 
 To run the CSLE integration tests, execute the command:
@@ -65,5 +65,5 @@ simulation-system/libs/integration_tests.sh
 ```
 
 <p class="captionFig">
-Listing 128: Command to run the CSLE integration tests.
+Listing 129: Command to run the CSLE integration tests.
 </p>

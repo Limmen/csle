@@ -43,7 +43,7 @@ class EmulationDefenderAction(JSONSerializable):
             self.alt_cmds = []
         self.index = index
         self.ts = ts
-        self.execution_time = execution_time
+        self.execution_time = round(execution_time, 3)
 
     def __str__(self) -> str:
         """

@@ -201,7 +201,7 @@ const EmulationTrace = (props) => {
                                         <th>Name</th>
                                         <th>Commands</th>
                                         <th>Description</th>
-                                        <th>Execution time</th>
+                                        <th>Execution time (s)</th>
                                         <th>IPs</th>
                                         <th>Index</th>
                                         <th>Action outcome</th>
@@ -251,7 +251,7 @@ const EmulationTrace = (props) => {
                                         <th>Name</th>
                                         <th>Commands</th>
                                         <th>Description</th>
-                                        <th>Execution time</th>
+                                        <th>Execution time (s)</th>
                                         <th>IPs</th>
                                         <th>Index</th>
                                         <th>Action outcome</th>
@@ -301,8 +301,8 @@ const EmulationTrace = (props) => {
                                         <th># Found nodes</th>
                                         <th># Catched flags</th>
                                         <th># Compromised nodes</th>
-                                        <th>Found nodes ips</th>
-                                        <th>Compromised nodes ips</th>
+                                        <th>IPs of found nodes</th>
+                                        <th>IPs of compromised nodes</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -350,12 +350,12 @@ const EmulationTrace = (props) => {
                                         <th># Successful logins</th>
                                         <th># Open TCP connections</th>
                                         <th># User sessions</th>
-                                        <th># Block read</th>
-                                        <th># Block written</th>
+                                        <th># Blocks read</th>
+                                        <th># Blocks written</th>
                                         <th># CPU utilization %</th>
                                         <th># Memory utilization %</th>
-                                        <th># Received MB</th>
-                                        <th># Transmitted MB</th>
+                                        <th># Received MBs</th>
+                                        <th># Transmitted MBs</th>
                                         <th># PIDs</th>
                                         <th>Snort Alerts weighted by priority</th>
                                         <th># Snort Severe alerts</th>

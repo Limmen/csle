@@ -756,6 +756,17 @@ npm -v # Verify version of npm
 Listing 66: Commands to install `node.js` and `npm`.
 </p>
 
+Next install and build the web application of the management system by running the following commands:
+```bash
+cd csle/management-system/csle-mgmt-webapp
+npm install
+npm run build
+```
+
+<p class="captionFig">
+Listing 67: Commands to install the web application of the CSLE management system.
+</p>
+
 Next, install and start `pgadmin` **on the leader** by running the following commands:
 ```bash
 docker pull dpage/pgadmin4
@@ -763,7 +774,7 @@ docker run -p 7778:80 -e "PGADMIN_DEFAULT_EMAIL=user@domain.com" -e "PGADMIN_DEF
 ```
 
 <p class="captionFig">
-Listing 67: Commands to start `pgadmin`.
+Listing 68: Commands to start `pgadmin`.
 </p>
 
 Next, configure Nginx on the leader by editing the file:
@@ -772,7 +783,7 @@ Next, configure Nginx on the leader by editing the file:
 ```
 
 <p class="captionFig">
-Listing 68: Nginx configuration file.
+Listing 69: Nginx configuration file.
 </p>
 
 Replace the current configuration with the following:
@@ -805,7 +816,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 69: Content of `/etc/nginx/sites-available/default` on the leader.
+Listing 70: Content of `/etc/nginx/sites-available/default` on the leader.
 </p>
 Restart Nginx on the leader by running the command:
 
@@ -814,7 +825,7 @@ sudo service nginx restart
 ```
 
 <p class="captionFig">
-Listing 70: Command to restart Nginx.
+Listing 71: Command to restart Nginx.
 </p>
 
 If you have HTTPS enabled on the REST API and have certificates you can configure them in Nginx on the leader by editing the file:
@@ -824,7 +835,7 @@ If you have HTTPS enabled on the REST API and have certificates you can configur
 ```
 
 <p class="captionFig">
-Listing 71: Nginx configuration file.
+Listing 72: Nginx configuration file.
 </p>
 
 as follows:
@@ -864,7 +875,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 72: Contents of the file `/etc/nginx/sites-available/default` on the leader to allow HTTPS traffic to the web interface.
+Listing 73: Contents of the file `/etc/nginx/sites-available/default` on the leader to allow HTTPS traffic to the web interface.
 </p>
 
 Next, configure Nginx on the workers by editing the following file:
@@ -873,7 +884,7 @@ Next, configure Nginx on the workers by editing the following file:
 ```
 
 <p class="captionFig">
-Listing 73: Nginx configuration file.
+Listing 74: Nginx configuration file.
 </p>
 
 Open the file on each worker and replace the current configuration with the following (replace `leader-ip` with the actual ip):
@@ -903,7 +914,7 @@ server {
 ```
 
 <p class="captionFig">
-Listing 74: Content of `/etc/nginx/sites-available/default` on a worker.
+Listing 75: Content of `/etc/nginx/sites-available/default` on a worker.
 </p>
 
 Next make the Nginx log files readable by your user by running the commands:
@@ -914,7 +925,7 @@ sudo chown -R my_user /var/log/nginx
 ```
 
 <p class="captionFig">
-Listing 75: Commands to make the Nginx log files readable for a given user.
+Listing 76: Commands to make the Nginx log files readable for a given user.
 </p>
 
 Lastly, restart Nginx on each worker and on the leader by running the command:
@@ -924,7 +935,7 @@ sudo service nginx restart
 ```
 
 <p class="captionFig">
-Listing 76: Command to restart Nginx.
+Listing 77: Command to restart Nginx.
 </p>
 
 
@@ -938,7 +949,7 @@ chmod u+x install.sh
 ```
 
 <p class="captionFig">
-Listing 77: Commands to install the management system and associated tools.
+Listing 78: Commands to install the management system and associated tools.
 </p>
 
 Next, configure the IP of the leader by editing the following file on the leader:
@@ -948,7 +959,7 @@ csle/management-system/csle-mgmt-webapp/src
 ```
 
 <p class="captionFig">
-Listing 78: File to configure the IPs of servers in the management system.
+Listing 79: File to configure the IPs of servers in the management system.
 </p>
 
 Next, configure the port of the web interface on the leader by editing the file:
@@ -959,7 +970,7 @@ Next, configure the port of the web interface on the leader by editing the file:
 ```
 
 <p class="captionFig">
-Listing 79: File to configure the port of the web interface.
+Listing 80: File to configure the port of the web interface.
 </p>
 
 To start and stop the monitoring systems using the CSLE CLI, their binaries need to be added to the system path.
@@ -971,7 +982,7 @@ export PATH=/path/to/csle/management-system/prometheus/:$PATH
 ```
 
 <p class="captionFig">
-Listing 80: Line to add to `.bashrc` to add Prometheus to the path.
+Listing 81: Line to add to `.bashrc` to add Prometheus to the path.
 </p>
 
 If you have fish shell instead of bash, add the following line to the configuration file of fish:
@@ -981,7 +992,7 @@ fish_add_path /path/to/csle/management-system/prometheus/
 ```
 
 <p class="captionFig">
-Listing 81: Line to add to the configuration file of fish to add Prometheus to the path.
+Listing 82: Line to add to the configuration file of fish to add Prometheus to the path.
 </p>
 
 Similarly, to add the Node exporter binary to the path, add the following line to `.bashrc` on all nodes:
@@ -991,7 +1002,7 @@ export PATH=/path/to/csle/management-system/node_exporter/:$PATH
 ```
 
 <p class="captionFig">
-Listing 82: Line to add to `.bashrc` to add Node exporter to the path.
+Listing 83: Line to add to `.bashrc` to add Node exporter to the path.
 </p>
 
 If you have fish shell instead of bash, add the following line to the configuration file of fish:
@@ -1001,7 +1012,7 @@ fish_add_path /path/to/csle/management-system/node_exporter/
 ```
 
 <p class="captionFig">
-Listing 83: Line to add to the configuration file of fish shell to add Node exporter to the path.
+Listing 84: Line to add to the configuration file of fish shell to add Node exporter to the path.
 </p>
 
 Finally, start the csle daemons and setup the management user account with administrator privileges by running the following command on all nodes:
@@ -1010,5 +1021,5 @@ csle init
 ```
 
 <p class="captionFig">
-Listing 84: Command to setup the management user account with administrator privileges.
+Listing 85: Command to setup the management user account with administrator privileges.
 </p>

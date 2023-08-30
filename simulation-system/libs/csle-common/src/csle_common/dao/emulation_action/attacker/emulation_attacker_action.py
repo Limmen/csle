@@ -49,7 +49,7 @@ class EmulationAttackerAction(JSONSerializable):
             self.alt_cmds = []
         self.index = index
         self.backdoor = backdoor
-        self.execution_time = execution_time
+        self.execution_time = round(execution_time, 3)
         self.ts = ts
 
     def nmap_cmds(self, machine_ips: Optional[List[str]] = None) -> Tuple[List[str], List[str]]:
@@ -122,7 +122,8 @@ class EmulationAttackerAction(JSONSerializable):
         obj = EmulationAttackerAction(
             type=d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
             ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
-            backdoor=d["backdoor"], alt_cmds=d["alt_cmds"], execution_time=d["execution_time"], ts=d["ts"]
+            backdoor=d["backdoor"], alt_cmds=d["alt_cmds"],
+            execution_time=d["execution_time"], ts=d["ts"]
         )
         return obj
 
