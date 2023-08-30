@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import formatBytes from "../../Common/formatBytes";
 import {HTTP_PREFIX, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
 const ContainerImages = (props) => {
@@ -137,14 +138,14 @@ const ContainerImages = (props) => {
                         <thead>
                         <tr className="containerImagesTable">
                             <th>Name</th>
-                            <th> Size (bytes)</th>
+                            <th> Size</th>
                         </tr>
                         </thead>
                         <tbody>
                         {props.images.map((img, index) =>
                             <tr className="containerImagesTable" key={img.name + "-" + index}>
                                 <td>{img.name}</td>
-                                <td>{img.size}</td>
+                                <td>{formatBytes(img.size, 2)}</td>
                             </tr>
                         )}
                         </tbody>
