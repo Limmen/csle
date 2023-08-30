@@ -1,5 +1,5 @@
+from typing import Dict
 import numpy
-
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.action_space_config import ActionSpaceConfig
 from csle_common.dao.simulation_config.value_type import ValueType
@@ -22,7 +22,57 @@ from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.time_step_type import TimeStepType
 from csle_common.dao.simulation_config.transition_operator_config import TransitionOperatorConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
+
+
+class ExampleInputConfig(SimulationEnvInputConfig):
+    """
+    Test instance of the abstract SimulationEnvInputConfig class
+    """
+
+    def __init__(self, x: int) -> None:
+        """
+        Initializes the object
+
+        :param x: the input parameter
+        :return: None
+        """
+        self.x = x
+
+    def to_dict(self) -> Dict[str, int]:
+        """
+        Converts the object to a dict representation
+
+        :return: a dict representation of the object
+        """
+        d: Dict[str, int] = {}
+        d["x"] = self.x
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, int]) -> "ExampleInputConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ExampleInputConfig(x=d["x"])
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ExampleInputConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ExampleInputConfig.from_dict(json.loads(json_str))
 
 
 class TestSimulationConfigDaoSuite:
@@ -139,7 +189,7 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-        
+
         joint_action_space_config = JointActionSpaceConfig(
             action_spaces=[ActionSpaceConfig(actions=[Action(id=1, descr="test")], player_id=1,
                                              action_type=ValueType.INTEGER)])
@@ -312,13 +362,7 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
-        simulation_env_input_config = StoppingGameConfig(env_name="test", T=numpy.array([1, 2]), O=numpy.array([1, 3]),
-                                                         Z=numpy.array([1, 4]), R=numpy.array([2, 4]),
-                                                         S=numpy.array([6, 2]), A1=numpy.array([1, 4]),
-                                                         A2=numpy.array([1, 2]), L=numpy.array([2, 4]), R_INT=5,
-                                                         R_COST=4, R_SLA=7, R_ST=8, b1=numpy.array([0.4, 0.6]),
-                                                         save_dir="test/test", checkpoint_traces_freq=6)
+        simulation_env_input_config = ExampleInputConfig(x=5)
         observation = Observation(id=1, val=2, descr="test")
         observation_component_name_to_index = dict()
         observation_component_name_to_index["test"] = 1
@@ -363,14 +407,7 @@ class TestSimulationConfigDaoSuite:
             initial_state_distribution_config=initial_state_distribution_config,
             env_parameters_config=env_parameters_config
         )
-
         assert isinstance(simulation_env_config.to_dict(), dict)
-        assert isinstance(SimulationEnvConfig.from_dict(simulation_env_config.to_dict()),
-                          SimulationEnvConfig)
-        assert (SimulationEnvConfig.from_dict(simulation_env_config.to_dict()).to_dict() ==
-                simulation_env_config.to_dict())
-        assert (SimulationEnvConfig.from_dict(simulation_env_config.to_dict()) ==
-                simulation_env_config)
 
     def test_simulation_env_input_config(self) -> None:
         """
@@ -379,19 +416,14 @@ class TestSimulationConfigDaoSuite:
         :return: None
         """
 
-        simulation_env_input_config = StoppingGameConfig(env_name="test", T=numpy.array([1, 2]), O=numpy.array([1, 3]),
-                                                         Z=numpy.array([1, 4]), R=numpy.array([2, 4]),
-                                                         S=numpy.array([6, 2]), A1=numpy.array([1, 4]),
-                                                         A2=numpy.array([1, 2]), L=numpy.array([2, 4]), R_INT=5,
-                                                         R_COST=4, R_SLA=7, R_ST=8, b1=numpy.array([0.4, 0.6]),
-                                                         save_dir="test/test", checkpoint_traces_freq=6)
+        simulation_env_input_config = ExampleInputConfig(x=5)
 
         assert isinstance(simulation_env_input_config.to_dict(), dict)
-        assert isinstance(StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()),
-                          StoppingGameConfig)
-        assert (StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()).to_dict() ==
+        assert isinstance(ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()),
+                          ExampleInputConfig)
+        assert (ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()).to_dict() ==
                 simulation_env_input_config.to_dict())
-        assert (StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()) ==
+        assert (ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()) ==
                 simulation_env_input_config)
 
     def test_simulation_trace(self) -> None:

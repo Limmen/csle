@@ -1,5 +1,6 @@
 from typing import Any, List, Tuple
 import pytest
+import pytest_mock
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_cluster.cluster_manager.cluster_manager_pb2 import EmulationMetricsTimeSeriesDTO
 from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
@@ -66,7 +67,6 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import ClientManagersInfoD
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_collector.traffic_manager.traffic_manager_pb2 import TrafficDTO
 from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
-import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import GetNumClientsDTO
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
