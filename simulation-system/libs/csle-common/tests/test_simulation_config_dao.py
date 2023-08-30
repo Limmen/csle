@@ -1,3 +1,5 @@
+import numpy
+
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.action_space_config import ActionSpaceConfig
 from csle_common.dao.simulation_config.value_type import ValueType
@@ -9,6 +11,7 @@ from csle_common.dao.simulation_config.joint_action_space_config import JointAct
 from csle_common.dao.simulation_config.joint_observation_space_config import JointObservationSpaceConfig
 from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
 from csle_common.dao.simulation_config.observation import Observation
+from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
 
 
 class TestSimulationConfigDaoSuite:
@@ -187,3 +190,24 @@ class TestSimulationConfigDaoSuite:
                 observation.to_dict())
         assert (Observation.from_dict(observation.to_dict()) ==
                 observation)
+
+    def test_observation_function_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ObservationFunctionConfig DAO
+
+        :return: None
+        """
+
+        observation_tensor = numpy.array([1, 2, 3])
+        component_observation_tensors = dict()
+        component_observation_tensors["test"] = numpy.array([1, 2, 3])
+        observation_function_config = ObservationFunctionConfig(
+            observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
+
+        assert isinstance(observation_function_config.to_dict(), dict)
+        assert isinstance(ObservationFunctionConfig.from_dict(observation_function_config.to_dict()),
+                          ObservationFunctionConfig)
+        assert (ObservationFunctionConfig.from_dict(observation_function_config.to_dict()).to_dict() ==
+                observation_function_config.to_dict())
+        assert (ObservationFunctionConfig.from_dict(observation_function_config.to_dict()) ==
+                observation_function_config)
