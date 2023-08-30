@@ -170,3 +170,20 @@ class TestSimulationConfigDaoSuite:
                 joint_observation_space_config.to_dict())
         assert (JointObservationSpaceConfig.from_dict(joint_observation_space_config.to_dict()) ==
                 joint_observation_space_config)
+
+    def test_observation(self) -> None:
+        """
+        Tests creation and dict conversion of the Observation DAO
+
+        :return: None
+        """
+
+        observation = Observation(id=1, val=2, descr="test")
+
+        assert isinstance(observation.to_dict(), dict)
+        assert isinstance(Observation.from_dict(observation.to_dict()),
+                          Observation)
+        assert (Observation.from_dict(observation.to_dict()).to_dict() ==
+                observation.to_dict())
+        assert (Observation.from_dict(observation.to_dict()) ==
+                observation)
