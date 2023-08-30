@@ -21,6 +21,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.time_step_type import TimeStepType
 from csle_common.dao.simulation_config.transition_operator_config import TransitionOperatorConfig
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
@@ -392,3 +393,20 @@ class TestSimulationConfigDaoSuite:
                 simulation_env_input_config.to_dict())
         assert (StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()) ==
                 simulation_env_input_config)
+
+    def test_simulation_trace(self) -> None:
+        """
+        Tests creation and dict conversion of the SimulationTrace DAO
+
+        :return: None
+        """
+
+        simulation_trace = SimulationTrace(simulation_env="test")
+
+        assert isinstance(simulation_trace.to_dict(), dict)
+        assert isinstance(SimulationTrace.from_dict(simulation_trace.to_dict()),
+                          SimulationTrace)
+        assert (SimulationTrace.from_dict(simulation_trace.to_dict()).to_dict() ==
+                simulation_trace.to_dict())
+        assert (SimulationTrace.from_dict(simulation_trace.to_dict()) ==
+                simulation_trace)
