@@ -370,3 +370,25 @@ class TestSimulationConfigDaoSuite:
                 simulation_env_config.to_dict())
         assert (SimulationEnvConfig.from_dict(simulation_env_config.to_dict()) ==
                 simulation_env_config)
+
+    def test_simulation_env_input_config(self) -> None:
+        """
+        Tests creation and dict conversion of the SimulationEnvInputConfig DAO
+
+        :return: None
+        """
+
+        simulation_env_input_config = StoppingGameConfig(env_name="test", T=numpy.array([1, 2]), O=numpy.array([1, 3]),
+                                                         Z=numpy.array([1, 4]), R=numpy.array([2, 4]),
+                                                         S=numpy.array([6, 2]), A1=numpy.array([1, 4]),
+                                                         A2=numpy.array([1, 2]), L=numpy.array([2, 4]), R_INT=5,
+                                                         R_COST=4, R_SLA=7, R_ST=8, b1=numpy.array([0.4, 0.6]),
+                                                         save_dir="test/test", checkpoint_traces_freq=6)
+
+        assert isinstance(simulation_env_input_config.to_dict(), dict)
+        assert isinstance(StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()),
+                          StoppingGameConfig)
+        assert (StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()).to_dict() ==
+                simulation_env_input_config.to_dict())
+        assert (StoppingGameConfig.from_dict(simulation_env_input_config.to_dict()) ==
+                simulation_env_input_config)
