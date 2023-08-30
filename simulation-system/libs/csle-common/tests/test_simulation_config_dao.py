@@ -14,6 +14,7 @@ from csle_common.dao.simulation_config.observation import Observation
 from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
 from csle_common.dao.simulation_config.player_config import PlayerConfig
 from csle_common.dao.simulation_config.players_config import PlayersConfig
+from csle_common.dao.simulation_config.reward_function_config import RewardFunctionConfig
 
 
 class TestSimulationConfigDaoSuite:
@@ -279,3 +280,20 @@ class TestSimulationConfigDaoSuite:
                 players_config.to_dict())
         assert (PlayersConfig.from_dict(players_config.to_dict()) ==
                 players_config)
+
+    def test_reward_function_config(self) -> None:
+        """
+        Tests creation and dict conversion of the RewardFunctionConfig DAO
+
+        :return: None
+        """
+
+        reward_function_config = RewardFunctionConfig(reward_tensor=numpy.array([1, 3, 7]))
+
+        assert isinstance(reward_function_config.to_dict(), dict)
+        assert isinstance(RewardFunctionConfig.from_dict(reward_function_config.to_dict()),
+                          RewardFunctionConfig)
+        assert (RewardFunctionConfig.from_dict(reward_function_config.to_dict()).to_dict() ==
+                reward_function_config.to_dict())
+        assert (RewardFunctionConfig.from_dict(reward_function_config.to_dict()) ==
+                reward_function_config)
