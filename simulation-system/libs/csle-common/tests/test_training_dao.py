@@ -12,6 +12,9 @@ from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolic
 from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
+from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
+from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
 from csle_common.dao.training.hparam import HParam
 
 
@@ -231,3 +234,76 @@ class TestTrainingDaoSuite:
                 linear_threshold_stopping_policy.to_dict())
         assert (LinearThresholdStoppingPolicy.from_dict(linear_threshold_stopping_policy.to_dict()) ==
                 linear_threshold_stopping_policy)
+
+    def test_mixed_linear_tabular(self) -> None:
+        """
+        Tests creation and dict conversion of the MixedLinearTabularPolicy DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        actions = Action(id=1, descr="test")
+        mixed_linear_tabular_policy = MixedLinearTabularPolicy(
+            simulation_name="test", player_type=PlayerType.DEFENDER, states=[states],
+            actions=[actions], experiment_config=experiment_config, avg_R=0.9)
+
+        assert isinstance(mixed_linear_tabular_policy.to_dict(), dict)
+        assert isinstance(MixedLinearTabularPolicy.from_dict(mixed_linear_tabular_policy.to_dict()),
+                          MixedLinearTabularPolicy)
+        assert (MixedLinearTabularPolicy.from_dict(mixed_linear_tabular_policy.to_dict()).to_dict() ==
+                mixed_linear_tabular_policy.to_dict())
+        assert (MixedLinearTabularPolicy.from_dict(mixed_linear_tabular_policy.to_dict()) ==
+                mixed_linear_tabular_policy)
+
+    def mixed_multi_threshold_stopping_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the MixedMultiThresholdStoppingPolicy DAO
+
+        :return: None
+        """
+
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        actions = Action(id=1, descr="test")
+        mixed_multi_threshold_stopping_policy = MixedMultiThresholdStoppingPolicy(
+            defender_Theta=[[[1.5]]], attacker_Theta=[[[[6.5]]]], simulation_name="test", L=1, states=[states],
+            player_type=PlayerType.DEFENDER, actions=[actions], experiment_config=None, avg_R=0.9,
+            agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
+
+        assert isinstance(mixed_multi_threshold_stopping_policy.to_dict(), dict)
+        assert isinstance(MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()),
+                          MixedMultiThresholdStoppingPolicy)
+        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()).to_dict()
+                == mixed_multi_threshold_stopping_policy.to_dict())
+        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()) ==
+                mixed_multi_threshold_stopping_policy)
+
+    def mixed_ppo_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the MixedPPOPolicy DAO
+
+        :return: None
+        """
+
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        actions = Action(id=1, descr="test")
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+        mixed_ppo_policy = MixedPPOPolicy(simulation_name="test", player_type=PlayerType.DEFENDER, states=[states],
+                                          actions=[actions], experiment_config=experiment_config, avg_R=0.8)
+
+        assert isinstance(mixed_ppo_policy.to_dict(), dict)
+        assert isinstance(MixedPPOPolicy.from_dict(mixed_ppo_policy.to_dict()),
+                          MixedPPOPolicy)
+        assert (MixedPPOPolicy.from_dict(mixed_ppo_policy.to_dict()).to_dict()
+                == mixed_ppo_policy.to_dict())
+        assert (MixedPPOPolicy.from_dict(mixed_ppo_policy.to_dict()) ==
+                mixed_ppo_policy)
