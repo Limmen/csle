@@ -205,3 +205,29 @@ class TestTrainingDaoSuite:
                 linear_tabular_policy.to_dict())
         assert (LinearTabularPolicy.from_dict(linear_tabular_policy.to_dict()) ==
                 linear_tabular_policy)
+
+    def test_linear_threshold_stopping_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the LinearThresholdStoppingPolicy DAO
+
+        :return: None
+        """
+
+        actions = Action(id=1, descr="test")
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+        linear_threshold_stopping_policy = LinearThresholdStoppingPolicy(
+            [0.1], simulation_name="test", L=1, states=[states], player_type=PlayerType.SELF_PLAY,
+            actions=[actions], experiment_config=experiment_config, avg_R=0.2, agent_type=AgentType.RANDOM)
+
+        assert isinstance(linear_threshold_stopping_policy.to_dict(), dict)
+        assert isinstance(LinearThresholdStoppingPolicy.from_dict(linear_threshold_stopping_policy.to_dict()),
+                          LinearThresholdStoppingPolicy)
+        assert (LinearThresholdStoppingPolicy.from_dict(linear_threshold_stopping_policy.to_dict()).to_dict() ==
+                linear_threshold_stopping_policy.to_dict())
+        assert (LinearThresholdStoppingPolicy.from_dict(linear_threshold_stopping_policy.to_dict()) ==
+                linear_threshold_stopping_policy)
