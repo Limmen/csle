@@ -6,6 +6,8 @@ from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.hparam import HParam
 
 
@@ -81,3 +83,27 @@ class TestTrainingDaoSuite:
                 experiment_config.to_dict())
         assert (ExperimentConfig.from_dict(experiment_config.to_dict()) ==
                 experiment_config)
+
+    def test_experiment_execution(self) -> None:
+        """
+        Tests creation and dict conversion of the ExperimentExecution DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+        experiment_execution = ExperimentExecution(
+            config=experiment_config, result=ExperimentResult(), timestamp=10.10, emulation_name="test",
+            simulation_name="test1", descr="test2", log_file_path="test/test")
+
+        assert isinstance(experiment_execution.to_dict(), dict)
+        assert isinstance(ExperimentExecution.from_dict(experiment_execution.to_dict()),
+                          ExperimentExecution)
+        assert (ExperimentExecution.from_dict(experiment_execution.to_dict()).to_dict() ==
+                experiment_execution.to_dict())
+        assert (ExperimentExecution.from_dict(experiment_execution.to_dict()) ==
+                experiment_execution)
