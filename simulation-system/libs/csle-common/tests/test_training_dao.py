@@ -60,3 +60,24 @@ class TestTrainingDaoSuite:
                 dqn_policy.to_dict())
         assert (DQNPolicy.from_dict(dqn_policy.to_dict()) ==
                 dqn_policy)
+
+    def test_experiment_config(self) -> None:
+        """
+        Tests creation and dict conversion of the ExperimentConfig DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+
+        assert isinstance(experiment_config.to_dict(), dict)
+        assert isinstance(ExperimentConfig.from_dict(experiment_config.to_dict()),
+                          ExperimentConfig)
+        assert (ExperimentConfig.from_dict(experiment_config.to_dict()).to_dict() ==
+                experiment_config.to_dict())
+        assert (ExperimentConfig.from_dict(experiment_config.to_dict()) ==
+                experiment_config)
