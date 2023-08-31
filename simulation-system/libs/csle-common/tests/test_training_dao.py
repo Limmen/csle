@@ -107,3 +107,20 @@ class TestTrainingDaoSuite:
                 experiment_execution.to_dict())
         assert (ExperimentExecution.from_dict(experiment_execution.to_dict()) ==
                 experiment_execution)
+
+    def test_experiment_result(self) -> None:
+        """
+        Tests creation and dict conversion of the ExperimentResult DAO
+
+        :return: None
+        """
+
+        experiment_result = ExperimentResult()
+
+        assert isinstance(experiment_result.to_dict(), dict)
+        assert isinstance(ExperimentResult.from_dict(experiment_result.to_dict()),
+                          ExperimentResult)
+        assert (ExperimentResult.from_dict(experiment_result.to_dict()).to_dict() ==
+                experiment_result.to_dict())
+        assert (ExperimentResult.from_dict(experiment_result.to_dict()) ==
+                experiment_result)
