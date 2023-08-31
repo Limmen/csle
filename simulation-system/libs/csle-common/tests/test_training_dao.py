@@ -13,6 +13,7 @@ from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
+from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.hparam import HParam
 
 
@@ -258,3 +259,25 @@ class TestTrainingDaoSuite:
                 mixed_linear_tabular_policy.to_dict())
         assert (MixedLinearTabularPolicy.from_dict(mixed_linear_tabular_policy.to_dict()) ==
                 mixed_linear_tabular_policy)
+
+    def mixed_multi_threshold_stopping_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the MixedMultiThresholdStoppingPolicy DAO
+
+        :return: None
+        """
+
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        actions = Action(id=1, descr="test")
+        mixed_multi_threshold_stopping_policy = MixedMultiThresholdStoppingPolicy(
+            defender_Theta=[[[1.5]]], attacker_Theta=[[[[6.5]]]], simulation_name="test", L=1, states=[states],
+            player_type=PlayerType.DEFENDER, actions=[actions], experiment_config=None, avg_R=0.9,
+            agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
+
+        assert isinstance(mixed_multi_threshold_stopping_policy.to_dict(), dict)
+        assert isinstance(MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()),
+                          MixedMultiThresholdStoppingPolicy)
+        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()).to_dict()
+                == mixed_multi_threshold_stopping_policy.to_dict())
+        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()) ==
+                mixed_multi_threshold_stopping_policy)
