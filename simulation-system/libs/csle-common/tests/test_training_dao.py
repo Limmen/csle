@@ -4,6 +4,9 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.dqn_policy import DQNPolicy
+from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.hparam import HParam
 
 
 class TestTrainingDaoSuite:
@@ -31,3 +34,29 @@ class TestTrainingDaoSuite:
                 alpha_vectors_policy.to_dict())
         assert (AlphaVectorsPolicy.from_dict(alpha_vectors_policy.to_dict()) ==
                 alpha_vectors_policy)
+
+    def test_dqn_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the DQNPolicy DAO
+
+        :return: None
+        """
+
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2, 3], agent_type=AgentType.RANDOM, hparams=hparams,
+            log_every=10, player_type=PlayerType.ATTACKER, player_idx=0)
+        actions = Action(id=1, descr="test")
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        dqn_policy = DQNPolicy(model=None, simulation_name="test", save_path="test/test",
+                               player_type=PlayerType.ATTACKER, states=[states], actions=[actions], avg_R=0.6,
+                               experiment_config=experiment_config)
+
+        assert isinstance(dqn_policy.to_dict(), dict)
+        assert isinstance(DQNPolicy.from_dict(dqn_policy.to_dict()),
+                          DQNPolicy)
+        assert (DQNPolicy.from_dict(dqn_policy.to_dict()).to_dict() ==
+                dqn_policy.to_dict())
+        assert (DQNPolicy.from_dict(dqn_policy.to_dict()) ==
+                dqn_policy)
