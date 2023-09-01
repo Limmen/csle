@@ -15,6 +15,8 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
 from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.training.hparam import HParam
 
 
@@ -312,3 +314,60 @@ class TestTrainingDaoSuite:
                 == ppo_policy.to_dict())
         assert (PPOPolicy.from_dict(ppo_policy.to_dict()) ==
                 ppo_policy)
+
+    def test_random_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the RandomPolicy DAO
+
+        :return: None
+        """
+
+        actions = Action(id=1, descr="test")
+
+        random_policy = RandomPolicy(player_type=PlayerType.DEFENDER, actions=[actions], stage_policy_tensor=None)
+
+        assert isinstance(random_policy.to_dict(), dict)
+        assert isinstance(RandomPolicy.from_dict(random_policy.to_dict()),
+                          RandomPolicy)
+        assert (RandomPolicy.from_dict(random_policy.to_dict()).to_dict()
+                == random_policy.to_dict())
+        assert (RandomPolicy.from_dict(random_policy.to_dict()) ==
+                random_policy)
+
+    def test_tabular_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the TabularPolicy DAO
+
+        :return: None
+        """
+
+        actions = Action(id=1, descr="test")
+        tabular_policy = TabularPolicy(player_type=PlayerType.DEFENDER, actions=[actions], lookup_table=[[1.4]],
+                                       simulation_name="test", avg_R=8.1, agent_type=AgentType.SONDIK_VALUE_ITERATION)
+
+        assert isinstance(tabular_policy.to_dict(), dict)
+        assert isinstance(TabularPolicy.from_dict(tabular_policy.to_dict()),
+                          TabularPolicy)
+        assert (TabularPolicy.from_dict(tabular_policy.to_dict()).to_dict()
+                == tabular_policy.to_dict())
+        assert (TabularPolicy.from_dict(tabular_policy.to_dict()) ==
+                tabular_policy)
+
+    def test_vector_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the VectorPolicy DAO
+
+        :return: None
+        """
+
+        vector_policy = VectorPolicy(player_type=PlayerType.DEFENDER, actions=[1, 3], policy_vector=[2.3],
+                                     agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM, simulation_name="test",
+                                     avg_R=0.4)
+
+        assert isinstance(vector_policy.to_dict(), dict)
+        assert isinstance(VectorPolicy.from_dict(vector_policy.to_dict()),
+                          VectorPolicy)
+        assert (VectorPolicy.from_dict(vector_policy.to_dict()).to_dict()
+                == vector_policy.to_dict())
+        assert (VectorPolicy.from_dict(vector_policy.to_dict()) ==
+                vector_policy)
