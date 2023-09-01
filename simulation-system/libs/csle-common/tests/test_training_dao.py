@@ -15,6 +15,7 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
+from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.hparam import HParam
 
 
@@ -307,3 +308,20 @@ class TestTrainingDaoSuite:
                 == mixed_ppo_policy.to_dict())
         assert (MixedPPOPolicy.from_dict(mixed_ppo_policy.to_dict()) ==
                 mixed_ppo_policy)
+
+    def mixed_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the Policy DAO
+
+        :return: None
+        """
+
+        policy = Policy(player_type=PlayerType.DEFENDER, agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
+
+        assert isinstance(policy.to_dict(), dict)
+        assert isinstance(Policy.from_dict(policy.to_dict()),
+                          Policy)
+        assert (policy.from_dict(policy.to_dict()).to_dict()
+                == policy.to_dict())
+        assert (policy.from_dict(policy.to_dict()) ==
+                policy)
