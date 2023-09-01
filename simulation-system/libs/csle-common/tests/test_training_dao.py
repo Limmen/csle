@@ -13,8 +13,10 @@ from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
-from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
+from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.training.hparam import HParam
 
 
@@ -261,29 +263,7 @@ class TestTrainingDaoSuite:
         assert (MixedLinearTabularPolicy.from_dict(mixed_linear_tabular_policy.to_dict()) ==
                 mixed_linear_tabular_policy)
 
-    def mixed_multi_threshold_stopping_policy(self) -> None:
-        """
-        Tests creation and dict conversion of the MixedMultiThresholdStoppingPolicy DAO
-
-        :return: None
-        """
-
-        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
-        actions = Action(id=1, descr="test")
-        mixed_multi_threshold_stopping_policy = MixedMultiThresholdStoppingPolicy(
-            defender_Theta=[[[1.5]]], attacker_Theta=[[[[6.5]]]], simulation_name="test", L=1, states=[states],
-            player_type=PlayerType.DEFENDER, actions=[actions], experiment_config=None, avg_R=0.9,
-            agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
-
-        assert isinstance(mixed_multi_threshold_stopping_policy.to_dict(), dict)
-        assert isinstance(MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()),
-                          MixedMultiThresholdStoppingPolicy)
-        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()).to_dict()
-                == mixed_multi_threshold_stopping_policy.to_dict())
-        assert (MixedMultiThresholdStoppingPolicy.from_dict(mixed_multi_threshold_stopping_policy.to_dict()) ==
-                mixed_multi_threshold_stopping_policy)
-
-    def mixed_ppo_policy(self) -> None:
+    def test_mixed_ppo_policy(self) -> None:
         """
         Tests creation and dict conversion of the MixedPPOPolicy DAO
 
@@ -307,3 +287,87 @@ class TestTrainingDaoSuite:
                 == mixed_ppo_policy.to_dict())
         assert (MixedPPOPolicy.from_dict(mixed_ppo_policy.to_dict()) ==
                 mixed_ppo_policy)
+
+    def test_ppo_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the PPOPolicy DAO
+
+        :return: None
+        """
+
+        states = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+        actions = Action(id=1, descr="test")
+        hparams = dict()
+        hparams["test"] = HParam(value=1, name="test", descr="test")
+        experiment_config = ExperimentConfig(
+            output_dir="test", title="test2", random_seeds=[1, 2], agent_type=AgentType.HSVI, hparams=hparams,
+            log_every=10, player_type=PlayerType.DEFENDER, player_idx=12)
+
+        ppo_policy = PPOPolicy(
+            model=None, simulation_name="test", save_path="test/test", player_type=PlayerType.DEFENDER, states=[states],
+            actions=[actions], experiment_config=experiment_config, avg_R=10)
+
+        assert isinstance(ppo_policy.to_dict(), dict)
+        assert isinstance(PPOPolicy.from_dict(ppo_policy.to_dict()),
+                          PPOPolicy)
+        assert (PPOPolicy.from_dict(ppo_policy.to_dict()).to_dict()
+                == ppo_policy.to_dict())
+        assert (PPOPolicy.from_dict(ppo_policy.to_dict()) ==
+                ppo_policy)
+
+    def test_random_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the RandomPolicy DAO
+
+        :return: None
+        """
+
+        actions = Action(id=1, descr="test")
+
+        random_policy = RandomPolicy(player_type=PlayerType.DEFENDER, actions=[actions], stage_policy_tensor=None)
+
+        assert isinstance(random_policy.to_dict(), dict)
+        assert isinstance(RandomPolicy.from_dict(random_policy.to_dict()),
+                          RandomPolicy)
+        assert (RandomPolicy.from_dict(random_policy.to_dict()).to_dict()
+                == random_policy.to_dict())
+        assert (RandomPolicy.from_dict(random_policy.to_dict()) ==
+                random_policy)
+
+    def test_tabular_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the TabularPolicy DAO
+
+        :return: None
+        """
+
+        actions = Action(id=1, descr="test")
+        tabular_policy = TabularPolicy(player_type=PlayerType.DEFENDER, actions=[actions], lookup_table=[[1.4]],
+                                       simulation_name="test", avg_R=8.1, agent_type=AgentType.SONDIK_VALUE_ITERATION)
+
+        assert isinstance(tabular_policy.to_dict(), dict)
+        assert isinstance(TabularPolicy.from_dict(tabular_policy.to_dict()),
+                          TabularPolicy)
+        assert (TabularPolicy.from_dict(tabular_policy.to_dict()).to_dict()
+                == tabular_policy.to_dict())
+        assert (TabularPolicy.from_dict(tabular_policy.to_dict()) ==
+                tabular_policy)
+
+    def test_vector_policy(self) -> None:
+        """
+        Tests creation and dict conversion of the VectorPolicy DAO
+
+        :return: None
+        """
+
+        vector_policy = VectorPolicy(player_type=PlayerType.DEFENDER, actions=[1, 3], policy_vector=[2.3],
+                                     agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM, simulation_name="test",
+                                     avg_R=0.4)
+
+        assert isinstance(vector_policy.to_dict(), dict)
+        assert isinstance(VectorPolicy.from_dict(vector_policy.to_dict()),
+                          VectorPolicy)
+        assert (VectorPolicy.from_dict(vector_policy.to_dict()).to_dict()
+                == vector_policy.to_dict())
+        assert (VectorPolicy.from_dict(vector_policy.to_dict()) ==
+                vector_policy)
