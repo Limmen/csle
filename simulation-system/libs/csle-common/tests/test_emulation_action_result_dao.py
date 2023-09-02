@@ -1,18 +1,14 @@
 from csle_common.dao.emulation_action_result.nikto_scan_result import NiktoScanResult
 from csle_common.dao.emulation_action_result.nikto_vuln import NiktoVuln
 from csle_common.dao.emulation_action_result.nmap_brute_credentials import NmapBruteCredentials
-from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_action_result.nmap_hop import NmapHop
 from csle_common.dao.emulation_action_result.nmap_http_enum import NmapHttpEnum
 from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_os import NmapOs
 from csle_common.dao.emulation_action_result.nmap_port import NmapPort
-from csle_common.dao.emulation_action_result.nmap_port_status import NmapPortStatus
-from csle_common.dao.emulation_action_result.nmap_host_status import NmapHostStatus
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
 from csle_common.dao.emulation_action_result.nmap_vuln import NmapVuln
-from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_action_result.nmap_host_result import NmapHostResult
 from csle_common.dao.emulation_action_result.nmap_scan_result import NmapScanResult
 
@@ -26,7 +22,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NiktoVuln DAO
 
-        :param example_nikto_vuln: an example DAO
+        :param example_nikto_vuln: an example NiktoVuln
         :return: None
         """
         assert isinstance(example_nikto_vuln.to_dict(), dict)
@@ -38,7 +34,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NiktoScanResult DAO
 
-        :param example_nikto_scan_result: an example DAO
+        :param example_nikto_scan_result: an example NiktoScanResult
         :return: None
         """
         assert isinstance(example_nikto_scan_result.to_dict(), dict)
@@ -51,7 +47,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapBruteCredentials DAO
 
-        :param example_nmap_brute_credentials: an example DAO
+        :param example_nmap_brute_credentials: an example NmapBruteCredentials
         :return: None
         """
         assert isinstance(example_nmap_brute_credentials.to_dict(), dict)
@@ -66,7 +62,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapHop DAO
 
-        :param example_nmap_hop: an example DAO
+        :param example_nmap_hop: an example NmapHop
         :return: None
         """
         assert isinstance(example_nmap_hop.to_dict(), dict)
@@ -78,7 +74,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapHttpEnum DAO
 
-        :param example_nmap_http_enum: an example DAO
+        :param example_nmap_http_enum: an example NmapHttpEnum
         :return: None
         """
         assert isinstance(example_nmap_http_enum.to_dict(), dict)
@@ -90,7 +86,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapHTTPGrep DAO
 
-        :param example_nmap_http_grep: an example DAO
+        :param example_nmap_http_grep: an example NmapHttpGrep
         :return: None
         """
         assert isinstance(example_nmap_http_grep.to_dict(), dict)
@@ -102,7 +98,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapVulScan DAO
 
-        :param example_nmap_vulscan: an example DAO
+        :param example_nmap_vulscan: an example NmapVulscan
         :return: None
         """
         assert isinstance(example_nmap_vulscan.to_dict(), dict)
@@ -114,7 +110,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapHTTPGrep DAO
 
-        :param example_nmap_os: an example DAO
+        :param example_nmap_os: an example NmapOs
         :return: None
         """
         assert isinstance(example_nmap_os.to_dict(), dict)
@@ -126,7 +122,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapPort DAO
 
-        :param example_nmap_port: an example DAO
+        :param example_nmap_port: an example NmapPort
         :return: None
         """
         assert isinstance(example_nmap_port.to_dict(), dict)
@@ -138,7 +134,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapTrace DAO
 
-        :param example_nmap_trace: an example DAO
+        :param example_nmap_trace: an example NmapTrace
         :return: None
         """
         assert isinstance(example_nmap_trace.to_dict(), dict)
@@ -150,7 +146,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapVuln DAO
 
-        :param example_nmap_vuln: an example DAO
+        :param example_nmap_vuln: an example NmapVuln
         :return: None
         """
         assert isinstance(example_nmap_vuln.to_dict(), dict)
@@ -162,7 +158,7 @@ class TestEmulationActionResultDaoSuite:
         """
         Tests creation and dict conversion of the NmapHostResult
 
-        :param example_nmap_host_result: an example DAO
+        :param example_nmap_host_result: an example NmapHostResult
         :return: None
         """
         assert isinstance(example_nmap_host_result.to_dict(), dict)

@@ -11,7 +11,7 @@ class TestDatasetsDaoSuite:
         """
         Tests creation and dict conversion of the TracesDataset DAO
 
-        :param test_traces_dataset: an example DAO
+        :param test_traces_dataset: an example TracesDataset
         :return: None
         """
         assert isinstance(example_traces_dataset.to_dict(), dict)
@@ -23,7 +23,7 @@ class TestDatasetsDaoSuite:
         """
         Tests creation and dict conversion of the StatisticsDataset DAO
 
-        :param example_statistics_dataset: an example DAO
+        :param example_statistics_dataset: an example StatisticsDataset
         :return: None
         """
         assert isinstance(example_statistics_dataset.to_dict(), dict)

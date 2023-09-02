@@ -11,7 +11,7 @@ class TestDockerDaoSuite:
         """
         Tests creation and dict conversion of the DockerContainerMetadata DAO
 
-        :param example_docker_container_metadata: an example DAO
+        :param example_docker_container_metadata: an example DockerContainerMetadata
         :return: None
         """
         assert isinstance(example_docker_container_metadata.to_dict(), dict)
@@ -26,7 +26,7 @@ class TestDockerDaoSuite:
         """
         Tests creation and dict conversion of the DockerEnvMetadata DAO
 
-        :param example_docker_env_metadata: an example DAO
+        :param example_docker_env_metadata: an example DockerEnvMetadata
         :return: None
         """
         assert isinstance(example_docker_env_metadata.to_dict(), dict)

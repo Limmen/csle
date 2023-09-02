@@ -13,7 +13,7 @@ class TestEmulationActionDaoSuite:
         """
         Tests creation and dict conversion of the EmulationAttackerAction DAO
 
-        :param example_emulation_attacker_action: an example DAO
+        :param example_emulation_attacker_action: an example EmulationAttackerAction
         :return: None
         """
         assert isinstance(example_emulation_attacker_action.to_dict(), dict)
@@ -29,7 +29,7 @@ class TestEmulationActionDaoSuite:
         """
         Tests creation and dict conversion of the EmulationAttackerActionConfig DAO
 
-        :param example_emulation_attacker_action: an example DAO
+        :param example_emulation_attacker_action: an example EmulationAttackerActionConfig
         :return: None
         """
         assert isinstance(example_emulation_attacker_action_config.to_dict(), dict)
@@ -44,7 +44,7 @@ class TestEmulationActionDaoSuite:
         """
         Tests creation and dict conversion of the EmulationDefenderAction DAO
 
-        :param example_emulation_defender_action: an example DAO
+        :param example_emulation_defender_action: an example EmulationDefenderAction
         :return: None
         """
         assert isinstance(example_emulation_defender_action.to_dict(), dict)
@@ -60,7 +60,7 @@ class TestEmulationActionDaoSuite:
         """
         Tests creation and dict conversion of the EmulationDefenderActionConfig DAO
 
-        :param example_emulation_defender_action_config: an example DAO
+        :param example_emulation_defender_action_config: an example EmulationDefenderActionConfig
         :return: None
         """
         assert isinstance(example_emulation_defender_action_config.to_dict(), dict)
