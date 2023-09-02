@@ -18,7 +18,7 @@ class MultiThresholdStoppingPolicy(Policy):
     A multi-threshold stopping policy
     """
 
-    def __init__(self, theta, simulation_name: str, L: int, states: List[State], player_type: PlayerType,
+    def __init__(self, theta: List[float], simulation_name: str, L: int, states: List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
                  agent_type: AgentType, opponent_strategy: Optional["MultiThresholdStoppingPolicy"] = None):
         """

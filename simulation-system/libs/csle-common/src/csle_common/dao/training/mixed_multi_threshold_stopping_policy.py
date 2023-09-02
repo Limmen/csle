@@ -323,3 +323,19 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Compares equality with another object
+
+        :param other: the object to compare with
+        :return: True if equals, False otherwise
+        """
+        if not isinstance(other, MixedMultiThresholdStoppingPolicy):
+            return False
+        else:
+            d1 = self.to_dict()
+            d2 = other.to_dict()
+            del d1["Theta"]
+            del d2["Theta"]
+            return d1 == d2

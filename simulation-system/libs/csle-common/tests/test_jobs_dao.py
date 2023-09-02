@@ -47,9 +47,7 @@ class TestJobsDaoSuite:
 
         :return: None
         """
-
         ips = ["10.10.10.10", "20.20.20.20"]
-
         container_network = ContainerNetwork(name="test1", subnet_mask="0.0.0.0",
                                              bitmask="0.0.0.0", subnet_prefix="0.0.0.0")
         ips_and_networks = [("container_network_test", container_network)]
@@ -58,7 +56,6 @@ class TestJobsDaoSuite:
         ips_and_network_configs = [("test2", NodeNetworkConfig())]
         resources = NodeResourcesConfig(container_name="test1", num_cpus=1,
                                         available_memory_gb=100, ips_and_network_configs=ips_and_network_configs)
-
         default_network_firewall_config = DefaultNetworkFirewallConfig(ip="1.1.1.1",
                                                                        default_gw="2.3.3.4",
                                                                        default_input="test",
@@ -126,10 +123,8 @@ class TestJobsDaoSuite:
 
         :return: None
         """
-
         hparams = dict()
         hparams["test"] = HParam(value=1, name="test", descr="test")
-
         system_identification_config = SystemIdentificationConfig(
             model_type=SystemModelType.GAUSSIAN_MIXTURE, hparams=hparams,
             output_dir="test/test", title="test", log_every=10)
@@ -155,7 +150,6 @@ class TestJobsDaoSuite:
 
         :return: None
         """
-
         hparams = dict()
         hparams["test"] = HParam(value=1, name="test", descr="test")
         experiment_config = ExperimentConfig(output_dir="test/test", title="test1", random_seeds=[1],

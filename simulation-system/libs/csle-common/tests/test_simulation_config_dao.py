@@ -90,12 +90,9 @@ class TestSimulationConfigDaoSuite:
         action = Action(id=1, descr="test")
 
         assert isinstance(action.to_dict(), dict)
-        assert isinstance(Action.from_dict(action.to_dict()),
-                          Action)
-        assert (Action.from_dict(action.to_dict()).to_dict() ==
-                action.to_dict())
-        assert (Action.from_dict(action.to_dict()) ==
-                action)
+        assert isinstance(Action.from_dict(action.to_dict()), Action)
+        assert Action.from_dict(action.to_dict()).to_dict() == action.to_dict()
+        assert Action.from_dict(action.to_dict()) == action
 
     def test_action_space_config(self) -> None:
         """
@@ -103,17 +100,13 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         action_space_config = ActionSpaceConfig(actions=[Action(id=1, descr="test")],
                                                 player_id=1, action_type=ValueType.INTEGER)
-
         assert isinstance(action_space_config.to_dict(), dict)
         assert isinstance(ActionSpaceConfig.from_dict(action_space_config.to_dict()),
                           ActionSpaceConfig)
-        assert (ActionSpaceConfig.from_dict(action_space_config.to_dict()).to_dict() ==
-                action_space_config.to_dict())
-        assert (ActionSpaceConfig.from_dict(action_space_config.to_dict()) ==
-                action_space_config)
+        assert ActionSpaceConfig.from_dict(action_space_config.to_dict()).to_dict() == action_space_config.to_dict()
+        assert ActionSpaceConfig.from_dict(action_space_config.to_dict()) == action_space_config
 
     def test_agent_log(self) -> None:
         """
@@ -121,16 +114,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         agent_log = AgentLog()
-
         assert isinstance(agent_log.to_dict(), dict)
-        assert isinstance(AgentLog.from_dict(agent_log.to_dict()),
-                          AgentLog)
-        assert (AgentLog.from_dict(agent_log.to_dict()).to_dict() ==
-                agent_log.to_dict())
-        assert (AgentLog.from_dict(agent_log.to_dict()) ==
-                agent_log)
+        assert isinstance(AgentLog.from_dict(agent_log.to_dict()), AgentLog)
+        assert AgentLog.from_dict(agent_log.to_dict()).to_dict() == agent_log.to_dict()
+        assert AgentLog.from_dict(agent_log.to_dict()) == agent_log
 
     def test_env_parameter(self) -> None:
         """
@@ -138,16 +126,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         env_parameter = EnvParameter(id=1, name="test", descr="test1")
-
         assert isinstance(env_parameter.to_dict(), dict)
-        assert isinstance(EnvParameter.from_dict(env_parameter.to_dict()),
-                          EnvParameter)
-        assert (EnvParameter.from_dict(env_parameter.to_dict()).to_dict() ==
-                env_parameter.to_dict())
-        assert (EnvParameter.from_dict(env_parameter.to_dict()) ==
-                env_parameter)
+        assert isinstance(EnvParameter.from_dict(env_parameter.to_dict()), EnvParameter)
+        assert EnvParameter.from_dict(env_parameter.to_dict()).to_dict() == env_parameter.to_dict()
+        assert EnvParameter.from_dict(env_parameter.to_dict()) == env_parameter
 
     def test_env_parameters_config(self) -> None:
         """
@@ -155,16 +138,12 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         env_parameters_config = EnvParametersConfig(parameters=[EnvParameter(id=1, name="test", descr="test1")])
-
         assert isinstance(env_parameters_config.to_dict(), dict)
-        assert isinstance(EnvParametersConfig.from_dict(env_parameters_config.to_dict()),
-                          EnvParametersConfig)
+        assert isinstance(EnvParametersConfig.from_dict(env_parameters_config.to_dict()), EnvParametersConfig)
         assert (EnvParametersConfig.from_dict(env_parameters_config.to_dict()).to_dict() ==
                 env_parameters_config.to_dict())
-        assert (EnvParametersConfig.from_dict(env_parameters_config.to_dict()) ==
-                env_parameters_config)
+        assert EnvParametersConfig.from_dict(env_parameters_config.to_dict()) == env_parameters_config
 
     def test_initial_state_distribution_config(self) -> None:
         """
@@ -172,9 +151,7 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         initial_state_distribution_config = InitialStateDistributionConfig(initial_state_distribution=[0.1, 0.9])
-
         assert isinstance(initial_state_distribution_config.to_dict(), dict)
         assert isinstance(InitialStateDistributionConfig.from_dict(initial_state_distribution_config.to_dict()),
                           InitialStateDistributionConfig)
@@ -189,11 +166,9 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         joint_action_space_config = JointActionSpaceConfig(
             action_spaces=[ActionSpaceConfig(actions=[Action(id=1, descr="test")], player_id=1,
                                              action_type=ValueType.INTEGER)])
-
         assert isinstance(joint_action_space_config.to_dict(), dict)
         assert isinstance(JointActionSpaceConfig.from_dict(joint_action_space_config.to_dict()),
                           JointActionSpaceConfig)
@@ -241,16 +216,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         observation = Observation(id=1, val=2, descr="test")
-
         assert isinstance(observation.to_dict(), dict)
-        assert isinstance(Observation.from_dict(observation.to_dict()),
-                          Observation)
-        assert (Observation.from_dict(observation.to_dict()).to_dict() ==
-                observation.to_dict())
-        assert (Observation.from_dict(observation.to_dict()) ==
-                observation)
+        assert isinstance(Observation.from_dict(observation.to_dict()), Observation)
+        assert Observation.from_dict(observation.to_dict()).to_dict() == observation.to_dict()
+        assert Observation.from_dict(observation.to_dict()) == observation
 
     def test_observation_function_config(self) -> None:
         """
@@ -258,13 +228,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         observation_tensor = numpy.array([1, 2, 3])
         component_observation_tensors = dict()
         component_observation_tensors["test"] = numpy.array([1, 2, 3])
         observation_function_config = ObservationFunctionConfig(
             observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
-
         assert isinstance(observation_function_config.to_dict(), dict)
         assert isinstance(ObservationFunctionConfig.from_dict(observation_function_config.to_dict()),
                           ObservationFunctionConfig)
@@ -279,7 +247,6 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         observation = Observation(id=1, val=2, descr="test")
         observation_component_name_to_index = dict()
         observation_component_name_to_index["test"] = 1
@@ -296,7 +263,6 @@ class TestSimulationConfigDaoSuite:
             observation_id_to_observation_vector=observation_id_to_observation_vector,
             component_observations=component_observations
         )
-
         assert isinstance(observation_space_config.to_dict(), dict)
         assert isinstance(ObservationSpaceConfig.from_dict(observation_space_config.to_dict()),
                           ObservationSpaceConfig)
@@ -311,16 +277,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         player_config = PlayerConfig(name="test", id=2)
-
         assert isinstance(player_config.to_dict(), dict)
-        assert isinstance(PlayerConfig.from_dict(player_config.to_dict()),
-                          PlayerConfig)
-        assert (PlayerConfig.from_dict(player_config.to_dict()).to_dict() ==
-                player_config.to_dict())
-        assert (PlayerConfig.from_dict(player_config.to_dict()) ==
-                player_config)
+        assert isinstance(PlayerConfig.from_dict(player_config.to_dict()), PlayerConfig)
+        assert PlayerConfig.from_dict(player_config.to_dict()).to_dict() == player_config.to_dict()
+        assert PlayerConfig.from_dict(player_config.to_dict()) == player_config
 
     def test_players_config(self) -> None:
         """
@@ -328,16 +289,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         players_config = PlayersConfig(player_configs=[PlayerConfig(name="test", id=4)])
-
         assert isinstance(players_config.to_dict(), dict)
-        assert isinstance(PlayersConfig.from_dict(players_config.to_dict()),
-                          PlayersConfig)
-        assert (PlayersConfig.from_dict(players_config.to_dict()).to_dict() ==
-                players_config.to_dict())
-        assert (PlayersConfig.from_dict(players_config.to_dict()) ==
-                players_config)
+        assert isinstance(PlayersConfig.from_dict(players_config.to_dict()), PlayersConfig)
+        assert PlayersConfig.from_dict(players_config.to_dict()).to_dict() == players_config.to_dict()
+        assert PlayersConfig.from_dict(players_config.to_dict()) == players_config
 
     def test_reward_function_config(self) -> None:
         """
@@ -345,16 +301,13 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         reward_function_config = RewardFunctionConfig(reward_tensor=numpy.array([1, 3, 7]))
-
         assert isinstance(reward_function_config.to_dict(), dict)
         assert isinstance(RewardFunctionConfig.from_dict(reward_function_config.to_dict()),
                           RewardFunctionConfig)
         assert (RewardFunctionConfig.from_dict(reward_function_config.to_dict()).to_dict() ==
                 reward_function_config.to_dict())
-        assert (RewardFunctionConfig.from_dict(reward_function_config.to_dict()) ==
-                reward_function_config)
+        assert RewardFunctionConfig.from_dict(reward_function_config.to_dict()) == reward_function_config
 
     def test_simulation_env_config(self) -> None:
         """
@@ -378,11 +331,8 @@ class TestSimulationConfigDaoSuite:
             observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
             observation_id_to_observation_vector=observation_id_to_observation_vector,
             component_observations=component_observations)
-
         joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=[observation_space_config])
-
         reward_function_config = RewardFunctionConfig(reward_tensor=numpy.array([1, 3, 7]))
-
         action_space_config = ActionSpaceConfig(actions=[Action(id=1, descr="test")],
                                                 player_id=1, action_type=ValueType.INTEGER)
         joint_action_space_config = JointActionSpaceConfig(action_spaces=[action_space_config])
@@ -415,16 +365,13 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         simulation_env_input_config = ExampleInputConfig(x=5)
-
         assert isinstance(simulation_env_input_config.to_dict(), dict)
         assert isinstance(ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()),
                           ExampleInputConfig)
         assert (ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()).to_dict() ==
                 simulation_env_input_config.to_dict())
-        assert (ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()) ==
-                simulation_env_input_config)
+        assert ExampleInputConfig.from_dict(simulation_env_input_config.to_dict()) == simulation_env_input_config
 
     def test_simulation_trace(self) -> None:
         """
@@ -432,16 +379,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         simulation_trace = SimulationTrace(simulation_env="test")
-
         assert isinstance(simulation_trace.to_dict(), dict)
-        assert isinstance(SimulationTrace.from_dict(simulation_trace.to_dict()),
-                          SimulationTrace)
-        assert (SimulationTrace.from_dict(simulation_trace.to_dict()).to_dict() ==
-                simulation_trace.to_dict())
-        assert (SimulationTrace.from_dict(simulation_trace.to_dict()) ==
-                simulation_trace)
+        assert isinstance(SimulationTrace.from_dict(simulation_trace.to_dict()), SimulationTrace)
+        assert SimulationTrace.from_dict(simulation_trace.to_dict()).to_dict() == simulation_trace.to_dict()
+        assert SimulationTrace.from_dict(simulation_trace.to_dict()) == simulation_trace
 
     def test_state(self) -> None:
         """
@@ -449,16 +391,11 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         state = State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
-
         assert isinstance(state.to_dict(), dict)
-        assert isinstance(State.from_dict(state.to_dict()),
-                          State)
-        assert (State.from_dict(state.to_dict()).to_dict() ==
-                state.to_dict())
-        assert (State.from_dict(state.to_dict()) ==
-                state)
+        assert isinstance(State.from_dict(state.to_dict()), State)
+        assert State.from_dict(state.to_dict()).to_dict() == state.to_dict()
+        assert State.from_dict(state.to_dict()) == state
 
     def test_state_space_config(self) -> None:
         """
@@ -466,17 +403,12 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         state_space_config = StateSpaceConfig(states=[State(id=1, name="test", descr="test1",
                                                             state_type=StateType.TERMINAL)])
-
         assert isinstance(state_space_config.to_dict(), dict)
-        assert isinstance(StateSpaceConfig.from_dict(state_space_config.to_dict()),
-                          StateSpaceConfig)
-        assert (StateSpaceConfig.from_dict(state_space_config.to_dict()).to_dict() ==
-                state_space_config.to_dict())
-        assert (StateSpaceConfig.from_dict(state_space_config.to_dict()) ==
-                state_space_config)
+        assert isinstance(StateSpaceConfig.from_dict(state_space_config.to_dict()), StateSpaceConfig)
+        assert StateSpaceConfig.from_dict(state_space_config.to_dict()).to_dict() == state_space_config.to_dict()
+        assert StateSpaceConfig.from_dict(state_space_config.to_dict()) == state_space_config
 
     def test_transition_operator_config(self) -> None:
         """
@@ -484,9 +416,7 @@ class TestSimulationConfigDaoSuite:
 
         :return: None
         """
-
         transition_operator_config = TransitionOperatorConfig(transition_tensor=numpy.array([1, 2, 3]))
-
         assert isinstance(transition_operator_config.to_dict(), dict)
         assert isinstance(TransitionOperatorConfig.from_dict(transition_operator_config.to_dict()),
                           TransitionOperatorConfig)

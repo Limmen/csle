@@ -47,11 +47,9 @@ class TestEmulationObservationDaoSuite:
 
         :return: None
         """
-
         emulation_port_observation_state = EmulationPortObservationState(
             port=3333, open=False, service="myservice", protocol=TransportProtocol.TCP, http_enum="testenum",
             http_grep="testgrep", vulscan="vulscantest", version="myversion", fingerprint="myfp")
-
         assert isinstance(emulation_port_observation_state.to_dict(), dict)
         assert isinstance(EmulationPortObservationState.from_dict(emulation_port_observation_state.to_dict()),
                           EmulationPortObservationState)
@@ -66,12 +64,9 @@ class TestEmulationObservationDaoSuite:
 
         :return: None
         """
-
         emulation_attack_machine_observation_state = (EmulationAttackerMachineObservationState
                                                       (ips=["172.31.212.1", "172.31.212.2"]))
-
         assert isinstance(emulation_attack_machine_observation_state.to_dict(), dict)
-
         assert isinstance(EmulationAttackerMachineObservationState.from_dict
                           (emulation_attack_machine_observation_state.to_dict()),
                           EmulationAttackerMachineObservationState)
@@ -90,7 +85,7 @@ class TestEmulationObservationDaoSuite:
         """
 
         emulation_attack_observation_state = (EmulationAttackerObservationState
-                                              (catched_flags=1, agent_reachable=set(["test1", "test2"])))
+                                              (catched_flags=1, agent_reachable={"test1", "test2"}))
 
         assert isinstance(emulation_attack_observation_state.to_dict(), dict)
 
@@ -154,7 +149,6 @@ class TestEmulationObservationDaoSuite:
 
         :return: None
         """
-
         ips = ["10.10.10.10", "20.20.20.20"]
         container_network = ContainerNetwork(name="test1", subnet_mask="0.0.0.0",
                                              bitmask="0.0.0.0", subnet_prefix="0.0.0.0")
@@ -164,7 +158,6 @@ class TestEmulationObservationDaoSuite:
         ips_and_network_configs = [("test2", NodeNetworkConfig())]
         resources = NodeResourcesConfig(container_name="test1", num_cpus=1,
                                         available_memory_gb=100, ips_and_network_configs=ips_and_network_configs)
-
         default_network_firewall_config = DefaultNetworkFirewallConfig(ip="1.1.1.1",
                                                                        default_gw="2.3.3.4",
                                                                        default_input="test",
@@ -180,19 +173,15 @@ class TestEmulationObservationDaoSuite:
                                              routes={("test", "test")})
         topics = [
             KafkaTopic(name="test", num_partitions=1, num_replicas=2, attributes=["test"], retention_time_hours=1)]
-
         kafka_config = KafkaConfig(container=container, resources=resources, firewall_config=firewall_config,
                                    topics=topics, kafka_manager_log_file="test", kafka_manager_log_dir="test",
                                    kafka_manager_max_workers=10)
-
         emulation_defender_machine_observation_state = (EmulationDefenderMachineObservationState
                                                         (ips=ips, kafka_config=kafka_config, host_metrics=HostMetrics(),
                                                          docker_stats=DockerStats(),
                                                          snort_ids_ip_alert_counters=SnortIdsIPAlertCounters(),
                                                          ossec_ids_alert_counters=OSSECIdsAlertCounters()))
-
         assert isinstance(emulation_defender_machine_observation_state.to_dict(), dict)
-
         assert isinstance(EmulationDefenderMachineObservationState.from_dict
                           (emulation_defender_machine_observation_state.to_dict()),
                           EmulationDefenderMachineObservationState)
@@ -209,7 +198,6 @@ class TestEmulationObservationDaoSuite:
 
         :return: None
         """
-
         ips = ["10.10.10.10", "20.20.20.20"]
         container_network = ContainerNetwork(name="test1", subnet_mask="0.0.0.0",
                                              bitmask="0.0.0.0", subnet_prefix="0.0.0.0")
@@ -219,7 +207,6 @@ class TestEmulationObservationDaoSuite:
         ips_and_network_configs = [("test2", NodeNetworkConfig())]
         resources = NodeResourcesConfig(container_name="test1", num_cpus=1,
                                         available_memory_gb=100, ips_and_network_configs=ips_and_network_configs)
-
         default_network_firewall_config = DefaultNetworkFirewallConfig(ip="1.1.1.1",
                                                                        default_gw="2.3.3.4",
                                                                        default_input="test",
@@ -235,7 +222,6 @@ class TestEmulationObservationDaoSuite:
                                              routes={("test", "test")})
         topics = [
             KafkaTopic(name="test", num_partitions=1, num_replicas=2, attributes=["test"], retention_time_hours=1)]
-
         kafka_config = KafkaConfig(container=container, resources=resources, firewall_config=firewall_config,
                                    topics=topics, kafka_manager_log_file="test", kafka_manager_log_dir="test",
                                    kafka_manager_max_workers=10)
@@ -248,7 +234,6 @@ class TestEmulationObservationDaoSuite:
                                                             cmds=["test", "test2"],
                                                             type=EmulationAttackerActionType.PRIVILEGE_ESCALATION,
                                                             descr="test", ips=ips, index=1)
-
         emulation_defender_observation_state = (EmulationDefenderObservationState(
             kafka_config=kafka_config, client_population_metrics=ClientPopulationMetrics(), docker_stats=DockerStats(),
             snort_ids_alert_counters=SnortIdsAlertCounters(), ossec_ids_alert_counters=OSSECIdsAlertCounters(),
@@ -256,15 +241,11 @@ class TestEmulationObservationDaoSuite:
             attacker_actions=[emulation_attacker_action],
             snort_ids_rule_counters=SnortIdsRuleCounters()
         ))
-
         assert isinstance(emulation_defender_observation_state.to_dict(), dict)
-
-        assert isinstance(EmulationDefenderObservationState.from_dict
-                          (emulation_defender_observation_state.to_dict()),
+        assert isinstance(EmulationDefenderObservationState.from_dict(emulation_defender_observation_state.to_dict()),
                           EmulationDefenderObservationState)
         assert (EmulationDefenderObservationState.from_dict
                 (emulation_defender_observation_state.to_dict()).to_dict() ==
                 emulation_defender_observation_state.to_dict())
-        assert (EmulationDefenderObservationState.from_dict
-                (emulation_defender_observation_state.to_dict()) ==
+        assert (EmulationDefenderObservationState.from_dict(emulation_defender_observation_state.to_dict()) ==
                 emulation_defender_observation_state)
