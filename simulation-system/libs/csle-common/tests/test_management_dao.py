@@ -7,27 +7,27 @@ class TestManagementDaoSuite:
     Test suite for management data access objects (DAOs)
     """
 
-    def test_management_user(self) -> None:
+    def test_management_user(self, example_management_user: ManagementUser) -> None:
         """
         Tests creation and dict conversion of the ManagementUser DAO
 
+        :param example_management_user: an example ManagementUser
         :return: None
         """
-        management_user = ManagementUser(username="test1", password="test2", email="test@test.test", first_name="test3",
-                                         last_name="test4", organization="testi", admin=False, salt="test")
-        assert isinstance(management_user.to_dict(), dict)
-        assert isinstance(ManagementUser.from_dict(management_user.to_dict()), ManagementUser)
-        assert ManagementUser.from_dict(management_user.to_dict()).to_dict() == management_user.to_dict()
-        assert ManagementUser.from_dict(management_user.to_dict()) == management_user
+        assert isinstance(example_management_user.to_dict(), dict)
+        assert isinstance(ManagementUser.from_dict(example_management_user.to_dict()), ManagementUser)
+        assert ManagementUser.from_dict(example_management_user.to_dict()).to_dict() == \
+               example_management_user.to_dict()
+        assert ManagementUser.from_dict(example_management_user.to_dict()) == example_management_user
 
-    def test_session_token(self) -> None:
+    def test_session_token(self, example_session_token: SessionToken) -> None:
         """
         Tests creation and dict conversion of the SessionToken DAO
 
+        :param example_session_token: an example SessionToken
         :return: None
         """
-        session_token = SessionToken(token="test_token", timestamp=11.11, username="test")
-        assert isinstance(session_token.to_dict(), dict)
-        assert isinstance(SessionToken.from_dict(session_token.to_dict()), SessionToken)
-        assert SessionToken.from_dict(session_token.to_dict()).to_dict() == session_token.to_dict()
-        assert SessionToken.from_dict(session_token.to_dict()) == session_token
+        assert isinstance(example_session_token.to_dict(), dict)
+        assert isinstance(SessionToken.from_dict(example_session_token.to_dict()), SessionToken)
+        assert SessionToken.from_dict(example_session_token.to_dict()).to_dict() == example_session_token.to_dict()
+        assert SessionToken.from_dict(example_session_token.to_dict()) == example_session_token

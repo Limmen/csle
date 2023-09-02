@@ -113,12 +113,44 @@ from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
+from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
+from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
+from csle_common.dao.emulation_observation.attacker. \
+    emulation_attacker_observation_state import EmulationAttackerObservationState
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
+from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
+from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
+    EmulationDefenderObservationState
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_common.dao.training.hparam import HParam
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.experiment_result import ExperimentResult
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.management.management_user import ManagementUser
+from csle_common.dao.management.session_token import SessionToken
+from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
+    EmulationDefenderObservationState
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
-from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
-    EmulationDefenderObservationState
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
@@ -1445,3 +1477,157 @@ def example_emulation_attacker_observation_state() -> EmulationAttackerObservati
     :return: an example EmulationAttackerObservationState object
     """
     return EmulationAttackerObservationState(catched_flags=5, agent_reachable={"172.2.2.2"})
+
+
+@pytest.fixture
+def example_hparam() -> HParam:
+    """
+    Fixture that returns an example HParam object
+
+    :return: an example HParam object
+    """
+    return HParam(value=1, name="test", descr="test")
+
+
+@pytest.fixture
+def example_system_identification_config(example_hparam: HParam) -> SystemIdentificationConfig:
+    """
+    Fixture that returns an example SystemIdentificationConfig object
+
+    :param example_hparam: an example HParam
+    :return: an example SystemIdentificationConfig object
+    """
+    hparams = dict()
+    hparams["test"] = example_hparam
+    return SystemIdentificationConfig(
+        model_type=SystemModelType.GAUSSIAN_MIXTURE, hparams=hparams,
+        output_dir="test/test", title="test", log_every=10)
+
+
+@pytest.fixture
+def example_experiment_config(example_hparam: HParam) -> ExperimentConfig:
+    """
+    Fixture that returns an example ExperimentConfig object
+
+    :param example_hparam: an example HParam
+    :return: an example ExperimentConfig object
+    """
+    hparams = dict()
+    hparams["test"] = example_hparam
+    return ExperimentConfig(output_dir="test/test", title="test1", random_seeds=[1],
+                            agent_type=AgentType.PPO, hparams=hparams, log_every=10,
+                            player_type=PlayerType.DEFENDER, player_idx=2)
+
+
+@pytest.fixture
+def example_experiment_result() -> ExperimentResult:
+    """
+    Fixture that returns an example ExperimentConfig object
+
+    :return: an example ExperimentConfig object
+    """
+    return ExperimentResult()
+
+
+@pytest.fixture
+def example_simulation_trace() -> SimulationTrace:
+    """
+    Fixture that returns an example SimulationTrace object
+
+    :return: an example SimulationTrace object
+    """
+    return SimulationTrace(simulation_env="test1")
+
+
+@pytest.fixture
+def example_training_job_config(example_experiment_config: ExperimentConfig,
+                                example_experiment_result: ExperimentResult,
+                                example_simulation_trace: SimulationTrace) -> TrainingJobConfig:
+    """
+    Fixture that returns an example TrainingJobConfig object
+
+    :param example_experiment_config: an example ExperimentConfig
+    :param example_experiment_result: an example ExperimentResult
+    :param example_simulation_trace: an example SimulationTrace
+    :return: an example TrainingJobConfig object
+    """
+    return TrainingJobConfig(simulation_env_name="test", progress_percentage=0.5,
+                             pid=1, emulation_env_name="test", num_cached_traces=1,
+                             log_file_path="test/test", descr="test", physical_host_ip="1.1.1.1",
+                             experiment_config=example_experiment_config,
+                             experiment_result=example_experiment_result,
+                             simulation_traces=[example_simulation_trace])
+
+
+@pytest.fixture
+def example_system_identification_job_config(
+        example_system_identification_config: SystemIdentificationConfig) -> SystemIdentificationJobConfig:
+    """
+    Fixture that returns an example SystemIdentificationConfig object
+
+    :param example_system_identification_config: an example SystemIdentificationConfig
+    :return: an example SystemIdentificationJobConfig object
+    """
+    return SystemIdentificationJobConfig(emulation_env_name="test", emulation_statistics_id=1, pid=123,
+                                         log_file_path="test/test",
+                                         system_identification_config=example_system_identification_config,
+                                         physical_host_ip="1.1.1.1", progress_percentage=0.5)
+
+
+@pytest.fixture
+def example_emulation_trace(
+        example_emulation_defender_observation_state: EmulationDefenderObservationState) -> EmulationTrace:
+    """
+    Fixture that returns an example EmulationTrace object
+
+    :param example_emulation_defender_observation_state: an example EmulationDefenderObservationState
+    :return: an example EmulationTrace object
+    """
+    return EmulationTrace(initial_attacker_observation_state=EmulationAttackerObservationState(
+        catched_flags=1, agent_reachable={"yes"}),
+        initial_defender_observation_state=example_emulation_defender_observation_state,
+        emulation_name="test")
+
+
+@pytest.fixture
+def example_data_collection_job(
+        example_emulation_attacker_action: EmulationAttackerAction,
+        example_emulation_defender_action: EmulationDefenderAction, example_emulation_trace: EmulationTrace) \
+        -> DataCollectionJobConfig:
+    """
+    Fixture that returns an example EmulationAttackerObservationState object
+
+    :param example_emulation_attacker_action: an example EmulationAttackerAction
+    :param example_emulation_defender_action: an example EmulationDefenderAction
+    :param example_emulation_trace: an example EmulationTrace
+    :return: an example EmulationAttackerObservationState object
+    """
+    return DataCollectionJobConfig(emulation_env_name="test", num_collected_steps=1,
+                                   progress_percentage=0.1,
+                                   attacker_sequence=[example_emulation_attacker_action],
+                                   pid=123, repeat_times=5, emulation_statistic_id=10,
+                                   num_sequences_completed=10, traces=[example_emulation_trace],
+                                   save_emulation_traces_every=1, num_cached_traces=10,
+                                   defender_sequence=[example_emulation_defender_action],
+                                   log_file_path="test/test", physical_host_ip="1.1.1.1")
+
+
+@pytest.fixture
+def example_management_user() -> ManagementUser:
+    """
+    Fixture that returns an example ManagementUser object
+
+    :return: an example ManagementUser object
+    """
+    return ManagementUser(username="test1", password="test2", email="test@test.test", first_name="test3",
+                          last_name="test4", organization="testi", admin=False, salt="test")
+
+
+@pytest.fixture
+def example_session_token() -> SessionToken:
+    """
+    Fixture that returns an example SessionToken object
+
+    :return: an example SessionToken object
+    """
+    return SessionToken(token="test_token", timestamp=11.11, username="test")
