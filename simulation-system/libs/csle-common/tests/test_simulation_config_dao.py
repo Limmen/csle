@@ -309,56 +309,6 @@ class TestSimulationConfigDaoSuite:
                 reward_function_config.to_dict())
         assert RewardFunctionConfig.from_dict(reward_function_config.to_dict()) == reward_function_config
 
-    def test_simulation_env_config(self) -> None:
-        """
-        Tests creation and dict conversion of the SimulationEnvConfig DAO
-
-        :return: None
-        """
-        simulation_env_input_config = ExampleInputConfig(x=5)
-        observation = Observation(id=1, val=2, descr="test")
-        observation_component_name_to_index = dict()
-        observation_component_name_to_index["test"] = 1
-        observation_id_to_observation_id_vector = dict()
-        observation_id_to_observation_id_vector[0] = [1, 2, 3]
-        observation_id_to_observation_vector = dict()
-        observation_id_to_observation_vector[4] = [4, 5, 6]
-        component_observations = dict()
-        component_observations["test1"] = [observation]
-        observation_space_config = ObservationSpaceConfig(
-            observations=[observation], observation_type=ValueType.INTEGER, descr="test", player_id=2,
-            observation_component_name_to_index=observation_component_name_to_index,
-            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
-            observation_id_to_observation_vector=observation_id_to_observation_vector,
-            component_observations=component_observations)
-        joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=[observation_space_config])
-        reward_function_config = RewardFunctionConfig(reward_tensor=numpy.array([1, 3, 7]))
-        action_space_config = ActionSpaceConfig(actions=[Action(id=1, descr="test")],
-                                                player_id=1, action_type=ValueType.INTEGER)
-        joint_action_space_config = JointActionSpaceConfig(action_spaces=[action_space_config])
-        transition_operator_config = TransitionOperatorConfig(transition_tensor=numpy.array([1, 2, 3]))
-        observation_tensor = numpy.array([1, 2, 3])
-        component_observation_tensors = dict()
-        component_observation_tensors["test"] = numpy.array([1, 2, 3])
-        observation_function_config = ObservationFunctionConfig(
-            observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
-        initial_state_distribution_config = InitialStateDistributionConfig(initial_state_distribution=[0.1, 0.9])
-        env_parameters_config = EnvParametersConfig(parameters=[EnvParameter(id=1, name="test", descr="test1")])
-        simulation_env_config = SimulationEnvConfig(
-            name="test", descr="test1", version="1.0", gym_env_name="gym_test",
-            simulation_env_input_config=simulation_env_input_config,
-            players_config=PlayersConfig(player_configs=[PlayerConfig(name="test", id=4)]),
-            state_space_config=StateSpaceConfig(
-                states=[State(id=1, name="test", descr="test1", state_type=StateType.ACTIVE)]),
-            joint_action_space_config=joint_action_space_config,
-            joint_observation_space_config=joint_observation_space_config, time_step_type=TimeStepType.CONTINUOUS,
-            reward_function_config=reward_function_config, transition_operator_config=transition_operator_config,
-            observation_function_config=observation_function_config,
-            initial_state_distribution_config=initial_state_distribution_config,
-            env_parameters_config=env_parameters_config
-        )
-        assert isinstance(simulation_env_config.to_dict(), dict)
-
     def test_simulation_env_input_config(self) -> None:
         """
         Tests creation and dict conversion of the SimulationEnvInputConfig DAO
@@ -424,3 +374,53 @@ class TestSimulationConfigDaoSuite:
                 transition_operator_config.to_dict())
         assert (TransitionOperatorConfig.from_dict(transition_operator_config.to_dict()) ==
                 transition_operator_config)
+
+    def test_simulation_env_config(self) -> None:
+        """
+        Tests creation and dict conversion of the SimulationEnvConfig DAO
+
+        :return: None
+        """
+        simulation_env_input_config = ExampleInputConfig(x=5)
+        observation = Observation(id=1, val=2, descr="test")
+        observation_component_name_to_index = dict()
+        observation_component_name_to_index["test"] = 1
+        observation_id_to_observation_id_vector = dict()
+        observation_id_to_observation_id_vector[0] = [1, 2, 3]
+        observation_id_to_observation_vector = dict()
+        observation_id_to_observation_vector[4] = [4, 5, 6]
+        component_observations = dict()
+        component_observations["test1"] = [observation]
+        observation_space_config = ObservationSpaceConfig(
+            observations=[observation], observation_type=ValueType.INTEGER, descr="test", player_id=2,
+            observation_component_name_to_index=observation_component_name_to_index,
+            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+            observation_id_to_observation_vector=observation_id_to_observation_vector,
+            component_observations=component_observations)
+        joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=[observation_space_config])
+        reward_function_config = RewardFunctionConfig(reward_tensor=numpy.array([1, 3, 7]))
+        action_space_config = ActionSpaceConfig(actions=[Action(id=1, descr="test")],
+                                                player_id=1, action_type=ValueType.INTEGER)
+        joint_action_space_config = JointActionSpaceConfig(action_spaces=[action_space_config])
+        transition_operator_config = TransitionOperatorConfig(transition_tensor=numpy.array([1, 2, 3]))
+        observation_tensor = numpy.array([1, 2, 3])
+        component_observation_tensors = dict()
+        component_observation_tensors["test"] = numpy.array([1, 2, 3])
+        observation_function_config = ObservationFunctionConfig(
+            observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
+        initial_state_distribution_config = InitialStateDistributionConfig(initial_state_distribution=[0.1, 0.9])
+        env_parameters_config = EnvParametersConfig(parameters=[EnvParameter(id=1, name="test", descr="test1")])
+        simulation_env_config = SimulationEnvConfig(
+            name="test", descr="test1", version="1.0", gym_env_name="gym_test",
+            simulation_env_input_config=simulation_env_input_config,
+            players_config=PlayersConfig(player_configs=[PlayerConfig(name="test", id=4)]),
+            state_space_config=StateSpaceConfig(
+                states=[State(id=1, name="test", descr="test1", state_type=StateType.ACTIVE)]),
+            joint_action_space_config=joint_action_space_config,
+            joint_observation_space_config=joint_observation_space_config, time_step_type=TimeStepType.CONTINUOUS,
+            reward_function_config=reward_function_config, transition_operator_config=transition_operator_config,
+            observation_function_config=observation_function_config,
+            initial_state_distribution_config=initial_state_distribution_config,
+            env_parameters_config=env_parameters_config
+        )
+        assert isinstance(simulation_env_config.to_dict(), dict)
