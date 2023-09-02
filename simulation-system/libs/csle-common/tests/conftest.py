@@ -1,4 +1,5 @@
 import time
+import numpy as np
 import pytest
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
@@ -147,6 +148,29 @@ from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
     EmulationDefenderObservationState
+from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.simulation_config.action_space_config import ActionSpaceConfig
+from csle_common.dao.simulation_config.value_type import ValueType
+from csle_common.dao.simulation_config.agent_log import AgentLog
+from csle_common.dao.simulation_config.env_parameter import EnvParameter
+from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
+from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
+from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
+from csle_common.dao.simulation_config.joint_observation_space_config import JointObservationSpaceConfig
+from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
+from csle_common.dao.simulation_config.observation import Observation
+from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
+from csle_common.dao.simulation_config.player_config import PlayerConfig
+from csle_common.dao.simulation_config.players_config import PlayersConfig
+from csle_common.dao.simulation_config.reward_function_config import RewardFunctionConfig
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
+from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
+from csle_common.dao.simulation_config.state import State
+from csle_common.dao.simulation_config.state_type import StateType
+from csle_common.dao.simulation_config.time_step_type import TimeStepType
+from csle_common.dao.simulation_config.transition_operator_config import TransitionOperatorConfig
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
@@ -163,6 +187,56 @@ from csle_collector.snort_ids_manager.snort_ids_manager_pb2 import SnortIdsMonit
 from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO
 from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
+
+
+class ExampleInputConfig(SimulationEnvInputConfig):
+    """
+    Test instance of the abstract SimulationEnvInputConfig class
+    """
+
+    def __init__(self, x: int) -> None:
+        """
+        Initializes the object
+
+        :param x: the input parameter
+        :return: None
+        """
+        self.x = x
+
+    def to_dict(self) -> Dict[str, int]:
+        """
+        Converts the object to a dict representation
+
+        :return: a dict representation of the object
+        """
+        d: Dict[str, int] = {}
+        d["x"] = self.x
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, int]) -> "ExampleInputConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ExampleInputConfig(x=d["x"])
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ExampleInputConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ExampleInputConfig.from_dict(json.loads(json_str))
 
 
 @pytest.fixture
@@ -1631,3 +1705,251 @@ def example_session_token() -> SessionToken:
     :return: an example SessionToken object
     """
     return SessionToken(token="test_token", timestamp=11.11, username="test")
+
+
+@pytest.fixture
+def example_action() -> Action:
+    """
+    Fixture that returns an example Action object
+
+    :return: an example Action object
+    """
+    return Action(id=1, descr="test")
+
+
+@pytest.fixture
+def example_action_space_config(example_action: Action) -> ActionSpaceConfig:
+    """
+    Fixture that returns an example ActionSpaceConfig object
+
+    :param example_action: an example Action
+    :return: an example ActionSpaceConfig object
+    """
+    return ActionSpaceConfig(actions=[example_action], player_id=1, action_type=ValueType.INTEGER)
+
+
+@pytest.fixture
+def example_agent_log() -> AgentLog:
+    """
+    Fixture that returns an example AgentLog object
+
+    :return: an example AgentLog object
+    """
+    return AgentLog()
+
+
+@pytest.fixture
+def example_env_parameter() -> EnvParameter:
+    """
+    Fixture that returns an example EnvParameter object
+
+    :return: an example EnvParameter object
+    """
+    return EnvParameter(id=1, name="test", descr="test1")
+
+
+@pytest.fixture
+def example_env_parameters_config(example_env_parameter: EnvParameter) -> EnvParametersConfig:
+    """
+    Fixture that returns an example EnvParametersConfig object
+
+    :param example_env_parameter: an example EnvParameter
+    :return: an example EnvParametersConfig object
+    """
+    return EnvParametersConfig(parameters=[example_env_parameter])
+
+
+@pytest.fixture
+def example_initial_state_distribution_config() -> InitialStateDistributionConfig:
+    """
+    Fixture that returns an example InitialStateDistributionConfig object
+
+    :return: an example InitialStateDistributionConfig object
+    """
+    return InitialStateDistributionConfig(initial_state_distribution=[0.1, 0.9])
+
+
+@pytest.fixture
+def example_joint_action_space_config(example_action_space_config: ActionSpaceConfig) -> JointActionSpaceConfig:
+    """
+    Fixture that returns an example JointActionSpaceConfig object
+
+    :param example_action_space_config: an example ActionSpaceConfig
+    :return: an example JointActionSpaceConfig object
+    """
+    return JointActionSpaceConfig(
+        action_spaces=[ActionSpaceConfig(actions=[Action(id=1, descr="test")], player_id=1,
+                                         action_type=ValueType.INTEGER)])
+
+
+@pytest.fixture
+def example_observation() -> Observation:
+    """
+    Fixture that returns an example Observation object
+
+    :return: an example Observation object
+    """
+    return Observation(id=1, val=2, descr="test")
+
+
+@pytest.fixture
+def example_observation_space_config(example_observation: Observation) -> ObservationSpaceConfig:
+    """
+    Fixture that returns an example ObservationSpaceConfig object
+
+    :param example_observation: an example Observation
+    :return: an example ObservationSpaceConfig object
+    """
+    observation = Observation(id=1, val=2, descr="test")
+    observation_component_name_to_index = dict()
+    observation_component_name_to_index["test"] = 1
+    observation_id_to_observation_id_vector = dict()
+    observation_id_to_observation_id_vector[0] = [1, 2, 3]
+    observation_id_to_observation_vector = dict()
+    observation_id_to_observation_vector[4] = [4, 5, 6]
+    component_observations = dict()
+    component_observations["test1"] = [observation]
+    return ObservationSpaceConfig(
+        observations=[example_observation], observation_type=ValueType.INTEGER, descr="test", player_id=2,
+        observation_component_name_to_index=observation_component_name_to_index,
+        observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+        observation_id_to_observation_vector=observation_id_to_observation_vector,
+        component_observations=component_observations)
+
+
+@pytest.fixture
+def example_joint_observation_space_config(example_observation_space_config: ObservationSpaceConfig) \
+        -> JointObservationSpaceConfig:
+    """
+    Fixture that returns an example JointObservationSpaceConfig object
+
+    :param example_observation_space_config: an example ObservationSpaceConfig
+    :return: an example ObservationSpaceConfig object
+    """
+    return JointObservationSpaceConfig(observation_spaces=[example_observation_space_config])
+
+
+@pytest.fixture
+def example_observation_function_config() -> ObservationFunctionConfig:
+    """
+    Fixture that returns an example ObservationFunctionConfig object
+
+    :return: an example ObservationFunctionConfig object
+    """
+    observation_tensor = np.array([1, 2, 3])
+    component_observation_tensors = dict()
+    component_observation_tensors["test"] = np.array([1, 2, 3])
+    return ObservationFunctionConfig(observation_tensor=observation_tensor,
+                                     component_observation_tensors=component_observation_tensors)
+
+
+@pytest.fixture
+def example_player_config() -> PlayerConfig:
+    """
+    Fixture that returns an example PlayerConfig object
+
+    :return: an example PlayerConfig object
+    """
+    return PlayerConfig(name="test", id=2)
+
+
+@pytest.fixture
+def example_players_config(example_player_config: PlayerConfig) -> PlayersConfig:
+    """
+    Fixture that returns an example PlayerConfig object
+
+    :param example_player_config: an example PlayerConfig
+    :return: an example PlayerConfig object
+    """
+    return PlayersConfig(player_configs=[example_player_config])
+
+
+@pytest.fixture
+def example_reward_function_config() -> RewardFunctionConfig:
+    """
+    Fixture that returns an example RewardFunctionConfig object
+
+    :return: an example RewardFunctionConfig object
+    """
+    return RewardFunctionConfig(reward_tensor=np.array([1, 3, 7]))
+
+
+@pytest.fixture
+def example_input_config() -> ExampleInputConfig:
+    """
+    Fixture that returns an example ExampleInputConfig object
+
+    :return: an example ExampleInputConfig object
+    """
+    return ExampleInputConfig(x=5)
+
+
+@pytest.fixture
+def example_state() -> State:
+    """
+    Fixture that returns an example State object
+
+    :return: an example State object
+    """
+    return State(id=1, name="test", descr="test1", state_type=StateType.TERMINAL)
+
+
+@pytest.fixture
+def example_state_space_config(example_state: State) -> StateSpaceConfig:
+    """
+    Fixture that returns an example StateSpaceConfig object
+
+    :param example_state: an example State
+    :return: an example StateSpaceConfig object
+    """
+    return StateSpaceConfig(states=[State(id=1, name="test", descr="test1",
+                                          state_type=StateType.TERMINAL)])
+
+
+@pytest.fixture
+def example_transition_operator_config() -> TransitionOperatorConfig:
+    """
+    Fixture that returns an example TransitionOperatorConfig object
+
+    :return: an example TransitionOperatorConfig object
+    """
+    return TransitionOperatorConfig(transition_tensor=np.array([1, 2, 3]))
+
+
+@pytest.fixture
+def example_simulation_env_config(
+        example_player_config: PlayerConfig, example_input_config: ExampleInputConfig,
+        example_joint_action_space_config: JointActionSpaceConfig,
+        example_joint_observation_space_config: JointObservationSpaceConfig,
+        example_reward_function_config: RewardFunctionConfig,
+        example_transition_operator_config: TransitionOperatorConfig,
+        example_observation_function_config: ObservationFunctionConfig,
+        example_initial_state_distribution_config: InitialStateDistributionConfig,
+        example_env_parameters_config: EnvParametersConfig) -> SimulationEnvConfig:
+    """
+    Fixture that returns an example SimulationEnvConfig object
+
+    :param example_player_config: an example PlayerConfig
+    :param example_input_config: an example ExampleInputConfig
+    :param example_joint_action_space_config: an example JointActionSpaceConfig
+    :param example_joint_observation_space_config: an example JointObservationSpaceConfig
+    :param example_reward_function_config: an example RewardFunctionConfig
+    :param example_transition_operator_config: an example TransitionOperatorConfig
+    :param example_observation_function_config: an example ObservationFunctionConfig
+    :param example_initial_state_distribution_config: an example InitialStateDistributionConfig
+    :param example_env_parameters_config: an example EnvParametersConfig
+    :return: an example SimulationEnvConfig object
+    """
+    return SimulationEnvConfig(
+        name="test", descr="test1", version="1.0", gym_env_name="gym_test",
+        simulation_env_input_config=example_input_config,
+        players_config=PlayersConfig(player_configs=[PlayerConfig(name="test", id=4)]),
+        state_space_config=StateSpaceConfig(
+            states=[State(id=1, name="test", descr="test1", state_type=StateType.ACTIVE)]),
+        joint_action_space_config=example_joint_action_space_config,
+        joint_observation_space_config=example_joint_observation_space_config, time_step_type=TimeStepType.CONTINUOUS,
+        reward_function_config=example_reward_function_config,
+        transition_operator_config=example_transition_operator_config,
+        observation_function_config=example_observation_function_config,
+        initial_state_distribution_config=example_initial_state_distribution_config,
+        env_parameters_config=example_env_parameters_config)
