@@ -35,8 +35,9 @@ class TestEmulationActionDaoSuite:
         assert isinstance(example_emulation_attacker_action_config.to_dict(), dict)
         assert isinstance(EmulationAttackerActionConfig.from_dict(example_emulation_attacker_action_config.to_dict()),
                           EmulationAttackerActionConfig)
-        assert EmulationAttackerActionConfig.from_dict(example_emulation_attacker_action_config.to_dict()).to_dict() == \
-               example_emulation_attacker_action_config.to_dict()
+        d1 = EmulationAttackerActionConfig.from_dict(example_emulation_attacker_action_config.to_dict()).to_dict()
+        d2 = example_emulation_attacker_action_config.to_dict()
+        assert d1 == d2
         assert EmulationAttackerActionConfig.from_dict(example_emulation_attacker_action_config.to_dict()) == \
                example_emulation_attacker_action_config
 
@@ -66,7 +67,8 @@ class TestEmulationActionDaoSuite:
         assert isinstance(example_emulation_defender_action_config.to_dict(), dict)
         assert isinstance(EmulationDefenderActionConfig.from_dict(example_emulation_defender_action_config.to_dict()),
                           EmulationDefenderActionConfig)
-        assert EmulationDefenderActionConfig.from_dict(example_emulation_defender_action_config.to_dict()).to_dict() == \
-               example_emulation_defender_action_config.to_dict()
+        d1 = EmulationDefenderActionConfig.from_dict(example_emulation_defender_action_config.to_dict()).to_dict()
+        d2 = example_emulation_defender_action_config.to_dict()
+        assert d1 == d2
         assert EmulationDefenderActionConfig.from_dict(example_emulation_defender_action_config.to_dict()) == \
                example_emulation_defender_action_config

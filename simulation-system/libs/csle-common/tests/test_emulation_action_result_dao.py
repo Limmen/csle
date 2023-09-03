@@ -163,7 +163,8 @@ class TestEmulationActionResultDaoSuite:
         """
         assert isinstance(example_nmap_host_result.to_dict(), dict)
         assert isinstance(NmapHostResult.from_dict(example_nmap_host_result.to_dict()), NmapHostResult)
-        assert NmapHostResult.from_dict(example_nmap_host_result.to_dict()).to_dict() == example_nmap_host_result.to_dict()
+        assert NmapHostResult.from_dict(
+            example_nmap_host_result.to_dict()).to_dict() == example_nmap_host_result.to_dict()
         assert NmapHostResult.from_dict(example_nmap_host_result.to_dict()) == example_nmap_host_result
 
     def test_nmap_scan_result(self, example_nmap_scan_result: NmapScanResult) -> None:

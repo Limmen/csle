@@ -162,9 +162,8 @@ class TestSimulationConfigDaoSuite:
         assert isinstance(example_initial_state_distribution_config.to_dict(), dict)
         assert isinstance(InitialStateDistributionConfig.from_dict(example_initial_state_distribution_config.to_dict()),
                           InitialStateDistributionConfig)
-        assert (InitialStateDistributionConfig.from_dict(
-            example_initial_state_distribution_config.to_dict()).to_dict() ==
-                example_initial_state_distribution_config.to_dict())
+        assert (InitialStateDistributionConfig.from_dict(example_initial_state_distribution_config.to_dict()).to_dict()
+                == example_initial_state_distribution_config.to_dict())
         assert (InitialStateDistributionConfig.from_dict(example_initial_state_distribution_config.to_dict()) ==
                 example_initial_state_distribution_config)
 

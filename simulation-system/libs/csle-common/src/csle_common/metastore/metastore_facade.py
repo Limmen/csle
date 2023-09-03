@@ -58,7 +58,7 @@ class MetastoreFacade:
     @staticmethod
     def list_emulations_ids() -> List[Tuple[int, str]]:
         """
-        :return: A list of emulation ids in the metastore
+        :return: A list of emulation ids and names in the metastore
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "

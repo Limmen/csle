@@ -696,9 +696,10 @@ class TestEmulationConfigDaoSuite:
         assert isinstance(
             EmulationConnectionObservationState.from_dict(example_emulation_connection_observation_state.to_dict()),
             EmulationConnectionObservationState)
-        assert EmulationConnectionObservationState.from_dict(
-            example_emulation_connection_observation_state.to_dict()).to_dict() \
-               == example_emulation_connection_observation_state.to_dict()
+        d1 = EmulationConnectionObservationState.from_dict(
+            example_emulation_connection_observation_state.to_dict()).to_dict()
+        d2 = example_emulation_connection_observation_state.to_dict()
+        assert d1 == d2
         assert EmulationConnectionObservationState.from_dict(
             example_emulation_connection_observation_state.to_dict()) == example_emulation_connection_observation_state
 

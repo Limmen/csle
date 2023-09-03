@@ -18,10 +18,7 @@ from csle_common.dao.emulation_config.client_population_config import ClientPopu
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
-from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
-from csle_common.dao.emulation_config.credential import Credential
-from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -29,15 +26,9 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
-from csle_common.dao.emulation_config.kafka_config import KafkaConfig
-from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
-from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
-from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
-from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
-from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
@@ -54,7 +45,6 @@ from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
-from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
@@ -92,14 +82,10 @@ from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManager
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
-from csle_common.dao.emulation_observation.common.emulation_connection_observation_state import \
-    EmulationConnectionObservationState
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state import EmulationPortObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_observation.attacker. \
     emulation_attacker_machine_observation_state import EmulationAttackerMachineObservationState
-from csle_common.dao.emulation_observation.attacker. \
-    emulation_attacker_observation_state import EmulationAttackerObservationState
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
@@ -107,14 +93,6 @@ from csle_common.dao.emulation_observation.common.emulation_vulnerability_observ
     import EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import \
     EmulationDefenderMachineObservationState
-from csle_common.dao.emulation_config.kafka_config import KafkaConfig
-from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
-from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
-from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
-from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
-from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
-from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.emulation_observation.attacker. \
@@ -127,22 +105,24 @@ from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
-from csle_collector.host_manager.dao.host_metrics import HostMetrics
-from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
-from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
-from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import \
-    EmulationDefenderObservationState
-from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
-from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
-from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
+from csle_common.dao.training.dqn_policy import DQNPolicy
+from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
+from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
+from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
+from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.vector_policy import VectorPolicy
+from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
-from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
-from csle_common.dao.system_identification.system_model_type import SystemModelType
-from csle_common.dao.training.hparam import HParam
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_result import ExperimentResult
-from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.management.management_user import ManagementUser
@@ -172,6 +152,18 @@ from csle_common.dao.simulation_config.time_step_type import TimeStepType
 from csle_common.dao.simulation_config.transition_operator_config import TransitionOperatorConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
+from csle_common.dao.system_identification.empirical_conditional import EmpiricalConditional
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.system_identification.gaussian_mixture_conditional import GaussianMixtureConditional
+from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
+from csle_common.dao.system_identification.gp_conditional import GPConditional
+from csle_common.dao.system_identification.gp_system_model import GPSystemModel
+from csle_common.dao.system_identification.mcmc_posterior import MCMCPosterior
+from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
+from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_common.dao.training.hparam import HParam
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
@@ -1219,7 +1211,7 @@ def example_beats_config(example_node_beats_config: NodeBeatsConfig) -> BeatsCon
 
 
 @pytest.fixture
-def example_flags_config(example_node_flags_config: NodeFlagsConfig) -> example_node_flags_config:
+def example_flags_config(example_node_flags_config: NodeFlagsConfig) -> FlagsConfig:
     """
     Fixture that returns an example FlagsConfig object
 
@@ -1542,16 +1534,6 @@ def example_emulation_attacker_machine_observation_state() -> EmulationAttackerM
     :return: an example EmulationAttackerMachineObservationState object
     """
     return EmulationAttackerMachineObservationState(ips=["172.31.212.1", "172.31.212.2"])
-
-
-@pytest.fixture
-def example_emulation_attacker_observation_state() -> EmulationAttackerObservationState:
-    """
-    Fixture that returns an example EmulationAttackerObservationState object
-
-    :return: an example EmulationAttackerObservationState object
-    """
-    return EmulationAttackerObservationState(catched_flags=5, agent_reachable={"172.2.2.2"})
 
 
 @pytest.fixture
@@ -1954,3 +1936,339 @@ def example_simulation_env_config(
         observation_function_config=example_observation_function_config,
         initial_state_distribution_config=example_initial_state_distribution_config,
         env_parameters_config=example_env_parameters_config)
+
+
+@pytest.fixture
+def example_empirical_conditional() -> EmpiricalConditional:
+    """
+    Fixture that returns an example EmpiricalConditional object
+
+    :return: an example EmpiricalConditional object
+    """
+    return EmpiricalConditional(conditional_name="test", metric_name="test2", sample_space=[1, 2, 3],
+                                probabilities=[0.2, 0.8])
+
+
+@pytest.fixture
+def example_empirical_system_model(example_empirical_conditional: EmpiricalConditional) -> EmpiricalSystemModel:
+    """
+    Fixture that returns an example EmpiricalSystemModel object
+
+    :param example_empirical_conditional: an example EmpiricalConditional
+    :return: an example EmpiricalSystemModel object
+    """
+    return EmpiricalSystemModel(emulation_env_name="test", emulation_statistic_id=1,
+                                conditional_metric_distributions=[[example_empirical_conditional]], descr="test1")
+
+
+@pytest.fixture
+def example_emulation_statistics() -> EmulationStatistics:
+    """
+    Fixture that returns an example EmulationStatistics object
+
+    :return: an example EmulationStatistics object
+    """
+    return EmulationStatistics(emulation_name="test")
+
+
+@pytest.fixture
+def example_gaussian_mixture_conditional() -> GaussianMixtureConditional:
+    """
+    Fixture that returns an example GaussianMixtureConditional object
+
+    :return: an example GaussianMixtureConditional object
+    """
+    return GaussianMixtureConditional(
+        conditional_name="test", metric_name="test1", num_mixture_components=2, dim=2,
+        mixtures_means=[[0.4], [0.7]], mixtures_covariance_matrix=[[[0.5]]], mixture_weights=[0.6, 0.3],
+        sample_space=[2, 5])
+
+
+@pytest.fixture
+def example_gaussian_mixture_system_model(
+        example_gaussian_mixture_conditional: GaussianMixtureConditional) -> GaussianMixtureSystemModel:
+    """
+    Fixture that returns an example GaussianMixtureSystemModel object
+
+    :param example_gp_conditional: an example GPConditional
+    :return: an example GaussianMixtureSystemModel object
+    """
+    return GaussianMixtureSystemModel(
+        emulation_env_name="test", emulation_statistic_id=2,
+        conditional_metric_distributions=[[example_gaussian_mixture_conditional]], descr="test3")
+
+
+@pytest.fixture
+def example_gp_conditional() -> GPConditional:
+    """
+    Fixture that returns an example GPConditional object
+
+    :return: an example GPConditional object
+    """
+    return GPConditional(
+        conditional_name="test", metric_name="test1", sample_space=[1, 2, 3], observed_x=[1, 2],
+        observed_y=[1.5, 3.4], scale_parameter=5.5, noise_parameter=3.2)
+
+
+@pytest.fixture
+def example_gp_system_model(example_gp_conditional: GPConditional) -> GPSystemModel:
+    """
+    Fixture that returns an example GPSystemModel object
+
+    :param example_gp_conditional: an example GPConditional
+    :return: an example GPSystemModel object
+    """
+    return GPSystemModel(emulation_env_name="test", emulation_statistic_id=1,
+                         conditional_metric_distributions=[[example_gp_conditional]], descr="test")
+
+
+@pytest.fixture
+def example_mcmc_posterior() -> MCMCPosterior:
+    """
+    Fixture that returns an example MCMCPosterior object
+
+    :return: an example MCMCPosterior object
+    """
+    return MCMCPosterior(posterior_name="test", samples=[1.5], densities=[4.5], sample_space=[3.5])
+
+
+@pytest.fixture
+def example_mcmc_system_model(example_mcmc_posterior: MCMCPosterior) -> MCMCSystemModel:
+    """
+    Fixture that returns an example MCMCSystemModel object
+
+    :param example_mcmc_posterior: an example MCMCPosterior
+    :return: an example MCMCSystemModel object
+    """
+    return MCMCSystemModel(emulation_env_name="test", emulation_statistic_id=0,
+                           posteriors=[example_mcmc_posterior], descr="test1")
+
+
+@pytest.fixture
+def example_alpha_vectors_policy(example_state: State, example_action: Action) -> AlphaVectorsPolicy:
+    """
+    Fixture that returns an example AlphaVectorsPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :return: an example AlphaVectorsPolicy object
+    """
+    return AlphaVectorsPolicy(
+        player_type=PlayerType.DEFENDER, actions=[example_action], alpha_vectors=[1, 2], transition_tensor=[1, 3],
+        reward_tensor=[5, 6], states=[example_state], agent_type=AgentType.PPO, simulation_name="test", avg_R=0.3)
+
+
+@pytest.fixture
+def example_dqn_policy(example_state: State, example_action: Action,
+                       example_experiment_config: ExperimentConfig) -> DQNPolicy:
+    """
+    Fixture that returns an example DQNPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example DQNPolicy object
+    """
+    return DQNPolicy(model=None, simulation_name="test", save_path="test/test",
+                     player_type=PlayerType.ATTACKER, states=[example_state], actions=[example_action], avg_R=0.6,
+                     experiment_config=example_experiment_config)
+
+
+@pytest.fixture
+def example_experiment_execution(
+        example_experiment_config: ExperimentConfig, example_experiment_result: ExperimentResult) \
+        -> ExperimentExecution:
+    """
+    Fixture that returns an example ExperimentExecution object
+
+    :param example_experiment_config: an example ExperimentConfig
+    :param example_experiment_result: an example ExperimentResult
+    :return: an example ExperimentExecution object
+    """
+    return ExperimentExecution(
+        config=example_experiment_config, result=example_experiment_result, timestamp=10.10, emulation_name="test",
+        simulation_name="test1", descr="test2", log_file_path="test/test")
+
+
+@pytest.fixture
+def example_fnn_with_softmax_policy(example_state: State, example_action: Action,
+                                    example_experiment_config: ExperimentConfig) -> FNNWithSoftmaxPolicy:
+    """
+    Fixture that returns an example FNNWithSoftmaxPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example FNNWithSoftmaxPolicy object
+    """
+    return FNNWithSoftmaxPolicy(
+        None, simulation_name="test", save_path="test/test", player_type=PlayerType.DEFENDER,
+        states=[example_state], actions=[example_action], experiment_config=example_experiment_config, avg_R=0.1,
+        input_dim=100,
+        output_dim=10)
+
+
+@pytest.fixture
+def example_tabular_policy(example_action: Action) -> TabularPolicy:
+    """
+    Fixture that returns an example TabularPolicy object
+
+    :param example_action: an example Actionp
+    :return: an example TabularPolicy object
+    """
+    return TabularPolicy(player_type=PlayerType.DEFENDER, actions=[example_action], lookup_table=[[1.4]],
+                         simulation_name="test", avg_R=8.1, agent_type=AgentType.SONDIK_VALUE_ITERATION)
+
+
+@pytest.fixture
+def example_linear_threshold_stopping_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> LinearThresholdStoppingPolicy:
+    """
+    Fixture that returns an example LinearThresholdStoppingPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example LinearThresholdStoppingPolicy object
+    """
+    return LinearThresholdStoppingPolicy(
+        [0.1], simulation_name="test", L=1, states=[example_state], player_type=PlayerType.SELF_PLAY,
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=0.2, agent_type=AgentType.RANDOM)
+
+
+@pytest.fixture
+def example_linear_tabular_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig,
+        example_tabular_policy: TabularPolicy,
+        example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) \
+        -> LinearTabularPolicy:
+    """
+    Fixture that returns an example LinearTabularPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example LinearTabularPolicy object
+    """
+    return LinearTabularPolicy(
+        stopping_policy=example_linear_threshold_stopping_policy, action_policy=example_tabular_policy,
+        player_type=PlayerType.DEFENDER,
+        actions=[example_action], avg_R=0.1, agent_type=AgentType.T_SPSA,
+        states=[example_state], simulation_name="test2", experiment_config=example_experiment_config)
+
+
+@pytest.fixture
+def example_mixed_linear_tabular(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> MixedLinearTabularPolicy:
+    """
+    Fixture that returns an example MixedLinearTabularPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example MixedLinearTabularPolicy object
+    """
+    return MixedLinearTabularPolicy(
+        simulation_name="test", player_type=PlayerType.DEFENDER, states=[example_state],
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=0.9)
+
+
+@pytest.fixture
+def example_mixed_multi_threshold_stopping_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> MixedMultiThresholdStoppingPolicy:
+    """
+    Fixture that returns an example MixedMultiThresholdStoppingPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example MixedMultiThresholdStoppingPolicy object
+    """
+    defender_Theta = [[[0.2, 0.8]]]
+    attacker_Theta = [[[[0.2, 0.8]]]]
+    return MixedMultiThresholdStoppingPolicy(
+        defender_Theta=defender_Theta, attacker_Theta=attacker_Theta,
+        simulation_name="test", L=2, player_type=PlayerType.DEFENDER, states=[example_state],
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=0.9,
+        agent_type=AgentType.T_SPSA, opponent_strategy=None)
+
+
+@pytest.fixture
+def example_mixed_ppo_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> MixedPPOPolicy:
+    """
+    Fixture that returns an example MixedPPOPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example MixedPPOPolicy object
+    """
+    return MixedPPOPolicy(simulation_name="test", player_type=PlayerType.DEFENDER, states=[example_state],
+                          actions=[example_action], experiment_config=example_experiment_config, avg_R=0.8)
+
+
+@pytest.fixture
+def example_multi_threshold_stopping_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> MultiThresholdStoppingPolicy:
+    """
+    Fixture that returns an example MultiThresholdStoppingPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example MultiThresholdStoppingPolicy object
+    """
+    theta = [0.2, 0.8]
+    return MultiThresholdStoppingPolicy(
+        theta=theta, simulation_name="test", L=2, player_type=PlayerType.DEFENDER, states=[example_state],
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=0.9, agent_type=AgentType.T_SPSA,
+        opponent_strategy=None)
+
+
+@pytest.fixture
+def example_ppo_policy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> PPOPolicy:
+    """
+    Fixture that returns an example PPOPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example PPOPolicy object
+    """
+    return PPOPolicy(
+        model=None, simulation_name="test", save_path="test/test", player_type=PlayerType.DEFENDER,
+        states=[example_state],
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=10)
+
+
+@pytest.fixture
+def example_random_policy(example_action: Action) -> RandomPolicy:
+    """
+    Fixture that returns an example RandomPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example RandomPolicy object
+    """
+    return RandomPolicy(player_type=PlayerType.DEFENDER, actions=[example_action], stage_policy_tensor=None)
+
+
+@pytest.fixture
+def example_vector_policy() -> VectorPolicy:
+    """
+    Fixture that returns an example VectorPolicy object
+
+    :return: an example VectorPolicy object
+    """
+    return VectorPolicy(player_type=PlayerType.DEFENDER, actions=[1, 3], policy_vector=[2.3],
+                        agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM, simulation_name="test",
+                        avg_R=0.4)
