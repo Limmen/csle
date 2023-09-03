@@ -1,6 +1,7 @@
 import time
 import numpy as np
 import pytest
+from typing import Dict
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_collector.client_manager.dao.client import Client
