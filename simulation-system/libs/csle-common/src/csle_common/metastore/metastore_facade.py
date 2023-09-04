@@ -194,7 +194,7 @@ class MetastoreFacade:
         :param simulation_record: the record to convert
         :return: the DTO representing the record
         """
-        simulation_config_json_str = json.dumps(simulation_record[2], indent=4, sort_keys=True)
+        simulation_config_json_str = json.dumps(simulation_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         simulation_env_config: SimulationEnvConfig = SimulationEnvConfig.from_dict(
             json.loads(simulation_config_json_str))
         simulation_env_config.id = simulation_record[0]
