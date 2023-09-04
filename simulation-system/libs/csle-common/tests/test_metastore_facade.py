@@ -175,7 +175,7 @@ class TestMetastoreFacadeSuite:
         Tests the get_emulation function
 
         :param mocker: the pytest mocker object
-        :param example_emulation_env_config: an example EmulationEnvConfig
+        :param example_esimulation_env_config: an example EmulationEnvConfig
         :return: None
         """
         id = 1
