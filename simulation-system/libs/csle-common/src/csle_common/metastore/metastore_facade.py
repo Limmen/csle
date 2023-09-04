@@ -181,7 +181,7 @@ class MetastoreFacade:
         :param emulation_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_config_json_str = json.dumps(emulation_record[2], indent=4, sort_keys=True)
+        emulation_config_json_str = json.dumps(emulation_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         emulation_env_config: EmulationEnvConfig = EmulationEnvConfig.from_dict(json.loads(emulation_config_json_str))
         emulation_env_config.id = emulation_record[0]
         return emulation_env_config
@@ -194,7 +194,7 @@ class MetastoreFacade:
         :param simulation_record: the record to convert
         :return: the DTO representing the record
         """
-        simulation_config_json_str = json.dumps(simulation_record[2], indent=4, sort_keys=True)
+        simulation_config_json_str = json.dumps(simulation_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         simulation_env_config: SimulationEnvConfig = SimulationEnvConfig.from_dict(
             json.loads(simulation_config_json_str))
         simulation_env_config.id = simulation_record[0]
@@ -208,7 +208,7 @@ class MetastoreFacade:
         :param emulation_trace_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_trace_json_str = json.dumps(emulation_trace_record[2], indent=4, sort_keys=True)
+        emulation_trace_json_str = json.dumps(emulation_trace_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         emulation_trace: EmulationTrace = EmulationTrace.from_dict(json.loads(emulation_trace_json_str))
         emulation_trace.id = emulation_trace_record[0]
         return emulation_trace
@@ -223,7 +223,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         emulation_simulation_trace_json_str = json.dumps(emulation_simulation_trace_record[2], indent=4,
-                                                         sort_keys=True)
+                                                         sort_keys=True, cls=NpEncoder)
         emulation_simulation_trace: EmulationSimulationTrace = \
             EmulationSimulationTrace.from_dict(json.loads(emulation_simulation_trace_json_str))
         emulation_simulation_trace.id = emulation_simulation_trace_record[0]
@@ -237,7 +237,7 @@ class MetastoreFacade:
         :param simulation_trace_record: the record to convert
         :return: the DTO representing the record
         """
-        simulation_trace_json_str = json.dumps(simulation_trace_record[2], indent=4, sort_keys=True)
+        simulation_trace_json_str = json.dumps(simulation_trace_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         simulation_trace: SimulationTrace = SimulationTrace.from_dict(json.loads(simulation_trace_json_str))
         simulation_trace.id = simulation_trace_record[0]
         return simulation_trace
@@ -250,7 +250,8 @@ class MetastoreFacade:
         :param emulation_statistics_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_statistics_json_str = json.dumps(emulation_statistics_record[2], indent=4, sort_keys=True)
+        emulation_statistics_json_str = json.dumps(emulation_statistics_record[2], indent=4, sort_keys=True,
+                                                   cls=NpEncoder)
         emulation_statistics: EmulationStatistics = EmulationStatistics.from_dict(
             json.loads(emulation_statistics_json_str,
                        object_hook=lambda d: {int(k.split(".", 1)[0]) if k.split(".", 1)[0].lstrip('-').isdigit()
@@ -301,7 +302,7 @@ class MetastoreFacade:
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
                                                          table_name=constants.METADATA_STORE.EMULATIONS_TABLE)
-                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
+                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (id, name, config) "
                                 f"VALUES (%s, %s, %s) RETURNING id", (id, config.name, config_json_str))
                     record = cur.fetchone()
@@ -1061,7 +1062,7 @@ class MetastoreFacade:
         :param experiment_execution_record: the record to convert
         :return: the DTO representing the record
         """
-        experiment_execution_json = json.dumps(experiment_execution_record[1], indent=4, sort_keys=True)
+        experiment_execution_json = json.dumps(experiment_execution_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         experiment_execution: ExperimentExecution = ExperimentExecution.from_dict(json.loads(experiment_execution_json))
         experiment_execution.id = experiment_execution_record[0]
         return experiment_execution
@@ -1148,7 +1149,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         multi_threshold_stopping_policy_json = json.dumps(multi_threshold_stopping_policy_record[1], indent=4,
-                                                          sort_keys=True)
+                                                          sort_keys=True, cls=NpEncoder)
         multi_threshold_stopping_policy: MultiThresholdStoppingPolicy = MultiThresholdStoppingPolicy.from_dict(
             json.loads(multi_threshold_stopping_policy_json))
         multi_threshold_stopping_policy.id = multi_threshold_stopping_policy_record[0]
@@ -1217,7 +1218,8 @@ class MetastoreFacade:
                 # on distributed tables properly
                 id = GeneralUtil.get_latest_table_id(
                     cur=cur, table_name=constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE)
-                policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
+                policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True,
+                                             cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str,
@@ -1238,7 +1240,7 @@ class MetastoreFacade:
         :param training_job_record: the record to convert
         :return: the DTO representing the record
         """
-        tranining_job_config_json = json.dumps(training_job_record[1], indent=4, sort_keys=True)
+        tranining_job_config_json = json.dumps(training_job_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         training_job_config: TrainingJobConfig = TrainingJobConfig.from_dict(json.loads(tranining_job_config_json))
         training_job_config.id = training_job_record[0]
         return training_job_config
@@ -1307,7 +1309,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 id = GeneralUtil.get_latest_table_id(cur=cur,
                                                      table_name=constants.METADATA_STORE.TRAINING_JOBS_TABLE)
-                training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
+                training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 emulation_name: Union[str, None] = training_job.emulation_env_name
                 if emulation_name == "":
                     emulation_name = None
@@ -1333,7 +1335,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         data_collection_job_config_json = json.dumps(data_collection_job_record[1], indent=4,
-                                                     sort_keys=True)
+                                                     sort_keys=True, cls=NpEncoder)
         data_collection_job_config: DataCollectionJobConfig = \
             DataCollectionJobConfig.from_dict(json.loads(data_collection_job_config_json))
         data_collection_job_config.id = data_collection_job_record[0]
@@ -1482,7 +1484,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(data_collection_job.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(data_collection_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
                             f" SET config=%s "
@@ -1567,7 +1569,7 @@ class MetastoreFacade:
         :param ppo_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        ppo_policy_json = json.dumps(ppo_policy_record[1], indent=4, sort_keys=True)
+        ppo_policy_json = json.dumps(ppo_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         ppo_policy: PPOPolicy = PPOPolicy.from_dict(json.loads(ppo_policy_json))
         ppo_policy.id = ppo_policy_record[0]
         return ppo_policy
@@ -1652,7 +1654,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         system_identification_job_config_json = json.dumps(system_identification_job_record[1], indent=4,
-                                                           sort_keys=True)
+                                                           sort_keys=True, cls=NpEncoder)
         system_identification_job_config: SystemIdentificationJobConfig = \
             SystemIdentificationJobConfig.from_dict(json.loads(system_identification_job_config_json))
         system_identification_job_config.id = system_identification_job_record[0]
@@ -1797,7 +1799,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         gaussian_mixture_system_model_config_json = json.dumps(gaussian_mixture_system_model_record[1], indent=4,
-                                                               sort_keys=True)
+                                                               sort_keys=True, cls=NpEncoder)
         gaussian_mixture_system_model_config: GaussianMixtureSystemModel = \
             GaussianMixtureSystemModel.from_dict(json.loads(gaussian_mixture_system_model_config_json))
         gaussian_mixture_system_model_config.id = gaussian_mixture_system_model_record[0]
@@ -1906,7 +1908,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4, sort_keys=True,
+                                             cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
                             f" SET config=%s "
@@ -1973,7 +1976,7 @@ class MetastoreFacade:
         :param tabular_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        tabular_policy_json = json.dumps(tabular_policy_record[1], indent=4, sort_keys=True)
+        tabular_policy_json = json.dumps(tabular_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         tabular_policy: TabularPolicy = TabularPolicy.from_dict(json.loads(tabular_policy_json))
         tabular_policy.id = tabular_policy_record[0]
         return tabular_policy
@@ -2084,7 +2087,7 @@ class MetastoreFacade:
         :param alpha_vec_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        alpha_vec_policy_json = json.dumps(alpha_vec_policy_record[1], indent=4, sort_keys=True)
+        alpha_vec_policy_json = json.dumps(alpha_vec_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         alpha_vec_policy: AlphaVectorsPolicy = AlphaVectorsPolicy.from_dict(json.loads(alpha_vec_policy_json))
         alpha_vec_policy.id = alpha_vec_policy_record[0]
         return alpha_vec_policy
@@ -2196,7 +2199,7 @@ class MetastoreFacade:
         :param dqn_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        dqn_policy_json = json.dumps(dqn_policy_record[1], indent=4, sort_keys=True)
+        dqn_policy_json = json.dumps(dqn_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         dqn_policy: DQNPolicy = DQNPolicy.from_dict(json.loads(dqn_policy_json))
         dqn_policy.id = dqn_policy_record[0]
         return dqn_policy
@@ -2307,7 +2310,7 @@ class MetastoreFacade:
         :param fnn_w_softmax_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        fnn_w_softmax_policy_json = json.dumps(fnn_w_softmax_policy_record[1], indent=4, sort_keys=True)
+        fnn_w_softmax_policy_json = json.dumps(fnn_w_softmax_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         fnn_w_softmax_policy: FNNWithSoftmaxPolicy = FNNWithSoftmaxPolicy.from_dict(json.loads(
             fnn_w_softmax_policy_json))
         fnn_w_softmax_policy.id = fnn_w_softmax_policy_record[0]
@@ -2423,7 +2426,7 @@ class MetastoreFacade:
         :param vector_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        vector_policy_json = json.dumps(vector_policy_record[1], indent=4, sort_keys=True)
+        vector_policy_json = json.dumps(vector_policy_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         vector_policy: VectorPolicy = VectorPolicy.from_dict(json.loads(vector_policy_json))
         vector_policy.id = vector_policy_record[0]
         return vector_policy
@@ -2567,7 +2570,7 @@ class MetastoreFacade:
         :param emulation_execution_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_execution_json = json.dumps(emulation_execution_record[2], indent=4, sort_keys=True)
+        emulation_execution_json = json.dumps(emulation_execution_record[2], indent=4, sort_keys=True, cls=NpEncoder)
         emulation_execution: EmulationExecution = EmulationExecution.from_dict(json.loads(emulation_execution_json))
         return emulation_execution
 
@@ -2664,7 +2667,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f" SET info=%s "
@@ -2685,7 +2688,8 @@ class MetastoreFacade:
         :param empirical_system_model_record: the record to convert
         :return: the DTO representing the record
         """
-        empirical_system_model_config_json = json.dumps(empirical_system_model_record[1], indent=4, sort_keys=True)
+        empirical_system_model_config_json = json.dumps(empirical_system_model_record[1], indent=4, sort_keys=True,
+                                                        cls=NpEncoder)
         empirical_system_model_config: EmpiricalSystemModel = \
             EmpiricalSystemModel.from_dict(json.loads(empirical_system_model_config_json))
         empirical_system_model_config.id = empirical_system_model_record[0]
@@ -2789,7 +2793,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(empirical_system_model.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(empirical_system_model.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
                             f" SET config=%s "
@@ -2827,7 +2831,7 @@ class MetastoreFacade:
         :param mcmc_system_model_record: the record to convert
         :return: the DTO representing the record
         """
-        mcmc_system_model_config_json = json.dumps(mcmc_system_model_record[1], indent=4, sort_keys=True)
+        mcmc_system_model_config_json = json.dumps(mcmc_system_model_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         mcmc_system_model_config: MCMCSystemModel = MCMCSystemModel.from_dict(json.loads(mcmc_system_model_config_json))
         mcmc_system_model_config.id = mcmc_system_model_record[0]
         return mcmc_system_model_config
@@ -2929,7 +2933,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(mcmc_system_model.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(mcmc_system_model.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
                             f" SET config=%s "
@@ -2967,7 +2971,7 @@ class MetastoreFacade:
         :param gp_system_model_record: the record to convert
         :return: the DTO representing the record
         """
-        gp_system_model_config_json = json.dumps(gp_system_model_record[1], indent=4, sort_keys=True)
+        gp_system_model_config_json = json.dumps(gp_system_model_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         gp_system_model_config: GPSystemModel = \
             GPSystemModel.from_dict(json.loads(gp_system_model_config_json))
         gp_system_model_config.id = gp_system_model_record[0]
@@ -3070,7 +3074,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(gp_system_model.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(gp_system_model.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
                             f" SET config=%s "
@@ -3421,7 +3425,7 @@ class MetastoreFacade:
         """
         data_schema = {}
         if traces_dataset_record[3] is not None and traces_dataset_record[3] != "":
-            data_schema_json_str = json.dumps(traces_dataset_record[3], indent=4, sort_keys=True)
+            data_schema_json_str = json.dumps(traces_dataset_record[3], indent=4, sort_keys=True, cls=NpEncoder)
             data_schema = json.loads(data_schema_json_str)
         traces_dataset = TracesDataset(name=traces_dataset_record[1], description=traces_dataset_record[2],
                                        data_schema=data_schema, download_count=traces_dataset_record[4],
@@ -3798,7 +3802,7 @@ class MetastoreFacade:
         :param config_record: the record to convert
         :return: the DTO representing the record
         """
-        config_json = json.dumps(config_record[1], indent=4, sort_keys=True)
+        config_json = json.dumps(config_record[1], indent=4, sort_keys=True, cls=NpEncoder)
         config: Config = Config.from_dict(json.loads(config_json))
         config.id = config_record[0]
         return config
@@ -3892,7 +3896,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.CONFIG_TABLE} "
                             f" SET config=%s "
@@ -3961,7 +3965,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         linear_threshold_stopping_policy_json = json.dumps(linear_threshold_stopping_policy_record[1], indent=4,
-                                                           sort_keys=True)
+                                                           sort_keys=True, cls=NpEncoder)
         linear_threshold_stopping_policy: LinearThresholdStoppingPolicy = LinearThresholdStoppingPolicy.from_dict(
             json.loads(linear_threshold_stopping_policy_json))
         linear_threshold_stopping_policy.id = linear_threshold_stopping_policy_record[0]
@@ -4031,7 +4035,8 @@ class MetastoreFacade:
                 # on distributed tables properly
                 id = GeneralUtil.get_latest_table_id(
                     cur=cur, table_name=constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE)
-                policy_json_str = json.dumps(linear_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
+                policy_json_str = json.dumps(linear_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True,
+                                             cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"(id, policy, simulation_name) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, policy_json_str,
