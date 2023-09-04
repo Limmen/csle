@@ -62,3 +62,50 @@ class TestMetastoreFacadeSuite:
         assert isinstance(emulation_ids_and_names, list)
         assert isinstance(emulation_ids_and_names[0], tuple)
         assert emulation_ids_and_names[0] == example_record
+
+    def test_convert_emulation_record_to_dto(self, example_emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Tests the _convert_emulation_record_to_dto function
+
+        :param example_emulation_env_config: an example EmulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        name = example_emulation_env_config.name
+        example_emulation_env_config.id = 1
+        example_record = (id, name, example_emulation_env_config.to_dict())
+        converted_object = MetastoreFacade._convert_emulation_record_to_dto(emulation_record=example_record)
+        assert isinstance(converted_object, EmulationEnvConfig)
+        assert converted_object == example_emulation_env_config
+
+    def test_install_emulation(self, mocker: pytest_mock.MockFixture,
+                               example_emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Tests the install_emulation function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_env_config: an example EmulationEnvConfig
+        :return: None
+        """
+        id = 2
+        example_emulation_env_config.id = 1
+        example_record = (id, example_emulation_env_config.name, example_emulation_env_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.install_emulation(config=example_emulation_env_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} "
+                                                      f"(id, name, config) "
+                                                      f"VALUES (%s, %s, %s) RETURNING id",
+                                                      (id, example_emulation_env_config.name,
+                                                       example_emulation_env_config.to_json_str()))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id

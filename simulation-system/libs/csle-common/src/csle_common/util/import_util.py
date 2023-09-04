@@ -48,6 +48,10 @@ class ImportUtil:
             Logger.__call__().get_logger().info(f"Saving trace {i}/{len(traces)} to the metastore")
             if emulation_name is not None:
                 trace.emulation_name = emulation_name
-            MetastoreFacade.save_emulation_trace(trace)
+            try:
+                MetastoreFacade.save_emulation_trace(trace)
+            except Exception as e:
+                Logger.__call__().get_logger().info(f"There was an error saving trace number {i}, "
+                                                    f"stacktrace: {e}, {repr(e)}")
         Logger.__call__().get_logger().info("Import of emulation traces from disk complete, "
                                             f"input file: {input_file}")
