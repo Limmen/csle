@@ -2,6 +2,7 @@ import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
+from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 import pytest_mock
 
 
@@ -172,10 +173,10 @@ class TestMetastoreFacadeSuite:
     def test_list_simulations(self, mocker: pytest_mock.MockFixture,
                               example_simulation_env_config: SimulationEnvConfig) -> None:
         """
-        Tests the get_emulation function
+        Tests the list_simulation function
 
         :param mocker: the pytest mocker object
-        :param example_esimulation_env_config: an example EmulationEnvConfig
+        :param example_simulation_env_config: an example EmulationEnvConfig
         :return: None
         """
         id = 1
@@ -198,3 +199,124 @@ class TestMetastoreFacadeSuite:
         assert isinstance(simulation_configs, list)
         assert isinstance(simulation_configs[0], SimulationEnvConfig)
         assert simulation_configs[0] == example_simulation_env_config
+
+    def test_list_simulation_ids(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the list_simulation_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        simulation_configs = MetastoreFacade.list_simulation_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(simulation_configs, list)
+        assert isinstance(simulation_configs[0], tuple)
+        assert simulation_configs[0] == example_record
+
+    def test_get_simulations_by_name(self, mocker: pytest_mock.MockFixture,
+                                     example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the get_simulation_by_name function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example EmulationEnvConfig
+        :return: None
+        """
+        id = 1
+        example_simulation_env_config.id = 1
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocker.patch('csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict',
+                     return_value=example_simulation_env_config)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        simulation_config = MetastoreFacade.get_simulation_by_name(example_simulation_env_config.name)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s",
+            (example_simulation_env_config.name,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(simulation_config, SimulationEnvConfig)
+        assert simulation_config == example_simulation_env_config
+
+    def test_get_simulations(self, mocker: pytest_mock.MockFixture,
+                             example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the get_simulation function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example EmulationEnvConfig
+        :return: None
+        """
+        id = 1
+        example_simulation_env_config.id = 1
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocker.patch('csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict',
+                     return_value=example_simulation_env_config)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        simulation_config = MetastoreFacade.get_simulation(example_simulation_env_config.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} "
+                                                      f"WHERE id = %s", (example_simulation_env_config.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(simulation_config, SimulationEnvConfig)
+        assert simulation_config == example_simulation_env_config
+
+    def test_convert_simulation_record_to_dto(self, mocker: pytest_mock.MockFixture,
+                                              example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the _convert_simulation_record_to_dto function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_env_config.id = 1
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocker.patch('csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict',
+                     return_value=example_simulation_env_config)
+        converted_object = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=example_record)
+        assert isinstance(converted_object, SimulationEnvConfig)
+        assert converted_object == example_simulation_env_config
+
+    def test_convert_emulation_trace_record_to_dto(self, example_emulation_trace: EmulationTrace) -> None:
+        """
+        Tests the _convert_simulation_record_to_dto function
+
+        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        example_emulation_trace.emulation_name = "emulation_trace1"
+        example_emulation_trace.id = 1
+        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        converted_object = MetastoreFacade._convert_emulation_trace_record_to_dto(emulation_trace_record=example_record)
+        assert isinstance(converted_object, EmulationTrace)
+        assert converted_object == example_emulation_trace
