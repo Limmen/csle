@@ -341,8 +341,11 @@ class TestMetastoreFacadeSuite:
         example_record = (id, example_simulation_emulation_trace.emulation_trace.id,
                           example_simulation_emulation_trace.simulation_trace.id)
         mocker.patch(
-            'csle_common.dao.emulation_config.emulation_simulation_trace.EmulationSimulationTrace.from_dict',
-            return_value=example_simulation_emulation_trace)
+            'csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace',
+            return_value=example_emulation_trace)
+        mocker.patch(
+            'csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation_trace',
+            return_value=example_simulation_trace)
         converted_object = MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(
             emulation_simulation_trace_record=example_record)
         assert isinstance(converted_object, EmulationSimulationTrace)
