@@ -3330,14 +3330,10 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
-                    # Need to manually set the ID since CITUS does not handle serial columns
-                    # on distributed tables properly
-                    id = GeneralUtil.get_latest_table_id(
-                        cur=cur, table_name=constants.METADATA_STORE.SESSION_TOKENS_TABLE)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
-                                f"(id, token, timestamp, username) "
-                                f"VALUES (%s, %s, %s, %s) RETURNING token",
-                                (id, session_token.token, ts, session_token.username))
+                                f"(token, timestamp, username) "
+                                f"VALUES (%s, %s, %s) RETURNING token",
+                                (session_token.token, ts, session_token.username))
                     record = cur.fetchone()
                     token_of_new_row = None
                     if record is not None:
