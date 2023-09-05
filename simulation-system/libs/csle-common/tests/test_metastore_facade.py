@@ -3,6 +3,8 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 import pytest_mock
 
 
@@ -308,9 +310,9 @@ class TestMetastoreFacadeSuite:
 
     def test_convert_emulation_trace_record_to_dto(self, example_emulation_trace: EmulationTrace) -> None:
         """
-        Tests the _convert_simulation_record_to_dto function
+        Tests the _convert_emulation_trace_record_to_dto function
 
-        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :param example_emulation_trace: an example EmulationTrace DTO
         :return: None
         """
         id = 1
@@ -320,3 +322,31 @@ class TestMetastoreFacadeSuite:
         converted_object = MetastoreFacade._convert_emulation_trace_record_to_dto(emulation_trace_record=example_record)
         assert isinstance(converted_object, EmulationTrace)
         assert converted_object == example_emulation_trace
+
+    def test_convert_emulation_simulation_trace_record_to_dto(self, mocker: pytest_mock.MockFixture,
+                                                              example_simulation_trace: SimulationTrace,
+                                                              example_emulation_trace: EmulationTrace) -> None:
+        """
+        Tests the _convert_emulation_simulation_trace_record_to_dto function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_trace: an example SimulationTrace DTO
+        :param example_emulation_trace: an example EmulationTrace DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_emulation_trace = EmulationSimulationTrace(simulation_trace=example_simulation_trace,
+                                                                      emulation_trace=example_emulation_trace)
+        example_simulation_emulation_trace.id = id
+        example_record = (id, example_simulation_emulation_trace.emulation_trace.id,
+                          example_simulation_emulation_trace.simulation_trace.id)
+        mocker.patch(
+            'csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace',
+            return_value=example_emulation_trace)
+        mocker.patch(
+            'csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation_trace',
+            return_value=example_simulation_trace)
+        converted_object = MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(
+            emulation_simulation_trace_record=example_record)
+        assert isinstance(converted_object, EmulationSimulationTrace)
+        assert converted_object == example_simulation_emulation_trace
