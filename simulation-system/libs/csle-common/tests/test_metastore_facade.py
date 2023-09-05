@@ -2,6 +2,7 @@ import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
+from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 import pytest_mock
 
 
@@ -286,3 +287,36 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.fetchone.assert_called_once()
         assert isinstance(simulation_config, SimulationEnvConfig)
         assert simulation_config == example_simulation_env_config
+
+    def test_convert_simulation_record_to_dto(self, mocker: pytest_mock.MockFixture,
+                                              example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the _convert_simulation_record_to_dto function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_env_config.id = 1
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocker.patch('csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict',
+                     return_value=example_simulation_env_config)
+        converted_object = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=example_record)
+        assert isinstance(converted_object, SimulationEnvConfig)
+        assert converted_object == example_simulation_env_config
+
+    def test_convert_emulation_trace_record_to_dto(self, example_emulation_trace: EmulationTrace) -> None:
+        """
+        Tests the _convert_simulation_record_to_dto function
+
+        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        example_emulation_trace.emulation_name = "emulation_trace1"
+        example_emulation_trace.id = 1
+        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        converted_object = MetastoreFacade._convert_emulation_trace_record_to_dto(emulation_trace_record=example_record)
+        assert isinstance(converted_object, EmulationTrace)
+        assert converted_object == example_emulation_trace
