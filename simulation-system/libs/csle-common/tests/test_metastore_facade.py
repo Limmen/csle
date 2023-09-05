@@ -286,3 +286,21 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.fetchone.assert_called_once()
         assert isinstance(simulation_config, SimulationEnvConfig)
         assert simulation_config == example_simulation_env_config
+
+    def test_convert_simulation_record_to_dto(self, mocker: pytest_mock.MockFixture,
+                                              example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the _convert_simulation_record_to_dto function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_env_config.id = 1
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocker.patch('csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig.from_dict',
+                     return_value=example_simulation_env_config)
+        converted_object = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=example_record)
+        assert isinstance(converted_object, SimulationEnvConfig)
+        assert converted_object == example_simulation_env_config
