@@ -172,10 +172,10 @@ class TestMetastoreFacadeSuite:
     def test_list_simulations(self, mocker: pytest_mock.MockFixture,
                               example_simulation_env_config: SimulationEnvConfig) -> None:
         """
-        Tests the get_emulation function
+        Tests the list_simulation function
 
         :param mocker: the pytest mocker object
-        :param example_esimulation_env_config: an example EmulationEnvConfig
+        :param example_simulation_env_config: an example EmulationEnvConfig
         :return: None
         """
         id = 1
@@ -198,3 +198,30 @@ class TestMetastoreFacadeSuite:
         assert isinstance(simulation_configs, list)
         assert isinstance(simulation_configs[0], SimulationEnvConfig)
         assert simulation_configs[0] == example_simulation_env_config
+
+    def test_list_simulation_ids(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the list_simulation_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        simulation_configs = MetastoreFacade.list_simulation_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(simulation_configs, list)
+        assert isinstance(simulation_configs[0], tuple)
+        assert simulation_configs[0] == example_record
