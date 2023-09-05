@@ -222,11 +222,18 @@ class MetastoreFacade:
         :param emulation_simulation_trace_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_simulation_trace_json_str = json.dumps(emulation_simulation_trace_record[2], indent=4,
-                                                         sort_keys=True, cls=NpEncoder)
-        emulation_simulation_trace: EmulationSimulationTrace = \
-            EmulationSimulationTrace.from_dict(json.loads(emulation_simulation_trace_json_str))
-        emulation_simulation_trace.id = emulation_simulation_trace_record[0]
+        id = emulation_simulation_trace_record[0]
+        emulation_trace_id = emulation_simulation_trace_record[1]
+        simulation_trace_id = emulation_simulation_trace_record[2]
+        emulation_trace = MetastoreFacade.get_emulation_trace(id=emulation_trace_id)
+        simulation_trace = MetastoreFacade.get_simulation_trace(id=simulation_trace_id)
+        if emulation_trace is None:
+            raise ValueError(f"Could not find an emulation trace with id: {emulation_trace_id}")
+        if simulation_trace is None:
+            raise ValueError(f"Could not find a simulation trace with id: {simulation_trace_id}")
+        emulation_simulation_trace = EmulationSimulationTrace(emulation_trace=emulation_trace,
+                                                              simulation_trace=simulation_trace)
+        emulation_simulation_trace.id = id
         return emulation_simulation_trace
 
     @staticmethod
@@ -2633,8 +2640,6 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                # Need to manually set the ID since CITUS does not handle serial columns
-                # on distributed tables properly
                 emulation_execution_str = \
                     json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "

@@ -1,13 +1,13 @@
 from typing import Optional, List, Dict, Any, Tuple, Union
 import json
 import os
-import numpy as np
 from csle_common.logging.log import Logger
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.encoding.np_encoder import NpEncoder
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
     import EmulationAttackerObservationState
 from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state \
@@ -42,14 +42,14 @@ class EmulationTrace(JSONSerializable):
         """
         :return: a string representation of the object
         """
-        print(f"initial_attacker_observation_state:{self.initial_attacker_observation_state}"
-              f"initial_defender_observation_state:{self.initial_defender_observation_state}"
-              f"attacker_observation_states:{self.attacker_observation_states}\n"
-              f"defender_observation_states:{self.defender_observation_states}\n"
-              f"attacker_actions:{self.attacker_actions}\n"
-              f"defender_actions:{self.defender_actions}\n"
-              f"emulation_name: {self.emulation_name},"
-              f"id:{self.id}")
+        return f"initial_attacker_observation_state:{self.initial_attacker_observation_state}" \
+               f"initial_defender_observation_state:{self.initial_defender_observation_state}" \
+               f"attacker_observation_states:{self.attacker_observation_states}\n" \
+               f"defender_observation_states:{self.defender_observation_states}\n" \
+               f"attacker_actions:{self.attacker_actions}\n" \
+               f"defender_actions:{self.defender_actions}\n" \
+               f"emulation_name: {self.emulation_name}," \
+               f"id:{self.id}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationTrace":
@@ -78,7 +78,7 @@ class EmulationTrace(JSONSerializable):
     def to_dict(self) -> Dict[str, Any]:
         """
         Converts the object to a dict representation
-        
+
         :return: a dict representation of the object
         """
         d: Dict[str, Any] = {}
@@ -751,23 +751,3 @@ class EmulationTrace(JSONSerializable):
                     values.append(null_value)
         assert len(values) == len(labels)
         return values, labels
-
-
-class NpEncoder(json.JSONEncoder):
-    """
-    Encoder for Numpy arrays to JSON
-    """
-    def default(self, obj):
-        """
-        Encodes a numpy type for JSON in the default way
-
-        :param obj: the numpy object to encode
-        :return: the encoded object
-        """
-        if isinstance(obj, np.integer):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return super(NpEncoder, self).default(obj)

@@ -21,6 +21,5 @@ def query_metastore_select(table: str) -> List[Dict[int, Dict]]:
 
 
 if __name__ == '__main__':
-    example_table = constants.METADATA_STORE.PPO_POLICIES_TABLE
+    example_table = constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE
     records = query_metastore_select(table=example_table)
-    print(records)
