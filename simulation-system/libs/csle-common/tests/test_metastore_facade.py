@@ -5,6 +5,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
+from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 import pytest_mock
 
 
@@ -350,3 +351,51 @@ class TestMetastoreFacadeSuite:
             emulation_simulation_trace_record=example_record)
         assert isinstance(converted_object, EmulationSimulationTrace)
         assert converted_object == example_simulation_emulation_trace
+
+    def test_convert_simulation_trace_record_to_dto(self, example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the _convert_simulation_trace_record_to_dto function
+
+        :param example_simulation_trace: an example SimulationTrace DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_trace.name = "simulation_trace1"
+        example_simulation_trace.id = 1
+        example_record = (id, example_simulation_trace.name, example_simulation_trace.to_dict())
+        converted_object = MetastoreFacade._convert_simulation_trace_record_to_dto(
+            simulation_trace_record=example_record)
+        assert isinstance(converted_object, SimulationTrace)
+        assert converted_object == example_simulation_trace
+
+    def test_convert_emulation_statistics_record_to_dto(self,
+                                                        example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the _convert_emulation_statistics_record_to_dto function
+
+        :param example_emulation_statistics: an example EmulationStatistics DTO
+        :return: None
+        """
+        id = 1
+        example_emulation_statistics.name = "emulation_static1"
+        example_emulation_statistics.id = 1
+        example_record = (id, example_emulation_statistics.name, example_emulation_statistics.to_dict())
+        converted_object = MetastoreFacade._convert_emulation_statistics_record_to_dto(
+            emulation_statistics_record=example_record)
+        assert isinstance(converted_object, EmulationStatistics)
+        assert converted_object == example_emulation_statistics
+
+    def test_convert_emulation_image_record_to_tuple(self) -> None:
+        """
+        Tests the _convert_emulation_image_record_to_tuple function
+
+        :return: None
+        """
+        id = 1
+        example_emulation_image_name = "image_name1"
+        example_emulation_image_data = bytes([1, 3, 5, 6])
+        example_record = (id, example_emulation_image_name, example_emulation_image_data)
+        converted_object = MetastoreFacade._convert_emulation_image_record_to_tuple(
+            emulation_image_record=example_record)
+        assert isinstance(converted_object, tuple)
+        assert converted_object == (example_emulation_image_name, example_emulation_image_data)
