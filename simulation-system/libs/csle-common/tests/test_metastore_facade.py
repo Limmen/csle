@@ -350,3 +350,19 @@ class TestMetastoreFacadeSuite:
             emulation_simulation_trace_record=example_record)
         assert isinstance(converted_object, EmulationSimulationTrace)
         assert converted_object == example_simulation_emulation_trace
+
+    def test_convert_simulation_trace_record_to_dto(self, example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the _convert_simulation_trace_record_to_dto function
+
+        :param example_simulation_trace: an example SimulationTrace DTO
+        :return: None
+        """
+        id = 1
+        example_simulation_trace.name = "simulation_trace1"
+        example_simulation_trace.id = 1
+        example_record = (id, example_simulation_trace.name, example_simulation_trace.to_dict())
+        converted_object = MetastoreFacade._convert_simulation_trace_record_to_dto(
+            simulation_trace_record=example_record)
+        assert isinstance(converted_object, SimulationTrace)
+        assert converted_object == example_simulation_trace
