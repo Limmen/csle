@@ -5,6 +5,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
+from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 import pytest_mock
 
 
@@ -366,3 +367,19 @@ class TestMetastoreFacadeSuite:
             simulation_trace_record=example_record)
         assert isinstance(converted_object, SimulationTrace)
         assert converted_object == example_simulation_trace
+
+    def test_convert_emulation_statistics_record_to_dto(self, example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the _convert_emulation_statistics_record_to_dto function
+
+        :param example_emulation_statistics: an example EmulationStatistics DTO
+        :return: None
+        """
+        id = 1
+        example_emulation_statistics.name = "emulation_static1"
+        example_emulation_statistics.id = 1
+        example_record = (id, example_emulation_statistics.name, example_emulation_statistics.to_dict())
+        converted_object = MetastoreFacade._convert_emulation_statistics_record_to_dto(
+            emulation_statistics_record=example_record)
+        assert isinstance(converted_object, EmulationStatistics)
+        assert converted_object == example_emulation_statistics
