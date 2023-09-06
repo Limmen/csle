@@ -362,7 +362,7 @@ class MetastoreFacade:
                     # on distributed tables properly
                     id = GeneralUtil.get_latest_table_id(cur=cur,
                                                          table_name=constants.METADATA_STORE.SIMULATIONS_TABLE)
-                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                    config_json_str = config.to_json_str()
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
                                 f"(id, name, config) "
                                 f"VALUES (%s, %s, %s) RETURNING id", (id, config.name, config_json_str))

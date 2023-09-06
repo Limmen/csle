@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from abc import ABC, abstractmethod
+from csle_base.encoding.np_encoder import NpEncoder
 
 
 class JSONSerializable(ABC):
@@ -45,7 +46,7 @@ class JSONSerializable(ABC):
         :return: the json string representation of the DTO
         """
         import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
+        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
         return json_str
 
     def to_json_file(self, json_file_path: str) -> None:
