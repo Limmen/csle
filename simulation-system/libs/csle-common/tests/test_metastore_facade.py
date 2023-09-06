@@ -368,7 +368,8 @@ class TestMetastoreFacadeSuite:
         assert isinstance(converted_object, SimulationTrace)
         assert converted_object == example_simulation_trace
 
-    def test_convert_emulation_statistics_record_to_dto(self, example_emulation_statistics: EmulationStatistics) -> None:
+    def test_convert_emulation_statistics_record_to_dto(self,
+                                                        example_emulation_statistics: EmulationStatistics) -> None:
         """
         Tests the _convert_emulation_statistics_record_to_dto function
 
@@ -383,3 +384,18 @@ class TestMetastoreFacadeSuite:
             emulation_statistics_record=example_record)
         assert isinstance(converted_object, EmulationStatistics)
         assert converted_object == example_emulation_statistics
+
+    def test_convert_emulation_image_record_to_tuple(self) -> None:
+        """
+        Tests the _convert_emulation_image_record_to_tuple function
+
+        :return: None
+        """
+        id = 1
+        example_emulation_image_name = "image_name1"
+        example_emulation_image_data = bytes([1, 3, 5, 6])
+        example_record = (id, example_emulation_image_name, example_emulation_image_data)
+        converted_object = MetastoreFacade._convert_emulation_image_record_to_tuple(
+            emulation_image_record=example_record)
+        assert isinstance(converted_object, tuple)
+        assert converted_object == (example_emulation_image_name, example_emulation_image_data)
