@@ -4,6 +4,7 @@ from scipy.special import rel_entr
 from csle_common.dao.system_identification.gp_conditional import GPConditional
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_common.dao.encoding.np_encoder import NpEncoder
 
 
 class GPSystemModel(SystemModel):
@@ -111,7 +112,7 @@ class GPSystemModel(SystemModel):
         :return: the json string representation of the DTO
         """
         import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
+        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
         return json_str
 
     def to_json_file(self, json_file_path: str) -> None:

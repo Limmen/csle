@@ -399,3 +399,72 @@ class TestMetastoreFacadeSuite:
             emulation_image_record=example_record)
         assert isinstance(converted_object, tuple)
         assert converted_object == (example_emulation_image_name, example_emulation_image_data)
+
+    def test_convert_simulation_image_record_to_tuple(self) -> None:
+        """
+        Tests the _convert_simulation_image_record_to_tuple function
+
+        :return: None
+        """
+        id = 1
+        example_simulation_image_name = "image_name1"
+        example_simulation_image_data = bytes([1, 3, 5, 6])
+        example_record = (id, example_simulation_image_name, example_simulation_image_data)
+        converted_object = MetastoreFacade._convert_simulation_image_record_to_tuple(
+            simulation_image_record=example_record)
+        assert isinstance(converted_object, tuple)
+        assert converted_object == (example_simulation_image_name, example_simulation_image_data)
+
+    def test_uninstall_emulation(self, mocker: pytest_mock.MockFixture, example_emulation_env_config) -> None:
+        """
+        Tests the uninstall_emulation function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_env_config: an example EmulationEnvConfig object
+        :return: None
+        """
+        example_emulation_env_config.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.uninstall_emulation(config=example_emulation_env_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s",
+            (example_emulation_env_config.name,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_install_simulation(self, mocker: pytest_mock.MockFixture,
+                                example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the install_simulation function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig object
+        :return: None
+        """
+        id = 2
+        example_simulation_env_config.id = 1
+        example_simulation_env_config.name = "simulation1"
+        example_record = (id, example_simulation_env_config.name, example_simulation_env_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.install_simulation(config=example_simulation_env_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
