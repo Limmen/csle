@@ -468,3 +468,29 @@ class TestMetastoreFacadeSuite:
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
         assert inserted_id == id
+
+    def test_uninstall_simulation(self, mocker: pytest_mock.MockFixture,
+                                  example_simulation_env_config: SimulationEnvConfig) -> None:
+        """
+        Tests the uninstall_simulation function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_env_config: an example SimulationEnvConfig object
+        :return: None
+        """
+        example_simulation_env_config.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.uninstall_simulation(config=example_simulation_env_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s",
+            (example_simulation_env_config.name,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
