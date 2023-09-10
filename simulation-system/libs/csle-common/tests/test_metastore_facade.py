@@ -524,6 +524,7 @@ class TestMetastoreFacadeSuite:
                                                       (id, example_emulation_trace.emulation_name,
                                                        example_emulation_trace.to_json_str()))
         mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
         assert inserted_id == id
 
@@ -557,5 +558,37 @@ class TestMetastoreFacadeSuite:
                                                       (id, example_emulation_statistics.emulation_name,
                                                        example_emulation_statistics.to_json_str()))
         mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
         assert inserted_id == id
+
+    def test_update_emulation_statistic(self, mocker: pytest_mock.MockFixture,
+                                        example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the update_emulation_statistic function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_statistics: an example EmulationStatistics object
+        :return: None
+        """
+        id = 2
+        example_emulation_statistics.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_emulation_statistic(
+            id=id,
+            emulation_statistics=example_emulation_statistics)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
+            f" SET statistics=%s "
+            f"WHERE {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}.id = %s",
+            (example_emulation_statistics.to_json_str(), id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
