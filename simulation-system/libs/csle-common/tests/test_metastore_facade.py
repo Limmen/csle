@@ -568,7 +568,6 @@ class TestMetastoreFacadeSuite:
         Tests the update_emulation_statistic function
 
         :param mocker: the pytest mocker object
-        :param example_emulation_statistics: an example EmulationStatistics object
         :return: None
         """
         id = 2
@@ -592,6 +591,35 @@ class TestMetastoreFacadeSuite:
             (example_emulation_statistics.to_json_str(), id))
         mocked_connection.commit.assert_called_once()
         assert result is None
+
+    def test_list_emulation_statistics(self, mocker: pytest_mock.MockFixture,
+                                       example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the list_emulation_statistics function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_statistics: an example EmulationStatistics object
+        :return: None
+        """
+        id = 1
+        example_emulation_statistics.id = id
+        example_record = (id, example_emulation_statistics.emulation_name, example_emulation_statistics.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        emulation_statistics = MetastoreFacade.list_emulation_statistics()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(emulation_statistics, list)
+        assert isinstance(emulation_statistics[0], EmulationStatistics)
+        assert emulation_statistics[0] == example_emulation_statistics
 
     def test_list_emulation_statistics_ids(self, mocker: pytest_mock.MockFixture) -> None:
         """
