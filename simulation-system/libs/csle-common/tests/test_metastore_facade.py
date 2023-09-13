@@ -851,7 +851,7 @@ class TestMetastoreFacadeSuite:
         Tests the remove_emulation_trace function
 
         :param mocker: the pytest mocker object
-        :param example_remove_emulation_trace: an example EmulationTrace object
+        :param example_emulation_trace: an example EmulationTrace object
         :return: None
         """
         example_emulation_trace.id = 1
@@ -868,5 +868,36 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.execute.assert_called_once_with(
             f"DELETE FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s",
             (example_emulation_trace.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_emulation_simulation_trace(self, mocker: pytest_mock.MockFixture,
+                                               example_emulation_trace: EmulationTrace,
+                                               example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the remove_emulation_simulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_trace: an example EmulationTrace object
+        :param example_simulation_trace_trace: an example Simulation object
+        :return: None
+        """
+        example_emulation_simulation_trace = EmulationSimulationTrace(simulation_trace=example_simulation_trace,
+                                                                      emulation_trace=example_emulation_trace)
+        example_emulation_simulation_trace.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_emulation_simulation_trace(
+            emulation_simulation_trace=example_emulation_simulation_trace)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_emulation_simulation_trace.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
