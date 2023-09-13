@@ -765,12 +765,12 @@ class MetastoreFacade:
                 return id_of_new_row
 
     @staticmethod
-    def save_emulation_simulation_trace(emulation_simulation_trace: EmulationSimulationTrace) -> None:
+    def save_emulation_simulation_trace(emulation_simulation_trace: EmulationSimulationTrace) -> Union[Any, int]:
         """
         Saves an emulation_simulation trace
 
         :param emulation_simulation_trace: the emulation trace to save
-        :return: None
+        :return: id of the new row
         """
         Logger.__call__().get_logger().debug(f"Installing emulation-simulation trace for "
                                              f"emulation:{emulation_simulation_trace.emulation_trace.emulation_name} "
@@ -794,11 +794,16 @@ class MetastoreFacade:
                             f"{constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
                             f"(id, emulation_trace, simulation_trace) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace_id, simulation_trace_id))
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug(
                     f"Emulation-Simulation trace for "
                     f"emulation {emulation_simulation_trace.emulation_trace.emulation_name} "
                     f"and simulation: {emulation_simulation_trace.simulation_trace.simulation_env} saved successfully")
+                return id_of_new_row
 
     @staticmethod
     def list_emulation_simulation_traces() -> List[EmulationSimulationTrace]:
