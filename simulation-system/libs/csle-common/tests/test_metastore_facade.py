@@ -815,3 +815,32 @@ class TestMetastoreFacadeSuite:
             (example_simulation_trace.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
+
+    def test_get_emulation_trace(self, mocker: pytest_mock.MockFixture,
+                                 example_emulation_trace: EmulationTrace) -> None:
+        """
+        Tests the get_emulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_trace: an example EmulationTrace
+        :return: None
+        """
+        id = 1
+        example_emulation_trace.id = id
+        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_emulation_trace = MetastoreFacade.get_emulation_trace(id=example_emulation_trace.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_emulation_trace.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_emulation_trace, EmulationTrace)
+        assert fetched_emulation_trace == example_emulation_trace
