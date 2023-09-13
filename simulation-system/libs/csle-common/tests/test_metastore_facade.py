@@ -844,3 +844,177 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.fetchone.assert_called_once()
         assert isinstance(fetched_emulation_trace, EmulationTrace)
         assert fetched_emulation_trace == example_emulation_trace
+
+    def test_remove_emulation_trace(self, mocker: pytest_mock.MockFixture,
+                                    example_emulation_trace: EmulationTrace) -> None:
+        """
+        Tests the remove_emulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_trace: an example EmulationTrace object
+        :return: None
+        """
+        example_emulation_trace.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_emulation_trace(emulation_trace=example_emulation_trace)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_emulation_trace.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_emulation_simulation_trace(self, mocker: pytest_mock.MockFixture,
+                                               example_emulation_trace: EmulationTrace,
+                                               example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the remove_emulation_simulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_trace: an example EmulationTrace object
+        :param example_simulation_trace_trace: an example Simulation object
+        :return: None
+        """
+        example_emulation_simulation_trace = EmulationSimulationTrace(simulation_trace=example_simulation_trace,
+                                                                      emulation_trace=example_emulation_trace)
+        example_emulation_simulation_trace.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_emulation_simulation_trace(
+            emulation_simulation_trace=example_emulation_simulation_trace)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_emulation_simulation_trace.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_get_emulation_statistics(self, mocker: pytest_mock.MockFixture,
+                                      example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the get_emulation_statistics function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_statistics: an example EmulationTrace
+        :return: None
+        """
+        id = 1
+        example_emulation_statistics.id = id
+        example_record = (id, example_emulation_statistics.emulation_name, example_emulation_statistics.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_emulation_statistics = MetastoreFacade.get_emulation_statistic(id=example_emulation_statistics.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
+            f"WHERE id = %s", (example_emulation_statistics.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_emulation_statistics, EmulationStatistics)
+        assert fetched_emulation_statistics == example_emulation_statistics
+
+    def test_remove_emulation_statistic(self, mocker: pytest_mock.MockFixture,
+                                        example_emulation_statistics: EmulationStatistics) -> None:
+        """
+        Tests the remove_emulation_statistic function
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_statistics: an example EmulationStatistics object
+        :return: None
+        """
+        example_emulation_statistics.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_emulation_statistic(
+            emulation_statistic=example_emulation_statistics)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} WHERE id = %s",
+            (example_emulation_statistics.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_get_simulation_trace(self, mocker: pytest_mock.MockFixture,
+                                  example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the get_simulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_trace: an example SimulationTrace
+        :return: None
+        """
+        id = 1
+        example_simulation_trace.id = id
+        example_record = (id, example_simulation_trace.simulation_env, example_simulation_trace.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_simulation_trace = MetastoreFacade.get_simulation_trace(id=example_simulation_trace.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_simulation_trace.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_simulation_trace, SimulationTrace)
+        assert fetched_simulation_trace == example_simulation_trace
+
+    def test_save_simulation_trace(self, mocker: pytest_mock.MockFixture,
+                                   example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the save_simulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_trace: an example SimulationTrace object
+        :return: None
+        """
+        id = 2
+        example_simulation_trace.id = id
+        example_record = (id, example_simulation_trace.simulation_env, example_simulation_trace.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_simulation_trace(simulation_trace=example_simulation_trace)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (id, gym_env, trace) "
+            f"VALUES (%s, %s, %s) RETURNING id", (id, example_simulation_trace.simulation_env,
+                                                  example_simulation_trace.to_json_str()))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
