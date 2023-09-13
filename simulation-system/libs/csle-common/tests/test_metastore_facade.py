@@ -789,3 +789,29 @@ class TestMetastoreFacadeSuite:
         assert isinstance(simulation_traces, list)
         assert isinstance(simulation_traces[0], SimulationTrace)
         assert simulation_traces[0] == example_simulation_trace
+
+    def test_remove_simulation_trace(self, mocker: pytest_mock.MockFixture,
+                                     example_simulation_trace: SimulationTrace) -> None:
+        """
+        Tests the remove_simulation_trace function
+
+        :param mocker: the pytest mocker object
+        :param example_simulation_trace: an example SimulationTrace object
+        :return: None
+        """
+        example_simulation_trace.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_simulation_trace(simulation_trace=example_simulation_trace)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %s",
+            (example_simulation_trace.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
