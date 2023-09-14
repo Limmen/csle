@@ -39,13 +39,13 @@ class StoppingGameState(JSONSerializable):
         """
         :return: the attacker's observation
         """
-        return np.array([self.l, self.b[1], self.s])
+        return np.array([np.float64(self.l), np.float64(self.b[1]), np.float64(self.s)])
 
     def defender_observation(self) -> npt.NDArray[Any]:
         """
         :return: the defender's observation
         """
-        return np.array([self.l, self.b[1]])
+        return np.array([np.float64(self.l), np.float64(self.b[1])])
 
     def __str__(self) -> str:
         """
