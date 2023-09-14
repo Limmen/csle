@@ -1137,3 +1137,35 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.fetchone.assert_called_once()
         assert isinstance(fetched_emulation_simulation_trace, EmulationSimulationTrace)
         assert fetched_emulation_simulation_trace == example_emulation_simulation_trace
+
+    def test_save_emulation_image(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the save_emulation_image function
+
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_emulation_image_name = "image_name1"
+        example_emulation_image_data = bytes([1, 3, 5, 6])
+        example_record = (id, example_emulation_image_name, example_emulation_image_data)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_emulation_image(emulation_name=example_emulation_image_name,
+                                                           img=example_emulation_image_data)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} "
+            f"(id, emulation_name, image) VALUES (%s, %s, %s) RETURNING id", (id, example_emulation_image_name,
+                                                                              example_emulation_image_data))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
