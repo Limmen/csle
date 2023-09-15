@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
@@ -66,3 +66,61 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
                 f"observation_tensor: {self.observation_tensor}, transition_tensor: {self.transition_tensor}, "
                 f"b1:{self.b1}, T: {self.T}, simulation_env_name: {self.simulation_env_name}, "
                 f"gym_env_name: {self.gym_env_name}")
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "IntrusionRecoveryPomdpConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        dto = IntrusionRecoveryPomdpConfig(
+            eta=d["eta"], p_a=d["p_a"], p_c_1=d["p_c_1"], p_c_2=d["p_c_2"], p_u=d["p_u"], BTR=d["BTR"],
+            negate_costs=d["negate_costs"], seed=d["seed"], discount_factor=d["discount_factor"], states=d["states"],
+            actions=d["actions"], observations=d["observations"], cost_tensor=d["cost_tensor"],
+            observation_tensor=d["observation_tensor"], transition_tensor=d["transition_tensor"], b1=d["b1"],
+            T=d["T"], simulation_env_name=d["simulation_env_name"], gym_env_name=d["gym_env_name"])
+        return dto
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Gets a dict representation of the object
+
+        :return: A dict representation of the object
+        """
+        d: Dict[str, Any] = {}
+        d["eta"] = self.eta
+        d["p_a"] = self.p_a
+        d["p_c_1"] = self.p_c_1
+        d["p_c_2"] = self.p_c_2
+        d["p_u"] = self.p_u
+        d["BTR"] = self.BTR
+        d["negate_costs"] = self.negate_costs
+        d["seed"] = self.seed
+        d["discount_factor"] = self.discount_factor
+        d["states"] = self.states
+        d["actions"] = self.actions
+        d["observations"] = self.observations
+        d["cost_tensor"] = self.cost_tensor
+        d["observation_tensor"] = self.observation_tensor
+        d["transition_tensor"] = self.transition_tensor
+        d["b1"] = self.b1
+        d["T"] = self.T
+        d["simulation_env_name"] = self.simulation_env_name
+        d["gym_env_name"] = self.simulation_env_name
+        return d
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "IntrusionRecoveryPomdpConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return IntrusionRecoveryPomdpConfig.from_dict(json.loads(json_str))
