@@ -8,11 +8,8 @@ class KernelConfig(ABC):
     Abstract class representing a kernel configuration
     """
 
-    def __init__(self):
-        pass
-
     @abstractmethod
-    def create_kernel(self, input_dim: int, var_function : Callable = None) -> GPy.kern.Kern:
+    def create_kernel(self, input_dim: int, var_function: Callable = None) -> GPy.kern.Kern:
         """
         Abstract method for creating the kernel (returning a GPy kernel) that each subclass should implement
 

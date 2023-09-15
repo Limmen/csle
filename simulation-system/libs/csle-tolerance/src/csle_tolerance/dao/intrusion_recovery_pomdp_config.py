@@ -9,7 +9,8 @@ class IntrusionRecoveryPomdpConfig:
     def __init__(self, eta: float, p_a: float, p_c_1: float, p_c_2: float, p_u: float, BTR: int, negate_costs: bool,
                  seed: int, discount_factor: float, states: List[int], actions: List[int], observations: List[int],
                  cost_tensor: List[List[float]], observation_tensor: List[List[float]],
-                 transition_tensor: List[List[List[float]]], b1: List[float], T: int) -> None:
+                 transition_tensor: List[List[List[float]]], b1: List[float], T: int, simulation_env_name: str,
+                 gym_env_name: str) -> None:
         """
         Initializes the DTO
 
@@ -30,6 +31,8 @@ class IntrusionRecoveryPomdpConfig:
         :param transition_tensor: the transition tensor
         :param b1: the initial belief
         :param T: the time horizon
+        :param simulation_env_name: name of the simulation environment
+        :param gym_env_name: name of the gym environment
         """
         self.eta = eta
         self.p_a = p_a
@@ -48,6 +51,8 @@ class IntrusionRecoveryPomdpConfig:
         self.transition_tensor = transition_tensor
         self.b1 = b1
         self.T = T
+        self.simulation_env_name = simulation_env_name
+        self.gym_env_name = gym_env_name
 
     def __str__(self) -> str:
         """
@@ -58,4 +63,5 @@ class IntrusionRecoveryPomdpConfig:
                 f"discount_factor: {self.discount_factor}, states: {self.states}, actions: {self.actions}, "
                 f"observations: {self.observation_tensor}, cost_tensor: {self.cost_tensor}, "
                 f"observation_tensor: {self.observation_tensor}, transition_tensor: {self.transition_tensor}, "
-                f"b1:{self.b1}, T: {self.T}")
+                f"b1:{self.b1}, T: {self.T}, simulation_env_name: {self.simulation_env_name}, "
+                f"gym_env_name: {self.gym_env_name}")

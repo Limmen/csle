@@ -68,13 +68,13 @@ class BOConfig:
         if self.acquisition_function_type == AcquisitionFunctionType.EXPECTED_IMPROVEMENT:
             return ExpectedImprovement(surrogate_model)
         elif self.acquisition_function_type == AcquisitionFunctionType.NEGATIVE_LOWER_CONFIDENCE_BOUND:
-            return NegativeLowerConfidenceBound(surrogate_model, beta = self.beta)
+            return NegativeLowerConfidenceBound(surrogate_model, beta=self.beta)
         elif self.acquisition_function_type == AcquisitionFunctionType.PROBABILITY_OF_IMPROVEMENT:
             return ProbabilityOfImprovement(surrogate_model)
         elif self.acquisition_function_type == AcquisitionFunctionType.MAX_VALUE_ENTROPY_SEARCH:
             return MaxValueEntropySearch(surrogate_model, space=self.input_space)
         elif self.acquisition_function_type == AcquisitionFunctionType.MUMBO:
-            return MUMBO(surrogate_model, space = self.input_space)
+            return MUMBO(surrogate_model, space=self.input_space)
         elif self.acquisition_function_type == AcquisitionFunctionType.ENTROPY_SEARCH:
             return EntropySearch(surrogate_model, space=self.input_space)
         else:

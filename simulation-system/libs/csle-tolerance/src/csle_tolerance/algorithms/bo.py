@@ -3,7 +3,6 @@ import time
 from csle_tolerance.dao.bo.bo_config import BOConfig
 from csle_tolerance.dao.bo.bo_results import BOResults
 from csle_tolerance.logging.logger import Logger
-from csle_tolerance.dao.bo.optimization.objective_type import ObjectiveType
 
 
 class BO:
@@ -57,7 +56,7 @@ class BO:
 
         # Fit the GP surrogate model based on the initial data
         results.surrogate_model = bo_config.gp_config.create_gp(X=bo_config.X_init, Y=bo_config.Y_init,
-                                                              input_dim=len(bo_config.input_space.parameters))
+                                                                input_dim=len(bo_config.input_space.parameters))
 
         # Define the acquisition function
         results.acquisition = bo_config.get_acquisition_function(surrogate_model=results.surrogate_model)
@@ -66,7 +65,6 @@ class BO:
         results.acquisition_optimizer = bo_config.get_acquisition_optimizer()
 
         while results.remaining_budget > 0:
-
             # Update GP model
             results.surrogate_model.optimize()
 
@@ -105,5 +103,5 @@ class BO:
             results.remaining_budget -= cost
 
         results.total_time = time.time() - results.start_time
-        logger.info(f"BO execution complete, total time: {round(results.total_time,2)}s")
+        logger.info(f"BO execution complete, total time: {round(results.total_time, 2)}s")
         return results

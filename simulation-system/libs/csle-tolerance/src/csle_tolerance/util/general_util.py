@@ -4,6 +4,9 @@ import numpy as np
 
 
 class GeneralUtil:
+    """
+    Class with general utility functions related to csle-tolerance
+    """
 
     @staticmethod
     def threshold_probability(b1: float, threshold: float, k=-20) -> float:
@@ -45,7 +48,6 @@ class GeneralUtil:
         :return: sigmoid(x)^(-1)
         """
         return math.log(y / (1 - y), math.e)
-
 
     @staticmethod
     def sample_next_state(transition_tensor: List[List[List[float]]], s: int, a: int, states: List[int]) -> int:

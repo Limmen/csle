@@ -47,7 +47,7 @@ class LpCmdp:
         for s in states:
             for a in actions:
                 occupancy_measures_sum += occupancy_measures[s][a]
-        problem += occupancy_measures_sum == 1, f"StochasticConstraint"
+        problem += occupancy_measures_sum == 1, "StochasticConstraint"
 
         # The transition constraints
         for s_prime in states:

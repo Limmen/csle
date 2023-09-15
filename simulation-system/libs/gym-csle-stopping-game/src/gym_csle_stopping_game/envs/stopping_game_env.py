@@ -52,13 +52,6 @@ class StoppingGameEnv(BaseEnv):
         self.action_space = self.defender_action_space
         self.observation_space = self.defender_observation_space
 
-        # Setup Config
-        self.viewer = None
-        self.metadata = {
-            'render.modes': ['human', 'rgb_array'],
-            'video.frames_per_second': 50  # Video rendering speed
-        }
-
         # Setup traces
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)

@@ -146,4 +146,3 @@ class BOResults:
         :return: a copy of the DTO
         """
         return BOResults.from_dict(self.to_dict())
-
