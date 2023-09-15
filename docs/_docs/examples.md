@@ -50,7 +50,7 @@ traces = MetastoreFacade.list_emulation_traces()
 ```
 
 <p class="captionFig">
-Listing 105: Example of collecting attack and system traces with CSLE.
+Listing 107: Example of collecting attack and system traces with CSLE.
 </p>
 
 ### System Identification
@@ -94,7 +94,7 @@ gaussian_mixture_system_model=system_model)
 ```
 
 <p class="captionFig">
-Listing 106: Example of system identification through expectation maximization with CSLE.
+Listing 108: Example of system identification through expectation maximization with CSLE.
 </p>
 
 ### Strategy Training
@@ -142,7 +142,7 @@ for policy in experiment_execution.result.policies.values():
 ```
 
 <p class="captionFig">
-Listing 107: Example of strategy optimization through the Proximal Policy Optimization (PPO) reinforcement learning algorithm in CSLE.
+Listing 109: Example of strategy optimization through the Proximal Policy Optimization (PPO) reinforcement learning algorithm in CSLE.
 </p>
 
 ### Strategy Evaluation
@@ -181,6 +181,6 @@ StoppingGamePomdpDefenderEnv.emulation_evaluation(
 ```
 
 <p class="captionFig">
-Listing 108: Example of evaluating learned security strategies in the emulation system of CSLE.
+Listing 110: Example of evaluating learned security strategies in the emulation system of CSLE.
 </p>
 

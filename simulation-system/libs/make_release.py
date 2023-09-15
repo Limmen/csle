@@ -42,6 +42,9 @@ RELEASE_CONFIG = {
     },
     "csle-cluster": {
         "new_version": "'0.3.8'"
+    },
+    "csle-tolerance": {
+        "new_version": "'0.3.8'"
     }
 }
 

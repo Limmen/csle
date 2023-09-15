@@ -24,3 +24,5 @@ echo "Running type checker for csle-base"
 cd simulation-system/libs/csle-base; mypy src; cd ../../../
 echo "Running type checker for csle-cli"
 cd simulation-system/libs/csle-cli; mypy src; cd ../../../
+echo "Running type checker for csle-tolerance"
+cd simulation-system/libs/csle-tolerance; mypy src; cd ../../../
