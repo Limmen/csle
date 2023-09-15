@@ -1,4 +1,5 @@
 from typing import List
+from gymnasium.envs.registration import register
 import math
 import numpy as np
 
@@ -64,3 +65,21 @@ class GeneralUtil:
         for s_prime in states:
             state_probs.append(transition_tensor[a][s][s_prime])
         return int(np.random.choice(np.arange(0, len(states)), p=state_probs))
+
+    @staticmethod
+    def register_envs() -> None:
+        """
+        Utility method for registering Gymnasium environments
+
+        :return: None
+        """
+        register(
+            id='csle-tolerance-intrusion-recovery-pomdp-v1',
+            entry_point='csle_tolerance.envs.intrusion_recovery_pomdp_env:IntrusionRecoveryPomdpEnv',
+            kwargs={'config': None}
+        )
+        register(
+            id='csle-tolerance-intrusion-response-cmdp-v1',
+            entry_point='csle_tolerance.envs.intrusion_response_cmdp_env:IntrusionResponseCmdpEnv',
+            kwargs={'config': None}
+        )
