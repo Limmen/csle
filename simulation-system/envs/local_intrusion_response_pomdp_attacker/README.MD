@@ -1,9 +1,6 @@
-# TODO 
+# Local Intrusion Response POMDP Attacker 
 
-TODO
-
-## Overview
-TODO
+POMDP model of the local intrusion response problem of the attacker.
 
 ## Useful commands
 

@@ -1,7 +1,8 @@
 from typing import List
+from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
-class IntrusionResponseCmdpConfig:
+class IntrusionResponseCmdpConfig(SimulationEnvInputConfig):
     """
     Configuration of the intrusion response CMDP
     """

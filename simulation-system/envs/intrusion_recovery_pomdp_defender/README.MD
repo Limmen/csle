@@ -1,6 +1,6 @@
-# Local Intrusion Response POMDP of the Defender 
+# Intrusion recovery POMDP
 
-POMDP model of the local intrusion response problem of the defender
+POMDP model of the intrusion recovery task of the defender.
 
 ## Useful commands
 
