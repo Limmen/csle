@@ -1229,3 +1229,26 @@ class TestMetastoreFacadeSuite:
         assert isinstance(fetched_emulation_image[0], str)
         assert isinstance(fetched_emulation_image[1], bytes)
         assert fetched_emulation_image == (example_emulation_image_name, example_emulation_image_data)
+
+    def test_delete_all(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the delete_all function
+
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        table_name = "test_table1"
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.delete_all(table=table_name)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {table_name}")
+        mocked_connection.commit.assert_called_once()
+        assert result is None
