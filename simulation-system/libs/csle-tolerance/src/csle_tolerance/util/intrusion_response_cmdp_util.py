@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 
-class IntrusionRecoveryCmdpUtil:
+class IntrusionResponseCmdpUtil:
     """
     Class with utility functions for the intrusion-response CMDP
     """
@@ -51,7 +51,7 @@ class IntrusionRecoveryCmdpUtil:
         """
         cost_tensor = []
         for s in states:
-            cost_tensor.append(IntrusionRecoveryCmdpUtil.cost_function(s=s, negate=negate))
+            cost_tensor.append(IntrusionResponseCmdpUtil.cost_function(s=s, negate=negate))
         return cost_tensor
 
     @staticmethod
@@ -79,7 +79,7 @@ class IntrusionRecoveryCmdpUtil:
         """
         constraint_cost_tensor = []
         for s in states:
-            constraint_cost_tensor.append(IntrusionRecoveryCmdpUtil.constraint_cost_function(s=s, f=f))
+            constraint_cost_tensor.append(IntrusionResponseCmdpUtil.constraint_cost_function(s=s, f=f))
         return constraint_cost_tensor
 
     @staticmethod
@@ -121,7 +121,7 @@ class IntrusionRecoveryCmdpUtil:
         :return: P(s_prime | s, a)
         """
         delta = s_prime - a - s
-        delta_prob = IntrusionRecoveryCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u, delta=delta, s_max=s_max)
+        delta_prob = IntrusionResponseCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u, delta=delta, s_max=s_max)
         return delta_prob
 
     @staticmethod
@@ -144,10 +144,10 @@ class IntrusionRecoveryCmdpUtil:
                 s_a_transitions = []
                 normalizing_constant = 0
                 for delta in range(-s_max, s_max + 1):
-                    normalizing_constant += IntrusionRecoveryCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u,
+                    normalizing_constant += IntrusionResponseCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u,
                                                                                      delta=delta, s_max=s_max)
                 for s_prime in states:
-                    s_a_transitions.append(IntrusionRecoveryCmdpUtil.transition_function(
+                    s_a_transitions.append(IntrusionResponseCmdpUtil.transition_function(
                         s=s, s_prime=s_prime, a=a, p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max))
                 normalizing_constant = sum(s_a_transitions)
                 s_a_transitions = list(np.array(s_a_transitions) * (1 / normalizing_constant))

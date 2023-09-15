@@ -204,13 +204,12 @@ class LinearProgrammingCMDPAgent(BaseAgent):
         actions = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.ACTIONS].value)
         states = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.STATES].value)
         cost_tensor = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.COST_TENSOR].value)
-        transition_tensor = np.array(self.experiment_config.hparams[
-                                         agents_constants.LP_FOR_CMDPs.TRANSITION_TENSOR].value)
+        transition_tensor = np.array(
+            self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.TRANSITION_TENSOR].value)
         constraint_cost_tensors = np.array(
             self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS].value)
         constraint_cost_thresholds = np.array(
             self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS].value)
-
 
         solution_status, optimal_occupancy_measures, optimal_strategy, expected_constraint_costs, objective_value = (
             self.lp(

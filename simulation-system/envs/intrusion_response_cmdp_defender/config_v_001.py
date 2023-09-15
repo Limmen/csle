@@ -23,7 +23,7 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
-from csle_tolerance.util.intrusion_response_cmdp_util import IntrusionRecoveryCmdpUtil
+from csle_tolerance.util.intrusion_response_cmdp_util import IntrusionResponseCmdpUtil
 from csle_tolerance.dao.intrusion_response_cmdp_config import IntrusionResponseCmdpConfig
 
 
@@ -139,7 +139,7 @@ def default_joint_observation_space_config(s_max: int) -> JointObservationSpaceC
     :param s_max: the maximum number of nodes
     :return: the default joint observation space configuration
     """
-    obs = IntrusionRecoveryCmdpUtil.state_space(s_max=s_max)
+    obs = IntrusionResponseCmdpUtil.state_space(s_max=s_max)
     observations = []
     observation_id_to_observation_id_vector = {}
     observation_id_to_observation_vector = {}
@@ -174,7 +174,7 @@ def default_reward_function_config(s_max: int, negate_costs: bool) -> RewardFunc
     :param negate_costs: boolean flag indicating whether costs should be negated or not
     :return: the default reward function configuration
     """
-    cost_tensor = IntrusionRecoveryCmdpUtil.cost_tensor(states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max),
+    cost_tensor = IntrusionResponseCmdpUtil.cost_tensor(states=IntrusionResponseCmdpUtil.state_space(s_max=s_max),
                                                         negate=negate_costs)
     reward_function_config = RewardFunctionConfig(reward_tensor=cost_tensor)
     return reward_function_config
@@ -190,8 +190,8 @@ def default_transition_operator_config(s_max: int, p_a: float, p_c: float, p_u: 
     :param p_u: the software upgrade probability
     :return: the default transition tensor configuration
     """
-    transition_tensor = IntrusionRecoveryCmdpUtil.transition_tensor(
-        states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max), actions=IntrusionRecoveryCmdpUtil.action_space(),
+    transition_tensor = IntrusionResponseCmdpUtil.transition_tensor(
+        states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), actions=IntrusionResponseCmdpUtil.action_space(),
         p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
     transition_operator_config = TransitionOperatorConfig(transition_tensor=transition_tensor)
     return transition_operator_config
@@ -207,8 +207,8 @@ def default_observation_function_config(s_max: int, p_a: float, p_c: float, p_u:
     :param p_u: the software upgrade probability
     :return: the default observation tensor configuration
     """
-    observation_tensor = IntrusionRecoveryCmdpUtil.transition_tensor(
-        states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max), actions=IntrusionRecoveryCmdpUtil.action_space(),
+    observation_tensor = IntrusionResponseCmdpUtil.transition_tensor(
+        states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), actions=IntrusionResponseCmdpUtil.action_space(),
         p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
     component_observation_tensors = {}
     component_observation_tensors["number of nodes"] = observation_tensor
@@ -250,17 +250,17 @@ def default_input_config(p_a: float, p_c: float, p_u: float, s_max: int, negate_
     :param discount_factor: the discount factor
     :return: The default input configuration to the OpenAI gym environment
     """
-    transition_tensor = IntrusionRecoveryCmdpUtil.transition_tensor(
-        states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max),
-        actions=IntrusionRecoveryCmdpUtil.action_space(), p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
-    cost_tensor = IntrusionRecoveryCmdpUtil.cost_tensor(
-        states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max), negate=negate_costs)
-    constraint_cost_tensor = IntrusionRecoveryCmdpUtil.constraint_cost_tensor(
-        states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max), f=f)
+    transition_tensor = IntrusionResponseCmdpUtil.transition_tensor(
+        states=IntrusionResponseCmdpUtil.state_space(s_max=s_max),
+        actions=IntrusionResponseCmdpUtil.action_space(), p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
+    cost_tensor = IntrusionResponseCmdpUtil.cost_tensor(
+        states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), negate=negate_costs)
+    constraint_cost_tensor = IntrusionResponseCmdpUtil.constraint_cost_tensor(
+        states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), f=f)
     config = IntrusionResponseCmdpConfig(
         p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max, transition_tensor=transition_tensor, cost_tensor=cost_tensor,
-        negate_costs=negate_costs, seed=seed, states=IntrusionRecoveryCmdpUtil.state_space(s_max=s_max),
-        actions=IntrusionRecoveryCmdpUtil.action_space(), initial_state=initial_state,
+        negate_costs=negate_costs, seed=seed, states=IntrusionResponseCmdpUtil.state_space(s_max=s_max),
+        actions=IntrusionResponseCmdpUtil.action_space(), initial_state=initial_state,
         constraint_cost_tensor=constraint_cost_tensor, f=f, epsilon_a=epsilon_a,
         simulation_env_name=simulation_env_name,
         gym_env_name="csle-tolerance-intrusion-response-cmdp-v1", discount_factor=discount_factor

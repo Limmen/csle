@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any
+from typing import Dict, Any
 import numpy as np
 from emukit.core import ParameterSpace
 from emukit.bayesian_optimization.acquisitions.expected_improvement import ExpectedImprovement

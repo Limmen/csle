@@ -295,7 +295,7 @@ class BayesOptEmukitAgent(BaseAgent):
             acquisition_optimizer_type=AcquisitionOptimizerType(acquisition_optimizer_type),
             objective_type=ObjectiveType.MIN, beta=beta)
 
-        Logger.__call__().get_logger().info(f"Starting BO execution")
+        Logger.__call__().get_logger().info("Starting BO execution")
         results = BOResults(remaining_budget=bo_config.evaluation_budget)
 
         # If the initial data is empty, pick the first point randomly so that we can initialize surrogate models

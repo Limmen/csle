@@ -231,6 +231,22 @@ def default_initial_state_distribution_config(p_a: float) -> InitialStateDistrib
 def default_input_config(eta: float, p_a: float, p_c_1: float, p_c_2: float, p_u: float, BTR: int, negate_costs: bool,
                          seed: int, discount_factor: float, simulation_env_name: str, num_observations: int) \
         -> SimulationEnvInputConfig:
+    """
+    Gets the default input configuration for the RL environment
+
+    :param eta: the cost scaling factor
+    :param p_a: the intrusion probability
+    :param p_c_1: the crash probability in the healthy state
+    :param p_c_2: the crash probability in the compromised state
+    :param p_u: the software upgrade probability
+    :param BTR: the time horizon
+    :param negate_costs: boolean flag indicating whether costs should be negated or not
+    :param seed: the random seed
+    :param discount_factor: the discount factor
+    :param simulation_env_name: the name of the simulation environment
+    :param num_observations: the number of observations
+    :return: the default input configuration
+    """
     cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
                                                          actions=IntrusionRecoveryPomdpUtil.action_space(),
                                                          negate=negate_costs)

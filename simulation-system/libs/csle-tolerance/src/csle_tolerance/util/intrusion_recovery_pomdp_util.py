@@ -1,9 +1,7 @@
 from typing import List
 from scipy.stats import betabinom
 import numpy as np
-import random
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
-from csle_tolerance.util.general_util import GeneralUtil
 
 
 class IntrusionRecoveryPomdpUtil:

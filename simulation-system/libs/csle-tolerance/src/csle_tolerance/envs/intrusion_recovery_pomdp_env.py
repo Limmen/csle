@@ -151,7 +151,6 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         """
         raise NotImplementedError("Rendering is not implemented for this environment")
 
-
     def get_traces(self) -> List[SimulationTrace]:
         """
         :return: the list of simulation traces
@@ -183,6 +182,7 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         :return: None
         """
         self.model = model
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the POMDP manually
@@ -249,4 +249,3 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
                     t += 1
                 cumulative_costs += c
                 print(f"s: {s}, c: {c}, o: {o}, b: {b}, t: {t}")
-
