@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any
+from typing import Dict, Any
 import GPy
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config import KernelConfig
 
@@ -26,7 +26,7 @@ class RBFKernelConfig(KernelConfig):
         return f"lengthscale_rbf_kernel: {self.lengthscale_rbf_kernel}, " \
                f"variance_rbf_kernel: {self.variance_rbf_kernel}"
 
-    def create_kernel(self, input_dim: int, var_function: Callable = None) -> GPy.kern.RBF:
+    def create_kernel(self, input_dim: int, var_function: Any = None) -> GPy.kern.RBF:
         """
         Creates the GPy kernel
 

@@ -259,11 +259,11 @@ class LinearProgrammingCMDPAgent(BaseAgent):
         return exp_result
 
     @staticmethod
-    def lp(actions: npt.NDArray[int], states: npt.NDArray[int], cost_tensor: npt.NDArray[Any],
+    def lp(actions: npt.NDArray[Any], states: npt.NDArray[Any], cost_tensor: npt.NDArray[Any],
            transition_tensor: npt.NDArray[Any],
            constraint_cost_tensors: npt.NDArray[Any],
-           constraint_cost_thresholds: npt.NDArray[float]) \
-            -> Tuple[str, npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[float], float]:
+           constraint_cost_thresholds: npt.NDArray[Any]) \
+            -> Tuple[str, npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], float]:
         """
         Linear program for solving a CMDP (see Altman '99 for details)
 

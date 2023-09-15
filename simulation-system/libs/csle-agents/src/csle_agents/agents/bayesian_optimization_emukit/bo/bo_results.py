@@ -4,6 +4,7 @@ from emukit.model_wrappers.gpy_model_wrappers import GPyModelWrapper
 from emukit.core.acquisition.acquisition import Acquisition
 from emukit.core.optimization import AcquisitionOptimizerBase
 import numpy as np
+import numpy.typing as npt
 
 
 class BOResults:
@@ -19,11 +20,11 @@ class BOResults:
         """
         self.remaining_budget: float = remaining_budget
         self.evaluation_budget: float = remaining_budget
-        self.X: np.ndarray = np.array([])
-        self.Y: np.ndarray = np.array([])
-        self.X_best: np.ndarray = np.array([])
-        self.Y_best: np.ndarray = np.array([])
-        self.C: np.ndarray = np.array([])
+        self.X: npt.NDArray[Any] = np.array([])
+        self.Y: npt.NDArray[Any] = np.array([])
+        self.X_best: npt.NDArray[Any] = np.array([])
+        self.Y_best: npt.NDArray[Any] = np.array([])
+        self.C: npt.NDArray[Any] = np.array([])
         self.cumulative_cost: float = 0.
         self.start_time: float = time.time()
         self.iteration: int = 0
@@ -31,8 +32,8 @@ class BOResults:
         self.surrogate_model: Union[GPyModelWrapper, None] = None
         self.acquisition: Union[Acquisition, None] = None
         self.acquisition_optimizer: Union[AcquisitionOptimizerBase, None] = None
-        self.X_objective: np.ndarray = np.array([])
-        self.Y_objective: np.ndarray = np.array([])
+        self.X_objective: npt.NDArray[Any] = np.array([])
+        self.Y_objective: npt.NDArray[Any] = np.array([])
         self.y_opt = 0
 
     def __str__(self) -> str:
@@ -74,7 +75,7 @@ class BOResults:
         """
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["remaining_budget"] = self.remaining_budget
         d["X"] = list(self.X.copy().tolist())
         d["Y"] = list(self.Y.copy().tolist())

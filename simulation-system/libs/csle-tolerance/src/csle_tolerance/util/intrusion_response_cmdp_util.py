@@ -83,7 +83,7 @@ class IntrusionResponseCmdpUtil:
         return constraint_cost_tensor
 
     @staticmethod
-    def delta_function(s: int, p_a: float, p_c: float, p_u: float, delta: int, s_max: int):
+    def delta_function(s: int, p_a: float, p_c: float, p_u: float, delta: int, s_max: int) -> float:
         """
         The delta function that gives the probability of the change in the number of healthy nodes
 
@@ -95,7 +95,7 @@ class IntrusionResponseCmdpUtil:
         :param s_max: the maximum number of nodes
         :return:
         """
-        prob = 0
+        prob = 0.0
         for failures in range(0, s_max + 1):
             for recoveries in range(0, s_max + 1):
                 if (recoveries - failures) == delta and (s + delta) <= s_max and (s + delta) >= 0:
@@ -103,7 +103,6 @@ class IntrusionResponseCmdpUtil:
                     non_failures = s - failures
                     prob += (math.pow(p_u, recoveries) * math.pow(1 - p_u, non_recoveries) *
                              math.pow(p_a + p_c, failures) * math.pow(1 - p_a - p_c, non_failures))
-                    # print(f"match, r:{recoveries}, failures: {failures}, delta:{delta}, prob: {prob}, s:{s}")
         return prob
 
     @staticmethod
@@ -142,7 +141,7 @@ class IntrusionResponseCmdpUtil:
             a_transitions = []
             for s in states:
                 s_a_transitions = []
-                normalizing_constant = 0
+                normalizing_constant = 0.0
                 for delta in range(-s_max, s_max + 1):
                     normalizing_constant += IntrusionResponseCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u,
                                                                                      delta=delta, s_max=s_max)

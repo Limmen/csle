@@ -19,7 +19,7 @@ class IntrusionRecoveryPomdpUtil:
         return [0, 1, 2]
 
     @staticmethod
-    def initial_belief(p_a: float) -> List[int]:
+    def initial_belief(p_a: float) -> List[float]:
         """
         Gets the initial belief state of the POMDP
 
@@ -97,10 +97,10 @@ class IntrusionRecoveryPomdpUtil:
         """
         if s == 0:
             no_intrusion_rv = betabinom(n=num_observations - 1, a=0.7, b=3)
-            return no_intrusion_rv.pmf(o)
+            return float(no_intrusion_rv.pmf(o))
         elif s == 1:
             intrusion_rv = betabinom(n=num_observations - 1, a=1, b=0.7)
-            return intrusion_rv.pmf(o)
+            return float(intrusion_rv.pmf(o))
         else:
             if o == num_observations - 1:
                 return 1.0
@@ -233,14 +233,14 @@ class IntrusionRecoveryPomdpUtil:
         :param transition_tensor: the transition tensor of the POMDP
         :return: b[s_prime]
         """
-        norm = 0
+        norm = 0.0
         for s in states:
             for s_prime_1 in states:
                 prob_1 = observation_tensor[s_prime_1][o]
                 norm += b[s] * prob_1 * transition_tensor[a][s][s_prime_1]
-        if norm == 0:
-            return 0
-        temp = 0
+        if norm == 0.0:
+            return 0.0
+        temp = 0.0
 
         for s in states:
             temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
@@ -266,7 +266,7 @@ class IntrusionRecoveryPomdpUtil:
         :param observation_tensor: the observation tensor
         :return: the probability of observing o when taking action a in belief point b
         """
-        prob = 0
+        prob = 0.0
         for s in states:
             for s_prime in states:
                 prob += b[s] * transition_tensor[a][s][s_prime] * observation_tensor[s_prime][o]
@@ -288,7 +288,7 @@ class IntrusionRecoveryPomdpUtil:
         :param transition_tensor: the transition tensor
         :return: the new belief
         """
-        b_prime = [0] * len(states)
+        b_prime = [0.0] * len(states)
         for s_prime in states:
             b_prime[s_prime] = IntrusionRecoveryPomdpUtil.bayes_filter(
                 s_prime=s_prime, o=o, a=a, b=b, states=states, observations=observations,

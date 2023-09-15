@@ -1,5 +1,5 @@
 from typing import Dict, Any
-import numpy as np
+import numpy.typing as npt
 import GPy
 from emukit.model_wrappers.gpy_model_wrappers import GPyModelWrapper
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config import KernelConfig
@@ -26,7 +26,7 @@ class GPConfig:
         """
         return f"kernel_config: {self.kernel_config}, obs_Likelihood_variance: {self.obs_likelihood_variance}"
 
-    def create_gp(self, X: np.ndarray, Y: np.ndarray, input_dim: int) -> GPyModelWrapper:
+    def create_gp(self, X: npt.NDArray[Any], Y: npt.NDArray[Any], input_dim: int) -> GPyModelWrapper:
         """
         Creates the GP model
 
@@ -36,7 +36,8 @@ class GPConfig:
         :return: the GP model (wrapped in emukit object)
         """
         return GPyModelWrapper(GPy.models.GPRegression(
-            X, Y, self.kernel_config.create_kernel(input_dim=input_dim), noise_var=self.obs_likelihood_variance))
+            X, Y, self.kernel_config.create_kernel(input_dim=input_dim, var_function=None),
+            noise_var=self.obs_likelihood_variance))
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GPConfig":

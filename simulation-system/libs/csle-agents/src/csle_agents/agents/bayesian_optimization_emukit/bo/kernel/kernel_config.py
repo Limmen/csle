@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any
+from typing import Dict, Any
 from abc import ABC, abstractmethod
 import GPy.kern
 from csle_base.json_serializable import JSONSerializable
@@ -10,7 +10,7 @@ class KernelConfig(ABC, JSONSerializable):
     """
 
     @abstractmethod
-    def create_kernel(self, input_dim: int, var_function: Callable = None) -> GPy.kern.Kern:
+    def create_kernel(self, input_dim: int, var_function: Any) -> GPy.kern.Kern:
         """
         Abstract method for creating the kernel (returning a GPy kernel) that each subclass should implement
 

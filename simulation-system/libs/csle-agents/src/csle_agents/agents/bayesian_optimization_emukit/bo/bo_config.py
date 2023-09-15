@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import numpy as np
+import numpy.typing as npt
 from emukit.core import ParameterSpace
 from emukit.bayesian_optimization.acquisitions.expected_improvement import ExpectedImprovement
 from emukit.bayesian_optimization.acquisitions.negative_lower_confidence_bound import NegativeLowerConfidenceBound
@@ -24,8 +25,8 @@ class BOConfig:
     DTO representing the configuration of a Bayesian Optimization execution
     """
 
-    def __init__(self, X_init: np.ndarray,
-                 Y_init: np.ndarray, input_space: ParameterSpace, evaluation_budget: int,
+    def __init__(self, X_init: npt.NDArray[Any],
+                 Y_init: npt.NDArray[Any], input_space: ParameterSpace, evaluation_budget: int,
                  gp_config: GPConfig, acquisition_function_type: AcquisitionFunctionType,
                  acquisition_optimizer_type: AcquisitionOptimizerType,
                  objective_type: ObjectiveType, beta: float = 1) -> None:
