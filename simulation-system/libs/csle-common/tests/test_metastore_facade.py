@@ -1409,3 +1409,39 @@ class TestMetastoreFacadeSuite:
         assert isinstance(experiment_execution, list)
         assert isinstance(experiment_execution[0], ExperimentExecution)
         assert experiment_execution[0] == example_experiment_execution
+
+    def test_list_experiment_execution_ids(self, mocker: pytest_mock.MockFixture,
+                                           example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the list_experiment_execution_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        id = 1
+        example_experiment_execution.id = id
+        example_record = (id, example_experiment_execution.simulation_name,
+                          example_experiment_execution.emulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        experiment_executions_ids = MetastoreFacade.list_experiment_executions_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name,emulation_name FROM "
+            f"{constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(experiment_executions_ids, list)
+        assert isinstance(experiment_executions_ids[0], tuple)
+        assert isinstance(experiment_executions_ids[0][0], int)
+        assert isinstance(experiment_executions_ids[0][1], str)
+        assert isinstance(experiment_executions_ids[0][2], str)
+        assert experiment_executions_ids[0][0] == id
+        assert experiment_executions_ids[0][1] == example_experiment_execution.simulation_name
+        assert experiment_executions_ids[0][2] == example_experiment_execution.emulation_name
