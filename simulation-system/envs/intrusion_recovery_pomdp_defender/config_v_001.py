@@ -1,12 +1,10 @@
 import argparse
 import os
-import numpy as np
 from csle_common.controllers.simulation_env_controller import SimulationEnvController
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.simulation_config.players_config import PlayersConfig
 from csle_common.dao.simulation_config.player_config import PlayerConfig
-from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
@@ -25,14 +23,12 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
-from csle_common.dao.training.tabular_policy import TabularPolicy
-from csle_common.dao.training.agent_type import AgentType
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
 
 
 def default_config(name: str, eta: float, p_a: float, p_c_1: float, p_c_2: float, p_u: float,
-                   BTR: int, negate_costs: bool, seed: int, discount_factor: float, num_observations: float,
+                   BTR: int, negate_costs: bool, seed: int, discount_factor: float, num_observations: int,
                    version: str = "0.0.1") -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
@@ -52,32 +48,18 @@ def default_config(name: str, eta: float, p_a: float, p_c_1: float, p_c_2: float
     :return: the default configuration
     """
     players_config = default_players_config()
-    state_space_config = default_state_space_config(number_of_zones=number_of_zones)
-    joint_action_space_config = default_joint_action_space_config(number_of_zones=number_of_zones)
-    joint_observation_space_config = default_joint_observation_space_config(X_max=X_max)
-    transition_operator_config = default_transition_operator_config(
-        num_zones=number_of_zones, attack_success_probability=attack_success_probability,
-        detection_probability=detection_probability)
-    observation_function_config = default_observation_function_config(
-        attacker_obs_space=joint_observation_space_config.observation_spaces[0],
-        number_of_zones=number_of_zones)
-    reward_function_config = default_reward_function_config(
-        number_of_zones=number_of_zones, eta=eta, beta=beta, reachable=reachable, initial_zone=initial_zone,
-        defender_action_cost=defender_action_cost, zone_utility=zone_utility)
-    initial_state_distribution_config = default_initial_state_distribution_config(initial_zone=initial_zone,
-                                                                                  number_of_zones=number_of_zones)
+    state_space_config = default_state_space_config()
+    joint_action_space_config = default_joint_action_space_config()
+    joint_observation_space_config = default_joint_observation_space_config(num_observations=num_observations)
+    transition_operator_config = default_transition_operator_config(p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u)
+    observation_function_config = default_observation_function_config(num_observations=num_observations)
+    reward_function_config = default_reward_function_config(eta=eta, negate_costs=negate_costs)
+    initial_state_distribution_config = default_initial_state_distribution_config(p_a=p_a)
     input_config = default_input_config(
-        attacker_observation_space_config=joint_observation_space_config.observation_spaces[0],
-        reward_function_config=reward_function_config,
-        transition_tensor_config=transition_operator_config,
-        observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config,
-        defender_action_space_config=joint_action_space_config.action_spaces[0], number_of_zones=number_of_zones,
-        attack_success_probability=attack_success_probability, beta=beta, eta=eta, initial_zone=initial_zone,
-        defender_action_cost=defender_action_cost, zone_utility=zone_utility,
-        detection_probability=detection_probability)
+        eta=eta, p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u, BTR=BTR, negate_costs=negate_costs, seed=seed,
+        discount_factor=discount_factor, simulation_env_name=name, num_observations=num_observations)
     env_parameters_config = default_env_parameters_config()
-    descr = "A local intrusion response game"
+    descr = "Intrusion recovery POMDP in TOLERANCE"
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
         players_config=players_config, state_space_config=state_space_config,
@@ -87,7 +69,7 @@ def default_config(name: str, eta: float, p_a: float, p_c_1: float, p_c_2: float
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
         time_step_type=TimeStepType.DISCRETE,
-        gym_env_name="csle-intrusion-response-game-local-pomdp-attacker-v1",
+        gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1",
         env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
@@ -130,6 +112,7 @@ def default_state_space_config() -> StateSpaceConfig:
     state_space_config = StateSpaceConfig(states=states)
     return state_space_config
 
+
 def default_joint_action_space_config() -> JointActionSpaceConfig:
     """
     Gets the default action space configuration
@@ -144,6 +127,7 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
                      ActionSpaceConfig(actions=attacker_actions, player_id=2, action_type=ValueType.INTEGER)]
     joint_action_space_config = JointActionSpaceConfig(action_spaces=action_spaces)
     return joint_action_space_config
+
 
 def default_joint_observation_space_config(num_observations: int) -> JointObservationSpaceConfig:
     """
@@ -180,6 +164,7 @@ def default_joint_observation_space_config(num_observations: int) -> JointObserv
     joint_observation_space_config = JointObservationSpaceConfig(observation_spaces=observation_spaces)
     return joint_observation_space_config
 
+
 def default_reward_function_config(eta: float, negate_costs: bool) -> RewardFunctionConfig:
     """
     Gets the default reward function config
@@ -189,9 +174,11 @@ def default_reward_function_config(eta: float, negate_costs: bool) -> RewardFunc
     :return: the default reward function configuration
     """
     cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
-                                           actions=IntrusionRecoveryPomdpUtil.action_space(), negate=negate_costs)
+                                                         actions=IntrusionRecoveryPomdpUtil.action_space(),
+                                                         negate=negate_costs)
     reward_function_config = RewardFunctionConfig(reward_tensor=[cost_tensor])
     return reward_function_config
+
 
 def default_transition_operator_config(p_a: float, p_c_1: float, p_c_2: float, p_u: float) -> TransitionOperatorConfig:
     """
@@ -242,7 +229,7 @@ def default_initial_state_distribution_config(p_a: float) -> InitialStateDistrib
 
 
 def default_input_config(eta: float, p_a: float, p_c_1: float, p_c_2: float, p_u: float, BTR: int, negate_costs: bool,
-                         seed: int,  discount_factor: float, simulation_env_name: str, num_observations: int) \
+                         seed: int, discount_factor: float, simulation_env_name: str, num_observations: int) \
         -> SimulationEnvInputConfig:
     cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
                                                          actions=IntrusionRecoveryPomdpUtil.action_space(),
@@ -272,10 +259,9 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-intrusion-response-game-local-pomdp-attacker-001", version="0.0.1",
-                            number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
-                            attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
-                            detection_probability=0.1)
+    config = default_config(name="csle-tolerance-intrusion-recovery-pomdp-defender-001", version="0.0.1",
+                            eta=1, p_a=0.1, p_c_1=0.00001, p_c_2=0.001, p_u=0.02, BTR=20, negate_costs=False,
+                            discount_factor=1, seed=999, num_observations=10)
     if args.install:
         SimulationEnvController.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()
