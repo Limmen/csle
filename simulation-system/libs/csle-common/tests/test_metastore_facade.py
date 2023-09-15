@@ -6,6 +6,7 @@ from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.training.experiment_execution import ExperimentExecution
 import pytest_mock
 
 
@@ -1314,3 +1315,97 @@ class TestMetastoreFacadeSuite:
         assert isinstance(simulation_images[0][0], str)
         assert isinstance(simulation_images[0][1], bytes)
         assert simulation_images[0] == (example_simulation_image_name, example_simulation_image_data)
+
+    def test_get_simulation_image(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the get_simulation_image function
+
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_simulation_image_name = "image_name1"
+        example_simulation_image_data = bytes([1, 3, 5, 6])
+        example_record = (id, example_simulation_image_name, example_simulation_image_data)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_simulation_image = MetastoreFacade.get_simulation_image(simulation_name=example_simulation_image_name)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
+            f"WHERE simulation_name = %s", (example_simulation_image_name,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_simulation_image, tuple)
+        assert isinstance(fetched_simulation_image[0], str)
+        assert isinstance(fetched_simulation_image[1], bytes)
+        assert fetched_simulation_image == (example_simulation_image_name, example_simulation_image_data)
+
+    def test_save_experiment_execution(self, mocker: pytest_mock.MockFixture,
+                                       example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the save_experiment_execution function
+
+        :param mocker: the pytest mocker object
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        id = 2
+        example_experiment_execution.id = id
+        example_record = (id, example_experiment_execution.to_dict(), example_experiment_execution.simulation_name,
+                          example_experiment_execution.emulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_experiment_execution(experiment_execution=example_experiment_execution)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
+            f"(id, execution, simulation_name, emulation_name) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, example_experiment_execution.to_json_str(),
+                                                      example_experiment_execution.simulation_name,
+                                                      example_experiment_execution.emulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_list_experiment_execution(self, mocker: pytest_mock.MockFixture,
+                                       example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the list_experiment_execution function
+
+        :param mocker: the pytest mocker object
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        id = 1
+        example_experiment_execution.id = id
+        example_record = (id, example_experiment_execution.to_dict(), example_experiment_execution.simulation_name,
+                          example_experiment_execution.emulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        experiment_execution = MetastoreFacade.list_experiment_executions()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(experiment_execution, list)
+        assert isinstance(experiment_execution[0], ExperimentExecution)
+        assert experiment_execution[0] == example_experiment_execution
