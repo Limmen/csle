@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
@@ -61,3 +61,59 @@ class IntrusionResponseCmdpConfig(SimulationEnvInputConfig):
                 f"initial state: {self.initial_state}, constraint_cost_tensor: {self.constraint_cost_tensor}, "
                 f"f: {self.f}, epsilon_a: {self.epsilon_a}, simulation_env_name: {self.simulation_env_name}, "
                 f"gym_env_name: {self.gym_env_name}, discount_factor: {self.discount_factor}")
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "IntrusionResponseCmdpConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        dto = IntrusionResponseCmdpConfig(
+            p_a=d["p_a"], p_c=d["p_c"], p_u=d["p_u"], s_max=d["s_max"], transition_tensor=d["transition_tensor"],
+            cost_tensor=d["cost_tensor"], negate_costs=d["negate_costs"], seed=d["seed"], states=d["states"],
+            actions=d["actions"], initial_state=d["initial_state"], constraint_cost_tensor=d["constraint_cost_tensor"],
+            f=d["f"], epsilon_a=d["epsilon_a"], simulation_env_name=d["simulation_env_name"],
+            gym_env_name=d["gym_env_name"], discount_factor=d["discount_factor"])
+        return dto
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Gets a dict representation of the object
+
+        :return: A dict representation of the object
+        """
+        d: Dict[str, Any] = {}
+        d["p_a"] = self.p_a
+        d["p_c"] = self.p_c
+        d["p_u"] = self.p_u
+        d["s_max"] = self.s_max
+        d["transition_tensor"] = self.transition_tensor
+        d["cost_tensor"] = self.cost_tensor
+        d["negate_costs"] = self.negate_costs
+        d["seed"] = self.seed
+        d["states"] = self.states
+        d["actions"] = self.actions
+        d["initial_state"] = self.initial_state
+        d["constraint_cost_tensor"] = self.constraint_cost_tensor
+        d["f"] = self.f
+        d["epsilon_a"] = self.epsilon_a
+        d["simulation_env_name"] = self.simulation_env_name
+        d["gym_env_name"] = self.gym_env_name
+        d["discount_factor"] = self.discount_factor
+        return d
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "IntrusionResponseCmdpConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return IntrusionResponseCmdpConfig.from_dict(json.loads(json_str))
