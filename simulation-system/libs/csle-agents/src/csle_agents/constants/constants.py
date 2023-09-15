@@ -197,6 +197,25 @@ class BAYESIAN_OPTIMIZATION:
     POLICY_TYPE = "policy_type"
 
 
+class BAYESIAN_OPTIMIZATION_EMUKIT:
+    """
+    String constants related to Bayesian Optimization Emukit
+    """
+    POLICY_TYPE = "policy_type"
+    EVALUATION_BUDGET = "evaluation_budget"
+    LENGTHSCALE_RBF_KERNEL = "lengthscale_rbf_kernel"
+    VARIANCE_RBF_KERNEL = "variance_rbf_kernel"
+    OBS_LIKELIHOOD_VARIANCE = "obs_likelihood_variance"
+    BETA = "beta"
+    INPUT_SPACE_DIM = "input_space_dim"
+    KERNEL_TYPE = "kernel_type"
+    ACQUISITION_FUNCTION_TYPE = "acquisition_function_type"
+    ACQUISITION_OPTIMIZER_TYPE = "acquisition_optimizer_type"
+    X_init = "X_init"
+    Y_init = "Y_init"
+    PARAMS = "params"
+
+
 class DIFFERENTIAL_EVOLUTION:
     """
     String constants related to differential evolution
@@ -341,6 +360,18 @@ class LP_FOR_NF_GAMES:
     N = "N"
     ACTION_SPACE_PLAYER_1 = "action_space_player_1"
     ACTION_SPACE_PLAYER_2 = "action_space_player_2"
+
+
+class LP_FOR_CMDPs:
+    """
+    String constants related to linear programming for CMDPs
+    """
+    ACTIONS = "actions"
+    STATES = "states"
+    COST_TENSOR = "cost_tensor"
+    TRANSITION_TENSOR = "transition_tensor"
+    CONSTRAINT_COST_TENSORS = "constraint_cost_tensors"
+    CONSTRAINT_COST_THRESHOLDS = "constraint_cost_thresholds"
 
 
 class DYNASEC:

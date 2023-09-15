@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from csle_tolerance.dao.bo.bo_results import BOResults
+from csle_agents.agents.bayesian_optimization_emukit.bo import BOResults
 
 
 def plot_bo_results_and_gp(bo_results: BOResults, file_name: str, fontsize: int = 18) -> None:

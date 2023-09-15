@@ -15,7 +15,7 @@ from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
-from csle_common.dao.training.vector_policy import VectorPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
@@ -24,9 +24,9 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class LinearProgrammingNormalFormGameAgent(BaseAgent):
+class LinearProgrammingCMDPAgent(BaseAgent):
     """
-    Linear programming agent for normal-form games
+    Linear programming agent for CMDPs
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -45,7 +45,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.LINEAR_PROGRAMMING_NORMAL_FORM
+        assert experiment_config.agent_type == AgentType.LINEAR_PROGRAMMING_CMDP
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
@@ -71,7 +71,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
 
-        descr = f"Training of policies with the linear programming for normal-form games algorithm using " \
+        descr = f"Training of policies with the linear programming for CMDPs algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
@@ -124,7 +124,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.linear_programming_normal_form(
+            exp_result = self.linear_programming_cmdp(
                 exp_result=exp_result, seed=seed, training_job=self.training_job,
                 random_seeds=self.experiment_config.random_seeds)
 
@@ -189,8 +189,8 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def linear_programming_normal_form(self, exp_result: ExperimentResult, seed: int,
-                                       training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
+    def linear_programming_cmdp(self, exp_result: ExperimentResult, seed: int,
+                                training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Runs the linear programming algorithm for normal-form games
 
@@ -201,14 +201,24 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         # Hyperparameters
-        payoff_matrix = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.PAYOFF_MATRIX].value)
-        A1 = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1].value)
-        A2 = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2].value)
+        actions = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.ACTIONS].value)
+        states = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.STATES].value)
+        cost_tensor = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.COST_TENSOR].value)
+        transition_tensor = np.array(self.experiment_config.hparams[
+                                         agents_constants.LP_FOR_CMDPs.TRANSITION_TENSOR].value)
+        constraint_cost_tensors = np.array(
+            self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS].value)
+        constraint_cost_thresholds = np.array(
+            self.experiment_config.hparams[agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS].value)
 
-        maximin_strategy, minimax_strategy, val = self.compute_equilibrium_strategies_in_matrix_game(
-            A=payoff_matrix, A1=A1, A2=A2)
+
+        solution_status, optimal_occupancy_measures, optimal_strategy, expected_constraint_costs, objective_value = (
+            self.lp(
+                actions=actions, states=states, cost_tensor=cost_tensor, transition_tensor=transition_tensor,
+                constraint_cost_tensors=constraint_cost_tensors, constraint_cost_thresholds=constraint_cost_thresholds
+            ))
         # Log average return
-        J = val
+        J = objective_value
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         running_avg_J = ExperimentUtil.running_average(
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -238,95 +248,132 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
             f"{running_avg_J}")
 
-        p1_policy = VectorPolicy(policy_vector=maximin_strategy, simulation_name=self.simulation_env_config.name,
-                                 player_type=self.experiment_config.player_type,
-                                 actions=list(range(len(maximin_strategy))),
-                                 avg_R=J, agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
-        p2_policy = VectorPolicy(policy_vector=minimax_strategy, simulation_name=self.simulation_env_config.name,
-                                 player_type=self.experiment_config.player_type,
-                                 actions=list(range(len(minimax_strategy))),
-                                 avg_R=J,
-                                 agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
-        exp_result.policies[seed] = p1_policy
-        exp_result.policies[seed + 1] = p2_policy
+        policy = TabularPolicy(
+            lookup_table=optimal_strategy, simulation_name=self.simulation_env_config.name,
+            player_type=self.experiment_config.player_type, actions=list(actions),
+            avg_R=J, agent_type=AgentType.LINEAR_PROGRAMMING_CMDP
+        )
+        exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
-            MetastoreFacade.save_vector_policy(vector_policy=p1_policy)
-            MetastoreFacade.save_vector_policy(vector_policy=p2_policy)
+            MetastoreFacade.save_tabular_policy(tabular_policy=policy)
         return exp_result
 
-    def compute_equilibrium_strategies_in_matrix_game(self, A: npt.NDArray[Any], A1: npt.NDArray[Any],
-                                                      A2: npt.NDArray[Any]) \
-            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], float]:
+    @staticmethod
+    def lp(actions: npt.NDArray[int], states: npt.NDArray[int], cost_tensor: npt.NDArray[Any],
+           transition_tensor: npt.NDArray[Any],
+           constraint_cost_tensors: npt.NDArray[Any],
+           constraint_cost_thresholds: npt.NDArray[float]) \
+            -> Tuple[str, npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[float], float]:
         """
-        Computes equilibrium strategies in a matrix game
+        Linear program for solving a CMDP (see Altman '99 for details)
 
-        :param A: the matrix game
-        :param A1: the action set of player 1 (the maximizer)
-        :param A2: the action set of player 2 (the minimizer)
-        :return: the equilibrium strategy profile and the value
+        :param actions: the action space
+        :param states: the state space
+        :param cost_tensor: the cost tensor
+        :param transition_tensor: the transition tensor
+        :param constraint_cost_tensors: the constraint cost tensors
+        :param constraint_cost_thresholds: the constraint cost thresholds
+        :return: the solution status, the optimal occupancy measure, the optimal strategy, the expeted constraint cost,
+                 the objective value
         """
-        v1, maximin_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=True)
-        v2, minimax_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=False)
-        return maximin_strategy, minimax_strategy, v1
+        problem = pulp.LpProblem("AvgCostMdp", pulp.LpMinimize)
 
-    def compute_matrix_game_value(self, A: npt.NDArray[Any], A1: npt.NDArray[Any], A2: npt.NDArray[Any],
-                                  maximizer: bool = True) -> Tuple[Any, npt.NDArray[Any]]:
-        """
-        Uses LP to compute the value of a a matrix game, also computes the maximin or minimax strategy
+        # Decision variables, state-action occupancy measures
+        occupancy_measures = []
+        for s in states:
+            occupancy_measures_s = []
+            for a in actions:
+                s_a_occupancy = pulp.LpVariable(f"occupancy_{s}_{a}", lowBound=0, upBound=1, cat=pulp.LpContinuous)
+                occupancy_measures_s.append(s_a_occupancy)
+            occupancy_measures.append(occupancy_measures_s)
 
-        :param A: the matrix game
-        :param A1: the action set of player 1
-        :param A2: the action set of player 2
-        :param maximizer: boolean flag whether to compute the maximin strategy or minimax strategy
-        :return: (val(A), maximin or minimax strategy)
-        """
-        if maximizer:
-            problem = pulp.LpProblem("AuxillaryGame", pulp.LpMaximize)
-            Ai = A1
-        else:
-            problem = pulp.LpProblem("AuxillaryGame", pulp.LpMinimize)
-            Ai = A2
+        # The non-zero constraints
+        for s in states:
+            for a in actions:
+                problem += occupancy_measures[s][a] >= 0, f"NonZeroConstraint_{s}_{a}"
 
-        # Decision variables, strategy-weights
-        s = []
-        for ai in Ai:
-            si = pulp.LpVariable("s_" + str(ai), lowBound=0, upBound=1, cat=pulp.LpContinuous)
-            s.append(si)
+        # The probability constraints
+        occupancy_measures_sum = 0
+        for s in states:
+            for a in actions:
+                occupancy_measures_sum += occupancy_measures[s][a]
+        problem += occupancy_measures_sum == 1, "StochasticConstraint"
 
-        # Auxillary decision variable, value of the game v
-        v = pulp.LpVariable("v", lowBound=None, upBound=None, cat=pulp.LpContinuous)
+        # The transition constraints
+        for s_prime in states:
+            rho_s_prime_a_sum = 0
+            for a in actions:
+                rho_s_prime_a_sum += occupancy_measures[s_prime][a]
 
-        # The objective function
-        problem += v, "Value of the game"
+            transition_sum = 0
+            for s in states:
+                for a in actions:
+                    transition_sum += occupancy_measures[s][a] * transition_tensor[a][s][s_prime]
 
-        # The constraints
-        if maximizer:
-            for j in range(A.shape[1]):
-                sum = 0
-                for i in range(A.shape[0]):
-                    sum += s[i] * A[i][j]
-                problem += sum >= v, "SecurityValueConstraint_" + str(j)
-        else:
-            for i in range(A.shape[0]):
-                sum = 0
-                for j in range(A.shape[1]):
-                    sum += s[j] * A[i][j]
-                problem += sum <= v, "SecurityValueConstraint_" + str(i)
+            problem += rho_s_prime_a_sum == transition_sum, f"TransitionConstraint_{s_prime}"
 
-        strategy_weights_sum = 0
-        for si in s:
-            strategy_weights_sum += si
-        problem += strategy_weights_sum == 1, "probabilities sum"
+        # The cost constraints
+        for i in range(len(constraint_cost_tensors)):
+            expected_constraint_cost = 0.0
+            for s in states:
+                for a in actions:
+                    if (isinstance(constraint_cost_tensors[i][a], list) or
+                            isinstance(constraint_cost_tensors[i][a], np.ndarray)):
+                        expected_constraint_cost += occupancy_measures[s][a] * constraint_cost_tensors[i][a][s]
+                    else:
+                        expected_constraint_cost += occupancy_measures[s][a] * constraint_cost_tensors[i][s]
+            threshold = constraint_cost_thresholds[i]
+            problem += expected_constraint_cost >= threshold, f"ExpectedCostConstraint_{i}"
+
+        # Objective function
+        avg_cost = 0
+        for s in states:
+            for a in actions:
+                if isinstance(cost_tensor[a], list):
+                    avg_cost += cost_tensor[a][s] * occupancy_measures[s][a]
+                else:
+                    avg_cost += cost_tensor[s] * occupancy_measures[s][a]
+        problem += avg_cost, "Average cost"
 
         # Solve
         problem.solve(pulp.PULP_CBC_CMD(msg=0))
 
         # Extract solution
-        optimal_strategy = np.array(list(map(lambda x: x.varValue, s)))
-        value = v.varValue
-
-        return value, optimal_strategy
+        optimal_occupancy_measures = []
+        for i in range(len(occupancy_measures)):
+            optimal_occupanct_measures_s = []
+            for j in range(len(occupancy_measures[i])):
+                optimal_occupanct_measures_s.append(occupancy_measures[i][j].varValue)
+            optimal_occupancy_measures.append(optimal_occupanct_measures_s)
+        optimal_occupancy_measures = optimal_occupancy_measures
+        optimal_strategy = []
+        for s in states:
+            optimal_strategy_s = []
+            for a in actions:
+                normalizing_sum = 0
+                for s_prime in states:
+                    normalizing_sum += optimal_occupancy_measures[s_prime][a]
+                if normalizing_sum != 0:
+                    action_prob = optimal_occupancy_measures[s][a] / normalizing_sum
+                else:
+                    action_prob = 0
+                optimal_strategy_s.append(action_prob)
+            optimal_strategy.append(optimal_strategy_s)
+        expected_constraint_costs = []
+        for i in range(len(constraint_cost_tensors)):
+            expected_constraint_cost = 0.0
+            for s in states:
+                for a in actions:
+                    if (isinstance(constraint_cost_tensors[i][a], list) or
+                            isinstance(constraint_cost_tensors[i][a], np.ndarray)):
+                        expected_constraint_cost += optimal_occupancy_measures[s][a] * constraint_cost_tensors[i][a][s]
+                    else:
+                        expected_constraint_cost += optimal_occupancy_measures[s][a] * constraint_cost_tensors[i][s]
+            expected_constraint_costs.append(expected_constraint_cost)
+        return (pulp.LpStatus[problem.status],
+                np.array(optimal_occupancy_measures), np.array(optimal_strategy), np.array(expected_constraint_costs),
+                problem.objective.value())
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
