@@ -19,7 +19,7 @@ class GaussianMixtureConditional(JSONSerializable):
 
         :param conditional_name: the name of the conditional
         :param num_mixture_components: the number of mixture components
-        :param dim: the dimension of the distribution, i.e. if it is multivariate
+        :param dim: the dimension of the distribution, i.e., if it is multivariate
         :param mixtures_means: the means of the mixtures
         :param mixtures_covariance_matrix: the covariance matrices of the mixtures
         :param mixture_weights: the mixture weights

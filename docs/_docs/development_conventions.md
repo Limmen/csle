@@ -18,9 +18,9 @@ CSLE tries to follow a few high-level principles in making both technical and co
 which are listed below.
 They are goals to shoot for, and may not be followed perfectly all the time.
 
-- **Code over configuration.** We aim to make CSLE fully programmable, everything from starting/stopping emulations to configuring a service running on a container should be possible through a program function. To achieve this level of programmability, as much as possible of CSLE should be defined in code rather than configuration files. If a configuration file is necessary, it should be defined in a serialization format that easily can be converted back to code, e.g. a JSON file that maps to a Python class. Another benefit of defining configuration in code is that we can run the configuration through the code quality toolchain to identify bugs and style errors.
+- **Code over configuration.** We aim to make CSLE fully programmable, everything from starting/stopping emulations to configuring a service running on a container should be possible through a program function. To achieve this level of programmability, as much as possible of CSLE should be defined in code rather than configuration files. If a configuration file is necessary, it should be defined in a serialization format that easily can be converted back to code, e.g., a JSON file that maps to a Python class. Another benefit of defining configuration in code is that we can run the configuration through the code quality toolchain to identify bugs and style errors.
 
-- **Separation of concerns.** CSLE is divided into components (systems), e.g. the management system, the emulation system, and the simulation system. These components interact via APIs and via a shared database (the metastore). As much as possible, each individual component should be independent of the other components. This principle allows users to install individual components without having to install the other components.
+- **Separation of concerns.** CSLE is divided into components (systems), e.g., the management system, the emulation system, and the simulation system. These components interact via APIs and via a shared database (the metastore). As much as possible, each individual component should be independent of the other components. This principle allows users to install individual components without having to install the other components.
 
 - **Release early and often.** We should emphasize smaller, more iterative releases over large and complex ones. This keeps our documentation in-line with the latest releases and also minimizes the disruption (and subsequent maintenance burden) associated with big changes. The process for creating a release is relatively simple and quick, so don't hesitate to release patch versions (or minor versions) as appropriate.
 
@@ -82,8 +82,8 @@ Listing 112: Configuration file for the `eslint` JavaScript linter.
 
 Names of variable, functions, methods etc. should be clear and descriptive, not cryptic.
 All Python functions and variables should be written in `snake_case`,
-e.g. `stop_all_executions()`. All JavaScript functions and variables should be
-in `CamelCase`, e.g. `getAgentType()`.
+e.g., `stop_all_executions()`. All JavaScript functions and variables should be
+in `CamelCase`, e.g., `getAgentType()`.
 
 It is common practice to name simple loop variables i, j, and k, so there's no
 need to give them silly names like `the_index` unless it's necessary for some reason or other.
@@ -214,7 +214,7 @@ otherwise the developer has to fix the failing tests or builds.
 Finally, when the code review and associated fixes are completed,
 the pull request is merged into the main/master branch and
 may optionally trigger a release pipeline where build artifacts are pushed
-to code servers (i.e. DockerHub and PyPi).
+to code servers (i.e., DockerHub and PyPi).
 
 <p align="center">
 <img src="./../../img/ci_pipeline.png" width="75%">

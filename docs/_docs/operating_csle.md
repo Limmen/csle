@@ -175,7 +175,7 @@ Listing 105: Command to list running CSLE containers.
 </p>
 
 To open a terminal in a running container,
-e.g. a container with the name `mycontainer`, run the command:
+e.g., a container with the name `mycontainer`, run the command:
 
 ```bash
 csle shell mycontainer

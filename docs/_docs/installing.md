@@ -24,7 +24,7 @@ Figure 26: Steps to install CSLE.
 To install and run CSLE you need at least one server or virtual machine that meets the following criteria:
 
 - Ubuntu 18.04+;
-- at least 16GB RAM (the exact amount of RAM necessary depends on the emulations to deploy; 16GB is sufficient for the smallest emulations, e.g. in the size of 5-10 containers);
+- at least 16GB RAM (the exact amount of RAM necessary depends on the emulations to deploy; 16GB is sufficient for the smallest emulations, e.g., in the size of 5-10 containers);
 - at least 2 CPUs;
 - 50 GB of free hard-disk space;
 - outside Internet access;
@@ -140,7 +140,7 @@ Listing 11: Line to add to the sudoers file.
 
 By adding the above line to the `sudoers` file, CSLE will be able to view logs and start and stop management services without requiring a password to be entered. (Note that the exact paths used above may differ on your system, very the paths by running the command `whereis service`, `whereis journalctl`, etc.)
 
-Next, setup SSH keys so that all servers (leader and workers) have SSH access to each other without requiring a password. To do this, generate an SSH key pair with the command `ssh-keygen` on each server and copy the public key (e.g. `id_rsa.pub`) to the file `.ssh/authorized_keys`.
+Next, setup SSH keys so that all servers (leader and workers) have SSH access to each other without requiring a password. To do this, generate an SSH key pair with the command `ssh-keygen` on each server and copy the public key (e.g., `id_rsa.pub`) to the file `.ssh/authorized_keys`.
 
 Lastly, define default username and password to the management system by editing the file: `csle/config.json`.
 
@@ -574,7 +574,7 @@ The emulation system consists of a set of configuration files and a set of Docke
 which are divided into a set of "base images" and a set of "derived images". 
 The base images contain common functionality required by all images in CSLE 
 whereas the derived images add specific configurations to the base images, 
-e.g. specific vulnerabilities. To install the emulation system, 
+e.g., specific vulnerabilities. To install the emulation system, 
 the configuration files must be inserted into the metastore and 
 the Docker images must be built or downloaded.
 
@@ -734,7 +734,7 @@ Listing 65: Command to set the configuration variable `max_user_watches`.
 
 ### Installing the Management System
 The management system consists of monitoring systems 
-(i.e. Grafana, Prometheus, Node exporter, and cAdvisor) and the web application 
+(i.e., Grafana, Prometheus, Node exporter, and cAdvisor) and the web application 
 that implements the web interface, 
 which is based on `node.js`. 
 Hence, installing the management system corresponds to installing these services and applications.

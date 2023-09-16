@@ -17,7 +17,7 @@ Listing 88: Command to list all information about CSLE.
 
 The above command lists information about the CSLE installation,
 including the emulation configurations that are installed in the metastore.
-Select one emulation configuration to start an execution, e.g. `csle-level9-010`,
+Select one emulation configuration to start an execution, e.g., `csle-level9-010`,
 and then run the command:
 
 ```bash
@@ -47,10 +47,10 @@ Listing 90: Command to start monitoring systems and the management system of CSL
 After the above commands have completed, the web interface of CSLE can be accessed
 at the URL: `http://localhost:7777/`, from which you can find links to Grafana's interface,
 Prometheus interface, cAdvisor's interface, and interfaces to storage systems
-(i.e. Kafka, Presto, and Elasticsearch).
+(i.e., Kafka, Presto, and Elasticsearch).
 
 To get started with reinforcement learning in CSLE, run the examples in the folder:
-`csle/examples`, e.g.
+`csle/examples`, e.g.,
 
 ```bash
 python csle/examples/training/ppo/

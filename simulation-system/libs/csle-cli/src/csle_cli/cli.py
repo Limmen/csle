@@ -1063,7 +1063,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           no_beats: bool) -> None:
     """
-    Starts an entity, e.g. a container or the management system
+    Starts an entity, e.g., a container or the management system
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image

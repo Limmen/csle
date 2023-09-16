@@ -39,7 +39,7 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         :param ev: the handshake complete event
         :return:
         """
-        # the datapath, i.e. abstraction of the link to the switch
+        # the datapath, i.e., abstraction of the link to the switch
         datapath = ev.msg.datapath
 
         self.logger.info(f"[SDN-Controller {self.controller_type}] OpenFlow handshake with switch DPID:{datapath.id}, "
@@ -69,10 +69,10 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         """
         Utility method for adding a flow to a switch
 
-        :param datapath: the datapath, i.e. abstraction of the link to the switch
+        :param datapath: the datapath, i.e., abstraction of the link to the switch
         :param priority: the priority of the flow (higher priority are prioritized)
         :param match: the pattern for matching packets to the flow based on the header
-        :param actions: the actions to take when the flow is matched, e.g. where to send the packet
+        :param actions: the actions to take when the flow is matched, e.g., where to send the packet
         :param buffer_id: the id of the buffer where packets for this flow are queued if they cannot be sent
         :return: None
         """
@@ -134,7 +134,7 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
                           f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, "
                           f"port number:{in_port}")
 
-        # learn a mac address to avoid FLOOD next time, i.e. map the port of the switch to the source MAC address
+        # learn a mac address to avoid FLOOD next time, i.e., map the port of the switch to the source MAC address
         self.mac_to_port[datapath_id][src_mac_address] = in_port
 
         if dst_mac_address in self.mac_to_port[datapath_id]:

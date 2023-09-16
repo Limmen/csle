@@ -5,7 +5,7 @@ permalink: /docs/releases/
 
 ## Release Management
 
-CSLE has semantic versioning, i.e. versions of CSLE are of the form `MAJOR.MINOR.PATCH`.
+CSLE has semantic versioning, i.e., versions of CSLE are of the form `MAJOR.MINOR.PATCH`.
 
 - The `MAJOR` version is incremented when incompatible API changes are made.
 - The `MINOR` version is incremented new functionality is added in a backwards compatible manner.

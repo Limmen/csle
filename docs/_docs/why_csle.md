@@ -10,7 +10,7 @@ As the ubiquity and evolving nature of cyber attacks is of growing concern to so
 part of the response to this threat. A promising approach to achieve this automation is 
 *reinforcement learning*, which has proven effective in finding near-optimal solutions 
 to control problems in several domains 
-(e.g. robotics and industry automation), and is actively investigated as an approach 
+(e.g., robotics and industry automation), and is actively investigated as an approach 
 to automated security (see <a href="https://github.com/Limmen/awesome-rl-for-cybersecurity">survey</a>). 
 While encouraging results have been obtained in this line of research, key challenges remain. 
 Chief among them is narrowing the gap between the environment where the reinforcement learning agents 

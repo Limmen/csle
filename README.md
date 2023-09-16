@@ -23,7 +23,7 @@ CSLE is a platform for evaluating and developing reinforcement learning agents f
 It can be considered as a cyber range specifically designed for reinforcement learning agents. Everything from network
 emulation, to simulation and implementation of network commands have been co-designed to provide an environment where it
 is possible to train and evaluate reinforcement learning agents on practical problems in cyber security. The platform
-can also be used to combine reinforcement learning with other quantitative methods, e.g. dynamic programming,
+can also be used to combine reinforcement learning with other quantitative methods, e.g., dynamic programming,
 computational game theory, evolutionary methods, causal inference, and general optimization.
 
 <p align="center">
@@ -40,7 +40,7 @@ on Linux containers and can be used to collect traces and to evaluate security p
 ![](docs/img/cli.gif)
 
 > **Note**
-> The emulation system is mainly designed to run on a distributed system, e.g. a compute cluster.
+> The emulation system is mainly designed to run on a distributed system, e.g., a compute cluster.
 > It can run on a laptop as well, but then only small emulations can be created.
 
 ### **Simulation System**

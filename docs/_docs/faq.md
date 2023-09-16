@@ -23,7 +23,7 @@ permalink: /docs/faq/
 
 **Q: How do I generate plots?**
 
-**A:** CSLE does not have its own plotting library. Plots can be created through standard libraries, e.g. matplotlib.
+**A:** CSLE does not have its own plotting library. Plots can be created through standard libraries, e.g., matplotlib.
 
 **Q: How do I install CSLE?**
 
