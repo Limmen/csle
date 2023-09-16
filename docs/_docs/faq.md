@@ -11,7 +11,7 @@ permalink: /docs/faq/
 
 **Q: Why does my machine crash when I try to run the emulation environment `csle-level9-010`?**
 
-**A:** Most likely because the machine is running out of memory. The emulation environment `csle-level9-010` includes $34$ containers, each of which requires at least 1GB of RAM, meaning that the machine needs at least 34GB of RAM to run this emulation environment.
+**A:** Most likely because the machine is running out of memory. The emulation environment `csle-level9-010` includes 34 containers, each of which requires at least 1GB of RAM, meaning that the machine needs at least 34GB of RAM to run this emulation environment.
 
 **Q: Why does my reinforcement learning algorithm not converge?**
 

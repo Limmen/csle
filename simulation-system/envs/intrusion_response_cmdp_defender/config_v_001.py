@@ -126,7 +126,8 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
             actions=[Action(id=0, descr="Add 0 nodes"), Action(id=1, descr="Add 1 node")],
             player_id=1, action_type=ValueType.INTEGER
         ),
-        ActionSpaceConfig(actions=[], player_id=2, action_type=ValueType.INTEGER)
+        ActionSpaceConfig(actions=[Action(id=0, descr="null")],
+                          player_id=2, action_type=ValueType.INTEGER)
     ]
     joint_action_space_config = JointActionSpaceConfig(action_spaces=action_spaces)
     return joint_action_space_config
@@ -176,7 +177,19 @@ def default_reward_function_config(s_max: int, negate_costs: bool) -> RewardFunc
     """
     cost_tensor = IntrusionResponseCmdpUtil.cost_tensor(states=IntrusionResponseCmdpUtil.state_space(s_max=s_max),
                                                         negate=negate_costs)
-    reward_function_config = RewardFunctionConfig(reward_tensor=cost_tensor)
+    expanded_cost_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for _ in IntrusionResponseCmdpUtil.action_space():
+            a1_tensor = []
+            for _ in [1]:
+                a2_tensor = []
+                for s in IntrusionResponseCmdpUtil.state_space(s_max=s_max):
+                    a2_tensor.append(cost_tensor[s])
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_cost_tensor.append(l_tensor)
+    reward_function_config = RewardFunctionConfig(reward_tensor=expanded_cost_tensor)
     return reward_function_config
 
 
@@ -193,7 +206,22 @@ def default_transition_operator_config(s_max: int, p_a: float, p_c: float, p_u: 
     transition_tensor = IntrusionResponseCmdpUtil.transition_tensor(
         states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), actions=IntrusionResponseCmdpUtil.action_space(),
         p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
-    transition_operator_config = TransitionOperatorConfig(transition_tensor=transition_tensor)
+    expanded_transition_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for a1 in IntrusionResponseCmdpUtil.action_space():
+            a1_tensor = []
+            for _ in [1]:
+                a2_tensor = []
+                for s in IntrusionResponseCmdpUtil.state_space(s_max=s_max):
+                    s_tensor = []
+                    for s_prime in IntrusionResponseCmdpUtil.state_space(s_max=s_max):
+                        s_tensor.append(transition_tensor[a1][s][s_prime])
+                    a2_tensor.append(s_tensor)
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_transition_tensor.append(l_tensor)
+    transition_operator_config = TransitionOperatorConfig(transition_tensor=expanded_transition_tensor)
     return transition_operator_config
 
 
@@ -210,10 +238,22 @@ def default_observation_function_config(s_max: int, p_a: float, p_c: float, p_u:
     observation_tensor = IntrusionResponseCmdpUtil.transition_tensor(
         states=IntrusionResponseCmdpUtil.state_space(s_max=s_max), actions=IntrusionResponseCmdpUtil.action_space(),
         p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max)
+    expanded_observation_tensor = []
+    for a1 in IntrusionResponseCmdpUtil.action_space():
+        a1_tensor = []
+        for _ in [1]:
+            a2_tensor = []
+            for s in IntrusionResponseCmdpUtil.state_space(s_max=s_max):
+                s_tensor = []
+                for s_prime in IntrusionResponseCmdpUtil.state_space(s_max=s_max):
+                    s_tensor.append(observation_tensor[a1][s][s_prime])
+                a2_tensor.append(s_tensor)
+            a1_tensor.append(a2_tensor)
+        expanded_observation_tensor.append(a1_tensor)
     component_observation_tensors = {}
-    component_observation_tensors["number of nodes"] = observation_tensor
+    component_observation_tensors["number of nodes"] = expanded_observation_tensor
     observation_function_config = ObservationFunctionConfig(
-        observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
+        observation_tensor=expanded_observation_tensor, component_observation_tensors=component_observation_tensors)
     return observation_function_config
 
 

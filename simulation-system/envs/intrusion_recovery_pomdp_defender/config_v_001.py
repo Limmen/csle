@@ -122,7 +122,7 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
     defender_actions = []
     defender_actions.append(Action(id=0, descr="Wait"))
     defender_actions.append(Action(id=1, descr="Recover"))
-    attacker_actions = []
+    attacker_actions = [Action(id=0, descr="Null")]
     action_spaces = [ActionSpaceConfig(actions=defender_actions, player_id=1, action_type=ValueType.INTEGER),
                      ActionSpaceConfig(actions=attacker_actions, player_id=2, action_type=ValueType.INTEGER)]
     joint_action_space_config = JointActionSpaceConfig(action_spaces=action_spaces)
@@ -176,7 +176,19 @@ def default_reward_function_config(eta: float, negate_costs: bool) -> RewardFunc
     cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
                                                          actions=IntrusionRecoveryPomdpUtil.action_space(),
                                                          negate=negate_costs)
-    reward_function_config = RewardFunctionConfig(reward_tensor=[cost_tensor])
+    expanded_cost_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for a1 in IntrusionRecoveryPomdpUtil.action_space():
+            a1_tensor = []
+            for _ in [1]:
+                a2_tensor = []
+                for s in IntrusionRecoveryPomdpUtil.state_space():
+                    a2_tensor.append(cost_tensor[a1][s])
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_cost_tensor.append(l_tensor)
+    reward_function_config = RewardFunctionConfig(reward_tensor=expanded_cost_tensor)
     return reward_function_config
 
 
@@ -187,14 +199,29 @@ def default_transition_operator_config(p_a: float, p_c_1: float, p_c_2: float, p
     :param p_a: the intrusion probability
     :param p_c_1: the crash probability in the healthy state
     :param p_c_2: the crash probability in the compromised state
-    :param p_u: the software upgrade probabilityn
+    :param p_u: the software upgrade probability
     :return: the default transition tensor configuration
     """
     transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(
         states=IntrusionRecoveryPomdpUtil.state_space(), actions=IntrusionRecoveryPomdpUtil.action_space(),
         p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u)
+    expanded_transition_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for a1 in IntrusionRecoveryPomdpUtil.action_space():
+            a1_tensor = []
+            for _ in [1]:
+                a2_tensor = []
+                for s in IntrusionRecoveryPomdpUtil.state_space():
+                    s_tensor = []
+                    for s_prime in IntrusionRecoveryPomdpUtil.state_space():
+                        s_tensor.append(transition_tensor[a1][s][s_prime])
+                    a2_tensor.append(s_tensor)
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_transition_tensor.append(l_tensor)
     transition_operator_config = TransitionOperatorConfig(
-        transition_tensor=list([transition_tensor]))
+        transition_tensor=expanded_transition_tensor)
     return transition_operator_config
 
 
@@ -208,10 +235,22 @@ def default_observation_function_config(num_observations: int) -> ObservationFun
     observation_tensor = IntrusionRecoveryPomdpUtil.observation_tensor(
         states=IntrusionRecoveryPomdpUtil.state_space(),
         observations=IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations))
+    expanded_observation_tensor = []
+    for _ in IntrusionRecoveryPomdpUtil.action_space():
+        a1_tensor = []
+        for _ in [1]:
+            a2_tensor = []
+            for s in IntrusionRecoveryPomdpUtil.state_space():
+                s_tensor = []
+                for o in IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations):
+                    s_tensor.append(observation_tensor[s][o])
+                a2_tensor.append(s_tensor)
+            a1_tensor.append(a2_tensor)
+        expanded_observation_tensor.append(a1_tensor)
     component_observation_tensors = {}
-    component_observation_tensors["weighted_alerts"] = observation_tensor
+    component_observation_tensors["weighted_alerts"] = expanded_observation_tensor
     observation_function_config = ObservationFunctionConfig(
-        observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
+        observation_tensor=expanded_observation_tensor, component_observation_tensors=component_observation_tensors)
     return observation_function_config
 
 

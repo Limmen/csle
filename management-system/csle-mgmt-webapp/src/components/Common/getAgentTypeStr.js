@@ -78,6 +78,15 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 23) {
         return "BAYESIAN OPTIMIZATION"
     }
+    if(agentType === 24) {
+        return "DFSP LOCAL"
+    }
+    if(agentType === 25) {
+        return "LINEAR PROGRAMMING CMDP"
+    }
+    if(agentType === 26) {
+        return "BAYESIAN OPTIMIZATION EMUKIT"
+    }
     else {
         return "Unknown"
     }
