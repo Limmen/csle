@@ -183,8 +183,12 @@ class LinearProgrammingCMDPAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.LP_FOR_NF_GAMES.PAYOFF_MATRIX, agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1,
-                agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2,
+        return [agents_constants.LP_FOR_CMDPs.ACTIONS,
+                agents_constants.LP_FOR_CMDPs.STATES,
+                agents_constants.LP_FOR_CMDPs.COST_TENSOR,
+                agents_constants.LP_FOR_CMDPs.TRANSITION_TENSOR,
+                agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS,
+                agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
@@ -249,7 +253,8 @@ class LinearProgrammingCMDPAgent(BaseAgent):
 
         policy = TabularPolicy(
             lookup_table=optimal_strategy, simulation_name=self.simulation_env_config.name,
-            player_type=self.experiment_config.player_type, actions=list(actions),
+            player_type=self.experiment_config.player_type,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[0].actions,
             avg_R=J, agent_type=AgentType.LINEAR_PROGRAMMING_CMDP
         )
         exp_result.policies[seed] = policy

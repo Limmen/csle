@@ -7,6 +7,7 @@ csle-defender==0.3.9
 csle-system-identification==0.3.9
 gym-csle-stopping-game==0.3.9
 gym-csle-intrusion-response-game==0.3.9
+csle-tolerance==0.3.9
 stable-baselines3==2.0.0
 pulp==2.7.0
 bayesian-optimization==1.3.1
