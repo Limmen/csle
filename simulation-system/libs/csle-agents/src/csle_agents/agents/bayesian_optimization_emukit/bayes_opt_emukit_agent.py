@@ -27,7 +27,6 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 from csle_agents.agents.bayesian_optimization_emukit.bo.bo_config import BOConfig
 from csle_agents.agents.bayesian_optimization_emukit.bo.bo_results import BOResults
-from csle_agents.agents.bayesian_optimization_emukit.bo.optimization.objective_type import ObjectiveType
 from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type import (
     AcquisitionOptimizerType)
 from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type import (
@@ -35,6 +34,7 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.rbf_kernel_config import RBFKernelConfig
 from csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config import GPConfig
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_type import KernelType
+from csle_agents.agents.bayesian_optimization_emukit.bo.optimization.objective_type import ObjectiveType
 
 
 class BayesOptEmukitAgent(BaseAgent):
@@ -229,6 +229,7 @@ class BayesOptEmukitAgent(BaseAgent):
                 agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init,
                 agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init,
                 agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS,
+                agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
@@ -262,10 +263,12 @@ class BayesOptEmukitAgent(BaseAgent):
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_FUNCTION_TYPE].value
         acquisition_optimizer_type = self.experiment_config.hparams[
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_OPTIMIZER_TYPE].value
+        objective_type = self.experiment_config.hparams[
+            agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE].value
         X_init = self.experiment_config.hparams[
-            agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init].value
+            agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init].value.copy()
         Y_init = self.experiment_config.hparams[
-            agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init].value
+            agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init].value.copy()
         params = self.experiment_config.hparams[
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS].value
         if kernel_type == KernelType.RBF.value:
@@ -276,14 +279,28 @@ class BayesOptEmukitAgent(BaseAgent):
         gp_config = GPConfig(kernel_config=kernel_config, obs_likelihood_variance=obs_likelihood_variance)
 
         # Initial eval
-        J = round(Y_init[0], 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
+        if len(Y_init) == 0:
+            theta = BayesOptEmukitAgent.initial_theta(L=input_space_dim)
+            policy = self.get_policy(theta=list(theta), L=input_space_dim)
+            avg_metrics = self.eval_theta(
+                policy=policy,
+                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            X_init.append(theta)
+            X_init = np.array(X_init).reshape(1, input_space_dim)
+            Y_init.append(J)
+            Y_init = np.array(Y_init).reshape(1, 1)
+        else:
+            X_init = np.array(X_init)
+            Y_init = np.array(Y_init)
+        J = round(Y_init[0][0], 3)
         exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS].append(
             BayesOptEmukitAgent.round_vec(X_init[0]))
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
 
         parameters = []
-        for i in range(params):
+        for i in range(len(params)):
             parameters.append(ContinuousParameter(str(params[i][0]), min_value=float(params[i][1]),
                                                   max_value=float(params[i][2])))
         input_space = ParameterSpace(parameters=parameters)
@@ -293,7 +310,7 @@ class BayesOptEmukitAgent(BaseAgent):
             input_space=input_space, evaluation_budget=evaluation_budget, gp_config=gp_config,
             acquisition_function_type=AcquisitionFunctionType(acquisition_function_type),
             acquisition_optimizer_type=AcquisitionOptimizerType(acquisition_optimizer_type),
-            objective_type=ObjectiveType.MIN, beta=beta)
+            objective_type=ObjectiveType(objective_type), beta=beta)
 
         Logger.__call__().get_logger().info("Starting BO execution")
         results = BOResults(remaining_budget=bo_config.evaluation_budget)
@@ -328,9 +345,12 @@ class BayesOptEmukitAgent(BaseAgent):
         results.Y = bo_config.Y_init.copy()
 
         # Initialize the best point and initial cost
-        min_index = np.argmin(results.Y)
-        results.Y_best = np.array([results.Y[min_index]])
-        results.X_best = np.array([results.X[min_index]])
+        if bo_config.objective_type == ObjectiveType.MIN:
+            best_index = np.argmin(results.Y)
+        else:
+            best_index = np.argmax(results.Y)
+        results.Y_best = np.array([results.Y[best_index]])
+        results.X_best = np.array([results.X[best_index]])
 
         # Fit the GP surrogate model based on the initial data
         results.surrogate_model = bo_config.gp_config.create_gp(X=bo_config.X_init, Y=bo_config.Y_init,
@@ -350,7 +370,7 @@ class BayesOptEmukitAgent(BaseAgent):
             x, _ = results.acquisition_optimizer.optimize(results.acquisition)
 
             # Evaluate the objective function at the new point
-            policy = self.get_policy(theta=list(x), L=input_space_dim)
+            policy = self.get_policy(theta=list(x[0]), L=input_space_dim)
             avg_metrics = self.eval_theta(
                 policy=policy,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -358,19 +378,19 @@ class BayesOptEmukitAgent(BaseAgent):
 
             # Append the new data point to the dataset
             results.X = np.append(results.X, x, axis=0)
-            results.Y = np.append(results.Y, y, axis=0)
+            results.Y = np.append(results.Y, [[y]], axis=0)
 
             # Log average return
-            policy.avg_R = J
+            policy.avg_R = y
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(y)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # Log thetas
             exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS].append(
-                BayesOptEmukitAgent.round_vec(x))
+                BayesOptEmukitAgent.round_vec(x[0]))
 
             if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE] \
                     == PolicyType.MULTI_THRESHOLD:
@@ -408,7 +428,7 @@ class BayesOptEmukitAgent(BaseAgent):
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
                 Logger.__call__().get_logger().info(
-                    f"[BAYES-OPT-EMUKIT] i: {results.iteration}, Best J:{results.Y_best[-1]}, J: {J}"
+                    f"[BAYES-OPT-EMUKIT] i: {results.iteration}, Best J:{results.Y_best[-1]}, J: {J} "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, remaining budget: {results.remaining_budget}, "
                     f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%")
@@ -421,9 +441,12 @@ class BayesOptEmukitAgent(BaseAgent):
             results.C = np.append(results.C, np.array([[results.cumulative_cost]]), axis=0)
 
             # Get current optimum
-            min_index_y = np.argmin(results.Y)
-            results.Y_best = np.append(results.Y_best, [results.Y[min_index_y]], axis=0)
-            results.X_best = np.append(results.X_best, [results.X[min_index_y]], axis=0)
+            if bo_config.objective_type == ObjectiveType.MIN:
+                best_index_y = np.argmin(results.Y)
+            else:
+                best_index_y = np.argmax(results.Y)
+            results.Y_best = np.append(results.Y_best, [results.Y[best_index_y]], axis=0)
+            results.X_best = np.append(results.X_best, [results.X[best_index_y]], axis=0)
 
             # Move to next iteration
             results.iteration += 1

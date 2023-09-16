@@ -214,6 +214,7 @@ class BAYESIAN_OPTIMIZATION_EMUKIT:
     X_init = "X_init"
     Y_init = "Y_init"
     PARAMS = "params"
+    OBJECTIVE_TYPE = "objective_type"
 
 
 class DIFFERENTIAL_EVOLUTION:
