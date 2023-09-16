@@ -158,3 +158,5 @@ static
 
 # Sphinx documentation
 docs/build
+
+.pypirc
