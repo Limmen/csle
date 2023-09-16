@@ -38,7 +38,7 @@ if __name__ == '__main__':
                                                         descr="the number of samples to keep in each iteration of CE"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[5]*L,
+            agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[5] * L,
                                                           name=agents_constants.CROSS_ENTROPY.THETA1,
                                                           descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,

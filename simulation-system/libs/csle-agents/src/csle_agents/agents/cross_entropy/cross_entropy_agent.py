@@ -335,7 +335,7 @@ class CrossEntropyAgent(BaseAgent):
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1, self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value + 1):
-                if env_constants.ENV_METRICS.STOP + f"_{l}"in avg_metrics:
+                if env_constants.ENV_METRICS.STOP + f"_{l}" in avg_metrics:
                     exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                         round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -382,7 +382,7 @@ class CrossEntropyAgent(BaseAgent):
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{opt_J}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%")
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%")
 
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy

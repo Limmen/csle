@@ -408,7 +408,7 @@ class TSPSAAgent(BaseAgent):
                     f"[T-SPSA] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
-                    f"opt_J:{opt_j}, "                  
+                    f"opt_J:{opt_j}, "
                     f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%")
 
         policy = self.get_policy(theta=theta, L=L)
