@@ -20,7 +20,10 @@ To generate a new release of CSLE, the following steps must be performed:
 
 **Python releases.** To make a new Python release, do the following:
 
-1. Edit the `RELEASE_CONFIG` variable to match the versions of the release in the file:
+1. Copy the `csle/simulation_system/libs/.pypirc_template` file to your home directory and rename it to `.pypirc`, e.g., `/home/kim/.pypirc`.
+2. Create a PyPi token following the intructions <a href="https://pypi.org/manage/account/token/">here</a>.
+3. Add the PyPi token to the `.pypirc` file.
+4. Edit the `RELEASE_CONFIG` variable to match the versions of the release in the file:
     ```bash
      ./simulation-system/libs/make_release.py
     ```
@@ -28,7 +31,7 @@ To generate a new release of CSLE, the following steps must be performed:
    Listing 134: File to generate Python releases.
    </p>
 
-2. Run the command below to build all the Python libraries and push the built artifacts to PyPi:
+5. Run the command below to build all the Python libraries and push the built artifacts to PyPi:
     ```bash
      python ./simulation-system/libs/make_release.py
     ```
