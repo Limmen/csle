@@ -22,7 +22,6 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
 from csle_agents.agents.bayesian_optimization_emukit.bo.optimization.objective_type import ObjectiveType
 
 
-
 class TestBayesOptSuite:
     """
     Test suite for the BayesOptAgent

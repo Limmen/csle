@@ -6,4 +6,3 @@ csle-defender==0.3.9
 gymnasium==0.27.1
 numpy==1.23.5
 pulp==2.7.0
-emukit==0.4.10

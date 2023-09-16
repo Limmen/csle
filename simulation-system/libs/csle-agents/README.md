@@ -22,6 +22,7 @@ and game-theoretic algorithms for finding defender policies.
 - `pulp` (for linear and convex optimization)
 - `Bayesian optimization` (for Bayesian optimization algorithms)
 - `iteround` (utility library)
+- `emukit` (for Bayesian optimization)
 
 ## Development Requirements
 
