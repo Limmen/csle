@@ -1,9 +1,9 @@
-csle-base==0.3.8
-csle-common==0.3.8
-csle-agents==0.3.8
-csle-cluster==0.3.8
-csle-system-identification==0.3.8
-csle-ryu==0.3.8
+csle-base==0.3.9
+csle-common==0.3.9
+csle-agents==0.3.9
+csle-cluster==0.3.9
+csle-system-identification==0.3.9
+csle-ryu==0.3.9
 flask==2.2.2
 flask-socketio==5.3.2
 waitress==2.1.2

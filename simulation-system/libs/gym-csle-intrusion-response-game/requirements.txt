@@ -1,6 +1,6 @@
 gymnasium==0.27.1
-csle-base==0.3.8
-csle-common==0.3.8
-csle-collector==0.3.8
-csle-attacker==0.3.8
-csle-defender==0.3.8
+csle-base==0.3.9
+csle-common==0.3.9
+csle-collector==0.3.9
+csle-attacker==0.3.9
+csle-defender==0.3.9
