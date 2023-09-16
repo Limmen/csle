@@ -6,8 +6,8 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
 from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
@@ -15,13 +15,14 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
-    simulation_name = "csle-stopping-pomdp-defender-001"
+    simulation_name = "csle-tolerance-intrusion-recovery-pomdp-defender-001"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    input_config: IntrusionRecoveryPomdpConfig = simulation_env_config.simulation_env_input_config
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[399, 98912],
         agent_type=AgentType.T_SPSA,
         log_every=1,
         hparams={
@@ -42,11 +43,11 @@ if __name__ == '__main__':
             constants.T_SPSA.EPSILON: HParam(
                 value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.L: HParam(value=3, name="L", descr="the number of stop actions"),
+            constants.T_SPSA.L: HParam(value=input_config.BTR, name="L", descr="the number of thresholds"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            constants.T_SPSA.THETA1: HParam(value=[-4, -4, -4], name=constants.T_SPSA.THETA1,
-                                            descr="initial thresholds"),
+            constants.T_SPSA.THETA1: HParam(
+                value=[0]*input_config.BTR, name=constants.T_SPSA.THETA1, descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -65,15 +66,13 @@ if __name__ == '__main__':
                 value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
                 descr="policy type in T-SPSA"),
             constants.T_SPSA.OBJECTIVE_TYPE: HParam(
-                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                value=ObjectiveType.MIN, name=constants.T_SPSA.OBJECTIVE_TYPE,
                 descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
-    simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

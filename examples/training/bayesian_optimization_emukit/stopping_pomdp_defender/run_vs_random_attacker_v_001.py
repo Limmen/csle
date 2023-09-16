@@ -13,7 +13,7 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
     import AcquisitionFunctionType
 from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type \
     import AcquisitionOptimizerType
-from csle_agents.agents.bayesian_optimization_emukit.bo.optimization.objective_type import ObjectiveType
+from objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -32,11 +32,11 @@ if __name__ == '__main__':
         hparams={
             agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
                                                              descr="the number of training iterations"),
-            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=2, name="L", descr="the number of stop actions"),
+            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=3, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
-                value=[0, 0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
+                value=[0, 0, 0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
                 descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -56,22 +56,22 @@ if __name__ == '__main__':
                 value=PolicyType.MULTI_THRESHOLD, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.POLICY_TYPE,
                 descr="policy type for the execution"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET: HParam(
-                value=50, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET,
+                value=100, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET,
                 descr="evaluation budget"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL: HParam(
                 value=1.0, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL,
                 descr="Lengthscale for the RBF kernel"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL: HParam(
-                value=10.0, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL,
+                value=1.0, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL,
                 descr="Variance for the RBF kernel"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE: HParam(
-                value=10.0, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE,
+                value=1.0, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE,
                 descr="Observation likelihood variance"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA: HParam(
                 value=100, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA,
                 descr="The beta parameter for GP-UCB"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM: HParam(
-                value=2, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM,
+                value=3, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM,
                 descr="Dimension of the input space"),
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE: HParam(
                 value=KernelType.RBF, name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE,
@@ -99,7 +99,8 @@ if __name__ == '__main__':
             agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS: HParam(
                 value=[
                     ("Threshold_1", -5, 5),
-                    ("Threshold_2", -5, 5)
+                    ("Threshold_2", -5, 5),
+                    ("Threshold_3", -5, 5)
                 ],
                 name=agents_constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS,
                 descr="The parameters of the optimization")
@@ -110,8 +111,8 @@ if __name__ == '__main__':
         emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
         experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-10, R_SLA=0, R_ST=0, L=1))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 1
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
+    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 3
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

@@ -26,11 +26,11 @@ if __name__ == '__main__':
         hparams={
             agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
                                                              descr="the number of training iterations"),
-            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
+            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=3, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
-                value=[0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
+                value=[0, 0, 0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
                 descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
                 descr="kappa parameter for the xi utility function"),
             agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                value=[(-3, 3)],
+                value=[(-3, 3), (-3, 3), (-3, 3)],
                 name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
                 descr="parameter bounds"),
             agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
@@ -71,8 +71,8 @@ if __name__ == '__main__':
     agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                           experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-10, R_SLA=0, R_ST=0, L=1))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 1
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
+    simulation_env_config.simulation_env_input_config.stopping_game_config.L = 3
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

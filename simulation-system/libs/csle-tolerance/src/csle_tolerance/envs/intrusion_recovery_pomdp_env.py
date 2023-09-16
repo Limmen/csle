@@ -85,8 +85,8 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         info = self._info(info)
 
         # Log trace
-        self.trace.defender_rewards.append(-c)
-        self.trace.attacker_rewards.append(c)
+        self.trace.defender_rewards.append(c)
+        self.trace.attacker_rewards.append(-c)
         self.trace.attacker_actions.append(-1)
         self.trace.defender_actions.append(a)
         self.trace.infos.append(info)

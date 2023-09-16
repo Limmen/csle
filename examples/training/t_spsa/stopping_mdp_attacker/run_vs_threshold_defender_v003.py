@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import norm
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -11,7 +12,7 @@ from sklearn.mixture import GaussianMixture
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 from csle_common.dao.training.policy_type import PolicyType
-from scipy.stats import norm
+from csle_agents.common.objective_type import ObjectiveType
 
 
 def get_obs_tensor():
@@ -174,7 +175,10 @@ if __name__ == '__main__':
                 descr="the discount factor gamma"),
             constants.T_SPSA.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+                descr="policy type in T-SPSA"),
+            constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

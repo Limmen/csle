@@ -26,6 +26,7 @@ import csle_common.constants.constants as constants
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class TSPSAAgent(BaseAgent):
@@ -218,6 +219,7 @@ class TSPSAAgent(BaseAgent):
         return [constants.T_SPSA.a, constants.T_SPSA.c, constants.T_SPSA.LAMBDA,
                 constants.T_SPSA.A, constants.T_SPSA.EPSILON, constants.T_SPSA.N,
                 constants.T_SPSA.L, constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
+                constants.T_SPSA.OBJECTIVE_TYPE,
                 constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
@@ -232,6 +234,7 @@ class TSPSAAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        objective_type = ObjectiveType(self.experiment_config.hparams[constants.T_SPSA.OBJECTIVE_TYPE].value)
         L = self.experiment_config.hparams[constants.T_SPSA.L].value
         if constants.T_SPSA.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[constants.T_SPSA.THETA1].value
@@ -269,18 +272,25 @@ class TSPSAAgent(BaseAgent):
             gk = self.batch_gradient(theta=theta, ck=ck, L=L, k=i, gradient_batch_size=gradient_batch_size)
 
             # Adjust theta using SA
-            theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
+            if objective_type == ObjectiveType.MAX:
+                theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
+            else:
+                theta = [t - ak * gkk for t, gkk in zip(theta, gk)]
 
             # Constrain (Theorem 1.A, Hammar Stadler 2021)
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
+            if self.experiment_config.player_type == PlayerType.DEFENDER and "stop" in self.simulation_env_config.name:
                 for l in range(L - 1):
                     theta[l] = max(theta[l], theta[l + 1])
-            else:
-                if self.experiment_config.player_type == PlayerType.ATTACKER:
-                    for l in range(0, L - 1):
-                        theta[l] = min(theta[l], theta[l + 1])
-                    for l in range(L, 2 * L - 1):
-                        theta[l] = max(theta[l], theta[l + 1])
+            elif self.experiment_config.player_type == PlayerType.ATTACKER and "stop" \
+                    in self.simulation_env_config.name:
+                for l in range(0, L - 1):
+                    theta[l] = min(theta[l], theta[l + 1])
+                for l in range(L, 2 * L - 1):
+                    theta[l] = max(theta[l], theta[l + 1])
+            elif self.experiment_config.player_type == PlayerType.DEFENDER and "tolerance" \
+                    in self.simulation_env_config.name:
+                for l in range(L - 1):
+                    theta[l] = min(theta[l], theta[l + 1])
 
             # Evaluate new theta
             policy = self.get_policy(theta=theta, L=L)
@@ -307,37 +317,42 @@ class TSPSAAgent(BaseAgent):
                     exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_LENGTH in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log prediction distance
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
-                round(avg_metrics[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE], 3))
-            exp_result.all_metrics[seed][
-                agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE], 3))
+                exp_result.all_metrics[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT].append(
-                round(avg_metrics[env_constants.ENV_METRICS.START_POINT_CORRECT], 3))
-            exp_result.all_metrics[seed][
-                agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.START_POINT_CORRECT in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.START_POINT_CORRECT], 3))
+                exp_result.all_metrics[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log stopping times
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_START in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
                 round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
@@ -356,8 +371,9 @@ class TSPSAAgent(BaseAgent):
                             self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log baseline returns
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
+            if env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
             if env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in avg_metrics:
                 exp_result.all_metrics[seed][
                     env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
@@ -385,12 +401,14 @@ class TSPSAAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
+                opt_j = -1
+                if len(exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]) > 0:
+                    opt_j = exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]
                 Logger.__call__().get_logger().info(
                     f"[T-SPSA] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
-                    f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
+                    f"opt_J:{opt_j}, "                  
                     f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%")
 
         policy = self.get_policy(theta=theta, L=L)
