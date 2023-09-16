@@ -49,9 +49,6 @@ RELEASE_CONFIG = {
 }
 
 if __name__ == '__main__':
-    username = input("Enter PyPi username: ")
-    password = getpass()
-
     # Verify versions
     print("Verifying versions")
     for lib, versions in RELEASE_CONFIG.items():
@@ -130,7 +127,7 @@ if __name__ == '__main__':
     print("Push to PyPi")
     for lib, versions in RELEASE_CONFIG.items():
         print(f"Uploading {lib} to PyPi")
-        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/* -p {password} -u {username}",
+        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/*",
                              stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         exit_code = p.wait()
