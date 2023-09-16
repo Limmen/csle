@@ -26,6 +26,7 @@ from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class CrossEntropyAgent(BaseAgent):
@@ -207,6 +208,7 @@ class CrossEntropyAgent(BaseAgent):
         """
         return [agents_constants.CROSS_ENTROPY.N,
                 agents_constants.CROSS_ENTROPY.L, agents_constants.CROSS_ENTROPY.THETA1,
+                agents_constants.CROSS_ENTROPY.OBJECTIVE_TYPE,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
@@ -222,6 +224,8 @@ class CrossEntropyAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        objective_type = ObjectiveType(
+            self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.OBJECTIVE_TYPE].value)
         L = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value
         if agents_constants.CROSS_ENTROPY.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.THETA1].value
@@ -270,25 +274,23 @@ class CrossEntropyAgent(BaseAgent):
                 theta_sample = norm_dist.rvs(1)
                 if isinstance(theta_sample, np.floating):
                     theta_sample = np.array([theta_sample])
-                for i in range(len(theta_sample)):
-                    if theta_sample[i] > 1:
-                        theta_sample[i] = 0.99
-                    if theta_sample[i] < 0:
-                        theta_sample[i] = 0.01
                 policy = self.get_policy(theta=list(theta_sample), L=L)
                 avg_metrics = self.eval_theta(
                     policy=policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 theta_samples_and_returns.append((theta_sample, J))
-            sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
+            if objective_type == ObjectiveType.MAX:
+                sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
+            else:
+                sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=False)
             top_k_index = max(1, int(K * lamb))
             top_k_samples = sorted_samples[0:top_k_index]
             means = np.mean(np.array(list(map(lambda x: x[0], top_k_samples))), axis=0)
             stds = np.std(np.array(list(map(lambda x: x[0], top_k_samples))), axis=0)
-            for i in range(len(stds)):
-                if stds[i] <= 0:
-                    stds[i] = 0.01
+            for j in range(len(stds)):
+                if stds[j] <= 0:
+                    stds[j] = 0.01
             J = top_k_samples[0][1]
 
             # Log average return
@@ -310,20 +312,22 @@ class CrossEntropyAgent(BaseAgent):
                 exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_LENGTH in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log stopping times
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_START in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
                 round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
@@ -331,20 +335,23 @@ class CrossEntropyAgent(BaseAgent):
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1, self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value + 1):
-                exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    ExperimentUtil.running_average(
-                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
-                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+                if env_constants.ENV_METRICS.STOP + f"_{l}"in avg_metrics:
+                    exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                        round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                        ExperimentUtil.running_average(
+                            exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
+                            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log baseline returns
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
+            if env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in avg_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
+                exp_result.all_metrics[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN],
+                          3))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 # Update training job
@@ -367,15 +374,15 @@ class CrossEntropyAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
-
+                opt_J = -1
+                if len(exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]) > 0:
+                    opt_J = exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]
                 Logger.__call__().get_logger().info(
                     f"[CROSS-ENTROPY] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
-                    f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
+                    f"opt_J:{opt_J}, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%")
 
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy

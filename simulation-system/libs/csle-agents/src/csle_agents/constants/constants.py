@@ -249,6 +249,7 @@ class CROSS_ENTROPY:
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
 
 
 class KIEFER_WOLFOWITZ:

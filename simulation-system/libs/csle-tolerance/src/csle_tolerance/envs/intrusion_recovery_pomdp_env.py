@@ -101,7 +101,7 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         if self.t >= self.config.BTR or self.s == 2:
             done = True
 
-        return [self.t, self.o, self.b[1]], c, done, done, info
+        return [self.t, self.b[1], self.o], c, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[List[Union[int, int, float]], Dict[str, Any]]:
@@ -126,7 +126,7 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         self.trace.defender_observations.append(self.o)
         self.trace.attacker_observations.append(self.o)
         info: Dict[str, Any] = {}
-        return [self.t, self.o, self.b[1]], info
+        return [self.t, self.b[1], self.o], info
 
     def _info(self, info: Dict[str, Any]) -> Dict[str, Any]:
         """

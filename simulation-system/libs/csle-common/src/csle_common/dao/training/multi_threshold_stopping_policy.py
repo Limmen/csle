@@ -156,6 +156,8 @@ class MultiThresholdStoppingPolicy(Policy):
         """
         b1 = o[1]
         l = int(o[0])
+        if l > len(self.theta):
+            l = len(self.theta)
         threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
         a, prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
             threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
