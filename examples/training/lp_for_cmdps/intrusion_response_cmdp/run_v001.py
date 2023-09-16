@@ -1,4 +1,3 @@
-import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,6 +15,11 @@ if __name__ == '__main__':
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     input_config: IntrusionResponseCmdpConfig = simulation_env_config.simulation_env_input_config
+    print(input_config.states)
+    print(input_config.actions)
+    print(input_config.cost_tensor)
+    print(input_config.transition_tensor)
+    print(input_config.constraint_cost_tensor)
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}fp_test",
         title="Linear programming for constrained MDPs",
@@ -57,7 +61,7 @@ if __name__ == '__main__':
             agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS: HParam(
                 value=[0.2],
                 name=agents_constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS,
-                descr="the constraint cost thresholds"),
+                descr="the constraint cost thresholds")
         },
         player_type=PlayerType.DEFENDER, player_idx=1
     )
