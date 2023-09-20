@@ -12,6 +12,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_agents.common.objective_type import ObjectiveType
 
+
 class TestTFPSuite:
     """
     Test suite for the TFPAgent
