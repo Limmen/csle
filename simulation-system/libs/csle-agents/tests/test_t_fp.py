@@ -10,7 +10,7 @@ from csle_common.dao.training.policy_type import PolicyType
 import csle_agents.constants.constants as agents_constants
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-
+from csle_agents.common.objective_type import ObjectiveType
 
 class TestTFPSuite:
     """
@@ -84,7 +84,10 @@ class TestTFPSuite:
                     descr="the discount factor gamma"),
                 agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS: HParam(
                     value=5, name=agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS,
-                    descr="number of iterations to evaluate equilibrium strategies in each iteration")
+                    descr="number of iterations to evaluate equilibrium strategies in each iteration"),
+                constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MIN, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                    descr="Objective type")
             },
             player_type=PlayerType.ATTACKER, player_idx=1
         )

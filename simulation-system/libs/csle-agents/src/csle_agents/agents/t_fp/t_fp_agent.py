@@ -473,6 +473,7 @@ class TFPAgent(BaseAgent):
 
     def _eval_env(self, env: BaseEnv, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
         """
+        Evaluates a given policy
 
         :param env: the environment to use for evaluation
         :param policy: the policy to evaluate
@@ -568,7 +569,8 @@ class TFPAgent(BaseAgent):
                 agents_constants.T_FP.N_2, constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL, agents_constants.COMMON.RUNNING_AVERAGE,
                 agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS,
-                agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS]
+                agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS,
+                constants.T_SPSA.POLICY_TYPE, constants.T_SPSA.OBJECTIVE_TYPE]
 
     @staticmethod
     def exploitability(attacker_val: float, defender_val: float) -> float:
@@ -595,6 +597,7 @@ class TFPAgent(BaseAgent):
             constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
             constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
             constants.T_SPSA.POLICY_TYPE: self.experiment_config.hparams[constants.T_SPSA.POLICY_TYPE],
+            constants.T_SPSA.OBJECTIVE_TYPE: self.experiment_config.hparams[constants.T_SPSA.OBJECTIVE_TYPE],
             constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
             constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
             constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
@@ -632,6 +635,7 @@ class TFPAgent(BaseAgent):
             constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
             constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
             constants.T_SPSA.POLICY_TYPE: self.experiment_config.hparams[constants.T_SPSA.POLICY_TYPE],
+            constants.T_SPSA.OBJECTIVE_TYPE: self.experiment_config.hparams[constants.T_SPSA.OBJECTIVE_TYPE],
             constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
             constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
             constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],

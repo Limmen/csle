@@ -9,6 +9,7 @@ from csle_agents.agents.t_fp.t_fp_agent import TFPAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 
 if __name__ == '__main__':
@@ -81,7 +82,10 @@ if __name__ == '__main__':
                 descr="number of iterations to evaluate equilibrium strategies in each iteration"),
             agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
-                descr="policy type for the execution")
+                descr="policy type for the execution"),
+            constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
