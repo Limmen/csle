@@ -17,7 +17,7 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
     AcquisitionFunctionType
 from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type import \
     AcquisitionOptimizerType
-from objective_type import ObjectiveType
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class BOConfig:

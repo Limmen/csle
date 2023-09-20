@@ -34,7 +34,7 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.rbf_kernel_config import RBFKernelConfig
 from csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config import GPConfig
 from csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_type import KernelType
-from objective_type import ObjectiveType
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class BayesOptEmukitAgent(BaseAgent):

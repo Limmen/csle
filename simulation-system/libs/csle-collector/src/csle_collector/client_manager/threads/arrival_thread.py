@@ -40,7 +40,7 @@ class ArrivalThread(threading.Thread):
                      f"num workflows: {len(self.workflows_config.workflow_markov_chains)}")
 
     @staticmethod
-    def piece_wise_constant_rate(t, arrival_config: PieceWiseConstantArrivalConfig) -> float:
+    def piece_wise_constant_rate(t: int, arrival_config: PieceWiseConstantArrivalConfig) -> float:
         """
         Function that returns the rate of a piece-wise constant Poisson process
 
@@ -56,7 +56,7 @@ class ArrivalThread(threading.Thread):
         return rate
 
     @staticmethod
-    def spiking_poisson_arrival_rate(t, arrival_config: SpikingArrivalConfig) -> float:
+    def spiking_poisson_arrival_rate(t: int, arrival_config: SpikingArrivalConfig) -> float:
         """
         Function that returns the rate of a spiking Poisson process
 
@@ -71,7 +71,7 @@ class ArrivalThread(threading.Thread):
         return rate
 
     @staticmethod
-    def sine_modulated_poisson_rate(t, arrival_config: SineArrivalConfig) -> float:
+    def sine_modulated_poisson_rate(t: int, arrival_config: SineArrivalConfig) -> float:
         """
         Function that returns the rate of a sine-modulated Poisson process
 
@@ -93,7 +93,7 @@ class ArrivalThread(threading.Thread):
         return arrival_config.lamb
 
     @staticmethod
-    def eptmp_rate(t, arrival_config: EPTMPArrivalConfig) -> float:
+    def eptmp_rate(t: int, arrival_config: EPTMPArrivalConfig) -> float:
         """
         Function that returns the rate of a EPTMP Poisson process.
 

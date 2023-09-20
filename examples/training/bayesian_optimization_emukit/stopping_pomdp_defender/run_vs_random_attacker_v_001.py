@@ -13,7 +13,7 @@ from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_
     import AcquisitionFunctionType
 from csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type \
     import AcquisitionOptimizerType
-from objective_type import ObjectiveType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
