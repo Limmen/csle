@@ -30,7 +30,7 @@ this page allows a user to view system metrics of a given emulation execution in
 <img src="./../../img/statistics_page.png" width="75%">
 <p class="captionFig">
 Figure 19: The statistics page of the web interface; this page allows a user to view empirical statistics 
-of emulated infrastructures, e.g. empirical distributions of system metrics.
+of emulated infrastructures, e.g., empirical distributions of system metrics.
 </p>
 </p>
 
@@ -38,7 +38,7 @@ of emulated infrastructures, e.g. empirical distributions of system metrics.
 <img src="./../../img/control_plane_page_2.png" width="75%">
 <p class="captionFig">
 Figure 20: The control plane of the web interface; this page allows a user to 
-request management operations, e.g. starting and stopping emulated components or services.
+request management operations, e.g., starting and stopping emulated components or services.
 </p>
 </p>
 

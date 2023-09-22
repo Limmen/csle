@@ -1,9 +1,6 @@
-# TODO 
+# Local Intrusion Response POMDP of the Defender 
 
-TODO
-
-## Overview
-TODO
+POMDP model of the local intrusion response problem of the defender
 
 ## Useful commands
 

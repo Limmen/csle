@@ -20,7 +20,13 @@ install_workflow_intrusion_response_pomdp_attacker:
 install_workflow_intrusion_response_pomdp_defender:
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) install
 
-# Installs all emulations
+install_intrusion_recovery_pomdp_defender:
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) install
+
+install_intrusion_response_cmdp_defender:
+	cd intrusion_response_cmdp_defender/ && $(MAKE) install
+
+# Installs all simulations
 install:
 	cd stopping_game/ && $(MAKE) install
 	cd stopping_mdp_attacker/ && $(MAKE) install
@@ -29,6 +35,8 @@ install:
 	cd local_intrusion_response_pomdp_defender/ && $(MAKE) install
 	cd workflow_intrusion_response_pomdp_attacker/ && $(MAKE) install
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) install
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) install
+	cd intrusion_response_cmdp_defender/ && $(MAKE) install
 
 # Targets for uninstalling each individual env
 uninstall_stopping_game:
@@ -52,6 +60,12 @@ uninstall_workflow_intrusion_response_pomdp_attacker:
 uninstall_workflow_intrusion_response_pomdp_defender:
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) uninstall
 
+uninstall_intrusion_recovery_pomdp_defender:
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) uninstall
+
+uninstall_intrusion_response_cmdp_defender:
+	cd intrusion_response_cmdp_defender/ && $(MAKE) uninstall
+
 # Uninstalls all simulation envs
 uninstall:
 	cd stopping_game/ && $(MAKE) uninstall
@@ -61,6 +75,8 @@ uninstall:
 	cd local_intrusion_response_pomdp_defender/ && $(MAKE) uninstall
 	cd workflow_intrusion_response_pomdp_attacker/ && $(MAKE) uninstall
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) uninstall
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) uninstall
+	cd intrusion_response_cmdp_defender/ && $(MAKE) uninstall
 
 # Targets for cleaning the config each individual env
 clean_config_stopping_game:
@@ -84,6 +100,12 @@ clean_workflow_intrusion_response_pomdp_attacker:
 clean_workflow_intrusion_response_pomdp_defender:
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) clean
 
+clean_intrusion_recovery_pomdp_defender:
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) clean
+
+clean_intrusion_response_cmdp_defender:
+	cd intrusion_response_cmdp_defender/ && $(MAKE) clean
+
 # Cleans the materialized configuration of each emulation
 clean_config:
 	cd stopping_game/ && $(MAKE) clean_config
@@ -93,3 +115,5 @@ clean_config:
 	cd local_intrusion_response_pomdp_defender/ && $(MAKE) clean_config
 	cd workflow_intrusion_response_pomdp_attacker/ && $(MAKE) clean_config
 	cd workflow_intrusion_response_pomdp_defender/ && $(MAKE) clean_config
+	cd intrusion_recovery_pomdp_defender/ && $(MAKE) clean_config
+	cd intrusion_response_cmdp_defender/ && $(MAKE) clean_config

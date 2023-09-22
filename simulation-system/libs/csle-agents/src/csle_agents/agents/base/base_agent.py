@@ -7,6 +7,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.logging.log import Logger
+from csle_tolerance.util.general_util import GeneralUtil
 
 
 class BaseAgent(ABC):
@@ -23,6 +24,7 @@ class BaseAgent(ABC):
         :param emulation_env_config: the configuration of the emulation environment
         :param experiment_config: the experiment configuration
         """
+        GeneralUtil.register_envs()
         self.simulation_env_config = simulation_env_config
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config

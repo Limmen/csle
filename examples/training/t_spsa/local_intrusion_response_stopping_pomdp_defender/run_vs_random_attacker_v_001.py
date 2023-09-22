@@ -1,3 +1,4 @@
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -11,7 +12,7 @@ from gym_csle_intrusion_response_game.util.intrusion_response_game_util import I
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.policy_type import PolicyType
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
-import numpy as np
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -126,7 +127,10 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             constants.T_SPSA.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+                descr="policy type in T-SPSA"),
+            constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

@@ -8,6 +8,23 @@ permalink: /publications/
 
 The following publications are based on CSLE:
 
+##### **Scalable Learning of Intrusion Responses through Recursive Decomposition**
+**Conference**: International Conference on Decision and Game Theory for Security 2023 (GameSec).
+[Preprint.](https://arxiv.org/abs/2309.03292)
+
+**Bibtex**:
+```bash
+@misc{gamesec23_extended,
+      title={Scalable Learning of Intrusion Responses through Recursive Decomposition},
+      author={Kim Hammar and Rolf Stadler},
+      year={2023},
+      eprint={2309.03292},
+      archivePrefix={arXiv},
+      primaryClass={eess.SY},
+      url={https://arxiv.org/abs/2309.03292}
+}
+```
+
 ##### **Learning Near-Optimal Intrusion Responses Against Dynamic Attackers**
 **Journal**: IEEE Transactions on Network and Service Management (IEEE TNSM).
 [Proceedings.](https://ieeexplore.ieee.org/document/10175554), [Preprint.](https://arxiv.org/abs/2301.06085)

@@ -1,9 +1,6 @@
-# TODO 
+# Workflow Intrusion Response POMDP Defender 
 
-TODO
-
-## Overview
-TODO
+POMDP model of the task of defending a workflow against attacks
 
 ## Useful commands
 

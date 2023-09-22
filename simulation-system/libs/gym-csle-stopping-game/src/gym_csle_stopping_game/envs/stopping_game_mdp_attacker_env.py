@@ -1,4 +1,4 @@
-from typing import Tuple, List, Union, Dict, Any
+from typing import Tuple, List, Dict, Any, Union
 import numpy as np
 import numpy.typing as npt
 import torch
@@ -101,10 +101,14 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
 
         return attacker_obs, r[1], d, d, info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
+    def reset(self, seed: Union[int, None] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
+            -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
+        :param seed: the random seed
+        :param soft: boolean flag indicating whether it is a soft reset or not
+        :param options: optional configuration parameters
         :return: initial observation
         """
         o, _ = self.stopping_game_env.reset()
@@ -212,15 +216,6 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :return: None
         """
         return self.stopping_game_env.reset_traces()
-
-    def close(self) -> None:
-        """
-        Closes the viewer (cleanup)
-        :return: None
-        """
-        if self.viewer is not None:
-            self.viewer.close()
-            self.viewer = None
 
     def manual_play(self) -> None:
         """

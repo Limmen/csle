@@ -72,24 +72,24 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         """
         :return: the attacker's observation space
         """
-        return gym.spaces.Box(low=np.array([0] * (len(self.S_D) + 1)),
-                              high=np.array([len(self.S_A)] + [1] * len(self.S_D)),
+        return gym.spaces.Box(low=np.array([np.float64(0)] * (len(self.S_D) + 1)),
+                              high=np.array([np.float64(len(self.S_A))] + [np.float64(1)] * len(self.S_D)),
                               dtype=np.float64, shape=(len(self.S_D) + 1,))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Box(low=np.array(([0] * (len(self.S_A) + 1))),
-                              high=np.array([len(self.zones)] + [1] * len(self.S_A)),
+        return gym.spaces.Box(low=np.array(([np.float64(0)] * (len(self.S_A) + 1))),
+                              high=np.array([np.float64(len(self.zones))] + [np.float64(1)] * len(self.S_A)),
                               dtype=np.float64, shape=(len(self.S_A) + 1,))
 
     def defender_observation_space_stopping(self) -> gym.spaces.Box:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Box(low=np.array(([0] * (len(self.S_A)))),
-                              high=np.array([1] * len(self.S_A)),
+        return gym.spaces.Box(low=np.array(([np.float64(0)] * (len(self.S_A)))),
+                              high=np.array([np.float64(1)] * len(self.S_A)),
                               dtype=np.float64, shape=(len(self.S_A),))
 
     def attacker_action_space(self) -> gym.spaces.Discrete:

@@ -48,13 +48,6 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.static_attacker_strategy = self.config.attacker_strategy
         self.static_defender_strategy = self.config.defender_strategy
 
-        # Setup Config
-        self.viewer: Union[Any, None] = None
-        self.metadata = {
-            'render.modes': ['human', 'rgb_array'],
-            'video.frames_per_second': 50  # Video rendering speed
-        }
-
         # Setup traces
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
@@ -230,10 +223,14 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
+    def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
+            -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
+        :param seed: the random seed
+        :param soft: boolean flag indicating whether it is a soft reset or not
+        :param options: optional configuration parameters
         :return: initial observation
         """
         super().reset(seed=seed)
@@ -299,15 +296,6 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         ts = time.time()
         SimulationTrace.save_traces(traces_save_dir=constants.LOGGING.DEFAULT_LOG_DIR,
                                     traces=self.traces, traces_file=f"taus{ts}.json")
-
-    def close(self) -> None:
-        """
-        Closes the viewer (cleanup)
-        :return: None
-        """
-        if self.viewer is not None:
-            self.viewer.close()
-            self.viewer = None
 
     def manual_play(self) -> None:
         """

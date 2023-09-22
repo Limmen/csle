@@ -13,6 +13,8 @@
         <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a>
      <a href="https://ieeexplore.ieee.org/document/9779345">
         <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
+     <a href="https://www.youtube.com/watch?v=iE2KPmtIs2A&" alt="youtube"> 
+        <img src="https://img.shields.io/badge/Youtube-red.svg?logo=Youtube" /></a>
 </p>
 
 # The Cyber Security Learning Environment (CSLE)
@@ -20,8 +22,8 @@
 CSLE is a platform for evaluating and developing reinforcement learning agents for control problems in cyber security.
 It can be considered as a cyber range specifically designed for reinforcement learning agents. Everything from network
 emulation, to simulation and implementation of network commands have been co-designed to provide an environment where it
-is possible to train and evaluate reinforcement learning agents on practical problems in cyber security. 
-The platform can also be used to combine reinforcement learning with other quantitative methods, e.g. dynamic programming,
+is possible to train and evaluate reinforcement learning agents on practical problems in cyber security. The platform
+can also be used to combine reinforcement learning with other quantitative methods, e.g., dynamic programming,
 computational game theory, evolutionary methods, causal inference, and general optimization.
 
 <p align="center">
@@ -38,8 +40,8 @@ on Linux containers and can be used to collect traces and to evaluate security p
 ![](docs/img/cli.gif)
 
 > **Note**
-> The emulation system is mainly designed to run on a distributed system, e.g. a compute cluster. 
-> It can run on a laptop as well, but then only small emulations can be created.   
+> The emulation system is mainly designed to run on a distributed system, e.g., a compute cluster.
+> It can run on a laptop as well, but then only small emulations can be created.
 
 ### **Simulation System**
 
@@ -54,17 +56,17 @@ processes and Markov games. It is built in Python and can be integrated with sta
 
 ### **Management System**
 
-CSLE includes a system for managing emulations and simulations which can be accessed either through 
-Command-Line Interface (CLI), through a REST API, through Python libraries, or through a web interface. 
-The management system allows a) to start/stop emulations/simulations; b) real-time monitoring
-of emulation and simulation processes; and c), shell access to components of emulations.
+CSLE includes a system for managing emulations and simulations which can be accessed either through Command-Line
+Interface (CLI), through a REST API, through Python libraries, or through a web interface. The management system allows
+a) to start/stop emulations/simulations; b) real-time monitoring of emulation and simulation processes; and c), shell
+access to components of emulations.
 
 ![](docs/img/web_ui.gif)
 
 ## Documentation
 
-Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/).
-A PDF version of the documentation is available [here](./releases/)
+Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
+version of the documentation is available [here](./releases/)
 
 ## Supported Releases
 
@@ -92,6 +94,7 @@ features. We currently support each release for a window of 6 months.
 | [gym-csle-stopping-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml)                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml/badge.svg)           |
 | [gym-csle-intrusion-response-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml/badge.svg) |
 | [python-linter](https://github.com/Limmen/csle/actions/workflows/python-linter.yml)                                                          | ![status](https://github.com/Limmen/csle/actions/workflows/python-linter.yml/badge.svg)                                 |
+| [csle-tolerance-build](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml)                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml/badge.svg)                   |
 | [management-system](https://github.com/Limmen/csle/actions/workflows/js-management-system-build)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/js-management-system-build.yml/badge.svg)                    |
 
 ## Supported Platforms
@@ -114,7 +117,7 @@ features. We currently support each release for a window of 6 months.
 
 ## Contribute
 
-Contributions are very welcome. Please use Github issues and pull requests. See
+Contributions are very welcome. Please use GitHub issues and pull requests. See
 the [documentation](https://limmen.dev/csle/) for further instructions.
 
 ### List of Contributors :star2:

@@ -388,7 +388,7 @@ class BayesOptAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"theta:{policy.theta}, progress: {round(progress*100,2)}%")
+                    f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy

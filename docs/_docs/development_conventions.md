@@ -18,9 +18,9 @@ CSLE tries to follow a few high-level principles in making both technical and co
 which are listed below.
 They are goals to shoot for, and may not be followed perfectly all the time.
 
-- **Code over configuration.** We aim to make CSLE fully programmable, everything from starting/stopping emulations to configuring a service running on a container should be possible through a program function. To achieve this level of programmability, as much as possible of CSLE should be defined in code rather than configuration files. If a configuration file is necessary, it should be defined in a serialization format that easily can be converted back to code, e.g. a JSON file that maps to a Python class. Another benefit of defining configuration in code is that we can run the configuration through the code quality toolchain to identify bugs and style errors.
+- **Code over configuration.** We aim to make CSLE fully programmable, everything from starting/stopping emulations to configuring a service running on a container should be possible through a program function. To achieve this level of programmability, as much as possible of CSLE should be defined in code rather than configuration files. If a configuration file is necessary, it should be defined in a serialization format that easily can be converted back to code, e.g., a JSON file that maps to a Python class. Another benefit of defining configuration in code is that we can run the configuration through the code quality toolchain to identify bugs and style errors.
 
-- **Separation of concerns.** CSLE is divided into components (systems), e.g. the management system, the emulation system, and the simulation system. These components interact via APIs and via a shared database (the metastore). As much as possible, each individual component should be independent of the other components. This principle allows users to install individual components without having to install the other components.
+- **Separation of concerns.** CSLE is divided into components (systems), e.g., the management system, the emulation system, and the simulation system. These components interact via APIs and via a shared database (the metastore). As much as possible, each individual component should be independent of the other components. This principle allows users to install individual components without having to install the other components.
 
 - **Release early and often.** We should emphasize smaller, more iterative releases over large and complex ones. This keeps our documentation in-line with the latest releases and also minimizes the disruption (and subsequent maintenance burden) associated with big changes. The process for creating a release is relatively simple and quick, so don't hesitate to release patch versions (or minor versions) as appropriate.
 
@@ -53,6 +53,7 @@ should help you with that.
 - `simulation-system/libs/csle-system-identification`. A Python library with implementations of system identification algorithms to learn system models based on measured data and traces.
 - `simulation-system/libs/gym-csle-stopping-game`. A gym environment for an optimal stopping game.
 - `simulation-system/libs/gym-csle-intrusion-response-game`. A gym environment for an intrusion response game.
+- `simulation-system/libs/csle-tolerance`. An intrusion-tolerant system: Tolerance: (T)w(o)-(l)ev(e)l (r)ecovery (a)nd respo(n)se (c)ontrol with f(e)edback.
 
 #### Code Readability
 
@@ -65,7 +66,7 @@ csle/.flake8
 ```
 
 <p class="captionFig">
-Listing 110: Configuration file for the `flake8` Python linter.
+Listing 111: Configuration file for the `flake8` Python linter.
 </p>
 
 Configuration file for the `flake8` Python linter.
@@ -75,14 +76,14 @@ csle/management-system/csle-mgmt-webapp/.eslintrc.json
 ```
 
 <p class="captionFig">
-Listing 111: Configuration file for the `eslint` JavaScript linter.
+Listing 112: Configuration file for the `eslint` JavaScript linter.
 </p>
 
 
 Names of variable, functions, methods etc. should be clear and descriptive, not cryptic.
 All Python functions and variables should be written in `snake_case`,
-e.g. `stop_all_executions()`. All JavaScript functions and variables should be
-in `CamelCase`, e.g. `getAgentType()`.
+e.g., `stop_all_executions()`. All JavaScript functions and variables should be
+in `CamelCase`, e.g., `getAgentType()`.
 
 It is common practice to name simple loop variables i, j, and k, so there's no
 need to give them silly names like `the_index` unless it's necessary for some reason or other.
@@ -116,7 +117,7 @@ def stop_all_executions() -> None:
 ```
 
 <p class="captionFig">
-Listing 112: Example of a Python function with a comment.`
+Listing 113: Example of a Python function with a comment.`
 </p>
 
 Example of a comment to a JavaScript function:
@@ -143,7 +144,7 @@ const convertListToCommaSeparatedString = (listToConvert) => {
 ```
 
 <p class="captionFig">
-Listing 113: Example of a JavaScript function with a comment.
+Listing 114: Example of a JavaScript function with a comment.
 </p>
 
 ### Unit and Integration Testing
@@ -213,7 +214,7 @@ otherwise the developer has to fix the failing tests or builds.
 Finally, when the code review and associated fixes are completed,
 the pull request is merged into the main/master branch and
 may optionally trigger a release pipeline where build artifacts are pushed
-to code servers (i.e. DockerHub and PyPi).
+to code servers (i.e., DockerHub and PyPi).
 
 <p align="center">
 <img src="./../../img/ci_pipeline.png" width="75%">

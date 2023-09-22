@@ -67,6 +67,11 @@ This folder contains python projects that implement the functionality of the sim
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-intrusion-response-game)
   - A gym environment for an intrusion response game
 
+- **csle-tolerance** ([csle-tolerance](./csle-tolerance)):
+  - [![PyPI version](https://badge.fury.io/py/csle-tolerance.svg)](https://badge.fury.io/py/csle-tolerance)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-tolerance)
+  - An intrusion-tolerant system: Tolerance: (T)w(o)-(l)ev(e)l (r)ecovery (a)nd respo(n)se (c)ontrol with f(e)edback.
+
 ## Commands
 To generate API docs, execute:
 ```bash

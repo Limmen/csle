@@ -1,9 +1,6 @@
-# TODO 
+# Workflow POMDP attacker 
 
-TODO
-
-## Overview
-TODO
+POMDP model of the task of disrupting a workflow by compromising nodes
 
 ## Useful commands
 

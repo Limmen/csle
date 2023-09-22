@@ -14,6 +14,7 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class TestTSPSASuite:
@@ -72,7 +73,10 @@ class TestTSPSASuite:
                     descr="the number of samples to include when computing the running avg"),
                 constants.T_SPSA.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                    descr="policy type in T-SPSA")
+                    descr="policy type in T-SPSA"),
+                constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MIN, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                    descr="Objective type")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

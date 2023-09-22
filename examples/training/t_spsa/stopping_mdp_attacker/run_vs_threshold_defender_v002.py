@@ -10,6 +10,7 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -68,7 +69,10 @@ if __name__ == '__main__':
                 descr="the discount factor gamma"),
             constants.T_SPSA.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+                descr="policy type in T-SPSA"),
+            constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

@@ -250,7 +250,7 @@ and jitter according to a predefined configuration.
 
 Client populations in CSLE are emulated by processes that run inside Docker 
 containers and interact with emulated hosts through various network protocols, 
-e.g. HTTP, SSH, and DNS. The clients select functions from the list in 
+e.g., HTTP, SSH, and DNS. The clients select functions from the list in 
 Table 6 according to some probability distribution.
 
 | *Function* | *Description*                                       |
@@ -270,7 +270,7 @@ Table 6: Network functions that emulated clients may invoke.
 </p>
 
 Client arrivals are emulated by a Poisson process with exponentially distributed service times (see Fig. 11). 
-This process may be stationary or non-stationary, e.g. it may be sine-modulated to 
+This process may be stationary or non-stationary, e.g., it may be sine-modulated to 
 model periodic load patterns. The duration of a time-step in an emulation is defined 
 by its configuration; a typical duration is 30 seconds.
 
@@ -333,7 +333,7 @@ The defender actions are listed in Table 8.
 | 39      | Server migration between different zones of the infrastructure. |
 | 40      | Traffic redirect from one server to another.                    |
 | 41      | Server isolation.                                               |
-| 42      | Deploying new security functions (e.g. firewalls and IDPSs).    |
+| 42      | Deploying new security functions (e.g., firewalls and IDPSs).    |
 | 43      | Server shutdown.                                                |
 
 <p class="captionFig">
@@ -350,7 +350,7 @@ executionID.emulationID.253.0/24
 This network interfaces directly with the management system and also has 
 an interface to each emulated component. 
 The purpose of this network is to connect management systems to the emulated devices, 
-e.g. storage systems, monitoring systems, and SDN controllers (see Fig. 12). 
+e.g., storage systems, monitoring systems, and SDN controllers (see Fig. 12). 
 The reason for using a dedicated management network instead of carrying management traffic on 
 the network that carries device-to-device traffic is to avoid interference and 
 to simplify control of the execution.
@@ -379,7 +379,7 @@ each of which is stored at a server in the Kafka cluster.
 The topics are consumed by a set of data pipelines implemented with Spark, 
 which process the data and write the results to Presto and Elasticsearch for persistent storage and search, 
 respectively. These storage systems are then consumed by various downstream applications, 
-e.g. dashboards applications and machine learning applications. 
+e.g., dashboards applications and machine learning applications. 
 The processed data is also input to reinforcement learning agents, 
 which use it to decide on control actions.
 
@@ -396,7 +396,7 @@ and by downstream applications to create dashboards and statistical models.
 
 | *Topic*                                  | *Description*                                                               |
 |------------------------------------------|-----------------------------------------------------------------------------|
-| `client_population`                      | Statistics of the client population (e.g. number of clients per time.step). |
+| `client_population`                      | Statistics of the client population (e.g., number of clients per time.step). |
 | `snort_ids_log`                          | Information about Snort IDS alerts per time-step.                           |
 | `ossec_ids_log`                          | Information about OSSEC IDS alerts per time-step.                           |
 | `host_metrics`                           | Information about system metrics per host.                                  |
@@ -579,7 +579,7 @@ In addition to the monitoring agent, each emulated device runs a *management age
 which is connected to the management network and exposes a gRPC API 
 for management actions (see Fig. 14). 
 This API is invoked by the management system to perform management operations on behalf of 
-CSLE users and reinforcement learning agents, e.g. restarting services, rotating log files, 
+CSLE users and reinforcement learning agents, e.g., restarting services, rotating log files, 
 or updating firewall configurations. 
 The management functions available in the API are listed in 
 Tables 14-16.
@@ -687,7 +687,7 @@ from the metastore and starts the containers that are described in the configura
 Once the containers have started, the emulation system applies the emulation configuration. 
 This step involves executing a sequence of Remote Procedure Calls (RPCs) 
 through the gRPC API described above, 
-e.g. RPCs to create user accounts, to start services, and to configure services 
+e.g., RPCs to create user accounts, to start services, and to configure services 
 (see Fig. 15).
 
 <p align="center">

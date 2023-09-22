@@ -158,3 +158,5 @@ static
 */videos*/
 
 package-lock.json
+
+.pypirc

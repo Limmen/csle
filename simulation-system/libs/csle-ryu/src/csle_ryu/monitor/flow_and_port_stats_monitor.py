@@ -118,7 +118,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         """
         Utility function for sending a request to a switch with a qiven datapath to return its flow and port statistics.
 
-        :param datapath: the datapath, i.e. abstraction of the link to the switch
+        :param datapath: the datapath, i.e., abstraction of the link to the switch
         :return: None
         """
         # Extract the protocol and message parser to use for sending the request

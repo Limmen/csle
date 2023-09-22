@@ -34,7 +34,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
-        Initializes the Linar programming agent for normal-form games
+        Initializes the Linear programming agent for normal-form games
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config

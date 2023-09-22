@@ -1,4 +1,4 @@
-from typing import Tuple, Dict, List, Any
+from typing import Tuple, Dict, List, Any, Union
 import numpy as np
 import numpy.typing as npt
 import time
@@ -51,13 +51,6 @@ class StoppingGameEnv(BaseEnv):
 
         self.action_space = self.defender_action_space
         self.observation_space = self.defender_observation_space
-
-        # Setup Config
-        self.viewer = None
-        self.metadata = {
-            'render.modes': ['human', 'rgb_array'],
-            'video.frames_per_second': 50  # Video rendering speed
-        }
 
         # Setup traces
         self.traces: List[SimulationTrace] = []
@@ -364,12 +357,15 @@ class StoppingGameEnv(BaseEnv):
             defender_baseline_stop_on_first_alert_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) \
+    def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
-        :return: initial observation
+        :param seed: the random seed
+        :param soft: boolean flag indicating whether it is a soft reset or not
+        :param options: optional configuration parameters
+        :return: initial observation and info
         """
         super().reset(seed=seed)
         self.state.reset()

@@ -8,6 +8,7 @@ from csle_agents.agents.cross_entropy.cross_entropy_agent import CrossEntropyAge
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -28,9 +29,9 @@ if __name__ == '__main__':
                                                      descr="the number of training iterations"),
             agents_constants.CROSS_ENTROPY.L: HParam(value=3, name=agents_constants.CROSS_ENTROPY.L,
                                                      descr="the number of stop actions"),
-            agents_constants.CROSS_ENTROPY.K: HParam(value=10, name=agents_constants.CROSS_ENTROPY.K,
+            agents_constants.CROSS_ENTROPY.K: HParam(value=100, name=agents_constants.CROSS_ENTROPY.K,
                                                      descr="the number of samples in each iteration of CE"),
-            agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.25, name=agents_constants.CROSS_ENTROPY.K,
+            agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.15, name=agents_constants.CROSS_ENTROPY.K,
                                                         descr="the number of samples to keep in each iteration of CE"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
@@ -53,7 +54,10 @@ if __name__ == '__main__':
                 descr="the discount factor"),
             agents_constants.CROSS_ENTROPY.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CROSS_ENTROPY.POLICY_TYPE,
-                descr="policy type for the execution")
+                descr="policy type for the execution"),
+            agents_constants.CROSS_ENTROPY.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=agents_constants.CROSS_ENTROPY.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

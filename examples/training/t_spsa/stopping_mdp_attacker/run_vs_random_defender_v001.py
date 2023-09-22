@@ -8,6 +8,7 @@ from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -65,7 +66,10 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             constants.T_SPSA.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+                descr="policy type in T-SPSA"),
+            constants.T_SPSA.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=constants.T_SPSA.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
