@@ -7,6 +7,7 @@ from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 import pytest_mock
 
 
@@ -1445,3 +1446,247 @@ class TestMetastoreFacadeSuite:
         assert experiment_executions_ids[0][0] == id
         assert experiment_executions_ids[0][1] == example_experiment_execution.simulation_name
         assert experiment_executions_ids[0][2] == example_experiment_execution.emulation_name
+
+    def test_convert_experiment_execution_record_to_dto(
+            self, example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the _convert_experiment_execution_record_to_dto function
+
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        id = 1
+        example_experiment_execution.id = 1
+        example_record = (id, example_experiment_execution.to_dict())
+        converted_object = MetastoreFacade._convert_experiment_execution_record_to_dto(
+            experiment_execution_record=example_record)
+        assert isinstance(converted_object, ExperimentExecution)
+        assert converted_object == example_experiment_execution
+
+    def test_get_experiment_execution(self, mocker: pytest_mock.MockFixture,
+                                      example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the get_experiment_execution function
+
+        :param example_experiment_execution: an example ExperimentExecution object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_experiment_execution.id = id
+        example_record = (id, example_experiment_execution.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_experiment_execution = MetastoreFacade.get_experiment_execution(id=example_experiment_execution.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
+            f"WHERE id = %s", (example_experiment_execution.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_experiment_execution, ExperimentExecution)
+        assert fetched_experiment_execution == example_experiment_execution
+
+    def test_remove_experiment_execution(self, mocker: pytest_mock.MockFixture,
+                                         example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the remove_experiment_execution function
+
+        :param mocker: the pytest mocker object
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        example_experiment_execution.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_experiment_execution(experiment_execution=example_experiment_execution)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} WHERE id = %s",
+            (example_experiment_execution.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_list_multi_threshold_stopping_policies(
+            self, mocker: pytest_mock.MockFixture,
+            example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the remove_experiment_execution function
+
+        :param mocker: the pytest mocker object
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :return: None
+        """
+        id = 1
+        example_multi_threshold_stopping_policy.id = id
+        example_record = (id, example_multi_threshold_stopping_policy.to_dict(),
+                          example_multi_threshold_stopping_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        multi_threshold_stopping_policies = MetastoreFacade.list_multi_threshold_stopping_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(multi_threshold_stopping_policies, list)
+        assert isinstance(multi_threshold_stopping_policies[0], MultiThresholdStoppingPolicy)
+        assert multi_threshold_stopping_policies[0] == example_multi_threshold_stopping_policy
+
+    def test_list_multi_threshold_stopping_policies_ids(
+            self, mocker: pytest_mock.MockFixture,
+            example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the list_multi_threshold_stopping_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "multi_threshold_stopping_policy1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        multi_threshold_stopping_policy_ids = MetastoreFacade.list_multi_threshold_stopping_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM "
+            f"{constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(multi_threshold_stopping_policy_ids, list)
+        assert isinstance(multi_threshold_stopping_policy_ids[0], tuple)
+        assert isinstance(multi_threshold_stopping_policy_ids[0][0], int)
+        assert isinstance(multi_threshold_stopping_policy_ids[0][1], str)
+        assert multi_threshold_stopping_policy_ids[0] == example_record
+
+    def test_convert_multi_threshold_stopping_policy_record_to_dto(
+            self, example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the _convert_multi_threshold_stopping_policy_record_to_dto function
+
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :return: None
+        """
+        id = 1
+        example_multi_threshold_stopping_policy.id = 1
+        example_record = (id, example_multi_threshold_stopping_policy.to_dict())
+        converted_object = MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(
+            multi_threshold_stopping_policy_record=example_record)
+        assert isinstance(converted_object, MultiThresholdStoppingPolicy)
+        assert converted_object == example_multi_threshold_stopping_policy
+
+    def test_get_multi_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the get_multi_threshold_stopping_policy function
+
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_multi_threshold_stopping_policy.id = id
+        example_record = (id, example_multi_threshold_stopping_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_multi_threshold_stopping_policy = MetastoreFacade.get_multi_threshold_stopping_policy(
+            id=example_multi_threshold_stopping_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
+            f"WHERE id = %s", (example_multi_threshold_stopping_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_multi_threshold_stopping_policy, MultiThresholdStoppingPolicy)
+        assert fetched_multi_threshold_stopping_policy == example_multi_threshold_stopping_policy
+
+    def test_remove_multi_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the remove_multi_threshold_stopping_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :return: None
+        """
+        example_multi_threshold_stopping_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_multi_threshold_stopping_policy(
+            multi_threshold_stopping_policy=example_multi_threshold_stopping_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
+            f"WHERE id = %s", (example_multi_threshold_stopping_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_multi_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
+        """
+        Tests the save_multi_threshold_stopping_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_multi_threshold_stopping_policy: an example MultiThresholdStoppingPolicy object
+        :return: None
+        """
+        id = 2
+        example_multi_threshold_stopping_policy.id = id
+        example_record = (id, example_multi_threshold_stopping_policy.simulation_name,
+                          example_multi_threshold_stopping_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_multi_threshold_stopping_policy(
+            multi_threshold_stopping_policy=example_multi_threshold_stopping_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (id, example_multi_threshold_stopping_policy.to_json_str(),
+                                                  example_multi_threshold_stopping_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
