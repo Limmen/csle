@@ -245,7 +245,7 @@ source activate python39
 ```
 
 <p class="captionFig">
-Listing 21: Command to install Python 3.9 using Anaconda \cite{anaconda`.
+Listing 21: Command to install Python 3.9 using Anaconda.
 </p>
 
 The simulation system includes 10 Python libraries: 
@@ -264,6 +264,8 @@ pip install csle-base csle-collector csle-ryu csle-common csle-attacker csle-def
 <p class="captionFig">
 Listing 22: Command to install all CSLE python libraries from PyPi.
 </p>
+
+To install the libraries one by one rather than all at once, follow the instructions below.
 
 Install `csle-base` from PyPi by running the command:
 
