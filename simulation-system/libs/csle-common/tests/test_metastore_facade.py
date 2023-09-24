@@ -8,6 +8,8 @@ from csle_common.dao.emulation_config.emulation_simulation_trace import Emulatio
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 import pytest_mock
 
 
@@ -1686,6 +1688,291 @@ class TestMetastoreFacadeSuite:
             f"(id, policy, simulation_name) "
             f"VALUES (%s, %s, %s) RETURNING id", (id, example_multi_threshold_stopping_policy.to_json_str(),
                                                   example_multi_threshold_stopping_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_convert_training_job_record_to_dto(self, example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the _convert_training_job_record_to_dto function
+
+        :param example_training_job_config: an example TrainingJobConfig object
+        :return: None
+        """
+        id = 1
+        example_training_job_config.id = 1
+        example_record = (id, example_training_job_config.to_dict())
+        converted_object = MetastoreFacade._convert_training_job_record_to_dto(
+            training_job_record=example_record)
+        assert isinstance(converted_object, TrainingJobConfig)
+        assert converted_object == example_training_job_config
+
+    def test_list_training_jobs(self, mocker: pytest_mock.MockFixture,
+                                example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the list_training_jobs function
+
+        :param mocker: the pytest mocker object
+        :param example_training_job_config: an example TrainingJobConfig object
+        :return: None
+        """
+        id = 1
+        example_training_job_config.id = id
+        example_record = (id, example_training_job_config.to_dict(),
+                          example_training_job_config.simulation_env_name,
+                          example_training_job_config.emulation_env_name, example_training_job_config.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        training_job = MetastoreFacade.list_training_jobs()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(training_job, list)
+        assert isinstance(training_job[0], TrainingJobConfig)
+        assert training_job[0] == example_training_job_config
+
+    def test_list_training_jobs_ids(self, mocker: pytest_mock.MockFixture,
+                                    example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the list_training_jobs_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_training_job_config: TrainingJobConfig object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "training_jobs_simulation1", "training_jobs_emulation1", 123)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        training_job_ids = MetastoreFacade.list_training_jobs_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name,emulation_name,pid FROM "
+            f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(training_job_ids, list)
+        assert isinstance(training_job_ids[0], tuple)
+        assert isinstance(training_job_ids[0][0], int)
+        assert isinstance(training_job_ids[0][1], str)
+        assert isinstance(training_job_ids[0][2], str)
+        assert isinstance(training_job_ids[0][3], int)
+        assert training_job_ids[0] == example_record
+
+    def test_get_training_job_config(self, mocker: pytest_mock.MockFixture,
+                                     example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the get_training_job_config function
+
+        :param example_training_job_config: an example TrainingJobConfig object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_training_job_config.id = id
+        example_record = (id, example_training_job_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_training_job_config = MetastoreFacade.get_training_job_config(
+            id=example_training_job_config.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s",
+            (example_training_job_config.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_training_job_config, TrainingJobConfig)
+        assert fetched_training_job_config == example_training_job_config
+
+    def test_save_training_job(self, mocker: pytest_mock.MockFixture,
+                               example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the save_training_job function
+
+        :param mocker: the pytest mocker object
+        :param example_training_job_config: an example TrainingJobConfig object
+        :return: None
+        """
+        id = 2
+        example_training_job_config.id = id
+        example_record = (id, example_training_job_config.to_dict(), example_training_job_config.simulation_env_name,
+                          example_training_job_config.emulation_env_name, example_training_job_config.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_training_job(training_job=example_training_job_config)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
+            f"(id, config, simulation_name, emulation_name, pid) "
+            f"VALUES (%s, %s, %s, %s, %s) RETURNING id",
+            (example_training_job_config.id, example_training_job_config.to_json_str(),
+             example_training_job_config.simulation_env_name, example_training_job_config.emulation_env_name,
+             example_training_job_config.pid))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_convert_data_collection_job_record_to_dto(self,
+                                                       example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the _convert_data_collection_job_record_to_dto function
+
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :return: None
+        """
+        id = 1
+        example_data_collection_job.id = 1
+        example_record = (id, example_data_collection_job.to_dict())
+        converted_object = MetastoreFacade._convert_data_collection_job_record_to_dto(
+            data_collection_job_record=example_record)
+        assert isinstance(converted_object, DataCollectionJobConfig)
+        assert converted_object == example_data_collection_job
+
+    def test_list_data_collection_jobs(self, mocker: pytest_mock.MockFixture,
+                                       example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the list_data_collection_jobs function
+
+        :param mocker: the pytest mocker object
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :return: None
+        """
+        id = 1
+        example_data_collection_job.id = id
+        example_record = (id, example_data_collection_job.to_dict(), example_data_collection_job.emulation_env_name,
+                          example_data_collection_job.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        data_collection_jobs = MetastoreFacade.list_data_collection_jobs()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(data_collection_jobs, list)
+        assert isinstance(data_collection_jobs[0], DataCollectionJobConfig)
+        assert data_collection_jobs[0] == example_data_collection_job
+
+    def test_list_data_collection_jobs_ids(self, mocker: pytest_mock.MockFixture,
+                                           example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the list_data_collection_jobs_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_data_collection_job: DataCollectionJobConfig object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "training_jobs_emulation1", 123)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        data_collection_jobs_ids = MetastoreFacade.list_data_collection_jobs_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(data_collection_jobs_ids, list)
+        assert isinstance(data_collection_jobs_ids[0], tuple)
+        assert isinstance(data_collection_jobs_ids[0][0], int)
+        assert isinstance(data_collection_jobs_ids[0][1], str)
+        assert isinstance(data_collection_jobs_ids[0][2], int)
+        assert data_collection_jobs_ids[0] == example_record
+
+    def test_get_data_collection_job_config(self, mocker: pytest_mock.MockFixture,
+                                            example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the get_data_collection_job_config function
+
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_data_collection_job.id = id
+        example_record = (id, example_data_collection_job.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_data_collection_job_config = MetastoreFacade.get_data_collection_job_config(
+            id=example_data_collection_job.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s",
+            (example_data_collection_job.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_data_collection_job_config, DataCollectionJobConfig)
+        assert fetched_data_collection_job_config == example_data_collection_job
+
+    def test_save_data_collection_job(self, mocker: pytest_mock.MockFixture,
+                                      example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the save_data_collection_job function
+
+        :param mocker: the pytest mocker object
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :return: None
+        """
+        id = 2
+        example_data_collection_job.id = id
+        example_record = (id, example_data_collection_job.to_dict(), example_data_collection_job.emulation_env_name,
+                          example_data_collection_job.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_data_collection_job(data_collection_job=example_data_collection_job)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
+            f"(id, config, emulation_name, pid) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id",
+            (id, example_data_collection_job.to_json_str(), example_data_collection_job.emulation_env_name,
+             example_data_collection_job.pid))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
