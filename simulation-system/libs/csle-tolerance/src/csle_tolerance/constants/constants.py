@@ -13,3 +13,4 @@ class ENV_METRICS:
     DEFENDER_ACTION = "a1"
     OBSERVATION = "o"
     TIME_STEP = "t"
+    AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"

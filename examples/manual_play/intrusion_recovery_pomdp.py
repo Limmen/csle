@@ -1,7 +1,7 @@
 import gymnasium as gym
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_tolerance.util.general_util import GeneralUtil
-from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
+# from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 
 if __name__ == '__main__':
     GeneralUtil.register_envs()
@@ -11,10 +11,10 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     env = gym.make("csle-tolerance-intrusion-recovery-pomdp-v1",
                    config=simulation_env_config.simulation_env_input_config)
-    pomdp_solver_file_str = IntrusionRecoveryPomdpUtil.pomdp_solver_file(
-        config=simulation_env_config.simulation_env_input_config)
-    with open("./intrusion_recover_pa_01.pomdp", 'w') as f:
-        f.write(pomdp_solver_file_str)
+    # pomdp_solver_file_str = IntrusionRecoveryPomdpUtil.pomdp_solver_file(
+    #     config=simulation_env_config.simulation_env_input_config)
+    # with open("./intrusion_recover_pa_01.pomdp", 'w') as f:
+    #     f.write(pomdp_solver_file_str)
 
     # from csle_tolerance.util.pomdp_solve_parser import PomdpSolveParser
     # import numpy as np
@@ -47,4 +47,4 @@ if __name__ == '__main__':
     #     costs.append(cumulative_cost)
     # print(float(np.mean(costs)))
 
-    # env.manual_play()
+    env.manual_play()

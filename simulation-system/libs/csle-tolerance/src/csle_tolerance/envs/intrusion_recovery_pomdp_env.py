@@ -140,6 +140,17 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
             R += self.trace.defender_rewards[i] * math.pow(self.config.discount_factor, i)
         info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
+        upper_bound_return = 0
+        s = self.trace.states[0]
+        for i in range(len(self.trace.states)):
+            if s == 0:
+                a = 0
+            else:
+                a = 1
+            upper_bound_return += self.config.cost_tensor[a][s]
+            s = GeneralUtil.sample_next_state(transition_tensor=self.config.transition_tensor,
+                                              s=s, a=a, states=self.config.states)
+        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
         return info
 
     def render(self, mode: str = 'human'):
