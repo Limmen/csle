@@ -11,6 +11,7 @@ from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresh
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 import pytest_mock
 
 
@@ -2270,3 +2271,212 @@ class TestMetastoreFacadeSuite:
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
         assert inserted_id == id
+
+    def test_convert_system_identification_job_record_to_dto(
+            self, example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the _convert_system_identification_job_record_to_dto function
+
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :return: None
+        """
+        id = 1
+        example_system_identification_job_config.id = 1
+        example_record = (id, example_system_identification_job_config.to_dict())
+        converted_object = MetastoreFacade._convert_system_identification_job_record_to_dto(
+            system_identification_job_record=example_record)
+        assert isinstance(converted_object, SystemIdentificationJobConfig)
+        assert converted_object == example_system_identification_job_config
+
+    def test_list_system_identification_jobs(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the list_system_identification_jobs function
+
+        :param mocker: the pytest mocker object
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :return: None
+        """
+        id = 1
+        example_system_identification_job_config.id = id
+        example_record = (id, example_system_identification_job_config.to_dict(),
+                          example_system_identification_job_config.emulation_env_name,
+                          example_system_identification_job_config.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(system_identification_jobs, list)
+        assert isinstance(system_identification_jobs[0], SystemIdentificationJobConfig)
+        assert system_identification_jobs[0] == example_system_identification_job_config
+
+    def test_list_system_identification_jobs_ids(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the list_system_identification_jobs_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_system_identification_job_config: SystemIdentificationJobConfig object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "system_identification_job1", 123)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        system_identification_jobs_ids = MetastoreFacade.list_system_identification_jobs_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(f"SELECT id,emulation_name,pid FROM "
+                                                      f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(system_identification_jobs_ids, list)
+        assert isinstance(system_identification_jobs_ids[0], tuple)
+        assert isinstance(system_identification_jobs_ids[0][0], int)
+        assert isinstance(system_identification_jobs_ids[0][1], str)
+        assert isinstance(system_identification_jobs_ids[0][2], int)
+        assert system_identification_jobs_ids[0] == example_record
+
+    def test_get_system_identification_job_config(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the get_system_identification_job_config function
+
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_system_identification_job_config.id = id
+        example_record = (id, example_system_identification_job_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_system_identification_job = MetastoreFacade.get_system_identification_job_config(
+            id=example_system_identification_job_config.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM "
+            f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
+            (example_system_identification_job_config.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_system_identification_job, SystemIdentificationJobConfig)
+        assert fetched_system_identification_job == example_system_identification_job_config
+
+    def test_save_system_identification_job(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the save_system_identification_job function
+
+        :param mocker: the pytest mocker object
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :return: None
+        """
+        id = 2
+        example_system_identification_job_config.id = id
+        example_record = (id, example_system_identification_job_config.to_dict(),
+                          example_system_identification_job_config.emulation_env_name,
+                          example_system_identification_job_config.pid)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_system_identification_job(
+            system_identification_job=example_system_identification_job_config)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+            f"(config, emulation_name, pid) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id", (example_system_identification_job_config.id,
+                                                      example_system_identification_job_config.to_json_str(),
+                                                      example_system_identification_job_config.emulation_env_name,
+                                                      example_system_identification_job_config.pid))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_system_identification_job(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the update_system_identification_job function
+
+        :param mocker: the pytest mocker object
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :return: None
+        """
+        id = 2
+        example_system_identification_job_config.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_system_identification_job(
+            id=id, system_identification_job=example_system_identification_job_config)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}.id = %s",
+            (example_system_identification_job_config.to_json_str(), example_system_identification_job_config.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_system_identification_job(
+            self, mocker: pytest_mock.MockFixture,
+            example_system_identification_job_config: SystemIdentificationJobConfig) -> None:
+        """
+        Tests the remove_system_identification_job function
+
+        :param mocker: the pytest mocker object
+        :param example_system_identification_job_config: an example SystemIdentificationJobConfig object
+        :return: None
+        """
+        example_system_identification_job_config.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_system_identification_job(
+            system_identification_job=example_system_identification_job_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
+            (example_system_identification_job_config.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
