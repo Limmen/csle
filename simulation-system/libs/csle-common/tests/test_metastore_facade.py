@@ -10,6 +10,7 @@ from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
+from csle_common.dao.training.ppo_policy import PPOPolicy
 import pytest_mock
 
 
@@ -1973,6 +1974,298 @@ class TestMetastoreFacadeSuite:
             f"VALUES (%s, %s, %s, %s) RETURNING id",
             (id, example_data_collection_job.to_json_str(), example_data_collection_job.emulation_env_name,
              example_data_collection_job.pid))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_training_job(self, mocker: pytest_mock.MockFixture,
+                                 example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the update_training_job function
+
+        :param mocker: the pytest mocker object
+        :param example_training_job_config: an example TrainingJobConfig object
+        :return: None
+        """
+        id = 2
+        example_training_job_config.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_training_job(id=id, training_job=example_training_job_config)
+        mocked_cursor.execute.assert_called_once_with(f"UPDATE "
+                                                      f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
+                                                      f" SET config=%s "
+                                                      f"WHERE {constants.METADATA_STORE.TRAINING_JOBS_TABLE}.id = %s",
+                                                      (example_training_job_config.to_json_str(),
+                                                       example_training_job_config.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_update_experiment_execution(self, mocker: pytest_mock.MockFixture,
+                                         example_experiment_execution: ExperimentExecution) -> None:
+        """
+        Tests the update_experiment_execution function
+
+        :param mocker: the pytest mocker object
+        :param example_experiment_execution: an example ExperimentExecution object
+        :return: None
+        """
+        id = 2
+        example_experiment_execution.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_experiment_execution(id=id, experiment_execution=example_experiment_execution)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
+            f" SET execution=%s "
+            f"WHERE {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}.id = %s",
+            (example_experiment_execution.to_json_str(), example_experiment_execution.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_update_data_collection_job(self, mocker: pytest_mock.MockFixture,
+                                        example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the update_data_collection_job function
+
+        :param mocker: the pytest mocker object
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :return: None
+        """
+        id = 2
+        example_data_collection_job.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_data_collection_job(id=id, data_collection_job=example_data_collection_job)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}.id = %s",
+            (example_data_collection_job.to_json_str(), example_data_collection_job.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_training_job(self, mocker: pytest_mock.MockFixture,
+                                 example_training_job_config: TrainingJobConfig) -> None:
+        """
+        Tests the remove_training_job function
+
+        :param mocker: the pytest mocker object
+        :param example_training_job_config: an example TrainingJobConfig object
+        :return: None
+        """
+        example_training_job_config.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_training_job(training_job=example_training_job_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s",
+            (example_training_job_config.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_data_collection_job(self, mocker: pytest_mock.MockFixture,
+                                        example_data_collection_job: DataCollectionJobConfig) -> None:
+        """
+        Tests the remove_data_collection_job function
+
+        :param mocker: the pytest mocker object
+        :param example_data_collection_job: an example DataCollectionJobConfig object
+        :return: None
+        """
+        example_data_collection_job.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_data_collection_job(data_collection_job=example_data_collection_job)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s",
+            (example_data_collection_job.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_list_ppo_policies(self, mocker: pytest_mock.MockFixture, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the list_ppo_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_ppo_policy: an example PPOPolicy object
+        :return: None
+        """
+        id = 1
+        example_ppo_policy.id = id
+        example_record = (id, example_ppo_policy.to_dict(), example_ppo_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        ppo_policies = MetastoreFacade.list_ppo_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(ppo_policies, list)
+        assert isinstance(ppo_policies[0], PPOPolicy)
+        assert ppo_policies[0] == example_ppo_policy
+
+    def test_list_ppo_policies_ids(self, mocker: pytest_mock.MockFixture, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the list_ppo_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_ppo_policy: PPOPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "training_jobs_emulation1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        ppo_policies_ids = MetastoreFacade.list_ppo_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(ppo_policies_ids, list)
+        assert isinstance(ppo_policies_ids[0], tuple)
+        assert isinstance(ppo_policies_ids[0][0], int)
+        assert isinstance(ppo_policies_ids[0][1], str)
+        assert ppo_policies_ids[0] == example_record
+
+    def test_convert_ppo_policy_record_to_dto(self, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the _convert_ppo_policy_record_to_dto function
+
+        :param example_ppo_policy: an example PPOPolicy object
+        :return: None
+        """
+        id = 1
+        example_ppo_policy.id = 1
+        example_record = (id, example_ppo_policy.to_dict())
+        converted_object = MetastoreFacade._convert_ppo_policy_record_to_dto(ppo_policy_record=example_record)
+        assert isinstance(converted_object, PPOPolicy)
+        assert converted_object == example_ppo_policy
+
+    def test_get_ppo_policy(self, mocker: pytest_mock.MockFixture, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the get_ppo_policy function
+
+        :param example_ppo_policy: an example PPOPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_ppo_policy.id = id
+        example_record = (id, example_ppo_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_ppo_policy = MetastoreFacade.get_ppo_policy(id=example_ppo_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE} WHERE id = %s", (example_ppo_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_ppo_policy, PPOPolicy)
+        assert fetched_ppo_policy == example_ppo_policy
+
+    def test_remove_ppo_policy(self, mocker: pytest_mock.MockFixture, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the remove_ppo_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_ppo_policy: an example PPOPolicy object
+        :return: None
+        """
+        example_ppo_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_ppo_policy(ppo_policy=example_ppo_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE} WHERE id = %s", (example_ppo_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_ppo_policy(self, mocker: pytest_mock.MockFixture, example_ppo_policy: PPOPolicy) -> None:
+        """
+        Tests the save_ppo_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_ppo_policy: an example PPOPolicy object
+        :return: None
+        """
+        id = 2
+        example_ppo_policy.id = id
+        example_record = (id, example_ppo_policy.to_dict(), example_ppo_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_ppo_policy(ppo_policy=example_ppo_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (id, example_ppo_policy.to_json_str(),
+                                                  example_ppo_policy.simulation_name))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
