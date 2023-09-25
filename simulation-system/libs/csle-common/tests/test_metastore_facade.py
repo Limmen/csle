@@ -12,6 +12,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 import pytest_mock
 
 
@@ -2478,5 +2479,214 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.execute.assert_called_once_with(
             f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
             (example_system_identification_job_config.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_convert_gaussian_mixture_system_model_record_to_dto(
+            self, example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the _convert_gaussian_mixture_system_model_record_to_dto function
+
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :return: None
+        """
+        id = 1
+        example_gaussian_mixture_system_model.id = 1
+        example_record = (id, example_gaussian_mixture_system_model.to_dict())
+        converted_object = MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(
+            gaussian_mixture_system_model_record=example_record)
+        assert isinstance(converted_object, GaussianMixtureSystemModel)
+        assert converted_object == example_gaussian_mixture_system_model
+
+    def test_list_gaussian_mixture_system_models(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the list_gaussian_mixture_system_models function
+
+        :param mocker: the pytest mocker object
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :return: None
+        """
+        id = 1
+        example_gaussian_mixture_system_model.id = id
+        example_record = (id, example_gaussian_mixture_system_model.to_dict(),
+                          example_gaussian_mixture_system_model.emulation_env_name,
+                          example_gaussian_mixture_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        gaussian_mixture_system_models = MetastoreFacade.list_gaussian_mixture_system_models()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(gaussian_mixture_system_models, list)
+        assert isinstance(gaussian_mixture_system_models[0], GaussianMixtureSystemModel)
+        assert gaussian_mixture_system_models[0] == example_gaussian_mixture_system_model
+
+    def test_list_gaussian_mixture_system_models_ids(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the list_gaussian_mixture_system_models_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_gaussian_mixture_system_model: GaussianMixtureSystemModel object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "emulation_name1", 123)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        gaussian_mixture_system_models_ids = MetastoreFacade.list_gaussian_mixture_system_models_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,emulation_name,emulation_statistic_id FROM "
+            f"{constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(gaussian_mixture_system_models_ids, list)
+        assert isinstance(gaussian_mixture_system_models_ids[0], tuple)
+        assert isinstance(gaussian_mixture_system_models_ids[0][0], int)
+        assert isinstance(gaussian_mixture_system_models_ids[0][1], str)
+        assert isinstance(gaussian_mixture_system_models_ids[0][2], int)
+        assert gaussian_mixture_system_models_ids[0] == example_record
+
+    def test_get_gaussian_mixture_system_model_config(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the get_gaussian_mixture_system_model_config function
+
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_gaussian_mixture_system_model.id = id
+        example_record = (id, example_gaussian_mixture_system_model.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_gaussian_mixture_system_model = MetastoreFacade.get_gaussian_mixture_system_model_config(
+            id=example_gaussian_mixture_system_model.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+            f"WHERE id = %s", (example_gaussian_mixture_system_model.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_gaussian_mixture_system_model, GaussianMixtureSystemModel)
+        assert fetched_gaussian_mixture_system_model == example_gaussian_mixture_system_model
+
+    def test_save_gaussian_mixture_system_model(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the save_gaussian_mixture_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :return: None
+        """
+        id = 2
+        example_gaussian_mixture_system_model.id = id
+        example_record = (example_gaussian_mixture_system_model.id, example_gaussian_mixture_system_model.to_dict(),
+                          example_gaussian_mixture_system_model.emulation_env_name,
+                          example_gaussian_mixture_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_gaussian_mixture_system_model(
+            gaussian_mixture_system_model=example_gaussian_mixture_system_model)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+            f"(id, model, emulation_name, emulation_statistic_id) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id",
+            (example_gaussian_mixture_system_model.id, example_gaussian_mixture_system_model.to_json_str(),
+             example_gaussian_mixture_system_model.emulation_env_name,
+             example_gaussian_mixture_system_model.emulation_statistic_id))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_gaussian_mixture_system_model(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the update_gaussian_mixture_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :return: None
+        """
+        id = 2
+        example_gaussian_mixture_system_model.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_gaussian_mixture_system_model(
+            id=id, gaussian_mixture_system_model=example_gaussian_mixture_system_model)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}.id = %s",
+            (example_gaussian_mixture_system_model.to_json_str(), example_gaussian_mixture_system_model.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_gaussian_mixture_system_model(
+            self, mocker: pytest_mock.MockFixture,
+            example_gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Tests the remove_gaussian_mixture_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gaussian_mixture_system_model: an example GaussianMixtureSystemModel object
+        :return: None
+        """
+        example_gaussian_mixture_system_model.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_gaussian_mixture_system_model(
+            gaussian_mixture_system_model=example_gaussian_mixture_system_model)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+            f"WHERE id = %s", (example_gaussian_mixture_system_model.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
