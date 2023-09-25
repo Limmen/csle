@@ -176,6 +176,21 @@ class RANDOM_SEARCH:
     POLICY_TYPE = "policy_type"
 
 
+class SIMULATED_ANNEALING:
+    """
+    String constants related som simulated annealing
+    """
+    L = "L"
+    N = "N"
+    THETA1 = "theta1"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    THETAS = "thetas"
+    DELTA = "delta"
+    POLICY_TYPE = "policy_type"
+
+
 class BAYESIAN_OPTIMIZATION:
     """
     String constants related to Bayesian Optimization
