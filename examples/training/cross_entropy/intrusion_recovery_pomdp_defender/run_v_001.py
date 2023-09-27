@@ -26,7 +26,7 @@ if __name__ == '__main__':
     p_c_1 = 0.00001
     p_c_2 = 0.001
     p_u = 0.02
-    BTR = 30
+    BTR = 21
     negate_costs = False
     discount_factor = 1
     num_observations = 1000

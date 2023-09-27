@@ -26,7 +26,7 @@ if __name__ == '__main__':
     p_c_1 = 0.00001
     p_c_2 = 0.001
     p_u = 0.02
-    BTR = 30
+    BTR = 3
     negate_costs = False
     discount_factor = 1
     num_observations = 1000
@@ -53,16 +53,17 @@ if __name__ == '__main__':
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}differential_evolution_btr_{L}",
         title=f"Tolerance;DE;BTR:{L}",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[561512, 351, 5126, 2350, 16391, 52101, 3520210, 11124, 61912, 888812, 235610, 12511,
+                      44102, 21501, 5112, 35011, 7776612, 22212, 2019850, 98212, 333901],
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=300, name=constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=400, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=L, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.DIFFERENTIAL_EVOLUTION.THETA1: HParam(value=[-5] * L,
+            agents_constants.DIFFERENTIAL_EVOLUTION.THETA1: HParam(value=[5] * L,
                                                                    name=constants.T_SPSA.THETA1,
                                                                    descr="initial thresholds"),
             agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE: HParam(
@@ -102,7 +103,7 @@ if __name__ == '__main__':
     )
     agent = DifferentialEvolutionAgent(emulation_env_config=emulation_env_config,
                                        simulation_env_config=simulation_env_config,
-                                       experiment_config=experiment_config)
+                                       experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

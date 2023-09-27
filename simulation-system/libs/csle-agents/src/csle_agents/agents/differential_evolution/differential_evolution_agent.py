@@ -385,20 +385,24 @@ class DifferentialEvolutionAgent(BaseAgent):
                     exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_LENGTH in exp_result.all_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
+            if agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH in exp_result.all_metrics:
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log stopping times
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_START in exp_result.all_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
+            if agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in exp_result.all_metrics:
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
                 round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
@@ -453,7 +457,6 @@ class DifferentialEvolutionAgent(BaseAgent):
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
                     f"theta:{best_policy.theta}, T: {T_avg}, runtime (m): {time_elapsed_minutes}, "
                     f"progress: {round(progress * 100, 2)}%")
         exp_result.policies[seed] = best_policy
