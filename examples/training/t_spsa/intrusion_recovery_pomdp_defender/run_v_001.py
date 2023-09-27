@@ -7,7 +7,6 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 from csle_common.dao.training.policy_type import PolicyType
-from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
 from csle_agents.common.objective_type import ObjectiveType
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
