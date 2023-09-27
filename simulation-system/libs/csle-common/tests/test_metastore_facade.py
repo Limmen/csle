@@ -15,6 +15,7 @@ from csle_common.dao.jobs.system_identification_job_config import SystemIdentifi
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
+from csle_common.dao.training.dqn_policy import DQNPolicy
 import pytest_mock
 
 
@@ -3009,6 +3010,159 @@ class TestMetastoreFacadeSuite:
             f"(id, policy, simulation_name) "
             f"VALUES (%s, %s, %s) RETURNING id", (id, example_alpha_vectors_policy.to_json_str(),
                                                   example_alpha_vectors_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_list_dqn_policies(self, mocker: pytest_mock.MockFixture, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the list_dqn_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_dqn_policy: an example DQNPolicy object
+        :return: None
+        """
+        id = 1
+        example_dqn_policy.id = id
+        example_record = (id, example_dqn_policy.to_dict(), example_dqn_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        dqn_policies = MetastoreFacade.list_dqn_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(dqn_policies, list)
+        assert isinstance(dqn_policies[0], DQNPolicy)
+        assert dqn_policies[0] == example_dqn_policy
+
+    def test_list_dqn_policies_ids(self, mocker: pytest_mock.MockFixture, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the list_dqn_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_dqn_policy: DQNPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation_name1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        dqn_policies_ids = MetastoreFacade.list_dqn_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(dqn_policies_ids, list)
+        assert isinstance(dqn_policies_ids[0], tuple)
+        assert isinstance(dqn_policies_ids[0][0], int)
+        assert isinstance(dqn_policies_ids[0][1], str)
+        assert dqn_policies_ids[0] == example_record
+
+    def test_convert_dqn_policy_record_to_dto(self, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the _convert_dqn_policy_record_to_dto function
+
+        :param example_dqn_policy: an example DQNPolicy object
+        :return: None
+        """
+        id = 1
+        example_dqn_policy.id = 1
+        example_record = (id, example_dqn_policy.to_dict())
+        converted_object = MetastoreFacade._convert_dqn_policy_record_to_dto(dqn_policy_record=example_record)
+        assert isinstance(converted_object, DQNPolicy)
+        assert converted_object == example_dqn_policy
+
+    def test_get_dqn_policy(self, mocker: pytest_mock.MockFixture, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the get_dqn_policy function
+
+        :param example_dqn_policy: an example DQNPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_dqn_policy.id = id
+        example_record = (id, example_dqn_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_dqn_policy = MetastoreFacade.get_dqn_policy(id=example_dqn_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE} WHERE id = %s", (example_dqn_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_dqn_policy, DQNPolicy)
+        assert fetched_dqn_policy == example_dqn_policy
+
+    def test_remove_dqn_policy(self, mocker: pytest_mock.MockFixture, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the remove_dqn_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_dqn_policy: an example DQNPolicy object
+        :return: None
+        """
+        example_dqn_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_dqn_policy(dqn_policy=example_dqn_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE} WHERE id = %s", (example_dqn_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_dqn_policy(self, mocker: pytest_mock.MockFixture, example_dqn_policy: DQNPolicy) -> None:
+        """
+        Tests the save_dqn_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_dqn_policy: an example DQNPolicy object
+        :return: None
+        """
+        id = 2
+        example_dqn_policy.id = id
+        example_record = (example_dqn_policy.id, example_dqn_policy.to_dict(), example_dqn_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_dqn_policy(dqn_policy=example_dqn_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.DQN_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (example_dqn_policy.id, example_dqn_policy.to_json_str(),
+                                                  example_dqn_policy.simulation_name))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
