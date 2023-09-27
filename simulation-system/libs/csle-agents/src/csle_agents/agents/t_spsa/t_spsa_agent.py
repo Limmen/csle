@@ -80,6 +80,7 @@ class TSPSAAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
         for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
@@ -117,6 +118,7 @@ class TSPSAAgent(BaseAgent):
             for l in range(1, self.experiment_config.hparams[constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -234,6 +236,7 @@ class TSPSAAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        start: float = time.time()
         objective_type = ObjectiveType(self.experiment_config.hparams[constants.T_SPSA.OBJECTIVE_TYPE].value)
         L = self.experiment_config.hparams[constants.T_SPSA.L].value
         if constants.T_SPSA.THETA1 in self.experiment_config.hparams:
@@ -253,6 +256,8 @@ class TSPSAAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+        time_elapsed_minutes = round((time.time() - start) / 60, 3)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         # Hyperparameters
         N = self.experiment_config.hparams[constants.T_SPSA.N].value
@@ -305,6 +310,10 @@ class TSPSAAgent(BaseAgent):
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
+
+            # Log runtime
+            time_elapsed_minutes = round((time.time() - start) / 60, 3)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
             exp_result.all_metrics[seed][constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
             if self.experiment_config.hparams[constants.T_SPSA.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
@@ -409,7 +418,7 @@ class TSPSAAgent(BaseAgent):
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{opt_j}, "
-                    f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%")
+                    f"theta:{policy.theta}, progress: {round(progress * 100, 2)}%, runtime: {time_elapsed_minutes} min")
 
         policy = self.get_policy(theta=theta, L=L)
         exp_result.policies[seed] = policy

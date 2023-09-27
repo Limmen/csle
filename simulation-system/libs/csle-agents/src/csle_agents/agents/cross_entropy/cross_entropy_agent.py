@@ -75,6 +75,7 @@ class CrossEntropyAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
         for l in range(1, self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
@@ -108,6 +109,7 @@ class CrossEntropyAgent(BaseAgent):
             for l in range(1, self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -224,6 +226,7 @@ class CrossEntropyAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        start: float = time.time()
         objective_type = ObjectiveType(
             self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.OBJECTIVE_TYPE].value)
         L = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value
@@ -240,13 +243,17 @@ class CrossEntropyAgent(BaseAgent):
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        J_opt = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(J_opt)
         exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THETAS].append(CrossEntropyAgent.round_vec(theta))
+        time_elapsed_minutes = round((time.time() - start) / 60, 3)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         Logger.__call__().get_logger().info(
-            f"[CROSS-ENTROPY] i: {0}, J:{J}, "
+            f"[CROSS-ENTROPY] i: {0}, J:{J}, J_opt:{J_opt}, "
             f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
             f"{J}, sigmoid(theta):{policy.thresholds()}, progress: {0}%")
 
@@ -254,12 +261,6 @@ class CrossEntropyAgent(BaseAgent):
         N = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.N].value
         K = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.K].value
         lamb = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.LAMB].value
-
-        # Initial eval
-        policy = self.get_policy(theta=list(theta), L=L)
-        avg_metrics = self.eval_theta(
-            policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
         means = []
         stds = []
@@ -279,7 +280,8 @@ class CrossEntropyAgent(BaseAgent):
                     policy=policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                theta_samples_and_returns.append((theta_sample, J))
+                OPT_J = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
+                theta_samples_and_returns.append((theta_sample, J, OPT_J))
             if objective_type == ObjectiveType.MAX:
                 sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
             else:
@@ -292,6 +294,7 @@ class CrossEntropyAgent(BaseAgent):
                 if stds[j] <= 0:
                     stds[j] = 0.01
             J = top_k_samples[0][1]
+            J_opt = top_k_samples[0][2]
 
             # Log average return
             policy.avg_R = J
@@ -300,6 +303,10 @@ class CrossEntropyAgent(BaseAgent):
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
+
+            # Log runtime
+            time_elapsed_minutes = round((time.time() - start) / 60, 3)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
             # Log thresholds
             exp_result.all_metrics[seed][
@@ -348,6 +355,7 @@ class CrossEntropyAgent(BaseAgent):
             if env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in avg_metrics:
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                     round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
+            if env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in avg_metrics:
                 exp_result.all_metrics[seed][
                     env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                     round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN],
@@ -374,15 +382,13 @@ class CrossEntropyAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
-                opt_J = -1
-                if len(exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]) > 0:
-                    opt_J = exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]
                 Logger.__call__().get_logger().info(
                     f"[CROSS-ENTROPY] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
-                    f"opt_J:{opt_J}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%")
+                    f"opt_J:{J_opt}, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%, "
+                    f"runtime: {time_elapsed_minutes} min")
 
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
@@ -397,6 +403,7 @@ class CrossEntropyAgent(BaseAgent):
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
+        :param max_steps: the maximum number of steps in the environment
         :return: the average metrics of the evaluation
         """
         if self.env is None:

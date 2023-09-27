@@ -82,13 +82,13 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a
         info[env_constants.ENV_METRICS.OBSERVATION] = self.o
         info[env_constants.ENV_METRICS.TIME_STEP] = self.t
-        info = self._info(info)
 
         # Log trace
         self.trace.defender_rewards.append(c)
         self.trace.attacker_rewards.append(-c)
         self.trace.attacker_actions.append(-1)
         self.trace.defender_actions.append(a)
+        info = self._info(info)
         self.trace.infos.append(info)
         self.trace.states.append(self.s)
         self.trace.beliefs.append(self.b[1])
@@ -138,8 +138,23 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         R = 0
         for i in range(len(self.trace.defender_rewards)):
             R += self.trace.defender_rewards[i] * math.pow(self.config.discount_factor, i)
-        info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
+        info[env_constants.ENV_METRICS.RETURN] = R
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
+        upper_bound_return = 0
+        s = self.trace.states[0]
+        for i in range(len(self.trace.states)):
+            if s == 0 or s == 2:
+                a = 0
+            else:
+                a = 1
+            upper_bound_return += self.config.cost_tensor[a][s] * math.pow(self.config.discount_factor, i)
+            if a != self.trace.defender_actions[i] or s != self.trace.states[i]:
+                s = GeneralUtil.sample_next_state(transition_tensor=self.config.transition_tensor,
+                                                  s=s, a=a, states=self.config.states)
+            else:
+                if i < len(self.trace.states) - 1:
+                    s = self.trace.states[i + 1]
+        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
         return info
 
     def render(self, mode: str = 'human'):
