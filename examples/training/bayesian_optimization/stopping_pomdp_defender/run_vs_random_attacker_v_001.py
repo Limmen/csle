@@ -18,6 +18,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
+    L = 3
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
         random_seeds=[399, 98912, 999, 555],
@@ -26,11 +27,11 @@ if __name__ == '__main__':
         hparams={
             agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
                                                              descr="the number of training iterations"),
-            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=3, name="L", descr="the number of stop actions"),
+            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=L, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
-                value=[0, 0, 0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
+                value=[0] * L, name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
                 descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -57,9 +58,9 @@ if __name__ == '__main__':
             agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI: HParam(
                 value=0,
                 name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
-                descr="kappa parameter for the xi utility function"),
+                descr="xi parameter for the xi utility function"),
             agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                value=[(-3, 3), (-3, 3), (-3, 3)],
+                value=[(-5, 5)] * L,
                 name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
                 descr="parameter bounds"),
             agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
@@ -69,7 +70,7 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                          experiment_config=experiment_config)
+                          experiment_config=experiment_config, save_to_metastore=False)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.L = 3

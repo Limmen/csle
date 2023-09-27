@@ -195,6 +195,7 @@ class BAYESIAN_OPTIMIZATION:
     TARGET = "target"
     PARAMS = "params"
     POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
 
 
 class BAYESIAN_OPTIMIZATION_EMUKIT:
