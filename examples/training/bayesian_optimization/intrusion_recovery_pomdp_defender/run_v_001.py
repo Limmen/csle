@@ -52,7 +52,8 @@ if __name__ == '__main__':
     L = input_config.BTR
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[561512, 351, 5126, 2350, 16391, 52101, 3520210, 11124, 61912, 888812, 235610, 12511,
+                      44102, 21501, 5112, 35011, 7776612, 22212, 2019850, 98212, 333901],
         agent_type=AgentType.BAYESIAN_OPTIMIZATION,
         log_every=1,
         hparams={
