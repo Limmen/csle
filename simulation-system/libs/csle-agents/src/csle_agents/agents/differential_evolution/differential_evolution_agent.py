@@ -23,6 +23,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.util.general_util import GeneralUtil
+from csle_agents.common.objective_type import ObjectiveType
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -228,6 +229,7 @@ class DifferentialEvolutionAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        objective = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE].value
         L = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value
         if agents_constants.DIFFERENTIAL_EVOLUTION.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.THETA1].value
@@ -333,14 +335,25 @@ class DifferentialEvolutionAgent(BaseAgent):
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 score_target = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
-                if score_trial > score_target:
-                    population[j] = v_trial
-                    gen_scores.append(score_trial)
+                if objective == ObjectiveType.MAX:
+                    if score_trial > score_target:
+                        population[j] = v_trial
+                        gen_scores.append(score_trial)
+                    else:
+                        gen_scores.append(score_target)
                 else:
-                    gen_scores.append(score_target)
+                    if score_trial < score_target:
+                        population[j] = v_trial
+                        gen_scores.append(score_trial)
+                    else:
+                        gen_scores.append(score_target)
 
-            gen_best = max(gen_scores)  # fitness of best individual
-            gen_sol = population[gen_scores.index(min(gen_scores))]  # solution of best individual
+            if objective == ObjectiveType.MAX:
+                gen_best = max(gen_scores)  # fitness of best individual
+                gen_sol = population[gen_scores.index(max(gen_scores))]  # solution of best individual
+            else:
+                gen_best = min(gen_scores)  # fitness of best individual
+                gen_sol = population[gen_scores.index(min(gen_scores))]  # solution of best individual
             best_policy = self.get_policy(theta=list(gen_sol), L=L)
             values.append(gen_best)
             J = gen_best

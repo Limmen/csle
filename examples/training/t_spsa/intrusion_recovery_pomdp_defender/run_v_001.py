@@ -9,6 +9,8 @@ import csle_agents.constants.constants as agents_constants
 from csle_common.dao.training.policy_type import PolicyType
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
 from csle_agents.common.objective_type import ObjectiveType
+from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
+from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -18,21 +20,49 @@ if __name__ == '__main__':
     simulation_name = "csle-tolerance-intrusion-recovery-pomdp-defender-001"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
     input_config: IntrusionRecoveryPomdpConfig = simulation_env_config.simulation_env_input_config
+    eta = 1
+    p_a = 0.1
+    p_c_1 = 0.00001
+    p_c_2 = 0.001
+    p_u = 0.02
+    BTR = 25
+    negate_costs = False
+    discount_factor = 1
+    num_observations = 1000
+    cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
+                                                         actions=IntrusionRecoveryPomdpUtil.action_space(),
+                                                         negate=negate_costs)
+    observation_tensor = IntrusionRecoveryPomdpUtil.observation_tensor(
+        states=IntrusionRecoveryPomdpUtil.state_space(),
+        observations=IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations))
+    transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(
+        states=IntrusionRecoveryPomdpUtil.state_space(), actions=IntrusionRecoveryPomdpUtil.action_space(), p_a=p_a,
+        p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u)
+    input_config = IntrusionRecoveryPomdpConfig(
+        eta=eta, p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u, BTR=BTR, negate_costs=negate_costs, seed=999,
+        discount_factor=discount_factor, states=IntrusionRecoveryPomdpUtil.state_space(),
+        actions=IntrusionRecoveryPomdpUtil.action_space(),
+        observations=IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations),
+        cost_tensor=cost_tensor, observation_tensor=observation_tensor, transition_tensor=transition_tensor,
+        b1=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a), T=BTR,
+        simulation_env_name=simulation_name, gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1"
+    )
+    simulation_env_config.simulation_env_input_config = input_config
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
-        random_seeds=[399, 98912],
+        random_seeds=[98912, 399],
         agent_type=AgentType.T_SPSA,
         log_every=1,
         hparams={
-            constants.T_SPSA.N: HParam(value=200, name=constants.T_SPSA.N,
+            constants.T_SPSA.N: HParam(value=1000, name=constants.T_SPSA.N,
                                        descr="the number of training iterations"),
             constants.T_SPSA.c: HParam(
                 value=10, name=constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
             constants.T_SPSA.a: HParam(
-                value=1, name=constants.T_SPSA.a,
+                value=0.1, name=constants.T_SPSA.a,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             constants.T_SPSA.A: HParam(
                 value=100, name=constants.T_SPSA.A,
@@ -44,7 +74,7 @@ if __name__ == '__main__':
                 value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             constants.T_SPSA.L: HParam(value=input_config.BTR, name="L", descr="the number of thresholds"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             constants.T_SPSA.THETA1: HParam(
                 value=[5] * input_config.BTR, name=constants.T_SPSA.THETA1, descr="initial thresholds"),
@@ -72,7 +102,7 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+                       experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

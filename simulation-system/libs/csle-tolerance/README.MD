@@ -45,10 +45,10 @@ $ pip install -e csle-tolerance
 # or (equivalently):
 make install
 # force upgrade deps
-$ pip install -e csle-csle-tolerance --upgrade
+$ pip install -e csle-tolerance --upgrade
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/libs/csle-csle-tolerance
+cd csle/simulation-system/libs/csle-tolerance
 pip3 install -e .
 # Install development dependencies
 $ pip install -r requirements_dev.txt

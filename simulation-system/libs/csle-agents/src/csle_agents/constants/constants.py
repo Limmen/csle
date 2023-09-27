@@ -224,6 +224,7 @@ class DIFFERENTIAL_EVOLUTION:
     L = "L"
     N = "N"
     POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
     THETA1 = "theta1"
     THETAS = "thetas"
     THRESHOLDS = "thresholds"

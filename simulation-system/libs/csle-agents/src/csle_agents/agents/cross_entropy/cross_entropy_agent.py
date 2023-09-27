@@ -243,15 +243,17 @@ class CrossEntropyAgent(BaseAgent):
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        J_opt = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(J_opt)
         exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THETAS].append(CrossEntropyAgent.round_vec(theta))
         time_elapsed_minutes = round((time.time() - start) / 60, 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         Logger.__call__().get_logger().info(
-            f"[CROSS-ENTROPY] i: {0}, J:{J}, "
+            f"[CROSS-ENTROPY] i: {0}, J:{J}, J_opt:{J_opt}, "
             f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
             f"{J}, sigmoid(theta):{policy.thresholds()}, progress: {0}%")
 
@@ -278,7 +280,8 @@ class CrossEntropyAgent(BaseAgent):
                     policy=policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                theta_samples_and_returns.append((theta_sample, J))
+                OPT_J = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
+                theta_samples_and_returns.append((theta_sample, J, OPT_J))
             if objective_type == ObjectiveType.MAX:
                 sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
             else:
@@ -291,6 +294,7 @@ class CrossEntropyAgent(BaseAgent):
                 if stds[j] <= 0:
                     stds[j] = 0.01
             J = top_k_samples[0][1]
+            J_opt = top_k_samples[0][2]
 
             # Log average return
             policy.avg_R = J
@@ -378,14 +382,11 @@ class CrossEntropyAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
-                opt_J = -1
-                if len(exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]) > 0:
-                    opt_J = exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]
                 Logger.__call__().get_logger().info(
                     f"[CROSS-ENTROPY] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
-                    f"opt_J:{opt_J}, "
+                    f"opt_J:{J_opt}, "
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%, "
                     f"runtime: {time_elapsed_minutes} min")
 
@@ -402,6 +403,7 @@ class CrossEntropyAgent(BaseAgent):
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
+        :param max_steps: the maximum number of steps in the environment
         :return: the average metrics of the evaluation
         """
         if self.env is None:
