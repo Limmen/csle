@@ -12,6 +12,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 import pytest_mock
 
@@ -2690,3 +2691,162 @@ class TestMetastoreFacadeSuite:
             f"WHERE id = %s", (example_gaussian_mixture_system_model.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
+
+    def test_list_tabular_policies(self, mocker: pytest_mock.MockFixture,
+                                   example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the list_tabular_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_tabular_policy: an example TabularPolicy object
+        :return: None
+        """
+        id = 1
+        example_tabular_policy.id = id
+        example_record = (id, example_tabular_policy.to_dict(), example_tabular_policy.simulation_name,)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        tabular_policies = MetastoreFacade.list_tabular_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(tabular_policies, list)
+        assert isinstance(tabular_policies[0], TabularPolicy)
+        assert tabular_policies[0] == example_tabular_policy
+
+    def test_list_tabular_policies_ids(self, mocker: pytest_mock.MockFixture,
+                                       example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the list_tabular_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_tabular_policy: TabularPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation_name1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        tabular_policies_ids = MetastoreFacade.list_tabular_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(tabular_policies_ids, list)
+        assert isinstance(tabular_policies_ids[0], tuple)
+        assert isinstance(tabular_policies_ids[0][0], int)
+        assert isinstance(tabular_policies_ids[0][1], str)
+        assert tabular_policies_ids[0] == example_record
+
+    def test_convert_tabular_policy_record_to_dto(self, example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the _convert_tabular_policy_record_to_dto function
+
+        :param example_tabular_policy: an example TabularPolicy object
+        :return: None
+        """
+        id = 1
+        example_tabular_policy.id = 1
+        example_record = (id, example_tabular_policy.to_dict())
+        converted_object = MetastoreFacade._convert_tabular_policy_record_to_dto(tabular_policy_record=example_record)
+        assert isinstance(converted_object, TabularPolicy)
+        assert converted_object == example_tabular_policy
+
+    def test_get_tabular_policy(self, mocker: pytest_mock.MockFixture, example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the get_tabular_policy function
+
+        :param example_tabular_policy: an example TabularPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_tabular_policy.id = id
+        example_record = (id, example_tabular_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_tabular_policy = MetastoreFacade.get_tabular_policy(id=example_tabular_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s",
+            (example_tabular_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_tabular_policy, TabularPolicy)
+        assert fetched_tabular_policy == example_tabular_policy
+
+    def test_remove_tabular_policy(self, mocker: pytest_mock.MockFixture,
+                                   example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the remove_tabular_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_tabular_policy: an example TabularPolicy object
+        :return: None
+        """
+        example_tabular_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_tabular_policy(tabular_policy=example_tabular_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s",
+            (example_tabular_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_tabular_policy(self, mocker: pytest_mock.MockFixture, example_tabular_policy: TabularPolicy) -> None:
+        """
+        Tests the save_tabular_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_tabular_policy: an example TabularPolicy object
+        :return: None
+        """
+        id = 2
+        example_tabular_policy.id = id
+        example_record = (example_tabular_policy.id, example_tabular_policy.to_dict(),
+                          example_tabular_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_tabular_policy(tabular_policy=example_tabular_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (example_tabular_policy.id, example_tabular_policy.to_json_str(),
+                                                  example_tabular_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
