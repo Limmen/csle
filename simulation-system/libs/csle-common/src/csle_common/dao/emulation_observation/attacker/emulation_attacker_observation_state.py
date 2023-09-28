@@ -52,8 +52,8 @@ class EmulationAttackerObservationState(JSONSerializable):
         d: Dict[str, Any] = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
         d["catched_flags"] = self.catched_flags
-        d["actions_tried"] = list(self.actions_tried)
-        d["agent_reachable"] = list(self.agent_reachable)
+        d["actions_tried"] = sorted(list(self.actions_tried))
+        d["agent_reachable"] = sorted(list(self.agent_reachable))
         return d
 
     def sort_machines(self) -> None:

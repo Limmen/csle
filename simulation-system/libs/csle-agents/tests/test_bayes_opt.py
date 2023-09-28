@@ -8,6 +8,7 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.bayesian_optimization.bayes_opt_agent import BayesOptAgent
+from csle_agents.common.objective_type import ObjectiveType
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
@@ -74,7 +75,10 @@ class TestBayesOptSuite:
                     descr="parameter bounds"),
                 agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD, name=agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE,
-                    descr="policy type for the execution")
+                    descr="policy type for the execution"),
+                agents_constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MIN, name=agents_constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE,
+                    descr="Objective type")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

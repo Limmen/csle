@@ -14,6 +14,7 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class TestDifferentialEvolutionSuite:
@@ -72,7 +73,10 @@ class TestDifferentialEvolutionSuite:
                     descr="the discount factor"),
                 agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
-                    descr="policy type for the execution")
+                    descr="policy type for the execution"),
+                agents_constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MIN, name=agents_constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE,
+                    descr="Objective type")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

@@ -327,7 +327,6 @@ class TestResourcesEmulationTracesSuite:
         assert response_data_dict == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}/10")
-        response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_dict == {}
