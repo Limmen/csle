@@ -24,6 +24,7 @@ from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class RandomSearchAgent(BaseAgent):
@@ -72,6 +73,7 @@ class RandomSearchAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
         for l in range(1, self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
@@ -105,6 +107,7 @@ class RandomSearchAgent(BaseAgent):
             for l in range(1, self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -220,6 +223,8 @@ class RandomSearchAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        start: float = time.time()
+        objective_type = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.OBJECTIVE_TYPE].value
         L = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value
         if agents_constants.RANDOM_SEARCH.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.THETA1].value
@@ -238,6 +243,8 @@ class RandomSearchAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
+        time_elapsed_minutes = round((time.time() - start) / 60, 3)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.N].value
@@ -257,10 +264,16 @@ class RandomSearchAgent(BaseAgent):
                 policy=candidate_policy,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            if J_candidate > J_0:
-                theta = theta_candidate
-                J_0 = J_candidate
-                policy = candidate_policy
+            if objective_type == ObjectiveType.MAX:
+                if J_candidate > J_0:
+                    theta = theta_candidate
+                    J_0 = J_candidate
+                    policy = candidate_policy
+            else:
+                if J_candidate < J_0:
+                    theta = theta_candidate
+                    J_0 = J_candidate
+                    policy = candidate_policy
 
             # Log average return
             J = J_0
@@ -270,6 +283,10 @@ class RandomSearchAgent(BaseAgent):
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
+
+            # Log runtime
+            time_elapsed_minutes = round((time.time() - start) / 60, 3)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(
@@ -282,20 +299,24 @@ class RandomSearchAgent(BaseAgent):
                 exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_LENGTH in exp_result.all_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
+            if agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH in exp_result.all_metrics:
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log stopping times
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            if env_constants.ENV_METRICS.INTRUSION_START in exp_result.all_metrics:
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
+            if agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in exp_result.all_metrics:
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
                 round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
@@ -303,20 +324,25 @@ class RandomSearchAgent(BaseAgent):
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1, self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value + 1):
-                exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    ExperimentUtil.running_average(
-                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
-                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+                if env_constants.ENV_METRICS.STOP + f"_{l}" in exp_result.plot_metrics:
+                    exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
+                if env_constants.ENV_METRICS.STOP + f"_{l}" in exp_result.all_metrics:
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                        round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
+                if env_constants.ENV_METRICS.STOP + f"_running_average_{l}" in exp_result.all_metrics:
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                        ExperimentUtil.running_average(
+                            exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
+                            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log baseline returns
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
+            if env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in exp_result.all_metrics:
+                exp_result.all_metrics[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN],
+                          3))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 # Update training job
@@ -345,9 +371,8 @@ class RandomSearchAgent(BaseAgent):
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%, "
+                    f"runtime: {time_elapsed_minutes} min")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy
@@ -459,8 +484,8 @@ class RandomSearchAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-                                                              LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 

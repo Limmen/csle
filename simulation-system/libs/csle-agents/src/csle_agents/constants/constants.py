@@ -174,6 +174,7 @@ class RANDOM_SEARCH:
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     DELTA = "delta"
     POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
 
 
 class BAYESIAN_OPTIMIZATION:
