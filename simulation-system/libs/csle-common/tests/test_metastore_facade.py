@@ -16,6 +16,8 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.dao.training.dqn_policy import DQNPolicy
+from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
+from csle_common.dao.training.vector_policy import VectorPolicy
 import pytest_mock
 
 
@@ -3163,6 +3165,332 @@ class TestMetastoreFacadeSuite:
             f"(id, policy, simulation_name) "
             f"VALUES (%s, %s, %s) RETURNING id", (example_dqn_policy.id, example_dqn_policy.to_json_str(),
                                                   example_dqn_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_list_fnn_w_softmax_policies(self, mocker: pytest_mock.MockFixture,
+                                         example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the list_fnn_w_softmax_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_fnn_with_softmax_policy: an example FNNWithSoftmaxPolicy object
+        :return: None
+        """
+        id = 1
+        example_fnn_with_softmax_policy.id = id
+        example_record = (id, example_fnn_with_softmax_policy.to_dict(),
+                          example_fnn_with_softmax_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fnn_w_softmax_policies = MetastoreFacade.list_fnn_w_softmax_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(fnn_w_softmax_policies, list)
+        assert isinstance(fnn_w_softmax_policies[0], FNNWithSoftmaxPolicy)
+        assert fnn_w_softmax_policies[0] == example_fnn_with_softmax_policy
+
+    def test_list_fnn_w_softmax_policies_ids(self, mocker: pytest_mock.MockFixture,
+                                             example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the list_fnn_w_softmax_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation_name1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fnn_w_softmax_policies_ids = MetastoreFacade.list_fnn_w_softmax_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(fnn_w_softmax_policies_ids, list)
+        assert isinstance(fnn_w_softmax_policies_ids[0], tuple)
+        assert isinstance(fnn_w_softmax_policies_ids[0][0], int)
+        assert isinstance(fnn_w_softmax_policies_ids[0][1], str)
+        assert fnn_w_softmax_policies_ids[0] == example_record
+
+    def test_convert_fnn_w_softmax_policy_record_to_dto(self,
+                                                        example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the _convert_fnn_w_softmax_policy_record_to_dto function
+
+        :param example_fnn_with_softmax_policy: an example FNNWithSoftmaxPolicy object
+        :return: None
+        """
+        id = 1
+        example_fnn_with_softmax_policy.id = 1
+        example_record = (id, example_fnn_with_softmax_policy.to_dict())
+        converted_object = MetastoreFacade._convert_fnn_w_softmax_policy_record_to_dto(
+            fnn_w_softmax_policy_record=example_record)
+        assert isinstance(converted_object, FNNWithSoftmaxPolicy)
+        assert converted_object == example_fnn_with_softmax_policy
+
+    def test_get_fnn_w_softmax_policy(self, mocker: pytest_mock.MockFixture,
+                                      example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the get_fnn_w_softmax_policy function
+
+        :param example_fnn_with_softmax_policy: an example FNNWithSoftmaxPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_fnn_with_softmax_policy.id = id
+        example_record = (id, example_fnn_with_softmax_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_fnn_with_softmax_policy = MetastoreFacade.get_fnn_w_softmax_policy(
+            id=example_fnn_with_softmax_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
+            f"WHERE id = %s", (example_fnn_with_softmax_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_fnn_with_softmax_policy, FNNWithSoftmaxPolicy)
+        assert fetched_fnn_with_softmax_policy == example_fnn_with_softmax_policy
+
+    def test_remove_fnn_w_softmax_policy(self, mocker: pytest_mock.MockFixture,
+                                         example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the remove_fnn_w_softmax_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_fnn_with_softmax_policy: an example FNNWithSoftmaxPolicy object
+        :return: None
+        """
+        example_fnn_with_softmax_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=example_fnn_with_softmax_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s",
+            (example_fnn_with_softmax_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_fnn_w_softmax_policy(self, mocker: pytest_mock.MockFixture,
+                                       example_fnn_with_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Tests the save_fnn_w_softmax_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_fnn_with_softmax_policy: an example FNNWithSoftmaxPolicy object
+        :return: None
+        """
+        id = 2
+        example_fnn_with_softmax_policy.id = id
+        example_record = (example_fnn_with_softmax_policy.id, example_fnn_with_softmax_policy.to_dict(),
+                          example_fnn_with_softmax_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_fnn_w_softmax_policy(fnn_w_softmax_policy=example_fnn_with_softmax_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (example_fnn_with_softmax_policy.id,
+                                                  example_fnn_with_softmax_policy.to_json_str(),
+                                                  example_fnn_with_softmax_policy.simulation_name))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_list_vector_policies(self, mocker: pytest_mock.MockFixture,
+                                  example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the list_vector_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_vector_policy: an example VectorPolicy object
+        :return: None
+        """
+        id = 1
+        example_vector_policy.id = id
+        example_record = (id, example_vector_policy.to_dict(), example_vector_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        vector_policies = MetastoreFacade.list_vector_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(vector_policies, list)
+        assert isinstance(vector_policies[0], VectorPolicy)
+        assert vector_policies[0] == example_vector_policy
+
+    def test_list_vector_policies_ids(self, mocker: pytest_mock.MockFixture,
+                                      example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the list_vector_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_vector_policy: VectorPolicy object
+        :return: None
+        """
+        id = 1
+        example_record = (id, "simulation_name1")
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        vector_policies_ids = MetastoreFacade.list_vector_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(vector_policies_ids, list)
+        assert isinstance(vector_policies_ids[0], tuple)
+        assert isinstance(vector_policies_ids[0][0], int)
+        assert isinstance(vector_policies_ids[0][1], str)
+        assert vector_policies_ids[0] == example_record
+
+    def test_convert_vector_policy_record_to_dto(self, example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the _convert_vector_policy_record_to_dto function
+
+        :param example_vector_policy: an example VectorPolicy object
+        :return: None
+        """
+        id = 1
+        example_vector_policy.id = 1
+        example_record = (id, example_vector_policy.to_dict())
+        converted_object = MetastoreFacade._convert_vector_policy_record_to_dto(vector_policy_record=example_record)
+        assert isinstance(converted_object, VectorPolicy)
+        assert converted_object == example_vector_policy
+
+    def test_get_vector_policy(self, mocker: pytest_mock.MockFixture,
+                               example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the get_vector_policy function
+
+        :param example_vector_policy: an example VectorPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_vector_policy.id = id
+        example_record = (id, example_vector_policy.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        fetched_vector_policy = MetastoreFacade.get_vector_policy(id=example_vector_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s",
+            (example_vector_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(fetched_vector_policy, VectorPolicy)
+        assert fetched_vector_policy == example_vector_policy
+
+    def test_remove_vector_policy(self, mocker: pytest_mock.MockFixture,
+                                  example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the remove_vector_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_vector_policy: an example VectorPolicy object
+        :return: None
+        """
+        example_vector_policy.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_vector_policy(vector_policy=example_vector_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s",
+            (example_vector_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_vector_policy(self, mocker: pytest_mock.MockFixture, example_vector_policy: VectorPolicy) -> None:
+        """
+        Tests the save_vector_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_vector_policy: an example VectorPolicy object
+        :return: None
+        """
+        id = 2
+        example_vector_policy.id = id
+        example_record = (example_vector_policy.id, example_vector_policy.to_dict(),
+                          example_vector_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_vector_policy(vector_policy=example_vector_policy)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
+            f"(id, policy, simulation_name) "
+            f"VALUES (%s, %s, %s) RETURNING id", (example_vector_policy.id, example_vector_policy.to_json_str(),
+                                                  example_vector_policy.simulation_name))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
