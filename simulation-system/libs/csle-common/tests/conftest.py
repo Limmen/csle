@@ -1286,14 +1286,14 @@ def example_emulation_env_config(
 
 
 @pytest.fixture
-def example_emulation_execution(get_ex_em_env: EmulationEnvConfig) -> EmulationExecution:
+def example_emulation_execution(example_emulation_env_config: EmulationEnvConfig) -> EmulationExecution:
     """
     Fixture that returns an example EmulationExecution object
 
-    :param get_ex_em_env: fixture returning an example EmulationEnvConfig
+    :param example_emulation_env_config: fixture returning an example EmulationEnvConfig
     :return: an example EmulationExecution object
     """
-    em_env = get_ex_em_env
+    em_env = example_emulation_env_config
     em_ex = EmulationExecution(emulation_name="JohbnDoeEmulation", timestamp=1.5, ip_first_octet=-1,
                                emulation_env_config=em_env, physical_servers=["JohnDoeServer"])
     return em_ex
