@@ -101,7 +101,10 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         if self.t >= self.config.BTR or self.s == 2:
             done = True
 
-        return [self.t, self.b[1], self.o], c, done, done, info
+        t = self.t
+        if self.config.BTR == np.inf:
+            t = 1
+        return [t, self.b[1], self.o], c, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[List[Union[int, int, float]], Dict[str, Any]]:

@@ -1,3 +1,4 @@
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     p_c_1 = 0.00001
     p_c_2 = 0.001
     p_u = 0.02
-    BTR = 25
+    BTR = np.inf
     negate_costs = False
     discount_factor = 1
     num_observations = 1000
@@ -49,7 +50,7 @@ if __name__ == '__main__':
         simulation_env_name=simulation_name, gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1"
     )
     simulation_env_config.simulation_env_input_config = input_config
-    L = input_config.BTR
+    L = 1
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
         random_seeds=[561512, 351, 5126, 2350, 16391, 52101, 3520210, 11124, 61912, 888812, 235610, 12511,
@@ -71,7 +72,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=25, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,

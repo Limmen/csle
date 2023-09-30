@@ -1,6 +1,7 @@
 """
 Utility functions for training with the csle environments
 """
+from typing import List
 import io
 import json
 import logging
@@ -12,6 +13,7 @@ import numpy as np
 import random
 import torch
 import scipy.stats
+from scipy.interpolate import interp1d
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -382,3 +384,25 @@ class ExperimentUtil:
         random.seed(seed)
         np.random.seed(seed)
         torch.manual_seed(seed)
+
+    @staticmethod
+    def regress_lists(lists: List[List[float]]) -> List[List[float]]:
+        """
+        Regress sublists by interpolating their values to fit the length of the first sublist (reference list).
+
+        :param lists: the lists ro regress
+        :return: the regressed lists
+        """
+        # Assume that the longest list is the reference list
+        ref_len = max([len(sublist) for sublist in lists])
+        for i in range(len(lists)):
+            if len(lists[i]) != ref_len:
+                # If the list is not the same length, interpolate to the correct size
+                sublist = lists[i]
+                x = np.linspace(0, 1, len(sublist))
+                y = np.array(sublist).squeeze()
+                f = interp1d(x, y, kind="linear")
+                new_x = np.linspace(0, 1, ref_len)
+                new_y = f(new_x)
+                lists[i] = new_y
+        return lists

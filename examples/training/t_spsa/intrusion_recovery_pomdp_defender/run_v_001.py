@@ -1,3 +1,4 @@
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     p_c_1 = 0.00001
     p_c_2 = 0.001
     p_u = 0.02
-    BTR = 3
+    BTR = np.inf
     negate_costs = False
     discount_factor = 1
     num_observations = 1000
@@ -49,6 +50,7 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config = input_config
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
+    L = 1
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
         random_seeds=[561512, 351, 5126, 2350, 16391, 52101, 3520210, 11124, 61912, 888812, 235610, 12511,
@@ -73,18 +75,18 @@ if __name__ == '__main__':
             constants.T_SPSA.EPSILON: HParam(
                 value=0.101, name=constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.L: HParam(value=input_config.BTR, name="L", descr="the number of thresholds"),
+            constants.T_SPSA.L: HParam(value=L, name="L", descr="the number of thresholds"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             constants.T_SPSA.THETA1: HParam(
-                value=[5] * input_config.BTR, name=constants.T_SPSA.THETA1, descr="initial thresholds"),
+                value=[5] * L, name=constants.T_SPSA.THETA1, descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=25, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=constants.T_SPSA.GRADIENT_BATCH_SIZE,
