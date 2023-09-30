@@ -82,7 +82,6 @@ class DifferentialEvolutionAgent(BaseAgent):
         descr = f"Training of policies with the differential evolution algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
-            self.start = time.time()
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
@@ -229,6 +228,7 @@ class DifferentialEvolutionAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        start = time.time()
         objective = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE].value
         L = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value
         if agents_constants.DIFFERENTIAL_EVOLUTION.THETA1 in self.experiment_config.hparams:
@@ -256,7 +256,7 @@ class DifferentialEvolutionAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS].append(
             DifferentialEvolutionAgent.round_vec(theta))
-        time_elapsed_minutes = round((time.time() - self.start) / 60, 3)
+        time_elapsed_minutes = round((time.time() - start) / 60, 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         Logger.__call__().get_logger().info(
@@ -367,7 +367,7 @@ class DifferentialEvolutionAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # log runtime
-            time_elapsed_minutes = round((time.time() - self.start) / 60, 3)
+            time_elapsed_minutes = round((time.time() - start) / 60, 3)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
             # Log thresholds

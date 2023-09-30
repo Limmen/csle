@@ -103,6 +103,7 @@ if __name__ == '__main__':
         json_str = f.read()
         data_dict = json.loads(json_str)
     print("loaded")
+    optimal_costs = [0.087,0.1127,0.12,0.140655,0.148822,0.154955,0.15972,0.163532,0.16664,0.1692383,0.171429,0.173304,0.1745,0.176344,0,0,0,0,0,0,0,0,0.1839356]
     # btrs = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
     # btrs = [25]
     # for btr in btrs:
@@ -118,7 +119,30 @@ if __name__ == '__main__':
     #     f.write(json.dumps(data_dict, indent=4, sort_keys=True, cls=NpEncoder))
     # import sys
     # sys.exit(0)
-
+    optimal_costs = np.array(data_dict["de"][str(15)]["optimal_costs"])
+    print(optimal_costs)
+    # print(data_dict["ce"][str(25)]["avg_costs"])
+    # print(data_dict["ce"][str(5)]["avg_costs_stds"])
+    for i in range(len(data_dict["bo"][str(25)]["avg_costs"])):
+        if data_dict["bo"][str(25)]["avg_costs"][i] < 0.172:
+            print(data_dict["bo"][str(25)]["runtimes"][i])
+            break
+    # print(data_dict["spsa"][str(25)]["avg_costs"])
+    # print(data_dict["spsa"][str(25)]["runtimes"])
+    import sys
+    sys.exit(0)
+    # print(data_dict["ce"][str(10)]["avg_costs"])
+    # print(data_dict["ce"][str(10)]["avg_costs_stds"])
+    # print(data_dict["ce"][str(10)]["runtimes"])
+    # print(data_dict["ce"][str(15)]["avg_costs"])
+    # print(data_dict["ce"][str(15)]["avg_costs_stds"])
+    # print(data_dict["ce"][str(15)]["runtimes"])
+    # print(data_dict["ce"][str(20)]["avg_costs"])
+    # print(data_dict["ce"][str(20)]["avg_costs_stds"])
+    # print(data_dict["ce"][str(20)]["runtimes"])
+    # print(data_dict["ce"][str(25)]["avg_costs"])
+    # print(data_dict["ce"][str(25)]["avg_costs_stds"])
+    # print(data_dict["ce"][str(25)]["runtimes"])
     fontsize: int = 14
     lw: float = 1.2
     alpha: float = 0.15
@@ -137,7 +161,6 @@ if __name__ == '__main__':
     line_styles = ["-", "dotted", "dashdot", (0, (1, 1)), (0, (3, 1, 1, 1))]
     col = 0
     row = 0
-
     for btr in btrs:
         for i, algo in enumerate(algos):
             color = colors[i]
@@ -183,6 +206,8 @@ if __name__ == '__main__':
                ncol=8, fancybox=False, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,
                prop={'size': fontsize}, frameon=False)
     plt.show()
+    # fig.savefig(file_name + ".png", format="png", dpi=600)
+    # fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
 
     # for algo in algos:
     #     print(f"algo: {algo}, btr: {btr}")

@@ -176,7 +176,8 @@ class BayesOptAgent(BaseAgent):
                         or type(value_vectors[0][0]) is np.int64 or type(value_vectors[0][0]) is np.float64:
                     seed_values = []
                     for seed_idx in range(len(self.experiment_config.random_seeds)):
-                        seed_values.append(value_vectors[seed_idx][i])
+                        if i < len(value_vectors[seed_idx]):
+                            seed_values.append(value_vectors[seed_idx][i])
                     avg = ExperimentUtil.mean_confidence_interval(
                         data=seed_values,
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]

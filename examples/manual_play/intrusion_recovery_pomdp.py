@@ -42,10 +42,10 @@ if __name__ == '__main__':
     env.reset()
     for i in range(10):
         env.step(action=0)
-    # pomdp_solver_file_str = IntrusionRecoveryPomdpUtil.pomdp_solver_file(
-    #     config=input_config)
-    # with open("./intrusion_recover.pomdp", 'w') as f:
-    #     f.write(pomdp_solver_file_str)
+    pomdp_solver_file_str = IntrusionRecoveryPomdpUtil.pomdp_solver_file(
+        config=input_config)
+    with open("/home/kim/intrusion_recover.pomdp", 'w') as f:
+        f.write(pomdp_solver_file_str)
 
     # from csle_tolerance.util.pomdp_solve_parser import PomdpSolveParser
     # import numpy as np
