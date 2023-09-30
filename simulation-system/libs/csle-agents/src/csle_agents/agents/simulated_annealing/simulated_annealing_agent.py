@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Any
+from typing import Union, List, Optional, Any, Dict
 import math
 import time
 import random
@@ -34,7 +34,7 @@ class SimulatedAnnealingAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
-                 experiment_config: ExperimentConfig, T: int, cooling_factor: float,
+                 experiment_config: ExperimentConfig, T: int = 100, cooling_factor: float = 0.95,
                  env: Optional[BaseEnv] = None, training_job: Optional[TrainingJobConfig] = None,
                  save_to_metastore: bool = True):
         """
@@ -43,6 +43,7 @@ class SimulatedAnnealingAgent(BaseAgent):
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
         :param experiment_config: the experiment config
+        :param T: inital temperature
         :param env: (optional) the gym environment to use for simulation
         :param training_job: (optional) a training job configuration
         :param save_to_metastore: boolean flag that can be set to avoid saving results and progress to the metastore
@@ -152,7 +153,8 @@ class SimulatedAnnealingAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
             exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed, T=self.T,
                                                   cooling_factor=self.cooling_factor,
-                                                  random_seeds=self.experiment_config.random_seeds)
+                                                  random_seeds=self.experiment_config.random_seeds,
+                                                  training_job=self.training_job)
             # Save latest trace
             if self.save_to_metastore:
                 MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
@@ -202,6 +204,16 @@ class SimulatedAnnealingAgent(BaseAgent):
             MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                         id=self.exp_execution.id)
         return self.exp_execution
+
+    def hparam_names(self) -> List[str]:
+        """
+        :return: a list with the hyperparameter names
+        """
+        return [agents_constants.SIMULATED_ANNEALING.N, agents_constants.SIMULATED_ANNEALING.DELTA,
+                agents_constants.SIMULATED_ANNEALING.L, agents_constants.SIMULATED_ANNEALING.THETA1,
+                agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.COMMON.CONFIDENCE_INTERVAL,
+                agents_constants.COMMON.RUNNING_AVERAGE]
 
     def simulated_annealing(self, exp_result, seed, T, cooling_factor, random_seeds: List[int],
                             training_job: TrainingJobConfig):
@@ -342,7 +354,7 @@ class SimulatedAnnealingAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[RANDOM-SEARCH] i: {i}, J:{J}, "
+                    f"[SIMULATED-ANNEALING] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -355,6 +367,87 @@ class SimulatedAnnealingAgent(BaseAgent):
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
+
+    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
+        """
+        Evaluates a given threshold policy by running monte-carlo simulations
+
+        :param policy: the policy to evaluate
+        :return: the average metrics of the evaluation
+        """
+        if self.env is None:
+            raise ValueError("Need to specify an environment to run policy evaluation")
+        eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
+        metrics: Dict[str, Any] = {}
+        for j in range(eval_batch_size):
+            done = False
+            o, _ = self.env.reset()
+            l = int(o[0])
+            b1 = o[1]
+            t = 1
+            r = 0
+            a = 0
+            info: Dict[str, Any] = {}
+            while not done and t <= max_steps:
+                Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
+                if self.experiment_config.player_type == PlayerType.ATTACKER:
+                    policy.opponent_strategy = self.env.static_defender_strategy
+                    a = policy.action(o=o)
+                else:
+                    a = policy.action(o=o)
+                o, r, done, _, info = self.env.step(a)
+                l = int(o[0])
+                b1 = o[1]
+                t += 1
+            metrics = SimulatedAnnealingAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = SimulatedAnnealingAgent.compute_avg_metrics(metrics=metrics)
+        return avg_metrics
+
+    def random_perturbation(self, delta: float, theta: npt.NDArray[Any]) -> npt.NDArray[Any]:
+        """
+        Performs a random perturbation to the theta vector
+
+        :param delta: the step size for the perturbation
+        :param theta: the current theta vector
+        :return: the perturbed theta vector
+        """
+        perturbed_theta = []
+        for l in range(len(theta)):
+            Delta = np.random.uniform(-delta, delta)
+            perturbed_theta.append(theta[l] + Delta)
+        return np.array(perturbed_theta)
+
+    @staticmethod
+    def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
+            -> Dict[str, List[Union[float, int]]]:
+        """
+        Update a dict with aggregated metrics using new information from the environment
+
+        :param metrics: the dict with the aggregated metrics
+        :param info: the new information
+        :return: the updated dict
+        """
+        for k, v in info.items():
+            if k in metrics:
+                metrics[k].append(round(v, 3))
+            else:
+                metrics[k] = [v]
+        return metrics
+
+    @staticmethod
+    def compute_avg_metrics(metrics: Dict[str, List[Union[float, int]]]) -> Dict[str, Union[float, int]]:
+        """
+        Computes the average metrics of a dict with aggregated metrics
+
+        :param metrics: the dict with the aggregated metrics
+        :return: the average metrics
+        """
+        avg_metrics = {}
+        for k, v in metrics.items():
+            avg = round(sum(v) / len(v), 2)
+            avg_metrics[k] = avg
+        return avg_metrics
 
     @staticmethod
     def initial_theta(L: int) -> npt.NDArray[Any]:

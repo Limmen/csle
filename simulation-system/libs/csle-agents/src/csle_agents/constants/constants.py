@@ -178,7 +178,7 @@ class RANDOM_SEARCH:
 
 class SIMULATED_ANNEALING:
     """
-    String constants related som simulated annealing
+    String constants related to simulated annealing
     """
     L = "L"
     N = "N"
