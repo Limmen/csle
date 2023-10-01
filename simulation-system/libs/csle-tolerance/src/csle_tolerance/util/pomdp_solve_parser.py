@@ -40,10 +40,10 @@ class PomdpSolveParser:
         :return: the optimal average value
         """
         alpha_vectors = PomdpSolveParser.parse_alpha_vectors(file_path=file_path_to_alpha_vectors)
-        b_vec = [1 - initial_belief, initial_belief]
-        dot_vals = []
+        b_vec: List[float] = [1.0 - initial_belief, initial_belief]
+        dot_vals: List[float] = []
         for i in range(len(alpha_vectors)):
             dot_vals.append(-np.dot(b_vec, alpha_vectors[i][1][0:2]))
-        min_index = np.argmin(dot_vals)
-        value = dot_vals[min_index]
-        return value / btr
+        min_index: int = int(np.argmin(dot_vals))
+        value: float = dot_vals[min_index]
+        return float(value / btr)
