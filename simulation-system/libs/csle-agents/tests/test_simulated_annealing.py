@@ -35,15 +35,16 @@ class TestSimulatedAnnealingSuite:
             log_every=1,
             hparams={
                 agents_constants.SIMULATED_ANNEALING.N: HParam(value=2, name=constants.T_SPSA.N,
-                                                         descr="the number of training iterations"),
-                agents_constants.SIMULATED_ANNEALING.DELTA: HParam(value=0.5, name=agents_constants.SIMULATED_ANNEALING.DELTA,
-                                                             descr="the step size for random perturbations"),
+                                                               descr="the number of training iterations"),
+                agents_constants.SIMULATED_ANNEALING.DELTA: HParam(value=0.5,
+                                                                   name=agents_constants.SIMULATED_ANNEALING.DELTA,
+                                                                   descr="the step size for random perturbations"),
                 agents_constants.SIMULATED_ANNEALING.L: HParam(value=1, name="L", descr="the number of stop actions"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
                 agents_constants.SIMULATED_ANNEALING.THETA1: HParam(value=[-3, -3, -3],
-                                                              name=agents_constants.SIMULATED_ANNEALING.THETA1,
-                                                              descr="initial thresholds"),
+                                                                    name=agents_constants.SIMULATED_ANNEALING.THETA1,
+                                                                    descr="initial thresholds"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -116,7 +117,7 @@ class TestSimulatedAnnealingSuite:
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
         SimulatedAnnealingAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                          experiment_config=experiment_config)
+                                experiment_config=experiment_config)
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
@@ -151,8 +152,8 @@ class TestSimulatedAnnealingSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
         agent = SimulatedAnnealingAgent(emulation_env_config=emulation_env_config,
-                                  simulation_env_config=simulation_env_config,
-                                  experiment_config=experiment_config)
+                                        simulation_env_config=simulation_env_config,
+                                        experiment_config=experiment_config)
         experiment_execution = agent.train()
         assert experiment_execution is not None
         assert experiment_execution.descr != ""

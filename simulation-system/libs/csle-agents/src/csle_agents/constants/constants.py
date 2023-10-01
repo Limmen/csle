@@ -189,6 +189,8 @@ class SIMULATED_ANNEALING:
     THETAS = "thetas"
     DELTA = "delta"
     POLICY_TYPE = "policy_type"
+    COOLING_FACTOR = "cooling_factor"
+    INITIAL_TEMPERATURE = "initial_temperature"
 
 
 class BAYESIAN_OPTIMIZATION:

@@ -29,7 +29,15 @@ if __name__ == '__main__':
             agents_constants.SIMULATED_ANNEALING.DELTA: HParam(value=0.5,
                                                                name=agents_constants.SIMULATED_ANNEALING.DELTA,
                                                                descr="the step size for random perturbations"),
-            agents_constants.SIMULATED_ANNEALING.L: HParam(value=3, name="L", descr="the number of stop actions"),
+            agents_constants.SIMULATED_ANNEALING.L: HParam(
+                value=3, name=agents_constants.SIMULATED_ANNEALING.L,
+                descr="the number of stop actions"),
+            agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR: HParam(
+                value=0.95, name=agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR,
+                descr="the cooling factor for simulated annealing"),
+            agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE: HParam(
+                value=100, name=agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE,
+                descr="the initial temperature for simulated annealing"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.SIMULATED_ANNEALING.THETA1: HParam(value=[-3, -3, -3],

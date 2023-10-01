@@ -34,7 +34,7 @@ class SimulatedAnnealingAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
-                 experiment_config: ExperimentConfig, T: int = 100, cooling_factor: float = 0.95,
+                 experiment_config: ExperimentConfig,
                  env: Optional[BaseEnv] = None, training_job: Optional[TrainingJobConfig] = None,
                  save_to_metastore: bool = True):
         """
@@ -43,7 +43,6 @@ class SimulatedAnnealingAgent(BaseAgent):
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
         :param experiment_config: the experiment config
-        :param T: inital temperature
         :param env: (optional) the gym environment to use for simulation
         :param training_job: (optional) a training job configuration
         :param save_to_metastore: boolean flag that can be set to avoid saving results and progress to the metastore
@@ -54,12 +53,10 @@ class SimulatedAnnealingAgent(BaseAgent):
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-        self.T = T
-        self.cooling_factor = cooling_factor
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using random search
+        Performs the policy training for the given random seeds using simulated annealing
 
         :return: the training metrics and the trained policies
         """
@@ -151,8 +148,7 @@ class SimulatedAnnealingAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed, T=self.T,
-                                                  cooling_factor=self.cooling_factor,
+            exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed,
                                                   random_seeds=self.experiment_config.random_seeds,
                                                   training_job=self.training_job)
             # Save latest trace
@@ -215,19 +211,19 @@ class SimulatedAnnealingAgent(BaseAgent):
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def simulated_annealing(self, exp_result, seed, T, cooling_factor, random_seeds: List[int],
+    def simulated_annealing(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                             training_job: TrainingJobConfig):
         """
         Runs the simulated annealing algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
-        :param T: the initial temperature
-        :param cooling factor: the cooling factor in which the rate of T is decreased
         :param training_job: the training job config
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
+        cooling_factor = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR].value
+        T = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE].value
         L = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value
         if agents_constants.SIMULATED_ANNEALING.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.THETA1].value

@@ -87,6 +87,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 26) {
         return "BAYESIAN OPTIMIZATION EMUKIT"
     }
+    if(agentType === 27) {
+        return "SIMULATED ANNEALING"
+    }
     else {
         return "Unknown"
     }
