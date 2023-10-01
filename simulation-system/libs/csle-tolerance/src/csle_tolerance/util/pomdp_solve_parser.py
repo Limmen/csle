@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import numpy as np
 
 
 class PomdpSolveParser:
@@ -27,3 +28,22 @@ class PomdpSolveParser:
                                         list(filter(lambda x: x != '', non_empty_lines[line_index + 1].split(" ")))))
                 alpha_vectors.append((action, alpha_vector))
             return alpha_vectors
+
+    @staticmethod
+    def optimal_avg_value(file_path_to_alpha_vectors: str, initial_belief: float, btr: int) -> float:
+        """
+        Computes the optimal average value given a set of alpha vectors
+
+        :param file_path_to_alpha_vectors:
+        :param initial_belief: the belief to compute the value for
+        :param btr: the BTR constraint/horizon
+        :return: the optimal average value
+        """
+        alpha_vectors = PomdpSolveParser.parse_alpha_vectors(file_path=file_path_to_alpha_vectors)
+        b_vec = [1 - initial_belief, initial_belief]
+        dot_vals = []
+        for i in range(len(alpha_vectors)):
+            dot_vals.append(-np.dot(b_vec, alpha_vectors[i][1][0:2]))
+        min_index = np.argmin(dot_vals)
+        value = dot_vals[min_index]
+        return value / btr
