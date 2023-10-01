@@ -177,6 +177,23 @@ class RANDOM_SEARCH:
     OBJECTIVE_TYPE = "objective_type"
 
 
+class SIMULATED_ANNEALING:
+    """
+    String constants related to simulated annealing
+    """
+    L = "L"
+    N = "N"
+    THETA1 = "theta1"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    THETAS = "thetas"
+    DELTA = "delta"
+    POLICY_TYPE = "policy_type"
+    COOLING_FACTOR = "cooling_factor"
+    INITIAL_TEMPERATURE = "initial_temperature"
+
+
 class BAYESIAN_OPTIMIZATION:
     """
     String constants related to Bayesian Optimization
