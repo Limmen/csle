@@ -22,6 +22,8 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
 from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
+from csle_common.dao.management.management_user import ManagementUser
+from csle_common.dao.management.session_token import SessionToken
 import pytest_mock
 
 
@@ -4376,3 +4378,335 @@ class TestMetastoreFacadeSuite:
             (example_gp_system_model.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
+
+    def test_convert_management_user_record_to_dto(self, example_management_user: ManagementUser) -> None:
+        """
+        Tests the _convert_management_user_record_to_dto function
+
+        :param example_management_user: an example ManagementUser object
+        :return: None
+        """
+        id = 1
+        example_management_user.id = 1
+        example_record = (id, example_management_user.username, example_management_user.password,
+                          example_management_user.email, example_management_user.first_name,
+                          example_management_user.last_name, example_management_user.organization,
+                          example_management_user.admin, example_management_user.salt)
+        converted_object = MetastoreFacade._convert_management_user_record_to_dto(
+            management_user_record=example_record)
+        assert isinstance(converted_object, ManagementUser)
+        assert converted_object == example_management_user
+
+    def test_list_management_users(self, mocker: pytest_mock.MockFixture,
+                                   example_management_user: ManagementUser) -> None:
+        """
+        Tests the list_management_users function
+
+        :param mocker: the pytest mocker object
+        :param example_management_user: an example ManagementUser object
+        :return: None
+        """
+        id = 1
+        example_management_user.id = id
+        example_record = (id, example_management_user.username, example_management_user.password,
+                          example_management_user.email, example_management_user.first_name,
+                          example_management_user.last_name, example_management_user.organization,
+                          example_management_user.admin, example_management_user.salt)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        management_user = MetastoreFacade.list_management_users()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(management_user, list)
+        assert isinstance(management_user[0], ManagementUser)
+        assert management_user[0] == example_management_user
+
+    def test_list_management_users_ids(self, mocker: pytest_mock.MockFixture,
+                                       example_management_user: ManagementUser) -> None:
+        """
+        Tests the list_management_users_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_management_user: ManagementUser object
+        :return: None
+        """
+        id = 1
+        example_management_user.id = id
+        example_record = (example_management_user.id,)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        management_users_ids = MetastoreFacade.list_management_users_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id FROM "
+            f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(management_users_ids, list)
+        assert isinstance(management_users_ids[0], int)
+        assert management_users_ids[0] == example_record[0]
+
+    def test_get_management_user_config(self, mocker: pytest_mock.MockFixture,
+                                        example_management_user: ManagementUser) -> None:
+        """
+        Tests the get_management_user_config function
+
+        :param example_management_user: an example ManagementUser object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_management_user.id = id
+        example_record = (id, example_management_user.username, example_management_user.password,
+                          example_management_user.email, example_management_user.first_name,
+                          example_management_user.last_name, example_management_user.organization,
+                          example_management_user.admin, example_management_user.salt)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        management_user_config = MetastoreFacade.get_management_user_config(id=example_management_user.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+            f"WHERE id = %s", (example_management_user.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(management_user_config, ManagementUser)
+        assert management_user_config == example_management_user
+
+    def test_save_management_user(self, mocker: pytest_mock.MockFixture,
+                                  example_management_user: ManagementUser) -> None:
+        """
+        Tests the save_management_user function
+
+        :param mocker: the pytest mocker object
+        :param example_management_user: an example ManagementUser object
+        :return: None
+        """
+        id = 2
+        example_management_user.id = id
+        example_record = (id, example_management_user.username, example_management_user.password,
+                          example_management_user.email, example_management_user.first_name,
+                          example_management_user.last_name, example_management_user.organization,
+                          example_management_user.admin, example_management_user.salt)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_management_user(management_user=example_management_user)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+            f"(id, username, password, email, first_name, last_name, organization, admin, salt) "
+            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+            (example_management_user.id, example_management_user.username, example_management_user.password,
+             example_management_user.email, example_management_user.first_name, example_management_user.last_name,
+             example_management_user.organization, example_management_user.admin, example_management_user.salt))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_management_user(self, mocker: pytest_mock.MockFixture,
+                                    example_management_user: ManagementUser) -> None:
+        """
+        Tests the update_management_user function
+
+        :param mocker: the pytest mocker object
+        :param example_management_user: an example ManagementUser object
+        :return: None
+        """
+        id = 2
+        example_management_user.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_management_user(management_user=example_management_user,
+                                                        id=example_management_user.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+            f" SET username=%s, password=%s, email=%s, first_name=%s, last_name=%s, organization=%s, "
+            f"admin=%s, salt=%s WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
+            (example_management_user.username, example_management_user.password, example_management_user.email,
+             example_management_user.first_name, example_management_user.last_name, example_management_user.organization,
+             example_management_user.admin, example_management_user.salt, id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_management_user(self, mocker: pytest_mock.MockFixture,
+                                    example_management_user: ManagementUser) -> None:
+        """
+        Tests the remove_management_user function
+
+        :param mocker: the pytest mocker object
+        :param example_management_user: an example ManagementUser object
+        :return: None
+        """
+        example_management_user.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_management_user(management_user=example_management_user)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} WHERE id = %s",
+            (example_management_user.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_get_management_user_by_username(self, mocker: pytest_mock.MockFixture,
+                                             example_management_user: ManagementUser) -> None:
+        """
+        Tests the get_management_user_by_username function
+
+        :param example_management_user: an example ManagementUser object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_management_user.id = id
+        example_record = (id, example_management_user.username, example_management_user.password,
+                          example_management_user.email, example_management_user.first_name,
+                          example_management_user.last_name, example_management_user.organization,
+                          example_management_user.admin, example_management_user.salt)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        management_user_config = MetastoreFacade.get_management_user_by_username(
+            username=example_management_user.username)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+            f"WHERE username = %s", (example_management_user.username,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(management_user_config, ManagementUser)
+        assert management_user_config == example_management_user
+
+    def test_convert_session_token_record_to_dto(self, example_session_token: SessionToken) -> None:
+        """
+        Tests the _convert_session_token_record_to_dto function
+
+        :param example_session_token: an example SessionToken object
+        :return: None
+        """
+        example_record = (example_session_token.token, example_session_token.timestamp, example_session_token.username)
+        converted_object = MetastoreFacade._convert_session_token_record_to_dto(
+            session_token_record=example_record)
+        assert isinstance(converted_object, SessionToken)
+        assert converted_object == example_session_token
+
+    def test_list_session_tokens(self, mocker: pytest_mock.MockFixture,
+                                 example_session_token: SessionToken) -> None:
+        """
+        Tests the list_session_tokens function
+
+        :param mocker: the pytest mocker object
+        :param example_session_token: an example SessionToken object
+        :return: None
+        """
+
+        example_record = (example_session_token.token, example_session_token.timestamp, example_session_token.username)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        session_token = MetastoreFacade.list_session_tokens()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(session_token, list)
+        assert isinstance(session_token[0], SessionToken)
+        assert session_token[0] == example_session_token
+
+    def test_get_session_token_metadata(self, mocker: pytest_mock.MockFixture,
+                                        example_session_token: SessionToken) -> None:
+        """
+        Tests the get_session_token_metadata function
+
+        :param example_session_token: an example SessionToken object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_record = (example_session_token.token, example_session_token.timestamp, example_session_token.username)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        session_token = MetastoreFacade.get_session_token_metadata(token=example_session_token.token)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+            f"WHERE token = %s", (example_session_token.token,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(session_token, SessionToken)
+        assert session_token == example_session_token
+
+    def test_save_session_token(self, mocker: pytest_mock.MockFixture, example_session_token: SessionToken) -> None:
+        """
+        Tests the save_session_token function
+
+        :param mocker: the pytest mocker object
+        :param example_session_token: an example SessionToken object
+        :return: None
+        """
+        example_record = (example_session_token.token, example_session_token.timestamp, example_session_token.username)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_session_token(session_token=example_session_token)
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, str)
+        assert inserted_id == example_session_token.token
