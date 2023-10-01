@@ -19,6 +19,8 @@ from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
 from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
 import pytest_mock
 
 
@@ -3767,5 +3769,409 @@ class TestMetastoreFacadeSuite:
             f"AND {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}.emulation_name = %s",
             (example_emulation_execution.to_json_str(), example_emulation_execution.ip_first_octet,
              example_emulation_execution.emulation_name))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_convert_empirical_system_model_record_to_dto(self, mocker: pytest_mock.MockFixture,
+                                                          example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the _convert_empirical_system_model_record_to_dto function
+
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :return: None
+        """
+        id = 1
+        example_empirical_system_model.id = 1
+        example_record = (id, example_empirical_system_model.to_dict(),
+                          example_empirical_system_model.emulation_env_name,
+                          example_empirical_system_model.emulation_statistic_id)
+        converted_object = MetastoreFacade._convert_empirical_system_model_record_to_dto(
+            empirical_system_model_record=example_record)
+        assert isinstance(converted_object, EmpiricalSystemModel)
+        assert converted_object == example_empirical_system_model
+
+    def test_list_empirical_system_models(self, mocker: pytest_mock.MockFixture,
+                                          example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the list_empirical_system_models function
+
+        :param mocker: the pytest mocker object
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :return: None
+        """
+        id = 1
+        example_empirical_system_model.id = id
+        example_record = (id, example_empirical_system_model.to_dict(),
+                          example_empirical_system_model.emulation_env_name,
+                          example_empirical_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        empirical_system_models = MetastoreFacade.list_empirical_system_models()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(empirical_system_models, list)
+        assert isinstance(empirical_system_models[0], EmpiricalSystemModel)
+        assert empirical_system_models[0] == example_empirical_system_model
+
+    def test_list_empirical_system_models_ids(self, mocker: pytest_mock.MockFixture,
+                                              example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the list_empirical_system_models_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_empirical_system_model: EmpiricalSystemModel object
+        :return: None
+        """
+        id = 1
+        example_record = (id, example_empirical_system_model.emulation_env_name,
+                          example_empirical_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        empirical_system_models_ids = MetastoreFacade.list_empirical_system_models_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,emulation_name,emulation_statistic_id FROM "
+            f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(empirical_system_models_ids, list)
+        assert isinstance(empirical_system_models_ids[0], tuple)
+        assert isinstance(empirical_system_models_ids[0][0], int)
+        assert isinstance(empirical_system_models_ids[0][1], str)
+        assert isinstance(empirical_system_models_ids[0][2], int)
+        assert empirical_system_models_ids[0] == example_record
+
+    def test_get_empirical_system_model_config(self, mocker: pytest_mock.MockFixture,
+                                               example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the get_empirical_system_model_config function
+
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_empirical_system_model.id = id
+        example_record = (id, example_empirical_system_model.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        empirical_system_model_config = MetastoreFacade.get_empirical_system_model_config(
+            id=example_empirical_system_model.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+            f"WHERE id = %s", (example_empirical_system_model.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(empirical_system_model_config, EmpiricalSystemModel)
+        assert empirical_system_model_config == example_empirical_system_model
+
+    def test_save_empirical_system_model(self, mocker: pytest_mock.MockFixture,
+                                         example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the save_empirical_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :return: None
+        """
+        id = 2
+        example_empirical_system_model.id = id
+        example_record = (example_empirical_system_model.id, example_empirical_system_model.to_dict(),
+                          example_empirical_system_model.emulation_env_name,
+                          example_empirical_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_empirical_system_model(empirical_system_model=example_empirical_system_model)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+            f"(id, model, emulation_name, emulation_statistic_id) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, example_empirical_system_model.to_json_str(),
+                                                      example_empirical_system_model.emulation_env_name,
+                                                      example_empirical_system_model.emulation_statistic_id))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_empirical_system_model(self, mocker: pytest_mock.MockFixture,
+                                           example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the update_empirical_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :return: None
+        """
+        id = 2
+        example_empirical_system_model.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_empirical_system_model(empirical_system_model=example_empirical_system_model,
+                                                               id=example_empirical_system_model.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+            f" SET config=%s "f"WHERE {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}.id = %s",
+            (example_empirical_system_model.to_json_str(), example_empirical_system_model.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_empirical_system_model(self, mocker: pytest_mock.MockFixture,
+                                           example_empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Tests the remove_empirical_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_empirical_system_model: an example EmpiricalSystemModel object
+        :return: None
+        """
+        example_empirical_system_model.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_empirical_system_model(empirical_system_model=example_empirical_system_model)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} WHERE id = %s",
+            (example_empirical_system_model.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_convert_mcmc_system_model_record_to_dto(self, example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the _convert_mcmc_system_model_record_to_dto function
+
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :return: None
+        """
+        id = 1
+        example_mcmc_system_model.id = 1
+        example_record = (id, example_mcmc_system_model.to_dict(),
+                          example_mcmc_system_model.emulation_env_name,
+                          example_mcmc_system_model.emulation_statistic_id)
+        converted_object = MetastoreFacade._convert_mcmc_system_model_record_to_dto(
+            mcmc_system_model_record=example_record)
+        assert isinstance(converted_object, MCMCSystemModel)
+        assert converted_object == example_mcmc_system_model
+
+    def test_list_mcmc_system_models(self, mocker: pytest_mock.MockFixture,
+                                     example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the list_mcmc_system_models function
+
+        :param mocker: the pytest mocker object
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :return: None
+        """
+        id = 1
+        example_mcmc_system_model.id = id
+        example_record = (id, example_mcmc_system_model.to_dict(),
+                          example_mcmc_system_model.emulation_env_name,
+                          example_mcmc_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        mcmc_system_models = MetastoreFacade.list_mcmc_system_models()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(mcmc_system_models, list)
+        assert isinstance(mcmc_system_models[0], MCMCSystemModel)
+        assert mcmc_system_models[0] == example_mcmc_system_model
+
+    def test_list_mcmc_system_models_ids(self, mocker: pytest_mock.MockFixture,
+                                         example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the list_mcmc_system_models_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_mcmc_system_model: MCMCSystemModel object
+        :return: None
+        """
+        id = 1
+        example_record = (id, example_mcmc_system_model.emulation_env_name,
+                          example_mcmc_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        mcmc_system_models_ids = MetastoreFacade.list_mcmc_system_models_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,emulation_name,emulation_statistic_id FROM "
+            f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(mcmc_system_models_ids, list)
+        assert isinstance(mcmc_system_models_ids[0], tuple)
+        assert isinstance(mcmc_system_models_ids[0][0], int)
+        assert isinstance(mcmc_system_models_ids[0][1], str)
+        assert isinstance(mcmc_system_models_ids[0][2], int)
+        assert mcmc_system_models_ids[0] == example_record
+
+    def test_get_mcmc_system_model_config(self, mocker: pytest_mock.MockFixture,
+                                          example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the get_mcmc_system_model_config function
+
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_mcmc_system_model.id = id
+        example_record = (id, example_mcmc_system_model.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        mcmc_system_model_config = MetastoreFacade.get_mcmc_system_model_config(
+            id=example_mcmc_system_model.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+            f"WHERE id = %s", (example_mcmc_system_model.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(mcmc_system_model_config, MCMCSystemModel)
+        assert mcmc_system_model_config == example_mcmc_system_model
+
+    def test_save_mcmc_system_model(self, mocker: pytest_mock.MockFixture,
+                                    example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the save_mcmc_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :return: None
+        """
+        id = 2
+        example_mcmc_system_model.id = id
+        example_record = (example_mcmc_system_model.id, example_mcmc_system_model.to_dict(),
+                          example_mcmc_system_model.emulation_env_name,
+                          example_mcmc_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_mcmc_system_model(mcmc_system_model=example_mcmc_system_model)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+            f"(id, model, emulation_name, emulation_statistic_id) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, example_mcmc_system_model.to_json_str(),
+                                                      example_mcmc_system_model.emulation_env_name,
+                                                      example_mcmc_system_model.emulation_statistic_id))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_mcmc_system_model(self, mocker: pytest_mock.MockFixture,
+                                      example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the update_mcmc_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :return: None
+        """
+        id = 2
+        example_mcmc_system_model.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_mcmc_system_model(mcmc_system_model=example_mcmc_system_model,
+                                                          id=example_mcmc_system_model.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}.id = %s",
+            (example_mcmc_system_model.to_json_str(), example_mcmc_system_model.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_mcmc_system_model(self, mocker: pytest_mock.MockFixture,
+                                      example_mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Tests the remove_mcmc_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_mcmc_system_model: an example MCMCSystemModel object
+        :return: None
+        """
+        example_mcmc_system_model.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_mcmc_system_model(mcmc_system_model=example_mcmc_system_model)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} WHERE id = %s",
+            (example_mcmc_system_model.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
