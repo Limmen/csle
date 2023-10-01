@@ -2632,7 +2632,7 @@ class MetastoreFacade:
                                                      f"deleted successfully")
 
     @staticmethod
-    def save_emulation_execution(emulation_execution: EmulationExecution) -> None:
+    def save_emulation_execution(emulation_execution: EmulationExecution) -> Union[Any, int]:
         """
         Saves a emulation execution to the metastore
 
@@ -2654,9 +2654,13 @@ class MetastoreFacade:
                                 emulation_execution.ip_first_octet,
                                 emulation_execution.emulation_name,
                                 emulation_execution_str))
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("emulation execution saved successfully")
-                return None
+                return id_of_new_row
 
     @staticmethod
     def update_emulation_execution(emulation_execution: EmulationExecution, ip_first_octet: int,
