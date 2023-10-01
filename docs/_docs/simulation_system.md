@@ -105,7 +105,8 @@ Listing 2: Example of strategy optimization through the Q-learning algorithm in 
 | *Name*                                                           | *Algorithm type*          |
 |------------------------------------------------------------------|---------------------------|
 | Bayesian optimization                                            | Black-box optimization    |
-| Cross-entropy                                                    | Black-box optimization    |
+| Cross-entropy method                                             | Black-box optimization    |
+| Simulated annealing                                              | Black-box optimization    |
 | Differential evolution                                           | Evolutionary computation  |
 | Deep Q-network (DQN)                                             | Reinforcement learning    |
 | Fictitious Self-Play                                             | Computational game theory |
