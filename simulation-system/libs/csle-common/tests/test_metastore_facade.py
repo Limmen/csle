@@ -21,6 +21,7 @@ from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
 from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
+from csle_common.dao.system_identification.gp_system_model import GPSystemModel
 import pytest_mock
 
 
@@ -4173,5 +4174,205 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.execute.assert_called_once_with(
             f"DELETE FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} WHERE id = %s",
             (example_mcmc_system_model.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_convert_gp_system_model_record_to_dto(self, example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the _convert_gp_system_model_record_to_dto function
+
+        :param example_gp_system_model: an example GPSystemModel object
+        :return: None
+        """
+        id = 1
+        example_gp_system_model.id = 1
+        example_record = (id, example_gp_system_model.to_dict(),
+                          example_gp_system_model.emulation_env_name,
+                          example_gp_system_model.emulation_statistic_id)
+        converted_object = MetastoreFacade._convert_gp_system_model_record_to_dto(gp_system_model_record=example_record)
+        assert isinstance(converted_object, GPSystemModel)
+        assert converted_object == example_gp_system_model
+
+    def test_list_gp_system_models(self, mocker: pytest_mock.MockFixture,
+                                   example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the list_gp_system_models function
+
+        :param mocker: the pytest mocker object
+        :param example_gp_system_model: an example GPSystemModel object
+        :return: None
+        """
+        id = 1
+        example_gp_system_model.id = id
+        example_record = (id, example_gp_system_model.to_dict(),
+                          example_gp_system_model.emulation_env_name,
+                          example_gp_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        gp_system_model = MetastoreFacade.list_gp_system_models()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(gp_system_model, list)
+        assert isinstance(gp_system_model[0], GPSystemModel)
+        assert gp_system_model[0] == example_gp_system_model
+
+    def test_list_gp_system_models_ids(self, mocker: pytest_mock.MockFixture,
+                                       example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the list_gp_system_models_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_gp_system_model: GPSystemModel object
+        :return: None
+        """
+        id = 1
+        example_record = (id, example_gp_system_model.emulation_env_name,
+                          example_gp_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        gp_system_model = MetastoreFacade.list_gp_system_models_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,emulation_name,emulation_statistic_id FROM "
+            f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(gp_system_model, list)
+        assert isinstance(gp_system_model[0], tuple)
+        assert isinstance(gp_system_model[0][0], int)
+        assert isinstance(gp_system_model[0][1], str)
+        assert isinstance(gp_system_model[0][2], int)
+        assert gp_system_model[0] == example_record
+
+    def test_get_gp_system_model_config(self, mocker: pytest_mock.MockFixture,
+                                        example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the get_gp_system_model_config function
+
+        :param example_gp_system_model: an example GPSystemModel object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        id = 1
+        example_gp_system_model.id = id
+        example_record = (id, example_gp_system_model.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        gp_system_model = MetastoreFacade.get_gp_system_model_config(id=example_gp_system_model.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+            f"WHERE id = %s", (example_gp_system_model.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(gp_system_model, GPSystemModel)
+        assert gp_system_model == example_gp_system_model
+
+    def test_save_gp_system_model(self, mocker: pytest_mock.MockFixture,
+                                  example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the save_gp_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gp_system_model: an example GPSystemModel object
+        :return: None
+        """
+        id = 2
+        example_gp_system_model.id = id
+        example_record = (example_gp_system_model.id, example_gp_system_model.to_dict(),
+                          example_gp_system_model.emulation_env_name,
+                          example_gp_system_model.emulation_statistic_id)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_gp_system_model(gp_system_model=example_gp_system_model)
+        mocked_cursor.execute.assert_called_once_with(
+            f"INSERT INTO {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+            f"(id, model, emulation_name, emulation_statistic_id) "
+            f"VALUES (%s, %s, %s, %s) RETURNING id", (example_gp_system_model.id, example_gp_system_model.to_json_str(),
+                                                      example_gp_system_model.emulation_env_name,
+                                                      example_gp_system_model.emulation_statistic_id))
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == id
+
+    def test_update_gp_system_model(self, mocker: pytest_mock.MockFixture,
+                                    example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the update_gp_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gp_system_model: an example GPSystemModel object
+        :return: None
+        """
+        id = 2
+        example_gp_system_model.id = id
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_gp_system_model(gp_system_model=example_gp_system_model,
+                                                        id=example_gp_system_model.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}.id = %s",
+            (example_gp_system_model.to_json_str(), id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_gp_system_model(self, mocker: pytest_mock.MockFixture,
+                                    example_gp_system_model: GPSystemModel) -> None:
+        """
+        Tests the remove_gp_system_model function
+
+        :param mocker: the pytest mocker object
+        :param example_gp_system_model: an example GPSystemModel object
+        :return: None
+        """
+        example_gp_system_model.id = 1
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_gp_system_model(gp_system_model=example_gp_system_model)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} WHERE id = %s",
+            (example_gp_system_model.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
