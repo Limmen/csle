@@ -192,6 +192,7 @@ class SIMULATED_ANNEALING:
     POLICY_TYPE = "policy_type"
     COOLING_FACTOR = "cooling_factor"
     INITIAL_TEMPERATURE = "initial_temperature"
+    OBJECTIVE_TYPE = "objective_type"
 
 
 class BAYESIAN_OPTIMIZATION:

@@ -8,6 +8,7 @@ from csle_agents.agents.simulated_annealing.simulated_annealing_agent import Sim
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -59,7 +60,10 @@ if __name__ == '__main__':
                 descr="the discount factor"),
             agents_constants.SIMULATED_ANNEALING.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=agents_constants.SIMULATED_ANNEALING.POLICY_TYPE,
-                descr="policy type for the execution")
+                descr="policy type for the execution"),
+            agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

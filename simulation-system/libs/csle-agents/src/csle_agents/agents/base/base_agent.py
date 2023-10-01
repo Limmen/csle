@@ -2,14 +2,11 @@ from typing import List, Union
 from abc import ABC, abstractmethod
 import os
 import time
-import sys
-
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.logging.log import Logger
-sys.path.insert(1, '/home/nils/csle/simulation-system/libs/csle-tolerance/src')
 from csle_tolerance.util.general_util import GeneralUtil
 
 

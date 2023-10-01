@@ -14,6 +14,7 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
+from csle_agents.common.objective_type import ObjectiveType
 
 
 class TestSimulatedAnnealingSuite:
@@ -61,7 +62,16 @@ class TestSimulatedAnnealingSuite:
                     descr="the discount factor"),
                 agents_constants.SIMULATED_ANNEALING.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD, name=agents_constants.SIMULATED_ANNEALING.POLICY_TYPE,
-                    descr="policy type for the execution")
+                    descr="policy type for the execution"),
+                agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR: HParam(
+                    value=0.95, name=agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR,
+                    descr="The cooling factor for simulated annealing"),
+                agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE: HParam(
+                    value=100, name=agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE,
+                    descr="The initial temperature for simulated annealing"),
+                agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MAX, name=agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE,
+                    descr="The objective type for the optimization")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

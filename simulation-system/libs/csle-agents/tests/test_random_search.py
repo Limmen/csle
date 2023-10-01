@@ -13,6 +13,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
+from csle_agents.common.objective_type import ObjectiveType
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
@@ -60,7 +61,10 @@ class TestRandomSearchSuite:
                     descr="the discount factor"),
                 agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
-                    descr="policy type for the execution")
+                    descr="policy type for the execution"),
+                agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MAX, name=agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE,
+                    descr="The objective type for the optimization")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )
