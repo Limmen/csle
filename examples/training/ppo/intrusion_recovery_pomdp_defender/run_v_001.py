@@ -29,7 +29,7 @@ if __name__ == '__main__':
     p_c_1 = 0.00001
     p_c_2 = 0.001
     p_u = 0.02
-    BTR = 5
+    BTR = 3
     negate_costs = True
     discount_factor = 1
     num_observations = 1000
@@ -117,7 +117,9 @@ if __name__ == '__main__':
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg")
+                descr="the number of samples to include when computing the running avg"),
+            agents_constants.COMMON.L: HParam(value=BTR, name=agents_constants.COMMON.L,
+                                              descr="the number of stop actions")
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )
