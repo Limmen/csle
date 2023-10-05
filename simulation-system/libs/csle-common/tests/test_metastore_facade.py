@@ -28,6 +28,8 @@ from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
 from csle_common.dao.encoding.np_encoder import NpEncoder
+from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
+
 
 class TestMetastoreFacadeSuite:
     """
@@ -4557,7 +4559,8 @@ class TestMetastoreFacadeSuite:
             f" SET username=%s, password=%s, email=%s, first_name=%s, last_name=%s, organization=%s, "
             f"admin=%s, salt=%s WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
             (example_management_user.username, example_management_user.password, example_management_user.email,
-             example_management_user.first_name, example_management_user.last_name, example_management_user.organization,
+             example_management_user.first_name, example_management_user.last_name,
+             example_management_user.organization,
              example_management_user.admin, example_management_user.salt, id))
         mocked_connection.commit.assert_called_once()
         assert result is None
@@ -4911,7 +4914,7 @@ class TestMetastoreFacadeSuite:
         assert traces_dataset_metadata == example_traces_dataset
 
     def test_get_traces_dataset_metadata_by_name(self, mocker: pytest_mock.MockFixture,
-                                         example_traces_dataset: TracesDataset) -> None:
+                                                 example_traces_dataset: TracesDataset) -> None:
         """
         Tests the get_traces_dataset_metadata_by_name function
 
@@ -5041,3 +5044,58 @@ class TestMetastoreFacadeSuite:
             (example_traces_dataset.id,))
         mocked_connection.commit.assert_called_once()
         assert result is None
+
+    def test_convert_statistics_dataset_record_to_dto(self, example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the _convert_statistics_dataset_record_to_dto function
+
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :return: None
+        """
+        example_statistics_dataset.id = 1
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name,
+                          example_statistics_dataset.description, example_statistics_dataset.download_count,
+                          example_statistics_dataset.file_path, example_statistics_dataset.url,
+                          example_statistics_dataset.date_added,
+                          example_statistics_dataset.num_measurements,
+                          example_statistics_dataset.num_metrics,
+                          example_statistics_dataset.size_in_gb,
+                          example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+                          example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+                          example_statistics_dataset.added_by, example_statistics_dataset.conditions,
+                          example_statistics_dataset.metrics, example_statistics_dataset.num_conditions)
+        converted_object = MetastoreFacade._convert_statistics_dataset_record_to_dto(
+            statistics_dataset_record=example_record)
+        assert isinstance(converted_object, StatisticsDataset)
+        assert converted_object == example_statistics_dataset
+
+    def test_list_statistics_datasets_ids(self, mocker: pytest_mock.MockFixture,
+                                          example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the list_statistics_datasets_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_statistics_dataset: StatisticsDataset object
+        :return: None
+        """
+        id = 1
+        example_statistics_dataset.id = id
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        statistics_datasets_ids = MetastoreFacade.list_statistics_datasets_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,name FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(statistics_datasets_ids, list)
+        assert isinstance(statistics_datasets_ids[0], tuple)
+        assert isinstance(statistics_datasets_ids[0][0], int)
+        assert isinstance(statistics_datasets_ids[0][1], str)
+        assert statistics_datasets_ids[0] == example_record
