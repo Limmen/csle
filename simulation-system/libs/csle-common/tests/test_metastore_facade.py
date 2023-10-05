@@ -29,6 +29,8 @@ from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
 from csle_common.dao.encoding.np_encoder import NpEncoder
 from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
+from csle_common.dao.emulation_config.config import Config
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 
 
 class TestMetastoreFacadeSuite:
@@ -5099,3 +5101,556 @@ class TestMetastoreFacadeSuite:
         assert isinstance(statistics_datasets_ids[0][0], int)
         assert isinstance(statistics_datasets_ids[0][1], str)
         assert statistics_datasets_ids[0] == example_record
+
+    def test_list_statistics_datasets(self, mocker: pytest_mock.MockFixture,
+                                      example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the list_statistics_datasets function
+
+        :param mocker: the pytest mocker object
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :return: None
+        """
+        id = 1
+        example_statistics_dataset.id = id
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name,
+                          example_statistics_dataset.description, example_statistics_dataset.download_count,
+                          example_statistics_dataset.file_path, example_statistics_dataset.url,
+                          example_statistics_dataset.date_added,
+                          example_statistics_dataset.num_measurements,
+                          example_statistics_dataset.num_metrics,
+                          example_statistics_dataset.size_in_gb,
+                          example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+                          example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+                          example_statistics_dataset.added_by, example_statistics_dataset.conditions,
+                          example_statistics_dataset.metrics, example_statistics_dataset.num_conditions)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        statistics_datasets = MetastoreFacade.list_statistics_datasets()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(statistics_datasets, list)
+        assert isinstance(statistics_datasets[0], StatisticsDataset)
+        assert statistics_datasets[0] == example_statistics_dataset
+
+    def test_get_statistics_dataset_metadata(self, mocker: pytest_mock.MockFixture,
+                                             example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the get_statistics_dataset_metadata function
+
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_statistics_dataset.id = 1
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name,
+                          example_statistics_dataset.description, example_statistics_dataset.download_count,
+                          example_statistics_dataset.file_path, example_statistics_dataset.url,
+                          example_statistics_dataset.date_added,
+                          example_statistics_dataset.num_measurements,
+                          example_statistics_dataset.num_metrics,
+                          example_statistics_dataset.size_in_gb,
+                          example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+                          example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+                          example_statistics_dataset.added_by, example_statistics_dataset.conditions,
+                          example_statistics_dataset.metrics, example_statistics_dataset.num_conditions)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        statistics_dataset_metadata = MetastoreFacade.get_statistics_dataset_metadata(id=example_statistics_dataset.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+            f"WHERE id = %s", (example_statistics_dataset.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(statistics_dataset_metadata, StatisticsDataset)
+        assert statistics_dataset_metadata == example_statistics_dataset
+
+    def test_get_statistics_dataset_metadata_by_name(self, mocker: pytest_mock.MockFixture,
+                                                     example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the get_statistics_dataset_metadata_by_name function
+
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name,
+                          example_statistics_dataset.description, example_statistics_dataset.download_count,
+                          example_statistics_dataset.file_path, example_statistics_dataset.url,
+                          example_statistics_dataset.date_added,
+                          example_statistics_dataset.num_measurements,
+                          example_statistics_dataset.num_metrics,
+                          example_statistics_dataset.size_in_gb,
+                          example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+                          example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+                          example_statistics_dataset.added_by, example_statistics_dataset.conditions,
+                          example_statistics_dataset.metrics, example_statistics_dataset.num_conditions)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        statistics_dataset_metadata = MetastoreFacade.get_statistics_dataset_metadata_by_name(
+            dataset_name=example_statistics_dataset.name)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+            f"WHERE name = %s", (example_statistics_dataset.name,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(statistics_dataset_metadata, StatisticsDataset)
+        assert statistics_dataset_metadata == example_statistics_dataset
+
+    def test_save_statistics_dataset(self, mocker: pytest_mock.MockFixture,
+                                     example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the save_statistics_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :return: None
+        """
+        example_statistics_dataset.id = 1
+        example_record = (example_statistics_dataset.id, example_statistics_dataset.name,
+                          example_statistics_dataset.description, example_statistics_dataset.download_count,
+                          example_statistics_dataset.file_path, example_statistics_dataset.url,
+                          example_statistics_dataset.date_added,
+                          example_statistics_dataset.num_measurements,
+                          example_statistics_dataset.num_metrics,
+                          example_statistics_dataset.size_in_gb,
+                          example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+                          example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+                          example_statistics_dataset.added_by, example_statistics_dataset.conditions,
+                          example_statistics_dataset.metrics, example_statistics_dataset.num_conditions)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_statistics_dataset(statistics_dataset=example_statistics_dataset)
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == example_statistics_dataset.id
+
+    def test_update_statistics_dataset(self, mocker: pytest_mock.MockFixture,
+                                       example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the update_statistics_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_statistics_dataset(
+            statistics_dataset=example_statistics_dataset, id=example_statistics_dataset.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+            f" SET name=%s, description=%s, download_count=%s, file_path=%s, "
+            f"url=%s, date_added=%s, num_measurements=%s, num_metrics=%s, size_in_gb=%s, "
+            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s, added_by=%s, "
+            f"conditions=%s, metrics=%s, num_conditions=%s "
+            f"WHERE {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}.id = %s",
+            (example_statistics_dataset.name, example_statistics_dataset.description,
+             example_statistics_dataset.download_count, example_statistics_dataset.file_path,
+             example_statistics_dataset.url,
+             example_statistics_dataset.date_added, example_statistics_dataset.num_measurements,
+             example_statistics_dataset.num_metrics, example_statistics_dataset.size_in_gb,
+             example_statistics_dataset.compressed_size_in_gb, example_statistics_dataset.citation,
+             example_statistics_dataset.num_files, example_statistics_dataset.file_format,
+             example_statistics_dataset.added_by,
+             example_statistics_dataset.conditions, example_statistics_dataset.metrics,
+             example_statistics_dataset.num_conditions, example_statistics_dataset.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_statistics_dataset(self, mocker: pytest_mock.MockFixture,
+                                       example_statistics_dataset: StatisticsDataset) -> None:
+        """
+        Tests the remove_statistics_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_statistics_dataset: an example StatisticsDataset object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_statistics_dataset(statistics_dataset=example_statistics_dataset)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} WHERE id = %s",
+            (example_statistics_dataset.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_convert_config_record_to_dto(self, example_config: Config) -> None:
+        """
+        Tests the _convert_config_record_to_dto function
+
+        :param example_config: an example Config object
+        :return: None
+        """
+        example_config.id = 1
+        example_record = (example_config.id, example_config.to_dict())
+        converted_object = MetastoreFacade._convert_config_record_to_dto(config_record=example_record)
+        assert isinstance(converted_object, Config)
+        assert converted_object == example_config
+
+    def test_list_configs(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the list_configs function
+
+        :param mocker: the pytest mocker object
+        :param example_config: an example Config object
+        :return: None
+        """
+        example_config.id = 1
+        example_record = (example_config.id, example_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        configs = MetastoreFacade.list_configs()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.CONFIG_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(configs, list)
+        assert isinstance(configs[0], Config)
+        assert configs[0] == example_config
+
+    def test_list_config_ids(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the list_config_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_config: Config object
+        :return: None
+        """
+        example_config.id = 1
+        example_record = (example_config.id, )
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        config_ids = MetastoreFacade.list_config_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id FROM {constants.METADATA_STORE.CONFIG_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(config_ids, list)
+        assert isinstance(config_ids[0], int)
+        assert config_ids[0] == example_config.id
+
+    def test_get_config(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the get_config function
+
+        :param example_config: an example Config object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_config.id = 1
+        example_record = (example_config.id, example_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        config = MetastoreFacade.get_config(id=example_config.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.CONFIG_TABLE} "
+            f"WHERE id = %s", (example_config.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(config, Config)
+        assert config == example_config
+
+    def test_save_config(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the save_config function
+
+        :param mocker: the pytest mocker object
+        :param example_config: an example Config object
+        :return: None
+        """
+        example_config.id = 1
+        example_record = (example_config.id, example_config.to_dict())
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_config(config=example_config)
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == example_config.id
+
+    def test_update_config(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the update_config function
+
+        :param mocker: the pytest mocker object
+        :param example_config: an example Config object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_config(config=example_config, id=example_config.id)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.CONFIG_TABLE} "
+            f" SET config=%s "
+            f"WHERE {constants.METADATA_STORE.CONFIG_TABLE}.id = %s", (example_config.to_json_str(), example_config.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_config(self, mocker: pytest_mock.MockFixture, example_config: Config) -> None:
+        """
+        Tests the remove_config function
+
+        :param mocker: the pytest mocker object
+        :param example_config: an example Config object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_config(config=example_config)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.CONFIG_TABLE} WHERE id = %s", (example_config.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_list_linear_threshold_stopping_policies(
+            self, mocker: pytest_mock.MockFixture,
+            example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the list_linear_threshold_stopping_policies function
+
+        :param mocker: the pytest mocker object
+        :param example_linear_threshold_stopping_policy: an example LinearThresholdStoppingPolicy object
+        :return: None
+        """
+        example_linear_threshold_stopping_policy.id = 1
+        example_record = (example_linear_threshold_stopping_policy.id,
+                          example_linear_threshold_stopping_policy.to_dict(),
+                          example_linear_threshold_stopping_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        linear_threshold_stopping_policies = MetastoreFacade.list_linear_threshold_stopping_policies()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(linear_threshold_stopping_policies, list)
+        assert isinstance(linear_threshold_stopping_policies[0], LinearThresholdStoppingPolicy)
+        assert linear_threshold_stopping_policies[0] == example_linear_threshold_stopping_policy
+
+    def test_list_linear_threshold_stopping_policies_ids(
+            self, mocker: pytest_mock.MockFixture,
+            example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the list_linear_threshold_stopping_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy object
+        :return: None
+        """
+        example_linear_threshold_stopping_policy.id = 1
+        example_record = (example_linear_threshold_stopping_policy.id,
+                          example_linear_threshold_stopping_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        linear_threshold_stopping_policies_ids = MetastoreFacade.list_linear_threshold_stopping_policies_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,simulation_name FROM "
+            f"{constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(linear_threshold_stopping_policies_ids, list)
+        assert isinstance(linear_threshold_stopping_policies_ids[0], tuple)
+        assert isinstance(linear_threshold_stopping_policies_ids[0][0], int)
+        assert isinstance(linear_threshold_stopping_policies_ids[0][1], str)
+        assert linear_threshold_stopping_policies_ids[0] == example_record
+
+    def test_convert_linear_threshold_stopping_policy_record_to_dto(
+            self, example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the _convert_linear_threshold_stopping_policy_record_to_dto function
+
+        :param example_linear_threshold_stopping_policy: an example LinearThresholdStoppingPolicy object
+        :return: None
+        """
+        example_linear_threshold_stopping_policy.id = 1
+        example_record = (example_linear_threshold_stopping_policy.id,
+                          example_linear_threshold_stopping_policy.to_dict(),
+                          example_linear_threshold_stopping_policy.simulation_name)
+        converted_object = MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(
+            linear_threshold_stopping_policy_record=example_record)
+        assert isinstance(converted_object, LinearThresholdStoppingPolicy)
+        assert converted_object == example_linear_threshold_stopping_policy
+
+    def test_get_linear_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the get_linear_threshold_stopping_policy function
+
+        :param example_linear_threshold_stopping_policy: an example LinearThresholdStoppingPolicy object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_linear_threshold_stopping_policy.id = 1
+        example_record = (example_linear_threshold_stopping_policy.id,
+                          example_linear_threshold_stopping_policy.to_dict(),
+                          example_linear_threshold_stopping_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        linear_threshold_stopping_policy = MetastoreFacade.get_linear_threshold_stopping_policy(
+            id=example_linear_threshold_stopping_policy.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
+            f"WHERE id = %s", (example_linear_threshold_stopping_policy.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(linear_threshold_stopping_policy, LinearThresholdStoppingPolicy)
+        assert linear_threshold_stopping_policy == example_linear_threshold_stopping_policy
+
+    def test_remove_linear_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the remove_linear_threshold_stopping_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_linear_threshold_stopping_policy: an example LinearThresholdStoppingPolicy object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_linear_threshold_stopping_policy(
+            linear_threshold_stopping_policy=example_linear_threshold_stopping_policy)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
+            f"WHERE id = %s", (example_linear_threshold_stopping_policy.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_save_linear_threshold_stopping_policy(
+            self, mocker: pytest_mock.MockFixture,
+            example_linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Tests the save_linear_threshold_stopping_policy function
+
+        :param mocker: the pytest mocker object
+        :param example_linear_threshold_stopping_policy: an LinearThresholdStoppingPolicy Config object
+        :return: None
+        """
+        example_linear_threshold_stopping_policy.id = 1
+        example_record = (example_linear_threshold_stopping_policy.id,
+                          example_linear_threshold_stopping_policy.to_dict(),
+                          example_linear_threshold_stopping_policy.simulation_name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_linear_threshold_stopping_policy(
+            linear_threshold_stopping_policy=example_linear_threshold_stopping_policy)
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == example_linear_threshold_stopping_policy.id
