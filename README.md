@@ -32,7 +32,7 @@ computational game theory, evolutionary methods, causal inference, and general o
 
 # Main Features
 
-### **Emulation System**
+### 🖥️ **Emulation System**
 
 CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations. It is based
 on Linux containers and can be used to collect traces and to evaluate security policies.
@@ -43,7 +43,7 @@ on Linux containers and can be used to collect traces and to evaluate security p
 > The emulation system is mainly designed to run on a distributed system, e.g., a compute cluster.
 > It can run on a laptop as well, but then only small emulations can be created.
 
-### **Simulation System**
+### 💭 **Simulation System**
 
 CSLE includes a simulation system for executing reinforcement learning algorithms and simulating Markov decision
 processes and Markov games. It is built in Python and can be integrated with standard machine learning libraries.
@@ -54,7 +54,7 @@ processes and Markov games. It is built in Python and can be integrated with sta
 > The simulations are compatible with OpenAI Gym/Gymnasium. Hence you can integrate the simulations
 > with your own implementations of reinforcement learning algorithms.
 
-### **Management System**
+### ⚙️ **Management System**
 
 CSLE includes a system for managing emulations and simulations which can be accessed either through Command-Line
 Interface (CLI), through a REST API, through Python libraries, or through a web interface. The management system allows
@@ -63,12 +63,12 @@ access to components of emulations.
 
 ![](docs/img/web_ui.gif)
 
-## Documentation
+## 🎓 Documentation 
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
 version of the documentation is available [here](./releases/)
 
-## Supported Releases
+## 📋 Supported Releases
 
 | Release                                                         | Last date of support |
 |-----------------------------------------------------------------|---------------------|
@@ -79,7 +79,7 @@ version of the documentation is available [here](./releases/)
 Maintenance releases have a stable API and dependency tree, and receive bug fixes and critical improvements but not new
 features. We currently support each release for a window of 6 months.
 
-## Build Status
+## 📈 Build Status
 
 | Workflow                                                                                                                                     | Status                                                                                                                  |
 |----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -115,7 +115,7 @@ features. We currently support each release for a window of 6 months.
   </tbody>
 </table>
 
-## Contribute
+## 🧑‍🤝‍🧑 Contribute
 
 Contributions are very welcome. Please use GitHub issues and pull requests. See
 the [documentation](https://limmen.dev/csle/) for further instructions.
@@ -141,7 +141,7 @@ Thanks go to these people!
   </tbody>
 </table>
 
-## Copyright and license
+## 🔖 Copyright and license
 
 <p>
 <a href="./LICENSE.md">Creative Commons (C) 2020-2023, Kim Hammar</a>

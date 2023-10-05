@@ -12,7 +12,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
                  seed: int, discount_factor: float, states: List[int], actions: List[int], observations: List[int],
                  cost_tensor: List[List[float]], observation_tensor: List[List[float]],
                  transition_tensor: List[List[List[float]]], b1: List[float], T: int, simulation_env_name: str,
-                 gym_env_name: str, max_horizon: int = np.inf) -> None:
+                 gym_env_name: str, max_horizon: float = np.inf) -> None:
         """
         Initializes the DTO
 

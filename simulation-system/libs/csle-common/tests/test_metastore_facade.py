@@ -29,6 +29,7 @@ from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
 from csle_common.dao.encoding.np_encoder import NpEncoder
 
+
 class TestMetastoreFacadeSuite:
     """
     Test suite for metastore_facade.py
@@ -4557,7 +4558,8 @@ class TestMetastoreFacadeSuite:
             f" SET username=%s, password=%s, email=%s, first_name=%s, last_name=%s, organization=%s, "
             f"admin=%s, salt=%s WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
             (example_management_user.username, example_management_user.password, example_management_user.email,
-             example_management_user.first_name, example_management_user.last_name, example_management_user.organization,
+             example_management_user.first_name, example_management_user.last_name,
+             example_management_user.organization,
              example_management_user.admin, example_management_user.salt, id))
         mocked_connection.commit.assert_called_once()
         assert result is None
@@ -4911,7 +4913,7 @@ class TestMetastoreFacadeSuite:
         assert traces_dataset_metadata == example_traces_dataset
 
     def test_get_traces_dataset_metadata_by_name(self, mocker: pytest_mock.MockFixture,
-                                         example_traces_dataset: TracesDataset) -> None:
+                                                 example_traces_dataset: TracesDataset) -> None:
         """
         Tests the get_traces_dataset_metadata_by_name function
 
