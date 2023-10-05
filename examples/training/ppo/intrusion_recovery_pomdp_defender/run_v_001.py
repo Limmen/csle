@@ -46,6 +46,7 @@ if __name__ == '__main__':
         b1=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a), T=BTR,
         simulation_env_name=simulation_name, gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1"
     )
+    input_config.max_horizon = 30
     simulation_env_config.simulation_env_input_config = input_config
     L = 1
     experiment_config = ExperimentConfig(

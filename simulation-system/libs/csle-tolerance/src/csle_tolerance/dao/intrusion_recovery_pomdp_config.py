@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+import numpy as np
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
@@ -11,7 +12,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
                  seed: int, discount_factor: float, states: List[int], actions: List[int], observations: List[int],
                  cost_tensor: List[List[float]], observation_tensor: List[List[float]],
                  transition_tensor: List[List[List[float]]], b1: List[float], T: int, simulation_env_name: str,
-                 gym_env_name: str) -> None:
+                 gym_env_name: str, max_horizon: int = np.inf) -> None:
         """
         Initializes the DTO
 
@@ -34,6 +35,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
         :param T: the time horizon
         :param simulation_env_name: name of the simulation environment
         :param gym_env_name: name of the gym environment
+        :param max_horizon: the maximum horizon to avoid infinie simulations
         """
         self.eta = eta
         self.p_a = p_a
@@ -54,6 +56,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
         self.T = T
         self.simulation_env_name = simulation_env_name
         self.gym_env_name = gym_env_name
+        self.max_horizon = max_horizon
 
     def __str__(self) -> str:
         """
@@ -65,7 +68,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
                 f"observations: {self.observation_tensor}, cost_tensor: {self.cost_tensor}, "
                 f"observation_tensor: {self.observation_tensor}, transition_tensor: {self.transition_tensor}, "
                 f"b1:{self.b1}, T: {self.T}, simulation_env_name: {self.simulation_env_name}, "
-                f"gym_env_name: {self.gym_env_name}")
+                f"gym_env_name: {self.gym_env_name}, max_horizon: {self.max_horizon}")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "IntrusionRecoveryPomdpConfig":

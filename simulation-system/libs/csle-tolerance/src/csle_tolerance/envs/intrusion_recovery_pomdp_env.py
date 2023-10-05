@@ -98,7 +98,7 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
             self.trace.defender_observations.append(self.o)
 
         # Check if done or not
-        if self.t >= self.config.BTR or self.s == 2:
+        if self.t >= self.config.BTR or self.s == 2 or self.t > self.config.max_horizon:
             done = True
 
         t = self.t
