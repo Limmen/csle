@@ -1,3 +1,5 @@
+import json
+import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -24,8 +26,8 @@ from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemMo
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
-import pytest_mock
-
+from csle_common.dao.datasets.traces_dataset import TracesDataset
+from csle_common.dao.encoding.np_encoder import NpEncoder
 
 class TestMetastoreFacadeSuite:
     """
@@ -4710,3 +4712,332 @@ class TestMetastoreFacadeSuite:
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, str)
         assert inserted_id == example_session_token.token
+
+    def test_update_session_token(self, mocker: pytest_mock.MockFixture, example_session_token: SessionToken) -> None:
+        """
+        Tests the update_session_token function
+
+        :param mocker: the pytest mocker object
+        :param example_session_token: an example SessionToken object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_session_token(session_token=example_session_token, token="token")
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+            f" SET token=%s, timestamp=%s, username=%s "
+            f"WHERE {constants.METADATA_STORE.SESSION_TOKENS_TABLE}.token = %s",
+            (example_session_token.token, example_session_token.timestamp, example_session_token.username, "token"))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_session_token(self, mocker: pytest_mock.MockFixture, example_session_token: SessionToken) -> None:
+        """
+        Tests the remove_session_token function
+
+        :param mocker: the pytest mocker object
+        :param example_session_token: an example SessionToken object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_session_token(session_token=example_session_token)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} WHERE token = %s",
+            (example_session_token.token,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_get_session_token_by_username(self, mocker: pytest_mock.MockFixture,
+                                           example_session_token: SessionToken) -> None:
+        """
+        Tests the get_session_token_by_username function
+
+        :param example_session_token: an example SessionToken object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_record = (example_session_token.token, example_session_token.timestamp, example_session_token.username)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        session_token = MetastoreFacade.get_session_token_by_username(username=example_session_token.username)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+            f"WHERE username = %s", (example_session_token.username,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(session_token, SessionToken)
+        assert session_token == example_session_token
+
+    def test_convert_traces_dataset_record_to_dto(self, example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the _convert_traces_dataset_record_to_dto function
+
+        :param example_traces_dataset: an example TracesDataset object
+        :return: None
+        """
+        example_traces_dataset.id = 1
+        example_record = (example_traces_dataset.id, example_traces_dataset.name, example_traces_dataset.description,
+                          example_traces_dataset.data_schema, example_traces_dataset.download_count,
+                          example_traces_dataset.file_path, example_traces_dataset.url,
+                          example_traces_dataset.date_added, example_traces_dataset.num_traces,
+                          example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+                          example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+                          example_traces_dataset.num_files, example_traces_dataset.file_format,
+                          example_traces_dataset.added_by, example_traces_dataset.columns)
+        converted_object = MetastoreFacade._convert_traces_dataset_record_to_dto(traces_dataset_record=example_record)
+        assert isinstance(converted_object, TracesDataset)
+        assert converted_object == example_traces_dataset
+
+    def test_list_traces_datasets_ids(self, mocker: pytest_mock.MockFixture,
+                                      example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the list_traces_datasets_ids function
+
+        :param mocker: the pytest mocker object
+        :param example_traces_dataset: TracesDataset object
+        :return: None
+        """
+        id = 1
+        example_traces_dataset.id = id
+        example_record = (example_traces_dataset.id, example_traces_dataset.name)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        traces_datasets_ids = MetastoreFacade.list_traces_datasets_ids()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT id,name FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(traces_datasets_ids, list)
+        assert isinstance(traces_datasets_ids[0], tuple)
+        assert isinstance(traces_datasets_ids[0][0], int)
+        assert isinstance(traces_datasets_ids[0][1], str)
+        assert traces_datasets_ids[0] == example_record
+
+    def test_list_traces_datasets(self, mocker: pytest_mock.MockFixture, example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the list_traces_datasets function
+
+        :param mocker: the pytest mocker object
+        :param example_traces_dataset: an example TracesDataset object
+        :return: None
+        """
+        id = 1
+        example_traces_dataset.id = id
+        example_record = (example_traces_dataset.id, example_traces_dataset.name, example_traces_dataset.description,
+                          example_traces_dataset.data_schema, example_traces_dataset.download_count,
+                          example_traces_dataset.file_path, example_traces_dataset.url,
+                          example_traces_dataset.date_added, example_traces_dataset.num_traces,
+                          example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+                          example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+                          example_traces_dataset.num_files, example_traces_dataset.file_format,
+                          example_traces_dataset.added_by, example_traces_dataset.columns)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchall.return_value": [example_record]})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        traces_datasets = MetastoreFacade.list_traces_datasets()
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
+        mocked_cursor.fetchall.assert_called_once()
+        assert isinstance(traces_datasets, list)
+        assert isinstance(traces_datasets[0], TracesDataset)
+        assert traces_datasets[0] == example_traces_dataset
+
+    def test_get_traces_dataset_metadata(self, mocker: pytest_mock.MockFixture,
+                                         example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the get_traces_dataset_metadata function
+
+        :param example_traces_dataset: an example TracesDataset object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_record = (example_traces_dataset.id, example_traces_dataset.name, example_traces_dataset.description,
+                          example_traces_dataset.data_schema, example_traces_dataset.download_count,
+                          example_traces_dataset.file_path, example_traces_dataset.url,
+                          example_traces_dataset.date_added, example_traces_dataset.num_traces,
+                          example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+                          example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+                          example_traces_dataset.num_files, example_traces_dataset.file_format,
+                          example_traces_dataset.added_by, example_traces_dataset.columns)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        traces_dataset_metadata = MetastoreFacade.get_traces_dataset_metadata(id=example_traces_dataset.id)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+            f"WHERE id = %s", (example_traces_dataset.id,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(traces_dataset_metadata, TracesDataset)
+        assert traces_dataset_metadata == example_traces_dataset
+
+    def test_get_traces_dataset_metadata_by_name(self, mocker: pytest_mock.MockFixture,
+                                         example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the get_traces_dataset_metadata_by_name function
+
+        :param example_traces_dataset: an example TracesDataset object
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        example_record = (example_traces_dataset.id, example_traces_dataset.name, example_traces_dataset.description,
+                          example_traces_dataset.data_schema, example_traces_dataset.download_count,
+                          example_traces_dataset.file_path, example_traces_dataset.url,
+                          example_traces_dataset.date_added, example_traces_dataset.num_traces,
+                          example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+                          example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+                          example_traces_dataset.num_files, example_traces_dataset.file_format,
+                          example_traces_dataset.added_by, example_traces_dataset.columns)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        traces_dataset_metadata = MetastoreFacade.get_traces_dataset_metadata_by_name(
+            dataset_name=example_traces_dataset.name)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+            f"WHERE name = %s", (example_traces_dataset.name,))
+        mocked_cursor.fetchone.assert_called_once()
+        assert isinstance(traces_dataset_metadata, TracesDataset)
+        assert traces_dataset_metadata == example_traces_dataset
+
+    def test_save_traces_dataset(self, mocker: pytest_mock.MockFixture, example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the save_traces_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_traces_dataset: an example TracesDataset object
+        :return: None
+        """
+        example_traces_dataset.id = 1
+        example_record = (example_traces_dataset.id, example_traces_dataset.name, example_traces_dataset.description,
+                          example_traces_dataset.data_schema, example_traces_dataset.download_count,
+                          example_traces_dataset.file_path, example_traces_dataset.url,
+                          example_traces_dataset.date_added, example_traces_dataset.num_traces,
+                          example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+                          example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+                          example_traces_dataset.num_files, example_traces_dataset.file_format,
+                          example_traces_dataset.added_by, example_traces_dataset.columns)
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"fetchone.return_value": example_record})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        inserted_id = MetastoreFacade.save_traces_dataset(traces_dataset=example_traces_dataset)
+        mocked_cursor.fetchone.assert_called_once()
+        mocked_connection.commit.assert_called_once()
+        assert isinstance(inserted_id, int)
+        assert inserted_id == example_traces_dataset.id
+
+    def test_update_traces_dataset(self, mocker: pytest_mock.MockFixture,
+                                   example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the update_traces_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_traces_dataset: an example TracesDataset object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.update_traces_dataset(traces_dataset=example_traces_dataset,
+                                                       id=example_traces_dataset.id)
+        schema_json_str = ""
+        if example_traces_dataset.data_schema is not None:
+            schema_json_str = json.dumps(example_traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
+        mocked_cursor.execute.assert_called_once_with(
+            f"UPDATE "
+            f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+            f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
+            f"url=%s, date_added=%s, num_traces=%s, num_attributes_per_time_step=%s, size_in_gb=%s, "
+            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s, added_by=%s, "
+            f"columns=%s "
+            f"WHERE {constants.METADATA_STORE.TRACES_DATASETS_TABLE}.id = %s",
+            (example_traces_dataset.name, example_traces_dataset.description, schema_json_str,
+             example_traces_dataset.download_count, example_traces_dataset.file_path, example_traces_dataset.url,
+             example_traces_dataset.date_added, example_traces_dataset.num_traces,
+             example_traces_dataset.num_attributes_per_time_step, example_traces_dataset.size_in_gb,
+             example_traces_dataset.compressed_size_in_gb, example_traces_dataset.citation,
+             example_traces_dataset.num_files, example_traces_dataset.file_format, example_traces_dataset.added_by,
+             example_traces_dataset.columns, example_traces_dataset.id))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
+
+    def test_remove_traces_dataset(self, mocker: pytest_mock.MockFixture,
+                                   example_traces_dataset: TracesDataset) -> None:
+        """
+        Tests the remove_traces_dataset function
+
+        :param mocker: the pytest mocker object
+        :param example_traces_dataset: an example TracesDataset object
+        :return: None
+        """
+        mocked_connection = mocker.MagicMock()
+        mocked_cursor = mocker.MagicMock()
+        mocker.patch('psycopg.connect', return_value=mocked_connection)
+        mocked_connection.configure_mock(**{"__enter__.return_value": mocked_connection})
+        mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
+        mocked_cursor.configure_mock(**{"execute.return_value": None})
+        mocked_cursor.configure_mock(**{"commit.return_value": None})
+        mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
+        result = MetastoreFacade.remove_traces_dataset(traces_dataset=example_traces_dataset)
+        mocked_connection.cursor.assert_called_once()
+        mocked_cursor.execute.assert_called_once_with(
+            f"DELETE FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} WHERE id = %s",
+            (example_traces_dataset.id,))
+        mocked_connection.commit.assert_called_once()
+        assert result is None
