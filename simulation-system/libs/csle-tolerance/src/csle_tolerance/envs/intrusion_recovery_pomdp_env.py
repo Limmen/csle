@@ -102,7 +102,7 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
             done = True
 
         t = self.t
-        if self.config.BTR == np.inf:
+        if self.config.BTR == np.inf or self.config.BTR >= 10000:
             t = 1
         return [t, self.b[1], self.o], c, done, done, info
 
