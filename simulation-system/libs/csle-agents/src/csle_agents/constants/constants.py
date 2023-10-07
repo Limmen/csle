@@ -216,6 +216,26 @@ class BAYESIAN_OPTIMIZATION:
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
 
+class CMA_ES_OPTIMIZATION:
+    """
+    String constants related to CMA-ES Optimization
+    """
+    L = "L"
+    PARAMETER_BOUNDS = "parameter_bounds"
+    N = "N"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    UTILITY_FUNCTION = "utility_function"
+    UCB_KAPPA = "ucb_kappa"
+    UCB_XI = "ucb_xi"
+    UCB = "ucb"
+    TARGET = "target"
+    PARAMS = "params"
+    POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
 
 class BAYESIAN_OPTIMIZATION_EMUKIT:
     """

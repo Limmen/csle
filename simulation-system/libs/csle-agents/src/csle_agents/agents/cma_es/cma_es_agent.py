@@ -6,8 +6,6 @@ import cma
 import os
 import numpy as np
 import numpy.typing as npt
-from bayes_opt import BayesianOptimization
-from bayes_opt import UtilityFunction
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -51,14 +49,14 @@ class CMAESAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.BAYESIAN_OPTIMIZATION
+        assert experiment_config.agent_type == AgentType.CMA_ES
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using Bayesian Optimization
+        Performs the policy training for the given random seeds using CMA-ES
 
         :return: the training metrics and the trained policies
         """
@@ -81,7 +79,7 @@ class CMAESAgent(BaseAgent):
             exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_{l}")
             exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_running_average_{l}")
 
-        descr = f"Training of policies with the Bayesian Optimization algorithm using " \
+        descr = f"Training of policies with the CMA-ES algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
@@ -154,8 +152,8 @@ class CMAESAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.bayesian_optimization(exp_result=exp_result, seed=seed, training_job=self.training_job,
-                                                    random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.cma_es(exp_result=exp_result, seed=seed, training_job=self.training_job,
+                                     random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -223,8 +221,7 @@ class CMAESAgent(BaseAgent):
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
     def cma_es(self, exp_result: ExperimentResult, seed: int,
-               training_job: TrainingJobConfig, random_seeds: List[int],
-                sigma=0.1) -> ExperimentResult:
+               training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Runs the CMA-ES algorithm
 
@@ -235,7 +232,6 @@ class CMAESAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         start: float = time.time()
-        objective_type = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE].value
         L = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value
         if agents_constants.CMA_ES_OPTIMIZATION.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.THETA1].value
@@ -256,6 +252,7 @@ class CMAESAgent(BaseAgent):
             policy=policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        print("här ges typen av J: ", type(J))
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
@@ -272,26 +269,14 @@ class CMAESAgent(BaseAgent):
         for i, bound in enumerate(parameter_bounds):
             parameter_bounds_dict[f"param_{i}"] = bound
         # {'x': (-2, 2), 'y': (-3, 3)}
-        es = cma.CMAEvolutionStrategy()
-        if self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION].value \
-                == agents_constants.CMA_ES_OPTIMIZATION.UCB:
-            utility = UtilityFunction(
-                kind=agents_constants.CMA_ES_OPTIMIZATION.UCB,
-                kappa=self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.UCB_KAPPA].value,
-                xi=self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.UCB_XI].value)
-        else:
-            raise ValueError(
-                f"Utility function: "
-                f"{self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION].value} "
-                f"not recognized")
-
+        # es = cma.CMAEvolutionStrategy()
         for i in range(N):
             candidate_policy = self.get_policy(theta=list(theta), L=L)
             avg_metrics = self.eval_theta(
                 policy=candidate_policy,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            es = cma.CMAEvolutionStrategy(theta, sigma)
-            es.optimize(J)            
+            es = cma.CMAEvolutionStrategy(theta, L/N)
+            es.optimize(float(J))
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
