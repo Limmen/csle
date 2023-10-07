@@ -248,11 +248,7 @@ class CMAESAgent(BaseAgent):
                 self.env.static_defender_strategy = policy
             if self.experiment_config.player_type == PlayerType.ATTACKER:
                 self.env.static_attacker_strategy = policy
-        avg_metrics = self.eval_theta(
-            policy=policy,
-            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        print("här ges typen av J: ", type(J))
+        J = self.J(theta)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
@@ -269,20 +265,18 @@ class CMAESAgent(BaseAgent):
         for i, bound in enumerate(parameter_bounds):
             parameter_bounds_dict[f"param_{i}"] = bound
         # {'x': (-2, 2), 'y': (-3, 3)}
-        # es = cma.CMAEvolutionStrategy()
         for i in range(N):
-            candidate_policy = self.get_policy(theta=list(theta), L=L)
-            avg_metrics = self.eval_theta(
-                policy=candidate_policy,
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             es = cma.CMAEvolutionStrategy(theta, L/N)
-            es.optimize(float(J))
+            es.optimize(self.J)
+            J = es.result_pretty().fbest
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
+
+            avg_metrics = self.eval_theta(theta)
 
             # Log runtime
             time_elapsed_minutes = round((time.time() - start) / 60, 3)
@@ -382,14 +376,35 @@ class CMAESAgent(BaseAgent):
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
-                   max_steps: int = 200) -> Dict[str, Any]:
+    def J(self, theta):
+        return round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3)
+
+    def eval_theta(self, theta) -> Dict[str, Any]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
         :return: the average metrics of the evaluation
         """
+        max_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
+        L = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value
+        if self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE].value \
+                == PolicyType.MULTI_THRESHOLD.value:
+            policy = MultiThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
         if self.env is None:
             raise ValueError("An environment need to specified to run the evaluation")
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
