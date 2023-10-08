@@ -260,11 +260,6 @@ class CMAESAgent(BaseAgent):
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.N].value
 
-        parameter_bounds = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS].value
-        parameter_bounds_dict = {}
-        for i, bound in enumerate(parameter_bounds):
-            parameter_bounds_dict[f"param_{i}"] = bound
-        # {'x': (-2, 2), 'y': (-3, 3)}
         for i in range(N):
             es = cma.CMAEvolutionStrategy(theta, L/N)
             es.optimize(self.J)
@@ -363,7 +358,7 @@ class CMAESAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[BAYES-OPT] i: {i}, J:{J}, "
+                    f"[CMA-ES] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -487,15 +482,6 @@ class CMAESAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    @staticmethod
-    def get_theta_vector_from_param_dict(param_dict: Dict[str, float]) -> List[float]:
-        """
-        Extracts the theta vector from the parameter dict
-
-        :param param_dict: the parameter dict
-        :return: the theta vector
-        """
-        return list(param_dict.values())
 
     def get_policy(self, theta: List[float], L: int) \
             -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
