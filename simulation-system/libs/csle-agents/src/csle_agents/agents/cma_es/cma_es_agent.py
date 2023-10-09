@@ -25,7 +25,6 @@ from csle_common.dao.training.policy_type import PolicyType
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
-from csle_agents.common.objective_type import ObjectiveType
 
 
 class CMAESAgent(BaseAgent):
@@ -261,7 +260,7 @@ class CMAESAgent(BaseAgent):
         N = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.N].value
 
         for i in range(N):
-            es = cma.CMAEvolutionStrategy(theta, L/N)
+            es = cma.CMAEvolutionStrategy(theta, L / N)
             es.optimize(self.J)
             J = es.result_pretty().fbest
             policy.avg_R = J
@@ -391,7 +390,7 @@ class CMAESAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         else:
             policy = LinearThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -399,7 +398,7 @@ class CMAESAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         if self.env is None:
             raise ValueError("An environment need to specified to run the evaluation")
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
@@ -482,7 +481,6 @@ class CMAESAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-
     def get_policy(self, theta: List[float], L: int) \
             -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
@@ -500,7 +498,7 @@ class CMAESAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         else:
             policy = LinearThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -508,5 +506,5 @@ class CMAESAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         return policy

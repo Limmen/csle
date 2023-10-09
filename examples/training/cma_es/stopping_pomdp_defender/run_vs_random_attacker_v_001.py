@@ -20,7 +20,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     L = 3
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}cma_es_opt_test", title="CMA-ES test",
         random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.CMA_ES,
         log_every=1,
@@ -86,4 +86,4 @@ if __name__ == '__main__':
         else:
             raise ValueError("Policy type: "
                              f"{experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE].value} "
-                             f"not recognized for Bayesian optimization")
+                             f"not recognized for CMA-ES")
