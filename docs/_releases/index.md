@@ -8,6 +8,17 @@ permalink: /releases/
 
 The following is a list of official releases of of the Cyber Security Learning Environment (CSLE).
 
+##### **CSLE 0.4.0**
+
+**Release Date:** 9/9 2023
+
+**Description:** The fourth beta release of CSLE. Notable features: (1) added csle-tolerance;
+(2) CMA-ES for black box optimization; (3) simulated annealing for black box optimization; (4) unit tests; and (5), bugfixes.
+
+**Download:** [https://github.com/Limmen/csle/releases/tag/v0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0)
+
+**Documentation:** [https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.4.0_DOCUMENTATION.pdf](https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.4.0_DOCUMENTATION.pdf)
+
 ##### **CSLE 0.3.0**
 
 **Release Date:** 16/8 2023
