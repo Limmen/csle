@@ -279,10 +279,10 @@
 </li>
       <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.commands">commands() (csle_collector.client_manager.dao.workflows_config.WorkflowsConfig method)</a>
 </li>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages">compute_averages() (csle_collector.docker_stats_manager.docker_stats.DockerStats static method)</a>
+      <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.compute_averages">compute_averages() (csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages">(csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread method)</a>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.compute_averages">(csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread method)</a>
 </li>
       </ul></li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.FILEBEAT.CONFIG_DIR">CONFIG_DIR (csle_collector.constants.constants.FILEBEAT attribute)</a>
@@ -370,7 +370,7 @@
 </li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.copy">(csle_collector.client_manager.dao.workflows_config.WorkflowsConfig method)</a>
 </li>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.copy">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.copy">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.copy">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -586,8 +586,6 @@
         <li><a href="csle_collector.client_manager.threads.html#module-csle_collector.client_manager.threads.client_thread">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_collector.client_manager.threads.producer_thread
 
@@ -602,6 +600,8 @@
         <li><a href="csle_collector.constants.html#module-csle_collector.constants">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_collector.constants.constants
 
@@ -617,10 +617,17 @@
 </li>
       </ul></li>
       <li>
-    csle_collector.docker_stats_manager.docker_stats
+    csle_collector.docker_stats_manager.dao
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.docker_stats">module</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_collector.docker_stats_manager.dao.docker_stats
+
+      <ul>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao.docker_stats">module</a>
 </li>
       </ul></li>
       <li>
@@ -659,6 +666,20 @@
 </li>
       </ul></li>
       <li>
+    csle_collector.docker_stats_manager.threads
+
+      <ul>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_collector.docker_stats_manager.threads.docker_stats_thread
+
+      <ul>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads.docker_stats_thread">module</a>
+</li>
+      </ul></li>
+      <li>
     csle_collector.elk_manager
 
       <ul>
@@ -694,10 +715,10 @@
 </li>
       </ul></li>
       <li>
-    csle_collector.elk_manager.query_elk_server
+    csle_collector.elk_manager.query_elk_manager
 
       <ul>
-        <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_server">module</a>
+        <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_manager">module</a>
 </li>
       </ul></li>
       <li>
@@ -911,10 +932,10 @@
 </li>
       </ul></li>
       <li>
-    csle_collector.ryu_manager.query_ryu_server
+    csle_collector.ryu_manager.query_ryu_manager
 
       <ul>
-        <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_server">module</a>
+        <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_manager">module</a>
 </li>
       </ul></li>
       <li>
@@ -943,6 +964,20 @@
 
       <ul>
         <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.ryu_manager_util">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_collector.ryu_manager.threads
+
+      <ul>
+        <li><a href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_collector.ryu_manager.threads.failure_detector
+
+      <ul>
+        <li><a href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads.failure_detector">module</a>
 </li>
       </ul></li>
       <li>
@@ -1152,7 +1187,7 @@
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME">DOCKER_STATS_TOPIC_NAME (csle_collector.constants.constants.KAFKA_CONFIG attribute)</a>
 </li>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats">DockerStats (class in csle_collector.docker_stats_manager.docker_stats)</a>
+      <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats">DockerStats (class in csle_collector.docker_stats_manager.dao.docker_stats)</a>
 </li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManager">DockerStatsManager (class in csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc)</a>
 </li>
@@ -1164,7 +1199,7 @@
       </ul></li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub">DockerStatsManagerStub (class in csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc)</a>
 </li>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread">DockerStatsThread (class in csle_collector.docker_stats_manager.docker_stats_manager)</a>
+      <li><a href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread">DockerStatsThread (class in csle_collector.docker_stats_manager.threads.docker_stats_thread)</a>
 </li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil">DockerStatsUtil (class in csle_collector.docker_stats_manager.docker_stats_util)</a>
 </li>
@@ -1266,7 +1301,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt">FailedLoginAttempt (class in csle_collector.host_manager.dao.failed_login_attempt)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.FailureDetector">FailureDetector (class in csle_collector.ryu_manager.ryu_manager)</a>
+      <li><a href="csle_collector.ryu_manager.threads.html#csle_collector.ryu_manager.threads.failure_detector.FailureDetector">FailureDetector (class in csle_collector.ryu_manager.threads.failure_detector)</a>
 </li>
       <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.fast_log_parse">fast_log_parse() (csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert static method)</a>
 </li>
@@ -1329,7 +1364,7 @@
 </li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_dict">(csle_collector.client_manager.dao.workflows_config.WorkflowsConfig static method)</a>
 </li>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict">(csle_collector.docker_stats_manager.docker_stats.DockerStats static method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_dict">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_dict">(csle_collector.host_manager.dao.host_metrics.HostMetrics static method)</a>
 </li>
@@ -1389,6 +1424,8 @@
 </li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.from_json_file">(csle_collector.client_manager.dao.workflows_config.WorkflowsConfig static method)</a>
 </li>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_json_file">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
+</li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert.from_json_file">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert static method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_json_file">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters static method)</a>
@@ -1397,7 +1434,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.from_kafka_record">from_kafka_record() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics static method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record">(csle_collector.docker_stats_manager.docker_stats.DockerStats static method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_kafka_record">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_kafka_record">(csle_collector.host_manager.dao.host_metrics.HostMetrics static method)</a>
 </li>
@@ -1420,6 +1457,8 @@
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.HTTP.GET">GET (csle_collector.constants.constants.HTTP attribute)</a>
 </li>
+      <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_arrival_thread">get_arrival_thread() (csle_collector.client_manager.client_manager.ClientManagerServicer method)</a>
+</li>
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.query_clients.get_clients">get_clients() (in module csle_collector.client_manager.query_clients)</a>
 </li>
       <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflow_service.WorkflowService.get_commands">get_commands() (csle_collector.client_manager.dao.workflow_service.WorkflowService method)</a>
@@ -1427,7 +1466,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.get_deltas">get_deltas() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_deltas">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.get_deltas">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -1440,7 +1479,9 @@
       </ul></li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status">get_docker_stats_manager_status() (in module csle_collector.docker_stats_manager.query_docker_stats_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.get_elk_status">get_elk_status() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.get_docker_stats_monitor_threads">get_docker_stats_monitor_threads() (csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer method)</a>
+</li>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.get_elk_status">get_elk_status() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
       <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert.get_group_id">get_group_id() (csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert method)</a>
 </li>
@@ -1448,7 +1489,7 @@
 </li>
       <li><a href="csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.get_host_status">get_host_status() (in module csle_collector.host_manager.query_host_manager)</a>
 </li>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip">get_ip() (csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread method)</a>
+      <li><a href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.get_ip">get_ip() (csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread method)</a>
 </li>
       <li><a href="csle_collector.kafka_manager.html#csle_collector.kafka_manager.query_kafka_server.get_kafka_status">get_kafka_status() (in module csle_collector.kafka_manager.query_kafka_server)</a>
 </li>
@@ -1458,7 +1499,9 @@
 </li>
       <li><a href="csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status">get_ossec_ids_monitor_status() (in module csle_collector.ossec_ids_manager.query_ossec_ids_manager)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.get_ryu_status">get_ryu_status() (in module csle_collector.ryu_manager.query_ryu_server)</a>
+      <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_producer_thread">get_producer_thread() (csle_collector.client_manager.client_manager.ClientManagerServicer method)</a>
+</li>
+      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.get_ryu_status">get_ryu_status() (in module csle_collector.ryu_manager.query_ryu_manager)</a>
 </li>
       <li><a href="csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts">get_snort_ids_alerts() (in module csle_collector.snort_ids_manager.query_snort_ids_manager)</a>
 </li>
@@ -1469,7 +1512,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.get_values">get_values() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_values">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.get_values">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -1954,7 +1997,9 @@
 </li>
         <li><a href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager">csle_collector.docker_stats_manager</a>
 </li>
-        <li><a href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.docker_stats">csle_collector.docker_stats_manager.docker_stats</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao">csle_collector.docker_stats_manager.dao</a>
+</li>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao.docker_stats">csle_collector.docker_stats_manager.dao.docker_stats</a>
 </li>
         <li><a href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.docker_stats_manager">csle_collector.docker_stats_manager.docker_stats_manager</a>
 </li>
@@ -1966,6 +2011,10 @@
 </li>
         <li><a href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.query_docker_stats_manager">csle_collector.docker_stats_manager.query_docker_stats_manager</a>
 </li>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads">csle_collector.docker_stats_manager.threads</a>
+</li>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads.docker_stats_thread">csle_collector.docker_stats_manager.threads.docker_stats_thread</a>
+</li>
         <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager">csle_collector.elk_manager</a>
 </li>
         <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.elk_manager">csle_collector.elk_manager.elk_manager</a>
@@ -1976,7 +2025,7 @@
 </li>
         <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.elk_manager_util">csle_collector.elk_manager.elk_manager_util</a>
 </li>
-        <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_server">csle_collector.elk_manager.query_elk_server</a>
+        <li><a href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_manager">csle_collector.elk_manager.query_elk_manager</a>
 </li>
         <li><a href="csle_collector.host_manager.html#module-csle_collector.host_manager">csle_collector.host_manager</a>
 </li>
@@ -2038,7 +2087,7 @@
 </li>
         <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager">csle_collector.ryu_manager</a>
 </li>
-        <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_server">csle_collector.ryu_manager.query_ryu_server</a>
+        <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_manager">csle_collector.ryu_manager.query_ryu_manager</a>
 </li>
         <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.ryu_manager">csle_collector.ryu_manager.ryu_manager</a>
 </li>
@@ -2047,6 +2096,10 @@
         <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.ryu_manager_pb2_grpc">csle_collector.ryu_manager.ryu_manager_pb2_grpc</a>
 </li>
         <li><a href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.ryu_manager_util">csle_collector.ryu_manager.ryu_manager_util</a>
+</li>
+        <li><a href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads">csle_collector.ryu_manager.threads</a>
+</li>
+        <li><a href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads.failure_detector">csle_collector.ryu_manager.threads.failure_detector</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.html#module-csle_collector.snort_ids_manager">csle_collector.snort_ids_manager</a>
 </li>
@@ -2152,7 +2205,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.num_attributes">num_attributes() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.num_attributes">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.num_attributes">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -2388,13 +2441,13 @@
 </li>
         <li><a href="csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.producer_thread.ProducerThread.run">(csle_collector.client_manager.threads.producer_thread.ProducerThread method)</a>
 </li>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run">(csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread method)</a>
+        <li><a href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.run">(csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread method)</a>
 </li>
         <li><a href="csle_collector.host_manager.threads.html#csle_collector.host_manager.threads.host_monitor_thread.HostMonitorThread.run">(csle_collector.host_manager.threads.host_monitor_thread.HostMonitorThread method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.threads.html#csle_collector.ossec_ids_manager.threads.ossec_ids_monitor_thread.OSSecIdsMonitorThread.run">(csle_collector.ossec_ids_manager.threads.ossec_ids_monitor_thread.OSSecIdsMonitorThread method)</a>
 </li>
-        <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.FailureDetector.run">(csle_collector.ryu_manager.ryu_manager.FailureDetector method)</a>
+        <li><a href="csle_collector.ryu_manager.threads.html#csle_collector.ryu_manager.threads.failure_detector.FailureDetector.run">(csle_collector.ryu_manager.threads.failure_detector.FailureDetector method)</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.threads.html#csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread.SnortIDSMonitorThread.run">(csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread.SnortIDSMonitorThread method)</a>
 </li>
@@ -2440,7 +2493,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.schema">schema() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics static method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.schema">(csle_collector.docker_stats_manager.docker_stats.DockerStats static method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.schema">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.schema">(csle_collector.host_manager.dao.host_metrics.HostMetrics static method)</a>
 </li>
@@ -2633,9 +2686,9 @@
 </li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor">start_docker_stats_monitor() (in module csle_collector.docker_stats_manager.query_docker_stats_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_elastic">start_elastic() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_elastic">start_elastic() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_elk">start_elk() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_elk">start_elk() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
       <li><a href="csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_filebeat">start_filebeat() (in module csle_collector.host_manager.query_host_manager)</a>
 </li>
@@ -2645,9 +2698,9 @@
 </li>
       <li><a href="csle_collector.kafka_manager.html#csle_collector.kafka_manager.query_kafka_server.start_kafka">start_kafka() (in module csle_collector.kafka_manager.query_kafka_server)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_kibana">start_kibana() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_kibana">start_kibana() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_logstash">start_logstash() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_logstash">start_logstash() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
       <li><a href="csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.start_metricbeat">start_metricbeat() (in module csle_collector.host_manager.query_host_manager)</a>
 </li>
@@ -2663,11 +2716,11 @@
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.RYU.START_PRODUCER_HTTP_RESOURCE">START_PRODUCER_HTTP_RESOURCE (csle_collector.constants.constants.RYU attribute)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.start_ryu">start_ryu() (in module csle_collector.ryu_manager.query_ryu_server)</a>
+      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.start_ryu">start_ryu() (in module csle_collector.ryu_manager.query_ryu_manager)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.RYU.START_RYU_CONTROLLER">START_RYU_CONTROLLER (csle_collector.constants.constants.RYU attribute)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor">start_ryu_monitor() (in module csle_collector.ryu_manager.query_ryu_server)</a>
+      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.start_ryu_monitor">start_ryu_monitor() (in module csle_collector.ryu_manager.query_ryu_manager)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.SNORT_IDS_ROUTER.START_SNORT_IDS">START_SNORT_IDS (csle_collector.constants.constants.SNORT_IDS_ROUTER attribute)</a>
 </li>
@@ -2863,9 +2916,9 @@
 </li>
       <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor">stop_docker_stats_monitor() (in module csle_collector.docker_stats_manager.query_docker_stats_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_elastic">stop_elastic() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_elastic">stop_elastic() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_elk">stop_elk() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_elk">stop_elk() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
       <li><a href="csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_filebeat">stop_filebeat() (in module csle_collector.host_manager.query_host_manager)</a>
 </li>
@@ -2875,9 +2928,9 @@
 </li>
       <li><a href="csle_collector.kafka_manager.html#csle_collector.kafka_manager.query_kafka_server.stop_kafka">stop_kafka() (in module csle_collector.kafka_manager.query_kafka_server)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_kibana">stop_kibana() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_kibana">stop_kibana() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
-      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_logstash">stop_logstash() (in module csle_collector.elk_manager.query_elk_server)</a>
+      <li><a href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_logstash">stop_logstash() (in module csle_collector.elk_manager.query_elk_manager)</a>
 </li>
       <li><a href="csle_collector.host_manager.html#csle_collector.host_manager.query_host_manager.stop_metricbeat">stop_metricbeat() (in module csle_collector.host_manager.query_host_manager)</a>
 </li>
@@ -2893,13 +2946,13 @@
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.RYU.STOP_PRODUCER_HTTP_RESOURCE">STOP_PRODUCER_HTTP_RESOURCE (csle_collector.constants.constants.RYU attribute)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.stop_ryu">stop_ryu() (in module csle_collector.ryu_manager.query_ryu_server)</a>
+      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.stop_ryu">stop_ryu() (in module csle_collector.ryu_manager.query_ryu_manager)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.RYU.STOP_RYU_CONTROLLER">STOP_RYU_CONTROLLER (csle_collector.constants.constants.RYU attribute)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.RYU.STOP_RYU_CONTROLLER_MANAGER">STOP_RYU_CONTROLLER_MANAGER (csle_collector.constants.constants.RYU attribute)</a>
 </li>
-      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.stop_ryu_monitor">stop_ryu_monitor() (in module csle_collector.ryu_manager.query_ryu_server)</a>
+      <li><a href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.stop_ryu_monitor">stop_ryu_monitor() (in module csle_collector.ryu_manager.query_ryu_manager)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS">STOP_SNORT_IDS (csle_collector.constants.constants.SNORT_IDS_ROUTER attribute)</a>
 </li>
@@ -3170,7 +3223,7 @@
 </li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.workflows_config.WorkflowsConfig.to_dict">(csle_collector.client_manager.dao.workflows_config.WorkflowsConfig method)</a>
 </li>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_dict">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_dict">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -3215,7 +3268,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record">to_kafka_record() (csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+      <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_kafka_record">to_kafka_record() (csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 
       <ul>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_kafka_record">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
@@ -3280,7 +3333,7 @@
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.update_with_kafka_record">update_with_kafka_record() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics method)</a>
 
       <ul>
-        <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record">(csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+        <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.update_with_kafka_record">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
 </li>
@@ -3295,7 +3348,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip">update_with_kafka_record_ip() (csle_collector.docker_stats_manager.docker_stats.DockerStats method)</a>
+      <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record_ip">update_with_kafka_record_ip() (csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.DOCKER_STATS.USAGE">USAGE (csle_collector.constants.constants.DOCKER_STATS attribute)</a>
 </li>

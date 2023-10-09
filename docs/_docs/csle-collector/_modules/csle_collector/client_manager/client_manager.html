@@ -102,6 +102,22 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
+<div class="viewcode-block" id="ClientManagerServicer.get_arrival_thread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_arrival_thread">[docs]</a>    <span class="k">def</span> <span class="nf">get_arrival_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ArrivalThread</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the arrival thread</span>
+
+<span class="sd">        :return: The arrival thread if it is initialized, otherwise None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span></div>
+
+<div class="viewcode-block" id="ClientManagerServicer.get_producer_thread"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_producer_thread">[docs]</a>    <span class="k">def</span> <span class="nf">get_producer_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ProducerThread</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the producer thread</span>
+
+<span class="sd">        :return: The producer thread if it is initialized, otherwise None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span></div>
+
 <div class="viewcode-block" id="ClientManagerServicer.getClients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.getClients">[docs]</a>    <span class="k">def</span> <span class="nf">getClients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">GetClientsMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -114,17 +130,19 @@
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_arrival_thread</span><span class="p">()</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
 
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
             <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
 
         <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
 
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span>
@@ -145,17 +163,19 @@
 
         <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
 
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span>
@@ -181,8 +201,10 @@
                      <span class="sa">f</span><span class="s2">&quot;workflow services: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_services</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span>
                      <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> commands: </span><span class="si">{</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">commands</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_arrival_thread</span><span class="p">()</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">arrival_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="mi">1</span>
@@ -190,14 +212,14 @@
                                        <span class="n">workflows_config</span><span class="o">=</span><span class="n">workflows_config</span><span class="p">)</span>
         <span class="n">arrival_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="o">=</span> <span class="n">arrival_thread</span>
-        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+        <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
         <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">producer_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">producer_time_step_len_seconds</span> <span class="o">=</span> <span class="n">producer_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
-            <span class="n">num_clients</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">),</span> <span class="n">client_process_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span> <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
+            <span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="n">producer_active</span><span class="p">,</span>
+            <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
             <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="n">producer_time_step_len_seconds</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clients_dto</span></div>
 
@@ -210,28 +232,31 @@
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a clients DTO with the state of the clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting producer, time-step len:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">s, &quot;</span>
-                     <span class="sa">f</span><span class="s2">&quot;arrival_thread: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_arrival_thread</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting producer, time-step len:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">s, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;arrival_thread: </span><span class="si">{</span><span class="n">arrival_thread</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot start producer if the arrival thread is not started&quot;</span><span class="p">)</span>
-        <span class="n">producer_thread</span> <span class="o">=</span> <span class="n">ProducerThread</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="p">,</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="n">ProducerThread</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">=</span><span class="n">arrival_thread</span><span class="p">,</span>
                                          <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
                                          <span class="n">ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="n">producer_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="o">=</span> <span class="n">producer_thread</span>
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
             <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span>
@@ -249,16 +274,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping producer&quot;</span><span class="p">)</span>
         <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">producer_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_producer_thread</span><span class="p">()</span>
+        <span class="n">arrival_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_arrival_thread</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">producer_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">producer_thread</span><span class="o">.</span><span class="n">stopped</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer_thread</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">num_clients</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arrival_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_clients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">client_threads</span><span class="p">)</span>
             <span class="n">client_process_active</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
+            <span class="n">clients_time_step_len_seconds</span> <span class="o">=</span> <span class="n">arrival_thread</span><span class="o">.</span><span class="n">time_step_len_seconds</span>
         <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">(</span>
             <span class="n">num_clients</span><span class="o">=</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">client_process_active</span><span class="o">=</span><span class="n">client_process_active</span><span class="p">,</span> <span class="n">producer_active</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">clients_time_step_len_seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">clients_time_step_len_seconds</span><span class="p">),</span> <span class="n">producer_time_step_len_seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

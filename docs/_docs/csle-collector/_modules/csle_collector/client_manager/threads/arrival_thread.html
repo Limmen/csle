@@ -115,7 +115,7 @@
                      <span class="sa">f</span><span class="s2">&quot;num workflows: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflows_config</span><span class="o">.</span><span class="n">workflow_markov_chains</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ArrivalThread.piece_wise_constant_rate"><a class="viewcode-back" href="../../../../csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.piece_wise_constant_rate">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">piece_wise_constant_rate</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">PieceWiseConstantArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">piece_wise_constant_rate</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">PieceWiseConstantArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that returns the rate of a piece-wise constant Poisson process</span>
 
@@ -131,7 +131,7 @@
         <span class="k">return</span> <span class="n">rate</span></div>
 
 <div class="viewcode-block" id="ArrivalThread.spiking_poisson_arrival_rate"><a class="viewcode-back" href="../../../../csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.spiking_poisson_arrival_rate">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">spiking_poisson_arrival_rate</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">SpikingArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">spiking_poisson_arrival_rate</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">SpikingArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that returns the rate of a spiking Poisson process</span>
 
@@ -146,7 +146,7 @@
         <span class="k">return</span> <span class="n">rate</span></div>
 
 <div class="viewcode-block" id="ArrivalThread.sine_modulated_poisson_rate"><a class="viewcode-back" href="../../../../csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.sine_modulated_poisson_rate">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sine_modulated_poisson_rate</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">SineArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sine_modulated_poisson_rate</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">SineArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that returns the rate of a sine-modulated Poisson process</span>
 
@@ -168,7 +168,7 @@
         <span class="k">return</span> <span class="n">arrival_config</span><span class="o">.</span><span class="n">lamb</span></div>
 
 <div class="viewcode-block" id="ArrivalThread.eptmp_rate"><a class="viewcode-back" href="../../../../csle_collector.client_manager.threads.html#csle_collector.client_manager.threads.arrival_thread.ArrivalThread.eptmp_rate">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">eptmp_rate</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">EPTMPArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eptmp_rate</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arrival_config</span><span class="p">:</span> <span class="n">EPTMPArrivalConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that returns the rate of a EPTMP Poisson process.</span>
 

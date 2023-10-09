@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.bayesian_optimization_emukit.bo.bo_config &mdash; csle-agents 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.bayesian_optimization_emukit.bo.bo_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.bayesian_optimization_emukit.bo.bo_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">from</span> <span class="nn">emukit.core</span> <span class="kn">import</span> <span class="n">ParameterSpace</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.expected_improvement</span> <span class="kn">import</span> <span class="n">ExpectedImprovement</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.negative_lower_confidence_bound</span> <span class="kn">import</span> <span class="n">NegativeLowerConfidenceBound</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.probability_of_improvement</span> <span class="kn">import</span> <span class="n">ProbabilityOfImprovement</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.max_value_entropy_search</span> <span class="kn">import</span> <span class="n">MaxValueEntropySearch</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.max_value_entropy_search</span> <span class="kn">import</span> <span class="n">MUMBO</span>
+<span class="kn">from</span> <span class="nn">emukit.bayesian_optimization.acquisitions.entropy_search</span> <span class="kn">import</span> <span class="n">EntropySearch</span>
+<span class="kn">from</span> <span class="nn">emukit.core.acquisition.acquisition</span> <span class="kn">import</span> <span class="n">Acquisition</span>
+<span class="kn">from</span> <span class="nn">emukit.model_wrappers.gpy_model_wrappers</span> <span class="kn">import</span> <span class="n">GPyModelWrapper</span>
+<span class="kn">from</span> <span class="nn">emukit.core.optimization</span> <span class="kn">import</span> <span class="n">GradientAcquisitionOptimizer</span>
+<span class="kn">from</span> <span class="nn">emukit.core.optimization</span> <span class="kn">import</span> <span class="n">AcquisitionOptimizerBase</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config</span> <span class="kn">import</span> <span class="n">GPConfig</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type</span> <span class="kn">import</span> \
+    <span class="n">AcquisitionFunctionType</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type</span> <span class="kn">import</span> \
+    <span class="n">AcquisitionOptimizerType</span>
+<span class="kn">from</span> <span class="nn">csle_agents.common.objective_type</span> <span class="kn">import</span> <span class="n">ObjectiveType</span>
+
+
+<div class="viewcode-block" id="BOConfig"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig">[docs]</a><span class="k">class</span> <span class="nc">BOConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO representing the configuration of a Bayesian Optimization execution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_init</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+                 <span class="n">Y_init</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">input_space</span><span class="p">:</span> <span class="n">ParameterSpace</span><span class="p">,</span> <span class="n">evaluation_budget</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">gp_config</span><span class="p">:</span> <span class="n">GPConfig</span><span class="p">,</span> <span class="n">acquisition_function_type</span><span class="p">:</span> <span class="n">AcquisitionFunctionType</span><span class="p">,</span>
+                 <span class="n">acquisition_optimizer_type</span><span class="p">:</span> <span class="n">AcquisitionOptimizerType</span><span class="p">,</span>
+                 <span class="n">objective_type</span><span class="p">:</span> <span class="n">ObjectiveType</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param X_init: the initial dataset with x-values</span>
+<span class="sd">        :param Y_init: the initial dataset with y-values</span>
+<span class="sd">        :param input_space: the input space (i.e. the list of x-variables and their dimensions</span>
+<span class="sd">        :param evaluation_budget: the evaluation budget (i.e. maximum cost)</span>
+<span class="sd">        :param gp_config: the configuration of the GP</span>
+<span class="sd">        :param acquisition_function_type: the acquisition function to use</span>
+<span class="sd">        :param acquisition_optimizer_type: the type of optimizer for optimizing the acquisition function</span>
+<span class="sd">        :param objective_type: the objective (min or max)</span>
+<span class="sd">        :param beta: exploration parameter for GP-UCB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_init</span> <span class="o">=</span> <span class="n">X_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_init</span> <span class="o">=</span> <span class="n">Y_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_space</span> <span class="o">=</span> <span class="n">input_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluation_budget</span> <span class="o">=</span> <span class="n">evaluation_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gp_config</span> <span class="o">=</span> <span class="n">gp_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">=</span> <span class="n">acquisition_function_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer_type</span> <span class="o">=</span> <span class="n">acquisition_optimizer_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_type</span> <span class="o">=</span> <span class="n">objective_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
+
+<div class="viewcode-block" id="BOConfig.get_acquisition_function"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.get_acquisition_function">[docs]</a>    <span class="k">def</span> <span class="nf">get_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate_model</span><span class="p">:</span> <span class="n">GPyModelWrapper</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Acquisition</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the acquisition function for the configuration</span>
+
+<span class="sd">        :param surrogate_model: the surrogate model to use for the acquisition</span>
+<span class="sd">        :return: the acquisition function (from the emukit library)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">EXPECTED_IMPROVEMENT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExpectedImprovement</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">NEGATIVE_LOWER_CONFIDENCE_BOUND</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NegativeLowerConfidenceBound</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">PROBABILITY_OF_IMPROVEMENT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ProbabilityOfImprovement</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">MAX_VALUE_ENTROPY_SEARCH</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MaxValueEntropySearch</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_space</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">MUMBO</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MUMBO</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_space</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">AcquisitionFunctionType</span><span class="o">.</span><span class="n">ENTROPY_SEARCH</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EntropySearch</span><span class="p">(</span><span class="n">surrogate_model</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_space</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquisition function type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span><span class="si">}</span><span class="s2"> is not supported&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BOConfig.get_acquisition_optimizer"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.get_acquisition_optimizer">[docs]</a>    <span class="k">def</span> <span class="nf">get_acquisition_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AcquisitionOptimizerBase</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the acquisition function optimizer for the given configuration</span>
+
+<span class="sd">        :return: the optimizer (from the emukit library)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer_type</span> <span class="o">==</span> <span class="n">AcquisitionOptimizerType</span><span class="o">.</span><span class="n">GRADIENT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">GradientAcquisitionOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_space</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The specified acquisition optimizer type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer_type</span><span class="si">}</span><span class="s2"> &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;is not supported&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;X_init: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">X_init</span><span class="si">}</span><span class="s2">, Y_init: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Y_init</span><span class="si">}</span><span class="s2">, input_space: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_space</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;evaluation_budget: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluation_budget</span><span class="si">}</span><span class="s2">, gp_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gp_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;acquisition_optimizer_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer_type</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;acquisition_function_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;objective_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">objective_type</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="BOConfig.from_dict"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;BOConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">BOConfig</span><span class="p">(</span>
+            <span class="n">X_init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;X_init&quot;</span><span class="p">]),</span> <span class="n">Y_init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;Y_init&quot;</span><span class="p">]),</span>
+            <span class="n">input_space</span><span class="o">=</span><span class="n">ParameterSpace</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="p">[]),</span> <span class="n">evaluation_budget</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;evaluation_budget&quot;</span><span class="p">],</span>
+            <span class="n">gp_config</span><span class="o">=</span><span class="n">GPConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;gp_config&quot;</span><span class="p">]),</span> <span class="n">acquisition_function_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;acquisition_function_type&quot;</span><span class="p">],</span>
+            <span class="n">acquisition_optimizer_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;acquisition_optimizer_type&quot;</span><span class="p">],</span> <span class="n">objective_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;objective_type&quot;</span><span class="p">],</span>
+            <span class="n">beta</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="BOConfig.to_dict"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a dict representation of the object</span>
+
+<span class="sd">        :return: A dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;X_init&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_init</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Y_init&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Y_init</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;evaluation_budget&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluation_budget</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;gp_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;acquisition_function_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;acquisition_optimizer_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_optimizer_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;objective_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="BOConfig.from_json_file"><a class="viewcode-back" href="../../../../../csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BOConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">BOConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

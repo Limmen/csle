@@ -106,7 +106,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up TrafficManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_traffic_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_traffic_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of the traffic generator script</span>
 
@@ -117,7 +118,8 @@
         <span class="n">running</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR_FILE_NAME</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">return</span> <span class="n">running</span>
 
-    <span class="k">def</span> <span class="nf">_read_traffic_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_traffic_script</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the traffic generator script file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -128,7 +130,8 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not read the script file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_create_traffic_script</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_traffic_script</span><span class="p">(</span><span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to create the traffic script based on the list of commands</span>
 
@@ -176,8 +179,8 @@
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a TrafficDTO with the state of the traffic manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_traffic_status</span><span class="p">()</span>
-        <span class="n">script_file_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="n">TrafficManagerServicer</span><span class="o">.</span><span class="n">_get_traffic_status</span><span class="p">()</span>
+        <span class="n">script_file_str</span> <span class="o">=</span> <span class="n">TrafficManagerServicer</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
         <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">(</span><span class="n">running</span><span class="o">=</span><span class="n">running</span><span class="p">,</span>
                                                                                     <span class="n">script</span><span class="o">=</span><span class="n">script_file_str</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">traffic_dto</span></div>
@@ -194,7 +197,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping the traffic generator script&quot;</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;sudo pkill -f traffic_generator.sh&quot;</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-        <span class="n">script_file_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
+        <span class="n">script_file_str</span> <span class="o">=</span> <span class="n">TrafficManagerServicer</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">(</span><span class="n">running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">script</span><span class="o">=</span><span class="n">script_file_str</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrafficManagerServicer.startTraffic"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic">[docs]</a>    <span class="k">def</span> <span class="nf">startTraffic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">StartTrafficMsg</span><span class="p">,</span>
@@ -210,10 +213,10 @@
                      <span class="sa">f</span><span class="s2">&quot;commands:</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">commands</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">commands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">commands</span><span class="p">)</span>
         <span class="n">sleep_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">sleepTime</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_traffic_script</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span> <span class="n">sleep_time</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">)</span>
+        <span class="n">TrafficManagerServicer</span><span class="o">.</span><span class="n">_create_traffic_script</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span> <span class="n">sleep_time</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">START_TRAFFIC_GENERATOR_CMD</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-        <span class="n">script_file_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
+        <span class="n">script_file_str</span> <span class="o">=</span> <span class="n">TrafficManagerServicer</span><span class="o">.</span><span class="n">_read_traffic_script</span><span class="p">()</span>
         <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">(</span>
             <span class="n">running</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">script</span><span class="o">=</span><span class="n">script_file_str</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">traffic_dto</span></div></div>

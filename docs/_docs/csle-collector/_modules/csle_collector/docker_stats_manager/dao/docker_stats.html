@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.docker_stats_manager.dao.docker_stats &mdash; csle-collector 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.docker_stats_manager.dao.docker_stats</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.docker_stats_manager.dao.docker_stats</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="DockerStats"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats">[docs]</a><span class="k">class</span> <span class="nc">DockerStats</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO class containing docker statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pids</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cpu_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">mem_current</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">mem_total</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">mem_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">blk_read</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">blk_write</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">net_rx</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">net_tx</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">ip</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class constructor, creates a DockerStats object</span>
+
+<span class="sd">        :param pids: the number of pids in the container</span>
+<span class="sd">        :param timestamp: the timestamp that the stats were read</span>
+<span class="sd">        :param cpu_percent: the CPU utilization percentage</span>
+<span class="sd">        :param mem_current: the current memory usage</span>
+<span class="sd">        :param mem_total: the memory limit</span>
+<span class="sd">        :param mem_percent: the memory utilization</span>
+<span class="sd">        :param blk_read: the number of read IO bytes</span>
+<span class="sd">        :param blk_write: the number of written IO bytes</span>
+<span class="sd">        :param net_rx: the number of receives network bytes</span>
+<span class="sd">        :param net_tx: the number of sent network bytes</span>
+<span class="sd">        :param container_name: the name of the container</span>
+<span class="sd">        :param ip: the ip</span>
+<span class="sd">        :param ts: the timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pids</span> <span class="o">=</span> <span class="n">pids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="n">cpu_percent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span> <span class="o">=</span> <span class="n">mem_current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span> <span class="o">=</span> <span class="n">mem_total</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span> <span class="o">=</span> <span class="n">mem_percent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span> <span class="o">=</span> <span class="n">blk_read</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span> <span class="o">=</span> <span class="n">blk_write</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span> <span class="o">=</span> <span class="n">net_rx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span> <span class="o">=</span> <span class="n">net_tx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span>
+
+<div class="viewcode-block" id="DockerStats.from_dict"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">parsed_stats_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a DockerStats object from a dict</span>
+
+<span class="sd">        :param parsed_stats_dict: the dict to parse</span>
+<span class="sd">        :return: the parsed DockerStats object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DockerStats</span><span class="p">(</span><span class="n">pids</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PIDS</span><span class="p">],</span>
+                           <span class="n">timestamp</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">],</span>
+                           <span class="n">cpu_percent</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_PERCENT</span><span class="p">],</span>
+                           <span class="n">mem_current</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_CURRENT</span><span class="p">],</span>
+                           <span class="n">mem_total</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_TOTAL</span><span class="p">],</span>
+                           <span class="n">mem_percent</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_PERCENT</span><span class="p">],</span>
+                           <span class="n">blk_read</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_READ</span><span class="p">],</span>
+                           <span class="n">blk_write</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_WRITE</span><span class="p">],</span>
+                           <span class="n">net_rx</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_RX</span><span class="p">],</span>
+                           <span class="n">net_tx</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_TX</span><span class="p">],</span>
+                           <span class="n">container_name</span><span class="o">=</span><span class="n">parsed_stats_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CONTAINER_NAME</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DockerStats.to_dict"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the object to a dict representation</span>
+<span class="sd">        </span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">PIDS</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CPU_PERCENT</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_CURRENT</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_TOTAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">MEM_PERCENT</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_READ</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">BLK_WRITE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_RX</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">NET_TX</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">DOCKER_STATS</span><span class="o">.</span><span class="n">CONTAINER_NAME</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span>
+        <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;pids: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="si">}</span><span class="s2">, timestamp: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">, cpu_percent: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="si">}</span><span class="s2">%, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;mem_current: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="si">}</span><span class="s2">MB, mem_total: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="si">}</span><span class="s2">MB, mem_percent: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="si">}</span><span class="s2">%,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;blk_read: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="si">}</span><span class="s2">MB, blk_write: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="si">}</span><span class="s2">MB, net_rx: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="si">}</span><span class="s2">MB, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;net_tx: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="si">}</span><span class="s2">MB, container_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="DockerStats.compute_averages"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.compute_averages">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_averages</span><span class="p">(</span><span class="n">stats_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;DockerStats&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute average stats from a list</span>
+
+<span class="sd">        :param stats_list: the list to use to compute averages</span>
+<span class="sd">        :return: a new DockerStats object with the averages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">ts</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y, %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">DockerStats</span><span class="p">(</span><span class="n">pids</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">cpu_percent</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">mem_current</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">mem_total</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">mem_percent</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                               <span class="n">blk_read</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">blk_write</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">net_rx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">net_tx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">container_name</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">sum_pids</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_cpu_percent</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_mem_current</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_mem_total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_mem_percent</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_blk_read</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_blk_write</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_net_rx</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_net_tx</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">)):</span>
+            <span class="n">sum_pids</span> <span class="o">=</span> <span class="n">sum_pids</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pids</span>
+            <span class="n">sum_cpu_percent</span> <span class="o">=</span> <span class="n">sum_cpu_percent</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cpu_percent</span>
+            <span class="n">sum_mem_current</span> <span class="o">=</span> <span class="n">sum_mem_current</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mem_current</span>
+            <span class="n">sum_mem_total</span> <span class="o">=</span> <span class="n">sum_mem_total</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mem_total</span>
+            <span class="n">sum_mem_percent</span> <span class="o">=</span> <span class="n">sum_mem_percent</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mem_percent</span>
+            <span class="n">sum_blk_read</span> <span class="o">=</span> <span class="n">sum_blk_read</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">blk_read</span>
+            <span class="n">sum_blk_write</span> <span class="o">=</span> <span class="n">sum_blk_write</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">blk_write</span>
+            <span class="n">sum_net_rx</span> <span class="o">=</span> <span class="n">sum_net_rx</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">net_rx</span>
+            <span class="n">sum_net_tx</span> <span class="o">=</span> <span class="n">sum_net_tx</span> <span class="o">+</span> <span class="n">stats_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">net_tx</span>
+
+        <span class="n">avg_pids</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_pids</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_cpu_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_cpu_percent</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_mem_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_mem_current</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_mem_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_mem_total</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_mem_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_mem_percent</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_blk_read</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_blk_read</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_blk_write</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_blk_write</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_net_rx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_net_rx</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+        <span class="n">avg_net_tx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sum_net_tx</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats_list</span><span class="p">))))</span>
+
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">stats_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="n">container_name</span> <span class="o">=</span> <span class="n">stats_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">container_name</span>
+
+        <span class="k">return</span> <span class="n">DockerStats</span><span class="p">(</span><span class="n">pids</span><span class="o">=</span><span class="n">avg_pids</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">cpu_percent</span><span class="o">=</span><span class="n">avg_cpu_percent</span><span class="p">,</span> <span class="n">mem_current</span><span class="o">=</span><span class="n">avg_mem_current</span><span class="p">,</span>
+                           <span class="n">mem_total</span><span class="o">=</span><span class="n">avg_mem_total</span><span class="p">,</span> <span class="n">mem_percent</span><span class="o">=</span><span class="n">avg_mem_percent</span><span class="p">,</span>
+                           <span class="n">blk_read</span><span class="o">=</span><span class="n">avg_blk_read</span><span class="p">,</span> <span class="n">blk_write</span><span class="o">=</span><span class="n">avg_blk_write</span><span class="p">,</span> <span class="n">net_rx</span><span class="o">=</span><span class="n">avg_net_rx</span><span class="p">,</span> <span class="n">net_tx</span><span class="o">=</span><span class="n">avg_net_tx</span><span class="p">,</span>
+                           <span class="n">container_name</span><span class="o">=</span><span class="n">container_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DockerStats.from_kafka_record"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a kafka record to a DTO</span>
+
+<span class="sd">        :param record: the recordto convert</span>
+<span class="sd">        :return: the created DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">DockerStats</span><span class="p">(</span><span class="n">ts</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ip</span><span class="o">=</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cpu_percent</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">mem_current</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                          <span class="n">mem_total</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span> <span class="n">mem_percent</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span> <span class="n">blk_read</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+                          <span class="n">blk_write</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span> <span class="n">net_rx</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">8</span><span class="p">]),</span> <span class="n">net_tx</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">9</span><span class="p">]),</span> <span class="n">container_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">pids</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">]))),</span> <span class="n">timestamp</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="DockerStats.update_with_kafka_record"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the DTO with a given kafka record</span>
+
+<span class="sd">        :param record: the record to update with</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pids</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">])))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DockerStats.update_with_kafka_record_ip"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record_ip">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the DTO with a given kafka record</span>
+
+<span class="sd">        :param record: the record to update with</span>
+<span class="sd">        :param ip: the ip of the host</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ip</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pids</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">10</span><span class="p">])))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DockerStats.to_kafka_record"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the DTO to a kafka record</span>
+
+<span class="sd">        :param ip: the ip to add to the DTO</span>
+<span class="sd">        :return: the Kafka record</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="si">}</span><span class="s2">,&quot;</span> \
+                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="si">}</span><span class="s2">,&quot;</span> \
+                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="si">}</span><span class="s2">,&quot;</span> \
+                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">record</span></div>
+
+<div class="viewcode-block" id="DockerStats.copy"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a copy of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">DockerStats</span><span class="p">(</span>
+            <span class="n">pids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">cpu_percent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">,</span> <span class="n">mem_current</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="p">,</span>
+            <span class="n">mem_total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="p">,</span> <span class="n">mem_percent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="p">,</span> <span class="n">blk_read</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="p">,</span> <span class="n">blk_write</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="p">,</span>
+            <span class="n">net_rx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="p">,</span> <span class="n">net_tx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="p">,</span> <span class="n">container_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="DockerStats.get_deltas"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_deltas">[docs]</a>    <span class="k">def</span> <span class="nf">get_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_prime</span><span class="p">:</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the deltas between two stats objects</span>
+
+<span class="sd">        :param stats_prime: the stats object to compare with</span>
+<span class="sd">        :param max_counter: the maximum counter_value</span>
+<span class="sd">        :return: the deltas and the labels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deltas</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">cpu_percent</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">mem_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">mem_total</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">mem_percent</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">blk_read</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">blk_write</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">net_rx</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">net_tx</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="p">)),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stats_prime</span><span class="o">.</span><span class="n">pids</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;cpu_percent&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_current&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_total&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_percent&quot;</span><span class="p">,</span> <span class="s2">&quot;blk_read&quot;</span><span class="p">,</span> <span class="s2">&quot;blk_write&quot;</span><span class="p">,</span> <span class="s2">&quot;net_rx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;net_tx&quot;</span><span class="p">,</span> <span class="s2">&quot;pids&quot;</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">labels</span></div>
+
+<div class="viewcode-block" id="DockerStats.get_values"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current values</span>
+
+<span class="sd">        :return: the values and the labels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_current</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_total</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_percent</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_read</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blk_write</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net_rx</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net_tx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pids</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;cpu_percent&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_current&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_total&quot;</span><span class="p">,</span> <span class="s2">&quot;mem_percent&quot;</span><span class="p">,</span> <span class="s2">&quot;blk_read&quot;</span><span class="p">,</span> <span class="s2">&quot;blk_write&quot;</span><span class="p">,</span> <span class="s2">&quot;net_rx&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;net_tx&quot;</span><span class="p">,</span> <span class="s2">&quot;pids&quot;</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">labels</span></div>
+
+<div class="viewcode-block" id="DockerStats.num_attributes"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The number of attributes of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">13</span></div>
+
+<div class="viewcode-block" id="DockerStats.schema"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.schema">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: get the schema of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DockerStats</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DockerStats.from_json_file"><a class="viewcode-back" href="../../../../csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DockerStats&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">DockerStats</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -28,6 +28,14 @@ csle\_agents.common.fnn\_w\_linear module
    :undoc-members:
    :show-inheritance:
 
+csle\_agents.common.objective\_type module
+------------------------------------------
+
+.. automodule:: csle_agents.common.objective_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_agents.common.pruning module
 ----------------------------------
 

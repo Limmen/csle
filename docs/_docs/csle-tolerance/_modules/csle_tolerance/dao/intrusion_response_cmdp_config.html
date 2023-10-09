@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_tolerance.dao.intrusion_response_cmdp_config &mdash; csle-tolerancexsg 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-tolerancexsg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.constants.html">csle_tolerance.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.dao.html">csle_tolerance.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.envs.html">csle_tolerance.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.util.html">csle_tolerance.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-tolerancexsg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_tolerance.dao.intrusion_response_cmdp_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_tolerance.dao.intrusion_response_cmdp_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+
+<div class="viewcode-block" id="IntrusionResponseCmdpConfig"><a class="viewcode-back" href="../../../csle_tolerance.dao.html#csle_tolerance.dao.intrusion_response_cmdp_config.IntrusionResponseCmdpConfig">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseCmdpConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configuration of the intrusion response CMDP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">s_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span>
+                 <span class="n">cost_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">negate_costs</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+                 <span class="n">initial_state</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">constraint_cost_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">epsilon_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param p_a: the intrusion probability</span>
+<span class="sd">        :param p_c: the crash probability</span>
+<span class="sd">        :param p_u: the recovery probability</span>
+<span class="sd">        :param s_max: the maximum node of nodes</span>
+<span class="sd">        :param transition_tensor: the transition tensor</span>
+<span class="sd">        :param cost_tensor: the cost tensor</span>
+<span class="sd">        :param constraint_cost_tensor: the constraint cost tensor</span>
+<span class="sd">        :param negate_costs: boolean flag indicating whether costs should be negated or not</span>
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param actions: the list of actions</span>
+<span class="sd">        :param initial_state: the initial state of the CMDP</span>
+<span class="sd">        :param cost_tensor: the constraint cost tensor</span>
+<span class="sd">        :param f: the tolerance threshold</span>
+<span class="sd">        :param epsilon_a: the expected availability threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_a</span> <span class="o">=</span> <span class="n">p_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_c</span> <span class="o">=</span> <span class="n">p_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_u</span> <span class="o">=</span> <span class="n">p_u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">=</span> <span class="n">s_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span> <span class="o">=</span> <span class="n">transition_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_tensor</span> <span class="o">=</span> <span class="n">cost_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negate_costs</span> <span class="o">=</span> <span class="n">negate_costs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_state</span> <span class="o">=</span> <span class="n">initial_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraint_cost_tensor</span> <span class="o">=</span> <span class="n">constraint_cost_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_a</span> <span class="o">=</span> <span class="n">epsilon_a</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p_a: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_a</span><span class="si">}</span><span class="s2">, p_c: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_c</span><span class="si">}</span><span class="s2">, p_u: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_u</span><span class="si">}</span><span class="s2">, s_max: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">s_max</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;transition_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span><span class="si">}</span><span class="s2">, cost_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_tensor</span><span class="si">}</span><span class="s2">, seed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;negate_costs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">negate_costs</span><span class="si">}</span><span class="s2">, states: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="si">}</span><span class="s2">, actions: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;initial state: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_state</span><span class="si">}</span><span class="s2">, constraint_cost_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">constraint_cost_tensor</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;f: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="si">}</span><span class="s2">, epsilon_a: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_a</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

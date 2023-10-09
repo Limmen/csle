@@ -111,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.client_manager.html#module-csle_collector.client_manager.client_manager">csle_collector.client_manager.client_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.getClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.getClients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_arrival_thread"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.get_arrival_thread()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.get_producer_thread"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.get_producer_thread()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.startClients()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.startProducer"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.startProducer()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.client_manager.html#csle_collector.client_manager.client_manager.ClientManagerServicer.stopClients"><code class="docutils literal notranslate"><span class="pre">ClientManagerServicer.stopClients()</span></code></a></li>
@@ -647,36 +649,28 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html">csle_collector.docker_stats_manager.dao package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao.docker_stats">csle_collector.docker_stats_manager.dao.docker_stats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html">csle_collector.docker_stats_manager.threads package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads.docker_stats_thread">csle_collector.docker_stats_manager.threads.docker_stats_thread module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.docker_stats">csle_collector.docker_stats_manager.docker_stats module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats"><code class="docutils literal notranslate"><span class="pre">DockerStats</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStats.compute_averages()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.copy"><code class="docutils literal notranslate"><span class="pre">DockerStats.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_deltas()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_values()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes"><code class="docutils literal notranslate"><span class="pre">DockerStats.num_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.schema"><code class="docutils literal notranslate"><span class="pre">DockerStats.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record_ip()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.html#module-csle_collector.docker_stats_manager.docker_stats_manager">csle_collector.docker_stats_manager.docker_stats_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.getDockerStatsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.getDockerStatsMonitorStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.get_docker_stats_monitor_threads"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.get_docker_stats_monitor_threads()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.startDockerStatsMonitor"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.startDockerStatsMonitor()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.stopDockerStatsMonitor"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.stopDockerStatsMonitor()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.compute_averages()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.get_ip()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.run()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
@@ -781,16 +775,16 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_server">csle_collector.elk_manager.query_elk_server module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.get_elk_status"><code class="docutils literal notranslate"><span class="pre">get_elk_status()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_elastic"><code class="docutils literal notranslate"><span class="pre">start_elastic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_elk"><code class="docutils literal notranslate"><span class="pre">start_elk()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_kibana"><code class="docutils literal notranslate"><span class="pre">start_kibana()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.start_logstash"><code class="docutils literal notranslate"><span class="pre">start_logstash()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_elastic"><code class="docutils literal notranslate"><span class="pre">stop_elastic()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_elk"><code class="docutils literal notranslate"><span class="pre">stop_elk()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_kibana"><code class="docutils literal notranslate"><span class="pre">stop_kibana()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_server.stop_logstash"><code class="docutils literal notranslate"><span class="pre">stop_logstash()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#module-csle_collector.elk_manager.query_elk_manager">csle_collector.elk_manager.query_elk_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.get_elk_status"><code class="docutils literal notranslate"><span class="pre">get_elk_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_elastic"><code class="docutils literal notranslate"><span class="pre">start_elastic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_elk"><code class="docutils literal notranslate"><span class="pre">start_elk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_kibana"><code class="docutils literal notranslate"><span class="pre">start_kibana()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.start_logstash"><code class="docutils literal notranslate"><span class="pre">start_logstash()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_elastic"><code class="docutils literal notranslate"><span class="pre">stop_elastic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_elk"><code class="docutils literal notranslate"><span class="pre">stop_elk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_kibana"><code class="docutils literal notranslate"><span class="pre">stop_kibana()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.elk_manager.html#csle_collector.elk_manager.query_elk_manager.stop_logstash"><code class="docutils literal notranslate"><span class="pre">stop_logstash()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.elk_manager.html#module-csle_collector.elk_manager">Module contents</a></li>
@@ -1099,20 +1093,25 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.ryu_manager.html">csle_collector.ryu_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ryu_manager.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.threads.html">csle_collector.ryu_manager.threads package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads.failure_detector">csle_collector.ryu_manager.threads.failure_detector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.threads.html#module-csle_collector.ryu_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.ryu_manager.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_server">csle_collector.ryu_manager.query_ryu_server module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.get_ryu_status"><code class="docutils literal notranslate"><span class="pre">get_ryu_status()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.start_ryu"><code class="docutils literal notranslate"><span class="pre">start_ryu()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor"><code class="docutils literal notranslate"><span class="pre">start_ryu_monitor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.stop_ryu"><code class="docutils literal notranslate"><span class="pre">stop_ryu()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_server.stop_ryu_monitor"><code class="docutils literal notranslate"><span class="pre">stop_ryu_monitor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.query_ryu_manager">csle_collector.ryu_manager.query_ryu_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.get_ryu_status"><code class="docutils literal notranslate"><span class="pre">get_ryu_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.start_ryu"><code class="docutils literal notranslate"><span class="pre">start_ryu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.start_ryu_monitor"><code class="docutils literal notranslate"><span class="pre">start_ryu_monitor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.stop_ryu"><code class="docutils literal notranslate"><span class="pre">stop_ryu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.query_ryu_manager.stop_ryu_monitor"><code class="docutils literal notranslate"><span class="pre">stop_ryu_monitor()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="csle_collector.ryu_manager.html#module-csle_collector.ryu_manager.ryu_manager">csle_collector.ryu_manager.ryu_manager module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.FailureDetector"><code class="docutils literal notranslate"><span class="pre">FailureDetector</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.FailureDetector.run"><code class="docutils literal notranslate"><span class="pre">FailureDetector.run()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer"><code class="docutils literal notranslate"><span class="pre">RyuManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.getRyuStatus"><code class="docutils literal notranslate"><span class="pre">RyuManagerServicer.getRyuStatus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.startRyu"><code class="docutils literal notranslate"><span class="pre">RyuManagerServicer.startRyu()</span></code></a></li>

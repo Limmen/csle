@@ -9,6 +9,8 @@ Subpackages
 
    csle_agents.agents.base
    csle_agents.agents.bayesian_optimization
+   csle_agents.agents.bayesian_optimization_emukit
+   csle_agents.agents.cma_es
    csle_agents.agents.cross_entropy
    csle_agents.agents.dfsp_local
    csle_agents.agents.differential_evolution
@@ -18,6 +20,7 @@ Subpackages
    csle_agents.agents.hsvi
    csle_agents.agents.hsvi_os_posg
    csle_agents.agents.kiefer_wolfowitz
+   csle_agents.agents.lp_cmdp
    csle_agents.agents.lp_nf
    csle_agents.agents.pi
    csle_agents.agents.ppo

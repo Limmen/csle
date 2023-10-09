@@ -1,13 +1,21 @@
 csle\_collector.ryu\_manager package
 ====================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   csle_collector.ryu_manager.threads
+
 Submodules
 ----------
 
-csle\_collector.ryu\_manager.query\_ryu\_server module
-------------------------------------------------------
+csle\_collector.ryu\_manager.query\_ryu\_manager module
+-------------------------------------------------------
 
-.. automodule:: csle_collector.ryu_manager.query_ryu_server
+.. automodule:: csle_collector.ryu_manager.query_ryu_manager
    :members:
    :undoc-members:
    :show-inheritance:

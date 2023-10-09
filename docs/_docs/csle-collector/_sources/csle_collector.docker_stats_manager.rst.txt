@@ -1,16 +1,17 @@
 csle\_collector.docker\_stats\_manager package
 ==============================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   csle_collector.docker_stats_manager.dao
+   csle_collector.docker_stats_manager.threads
+
 Submodules
 ----------
-
-csle\_collector.docker\_stats\_manager.docker\_stats module
------------------------------------------------------------
-
-.. automodule:: csle_collector.docker_stats_manager.docker_stats
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 csle\_collector.docker\_stats\_manager.docker\_stats\_manager module
 --------------------------------------------------------------------
