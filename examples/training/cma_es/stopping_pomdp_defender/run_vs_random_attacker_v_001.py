@@ -8,6 +8,7 @@ from csle_agents.agents.cma_es.cma_es_agent import CMAESAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy_type import PolicyType
+from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-030"
@@ -26,7 +27,7 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             agents_constants.CMA_ES_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
-                                                             descr="the number of training iterations"),
+                                                           descr="the number of training iterations"),
             agents_constants.CMA_ES_OPTIMIZATION.L: HParam(value=L, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
@@ -60,17 +61,20 @@ if __name__ == '__main__':
                 name=agents_constants.CMA_ES_OPTIMIZATION.UCB_XI,
                 descr="xi parameter for the xi utility function"),
             agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                value=[(-5, 5)] * L,
+                value=[[-5] * L, [5] * L],
                 name=agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS,
                 descr="parameter bounds"),
             agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE: HParam(
                 value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE,
-                descr="policy type for the execution")
+                descr="policy type for the execution"),
+            agents_constants.RANDOM_SEARCH.OBJECTIVE_TYPE: HParam(
+                value=ObjectiveType.MAX, name=agents_constants.RANDOM_SEARCH.OBJECTIVE_TYPE,
+                descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = CMAESAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                          experiment_config=experiment_config, save_to_metastore=False)
+                       experiment_config=experiment_config, save_to_metastore=False)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.L = 3

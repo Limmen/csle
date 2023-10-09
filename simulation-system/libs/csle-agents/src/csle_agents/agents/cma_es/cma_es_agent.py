@@ -23,6 +23,7 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.training.policy_type import PolicyType
 from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_agents.common.objective_type import ObjectiveType
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -232,6 +233,12 @@ class CMAESAgent(BaseAgent):
         """
         start: float = time.time()
         L = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value
+        objective_type_param = (
+            self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE].value)
+        if not isinstance(objective_type_param, ObjectiveType):
+            raise ValueError("Invalid objective type")
+        else:
+            objective_type: ObjectiveType = objective_type_param
         if agents_constants.CMA_ES_OPTIMIZATION.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.THETA1].value
         else:
@@ -247,7 +254,7 @@ class CMAESAgent(BaseAgent):
                 self.env.static_defender_strategy = policy
             if self.experiment_config.player_type == PlayerType.ATTACKER:
                 self.env.static_attacker_strategy = policy
-        J = self.J(theta)
+        J = self.J(theta, objetive_type=objective_type)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
@@ -258,11 +265,20 @@ class CMAESAgent(BaseAgent):
 
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.N].value
-
+        parameter_bounds = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS].value
+        es = cma.CMAEvolutionStrategy(theta, L / N, {'verb_log': False, 'verbose': False, 'verb_disp': False,
+                                                     'verb_time': False, 'bounds': parameter_bounds})
         for i in range(N):
-            es = cma.CMAEvolutionStrategy(theta, L / N)
-            es.optimize(self.J)
-            J = es.result_pretty().fbest
+            if es.stop():
+                break
+            solutions = es.ask()
+            values = list(map(lambda x: self.J(x, objetive_type=objective_type), solutions))
+            es.tell(solutions, values)
+            J = es.result.fbest
+            theta = es.result.xbest
+            if objective_type == ObjectiveType.MAX:
+                J = -J
+            policy = self.get_policy(theta=theta, L=L)
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -370,8 +386,18 @@ class CMAESAgent(BaseAgent):
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def J(self, theta):
-        return round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3)
+    def J(self, theta: List[float], objetive_type: ObjectiveType) -> float:
+        """
+        The objective function to minimize
+
+        :param theta: the theta vector to evaluate
+        :param objetive_type: the objective type
+        :return: the objective function value
+        """
+        if objetive_type == ObjectiveType.MIN:
+            return float(round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3))
+        else:
+            return -float(round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3))
 
     def eval_theta(self, theta) -> Dict[str, Any]:
         """

@@ -216,6 +216,7 @@ class BAYESIAN_OPTIMIZATION:
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
 
+
 class CMA_ES_OPTIMIZATION:
     """
     String constants related to CMA-ES Optimization
@@ -236,6 +237,7 @@ class CMA_ES_OPTIMIZATION:
     PARAMS = "params"
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
+
 
 class BAYESIAN_OPTIMIZATION_EMUKIT:
     """
