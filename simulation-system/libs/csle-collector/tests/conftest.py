@@ -8,6 +8,7 @@ from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArri
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
+from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 
 
 @pytest.fixture
@@ -57,7 +58,7 @@ def example_piece_wise_constant_arrival_config() -> PieceWiseConstantArrivalConf
 
     :return: an example PieceWiseConstantArrivalConfig object
     """
-    return PieceWiseConstantArrivalConfig(breakvalues=[1.4, 0.2], breakpoints=[2.1, 0.3])
+    return PieceWiseConstantArrivalConfig(breakvalues=[1.4, 0.2], breakpoints=[2, 0])
 
 
 @pytest.fixture
@@ -100,3 +101,15 @@ def example_workflow_config(example_workflow_markov_chain: WorkflowMarkovChain,
     """
     return WorkflowsConfig(workflow_markov_chains=[example_workflow_markov_chain],
                            workflow_services=[example_workflow_service])
+
+
+@pytest.fixture
+def example_docker_stats() -> DockerStats:
+    """
+    Fixture that returns an example DockerStats object
+
+    :return: an example DockerStats object
+    """
+    return DockerStats(pids=1.2, timestamp="1234567", cpu_percent=1.4, mem_current=56.3, mem_total=100.0,
+                       mem_percent=84.0, blk_read=13.2, blk_write=2.0, net_rx=21.0, net_tx=0.2,
+                       container_name="example_container1", ip="1.2.3.4", ts=2.3)

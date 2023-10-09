@@ -1,10 +1,11 @@
 from typing import List, Dict, Any, Tuple, Union
 from datetime import datetime
 import time
+from csle_base.json_serializable import JSONSerializable
 import csle_collector.constants.constants as constants
 
 
-class DockerStats:
+class DockerStats(JSONSerializable):
     """
     DTO class containing docker statistics
     """
@@ -286,3 +287,17 @@ class DockerStats:
         :return: get the schema of the DTO
         """
         return DockerStats()
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "DockerStats":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return DockerStats.from_dict(json.loads(json_str))
