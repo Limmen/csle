@@ -9,6 +9,10 @@ To run a script, execute:
 python <script_name>
 ```
 
+## Author
+
+Nils Forsgren <nforsg@kth.se>
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
