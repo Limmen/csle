@@ -23,6 +23,7 @@ and game-theoretic algorithms for finding defender policies.
 - `Bayesian optimization` (for Bayesian optimization algorithms)
 - `iteround` (utility library)
 - `emukit` (for Bayesian optimization)
+- `cma` (for CMA optimization)
 
 ## Development Requirements
 

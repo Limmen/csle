@@ -33,7 +33,6 @@ from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 
 
-
 class TestMetastoreFacadeSuite:
     """
     Test suite for metastore_facade.py
@@ -5368,7 +5367,7 @@ class TestMetastoreFacadeSuite:
         :return: None
         """
         example_config.id = 1
-        example_record = (example_config.id, )
+        example_record = (example_config.id,)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('psycopg.connect', return_value=mocked_connection)

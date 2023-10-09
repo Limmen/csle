@@ -2,11 +2,10 @@ from typing import Union, List, Dict, Optional, Any
 import math
 import time
 import gymnasium as gym
+import cma
 import os
 import numpy as np
 import numpy.typing as npt
-from bayes_opt import BayesianOptimization
-from bayes_opt import UtilityFunction
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -24,14 +23,14 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.training.policy_type import PolicyType
 from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_agents.common.objective_type import ObjectiveType
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
-from csle_agents.common.objective_type import ObjectiveType
 
 
-class BayesOptAgent(BaseAgent):
+class CMAESAgent(BaseAgent):
     """
-    Bayesian Optimization Agent
+    Covariance Matrix Adaptation Evolution Strategy (CMA-ES) Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -39,7 +38,7 @@ class BayesOptAgent(BaseAgent):
                  experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
-        Initializes the Bayesian Optimization Agent
+        Initializes the CMA-ES Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -50,14 +49,14 @@ class BayesOptAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.BAYESIAN_OPTIMIZATION
+        assert experiment_config.agent_type == AgentType.CMA_ES
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using Bayesian Optimization
+        Performs the policy training for the given random seeds using CMA-ES
 
         :return: the training metrics and the trained policies
         """
@@ -76,27 +75,27 @@ class BayesOptAgent(BaseAgent):
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
-        for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value + 1):
             exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_{l}")
             exp_result.plot_metrics.append(f"{env_constants.ENV_METRICS.STOP}_running_average_{l}")
 
-        descr = f"Training of policies with the Bayesian Optimization algorithm using " \
+        descr = f"Training of policies with the CMA-ES algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
+                for l in range(1, self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value + 1):
                     exp_result.all_metrics[seed][
-                        f"{agents_constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER}_l={l}"] = []
+                        f"{agents_constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER}_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
                     for l in range(1,
-                                   self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
-                        exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER
+                                   self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value + 1):
+                        exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -107,7 +106,7 @@ class BayesOptAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value + 1):
                 exp_result.all_metrics[seed][f"{env_constants.ENV_METRICS.STOP}_{l}"] = []
                 exp_result.all_metrics[seed][f"{env_constants.ENV_METRICS.STOP}_running_average_{l}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
@@ -153,8 +152,8 @@ class BayesOptAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.bayesian_optimization(exp_result=exp_result, seed=seed, training_job=self.training_job,
-                                                    random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.cma_es(exp_result=exp_result, seed=seed, training_job=self.training_job,
+                                     random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -211,20 +210,20 @@ class BayesOptAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.BAYESIAN_OPTIMIZATION.N,
-                agents_constants.BAYESIAN_OPTIMIZATION.L, agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
-                agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION,
-                agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA,
-                agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
-                agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
+        return [agents_constants.CMA_ES_OPTIMIZATION.N,
+                agents_constants.CMA_ES_OPTIMIZATION.L, agents_constants.CMA_ES_OPTIMIZATION.THETA1,
+                agents_constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION,
+                agents_constants.CMA_ES_OPTIMIZATION.UCB_KAPPA,
+                agents_constants.CMA_ES_OPTIMIZATION.UCB_XI,
+                agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def bayesian_optimization(self, exp_result: ExperimentResult, seed: int,
-                              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
+    def cma_es(self, exp_result: ExperimentResult, seed: int,
+               training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
-        Runs the Bayesian Optimization algorithm
+        Runs the CMA-ES algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -233,15 +232,20 @@ class BayesOptAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         start: float = time.time()
-        objective_type = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE].value
-        L = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value
-        if agents_constants.BAYESIAN_OPTIMIZATION.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.THETA1].value
+        L = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value
+        objective_type_param = (
+            self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE].value)
+        if not isinstance(objective_type_param, ObjectiveType):
+            raise ValueError("Invalid objective type")
+        else:
+            objective_type: ObjectiveType = objective_type_param
+        if agents_constants.CMA_ES_OPTIMIZATION.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = BayesOptAgent.initial_theta(L=L)
+                theta = CMAESAgent.initial_theta(L=L)
             else:
-                theta = BayesOptAgent.initial_theta(L=2 * L)
+                theta = CMAESAgent.initial_theta(L=2 * L)
 
         # Initial eval
         policy = self.get_policy(theta=list(theta), L=L)
@@ -250,64 +254,31 @@ class BayesOptAgent(BaseAgent):
                 self.env.static_defender_strategy = policy
             if self.experiment_config.player_type == PlayerType.ATTACKER:
                 self.env.static_attacker_strategy = policy
-        avg_metrics = self.eval_theta(
-            policy=policy,
-            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        J = self.J(theta, objetive_type=objective_type)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS].append(
-            BayesOptAgent.round_vec(theta))
+        exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.THETAS].append(
+            CMAESAgent.round_vec(theta))
         time_elapsed_minutes = round((time.time() - start) / 60, 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.N].value
-
+        N = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.N].value
         parameter_bounds = self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS].value
-        parameter_bounds_dict = {}
-        for i, bound in enumerate(parameter_bounds):
-            parameter_bounds_dict[f"param_{i}"] = bound
-        optimizer = BayesianOptimization(
-            f=None,
-            pbounds=parameter_bounds_dict,
-            verbose=0,
-            random_state=seed,
-        )
-        if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION].value \
-                == agents_constants.BAYESIAN_OPTIMIZATION.UCB:
-            utility = UtilityFunction(
-                kind=agents_constants.BAYESIAN_OPTIMIZATION.UCB,
-                kappa=self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA].value,
-                xi=self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI].value)
-        else:
-            raise ValueError(
-                f"Utility function: "
-                f"{self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION].value} "
-                f"not recognized")
-
+        es = cma.CMAEvolutionStrategy(theta, L / N, {'verb_log': False, 'verbose': False, 'verb_disp': False,
+                                                     'verb_time': False, 'bounds': parameter_bounds})
         for i in range(N):
-            theta_candidate = optimizer.suggest(utility)
-            theta = BayesOptAgent.get_theta_vector_from_param_dict(param_dict=theta_candidate)
-            candidate_policy = self.get_policy(theta=list(theta), L=L)
-            avg_metrics = self.eval_theta(
-                policy=candidate_policy,
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            if objective_type == ObjectiveType.MIN:
-                J_candidate = - J_candidate
-            try:
-                optimizer.register(params=theta_candidate, target=J_candidate)
-                J = -optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.TARGET]
-            except Exception as e:
-                Logger.__call__().get_logger().info(
-                    f"Exception, candidate:{theta_candidate}, exception: {str(e)}, {repr(e)}")
-                continue
-
-            # Log average return
-            policy = self.get_policy(theta=list(BayesOptAgent.get_theta_vector_from_param_dict(
-                optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.PARAMS])), L=L)
+            if es.stop():
+                break
+            solutions = es.ask()
+            values = list(map(lambda x: self.J(x, objetive_type=objective_type), solutions))
+            es.tell(solutions, values)
+            J = es.result.fbest
+            theta = es.result.xbest
+            if objective_type == ObjectiveType.MAX:
+                J = -J
+            policy = self.get_policy(theta=theta, L=L)
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -315,19 +286,21 @@ class BayesOptAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
+            avg_metrics = self.eval_theta(theta)
+
             # Log runtime
             time_elapsed_minutes = round((time.time() - start) / 60, 3)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
 
             # Log thetas
-            exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS].append(
-                BayesOptAgent.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.THETAS].append(
+                CMAESAgent.round_vec(theta))
 
-            if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE] \
+            if self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE] \
                     == PolicyType.MULTI_THRESHOLD:
                 # Log thresholds
-                exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THRESHOLDS].append(
-                    BayesOptAgent.round_vec(policy.thresholds()))
+                exp_result.all_metrics[seed][agents_constants.CMA_ES_OPTIMIZATION.THRESHOLDS].append(
+                    CMAESAgent.round_vec(policy.thresholds()))
 
                 # Log stop distribution
                 for k, v in policy.stop_distributions().items():
@@ -358,7 +331,7 @@ class BayesOptAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value + 1):
                 if env_constants.ENV_METRICS.STOP + f"_{l}" in avg_metrics:
                     exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
@@ -400,7 +373,7 @@ class BayesOptAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[BAYES-OPT] i: {i}, J:{J}, "
+                    f"[CMA-ES] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -413,14 +386,45 @@ class BayesOptAgent(BaseAgent):
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
-                   max_steps: int = 200) -> Dict[str, Any]:
+    def J(self, theta: List[float], objetive_type: ObjectiveType) -> float:
+        """
+        The objective function to minimize
+
+        :param theta: the theta vector to evaluate
+        :param objetive_type: the objective type
+        :return: the objective function value
+        """
+        if objetive_type == ObjectiveType.MIN:
+            return float(round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3))
+        else:
+            return -float(round(self.eval_theta(theta)[env_constants.ENV_METRICS.RETURN], 3))
+
+    def eval_theta(self, theta) -> Dict[str, Any]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
         :return: the average metrics of the evaluation
         """
+        max_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
+        L = self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.L].value
+        if self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE].value \
+                == PolicyType.MULTI_THRESHOLD.value:
+            policy = MultiThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.CMA_ES)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.CMA_ES)
         if self.env is None:
             raise ValueError("An environment need to specified to run the evaluation")
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
@@ -445,8 +449,8 @@ class BayesOptAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = BayesOptAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = BayesOptAgent.compute_avg_metrics(metrics=metrics)
+            metrics = CMAESAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = CMAESAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
     @staticmethod
@@ -503,16 +507,6 @@ class BayesOptAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    @staticmethod
-    def get_theta_vector_from_param_dict(param_dict: Dict[str, float]) -> List[float]:
-        """
-        Extracts the theta vector from the parameter dict
-
-        :param param_dict: the parameter dict
-        :return: the theta vector
-        """
-        return list(param_dict.values())
-
     def get_policy(self, theta: List[float], L: int) \
             -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
@@ -522,7 +516,7 @@ class BayesOptAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE].value \
+        if self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE].value \
                 == PolicyType.MULTI_THRESHOLD.value:
             policy = MultiThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -530,7 +524,7 @@ class BayesOptAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         else:
             policy = LinearThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -538,5 +532,5 @@ class BayesOptAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+                agent_type=AgentType.CMA_ES)
         return policy

@@ -90,6 +90,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 27) {
         return "SIMULATED ANNEALING"
     }
+    if(agentType === 28) {
+        return "CMA-ES"
+    }
     else {
         return "Unknown"
     }
