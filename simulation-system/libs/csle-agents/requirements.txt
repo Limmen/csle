@@ -15,3 +15,4 @@ iteround==1.0.4
 emukit==0.4.10
 GPy==1.10.0
 numpy==1.23.5
+cma==3.3.0

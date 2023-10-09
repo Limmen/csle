@@ -58,7 +58,7 @@ def example_piece_wise_constant_arrival_config() -> PieceWiseConstantArrivalConf
 
     :return: an example PieceWiseConstantArrivalConfig object
     """
-    return PieceWiseConstantArrivalConfig(breakvalues=[1.4, 0.2], breakpoints=[2, 0])
+    return PieceWiseConstantArrivalConfig(breakvalues=[1.4, 0.2], breakpoints=[2, 5])
 
 
 @pytest.fixture

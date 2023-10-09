@@ -72,7 +72,7 @@ Table 18: Properties of a simulation environment configuration.
 
 The numerical algorithms for strategy optimization and system identification are 
 listed in Table 19. These algorithms are implemented in Python and are based on 
-PyTorch, NumPy, PuLP, CvxPy, Openspiel, and Stable-Baselines3. 
+PyTorch, NumPy, PuLP, CvxPy, Openspiel, Stable-Baselines3, emukit, and cma. 
 A code example of running the Q-learning algorithm is shown below:
 
 ```python
