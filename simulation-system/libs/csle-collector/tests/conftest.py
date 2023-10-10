@@ -9,6 +9,7 @@ from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMark
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
+from csle_collector.host_manager.dao.failed_login_attempt import FailedLoginAttempt
 
 
 @pytest.fixture
@@ -113,3 +114,13 @@ def example_docker_stats() -> DockerStats:
     return DockerStats(pids=1.2, timestamp="1234567", cpu_percent=1.4, mem_current=56.3, mem_total=100.0,
                        mem_percent=84.0, blk_read=13.2, blk_write=2.0, net_rx=21.0, net_tx=0.2,
                        container_name="example_container1", ip="1.2.3.4", ts=2.3)
+
+
+@pytest.fixture
+def example_failed_login_attempt() -> FailedLoginAttempt:
+    """
+    Fixture that returns an example FailedLoginAttempt object
+
+    :return: an example FailedLoginAttempt object
+    """
+    return FailedLoginAttempt()
