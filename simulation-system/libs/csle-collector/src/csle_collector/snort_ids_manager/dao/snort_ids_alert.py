@@ -1,5 +1,7 @@
+from typing import Dict, Any
 import re
 import datetime
+from csle_base.json_serializable import JSONSerializable
 import csle_collector.constants.constants as constants
 
 
@@ -28,7 +30,7 @@ class SnortIdsFastLogAlert:
         self.rule_id = rule_id
 
 
-class SnortIdsAlert:
+class SnortIdsAlert(JSONSerializable):
     """
     Object representing an IDS Alert
     """
@@ -208,3 +210,93 @@ class SnortIdsAlert:
         fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id,
                                               source_ip=source_ip, target_ip=target_ip, rule_id=rule_id)
         return fast_log_alert
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Converts the object to a dict representation
+
+        :return: a dict representation of the object
+        """
+        d: Dict[str, Any] = {}
+        d["timestamp"] = self.timestamp
+        d["sig_generator"] = self.sig_generator
+        d["sig_id"] = self.sig_id
+        d["sig_rev"] = self.sig_rev
+        d["msg"] = self.msg
+        d["proto"] = self.proto
+        d["src_ip"] = self.src_ip
+        d["src_port"] = self.src_port
+        d["dst_ip"] = self.dst_ip
+        d["dst_port"] = self.dst_port
+        d["eth_src"] = self.eth_src
+        d["eth_dst"] = self.eth_dst
+        d["eth_len"] = self.eth_len
+        d["tcp_flags"] = self.tcp_flags
+        d["tcp_seq"] = self.tcp_seq
+        d["tcp_ack"] = self.tcp_ack
+        d["tcp_len"] = self.tcp_len
+        d["tcp_window"] = self.tcp_window
+        d["ttl"] = self.ttl
+        d["tos"] = self.tos
+        d["id"] = self.id
+        d["dgm_len"] = self.dgm_len
+        d["ip_len"] = self.ip_len
+        d["icmp_type"] = self.icmp_type
+        d["icmp_code"] = self.icmp_code
+        d["icmp_id"] = self.icmp_id
+        d["icmp_seq"] = self.icmp_seq
+        d["priority"] = self.priority
+        return d
+
+    @staticmethod
+    def from_dict(parsed_stats_dict: Dict[str, Any]) -> "SnortIdsAlert":
+        """
+        Parses a SnortIdsAlert object from a dict
+
+        :param parsed_stats_dict: the dict to parse
+        :return: the parsed SnortIdsAlert object
+        """
+        snort_ids_alert = SnortIdsAlert()
+        snort_ids_alert.timestamp = parsed_stats_dict["timestamp"]
+        snort_ids_alert.sig_generator = parsed_stats_dict["sig_generator"]
+        snort_ids_alert.sig_id = parsed_stats_dict["sig_id"]
+        snort_ids_alert.sig_rev = parsed_stats_dict["sig_rev"]
+        snort_ids_alert.msg = parsed_stats_dict["msg"]
+        snort_ids_alert.proto = parsed_stats_dict["proto"]
+        snort_ids_alert.src_ip = parsed_stats_dict["src_ip"]
+        snort_ids_alert.src_port = parsed_stats_dict["src_port"]
+        snort_ids_alert.dst_ip = parsed_stats_dict["dst_ip"]
+        snort_ids_alert.dst_port = parsed_stats_dict["dst_port"]
+        snort_ids_alert.eth_src = parsed_stats_dict["eth_src"]
+        snort_ids_alert.eth_dst = parsed_stats_dict["eth_dst"]
+        snort_ids_alert.eth_len = parsed_stats_dict["eth_len"]
+        snort_ids_alert.tcp_flags = parsed_stats_dict["tcp_flags"]
+        snort_ids_alert.tcp_seq = parsed_stats_dict["tcp_seq"]
+        snort_ids_alert.tcp_ack = parsed_stats_dict["tcp_ack"]
+        snort_ids_alert.tcp_len = parsed_stats_dict["tcp_len"]
+        snort_ids_alert.tcp_window = parsed_stats_dict["tcp_window"]
+        snort_ids_alert.ttl = parsed_stats_dict["ttl"]
+        snort_ids_alert.tos = parsed_stats_dict["tos"]
+        snort_ids_alert.id = parsed_stats_dict["id"]
+        snort_ids_alert.dgm_len = parsed_stats_dict["dgm_len"]
+        snort_ids_alert.ip_len = parsed_stats_dict["ip_len"]
+        snort_ids_alert.icmp_type = parsed_stats_dict["icmp_type"]
+        snort_ids_alert.icmp_code = parsed_stats_dict["icmp_code"]
+        snort_ids_alert.icmp_id = parsed_stats_dict["icmp_id"]
+        snort_ids_alert.icmp_seq = parsed_stats_dict["icmp_seq"]
+        snort_ids_alert.priority = parsed_stats_dict["priority"]
+        return snort_ids_alert
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SnortIdsAlert":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SnortIdsAlert.from_dict(json.loads(json_str))

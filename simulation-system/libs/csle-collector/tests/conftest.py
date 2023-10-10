@@ -12,6 +12,12 @@ from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.host_manager.dao.failed_login_attempt import FailedLoginAttempt
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.host_manager.dao.successful_login import SuccessfulLogin
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert import OSSECIDSAlert
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
 
 
 @pytest.fixture
@@ -147,3 +153,64 @@ def example_successful_login() -> SuccessfulLogin:
     :return: an example SuccessfulLogin object
     """
     return SuccessfulLogin()
+
+
+@pytest.fixture
+def example_ossec_ids_alert() -> OSSECIDSAlert:
+    """
+    Fixture that returns an example OSSECIDSAlert object
+
+    :return: an example OSSECIDSAlert object
+    """
+    return OSSECIDSAlert(timestamp=12345.2, groups=["group1", "group2"], host="host1", ip="1.2.3.4",
+                         rule_id="admin", level=1, descr="231", src="292", user="user1")
+
+
+@pytest.fixture
+def example_ossec_ids_alert_counters() -> OSSECIdsAlertCounters:
+    """
+    Fixture that returns an example OSSECIdsAlertCounters object
+
+    :return: an example OSSECIdsAlertCounters object
+    """
+    return OSSECIdsAlertCounters()
+
+
+@pytest.fixture
+def example_snort_ids_alert() -> SnortIdsAlert:
+    """
+    Fixture that returns an example SnortIdsAlert object
+
+    :return: an example SnortIdsAlert object
+    """
+    return SnortIdsAlert()
+
+
+@pytest.fixture
+def example_snort_ids_alert_counters() -> SnortIdsAlertCounters:
+    """
+    Fixture that returns an example SnortIdsAlertCounters object
+
+    :return: an example SnortIdsAlertCounters object
+    """
+    return SnortIdsAlertCounters()
+
+
+@pytest.fixture
+def example_snort_ids_ip_alert_counters() -> SnortIdsIPAlertCounters:
+    """
+    Fixture that returns an example SnortIdsIPAlertCounters object
+
+    :return: an example SnortIdsIPAlertCounters object
+    """
+    return SnortIdsIPAlertCounters()
+
+
+@pytest.fixture
+def example_snort_ids_rule_counters() -> SnortIdsRuleCounters:
+    """
+    Fixture that returns an example SnortIdsRuleCounters object
+
+    :return: an example SnortIdsRuleCounters object
+    """
+    return SnortIdsRuleCounters()

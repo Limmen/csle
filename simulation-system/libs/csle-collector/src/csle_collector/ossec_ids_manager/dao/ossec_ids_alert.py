@@ -26,6 +26,8 @@ class OSSECIDSAlert(JSONSerializable):
         self.timestamp = timestamp
         if groups is None:
             self.groups: List[str] = []
+        else:
+            self.groups = groups
         self.group_ids = list(map(lambda x: self.get_group_id(x), self.groups))
         self.host = host
         self.ip = ip
