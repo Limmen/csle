@@ -1,9 +1,10 @@
 from typing import List, Dict, Any
 import time
+from csle_base.json_serializable import JSONSerializable
 from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
 
 
-class SnortIdsRuleCounters:
+class SnortIdsRuleCounters(JSONSerializable):
     """
     DTO containing rule-statistics from the Snort IDS log
     """
@@ -143,3 +144,17 @@ class SnortIdsRuleCounters:
         :return: get the schema of the DTO
         """
         return SnortIdsRuleCounters()
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SnortIdsRuleCounters":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SnortIdsRuleCounters.from_dict(json.loads(json_str))

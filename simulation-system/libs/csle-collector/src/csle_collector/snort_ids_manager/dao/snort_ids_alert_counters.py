@@ -1,12 +1,13 @@
 from typing import List, Dict, Any, Tuple
 import time
 import numpy as np
+from csle_base.json_serializable import JSONSerializable
 import csle_collector.constants.constants as constants
 from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 
 
-class SnortIdsAlertCounters:
+class SnortIdsAlertCounters(JSONSerializable):
     """
     DTO containing statistics from the Snort IDS log
     """
@@ -269,3 +270,17 @@ class SnortIdsAlertCounters:
         :return: get the schema of the DTO
         """
         return SnortIdsAlertCounters()
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SnortIdsAlertCounters":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SnortIdsAlertCounters.from_dict(json.loads(json_str))
