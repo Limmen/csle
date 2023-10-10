@@ -1,7 +1,9 @@
 import datetime
+from csle_base.json_serializable import JSONSerializable
+from typing import Dict, Any
 
 
-class SuccessfulLogin:
+class SuccessfulLogin(JSONSerializable):
     """
     DTO Class representing a parsed successful login event from a server in the emulation
     """
@@ -39,3 +41,43 @@ class SuccessfulLogin:
         :return: a string representation of the object
         """
         return "ip:{}, user:{}, timestamp:{}".format(self.ip, self.user, self.timestamp)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Converts the object to a dict representation
+
+        :return: a dict representation of the object
+        """
+        d: Dict[str, Any] = {}
+        d["timestamp"] = self.timestamp
+        d["ip"] = self.ip
+        d["user"] = self.user
+        return d
+
+    @staticmethod
+    def from_dict(parsed_stats_dict: Dict[str, Any]) -> "SuccessfulLogin":
+        """
+        Parses a FailedLoginAttempt object from a dict
+
+        :param parsed_stats_dict: the dict to parse
+        :return: the parsed FailedLoginAttempt object
+        """
+        successful_login_dto = SuccessfulLogin()
+        successful_login_dto.timestamp = parsed_stats_dict["timestamp"]
+        successful_login_dto.ip = parsed_stats_dict["ip"]
+        successful_login_dto.user = parsed_stats_dict["user"]
+        return successful_login_dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SuccessfulLogin":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SuccessfulLogin.from_dict(json.loads(json_str))
