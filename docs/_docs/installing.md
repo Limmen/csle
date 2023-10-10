@@ -604,7 +604,7 @@ Listing 53: Commands to install Docker.
 
 Next, setup a docker swarm by running the following command on the leader:
 ```bash
-swarm init --advertise-addr <ip address of the leader>
+docker swarm init --advertise-addr <ip address of the leader>
 ```
 <p class="captionFig">
 Listing 54: Command to initialize a Docker swarm.

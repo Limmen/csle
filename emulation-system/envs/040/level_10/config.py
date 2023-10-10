@@ -635,7 +635,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
     ]
     containers_cfg = ContainersConfig(
         containers=containers,
-        agent_ip=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}."
+        agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                  f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.191",
         router_ip=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}.2.10",
         ids_enabled=True, vulnerable_nodes=[

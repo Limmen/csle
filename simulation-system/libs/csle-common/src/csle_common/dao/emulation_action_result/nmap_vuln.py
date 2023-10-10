@@ -99,3 +99,9 @@ class NmapVuln(JSONSerializable):
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
         return NmapVuln.from_dict(json.loads(json_str))
+
+    def __hash__(self) -> int:
+        """
+        :return: a hash representation of the object
+        """
+        return hash(self.name) + 31 * hash(self.port) + 31 * hash(self.protocol.value) + 28 * hash(self.service)

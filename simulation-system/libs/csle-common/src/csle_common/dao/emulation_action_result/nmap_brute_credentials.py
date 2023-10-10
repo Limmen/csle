@@ -83,3 +83,10 @@ class NmapBruteCredentials(JSONSerializable):
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
         return NmapBruteCredentials.from_dict(json.loads(json_str))
+
+    def __hash__(self) -> int:
+        """
+        :return: a hash representation of the object
+        """
+        return (hash(self.username) + 31 * hash(self.pw) + 31 * hash(self.state) + 28 * hash(self.service)
+                + 38 * (self.protocol.value))

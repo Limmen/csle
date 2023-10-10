@@ -45,8 +45,7 @@ class ConnectionUtil:
             raise ValueError("Could not find any EmulationAttackerObservationState object")
         for m in s.attacker_obs_state.machines:
             if m.ips == a.ips:
-                target_machine = m
-                target_machine = target_machine.copy()
+                target_machine = m.copy()
                 break
         # Check if already logged in
         if target_machine is not None:
@@ -311,6 +310,8 @@ class ConnectionUtil:
                             Logger.__call__().get_logger().warning("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                     else:
                         non_failed_credentials.append(cr)
+                if connected:
+                    break
             if connected:
                 break
         end = time.time()

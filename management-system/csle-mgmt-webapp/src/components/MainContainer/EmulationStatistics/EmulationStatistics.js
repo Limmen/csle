@@ -237,7 +237,7 @@ const EmulationStatistics = (props) => {
                 const statisticsIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: `ÌD:${id_obj.id}, emulation: ${id_obj.emulation}`
+                        label: `ID:${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
                 setEmulationStatisticIds(statisticsIds)
