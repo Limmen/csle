@@ -74,14 +74,12 @@
              
   <h1>Source code for csle_collector.client_manager.dao.sine_arrival_config</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">csle_base.grpc_serializable</span> <span class="kn">import</span> <span class="n">GRPCSerializable</span>
-<span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 <span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.arrival_config</span> <span class="kn">import</span> <span class="n">ArrivalConfig</span>
 <span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.client_arrival_type</span> <span class="kn">import</span> <span class="n">ClientArrivalType</span>
 <span class="kn">import</span> <span class="nn">csle_collector.client_manager.client_manager_pb2</span>
 
 
-<div class="viewcode-block" id="SineArrivalConfig"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig">[docs]</a><span class="k">class</span> <span class="nc">SineArrivalConfig</span><span class="p">(</span><span class="n">ArrivalConfig</span><span class="p">,</span> <span class="n">JSONSerializable</span><span class="p">,</span> <span class="n">GRPCSerializable</span><span class="p">):</span>
+<div class="viewcode-block" id="SineArrivalConfig"><a class="viewcode-back" href="../../../../csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.sine_arrival_config.SineArrivalConfig">[docs]</a><span class="k">class</span> <span class="nc">SineArrivalConfig</span><span class="p">(</span><span class="n">ArrivalConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO representing the configuration of a sine-modulated poisson arrival process with exponential service times</span>
 <span class="sd">    &quot;&quot;&quot;</span>

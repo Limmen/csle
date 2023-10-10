@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.bayesian_optimization_emukit package &mdash; csle-agents 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_agents.agents.bayesian_optimization_emukit.bo package" href="csle_agents.agents.bayesian_optimization_emukit.bo.html" />
+    <link rel="prev" title="csle_agents.agents.bayesian_optimization package" href="csle_agents.agents.bayesian_optimization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.bayesian_optimization_emukit package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-bayesian-optimization-emukit-bayes-opt-emukit-agent-module">csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.bayesian_optimization_emukit">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="csle_agents.agents.html">csle_agents.agents package</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.bayesian_optimization_emukit package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_agents.agents.bayesian_optimization_emukit.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-agents-agents-bayesian-optimization-emukit-package">
+<h1>csle_agents.agents.bayesian_optimization_emukit package<a class="headerlink" href="#csle-agents-agents-bayesian-optimization-emukit-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html">csle_agents.agents.bayesian_optimization_emukit.bo package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.acquisition">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.gp.html">csle_agents.agents.bayesian_optimization_emukit.bo.gp package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.gp.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.gp.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config">csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.gp.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.gp">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html">csle_agents.agents.bayesian_optimization_emukit.bo.kernel package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_type">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.kernel.rbf_kernel_config">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.rbf_kernel_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.kernel">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.bo_config">csle_agents.agents.bayesian_optimization_emukit.bo.bo_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig"><code class="docutils literal notranslate"><span class="pre">BOConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">BOConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">BOConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.get_acquisition_function"><code class="docutils literal notranslate"><span class="pre">BOConfig.get_acquisition_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.get_acquisition_optimizer"><code class="docutils literal notranslate"><span class="pre">BOConfig.get_acquisition_optimizer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">BOConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.bo_results">csle_agents.agents.bayesian_optimization_emukit.bo.bo_results module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults"><code class="docutils literal notranslate"><span class="pre">BOResults</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.copy"><code class="docutils literal notranslate"><span class="pre">BOResults.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.from_dict"><code class="docutils literal notranslate"><span class="pre">BOResults.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.from_json_file"><code class="docutils literal notranslate"><span class="pre">BOResults.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.from_json_str"><code class="docutils literal notranslate"><span class="pre">BOResults.from_json_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.to_dict"><code class="docutils literal notranslate"><span class="pre">BOResults.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.to_json_file"><code class="docutils literal notranslate"><span class="pre">BOResults.to_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.to_json_str"><code class="docutils literal notranslate"><span class="pre">BOResults.to_json_str()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="csle-agents-agents-bayesian-optimization-emukit-bayes-opt-emukit-agent-module">
+<h2>csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent module<a class="headerlink" href="#csle-agents-agents-bayesian-optimization-emukit-bayes-opt-emukit-agent-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-csle_agents.agents.bayesian_optimization_emukit">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.bayesian_optimization_emukit" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_agents.agents.bayesian_optimization.html" class="btn btn-neutral float-left" title="csle_agents.agents.bayesian_optimization package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_agents.agents.bayesian_optimization_emukit.bo.html" class="btn btn-neutral float-right" title="csle_agents.agents.bayesian_optimization_emukit.bo package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

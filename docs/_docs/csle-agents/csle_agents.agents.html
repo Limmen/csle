@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents package &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents package &mdash; csle-agents 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -44,6 +44,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html">csle_agents.agents.bayesian_optimization_emukit package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a></li>
@@ -53,6 +55,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
@@ -120,543 +123,163 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization.bayes_opt_agent">csle_agents.agents.bayesian_optimization.bayes_opt_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.bayesian_optimization"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.bayesian_optimization()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.get_theta_vector_from_param_dict"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.get_theta_vector_from_param_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.train"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">BayesOptAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle-agents-agents-bayesian-optimization-bayes-opt-agent-module">csle_agents.agents.bayesian_optimization.bayes_opt_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html">csle_agents.agents.bayesian_optimization_emukit package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html">csle_agents.agents.bayesian_optimization_emukit.bo package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.bo_config">csle_agents.agents.bayesian_optimization_emukit.bo.bo_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo.bo_results">csle_agents.agents.bayesian_optimization_emukit.bo.bo_results module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.bo.html#module-csle_agents.agents.bayesian_optimization_emukit.bo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#csle-agents-agents-bayesian-optimization-emukit-bayes-opt-emukit-agent-module">csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#module-csle_agents.agents.bayesian_optimization_emukit">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#csle-agents-agents-cma-es-cma-es-agent-module">csle_agents.agents.cma_es.cma_es_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#module-csle_agents.agents.cma_es">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.cross_entropy"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.cross_entropy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.train"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">CrossEntropyAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle-agents-agents-cross-entropy-cross-entropy-agent-module">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_agent">csle_agents.agents.dfsp_local.dfsp_local_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.attacker_best_response"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.attacker_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.defender_best_response"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.defender_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_attacker_policy"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.evaluate_attacker_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_defender_policy"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.evaluate_defender_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.evaluate_strategy_profile"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.evaluate_strategy_profile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.exploitability"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.exploitability()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.local_dfsp"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.local_dfsp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.running_average"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.running_average()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.train"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">DFSPLocalAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_R"><code class="docutils literal notranslate"><span class="pre">reduce_R()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.reduce_T"><code class="docutils literal notranslate"><span class="pre">reduce_T()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_ppo_agent">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.attacker_best_response"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.attacker_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.defender_best_response"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.defender_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_attacker_policy"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.evaluate_attacker_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_defender_policy"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.evaluate_defender_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.evaluate_strategy_profile"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.evaluate_strategy_profile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.exploitability"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.exploitability()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.get_attacker_experiment_config"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.get_attacker_experiment_config()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.get_defender_experiment_config"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.get_defender_experiment_config()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.local_dfsp"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.local_dfsp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.running_average"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.running_average()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.train"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_ppo_agent.DFSPLocalPPOAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">DFSPLocalPPOAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle-agents-agents-dfsp-local-dfsp-local-agent-module">csle_agents.agents.dfsp_local.dfsp_local_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle-agents-agents-dfsp-local-dfsp-local-ppo-agent-module">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution.differential_evolution_agent">csle_agents.agents.differential_evolution.differential_evolution_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.differential_evolution"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.differential_evolution()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.ensure_bounds"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.ensure_bounds()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.train"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolutionAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle-agents-agents-differential-evolution-differential-evolution-agent-module">csle_agents.agents.differential_evolution.differential_evolution_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn.dqn_agent">csle_agents.agents.dqn.dqn_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNAgent"><code class="docutils literal notranslate"><span class="pre">DQNAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">DQNAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNAgent.train"><code class="docutils literal notranslate"><span class="pre">DQNAgent.train()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback"><code class="docutils literal notranslate"><span class="pre">DQNTrainingCallback</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#csle-agents-agents-dqn-dqn-agent-module">csle_agents.agents.dqn.dqn_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec.dynasec_agent">csle_agents.agents.dynasec.dynasec_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DataCollectorProcess"><code class="docutils literal notranslate"><span class="pre">DataCollectorProcess</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DataCollectorProcess.run"><code class="docutils literal notranslate"><span class="pre">DataCollectorProcess.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_Z_from_system_model"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.get_Z_from_system_model()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_spsa_experiment_config"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.get_spsa_experiment_config()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.mean"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.mean()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.record_metrics"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.record_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.train"><code class="docutils literal notranslate"><span class="pre">DynaSecAgent.train()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.EmulationMonitorThread"><code class="docutils literal notranslate"><span class="pre">EmulationMonitorThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.EmulationMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">EmulationMonitorThread.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.EmulationStatisticsThread"><code class="docutils literal notranslate"><span class="pre">EmulationStatisticsThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.EmulationStatisticsThread.run"><code class="docutils literal notranslate"><span class="pre">EmulationStatisticsThread.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread"><code class="docutils literal notranslate"><span class="pre">PolicyEvaluationThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.eval_traces"><code class="docutils literal notranslate"><span class="pre">PolicyEvaluationThread.eval_traces()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.record_metrics"><code class="docutils literal notranslate"><span class="pre">PolicyEvaluationThread.record_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.run"><code class="docutils literal notranslate"><span class="pre">PolicyEvaluationThread.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyOptimizationProcess"><code class="docutils literal notranslate"><span class="pre">PolicyOptimizationProcess</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyOptimizationProcess.run"><code class="docutils literal notranslate"><span class="pre">PolicyOptimizationProcess.run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.SystemIdentificationProcess"><code class="docutils literal notranslate"><span class="pre">SystemIdentificationProcess</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.SystemIdentificationProcess.run"><code class="docutils literal notranslate"><span class="pre">SystemIdentificationProcess.run()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle-agents-agents-dynasec-dynasec-agent-module">csle_agents.agents.dynasec.dynasec_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp.fictitious_play_agent">csle_agents.agents.fp.fictitious_play_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.best_response"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.compute_empirical_strategy"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.compute_empirical_strategy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.fictitious_play"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.fictitious_play()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.train"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">FictitiousPlayAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#csle-agents-agents-fp-fictitious-play-agent-module">csle_agents.agents.fp.fictitious_play_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi.hsvi_agent">csle_agents.agents.hsvi.hsvi_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent"><code class="docutils literal notranslate"><span class="pre">HSVIAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.approximate_projection_sawtooth"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.approximate_projection_sawtooth()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.bayes_filter"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.bayes_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.excess"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.excess()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.explore"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.explore()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.generate_corner_belief"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.generate_corner_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.hsvi"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.hsvi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.hsvi_algorithm"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.hsvi_algorithm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.initialize_lower_bound"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.initialize_lower_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.initialize_upper_bound"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.initialize_upper_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.interior_point_belief_val"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.interior_point_belief_val()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_lower_bound_update"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.local_lower_bound_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_updates"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.local_updates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_upper_bound_update"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.local_upper_bound_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_backup"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.lower_bound_backup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_value"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.lower_bound_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lp_convex_hull_projection_lp"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.lp_convex_hull_projection_lp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.next_belief"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.next_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.observation_possible"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.observation_possible()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.one_step_lookahead"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.one_step_lookahead()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.p_o_given_b_a"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.p_o_given_b_a()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.prune_upper_bound"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.prune_upper_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.q"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.q()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.q_hat_interval"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.q_hat_interval()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.simulate"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.simulate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.train"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.update_corner_points"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.update_corner_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.upper_bound_backup"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.upper_bound_backup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.upper_bound_value"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.upper_bound_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.vi"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.vi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.width"><code class="docutils literal notranslate"><span class="pre">HSVIAgent.width()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle-agents-agents-hsvi-hsvi-agent-module">csle_agents.agents.hsvi.hsvi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.auxillary_game"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.auxillary_game()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.bayes_filter"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.bayes_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.choose_a_o_for_exploration"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.choose_a_o_for_exploration()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.combine_weights_and_pure_strategies_into_mixed_strategy"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.combine_weights_and_pure_strategies_into_mixed_strategy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.compute_delta"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.compute_delta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.compute_equilibrium_strategies_in_matrix_game"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.compute_equilibrium_strategies_in_matrix_game()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.compute_matrix_game_value"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.compute_matrix_game_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.delta_lipschitz_envelope_of_upper_bound_value"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.delta_lipschitz_envelope_of_upper_bound_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.excess"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.excess()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.explore"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.explore()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.generate_corner_belief"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.generate_corner_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.hsvi"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.hsvi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.hsvi_os_posg"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.hsvi_os_posg()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.initialize_lower_bound"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.initialize_lower_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.initialize_upper_bound"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.initialize_upper_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.local_lower_bound_update"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.local_lower_bound_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.local_updates"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.local_updates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.local_upper_bound_update"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.local_upper_bound_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.lower_bound_backup"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.lower_bound_backup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.lower_bound_value"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.lower_bound_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.maxcomp_shapley_bellman_operator"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.maxcomp_shapley_bellman_operator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.mdp_reward_matrix_p2"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.mdp_reward_matrix_p2()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.mdp_transition_tensor_p2"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.mdp_transition_tensor_p2()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.next_belief"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.next_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.obtain_equilibrium_strategy_profiles_in_stage_game"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.obtain_equilibrium_strategy_profiles_in_stage_game()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.one_step_lookahead"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.one_step_lookahead()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.p_o_given_b_a1_a2"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.p_o_given_b_a1_a2()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.p_o_given_b_pi_1_pi_2"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.p_o_given_b_pi_1_pi_2()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.prune_upper_bound"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.prune_upper_bound()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.rho"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.rho()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.sample_D"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.sample_D()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.si"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.si()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.train"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.upper_bound_backup"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.upper_bound_backup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.upper_bound_value"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.upper_bound_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.valcomp"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.valcomp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.value_of_p1_strategy_static"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.value_of_p1_strategy_static()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.vi"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.vi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.weighted_excess_gap"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.weighted_excess_gap()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.width"><code class="docutils literal notranslate"><span class="pre">HSVIOSPOSGAgent.width()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle-agents-agents-hsvi-os-posg-hsvi-os-posg-agent-module">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.batch_gradient"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.batch_gradient()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.estimate_gk"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.estimate_gk()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.kiefer_wolfowitz"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.kiefer_wolfowitz()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.train"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">KieferWolfowitzAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle-agents-agents-kiefer-wolfowitz-kiefer-wolfowitz-agent-module">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#csle-agents-agents-lp-cmdp-linear-programming-cmdp-agent-module">csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#module-csle_agents.agents.lp_cmdp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.compute_equilibrium_strategies_in_matrix_game"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.compute_equilibrium_strategies_in_matrix_game()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.compute_matrix_game_value"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.compute_matrix_game_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.linear_programming_normal_form"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.linear_programming_normal_form()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.train"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">LinearProgrammingNormalFormGameAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle-agents-agents-lp-nf-linear-programming-normal-form-game-agent-module">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi.pi_agent">csle_agents.agents.pi.pi_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent"><code class="docutils literal notranslate"><span class="pre">PIAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.evaluate_policy"><code class="docutils literal notranslate"><span class="pre">PIAgent.evaluate_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.expected_reward_under_policy"><code class="docutils literal notranslate"><span class="pre">PIAgent.expected_reward_under_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">PIAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.pi"><code class="docutils literal notranslate"><span class="pre">PIAgent.pi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_evaluation"><code class="docutils literal notranslate"><span class="pre">PIAgent.policy_evaluation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_improvement"><code class="docutils literal notranslate"><span class="pre">PIAgent.policy_improvement()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_iteration"><code class="docutils literal notranslate"><span class="pre">PIAgent.policy_iteration()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.train"><code class="docutils literal notranslate"><span class="pre">PIAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.transition_probability_under_policy"><code class="docutils literal notranslate"><span class="pre">PIAgent.transition_probability_under_policy()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#csle-agents-agents-pi-pi-agent-module">csle_agents.agents.pi.pi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo.ppo_agent">csle_agents.agents.ppo.ppo_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOAgent"><code class="docutils literal notranslate"><span class="pre">PPOAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">PPOAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOAgent.train"><code class="docutils literal notranslate"><span class="pre">PPOAgent.train()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback"><code class="docutils literal notranslate"><span class="pre">PPOTrainingCallback</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#csle-agents-agents-ppo-ppo-agent-module">csle_agents.agents.ppo.ppo_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning.q_learning_agent">csle_agents.agents.q_learning.q_learning_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent"><code class="docutils literal notranslate"><span class="pre">QLearningAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.create_policy_from_q_table"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.create_policy_from_q_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.eps_greedy"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.eps_greedy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.evaluate_policy"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.evaluate_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.initialize_count_table"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.initialize_count_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.initialize_q_table"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.initialize_q_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.q_learning"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.q_learning()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.q_learning_update"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.q_learning_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.step_size"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.step_size()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.train"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.train_q_learning"><code class="docutils literal notranslate"><span class="pre">QLearningAgent.train_q_learning()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle-agents-agents-q-learning-q-learning-agent-module">csle_agents.agents.q_learning.q_learning_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search.random_search_agent">csle_agents.agents.random_search.random_search_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_perturbation"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.random_perturbation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.random_search"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.random_search()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.train"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">RandomSearchAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#csle-agents-agents-random-search-random-search-agent-module">csle_agents.agents.random_search.random_search_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce.reinforce_agent">csle_agents.agents.reinforce.reinforce_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.reinforce"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.reinforce()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.train"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.training_step"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.training_step()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">ReinforceAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle-agents-agents-reinforce-reinforce-agent-module">csle_agents.agents.reinforce.reinforce_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa.sarsa_agent">csle_agents.agents.sarsa.sarsa_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent"><code class="docutils literal notranslate"><span class="pre">SARSAAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.create_policy_from_q_table"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.create_policy_from_q_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.eps_greedy"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.eps_greedy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.evaluate_policy"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.evaluate_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.initialize_count_table"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.initialize_count_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.initialize_q_table"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.initialize_q_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.q_learning"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.q_learning()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.sarsa_update"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.sarsa_update()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.step_size"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.step_size()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.train"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.train_sarsa"><code class="docutils literal notranslate"><span class="pre">SARSAAgent.train_sarsa()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle-agents-agents-sarsa-sarsa-agent-module">csle_agents.agents.sarsa.sarsa_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration.shapley_iteration_agent">csle_agents.agents.shapley_iteration.shapley_iteration_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.auxillary_game"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.auxillary_game()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.compute_matrix_game_value"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.compute_matrix_game_value()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.shapley_iteration"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.shapley_iteration()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.si"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.si()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.train"><code class="docutils literal notranslate"><span class="pre">ShapleyIterationAgent.train()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle-agents-agents-shapley-iteration-shapley-iteration-agent-module">csle_agents.agents.shapley_iteration.shapley_iteration_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi.sondik_vi_agent">csle_agents.agents.sondik_vi.sondik_vi_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.check_duplicate"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.check_duplicate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.compute_all_conditional_plans_conditioned_on_a_t"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.compute_all_conditional_plans_conditioned_on_a_t()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.evaluate_policy"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.evaluate_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.prune"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.prune()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.sondik_vi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi_algorithm"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.sondik_vi_algorithm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.train"><code class="docutils literal notranslate"><span class="pre">SondikVIAgent.train()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle-agents-agents-sondik-vi-sondik-vi-agent-module">csle_agents.agents.sondik_vi.sondik_vi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp.t_fp_agent">csle_agents.agents.t_fp.t_fp_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent"><code class="docutils literal notranslate"><span class="pre">TFPAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response"><code class="docutils literal notranslate"><span class="pre">TFPAgent.attacker_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">TFPAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.defender_best_response"><code class="docutils literal notranslate"><span class="pre">TFPAgent.defender_best_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_attacker_policy"><code class="docutils literal notranslate"><span class="pre">TFPAgent.evaluate_attacker_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_defender_policy"><code class="docutils literal notranslate"><span class="pre">TFPAgent.evaluate_defender_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.evaluate_strategy_profile"><code class="docutils literal notranslate"><span class="pre">TFPAgent.evaluate_strategy_profile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.exploitability"><code class="docutils literal notranslate"><span class="pre">TFPAgent.exploitability()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_attacker_experiment_config"><code class="docutils literal notranslate"><span class="pre">TFPAgent.get_attacker_experiment_config()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.get_defender_experiment_config"><code class="docutils literal notranslate"><span class="pre">TFPAgent.get_defender_experiment_config()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">TFPAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">TFPAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.running_average"><code class="docutils literal notranslate"><span class="pre">TFPAgent.running_average()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.t_fp"><code class="docutils literal notranslate"><span class="pre">TFPAgent.t_fp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.train"><code class="docutils literal notranslate"><span class="pre">TFPAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">TFPAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle-agents-agents-t-fp-t-fp-agent-module">csle_agents.agents.t_fp.t_fp_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa.t_spsa_agent">csle_agents.agents.t_spsa.t_spsa_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.batch_gradient"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.batch_gradient()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.compute_avg_metrics"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.compute_avg_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.estimate_gk"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.estimate_gk()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.eval_theta"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.eval_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.get_policy"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.get_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.initial_theta"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.initial_theta()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.round_vec"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.round_vec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.spsa"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.spsa()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ak"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.standard_ak()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ck"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.standard_ck()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_deltak"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.standard_deltak()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.train"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.update_metrics"><code class="docutils literal notranslate"><span class="pre">TSPSAAgent.update_metrics()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle-agents-agents-t-spsa-t-spsa-agent-module">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi.vi_agent">csle_agents.agents.vi.vi_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent"><code class="docutils literal notranslate"><span class="pre">VIAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.create_policy_from_value_function"><code class="docutils literal notranslate"><span class="pre">VIAgent.create_policy_from_value_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.evaluate_policy"><code class="docutils literal notranslate"><span class="pre">VIAgent.evaluate_policy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">VIAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.one_step_lookahead"><code class="docutils literal notranslate"><span class="pre">VIAgent.one_step_lookahead()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.train"><code class="docutils literal notranslate"><span class="pre">VIAgent.train()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.value_iteration"><code class="docutils literal notranslate"><span class="pre">VIAgent.value_iteration()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.vi.html#csle_agents.agents.vi.vi_agent.VIAgent.vi"><code class="docutils literal notranslate"><span class="pre">VIAgent.vi()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#csle-agents-agents-vi-vi-agent-module">csle_agents.agents.vi.vi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi">Module contents</a></li>
 </ul>
 </li>

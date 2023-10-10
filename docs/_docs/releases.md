@@ -87,6 +87,11 @@ Listing 136: Command to generate release documentation.
    <p class="captionFig">
    Listing 141: Directory with emulation configurations.
    </p>
+6. Make a new release of `https://github.com/Limmen/exploit-CVE-2017-7494`:
+    - Clone the repo by runnign the command: `git clone https://github.com/Limmen/exploit-CVE-2017-7494`
+    - Update the version parameter in `exploit-CVE-2017-7494/Makefile`
+    - Build: `cd exploit-CVE-2017-7494; make build`
+    - Push: `cd exploit-CVE-2017-7494; make push`
 6. Build the images by running the command:
     ```bash
       cd emulation-system/; make build

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.docker_stats_manager package &mdash; csle-collector 0.3.0 documentation</title>
+  <title>csle_collector.docker_stats_manager package &mdash; csle-collector 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="csle_collector.elk_manager package" href="csle_collector.elk_manager.html" />
+    <link rel="next" title="csle_collector.docker_stats_manager.dao package" href="csle_collector.docker_stats_manager.dao.html" />
     <link rel="prev" title="csle_collector.constants package" href="csle_collector.constants.html" /> 
 </head>
 
@@ -43,36 +43,18 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.constants.html">csle_collector.constants package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.docker_stats_manager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html">csle_collector.docker_stats_manager.dao package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html">csle_collector.docker_stats_manager.threads package</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.docker_stats_manager.docker_stats">csle_collector.docker_stats_manager.docker_stats module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats"><code class="docutils literal notranslate"><span class="pre">DockerStats</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStats.compute_averages()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.copy"><code class="docutils literal notranslate"><span class="pre">DockerStats.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_deltas()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_values()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes"><code class="docutils literal notranslate"><span class="pre">DockerStats.num_attributes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.schema"><code class="docutils literal notranslate"><span class="pre">DockerStats.schema()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record_ip()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.docker_stats_manager.docker_stats_manager">csle_collector.docker_stats_manager.docker_stats_manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.getDockerStatsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.getDockerStatsMonitorStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.get_docker_stats_monitor_threads"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.get_docker_stats_monitor_threads()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.startDockerStatsMonitor"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.startDockerStatsMonitor()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.stopDockerStatsMonitor"><code class="docutils literal notranslate"><span class="pre">DockerStatsManagerServicer.stopDockerStatsMonitor()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.compute_averages()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.get_ip()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.run()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
@@ -154,174 +136,53 @@
              
   <section id="csle-collector-docker-stats-manager-package">
 <h1>csle_collector.docker_stats_manager package<a class="headerlink" href="#csle-collector-docker-stats-manager-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html">csle_collector.docker_stats_manager.dao package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao.docker_stats">csle_collector.docker_stats_manager.dao.docker_stats module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats"><code class="docutils literal notranslate"><span class="pre">DockerStats</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStats.compute_averages()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.copy"><code class="docutils literal notranslate"><span class="pre">DockerStats.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_json_file"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_deltas"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_deltas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.get_values"><code class="docutils literal notranslate"><span class="pre">DockerStats.get_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.num_attributes"><code class="docutils literal notranslate"><span class="pre">DockerStats.num_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.schema"><code class="docutils literal notranslate"><span class="pre">DockerStats.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_dict"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.update_with_kafka_record_ip"><code class="docutils literal notranslate"><span class="pre">DockerStats.update_with_kafka_record_ip()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#module-csle_collector.docker_stats_manager.dao">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html">csle_collector.docker_stats_manager.threads package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads.docker_stats_thread">csle_collector.docker_stats_manager.threads.docker_stats_thread module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.compute_averages"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.compute_averages()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.get_ip"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.get_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread.run"><code class="docutils literal notranslate"><span class="pre">DockerStatsThread.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#module-csle_collector.docker_stats_manager.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
-</section>
-<section id="module-csle_collector.docker_stats_manager.docker_stats">
-<span id="csle-collector-docker-stats-manager-docker-stats-module"></span><h2>csle_collector.docker_stats_manager.docker_stats module<a class="headerlink" href="#module-csle_collector.docker_stats_manager.docker_stats" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats.</span></span><span class="sig-name descname"><span class="pre">DockerStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blk_write</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_rx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_tx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>DTO class containing docker statistics</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_averages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.compute_averages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.compute_averages" title="Permalink to this definition"></a></dt>
-<dd><p>Compute average stats from a list</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>stats_list</strong> – the list to use to compute averages</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a new DockerStats object with the averages</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.copy" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a copy of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parsed_stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Parses a DockerStats object from a dict</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parsed_stats_dict</strong> – the dict to parse</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the parsed DockerStats object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.from_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts a kafka record to a DTO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the recordto convert</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the created DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas">
-<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_deltas" title="Permalink to this definition"></a></dt>
-<dd><p>Get the deltas between two stats objects</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>stats_prime</strong> – the stats object to compare with</p></li>
-<li><p><strong>max_counter</strong> – the maximum counter_value</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the deltas and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values">
-<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.get_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.get_values" title="Permalink to this definition"></a></dt>
-<dd><p>Get the current values</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the values and the labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes">
-<span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.num_attributes" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of attributes of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.schema" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>get the schema of the DTO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the object to a dict representation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a dict representation of the object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record">
-<span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.to_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the DTO to a kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the Kafka record</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO with a given kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong> – the record to update with</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip">
-<span class="sig-name descname"><span class="pre">update_with_kafka_record_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats.html#DockerStats.update_with_kafka_record_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats.update_with_kafka_record_ip" title="Permalink to this definition"></a></dt>
-<dd><p>Updates the DTO with a given kafka record</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>record</strong> – the record to update with</p></li>
-<li><p><strong>ip</strong> – the ip of the host</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="module-csle_collector.docker_stats_manager.docker_stats_manager">
 <span id="csle-collector-docker-stats-manager-docker-stats-manager-module"></span><h2>csle_collector.docker_stats_manager.docker_stats_manager module<a class="headerlink" href="#module-csle_collector.docker_stats_manager.docker_stats_manager" title="Permalink to this heading"></a></h2>
@@ -329,7 +190,7 @@
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">DockerStatsManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerServicer" title="csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DockerStatsManagerServicer</span></code></a></p>
-<p>gRPC server for managing a the docker stats monitor server.
+<p>gRPC server for managing a docker stats monitor server.
 Allows to start/stop the docker stats monitor remotely and also to query the
 state of the server.</p>
 <dl class="py method">
@@ -345,6 +206,17 @@ state of the server.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the docker stats manager</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.get_docker_stats_monitor_threads">
+<span class="sig-name descname"><span class="pre">get_docker_stats_monitor_threads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_collector.docker_stats_manager.threads.html#csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread" title="csle_collector.docker_stats_manager.threads.docker_stats_thread.DockerStatsThread"><span class="pre">DockerStatsThread</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsManagerServicer.get_docker_stats_monitor_threads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.get_docker_stats_monitor_threads" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the list of Docker stats monitor threads</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of Docker stats monitor threads</p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,45 +251,6 @@ state of the server.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a clients DTO with the state of the docker stats monitor server</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.docker_stats_manager.docker_stats_manager.</span></span><span class="sig-name descname"><span class="pre">DockerStatsThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_names_and_ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ContainerIp</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_first_ip_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_queue_maxsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that collects performance statistics of Docker containers</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages">
-<span class="sig-name descname"><span class="pre">compute_averages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread.compute_averages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages" title="Permalink to this definition"></a></dt>
-<dd><p>Compute averages and aggregates of the list of metrics
-:return: the average and aggregate metrics</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip">
-<span class="sig-name descname"><span class="pre">get_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread.get_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the ip of a given container name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>container_name</strong> – the name of the container</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the ip of the container</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_manager.html#DockerStatsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Main loop of the thread</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -634,7 +467,7 @@ state of the server.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.parse_stats">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.docker_stats_manager.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.parse_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.parse_stats" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats" title="csle_collector.docker_stats_manager.dao.docker_stats.DockerStats"><span class="pre">DockerStats</span></a></span></span><a class="reference internal" href="_modules/csle_collector/docker_stats_manager/docker_stats_util.html#DockerStatsUtil.parse_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.parse_stats" title="Permalink to this definition"></a></dt>
 <dd><p>Parses a stats dict into a DockerStats object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -723,7 +556,7 @@ state of the server.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="csle_collector.constants.html" class="btn btn-neutral float-left" title="csle_collector.constants package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="csle_collector.elk_manager.html" class="btn btn-neutral float-right" title="csle_collector.elk_manager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="csle_collector.docker_stats_manager.dao.html" class="btn btn-neutral float-right" title="csle_collector.docker_stats_manager.dao package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

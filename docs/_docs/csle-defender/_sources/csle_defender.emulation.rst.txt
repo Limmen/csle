@@ -12,14 +12,6 @@ csle\_defender.emulation.defender\_stopping\_middleware module
    :undoc-members:
    :show-inheritance:
 
-csle\_defender.emulation.defender\_update\_state\_middleware module
--------------------------------------------------------------------
-
-.. automodule:: csle_defender.emulation.defender_update_state_middleware
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 csle\_defender.emulation.emulated\_defender module
 --------------------------------------------------
 

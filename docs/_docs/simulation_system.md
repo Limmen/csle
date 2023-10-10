@@ -72,7 +72,7 @@ Table 18: Properties of a simulation environment configuration.
 
 The numerical algorithms for strategy optimization and system identification are 
 listed in Table 19. These algorithms are implemented in Python and are based on 
-PyTorch, NumPy, PuLP, CvxPy, Openspiel, and Stable-Baselines3. 
+PyTorch, NumPy, PuLP, CvxPy, Openspiel, Stable-Baselines3, emukit, and cma. 
 A code example of running the Q-learning algorithm is shown below:
 
 ```python
@@ -102,30 +102,31 @@ for policy in experiment_execution.result.policies.values():
 Listing 2: Example of strategy optimization through the Q-learning algorithm in CSLE.
 </p>
 
-| *Name*                                                           | *Algorithm type*          |
-|------------------------------------------------------------------|---------------------------|
-| Bayesian optimization                                            | Black-box optimization    |
-| Cross-entropy method                                             | Black-box optimization    |
-| Simulated annealing                                              | Black-box optimization    |
-| Differential evolution                                           | Evolutionary computation  |
-| Deep Q-network (DQN)                                             | Reinforcement learning    |
-| Fictitious Self-Play                                             | Computational game theory |
-| Heuristic Search Value Iteration (HSVI)                          | Dynamic programming       |
+| *Name*                                                          | *Algorithm type*          |
+|-----------------------------------------------------------------|---------------------------|
+| Bayesian optimization                                           | Black-box optimization    |
+| Cross-entropy method                                            | Black-box optimization    |
+| Simulated annealing                                             | Black-box optimization    |
+| CMA-ES                                                          | Evolutionary computation  |
+| Differential evolution                                          | Evolutionary computation  |
+| Deep Q-network (DQN)                                            | Reinforcement learning    |
+| Fictitious Self-Play                                            | Computational game theory |
+| Heuristic Search Value Iteration (HSVI)                         | Dynamic programming       |
 | Heuristic Search Value Iteration (HSVI) for one-sided game POSGs | Computational game theory |
-| Kiefer Wolfowitz                                                 | Stochastic approximation  |
-| Linear programming                                               | Computational game theory |
-| Policy iteration                                                 | Dynamic programming       |
-| Value iteration                                                  | Dynamic programming       |
-| Proximal Policy Optimization (PPO)                               | Reinforcement learning    |
-| Q-learning                                                       | Reinforcement learning    |
-| Random search                                                    | Black-box optimization    |
-| REINFORCE                                                        | Reinforcement learning    |
-| SARSA                                                            | Reinforcement learning    |
-| Shapley iteration                                                | Computational game theory |
-| Sondik's value iteration                                         | Dynamic programming       |
-| T-FP                                                             | Reinforcement learning    |
-| T-SPSA                                                           | Reinforcement learning    |
-| Expectation maximization                                         | System identification     |
+| Kiefer Wolfowitz                                                | Stochastic approximation  |
+| Linear programming                                              | Computational game theory |
+| Policy iteration                                                | Dynamic programming       |
+| Value iteration                                                 | Dynamic programming       |
+| Proximal Policy Optimization (PPO)                              | Reinforcement learning    |
+| Q-learning                                                      | Reinforcement learning    |
+| Random search                                                   | Black-box optimization    |
+| REINFORCE                                                       | Reinforcement learning    |
+| SARSA                                                           | Reinforcement learning    |
+| Shapley iteration                                               | Computational game theory |
+| Sondik's value iteration                                        | Dynamic programming       |
+| T-FP                                                            | Reinforcement learning    |
+| T-SPSA                                                          | Reinforcement learning    |
+| Expectation maximization                                        | System identification     |
 
 <p class="captionFig">
 Table 19: Numerical algorithms.

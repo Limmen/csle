@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_tolerance.util.intrusion_response_cmdp_util &mdash; csle-tolerancexsg 0.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-tolerancexsg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.constants.html">csle_tolerance.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.dao.html">csle_tolerance.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.envs.html">csle_tolerance.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.util.html">csle_tolerance.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-tolerancexsg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_tolerance.util.intrusion_response_cmdp_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_tolerance.util.intrusion_response_cmdp_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil">[docs]</a><span class="k">class</span> <span class="nc">IntrusionRecoveryCmdpUtil</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for the intrusion-response CMDP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.state_space"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.state_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">state_space</span><span class="p">(</span><span class="n">s_max</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the state space of the CMDP</span>
+
+<span class="sd">        :return: a list with the states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.action_space"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.action_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">action_space</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the action space of the CMDP</span>
+
+<span class="sd">        :return: a list with the actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.cost_function"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">cost_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">negate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cost function of the CMDP</span>
+
+<span class="sd">        :param negate: boolean flag, if true then return negated version of the cost (the reward)</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :return: the cost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">negate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.cost_tensor"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">cost_tensor</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">negate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a |S| tensor with the costs (or rewards) of the CMDP</span>
+
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param negate: a boolean flag indicating whether the cost should be negated as a reward or not</span>
+<span class="sd">        :return: A tensor with the costs (or rewards)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cost_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">cost_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IntrusionRecoveryCmdpUtil</span><span class="o">.</span><span class="n">cost_function</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">negate</span><span class="o">=</span><span class="n">negate</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cost_tensor</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.constraint_cost_function"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">constraint_cost_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constraint cost function of the CMDP</span>
+
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param f: the tolerance threshold</span>
+<span class="sd">        :return: the cost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraint_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;=</span> <span class="n">f</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">constraint_cost</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">constraint_cost</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.constraint_cost_tensor"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">constraint_cost_tensor</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a |S| tensor with the constraint costs of the CMDP</span>
+
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param f: the tolerance threshold</span>
+<span class="sd">        :return: A tensor with the costs (or rewards)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraint_cost_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">constraint_cost_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IntrusionRecoveryCmdpUtil</span><span class="o">.</span><span class="n">constraint_cost_function</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">constraint_cost_tensor</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.delta_function"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.delta_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">delta_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The delta function that gives the probability of the change in the number of healthy nodes</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param p_a: the intrusion probability</span>
+<span class="sd">        :param p_c: the crash probability</span>
+<span class="sd">        :param p_u: the recovery probability</span>
+<span class="sd">        :param delta: the delta value</span>
+<span class="sd">        :param s_max: the maximum number of nodes</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">failures</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">recoveries</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">recoveries</span> <span class="o">-</span> <span class="n">failures</span><span class="p">)</span> <span class="o">==</span> <span class="n">delta</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">s_max</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">non_recoveries</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="n">recoveries</span>
+                    <span class="n">non_failures</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="n">failures</span>
+                    <span class="n">prob</span> <span class="o">+=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">p_u</span><span class="p">,</span> <span class="n">recoveries</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_u</span><span class="p">,</span> <span class="n">non_recoveries</span><span class="p">)</span> <span class="o">*</span>
+                             <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">p_a</span> <span class="o">+</span> <span class="n">p_c</span><span class="p">,</span> <span class="n">failures</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_a</span> <span class="o">-</span> <span class="n">p_c</span><span class="p">,</span> <span class="n">non_failures</span><span class="p">))</span>
+                    <span class="c1"># print(f&quot;match, r:{recoveries}, failures: {failures}, delta:{delta}, prob: {prob}, s:{s}&quot;)</span>
+        <span class="k">return</span> <span class="n">prob</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.transition_function"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">transition_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">s_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The transition function of the CMDP</span>
+
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param s_prime: the next state</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :param p_a: the intrusion probability</span>
+<span class="sd">        :param p_c: the crash probability</span>
+<span class="sd">        :param p_u: the recovery probability</span>
+<span class="sd">        :param s_max: the maximum state</span>
+<span class="sd">        :return: P(s_prime | s, a)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">s_prime</span> <span class="o">-</span> <span class="n">a</span> <span class="o">-</span> <span class="n">s</span>
+        <span class="n">delta_prob</span> <span class="o">=</span> <span class="n">IntrusionRecoveryCmdpUtil</span><span class="o">.</span><span class="n">delta_function</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">p_a</span><span class="o">=</span><span class="n">p_a</span><span class="p">,</span> <span class="n">p_c</span><span class="o">=</span><span class="n">p_c</span><span class="p">,</span> <span class="n">p_u</span><span class="o">=</span><span class="n">p_u</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span> <span class="n">s_max</span><span class="o">=</span><span class="n">s_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">delta_prob</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryCmdpUtil.transition_tensor"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">transition_tensor</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">s_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a |A|x|S|x|S| tensor with the transition probabilities of the CMDP</span>
+
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param actions: the list of actions</span>
+<span class="sd">        :param p_a: the intrusion probability</span>
+<span class="sd">        :param p_c: the failure probability</span>
+<span class="sd">        :param p_u: the upgrade probability</span>
+<span class="sd">        :return: the transition tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">transition_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+            <span class="n">a_transitions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+                <span class="n">s_a_transitions</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">normalizing_constant</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">s_max</span><span class="p">,</span> <span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">normalizing_constant</span> <span class="o">+=</span> <span class="n">IntrusionRecoveryCmdpUtil</span><span class="o">.</span><span class="n">delta_function</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">p_a</span><span class="o">=</span><span class="n">p_a</span><span class="p">,</span> <span class="n">p_c</span><span class="o">=</span><span class="n">p_c</span><span class="p">,</span> <span class="n">p_u</span><span class="o">=</span><span class="n">p_u</span><span class="p">,</span>
+                                                                                     <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span> <span class="n">s_max</span><span class="o">=</span><span class="n">s_max</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+                    <span class="n">s_a_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IntrusionRecoveryCmdpUtil</span><span class="o">.</span><span class="n">transition_function</span><span class="p">(</span>
+                        <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">p_a</span><span class="o">=</span><span class="n">p_a</span><span class="p">,</span> <span class="n">p_c</span><span class="o">=</span><span class="n">p_c</span><span class="p">,</span> <span class="n">p_u</span><span class="o">=</span><span class="n">p_u</span><span class="p">,</span> <span class="n">s_max</span><span class="o">=</span><span class="n">s_max</span><span class="p">))</span>
+                <span class="n">normalizing_constant</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s_a_transitions</span><span class="p">)</span>
+                <span class="n">s_a_transitions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">s_a_transitions</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">normalizing_constant</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">s_a_transitions</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">s_a_transitions</span><span class="p">)</span><span class="si">}</span><span class="s2">, s:</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, a:</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, normalizing constant: </span><span class="si">{</span><span class="n">normalizing_constant</span><span class="si">}</span><span class="s2">, &quot;</span>
+                          <span class="sa">f</span><span class="s2">&quot;s_a_transitions: </span><span class="si">{</span><span class="n">s_a_transitions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">a_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_a_transitions</span><span class="p">)</span>
+            <span class="n">transition_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_transitions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transition_tensor</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

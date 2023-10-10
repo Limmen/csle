@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.cross_entropy package &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents.cross_entropy package &mdash; csle-agents 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="csle_agents.agents.dfsp_local package" href="csle_agents.agents.dfsp_local.html" />
-    <link rel="prev" title="csle_agents.agents.bayesian_optimization package" href="csle_agents.agents.bayesian_optimization.html" /> 
+    <link rel="prev" title="csle_agents.agents.cma_es package" href="csle_agents.agents.cma_es.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,9 +44,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html">csle_agents.agents.bayesian_optimization_emukit package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.cross_entropy package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle-agents-agents-cross-entropy-cross-entropy-agent-module">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.cross_entropy">Module contents</a></li>
 </ul>
 </li>
@@ -58,6 +60,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
@@ -110,145 +113,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-csle_agents.agents.cross_entropy.cross_entropy_agent">
-<span id="csle-agents-agents-cross-entropy-cross-entropy-agent-module"></span><h2>csle_agents.agents.cross_entropy.cross_entropy_agent module<a class="headerlink" href="#module-csle_agents.agents.cross_entropy.cross_entropy_agent" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.cross_entropy.cross_entropy_agent.</span></span><span class="sig-name descname"><span class="pre">CrossEntropyAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">EmulationEnvConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Env</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgent</span></code></a></p>
-<p>Cross-Entropy Agent</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.compute_avg_metrics">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_avg_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.compute_avg_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.compute_avg_metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Computes the average metrics of a dict with aggregated metrics</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>metrics</strong> – the dict with the aggregated metrics</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the average metrics</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.cross_entropy">
-<span class="sig-name descname"><span class="pre">cross_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainingJobConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.cross_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.cross_entropy" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the cross-entropy algorithm</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>exp_result</strong> – the experiment result object to store the result</p></li>
-<li><p><strong>seed</strong> – the seed</p></li>
-<li><p><strong>training_job</strong> – the training job config</p></li>
-<li><p><strong>random_seeds</strong> – list of seeds</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the updated experiment result and the trained policy</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.eval_theta">
-<span class="sig-name descname"><span class="pre">eval_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">MultiThresholdStoppingPolicy</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">LinearThresholdStoppingPolicy</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.eval_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.eval_theta" title="Permalink to this definition"></a></dt>
-<dd><p>Evaluates a given threshold policy by running monte-carlo simulations</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>policy</strong> – the policy to evaluate</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the average metrics of the evaluation</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.get_policy">
-<span class="sig-name descname"><span class="pre">get_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">LinearThresholdStoppingPolicy</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MultiThresholdStoppingPolicy</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.get_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.get_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Utility method for getting the policy of a given parameter vector</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>theta</strong> – the parameter vector</p></li>
-<li><p><strong>L</strong> – the number of parameters</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the policy</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.hparam_names">
-<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.hparam_names" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>a list with the hyperparameter names</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.initial_theta">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.initial_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.initial_theta" title="Permalink to this definition"></a></dt>
-<dd><p>Initializes theta randomly</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>L</strong> – the dimension of theta</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the initialized theta vector</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.round_vec">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.round_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.round_vec" title="Permalink to this definition"></a></dt>
-<dd><p>Rounds a vector to 3 decimals</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vec</strong> – the vector to round</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the rounded vector</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.train" title="Permalink to this definition"></a></dt>
-<dd><p>Performs the policy training for the given random seeds using cross-entropy method</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the training metrics and the trained policies</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.update_metrics">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/cross_entropy/cross_entropy_agent.html#CrossEntropyAgent.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.update_metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Update a dict with aggregated metrics using new information from the environment</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>metrics</strong> – the dict with the aggregated metrics</p></li>
-<li><p><strong>info</strong> – the new information</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the updated dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-agents-agents-cross-entropy-cross-entropy-agent-module">
+<h2>csle_agents.agents.cross_entropy.cross_entropy_agent module<a class="headerlink" href="#csle-agents-agents-cross-entropy-cross-entropy-agent-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_agents.agents.cross_entropy">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.cross_entropy" title="Permalink to this heading"></a></h2>
@@ -259,7 +125,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_agents.agents.bayesian_optimization.html" class="btn btn-neutral float-left" title="csle_agents.agents.bayesian_optimization package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_agents.agents.cma_es.html" class="btn btn-neutral float-left" title="csle_agents.agents.cma_es package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="csle_agents.agents.dfsp_local.html" class="btn btn-neutral float-right" title="csle_agents.agents.dfsp_local package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

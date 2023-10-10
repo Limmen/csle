@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.consumer_threads package &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.consumer_threads package &mdash; csle-common 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -43,14 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_common.constants.html">csle_common.constants package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_common.consumer_threads package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.aggregated_host_metrics_thread">csle_common.consumer_threads.aggregated_host_metrics_thread module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread"><code class="docutils literal notranslate"><span class="pre">AggregatedHostMetricsThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.get_average_aggregated_host_metrics"><code class="docutils literal notranslate"><span class="pre">AggregatedHostMetricsThread.get_average_aggregated_host_metrics()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.run"><code class="docutils literal notranslate"><span class="pre">AggregatedHostMetricsThread.run()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#csle-common-consumer-threads-aggregated-host-metrics-thread-module">csle_common.consumer_threads.aggregated_host_metrics_thread module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread">csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread.AggregatedOSSECIdsLogConsumerThread"><code class="docutils literal notranslate"><span class="pre">AggregatedOSSECIdsLogConsumerThread</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread.AggregatedOSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters"><code class="docutils literal notranslate"><span class="pre">AggregatedOSSECIdsLogConsumerThread.get_aggregated_ids_alert_counters()</span></code></a></li>
@@ -98,21 +91,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.docker_host_stats_consumer_thread">csle_common.consumer_threads.docker_host_stats_consumer_thread module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread"><code class="docutils literal notranslate"><span class="pre">DockerHostStatsConsumerThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread.run"><code class="docutils literal notranslate"><span class="pre">DockerHostStatsConsumerThread.run()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.docker_stats_consumer_thread">csle_common.consumer_threads.docker_stats_consumer_thread module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread"><code class="docutils literal notranslate"><span class="pre">DockerStatsConsumerThread</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.get_average_docker_stats"><code class="docutils literal notranslate"><span class="pre">DockerStatsConsumerThread.get_average_docker_stats()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.run"><code class="docutils literal notranslate"><span class="pre">DockerStatsConsumerThread.run()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#csle-common-consumer-threads-docker-host-stats-consumer-thread-module">csle_common.consumer_threads.docker_host_stats_consumer_thread module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#csle-common-consumer-threads-docker-stats-consumer-thread-module">csle_common.consumer_threads.docker_stats_consumer_thread module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_common.consumer_threads.host_metrics_consumer_thread">csle_common.consumer_threads.host_metrics_consumer_thread module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread"><code class="docutils literal notranslate"><span class="pre">HostMetricsConsumerThread</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.consumer_threads.host_metrics_consumer_thread.HostMetricsConsumerThread.run"><code class="docutils literal notranslate"><span class="pre">HostMetricsConsumerThread.run()</span></code></a></li>
@@ -174,36 +154,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-csle_common.consumer_threads.aggregated_host_metrics_thread">
-<span id="csle-common-consumer-threads-aggregated-host-metrics-thread-module"></span><h2>csle_common.consumer_threads.aggregated_host_metrics_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.aggregated_host_metrics_thread" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.aggregated_host_metrics_thread.</span></span><span class="sig-name descname"><span class="pre">AggregatedHostMetricsThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HostMetrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState" title="csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state.EmulationDefenderMachineObservationState"><span class="pre">EmulationDefenderMachineObservationState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.get_average_aggregated_host_metrics">
-<span class="sig-name descname"><span class="pre">get_average_aggregated_host_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HostMetrics</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread.get_average_aggregated_host_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.get_average_aggregated_host_metrics" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>average of the list of aggregated host metrics</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/aggregated_host_metrics_thread.html#AggregatedHostMetricsThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.aggregated_host_metrics_thread.AggregatedHostMetricsThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the thread</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-consumer-threads-aggregated-host-metrics-thread-module">
+<h2>csle_common.consumer_threads.aggregated_host_metrics_thread module<a class="headerlink" href="#csle-common-consumer-threads-aggregated-host-metrics-thread-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread">
 <span id="csle-common-consumer-threads-aggregated-ossec-ids-log-consumer-thread-module"></span><h2>csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread" title="Permalink to this heading"></a></h2>
@@ -374,57 +326,11 @@
 </dd></dl>
 
 </section>
-<section id="module-csle_common.consumer_threads.docker_host_stats_consumer_thread">
-<span id="csle-common-consumer-threads-docker-host-stats-consumer-thread-module"></span><h2>csle_common.consumer_threads.docker_host_stats_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.docker_host_stats_consumer_thread" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.docker_host_stats_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">DockerHostStatsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DockerStats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_host_stats_consumer_thread.html#DockerHostStatsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that polls the Kafka log to get the latest status of the docker statistics for a specific host</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_host_stats_consumer_thread.html#DockerHostStatsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_host_stats_consumer_thread.DockerHostStatsConsumerThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the thread</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-consumer-threads-docker-host-stats-consumer-thread-module">
+<h2>csle_common.consumer_threads.docker_host_stats_consumer_thread module<a class="headerlink" href="#csle-common-consumer-threads-docker-host-stats-consumer-thread-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-csle_common.consumer_threads.docker_stats_consumer_thread">
-<span id="csle-common-consumer-threads-docker-stats-consumer-thread-module"></span><h2>csle_common.consumer_threads.docker_stats_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.docker_stats_consumer_thread" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.consumer_threads.docker_stats_consumer_thread.</span></span><span class="sig-name descname"><span class="pre">DockerStatsConsumerThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docker_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DockerStats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_offset_reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
-<p>Thread that polls the Kafka log to get the latest status of the docker statistics</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.get_average_docker_stats">
-<span class="sig-name descname"><span class="pre">get_average_docker_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DockerStats</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread.get_average_docker_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.get_average_docker_stats" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the average of the list of docker stats</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/consumer_threads/docker_stats_consumer_thread.html#DockerStatsConsumerThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.consumer_threads.docker_stats_consumer_thread.DockerStatsConsumerThread.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs the thread</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-common-consumer-threads-docker-stats-consumer-thread-module">
+<h2>csle_common.consumer_threads.docker_stats_consumer_thread module<a class="headerlink" href="#csle-common-consumer-threads-docker-stats-consumer-thread-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_common.consumer_threads.host_metrics_consumer_thread">
 <span id="csle-common-consumer-threads-host-metrics-consumer-thread-module"></span><h2>csle_common.consumer_threads.host_metrics_consumer_thread module<a class="headerlink" href="#module-csle_common.consumer_threads.host_metrics_consumer_thread" title="Permalink to this heading"></a></h2>

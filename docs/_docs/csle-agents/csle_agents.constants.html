@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.constants package &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.constants package &mdash; csle-agents 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -48,6 +48,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.L"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.L</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.N"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.PARAMS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.POLICY_TYPE</span></code></a></li>
@@ -61,6 +62,42 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UCB_KAPPA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UCB_XI"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UCB_XI</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_FUNCTION_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_FUNCTION_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_OPTIMIZER_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_OPTIMIZER_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.BETA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.POLICY_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.X_init</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT.Y_init</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.L"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.N"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMS"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.PARAMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.POLICY_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.TARGET"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETA1"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETAS"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.THRESHOLDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.UCB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_KAPPA"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.UCB_KAPPA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_XI"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.UCB_XI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION"><code class="docutils literal notranslate"><span class="pre">CMA_ES_OPTIMIZATION.UTILITY_FUNCTION</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.COMMON"><code class="docutils literal notranslate"><span class="pre">COMMON</span></code></a><ul>
@@ -114,6 +151,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.L"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.L</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.LAMB"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.LAMB</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.N"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.OBJECTIVE_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.POLICY_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
@@ -127,6 +165,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.L"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.L</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.MUTATE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.MUTATE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.N"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.POLICY_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.POPULATION_SIZE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.RECOMBINATION</span></code></a></li>
@@ -252,6 +291,15 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">LOCAL_DFSP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.ACTIONS"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.ACTIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.COST_TENSOR"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.COST_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.STATES"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.STATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_CMDPs.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">LP_FOR_CMDPs.TRANSITION_TENSOR</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2</span></code></a></li>
@@ -292,6 +340,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.DELTA"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.DELTA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.L"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.L</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.N"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.OBJECTIVE_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.POLICY_TYPE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
@@ -322,6 +371,21 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.REWARD_TENSOR</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.STATE_SPACE"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.STATE_SPACE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.TRANSITION_TENSOR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.COOLING_FACTOR"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.COOLING_FACTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.DELTA"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.DELTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.INITIAL_TEMPERATURE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.L"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.N"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.OBJECTIVE_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.POLICY_TYPE"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.POLICY_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THETA1"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THETAS"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">SIMULATED_ANNEALING.THRESHOLDS</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI</span></code></a><ul>
@@ -417,6 +481,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS">
 <span class="sig-name descname"><span class="pre">PARAMETER_BOUNDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parameter_bounds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -479,6 +548,170 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION">
 <span class="sig-name descname"><span class="pre">UTILITY_FUNCTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utility_function'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">BAYESIAN_OPTIMIZATION_EMUKIT</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#BAYESIAN_OPTIMIZATION_EMUKIT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants related to Bayesian Optimization Emukit</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_FUNCTION_TYPE">
+<span class="sig-name descname"><span class="pre">ACQUISITION_FUNCTION_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'acquisition_function_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_FUNCTION_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_OPTIMIZER_TYPE">
+<span class="sig-name descname"><span class="pre">ACQUISITION_OPTIMIZER_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'acquisition_optimizer_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.ACQUISITION_OPTIMIZER_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA">
+<span class="sig-name descname"><span class="pre">BETA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'beta'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET">
+<span class="sig-name descname"><span class="pre">EVALUATION_BUDGET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'evaluation_budget'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.EVALUATION_BUDGET" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM">
+<span class="sig-name descname"><span class="pre">INPUT_SPACE_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'input_space_dim'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.INPUT_SPACE_DIM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE">
+<span class="sig-name descname"><span class="pre">KERNEL_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kernel_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.KERNEL_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL">
+<span class="sig-name descname"><span class="pre">LENGTHSCALE_RBF_KERNEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lengthscale_rbf_kernel'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.LENGTHSCALE_RBF_KERNEL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE">
+<span class="sig-name descname"><span class="pre">OBS_LIKELIHOOD_VARIANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'obs_likelihood_variance'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.OBS_LIKELIHOOD_VARIANCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS">
+<span class="sig-name descname"><span class="pre">PARAMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'params'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.PARAMS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.POLICY_TYPE">
+<span class="sig-name descname"><span class="pre">POLICY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'policy_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.POLICY_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL">
+<span class="sig-name descname"><span class="pre">VARIANCE_RBF_KERNEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'variance_rbf_kernel'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.VARIANCE_RBF_KERNEL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init">
+<span class="sig-name descname"><span class="pre">X_init</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X_init'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.X_init" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init">
+<span class="sig-name descname"><span class="pre">Y_init</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y_init'</span></em><a class="headerlink" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.Y_init" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CMA_ES_OPTIMIZATION</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#CMA_ES_OPTIMIZATION"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants related to CMA-ES Optimization</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'L'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.N">
+<span class="sig-name descname"><span class="pre">N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'N'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.N" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS">
+<span class="sig-name descname"><span class="pre">PARAMETER_BOUNDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parameter_bounds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMS">
+<span class="sig-name descname"><span class="pre">PARAMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'params'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.PARAMS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.POLICY_TYPE">
+<span class="sig-name descname"><span class="pre">POLICY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'policy_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.POLICY_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER">
+<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_ATTACKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_attacker'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER">
+<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_DEFENDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_defender'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.TARGET">
+<span class="sig-name descname"><span class="pre">TARGET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'target'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.TARGET" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETA1">
+<span class="sig-name descname"><span class="pre">THETA1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'theta1'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETA1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETAS">
+<span class="sig-name descname"><span class="pre">THETAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thetas'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THETAS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THRESHOLDS">
+<span class="sig-name descname"><span class="pre">THRESHOLDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thresholds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.THRESHOLDS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB">
+<span class="sig-name descname"><span class="pre">UCB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ucb'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_KAPPA">
+<span class="sig-name descname"><span class="pre">UCB_KAPPA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ucb_kappa'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_KAPPA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_XI">
+<span class="sig-name descname"><span class="pre">UCB_XI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ucb_xi'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UCB_XI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION">
+<span class="sig-name descname"><span class="pre">UTILITY_FUNCTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utility_function'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CMA_ES_OPTIMIZATION.UTILITY_FUNCTION" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -731,6 +964,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.CROSS_ENTROPY.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CROSS_ENTROPY.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.CROSS_ENTROPY.POLICY_TYPE">
 <span class="sig-name descname"><span class="pre">POLICY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'policy_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.CROSS_ENTROPY.POLICY_TYPE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -785,6 +1023,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.N">
 <span class="sig-name descname"><span class="pre">N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'N'</span></em><a class="headerlink" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.N" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1341,6 +1584,43 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">LP_FOR_CMDPs</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#LP_FOR_CMDPs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants related to linear programming for CMDPs</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.ACTIONS">
+<span class="sig-name descname"><span class="pre">ACTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'actions'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.ACTIONS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS">
+<span class="sig-name descname"><span class="pre">CONSTRAINT_COST_TENSORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'constraint_cost_tensors'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_TENSORS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS">
+<span class="sig-name descname"><span class="pre">CONSTRAINT_COST_THRESHOLDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'constraint_cost_thresholds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.CONSTRAINT_COST_THRESHOLDS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.COST_TENSOR">
+<span class="sig-name descname"><span class="pre">COST_TENSOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cost_tensor'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.COST_TENSOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.STATES">
+<span class="sig-name descname"><span class="pre">STATES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'states'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.STATES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_CMDPs.TRANSITION_TENSOR">
+<span class="sig-name descname"><span class="pre">TRANSITION_TENSOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'transition_tensor'</span></em><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_CMDPs.TRANSITION_TENSOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.LP_FOR_NF_GAMES">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">LP_FOR_NF_GAMES</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#LP_FOR_NF_GAMES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1509,6 +1789,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.RANDOM_SEARCH.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.RANDOM_SEARCH.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.RANDOM_SEARCH.POLICY_TYPE">
 <span class="sig-name descname"><span class="pre">POLICY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'policy_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.RANDOM_SEARCH.POLICY_TYPE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -1632,6 +1917,73 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.SHAPLEY_ITERATION.TRANSITION_TENSOR">
 <span class="sig-name descname"><span class="pre">TRANSITION_TENSOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'transition_tensor'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.TRANSITION_TENSOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">SIMULATED_ANNEALING</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#SIMULATED_ANNEALING"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants related to simulated annealing</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.COOLING_FACTOR">
+<span class="sig-name descname"><span class="pre">COOLING_FACTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cooling_factor'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.COOLING_FACTOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.DELTA">
+<span class="sig-name descname"><span class="pre">DELTA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'delta'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.DELTA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE">
+<span class="sig-name descname"><span class="pre">INITIAL_TEMPERATURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'initial_temperature'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.L">
+<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'L'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.L" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.N">
+<span class="sig-name descname"><span class="pre">N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'N'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.N" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE">
+<span class="sig-name descname"><span class="pre">OBJECTIVE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'objective_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.POLICY_TYPE">
+<span class="sig-name descname"><span class="pre">POLICY_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'policy_type'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.POLICY_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER">
+<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_ATTACKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_attacker'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER">
+<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_DEFENDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_defender'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.THETA1">
+<span class="sig-name descname"><span class="pre">THETA1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'theta1'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THETA1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.THETAS">
+<span class="sig-name descname"><span class="pre">THETAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thetas'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THETAS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.SIMULATED_ANNEALING.THRESHOLDS">
+<span class="sig-name descname"><span class="pre">THRESHOLDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thresholds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.SIMULATED_ANNEALING.THRESHOLDS" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

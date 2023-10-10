@@ -36,10 +36,10 @@ csle\_collector.elk\_manager.elk\_manager\_util module
    :undoc-members:
    :show-inheritance:
 
-csle\_collector.elk\_manager.query\_elk\_server module
-------------------------------------------------------
+csle\_collector.elk\_manager.query\_elk\_manager module
+-------------------------------------------------------
 
-.. automodule:: csle_collector.elk_manager.query_elk_server
+.. automodule:: csle_collector.elk_manager.query_elk_manager
    :members:
    :undoc-members:
    :show-inheritance:

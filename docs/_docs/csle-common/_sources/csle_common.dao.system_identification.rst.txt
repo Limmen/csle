@@ -52,6 +52,14 @@ csle\_common.dao.system\_identification.gp\_conditional module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.system\_identification.gp\_regression\_model\_with\_gauissan\_noise module
+-------------------------------------------------------------------------------------------
+
+.. automodule:: csle_common.dao.system_identification.gp_regression_model_with_gauissan_noise
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.system\_identification.gp\_system\_model module
 ----------------------------------------------------------------
 

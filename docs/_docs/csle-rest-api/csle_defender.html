@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_defender package &mdash; csle-rest-api 0.3.0 documentation</title>
+  <title>csle_defender package &mdash; csle-rest-api 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -77,29 +77,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="csle_defender.emulation.html">csle_defender.emulation package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.defender_stopping_middleware">csle_defender.emulation.defender_stopping_middleware module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.continue_monitor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.stop_monitor()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.defender_update_state_middleware">csle_defender.emulation.defender_update_state_middleware module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware"><code class="docutils literal notranslate"><span class="pre">DefenderUpdateStateMiddleware</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware.update_state"><code class="docutils literal notranslate"><span class="pre">DefenderUpdateStateMiddleware.update_state()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.emulated_defender">csle_defender.emulation.emulated_defender module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_stopping_action()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_transition()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#csle-defender-emulation-defender-stopping-middleware-module">csle_defender.emulation.defender_stopping_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#csle-defender-emulation-defender-update-state-middleware-module">csle_defender.emulation.defender_update_state_middleware module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#csle-defender-emulation-emulated-defender-module">csle_defender.emulation.emulated_defender module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation">Module contents</a></li>
 </ul>
 </li>
@@ -109,35 +89,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-csle_defender.defender">
-<span id="csle-defender-defender-module"></span><h2>csle_defender.defender module<a class="headerlink" href="#module-csle_defender.defender" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_defender.defender.Defender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_defender.defender.</span></span><span class="sig-name descname"><span class="pre">Defender</span></span><a class="reference internal" href="_modules/csle_defender/defender.html#Defender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.defender.Defender" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Represents an automated defender agent</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_defender.defender.Defender.defender_transition">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defender_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/defender.html#Defender.defender_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.defender.Defender.defender_transition" title="Permalink to this definition"></a></dt>
-<dd><p>Implements the transition operator of the MDP/Markov Game for defense actions,
-supporting both simulation and emulation mode
-(s, a) –&gt; s’</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> – the current state</p></li>
-<li><p><strong>defender_action</strong> – the defender’s action of the transition</p></li>
-<li><p><strong>attacker_action</strong> – previous attacker action</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>s’</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-defender-defender-module">
+<h2>csle_defender.defender module<a class="headerlink" href="#csle-defender-defender-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_defender">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_defender" title="Permalink to this heading"></a></h2>

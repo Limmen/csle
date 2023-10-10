@@ -1,6 +1,6 @@
 # OS
 # Ubuntu 20
-FROM kimham/csle_ubuntu_20_base:0.3.0
+FROM kimham/csle_ubuntu_20_base:0.4.0
 USER root
 
 RUN apt-get install -y --force-yes lsb-release libtinfo5 apache2

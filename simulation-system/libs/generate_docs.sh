@@ -20,5 +20,7 @@ echo "Generating gym-csle-stopping-game API documentation"
 cd gym-csle-stopping-game/docs; sphinx-apidoc -f -o source/ ../src/gym_csle_stopping_game/; make html; cp -r build/html/* ../../../../docs/_docs/gym-csle-stopping-game; cd ../../
 echo "Generating csle-cluster API documentation"
 cd csle-cluster/docs; sphinx-apidoc -f -o source/ ../src/csle_cluster/; make html; cp -r build/html/* ../../../../docs/_docs/csle-cluster; cd ../../
-echo "Generating csle-cluster API documentation"
+echo "Generating gym-csle-intrusion-response-game API documentation"
 cd gym-csle-intrusion-response-game/docs; sphinx-apidoc -f -o source/ ../src/gym_csle_intrusion_response_game/; make html; cp -r build/html/* ../../../../docs/_docs/gym-csle-intrusion-response-game; cd ../../
+echo "Generating csle-tolerance API documentation"
+cd csle-tolerance/docs; sphinx-apidoc -f -o source/ ../src/csle_tolerance/; make html; cp -r build/html/* ../../../../docs/_docs/csle-tolerance; cd ../../

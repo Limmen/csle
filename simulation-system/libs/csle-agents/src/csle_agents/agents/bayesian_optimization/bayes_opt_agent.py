@@ -269,7 +269,6 @@ class BayesOptAgent(BaseAgent):
         parameter_bounds_dict = {}
         for i, bound in enumerate(parameter_bounds):
             parameter_bounds_dict[f"param_{i}"] = bound
-        # {'x': (-2, 2), 'y': (-3, 3)}
         optimizer = BayesianOptimization(
             f=None,
             pbounds=parameter_bounds_dict,

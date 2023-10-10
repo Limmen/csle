@@ -68,12 +68,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_agents.common.pruning</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">pulp</span>
 
 
-<div class="viewcode-block" id="check_duplicate"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_duplicate">[docs]</a><span class="k">def</span> <span class="nf">check_duplicate</span><span class="p">(</span><span class="n">alpha_set</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="check_duplicate"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_duplicate">[docs]</a><span class="k">def</span> <span class="nf">check_duplicate</span><span class="p">(</span><span class="n">alpha_set</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check whether alpha vector av is already in set a</span>
 
@@ -87,7 +88,7 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="prune_lower_bound"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.prune_lower_bound">[docs]</a><span class="k">def</span> <span class="nf">prune_lower_bound</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="prune_lower_bound"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.prune_lower_bound">[docs]</a><span class="k">def</span> <span class="nf">prune_lower_bound</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lark&#39;s filtering algorithm to prune the lower bound, (Cassandra, Littman, Zhang, 1997)</span>
 
@@ -117,12 +118,12 @@
     <span class="k">while</span> <span class="n">F</span><span class="p">:</span>
         <span class="n">alpha_vec</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>  <span class="c1"># just to get a reference</span>
         <span class="n">F</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">check_dominance_lp</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">check_dominance_lp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">F</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">max_alpha_val</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-            <span class="n">max_alpha_vec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">max_alpha_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
             <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">F</span><span class="p">:</span>
                 <span class="n">phi_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">phi_vec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_alpha_val</span><span class="p">:</span>
@@ -133,7 +134,7 @@
     <span class="k">return</span> <span class="n">Q</span></div>
 
 
-<div class="viewcode-block" id="check_dominance_lp"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_dominance_lp">[docs]</a><span class="k">def</span> <span class="nf">check_dominance_lp</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<div class="viewcode-block" id="check_dominance_lp"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.pruning.check_dominance_lp">[docs]</a><span class="k">def</span> <span class="nf">check_dominance_lp</span><span class="p">(</span><span class="n">alpha_vec</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Q</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses LP to check whether a given alpha vector is dominated or not (Cassandra, Littman, Zhang, 1997)</span>
 
