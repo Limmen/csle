@@ -10,6 +10,8 @@ from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.host_manager.dao.failed_login_attempt import FailedLoginAttempt
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.successful_login import SuccessfulLogin
 
 
 @pytest.fixture
@@ -124,3 +126,24 @@ def example_failed_login_attempt() -> FailedLoginAttempt:
     :return: an example FailedLoginAttempt object
     """
     return FailedLoginAttempt()
+
+
+@pytest.fixture
+def example_host_metrics() -> HostMetrics:
+    """
+    Fixture that returns an example HostMetrics object
+
+    :return: an example HostMetrics object
+    """
+    return HostMetrics(num_logged_in_users=1, num_failed_login_attempts=10, num_open_connections=1, num_login_events=2,
+                       num_processes=5, num_users=1, ip="1.1.1.1", ts=0.5)
+
+
+@pytest.fixture
+def example_successful_login() -> SuccessfulLogin:
+    """
+    Fixture that returns an example SuccessfulLogin object
+
+    :return: an example SuccessfulLogin object
+    """
+    return SuccessfulLogin()
