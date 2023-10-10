@@ -6,8 +6,6 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
 from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
-    import EmulationAttackerNetworkServiceActions
 from csle_system_identification.emulator import Emulator
 
 
