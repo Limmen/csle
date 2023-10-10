@@ -2,6 +2,7 @@ from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsAlert
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert import SnortIdsFastLogAlert
 
 
 class TestSnortIDSManagerDaoSuite:
@@ -68,3 +69,18 @@ class TestSnortIDSManagerDaoSuite:
                 == example_snort_ids_rule_counters.to_dict())
         assert (SnortIdsRuleCounters.from_dict(example_snort_ids_rule_counters.to_dict())
                 == example_snort_ids_rule_counters)
+
+    def test_snort_ids_log_alert(self, example_snort_ids_fast_alert: SnortIdsFastLogAlert) -> None:
+        """
+        Tests creation and dict conversion of the SnortIdsFastLogAlert DAO
+
+        :param example_snort_ids_fast_alert: an example SnortIdsFastLogAlert
+        :return: None
+        """
+        assert isinstance(example_snort_ids_fast_alert.to_dict(), dict)
+        assert isinstance(SnortIdsFastLogAlert.from_dict(example_snort_ids_fast_alert.to_dict()),
+                          SnortIdsFastLogAlert)
+        assert (SnortIdsFastLogAlert.from_dict(example_snort_ids_fast_alert.to_dict()).to_dict()
+                == example_snort_ids_fast_alert.to_dict())
+        assert (SnortIdsFastLogAlert.from_dict(example_snort_ids_fast_alert.to_dict())
+                == example_snort_ids_fast_alert)

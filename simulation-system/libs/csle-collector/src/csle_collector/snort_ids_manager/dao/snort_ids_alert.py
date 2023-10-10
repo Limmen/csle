@@ -2,32 +2,8 @@ from typing import Dict, Any
 import re
 import datetime
 from csle_base.json_serializable import JSONSerializable
+from csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert import SnortIdsFastLogAlert
 import csle_collector.constants.constants as constants
-
-
-class SnortIdsFastLogAlert:
-    """
-    DTO representing an alert entry in the fast log of Snort
-    """
-
-    def __init__(self, timestamp: float, priority: int, class_id: int, source_ip: str, target_ip: str, rule_id: str) \
-            -> None:
-        """
-        Initializes the DTO
-
-        :param timestamp: the timestamp of the record
-        :param priority: the priority of the record
-        :param class_id: the class id of the record
-        :param source_ip: the source ip of the record
-        :param target_ip: the target ip of the record
-        :param rule_id: the id of the Snort rule relating to the record
-        """
-        self.timestamp = timestamp
-        self.priority = priority
-        self.class_id = class_id
-        self.source_ip = source_ip
-        self.target_ip = target_ip
-        self.rule_id = rule_id
 
 
 class SnortIdsAlert(JSONSerializable):
