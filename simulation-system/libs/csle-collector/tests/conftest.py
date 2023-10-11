@@ -18,6 +18,7 @@ from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsAlert
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert import SnortIdsFastLogAlert
 
 
 @pytest.fixture
@@ -214,3 +215,14 @@ def example_snort_ids_rule_counters() -> SnortIdsRuleCounters:
     :return: an example SnortIdsRuleCounters object
     """
     return SnortIdsRuleCounters()
+
+
+@pytest.fixture
+def example_snort_ids_fast_alert() -> SnortIdsFastLogAlert:
+    """
+    Fixture that returns an example SnortIdsFastLogAlert object
+
+    :return: an example SnortIdsFastLogAlert object
+    """
+    return SnortIdsFastLogAlert(timestamp=1234.4, priority=1, class_id=1, source_ip="1.2.3.4", target_ip="2.3.4.1",
+                                rule_id="1")
