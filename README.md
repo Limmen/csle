@@ -15,6 +15,10 @@
         <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
      <a href="https://www.youtube.com/watch?v=iE2KPmtIs2A&" alt="youtube"> 
         <img src="https://img.shields.io/badge/Youtube-red.svg?logo=Youtube" /></a>
+    <a href="https://arxiv.org/abs/2309.03292">
+        <img src="https://img.shields.io/badge/arxiv-2309.03292-silver" alt="Paper">
+    </a>
+    <img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
 </p>
 
 # The Cyber Security Learning Environment (CSLE)
@@ -63,7 +67,7 @@ access to components of emulations.
 
 ![](docs/img/web_ui.gif)
 
-## 🎓 Documentation 
+## 🎓 Documentation
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
 version of the documentation is available [here](./releases/)
