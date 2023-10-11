@@ -22,6 +22,13 @@
     <a href="https://github.com/limmen/csle">
      <img src="https://img.shields.io/badge/-github-teal?logo=github" alt="github">
     </a>
+    <a href="https://hub.docker.com/r/kimham/csle_cve_2010_0426_base/">
+        <img src="https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_base?icon=docker&label=pulls" 
+        alt="Docker pulls">
+    </a>
+    <a href="https://pypi.org/user/Limmen/">
+        <img src="https://img.shields.io/pypi/dm/csle-collector" alt="PyPi downloads">
+    </a>
 </p>
 
 # The Cyber Security Learning Environment (CSLE)
