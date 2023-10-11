@@ -5,8 +5,8 @@
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
-    <a href="https://img.shields.io/badge/version-0.3.0-blue">
-        <img src="https://img.shields.io/badge/version-0.3.0-blue" /></a>
+    <a href="https://img.shields.io/badge/version-0.4.0-blue">
+        <img src="https://img.shields.io/badge/version-0.4.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
@@ -19,6 +19,9 @@
         <img src="https://img.shields.io/badge/arxiv-2309.03292-silver" alt="Paper">
     </a>
     <img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
+    <a href="https://github.com/limmen/csle">
+     <img src="https://img.shields.io/badge/-github-teal?logo=github" alt="github">
+    </a>
 </p>
 
 # The Cyber Security Learning Environment (CSLE)
