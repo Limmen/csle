@@ -10,8 +10,7 @@
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
-        <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a>
-    <br></br>
+        <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a> 
      <a href="https://ieeexplore.ieee.org/document/9779345">
         <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
      <a href="https://www.youtube.com/watch?v=iE2KPmtIs2A&" alt="youtube"> 
