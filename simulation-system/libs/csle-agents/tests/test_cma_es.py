@@ -40,7 +40,7 @@ class TestCMAESSuite:
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
                 agents_constants.CMA_ES_OPTIMIZATION.THETA1: HParam(
-                    value=np.array([-3, 3]), name=agents_constants.CMA_ES_OPTIMIZATION.THETA1,
+                    value=[0.5]*5, name=agents_constants.CMA_ES_OPTIMIZATION.THETA1,
                     descr="initial thresholds"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
@@ -69,7 +69,7 @@ class TestCMAESSuite:
                     name=agents_constants.CMA_ES_OPTIMIZATION.UCB_XI,
                     descr="kappa parameter for the xi utility function"),
                 agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                    value=[(-3, 3)],
+                    value=[-3, 3],
                     name=agents_constants.CMA_ES_OPTIMIZATION.PARAMETER_BOUNDS,
                     descr="parameter bounds"),
                 agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE: HParam(
