@@ -35,18 +35,18 @@ class TestCMAESSuite:
             log_every=1,
             hparams={
                 agents_constants.CMA_ES_OPTIMIZATION.N: HParam(value=5, name=constants.T_SPSA.N,
-                                                                 descr="the number of training iterations"),
+                                                               descr="the number of training iterations"),
                 agents_constants.CMA_ES_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
-                agents_constants.CMA_ES_OPTIMIZATION.THETA1: HParam(
-                    value=[0.5]*5, name=agents_constants.CMA_ES_OPTIMIZATION.THETA1,
-                    descr="initial thresholds"),
+                agents_constants.CMA_ES_OPTIMIZATION.THETA1: HParam(value=[0.5] * 5,
+                                                                    name=agents_constants.CMA_ES_OPTIMIZATION.THETA1,
+                                                                    descr="initial thresholds"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
-                agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
-                    value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                    descr="confidence interval"),
+                agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(value=0.95,
+                                                                    name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
+                                                                    descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                     value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
@@ -76,7 +76,8 @@ class TestCMAESSuite:
                     value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CMA_ES_OPTIMIZATION.POLICY_TYPE,
                     descr="policy type for the execution"),
                 agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE: HParam(
-                    value=ObjectiveType.MIN, name=agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE,
+                    value=ObjectiveType.MIN,
+                    name=agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE,
                     descr="Objective type")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
@@ -133,8 +134,8 @@ class TestCMAESSuite:
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
         CMAESAgent(simulation_env_config=simulation_env_config,
-                      emulation_env_config=emulation_env_config,
-                      experiment_config=experiment_config)
+                   emulation_env_config=emulation_env_config,
+                   experiment_config=experiment_config)
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
