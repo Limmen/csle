@@ -5,29 +5,32 @@ def f(p):
     return (p[0]-1)**2 + (p[1]-4)**2 + 10
 
 def reflection(x_c, x_n, alpha=1):
-    print("kommer jag hit nån gång")
-    x_r = x_c + alpha * (x_c - x_n)
+    t = tuple(alpha * (i - j) for i,j in zip(x_c, x_n))
+    x_r = tuple(k+l for k,l in zip(x_c, t))
     return x_r
 
 def expantion(x_c, x_r, gamma=2):
-    x_e = x_c + gamma * (x_r - x_c)
+    t = tuple(gamma * (i - j) for i,j in zip(x_r, x_c))
+    x_e = tuple(k + l for k,l in zip(x_c, t))
     return x_e
 
 def contraction(x_c, x_w, rho=0.5):
-    x_co = x_c + rho * (x_w - x_c)
+    t = tuple(rho * (i - j) for i, j in zip(x_w, x_c))
+    x_co = tuple(k + l for k, l in zip(x_c, t))
+    # x_co = x_c + rho * (x_w - x_c)
     return x_co
 
 def shrink(x_i, x_0, sigma=0.5):
-    x = x_0 + sigma * (x_i - x_0)
+    t = tuple(sigma * (i - j) for i, j in zip(x_i, x_0))
+    x = tuple(k + l for k, l in zip(x_0, t))
+    # x = x_0 + sigma * (x_i - x_0)
     return x
 
-def nelder_mead(x_list, tolerance = 0.1):
-
+def nelder_mead(x_list, tolerance = 0.3):
     func_evals = []
     
     x_n = 0 #the point genrating the worst (aka of higehst magnitiude) function evaluation
     f_n = 0 # current worst function evalutaion
-    x_0 = 0 # the point that is to generate the best function evaluation
     f_best = f((101, 101))
 
     for k in range(len(x_list)):
@@ -36,38 +39,31 @@ def nelder_mead(x_list, tolerance = 0.1):
         if f_k > f_n:
             f_n = f_k # assign new worst evaluation
             x_n = x_list[k] # assign new worst evalution point
-        else:
-            if f_k <= f_best:
-                f_best = f_k
-                x_0 = x_list[k]
-
-    # print(func_evals)
-    # print(len(func_evals))
 
     func_evals.sort() # sorting from best to worst evalutaion
+    f_best = func_evals[0]
+
+    for l in range(len(x_list)): # derive the current best avaluation point (not very rigorous)
+        if f(x_list[l]) == f_best:
+            x_0 = x_list[l]
+    print(x_0)
 
     std_f = np.std(func_evals)
 
     if std_f <= tolerance: # base case
         return x_0
 
-    # print(f_best)
-    # print(func_evals[0])
-    # f_best = func_evals[0]
     f_2worst = func_evals[-2]
 
     # x_c = np.mean(x_list[:-1]) # calculating centroid point
     sum1 = 0
     sum2 = 0
     for j in range(len(x_list[:-1])):
-        sum1 += x_list[i][0]
-        sum2 += x_list[i][1]
+        sum1 += x_list[j][0]
+        sum2 += x_list[j][1]
     x_c = (sum1 / len(x_list[:-1]), sum1 / len(x_list[:-1])) # calculating the centroid point
 
     x_r = reflection(x_c, x_n) # calculating reflection
-    print(x_r)
-    
-
     assert f_n == func_evals[-1]
     assert f_best == func_evals[0]
 
@@ -105,7 +101,7 @@ def nelder_mead(x_list, tolerance = 0.1):
     nelder_mead(x_list)
 
 def main():
-    x_list = [(random.randint(0,100), random.randint(0, 100)) for i in range(10)]
+    x_list = [(random.randint(5,15), random.randint(5, 15)) for i in range(10)]
     solution = nelder_mead(x_list)
     print(solution)
 
