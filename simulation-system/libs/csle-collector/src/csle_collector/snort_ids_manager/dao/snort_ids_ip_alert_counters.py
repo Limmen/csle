@@ -3,7 +3,7 @@ import time
 import numpy as np
 from csle_base.json_serializable import JSONSerializable
 import csle_collector.constants.constants as constants
-from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert import SnortIdsFastLogAlert
 
 
 class SnortIdsIPAlertCounters(JSONSerializable):

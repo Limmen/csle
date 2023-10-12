@@ -1,8 +1,5 @@
 from typing import Dict, Any
-import re
-import datetime
 from csle_base.json_serializable import JSONSerializable
-import csle_collector.constants.constants as constants
 
 
 class SnortIdsFastLogAlert(JSONSerializable):
