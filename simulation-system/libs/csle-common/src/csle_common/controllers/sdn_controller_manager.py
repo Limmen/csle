@@ -131,7 +131,7 @@ class SDNControllerManager:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
-            ryu_dto = csle_collector.ryu_manager.query_ryu_server.get_ryu_status(stub)
+            ryu_dto = csle_collector.ryu_manager.query_ryu_manager.get_ryu_status(stub)
             return ryu_dto
 
     @staticmethod
@@ -157,7 +157,7 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
-            ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu(stub)
+            ryu_dto = csle_collector.ryu_manager.query_ryu_manager.stop_ryu(stub)
             return ryu_dto
 
     @staticmethod
@@ -191,7 +191,7 @@ class SDNControllerManager:
                 f"Starting RYU, port: {emulation_env_config.sdn_controller_config.controller_port}, "
                 f"web_port: {emulation_env_config.sdn_controller_config.controller_web_api_port}, "
                 f"controller: {emulation_env_config.sdn_controller_config.controller_module_name}")
-            ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu(
+            ryu_dto = csle_collector.ryu_manager.query_ryu_manager.start_ryu(
                 stub, port=emulation_env_config.sdn_controller_config.controller_port,
                 web_port=emulation_env_config.sdn_controller_config.controller_web_api_port,
                 controller=emulation_env_config.sdn_controller_config.controller_module_name)
@@ -224,7 +224,7 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
-            ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor(
+            ryu_dto = csle_collector.ryu_manager.query_ryu_manager.start_ryu_monitor(
                 stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
                 kafka_port=emulation_env_config.kafka_config.kafka_port,
                 time_step_len=emulation_env_config.sdn_controller_config.time_step_len_seconds)
@@ -254,7 +254,7 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.manager_port}',
                 options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
-            ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu_monitor(stub)
+            ryu_dto = csle_collector.ryu_manager.query_ryu_manager.stop_ryu_monitor(stub)
             return ryu_dto
 
     @staticmethod
