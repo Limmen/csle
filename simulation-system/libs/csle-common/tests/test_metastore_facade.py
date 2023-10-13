@@ -3740,7 +3740,7 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.execute.assert_called_once_with(
             f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
             f"(ip_first_octet, emulation_name, info) "
-            f"VALUES (%s, %s, %s)", (example_emulation_execution.ip_first_octet,
+            f"VALUES (%s, %s, %s) RETURNING ip_first_octet", (example_emulation_execution.ip_first_octet,
                                      example_emulation_execution.emulation_name,
                                      example_emulation_execution.to_json_str()))
         mocked_cursor.fetchone.assert_called_once()
