@@ -267,8 +267,8 @@ class OSSECIdsAlertCounters(GRPCSerializable, KafkaSerializable, JSONSerializabl
         :return: a copy of the object
         """
         c = OSSECIdsAlertCounters()
-        c.group_alerts = self.group_alerts
-        c.level_alerts = self.level_alerts
+        c.group_alerts = self.group_alerts.copy()
+        c.level_alerts = self.level_alerts.copy()
         c.ip = self.ip
         c.ts = self.ts
         c.total_alerts = self.total_alerts
