@@ -195,6 +195,26 @@ class SIMULATED_ANNEALING:
     OBJECTIVE_TYPE = "objective_type"
 
 
+class NELDER_MEAD:
+    """
+    String constants related to Nelder-Mead
+    """
+    L = "L"
+    IMPROVE_THRESHOLD = "improve_threshold"
+    IMPROVE_BREAK = "improve_break"
+    N = "N"
+    STEP = "step"
+    THETA1 = "theta1"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    THETAS = "thetas"
+    DELTA = "delta"
+    POLICY_TYPE = "policy_type"
+    COOLING_FACTOR = "cooling_factor"
+    INITIAL_TEMPERATURE = "initial_temperature"
+    OBJECTIVE_TYPE = "objective_type"
+
 class BAYESIAN_OPTIMIZATION:
     """
     String constants related to Bayesian Optimization

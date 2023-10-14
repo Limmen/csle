@@ -3,6 +3,7 @@ import math
 import time
 import random
 import gymnasium as gym
+import copy
 import os
 import numpy as np
 import numpy.typing as npt
@@ -49,7 +50,7 @@ class NelderMeadAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.SIMULATED_ANNEALING
+        assert experiment_config.agent_type == AgentType.NELDER_MEAD
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
@@ -148,9 +149,9 @@ class NelderMeadAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed,
-                                                  random_seeds=self.experiment_config.random_seeds,
-                                                  training_job=self.training_job)
+            exp_result = self.nelder_mead(exp_result=exp_result, seed=seed,
+                                          random_seeds=self.experiment_config.random_seeds,
+                                          training_job=self.training_job)
             # Save latest trace
             if self.save_to_metastore:
                 MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
@@ -212,9 +213,9 @@ class NelderMeadAgent(BaseAgent):
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
     def nelder_mead(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
-                            training_job: TrainingJobConfig):
+                    training_job: TrainingJobConfig):
         """
-        Runs the simulated annealing algorithm
+        Runs the Nelder-Mead algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -222,16 +223,17 @@ class NelderMeadAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        cooling_factor = self.experiment_config.hparams[agents_constants.NELDER_MEAD.COOLING_FACTOR].value
-        T = self.experiment_config.hparams[agents_constants.NELDER_MEAD.INITIAL_TEMPERATURE].value
+        no_improve_break = self.experiment_config.hparams[agents_constants.NELDER_MEAD.IMPROVE_BREAK].value
+        step = self.experiment_config.hparams[agents_constants.NELDER_MEAD.STEP].value
+        no_improve_thr = self.experiment_config.hparams[agents_constants.NELDER_MEAD.IMPROVE_THRESHOLD].value
         L = self.experiment_config.hparams[agents_constants.NELDER_MEAD.L].value
         if agents_constants.NELDER_MEAD.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.NELDER_MEAD.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = SimulatedAnnealingAgent.initial_theta(L=L)
+                theta = NelderMeadAgent.initial_theta(L=L)
             else:
-                theta = SimulatedAnnealingAgent.initial_theta(L=2 * L)
+                theta = NelderMeadAgent.initial_theta(L=2 * L)
 
         # Initial eval
         policy = self.get_policy(theta=list(theta), L=L)
@@ -242,7 +244,7 @@ class NelderMeadAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS].append(
-            SimulatedAnnealingAgent.round_vec(theta))
+            NelderMeadAgent.round_vec(theta))
 
         # Initial eval
         policy = self.get_policy(theta=list(theta), L=L)
@@ -254,25 +256,112 @@ class NelderMeadAgent(BaseAgent):
         N = self.experiment_config.hparams[agents_constants.NELDER_MEAD.N].value
         delta = self.experiment_config.hparams[agents_constants.NELDER_MEAD.DELTA].value
 
-        for i in range(N):
+        def reflection(x_c, x_n, alpha=1):
+            t = tuple(alpha * (i - j) for i,j in zip(x_c, x_n))
+            x_r = tuple(k+l for k,l in zip(x_c, t))
+            return x_r
 
-            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
-            candidate_policy = self.get_policy(theta=list(theta_candidate), L=L)
-            avg_metrics = self.eval_theta(
-                policy=candidate_policy,
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            d_J = J_candidate - J_0
-            if d_J < 0:
-                if np.exp(d_J / T) > random.random():
-                    J_0 = J_candidate
-                    policy = candidate_policy
-                else:
-                    continue
+        def expansion(x_c, x_r, gamma=2):
+            t = tuple(gamma * (i - j) for i,j in zip(x_r, x_c))
+            x_e = tuple(k + l for k,l in zip(x_c, t))
+            return x_e
+
+        def contraction(x_c, x_w, rho=0.5):
+            t = tuple(rho * (i - j) for i, j in zip(x_w, x_c))
+            x_co = tuple(k + l for k, l in zip(x_c, t))
+            # x_co = x_c + rho * (x_w - x_c)
+            return x_co
+
+        def shrink(x_i, x_0, sigma=0.5):
+            t = tuple(sigma * (i - j) for i, j in zip(x_i, x_0))
+            x = tuple(k + l for k, l in zip(x_0, t))
+            return x
+
+        dim = len(theta)
+        no_improv = 0
+        func_evals = [[theta, J_0]]
+        for i in range(dim):
+            theta_1 = copy.copy(theta)
+            theta_1[i] = theta_1[i] + step
+            policy = self.get_policy(theta=list(theta_1), L=L)
+            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            func_evals.append([theta_1, J])
+
+        while True:
+
+            func_evals.sort(key=lambda x: x[1])
+            J_best = func_evals[0][1]
+
+            if J_best < J_0 - no_improve_thr:
+                no_improv = 0
+                J_0 = J_best
             else:
-                J_0 = J_candidate
-            J = J_candidate
-            T = T * cooling_factor
+                no_improv += 1
+
+            if no_improv >= no_improve_break:
+                J = J_best
+                # return func_evals[0]
+                break
+
+            theta_c = [0.] * dim
+
+            for tup in func_evals[:-1]:
+                for i, c in enumerate(tup[0]):
+                    theta_c[i] += c / (len(func_evals)-1)
+
+            theta_n = func_evals[-1][0]
+            J_n2 = func_evals[-2][1]
+            theta_r = reflection(theta_c, theta_n)
+            policy = self.get_policy(theta=list(theta_r), L=L)
+            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_r  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        
+            if J_best <= J_r < J_n2:
+                del func_evals[-1]
+                func_evals.append([theta_r, J_r])
+                continue
+
+            if J_r < J_best:
+                theta_e = expansion(theta_c, theta_n)
+                policy = self.get_policy(theta=list(theta_e), L=L)
+                avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_e  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                if J_e < J_r:
+                    del func_evals[-1]
+                    func_evals.append([theta_e, J_e])
+                    continue
+                else:
+                    del func_evals[-1]
+                    func_evals.append([theta_r, J_r])
+                    continue
+        
+            theta_co = contraction(theta_c, theta_n)
+            policy = self.get_policy(theta=list(theta_co), L=L)
+            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_co  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            
+            J_worst = func_evals[-1][1]
+            if J_co < J_worst:
+                del func_evals[-1]
+                func_evals.append([theta_co, J_co])
+                continue
+
+
+            theta_0 = func_evals[0][0]
+            nres = []
+
+            for tup in func_evals:
+
+                theta_s = shrink(theta_0, tup[0])
+                policy = self.get_policy(theta=list(theta_s), L=L)
+                avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_s  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+
+                nres.append([theta_s, J_s])
+
+            func_evals = nres
+
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -282,9 +371,9 @@ class NelderMeadAgent(BaseAgent):
 
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS].append(
-                SimulatedAnnealingAgent.round_vec(theta))
+                NelderMeadAgent.round_vec(theta))
             exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THRESHOLDS].append(
-                SimulatedAnnealingAgent.round_vec(policy.thresholds()))
+                NelderMeadAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
             for k, v in policy.stop_distributions().items():
@@ -350,7 +439,7 @@ class NelderMeadAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[SIMULATED-ANNEALING] i: {i}, J:{J}, "
+                    f"[NELDER-MEAD] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -396,8 +485,8 @@ class NelderMeadAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = SimulatedAnnealingAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = SimulatedAnnealingAgent.compute_avg_metrics(metrics=metrics)
+            metrics = NelderMeadAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = NelderMeadAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
     def random_perturbation(self, delta: float, theta: npt.NDArray[Any]) -> npt.NDArray[Any]:
@@ -475,7 +564,7 @@ class NelderMeadAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.SIMULATED_ANNEALING)
+                agent_type=AgentType.NELDER_MEAD)
         else:
             policy = LinearThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -483,7 +572,7 @@ class NelderMeadAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.SIMULATED_ANNEALING)
+                agent_type=AgentType.NELDER_MEAD)
         return policy
 
     @staticmethod

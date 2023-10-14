@@ -37,7 +37,7 @@ def nelder_mead(x_list, no_improve_thr = 10e-6, no_improv_break = 10, step = 0.1
         f_x = f(x)
         func_evals.append([x, f_x])
 
-    while 1:
+    while True:
 
         func_evals.sort(key=lambda x: x[1])
         f_best = func_evals[0][1]
@@ -60,12 +60,12 @@ def nelder_mead(x_list, no_improve_thr = 10e-6, no_improv_break = 10, step = 0.1
         x_n = func_evals[-1][0]
         xr = reflection(x_c, x_n)
         f_r = f(xr)
-        if func_evals[0][1] <= f_r < func_evals[-2][1]:
+        if f_best <= f_r < func_evals[-2][1]:
             del func_evals[-1]
             func_evals.append([xr, f_r])
             continue
 
-        if f_r < func_evals[0][1]:
+        if f_r < f_best:
             x_e = expansion(x_c, x_n)
             f_e = f(x_e)
             if f_e < f_r:
