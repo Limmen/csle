@@ -3694,7 +3694,7 @@ class ClusterController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start Spark instances --")
         for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"-- Starting spark instances of"
+            Logger.__call__().get_logger().info(f"-- Starting spark instances of "
                                                 f"emulation {execution.emulation_env_config.name}"
                                                 f" on server: {ip}--")
             ClusterController.start_spark_servers(

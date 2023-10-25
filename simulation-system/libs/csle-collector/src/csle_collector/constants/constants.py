@@ -754,8 +754,8 @@ class SPARK:
     """
     Constants related to Spark
     """
-    START_SPARK_MASTER = "/spark-3.3.2-bin-hadoop3/sbin/start-master.sh"
-    START_SPARK_WORKER = "/spark-3.3.2-bin-hadoop3/sbin/start-worker.sh spark://15.13.1.161:7077 -m 2G -c 1"
+    START_SPARK_MASTER = "/spark-3.3.3-bin-hadoop3/sbin/start-master.sh"
+    START_SPARK_WORKER = "/spark-3.3.3-bin-hadoop3/sbin/start-worker.sh spark://15.13.1.161:7077 -m 2G -c 1"
     SPARK_MASTER_PID_FILE = "/tmp/spark--org.apache.spark.deploy.master.Master-1.pid"
     SPARK_WORKER_PID_FILE = "/tmp/spark--org.apache.spark.deploy.worker.Worker-1.pid"
     STOP_SPARK_WORKER = "sudo kill -9 {}"
