@@ -17,6 +17,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_cluster.cluster_manager.cluster_manager_pb2 import SnortIdsStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImageDTO
+
 ClusterUtil.set_config_parameters_from_config_file()
 
 
@@ -399,7 +400,12 @@ def shell(container: str) -> None:
     :param container: the name of the container
     :return: None
     """
+    import socket
+    import netifaces
     from csle_common.controllers.container_controller import ContainerController
+    import csle_collector.constants.constants as collector_constants
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
 
     running_containers = ContainerController.list_all_running_containers()
     container_found = False
@@ -411,7 +417,24 @@ def shell(container: str) -> None:
         cmd = f"docker exec -it {container} /bin/bash"
         click.secho(f"To open a shell in container:{container}, run: '{cmd}'", bold=False)
     else:
-        click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
+        hostname = socket.gethostname()
+        try:
+            ip = netifaces.ifaddresses(collector_constants.INTERFACES.ETH0)[netifaces.AF_INET][0][
+                collector_constants.INTERFACES.ADDR]
+        except Exception:
+            ip = socket.gethostbyname(hostname)
+        click.secho(f"Container: {container} not found among running containers on the current server "
+                    f"with ip: {ip}",
+                    fg="red", bold=False)
+        config = MetastoreFacade.get_config(id=1)
+        for node in config.cluster_config.cluster_nodes:
+            running_containers_dto = ClusterController.list_all_running_containers(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            container_names = list(map(lambda x: x.name, running_containers_dto.runningContainers))
+            if container in container_names:
+                click.secho(f"Container: {container} found among running containers on server "
+                            f"with ip: {node.ip}, to access it with a shell, login to the "
+                            f"server with ip {node.ip} and run csle shell {container}'", fg="red", bold=False)
 
 
 def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool,
