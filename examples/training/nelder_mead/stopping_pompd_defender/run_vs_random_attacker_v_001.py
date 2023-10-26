@@ -26,24 +26,24 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             agents_constants.NELDER_MEAD.N: HParam(value=50, name=constants.T_SPSA.N,
-                                                           descr="the number of training iterations"),
+                                                   descr="the number of training iterations"),
             agents_constants.NELDER_MEAD.IMPROVE_BREAK: HParam(value=10,
                                                                name=agents_constants.NELDER_MEAD.DELTA,
                                                                descr="number of improvements before break"),
-            agents_constants.NELDER_MEAD.L: HParam(
-                value=3, name=agents_constants.NELDER_MEAD.L,
-                descr="the number of stop actions"),
-            agents_constants.NELDER_MEAD.STEP: HParam(
-                value=0.1, name=agents_constants.NELDER_MEAD.STEP,
-                descr="the step in which we modify/pertube each inital guess in the simplex"),
+            agents_constants.NELDER_MEAD.L: HParam(value=3, name=agents_constants.NELDER_MEAD.L,
+                                                   descr="the number of stop actions"),
+            agents_constants.NELDER_MEAD.STEP: HParam(value=0.1,
+                                                      name=agents_constants.NELDER_MEAD.STEP,
+                                                      descr="the step in which we modify/pertube "
+                                                      "each inital guess in the simplex"),
             agents_constants.NELDER_MEAD.IMPROVE_THRESHOLD: HParam(
                 value=10e-6, name=agents_constants.NELDER_MEAD.IMPROVE_THRESHOLD,
                 descr="the threshold whose subtraction of previous best is compared to the current best"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.NELDER_MEAD.THETA1: HParam(value=[-3, -3, -3],
-                                                                name=agents_constants.NELDER_MEAD.THETA1,
-                                                                descr="initial thresholds"),
+                                                        name=agents_constants.NELDER_MEAD.THETA1,
+                                                        descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(

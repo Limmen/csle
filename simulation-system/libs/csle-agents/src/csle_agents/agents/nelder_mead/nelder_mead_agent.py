@@ -1,7 +1,6 @@
 from typing import Union, List, Optional, Any, Dict
 import math
 import time
-import random
 import gymnasium as gym
 import copy
 import os
@@ -256,13 +255,13 @@ class NelderMeadAgent(BaseAgent):
         N = self.experiment_config.hparams[agents_constants.NELDER_MEAD.N].value
 
         def reflection(x_c, x_n, alpha=1):
-            t = tuple(alpha * (i - j) for i,j in zip(x_c, x_n))
-            x_r = tuple(k+l for k,l in zip(x_c, t))
+            t = tuple(alpha * (i - j) for i, j in zip(x_c, x_n))
+            x_r = tuple(k + l for k, l in zip(x_c, t))
             return x_r
 
         def expansion(x_c, x_r, gamma=2):
-            t = tuple(gamma * (i - j) for i,j in zip(x_r, x_c))
-            x_e = tuple(k + l for k,l in zip(x_c, t))
+            t = tuple(gamma * (i - j) for i, j in zip(x_r, x_c))
+            x_e = tuple(k + l for k, l in zip(x_c, t))
             return x_e
 
         def contraction(x_c, x_w, rho=0.5):
@@ -283,7 +282,9 @@ class NelderMeadAgent(BaseAgent):
             theta_1 = copy.copy(theta)
             theta_1[i] = theta_1[i] + step
             policy = self.get_policy(theta=list(theta_1), L=L)
-            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
             J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             func_evals.append([theta_1, J])
 
@@ -307,14 +308,16 @@ class NelderMeadAgent(BaseAgent):
 
             for tup in func_evals[:-1]:
                 for i, c in enumerate(tup[0]):
-                    theta_c[i] += c / (len(func_evals)-1)
+                    theta_c[i] += c / (len(func_evals) - 1)
 
             theta_n = func_evals[-1][0]
             J_n2 = func_evals[-2][1]
             theta_r = reflection(theta_c, theta_n)
             policy = self.get_policy(theta=list(theta_r), L=L)
-            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_r  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_r = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
         
             if J_best <= J_r < J_n2:
                 del func_evals[-1]
@@ -324,8 +327,10 @@ class NelderMeadAgent(BaseAgent):
             if J_r < J_best:
                 theta_e = expansion(theta_c, theta_n)
                 policy = self.get_policy(theta=list(theta_e), L=L)
-                avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-                J_e  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_e = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 if J_e < J_r:
                     del func_evals[-1]
                     func_evals.append([theta_e, J_e])
@@ -337,15 +342,16 @@ class NelderMeadAgent(BaseAgent):
         
             theta_co = contraction(theta_c, theta_n)
             policy = self.get_policy(theta=list(theta_co), L=L)
-            avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_co  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_co = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+
             J_worst = func_evals[-1][1]
             if J_co < J_worst:
                 del func_evals[-1]
                 func_evals.append([theta_co, J_co])
                 continue
-
 
             theta_0 = func_evals[0][0]
             nres = []
@@ -354,8 +360,10 @@ class NelderMeadAgent(BaseAgent):
 
                 theta_s = shrink(theta_0, tup[0])
                 policy = self.get_policy(theta=list(theta_s), L=L)
-                avg_metrics = self.eval_theta(policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-                J_s  = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_s = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
                 nres.append([theta_s, J_s])
 

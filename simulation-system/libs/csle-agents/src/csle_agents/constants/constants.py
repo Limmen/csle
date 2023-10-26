@@ -217,6 +217,7 @@ class NELDER_MEAD:
     INITIAL_TEMPERATURE = "initial_temperature"
     OBJECTIVE_TYPE = "objective_type"
 
+
 class BAYESIAN_OPTIMIZATION:
     """
     String constants related to Bayesian Optimization
