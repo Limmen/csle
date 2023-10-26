@@ -20,18 +20,18 @@ if __name__ == '__main__':
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}simulated_annealing_test", title="Simulated Annealing test",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}nelder_mead_test", title="Nelder-Mead test",
         random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.NELDER_MEAD,
         log_every=1,
         hparams={
-            agents_constants.SIMULATED_ANNEALING.N: HParam(value=50, name=constants.T_SPSA.N,
+            agents_constants.NELDER_MEAD.N: HParam(value=50, name=constants.T_SPSA.N,
                                                            descr="the number of training iterations"),
             agents_constants.NELDER_MEAD.IMPROVE_BREAK: HParam(value=10,
-                                                               name=agents_constants.SIMULATED_ANNEALING.DELTA,
+                                                               name=agents_constants.NELDER_MEAD.DELTA,
                                                                descr="number of improvements before break"),
             agents_constants.NELDER_MEAD.L: HParam(
-                value=3, name=agents_constants.SIMULATED_ANNEALING.L,
+                value=3, name=agents_constants.NELDER_MEAD.L,
                 descr="the number of stop actions"),
             agents_constants.NELDER_MEAD.STEP: HParam(
                 value=0.1, name=agents_constants.NELDER_MEAD.STEP,
@@ -42,7 +42,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.NELDER_MEAD.THETA1: HParam(value=[-3, -3, -3],
-                                                                name=agents_constants.SIMULATED_ANNEALING.THETA1,
+                                                                name=agents_constants.NELDER_MEAD.THETA1,
                                                                 descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -59,10 +59,10 @@ if __name__ == '__main__':
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
             agents_constants.NELDER_MEAD.POLICY_TYPE: HParam(
-                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.SIMULATED_ANNEALING.POLICY_TYPE,
+                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.NELDER_MEAD.POLICY_TYPE,
                 descr="policy type for the execution"),
             agents_constants.NELDER_MEAD.OBJECTIVE_TYPE: HParam(
-                value=ObjectiveType.MAX, name=agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE,
+                value=ObjectiveType.MAX, name=agents_constants.NELDER_MEAD.OBJECTIVE_TYPE,
                 descr="Objective type")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
@@ -75,13 +75,13 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        if experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value == \
+        if experiment_config.hparams[agents_constants.NELDER_MEAD.POLICY_TYPE].value == \
                 PolicyType.MULTI_THRESHOLD:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
-        elif experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value \
+        elif experiment_config.hparams[agents_constants.NELDER_MEAD.POLICY_TYPE].value \
                 == PolicyType.LINEAR_THRESHOLD:
             MetastoreFacade.save_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
         else:
             raise ValueError("Policy type: "
-                             f"{experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value} "
-                             f"not recognized for simulated annealing")
+                             f"{experiment_config.hparams[agents_constants.NELDER_MEAD.POLICY_TYPE].value} "
+                             f"not recognized for Nelder-Mead")
