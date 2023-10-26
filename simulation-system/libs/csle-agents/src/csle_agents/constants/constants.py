@@ -242,6 +242,12 @@ class PARTICLE_SWARM:
     """
     String constants related to simulated annealing
     """
+    S = "S"
+    B_LOW = "b_lo"
+    B_UP = "b_up"
+    INTERTIA_WEIGHT = "w"
+    COGNITIVE_COEFFICIENT = "Phi_p"
+    SOCIAL_COEFFICIENT = "Phi_g"
     L = "L"
     N = "N"
     THETA1 = "theta1"
@@ -251,8 +257,6 @@ class PARTICLE_SWARM:
     THETAS = "thetas"
     DELTA = "delta"
     POLICY_TYPE = "policy_type"
-    COOLING_FACTOR = "cooling_factor"
-    INITIAL_TEMPERATURE = "initial_temperature"
     OBJECTIVE_TYPE = "objective_type"
 
 

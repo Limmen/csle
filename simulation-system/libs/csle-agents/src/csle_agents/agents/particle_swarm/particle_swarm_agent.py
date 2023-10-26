@@ -211,6 +211,7 @@ class ParticleSwarmAgent(BaseAgent):
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
+
     def particle_swarm(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                             training_job: TrainingJobConfig):
         """
@@ -222,68 +223,78 @@ class ParticleSwarmAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        S = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        b_lo = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        b_up = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        Phi_p = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        Phi_g = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        w = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INITIAL_TEMPERATURE].value
-        L = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value
+        S = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.S].value
+        b_lo = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.B_LOW].value
+        b_up = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.B_UP].value
+        Phi_p = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.COGNITIVE_COEFFICIENT].value
+        Phi_g = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.SOCIAL_COEFFICIENT].value
+        w = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INTERTIA_WEIGHT].value
+        L = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value
         if agents_constants.SIMULATED_ANNEALING.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.THETA1].value
+            thetas = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = ParticleSwarmAgent.initial_theta(L=L)
+                P, thetas = ParticleSwarmAgent.initial_theta(L=L)
             else:
-                theta = ParticleSwarmAgent.initial_theta(L=2 * L)
+                P, thetas = ParticleSwarmAgent.initial_theta(L=2 * L)
 
-        # Initial eval
-        policy = self.get_policy(theta=list(theta), L=L)
-        avg_metrics = self.eval_theta(
-            policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        policy.avg_R = J
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
-            ParticleSwarmAgent.round_vec(theta))
-
-        # Initial eval
-        policy = self.get_policy(theta=list(theta), L=L)
-        avg_metrics = self.eval_theta(
-            policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J_0 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
+        g_list = [random.uniform(b_lo, b_up) for i in range(L)]
+        g = np.array(g)
+        
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.N].value
-        delta = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.DELTA].value
 
-        for i in range(N):
-
-            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
-            candidate_policy = self.get_policy(theta=list(theta_candidate), L=L)
+        for i in range(S):
+            policy = self.get_policy(theta=list(P[:, i]), L=L)
             avg_metrics = self.eval_theta(
-                policy=candidate_policy,
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            d_J = J_candidate - J_0
-            if d_J < 0:
-                if np.exp(d_J / T) > random.random():
-                    J_0 = J_candidate
-                    policy = candidate_policy
-                else:
-                    continue
-            else:
-                J_0 = J_candidate
-            J = J_candidate
-            T = T * cooling_factor
-            policy.avg_R = J
+                policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+
+            policy = self.get_policy(theta=list(g), L=L)
+            avg_metrics = self.eval_theta(
+                policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            policy.avg_R = J_g
+            if J_p < J_g:
+                g = P[:, i]
+        V = ParticleSwarmAgent.initial_velocity(L, S, b_lo, b_up)
+        iter_variable = 0
+        while iter_variable <= N:
+            for j in range(S):
+                for l in range(L):
+                    r_p = random.random()
+                    r_g = random.random()
+                    V[j,l] = w * V[l, j] + Phi_p * r_p * (P[l, j] - thetas[l, j]) + Phi_g * r_g * (g[l] - thetas[l, j])
+                thetas[:, j] += V[:, j]
+                policy = self.get_policy(theta=list(thetas[:, j]), L=L)
+                avg_metrics = self.eval_theta(
+                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_t = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                policy = self.get_policy(theta=list(P[:, j]), L=L)
+                avg_metrics = self.eval_theta(
+                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                if J_t < J_p:
+                    P[:,j] = thetas[:, j]
+                    policy = self.get_policy(theta=list(P[:, j]), L=L)
+                    avg_metrics = self.eval_theta(
+                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    policy = self.get_policy(theta=list(g), L=L)
+                    avg_metrics = self.eval_theta(
+                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    if J_p < J_g:
+                        g = P[:, j]
+            theta = g
+            iter_variable += 1
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
+            iter_variable += 1
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
                 ParticleSwarmAgent.round_vec(theta))
@@ -404,19 +415,6 @@ class ParticleSwarmAgent(BaseAgent):
         avg_metrics = ParticleSwarmAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
-    def random_perturbation(self, delta: float, theta: npt.NDArray[Any]) -> npt.NDArray[Any]:
-        """
-        Performs a random perturbation to the theta vector
-
-        :param delta: the step size for the perturbation
-        :param theta: the current theta vector
-        :return: the perturbed theta vector
-        """
-        perturbed_theta = []
-        for l in range(len(theta)):
-            Delta = np.random.uniform(-delta, delta)
-            perturbed_theta.append(theta[l] + Delta)
-        return np.array(perturbed_theta)
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
@@ -450,17 +448,37 @@ class ParticleSwarmAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def initial_theta(L: int) -> npt.NDArray[Any]:
+    def initial_theta(L: int, S: int, b_lo: Union[int, float], b_up: Union[int, float]) -> npt.NDArray[Any]:
         """
-        Initializes theta randomly
+        Initializes particle positions (thetas) randomly
 
         :param L: the dimension of theta
+        :param S: the number of particles in the swarm
+        :param b_lo: lower boundary of randomization
+        :param b_up: upper boundary of randomization
         :return: the initialized theta vector
         """
-        theta_1 = []
-        for k in range(L):
-            theta_1.append(np.random.uniform(-3, 3))
-        return np.array(theta_1)
+        X = [[random.uniform(b_lo, b_up) for i in range(S)] for i in range(L)]
+        thetas = np.array(X)
+        P = np.zeros(np.shape(thetas))
+        for k in range(thetas.shape[0]):
+            for l in range(thetas.shape[1]):
+                P[k, l] = thetas[k, l]
+
+        return P, thetas
+
+    @staticmethod
+    def initial_velocity(L: int, S: int, b_lo: Union[int, float], b_up: Union[int, float]) -> npt.NDArray[Any]:
+        """
+        Initializes the voleicities amongst each particle in the swarm
+        :param L: the dimension
+        :param S: the number of particles in the swarm
+        :param b_lo: lower boundary od randomization
+        :param b_up: upper boundary of randomization
+        """
+        V = [[random.uniform(-abs(b_up - b_lo), abs(b_up - b_lo)) for i in range(S)] for k in range(L)]
+        V_np = np.array(V)
+        return V_np
 
     def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
                                                               LinearThresholdStoppingPolicy]:
@@ -499,3 +517,8 @@ class ParticleSwarmAgent(BaseAgent):
         :return: the rounded vector
         """
         return list(map(lambda x: round(x, 3), vec))
+
+    def random_position(self, L, S, b_lo, b_up):
+        X = [[random.uniform(b_lo, b_up) for i in range(S)] for i in range(L)]
+        X_np = np.array(X)
+        return X_np
