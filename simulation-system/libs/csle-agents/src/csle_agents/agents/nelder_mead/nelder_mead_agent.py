@@ -254,7 +254,6 @@ class NelderMeadAgent(BaseAgent):
 
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.NELDER_MEAD.N].value
-        delta = self.experiment_config.hparams[agents_constants.NELDER_MEAD.DELTA].value
 
         def reflection(x_c, x_n, alpha=1):
             t = tuple(alpha * (i - j) for i,j in zip(x_c, x_n))
