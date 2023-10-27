@@ -362,10 +362,10 @@ class ParticleSwarmAgent(BaseAgent):
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
 
-            if i % self.experiment_config.log_every == 0 and i > 0:
+            if iter_variable % self.experiment_config.log_every == 0 and iter_variable > 0:
                 # Update training job
                 total_iterations = len(random_seeds) * N
-                iterations_done = (random_seeds.index(seed)) * N + i
+                iterations_done = (random_seeds.index(seed)) * N + iter_variable
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
@@ -385,7 +385,7 @@ class ParticleSwarmAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[PARTICLE-SWARM] i: {i}, J:{J}, "
+                    f"[PARTICLE-SWARM] i: {iter_variable}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
