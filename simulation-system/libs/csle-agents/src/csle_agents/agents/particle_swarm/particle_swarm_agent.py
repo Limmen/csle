@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Any, Dict
+from typing import Union, List, Optional, Any, Dict, Tuple
 import math
 import time
 import random
@@ -248,7 +248,6 @@ class ParticleSwarmAgent(BaseAgent):
             ParticleSwarmAgent.round_vec(theta))
 
         g = [random.uniform(b_lo, b_up) for i in range(L)]
-        # g = np.array(g_list)
         
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.N].value
@@ -468,7 +467,8 @@ class ParticleSwarmAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def initial_theta(L: int, S: int, b_lo: Union[int, float], b_up: Union[int, float]) -> npt.NDArray[Any]:
+    def initial_theta(L: int, S: int, b_lo: Union[int, float],
+                      b_up: Union[int, float]) -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
         """
         Initializes particle positions (thetas) randomly
 
