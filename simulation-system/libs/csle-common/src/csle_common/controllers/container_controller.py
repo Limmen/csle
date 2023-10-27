@@ -41,7 +41,7 @@ class ContainerController:
         containers = client_1.containers.list()
         containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
         for c in containers:
-            Logger.__call__().get_logger().info("Stopping container: {}".format(c.name))
+            Logger.__call__().get_logger().info(f"Stopping container: {c.name}")
             c.stop()
 
     @staticmethod
