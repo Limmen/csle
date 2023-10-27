@@ -245,7 +245,7 @@ class PARTICLE_SWARM:
     S = "S"
     B_LOW = "b_lo"
     B_UP = "b_up"
-    INTERTIA_WEIGHT = "w"
+    INERTIA_WEIGHT = "w"
     COGNITIVE_COEFFICIENT = "Phi_p"
     SOCIAL_COEFFICIENT = "Phi_g"
     L = "L"
