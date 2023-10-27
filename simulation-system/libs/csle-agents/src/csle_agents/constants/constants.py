@@ -262,6 +262,28 @@ class CMA_ES_OPTIMIZATION:
     OBJECTIVE_TYPE = "objective_type"
 
 
+class PARTICLE_SWARM:
+    """
+    String constants related to simulated annealing
+    """
+    S = "S"
+    B_LOW = "b_lo"
+    B_UP = "b_up"
+    INERTIA_WEIGHT = "w"
+    COGNITIVE_COEFFICIENT = "Phi_p"
+    SOCIAL_COEFFICIENT = "Phi_g"
+    L = "L"
+    N = "N"
+    THETA1 = "theta1"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    THETAS = "thetas"
+    DELTA = "delta"
+    POLICY_TYPE = "policy_type"
+    OBJECTIVE_TYPE = "objective_type"
+
+
 class BAYESIAN_OPTIMIZATION_EMUKIT:
     """
     String constants related to Bayesian Optimization Emukit
