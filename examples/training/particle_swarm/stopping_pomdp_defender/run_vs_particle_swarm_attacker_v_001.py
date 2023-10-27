@@ -20,11 +20,11 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}particle_swarm_test", title="Particle Swarm test",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[399, 98912],
         agent_type=AgentType.PARTICLE_SWARM,
         log_every=1,
         hparams={
-            agents_constants.PARTICLE_SWARM.N: HParam(value=100, name=constants.T_SPSA.N,
+            agents_constants.PARTICLE_SWARM.N: HParam(value=5, name=constants.T_SPSA.N,
                                                       descr="the number of training iterations"),
             agents_constants.PARTICLE_SWARM.S: HParam(value=10, name=agents_constants.PARTICLE_SWARM.S,
                                                       descr="The number of particles in the swarm"),

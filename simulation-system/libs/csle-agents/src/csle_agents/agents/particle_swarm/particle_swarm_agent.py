@@ -24,6 +24,7 @@ from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
+from csle_agents.common.objective_type import ObjectiveType
 import csle_agents.constants.constants as agents_constants
 
 
@@ -164,13 +165,16 @@ class ParticleSwarmAgent(BaseAgent):
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
 
+            max_num_measurements = max(list(map(lambda x: len(x), value_vectors)))
+            value_vectors = list(filter(lambda x: len(x) == max_num_measurements, value_vectors))
+
             avg_metrics = []
             std_metrics = []
             for i in range(len(value_vectors[0])):
                 if type(value_vectors[0][0]) is int or type(value_vectors[0][0]) is float \
                         or type(value_vectors[0][0]) is np.int64 or type(value_vectors[0][0]) is np.float64:
                     seed_values = []
-                    for seed_idx in range(len(self.experiment_config.random_seeds)):
+                    for seed_idx in range(len(value_vectors)):
                         seed_values.append(value_vectors[seed_idx][i])
                     avg = ExperimentUtil.mean_confidence_interval(
                         data=seed_values,
@@ -229,6 +233,7 @@ class ParticleSwarmAgent(BaseAgent):
         Phi_g = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.SOCIAL_COEFFICIENT].value
         w = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INERTIA_WEIGHT].value
         L = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value
+        objective_type_param = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.OBJECTIVE_TYPE].value
         if agents_constants.PARTICLE_SWARM.THETA1 in self.experiment_config.hparams:
             thetas = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.THETA1].value
         else:
@@ -248,7 +253,7 @@ class ParticleSwarmAgent(BaseAgent):
             ParticleSwarmAgent.round_vec(theta))
 
         g = [random.uniform(b_lo, b_up) for i in range(L)]
-        
+
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.N].value
 
@@ -257,11 +262,15 @@ class ParticleSwarmAgent(BaseAgent):
             avg_metrics = self.eval_theta(
                 policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if objective_type_param == ObjectiveType.MAX:
+                J_p = -J_p
 
             policy = self.get_policy(theta=list(g), L=L)
             avg_metrics = self.eval_theta(
                 policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if objective_type_param == ObjectiveType.MAX:
+                J_g = -J_g
             policy.avg_R = J_g
             if J_p < J_g:
                 g = list(P[:, i])
@@ -279,11 +288,15 @@ class ParticleSwarmAgent(BaseAgent):
                     policy=policy, max_steps=self.experiment_config.hparams[
                         agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_t = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                if objective_type_param == ObjectiveType.MAX:
+                    J_t = -J_t
                 policy = self.get_policy(theta=list(P[:, j]), L=L)
                 avg_metrics = self.eval_theta(
                     policy=policy, max_steps=self.experiment_config.hparams[
                         agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                if objective_type_param == ObjectiveType.MAX:
+                    J_p = -J_p
                 if J_t < J_p:
                     P[:, j] = thetas[:, j]
                     policy = self.get_policy(theta=list(P[:, j]), L=L)
@@ -291,11 +304,15 @@ class ParticleSwarmAgent(BaseAgent):
                                                   max_steps=self.experiment_config.hparams[
                                                       agents_constants.COMMON.MAX_ENV_STEPS].value)
                     J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    if objective_type_param == ObjectiveType.MAX:
+                        J_p = -J_p
                     policy = self.get_policy(theta=list(g), L=L)
                     avg_metrics = self.eval_theta(policy=policy,
                                                   max_steps=self.experiment_config.hparams[
                                                       agents_constants.COMMON.MAX_ENV_STEPS].value)
                     J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    if objective_type_param == ObjectiveType.MAX:
+                        J_g = -J_g
                     J = J_g
                     if J_p < J_g:
                         g = list(P[:, j])
@@ -307,6 +324,8 @@ class ParticleSwarmAgent(BaseAgent):
                         J = J_g
             theta = g
             iter_variable += 1
+            if objective_type_param == ObjectiveType.MAX:
+                J = -J
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -314,7 +333,6 @@ class ParticleSwarmAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
-            iter_variable += 1
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THETAS].append(
                 ParticleSwarmAgent.round_vec(theta))
@@ -390,7 +408,7 @@ class ParticleSwarmAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
@@ -500,8 +518,8 @@ class ParticleSwarmAgent(BaseAgent):
         V_np = np.array(V)
         return V_np
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-                                                              LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 
@@ -538,7 +556,15 @@ class ParticleSwarmAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    def random_position(self, L, S, b_lo, b_up):
-        X = [[random.uniform(b_lo, b_up) for i in range(S)] for i in range(L)]
-        X_np = np.array(X)
-        return X_np
+    def random_position(self, L: int, S, b_lo: float, b_up: float) -> npt.NDArray[Any]:
+        """
+        Utility function to get a random position
+
+        :param L: the number of parameters
+        :param S: number of points
+        :param b_lo: lower bound
+        :param b_up: upper bound
+        :return: an array with the random coordinates
+        """
+        X = [[random.uniform(b_lo, b_up) for _ in range(S)] for i in range(L)]
+        return np.array(X)

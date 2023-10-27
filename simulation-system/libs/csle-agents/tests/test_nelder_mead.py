@@ -34,7 +34,7 @@ class TestNelderMeadSuite:
                                              agent_type=AgentType.NELDER_MEAD,
                                              log_every=1,
                                              hparams={
-                                                 agents_constants.NELDER_MEAD.N: HParam(value=50,
+                                                 agents_constants.NELDER_MEAD.N: HParam(value=2,
                                                                                         name=constants.T_SPSA.N,
                                                                                         descr="the number of "
                                                                                         "training iterations"

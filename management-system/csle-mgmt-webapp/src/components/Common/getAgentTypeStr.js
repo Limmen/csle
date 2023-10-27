@@ -94,7 +94,10 @@ const getAgentTypeStr = (agentType) => {
         return "CMA-ES"
     }
     if(agentType === 29) {
-        return "Nelder-Mead"
+        return "NELDER-MEAD"
+    }
+    if(agentType === 30) {
+        return "PARTICLE SWARM"
     }
     else {
         return "Unknown"

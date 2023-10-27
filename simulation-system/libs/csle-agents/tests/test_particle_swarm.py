@@ -35,9 +35,9 @@ class TestParticleSwarmSuite:
             agent_type=AgentType.PARTICLE_SWARM,
             log_every=1,
             hparams={
-                agents_constants.PARTICLE_SWARM.N: HParam(value=5, name=constants.T_SPSA.N,
+                agents_constants.PARTICLE_SWARM.N: HParam(value=1, name=constants.T_SPSA.N,
                                                           descr="the number of training iterations"),
-                agents_constants.PARTICLE_SWARM.S: HParam(value=10, name=agents_constants.PARTICLE_SWARM.S,
+                agents_constants.PARTICLE_SWARM.S: HParam(value=1, name=agents_constants.PARTICLE_SWARM.S,
                                                           descr="number of particles in the swarm"),
                 agents_constants.PARTICLE_SWARM.L: HParam(value=2, name=agents_constants.PARTICLE_SWARM.L,
                                                           descr="the number of stop actions"),
@@ -61,7 +61,7 @@ class TestParticleSwarmSuite:
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                    value=10, name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,

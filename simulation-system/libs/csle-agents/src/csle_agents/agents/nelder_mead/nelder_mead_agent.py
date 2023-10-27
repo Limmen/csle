@@ -230,8 +230,7 @@ class NelderMeadAgent(BaseAgent):
         step = self.experiment_config.hparams[agents_constants.NELDER_MEAD.STEP].value
         no_improve_thr = self.experiment_config.hparams[agents_constants.NELDER_MEAD.IMPROVE_THRESHOLD].value
         L = self.experiment_config.hparams[agents_constants.NELDER_MEAD.L].value
-        objective_type_param = (
-            self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE].value)
+        objective_type_param = self.experiment_config.hparams[agents_constants.NELDER_MEAD.OBJECTIVE_TYPE].value
         if agents_constants.NELDER_MEAD.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.NELDER_MEAD.THETA1].value
         else:
