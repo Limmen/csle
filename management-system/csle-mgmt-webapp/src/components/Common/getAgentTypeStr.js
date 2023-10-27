@@ -93,6 +93,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 28) {
         return "CMA-ES"
     }
+    if(agentType === 29) {
+        return "Nelder-Mead"
+    }
     else {
         return "Unknown"
     }

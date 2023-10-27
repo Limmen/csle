@@ -1816,6 +1816,7 @@ class T_SPSA:
     EPSILON = "epsilon"
     N = "N"
     L = "L"
+    IMPROVE_BREAK = "improve_break"
     THETA1 = "theta1"
     THETAS = "thetas"
     THRESHOLDS = "thresholds"
