@@ -43,7 +43,7 @@ class TestNelderMeadSuite:
                                                      value=10, name=agents_constants.NELDER_MEAD.DELTA,
                                                      descr="number of improvements before break"),
                                                  agents_constants.NELDER_MEAD.L: HParam(
-                                                     value=1, name=agents_constants.NELDER_MEAD.L,
+                                                     value=3, name=agents_constants.NELDER_MEAD.L,
                                                      descr="the number of stop actions"),
                                                  agents_constants.NELDER_MEAD.STEP: HParam(
                                                      value=0.1, name=agents_constants.NELDER_MEAD.STEP,
@@ -94,7 +94,7 @@ class TestNelderMeadSuite:
 
         :return: The example config
         """
-        L = 1
+        L = 3
         R_INT = -5
         R_COST = -5
         R_SLA = 1
