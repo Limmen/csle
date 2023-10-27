@@ -25,7 +25,7 @@ if __name__ == '__main__':
         agent_type=AgentType.NELDER_MEAD,
         log_every=1,
         hparams={
-            agents_constants.NELDER_MEAD.N: HParam(value=50, name=constants.T_SPSA.N,
+            agents_constants.NELDER_MEAD.N: HParam(value=100, name=constants.T_SPSA.N,
                                                    descr="the number of training iterations"),
             agents_constants.NELDER_MEAD.IMPROVE_BREAK: HParam(value=10,
                                                                name=agents_constants.NELDER_MEAD.DELTA,

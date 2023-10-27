@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Any, Dict
+from typing import Union, List, Optional, Any, Dict, Tuple
 import math
 import time
 import gymnasium as gym
@@ -24,6 +24,7 @@ from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
+from csle_agents.common.objective_type import ObjectiveType
 import csle_agents.constants.constants as agents_constants
 
 
@@ -164,13 +165,16 @@ class NelderMeadAgent(BaseAgent):
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
 
+            max_num_measurements = max(list(map(lambda x: len(x), value_vectors)))
+            value_vectors = list(filter(lambda x: len(x) == max_num_measurements, value_vectors))
+
             avg_metrics = []
             std_metrics = []
             for i in range(len(value_vectors[0])):
                 if type(value_vectors[0][0]) is int or type(value_vectors[0][0]) is float \
                         or type(value_vectors[0][0]) is np.int64 or type(value_vectors[0][0]) is np.float64:
                     seed_values = []
-                    for seed_idx in range(len(self.experiment_config.random_seeds)):
+                    for seed_idx in range(len(value_vectors)):
                         seed_values.append(value_vectors[seed_idx][i])
                     avg = ExperimentUtil.mean_confidence_interval(
                         data=seed_values,
@@ -226,6 +230,8 @@ class NelderMeadAgent(BaseAgent):
         step = self.experiment_config.hparams[agents_constants.NELDER_MEAD.STEP].value
         no_improve_thr = self.experiment_config.hparams[agents_constants.NELDER_MEAD.IMPROVE_THRESHOLD].value
         L = self.experiment_config.hparams[agents_constants.NELDER_MEAD.L].value
+        objective_type_param = (
+            self.experiment_config.hparams[agents_constants.CMA_ES_OPTIMIZATION.OBJECTIVE_TYPE].value)
         if agents_constants.NELDER_MEAD.THETA1 in self.experiment_config.hparams:
             theta = self.experiment_config.hparams[agents_constants.NELDER_MEAD.THETA1].value
         else:
@@ -254,29 +260,62 @@ class NelderMeadAgent(BaseAgent):
         # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.NELDER_MEAD.N].value
 
-        def reflection(x_c, x_n, alpha=1):
+        def reflection(x_c: Tuple[float, ...], x_n: Tuple[float, ...], alpha: float = 1.0) -> Tuple[float, ...]:
+            """
+            The reflection procedure of Nelder-Mead
+
+            :param x_c: tuple of x values for the parameter vector
+            :param x_n: tuple of result values
+            :param alpha: the alpha parameter of Nelder-Mead
+            :return: tuple with the reflected x values
+            """
             t = tuple(alpha * (i - j) for i, j in zip(x_c, x_n))
             x_r = tuple(k + l for k, l in zip(x_c, t))
             return x_r
 
-        def expansion(x_c, x_r, gamma=2):
+        def expansion(x_c: Tuple[float, ...], x_r: Tuple[float, ...], gamma: float = 2.0) -> Tuple[float, ...]:
+            """
+            The expansion procedure of Nelder-Mead
+
+            :param x_c: tuple of x values for the parameter vector
+            :param x_r: tuple of result values
+            :param gamma: the gamma parameter of the Nelder mead method
+            :return: tuple of expanded x values
+            """
             t = tuple(gamma * (i - j) for i, j in zip(x_r, x_c))
             x_e = tuple(k + l for k, l in zip(x_c, t))
             return x_e
 
-        def contraction(x_c, x_w, rho=0.5):
+        def contraction(x_c: Tuple[float, ...], x_w: Tuple[float, ...], rho: float = 0.5) -> Tuple[float, ...]:
+            """
+            The contraction procedure of Nelder-Mead
+
+            :param x_c: tuple of x values for the parameter vector
+            :param x_w: tuple of result values
+            :param rho: the rho parameter of Nelder-Mead
+            :return: tuple with the contracted x values
+            """
             t = tuple(rho * (i - j) for i, j in zip(x_w, x_c))
             x_co = tuple(k + l for k, l in zip(x_c, t))
-            # x_co = x_c + rho * (x_w - x_c)
             return x_co
 
-        def shrink(x_i, x_0, sigma=0.5):
+        def shrink(x_i: Tuple[float, ...], x_0: Tuple[float, ...], sigma: float = 0.5) -> Tuple[float, ...]:
+            """
+            The shrink procedure of Nelder-Mead
+
+            :param x_i: tuple of x values for the parameter vector
+            :param x_0: tuple of result values
+            :param sigma: the sigma parameter of Nelder-Mead
+            :return: tuple with the shrunk x values
+            """
             t = tuple(sigma * (i - j) for i, j in zip(x_i, x_0))
             x = tuple(k + l for k, l in zip(x_0, t))
             return x
 
         dim = len(theta)
         no_improv = 0
+        if objective_type_param == ObjectiveType.MAX:
+            J_0 = -J_0
         func_evals = [[theta, J_0]]
         for i in range(dim):
             theta_1 = copy.copy(theta)
@@ -286,9 +325,43 @@ class NelderMeadAgent(BaseAgent):
                                           max_steps=self.experiment_config.hparams[
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if objective_type_param == ObjectiveType.MAX:
+                J = -J
             func_evals.append([theta_1, J])
 
-        while True:
+        running_avg_J = ExperimentUtil.running_average(
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+
+        for iter in range(N):
+
+            if iter % self.experiment_config.log_every == 0 and iter > 0:
+                # Update training job
+                total_iterations = len(random_seeds) * N
+                iterations_done = (random_seeds.index(seed)) * N + iter
+                progress = round(iterations_done / total_iterations, 2)
+                training_job.progress_percentage = progress
+                training_job.experiment_result = exp_result
+                if self.env is not None and len(self.env.get_traces()) > 0:
+                    training_job.simulation_traces.append(self.env.get_traces()[-1])
+                if len(training_job.simulation_traces) > training_job.num_cached_traces:
+                    training_job.simulation_traces = training_job.simulation_traces[1:]
+                if self.save_to_metastore:
+                    MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+
+                # Update execution
+                ts = time.time()
+                self.exp_execution.timestamp = ts
+                self.exp_execution.result = exp_result
+                if self.save_to_metastore:
+                    MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                                id=self.exp_execution.id)
+
+                Logger.__call__().get_logger().info(
+                    f"[NELDER-MEAD] i: {iter}, J:{J}, "
+                    f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
+                    f"{running_avg_J}, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%")
 
             func_evals.sort(key=lambda x: x[1])
             J_best = func_evals[0][1]
@@ -300,15 +373,14 @@ class NelderMeadAgent(BaseAgent):
                 no_improv += 1
 
             if no_improv >= no_improve_break:
-                J = J_best
-                # return func_evals[0]
                 break
 
-            theta_c = [0.] * dim
+            theta_c_list = [0.] * dim
 
             for tup in func_evals[:-1]:
                 for i, c in enumerate(tup[0]):
-                    theta_c[i] += c / (len(func_evals) - 1)
+                    theta_c_list[i] += c / (len(func_evals) - 1)
+            theta_c = tuple(theta_c_list)
 
             theta_n = func_evals[-1][0]
             J_n2 = func_evals[-2][1]
@@ -318,7 +390,9 @@ class NelderMeadAgent(BaseAgent):
                                           max_steps=self.experiment_config.hparams[
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_r = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        
+            if objective_type_param == ObjectiveType.MAX:
+                J_r = -J_r
+
             if J_best <= J_r < J_n2:
                 del func_evals[-1]
                 func_evals.append([theta_r, J_r])
@@ -331,6 +405,8 @@ class NelderMeadAgent(BaseAgent):
                                               max_steps=self.experiment_config.hparams[
                                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_e = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                if objective_type_param == ObjectiveType.MAX:
+                    J_e = -J_e
                 if J_e < J_r:
                     del func_evals[-1]
                     func_evals.append([theta_e, J_e])
@@ -339,13 +415,15 @@ class NelderMeadAgent(BaseAgent):
                     del func_evals[-1]
                     func_evals.append([theta_r, J_r])
                     continue
-        
+
             theta_co = contraction(theta_c, theta_n)
             policy = self.get_policy(theta=list(theta_co), L=L)
             avg_metrics = self.eval_theta(policy=policy,
                                           max_steps=self.experiment_config.hparams[
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_co = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if objective_type_param == ObjectiveType.MAX:
+                J_co = -J_co
 
             J_worst = func_evals[-1][1]
             if J_co < J_worst:
@@ -357,18 +435,20 @@ class NelderMeadAgent(BaseAgent):
             nres = []
 
             for tup in func_evals:
-
                 theta_s = shrink(theta_0, tup[0])
                 policy = self.get_policy(theta=list(theta_s), L=L)
                 avg_metrics = self.eval_theta(policy=policy,
                                               max_steps=self.experiment_config.hparams[
                                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_s = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
+                if objective_type_param == ObjectiveType.MAX:
+                    J_s = -J_s
                 nres.append([theta_s, J_s])
 
             func_evals = nres
-
+            J = J_best
+            if objective_type_param == ObjectiveType.MAX:
+                J = -J_best
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -422,37 +502,6 @@ class NelderMeadAgent(BaseAgent):
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
-
-            if i % self.experiment_config.log_every == 0 and i > 0:
-                # Update training job
-                total_iterations = len(random_seeds) * N
-                iterations_done = (random_seeds.index(seed)) * N + i
-                progress = round(iterations_done / total_iterations, 2)
-                training_job.progress_percentage = progress
-                training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.get_traces()[-1])
-                if len(training_job.simulation_traces) > training_job.num_cached_traces:
-                    training_job.simulation_traces = training_job.simulation_traces[1:]
-                if self.save_to_metastore:
-                    MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
-
-                # Update execution
-                ts = time.time()
-                self.exp_execution.timestamp = ts
-                self.exp_execution.result = exp_result
-                if self.save_to_metastore:
-                    MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                                id=self.exp_execution.id)
-
-                Logger.__call__().get_logger().info(
-                    f"[NELDER-MEAD] i: {i}, J:{J}, "
-                    f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{running_avg_J}, "
-                    f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy
@@ -554,8 +603,8 @@ class NelderMeadAgent(BaseAgent):
             theta_1.append(np.random.uniform(-3, 3))
         return np.array(theta_1)
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-                                                              LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 
