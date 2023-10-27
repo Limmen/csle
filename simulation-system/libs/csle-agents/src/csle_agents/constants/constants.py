@@ -238,6 +238,7 @@ class CMA_ES_OPTIMIZATION:
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
 
+
 class PARTICLE_SWARM:
     """
     String constants related to simulated annealing

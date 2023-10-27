@@ -74,7 +74,7 @@ class ParticleSwarmAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
+        for l in range(1, self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
@@ -82,18 +82,18 @@ class ParticleSwarmAgent(BaseAgent):
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
+                for l in range(1, self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value + 1):
                     exp_result.all_metrics[seed][
-                        agents_constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                        agents_constants.PARTICLE_SWARM.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-                        exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1, self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value + 1):
+                        exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -104,7 +104,7 @@ class ParticleSwarmAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -205,15 +205,14 @@ class ParticleSwarmAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.SIMULATED_ANNEALING.N, agents_constants.SIMULATED_ANNEALING.DELTA,
-                agents_constants.SIMULATED_ANNEALING.L, agents_constants.SIMULATED_ANNEALING.THETA1,
+        return [agents_constants.PARTICLE_SWARM.N, agents_constants.PARTICLE_SWARM.DELTA,
+                agents_constants.PARTICLE_SWARM.L, agents_constants.PARTICLE_SWARM.THETA1,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-
     def particle_swarm(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
-                            training_job: TrainingJobConfig):
+                       training_job: TrainingJobConfig):
         """
         Runs the particle swarm algorithm
 
@@ -230,14 +229,14 @@ class ParticleSwarmAgent(BaseAgent):
         Phi_g = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.SOCIAL_COEFFICIENT].value
         w = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.INERTIA_WEIGHT].value
         L = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value
-        if agents_constants.SIMULATED_ANNEALING.THETA1 in self.experiment_config.hparams:
-            thetas = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.THETA1].value
+        if agents_constants.PARTICLE_SWARM.THETA1 in self.experiment_config.hparams:
+            thetas = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 P, thetas = ParticleSwarmAgent.initial_theta(L=L, S=S, b_lo=b_lo, b_up=b_up)
             else:
                 P, thetas = ParticleSwarmAgent.initial_theta(L=2 * L, S=S, b_lo=b_lo, b_up=b_up)
-        theta = list(thetas[:, random.randint(0, S-1)])
+        theta = list(thetas[:, random.randint(0, S - 1)])
         policy = self.get_policy(theta=theta, L=L)
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -245,14 +244,14 @@ class ParticleSwarmAgent(BaseAgent):
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
+        exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THETAS].append(
             ParticleSwarmAgent.round_vec(theta))
 
-        g_list = [random.uniform(b_lo, b_up) for i in range(L)]
-        g = np.array(g_list)
+        g = [random.uniform(b_lo, b_up) for i in range(L)]
+        # g = np.array(g_list)
         
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.N].value
+        N = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.N].value
 
         for i in range(S):
             policy = self.get_policy(theta=list(P[:, i]), L=L)
@@ -266,7 +265,7 @@ class ParticleSwarmAgent(BaseAgent):
             J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             policy.avg_R = J_g
             if J_p < J_g:
-                g = P[:, i]
+                g = list(P[:, i])
         V = ParticleSwarmAgent.initial_velocity(L, S, b_lo, b_up)
         iter_variable = 0
         while iter_variable <= N:
@@ -274,32 +273,37 @@ class ParticleSwarmAgent(BaseAgent):
                 for l in range(L):
                     r_p = random.random()
                     r_g = random.random()
-                    V[l,j] = w * V[l, j] + Phi_p * r_p * (P[l, j] - thetas[l, j]) + Phi_g * r_g * (g[l] - thetas[l, j])
+                    V[l, j] = w * V[l, j] + Phi_p * r_p * (P[l, j] - thetas[l, j]) + Phi_g * r_g * (g[l] - thetas[l, j])
                 thetas[:, j] += V[:, j]
                 policy = self.get_policy(theta=list(thetas[:, j]), L=L)
                 avg_metrics = self.eval_theta(
-                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    policy=policy, max_steps=self.experiment_config.hparams[
+                        agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_t = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 policy = self.get_policy(theta=list(P[:, j]), L=L)
                 avg_metrics = self.eval_theta(
-                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    policy=policy, max_steps=self.experiment_config.hparams[
+                        agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 if J_t < J_p:
-                    P[:,j] = thetas[:, j]
+                    P[:, j] = thetas[:, j]
                     policy = self.get_policy(theta=list(P[:, j]), L=L)
-                    avg_metrics = self.eval_theta(
-                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
                     J_p = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                     policy = self.get_policy(theta=list(g), L=L)
-                    avg_metrics = self.eval_theta(
-                    policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
                     J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                     J = J_g
                     if J_p < J_g:
-                        g = P[:, j]
+                        g = list(P[:, j])
                         policy = self.get_policy(theta=list(g), L=L)
-                        avg_metrics = self.eval_theta(
-                        policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                        avg_metrics = self.eval_theta(policy=policy,
+                                                      max_steps=self.experiment_config.hparams[
+                                                          agents_constants.COMMON.MAX_ENV_STEPS].value)
                         J_g = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                         J = J_g
             theta = g
@@ -313,9 +317,9 @@ class ParticleSwarmAgent(BaseAgent):
 
             iter_variable += 1
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
+            exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THETAS].append(
                 ParticleSwarmAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THRESHOLDS].append(
+            exp_result.all_metrics[seed][agents_constants.PARTICLE_SWARM.THRESHOLDS].append(
                 ParticleSwarmAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
@@ -343,7 +347,7 @@ class ParticleSwarmAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.L].value + 1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -432,7 +436,6 @@ class ParticleSwarmAgent(BaseAgent):
         avg_metrics = ParticleSwarmAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
-
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
             -> Dict[str, List[Union[float, int]]]:
@@ -506,7 +509,7 @@ class ParticleSwarmAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value \
+        if self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.POLICY_TYPE].value \
                 == PolicyType.MULTI_THRESHOLD.value:
             policy = MultiThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -514,7 +517,7 @@ class ParticleSwarmAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.SIMULATED_ANNEALING)
+                agent_type=AgentType.PARTICLE_SWARM)
         else:
             policy = LinearThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
@@ -522,7 +525,7 @@ class ParticleSwarmAgent(BaseAgent):
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.SIMULATED_ANNEALING)
+                agent_type=AgentType.PARTICLE_SWARM)
         return policy
 
     @staticmethod

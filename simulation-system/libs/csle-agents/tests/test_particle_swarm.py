@@ -31,20 +31,20 @@ class TestParticleSwarmSuite:
         """
         experiment_config = ExperimentConfig(
             output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}particle_swarm_test", title="Particle Swarm test",
-            random_seeds=[10, 20],
+            random_seeds=[399, 9812, 99, 555],
             agent_type=AgentType.PARTICLE_SWARM,
             log_every=1,
             hparams={
-                agents_constants.PARTICLE_SWARM.N: HParam(value=100, name=constants.T_SPSA.N,
-                                                               descr="the number of training iterations"),
+                agents_constants.PARTICLE_SWARM.N: HParam(value=5, name=constants.T_SPSA.N,
+                                                          descr="the number of training iterations"),
                 agents_constants.PARTICLE_SWARM.S: HParam(value=10, name=agents_constants.PARTICLE_SWARM.S,
                                                           descr="number of particles in the swarm"),
                 agents_constants.PARTICLE_SWARM.L: HParam(value=2, name=agents_constants.PARTICLE_SWARM.L,
-                                                               descr="the number of stop actions"),
+                                                          descr="the number of stop actions"),
                 agents_constants.PARTICLE_SWARM.B_LOW: HParam(value=-3, name=agents_constants.PARTICLE_SWARM.B_LOW,
-                                                               descr="lower boundary of intialization"),
+                                                              descr="lower boundary of intialization"),
                 agents_constants.PARTICLE_SWARM.B_UP: HParam(value=3, name=agents_constants.PARTICLE_SWARM.B_UP,
-                                                               descr="upper boundary of intialization"),
+                                                             descr="upper boundary of intialization"),
                 agents_constants.PARTICLE_SWARM.INERTIA_WEIGHT: HParam(
                     value=0.5, name=agents_constants.PARTICLE_SWARM.INERTIA_WEIGHT, descr="inertia weight w"),
                 agents_constants.PARTICLE_SWARM.COGNITIVE_COEFFICIENT: HParam(
@@ -69,17 +69,11 @@ class TestParticleSwarmSuite:
                 agents_constants.COMMON.GAMMA: HParam(
                     value=0.99, name=agents_constants.COMMON.GAMMA,
                     descr="the discount factor"),
-                agents_constants.SIMULATED_ANNEALING.POLICY_TYPE: HParam(
-                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.SIMULATED_ANNEALING.POLICY_TYPE,
+                agents_constants.PARTICLE_SWARM.POLICY_TYPE: HParam(
+                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.PARTICLE_SWARM.POLICY_TYPE,
                     descr="policy type for the execution"),
-                agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR: HParam(
-                    value=0.95, name=agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR,
-                    descr="The cooling factor for simulated annealing"),
-                agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE: HParam(
-                    value=100, name=agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE,
-                    descr="The initial temperature for simulated annealing"),
-                agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE: HParam(
-                    value=ObjectiveType.MAX, name=agents_constants.SIMULATED_ANNEALING.OBJECTIVE_TYPE,
+                agents_constants.PARTICLE_SWARM.OBJECTIVE_TYPE: HParam(
+                    value=ObjectiveType.MAX, name=agents_constants.PARTICLE_SWARM.OBJECTIVE_TYPE,
                     descr="The objective type for the optimization")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
@@ -93,7 +87,7 @@ class TestParticleSwarmSuite:
 
         :return: The example config
         """
-        L = 1
+        L = 2
         R_INT = -5
         R_COST = -5
         R_SLA = 1
@@ -129,7 +123,7 @@ class TestParticleSwarmSuite:
 
     def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the SimulatedAnnealingAgent
+        Tests creation of the ParticleSwarmAgent
 
         :return: None
         """
@@ -192,10 +186,10 @@ class TestParticleSwarmSuite:
                experiment_execution.result.plot_metrics
         for seed in experiment_config.random_seeds:
             assert seed in experiment_execution.result.all_metrics
-            assert agents_constants.SIMULATED_ANNEALING.THETAS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.PARTICLE_SWARM.THETAS in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
-            assert agents_constants.SIMULATED_ANNEALING.THRESHOLDS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.PARTICLE_SWARM.THRESHOLDS in experiment_execution.result.all_metrics[seed]
             assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in
                     experiment_execution.result.all_metrics[seed])
             assert (agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in
