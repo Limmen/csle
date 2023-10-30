@@ -250,6 +250,10 @@ class LOG_FILES:
     KAFKA_LOG_FILE = "/usr/local/kafka/logs/server.log"
     RYU_MANAGER_LOG_FILE = "ryu_manager.log"
     RYU_MANAGER_LOG_DIR = "/"
+    MINBFT_MANAGER_LOG_FILE = "minbft_manager.log"
+    MINBFT_MANAGER_LOG_DIR = "/"
+    MINBFT_CLIENT_MANAGER_LOG_FILE = "minbft_manager.log"
+    MINBFT_CLIENT_MANAGER_LOG_DIR = "/"
     DEFAULT_LOG_FILE_PATHS = ["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"]
 
 
