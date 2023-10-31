@@ -36,6 +36,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `requests` (for interacting with the Ryu Controller's web interface)
 - `netifaces` (networking utility)
 - `PyYaml` (for parsing yaml files)
+- `pycryptodome` (for cryptographic functions)
 
 ## Development Requirements
 
