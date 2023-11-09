@@ -38,8 +38,10 @@ class ContainerController:
         :return: None
         """
         client_1 = docker.from_env()
-        containers = client_1.containers.list()
+        containers = docker.from_env().containers.list()
+        logging.info(containers)
         containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
+        logging.info(containers)
         for c in containers:
             Logger.__call__().get_logger().info(f"Stopping container: {c.name}")
             c.stop()

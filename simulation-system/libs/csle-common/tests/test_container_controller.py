@@ -1,6 +1,7 @@
 import pytest_mock
 from csle_common.controllers.container_controller import ContainerController
-
+import csle_common.constants.constants as constants
+import logging
 
 class TestContainerControllerSuite:
     """
@@ -17,7 +18,8 @@ class TestContainerControllerSuite:
         mocked_docker_client = mocker.MagicMock()
         mocker.patch('docker.from_env', return_value=mocked_docker_client)
         mocked_container = mocker.MagicMock()
-        mocked_container.configure_mock(**{"name.return_value": "test_container_name"})
+        name = constants.CSLE.NAME
+        mocked_container.configure_mock(**{"name.return_value": f"{name}"})
         mocked_container.configure_mock(**{"stop.return_value": None})
         mocked_docker_client.configure_mock(**{"list.return_value": [mocked_container]})
-        ContainerController.stop_all_running_containers()
+        assert ContainerController.stop_all_running_containers() is None
