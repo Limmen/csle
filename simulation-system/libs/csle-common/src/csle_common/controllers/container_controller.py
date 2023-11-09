@@ -52,8 +52,8 @@ class ContainerController:
         :param name: the name of the container to stop
         :return: True if stopped, False otherwise
         """
-        client_1 = docker.from_env()
-        containers = client_1.containers.list()
+        # client_1 = docker.from_env()
+        containers = docker.from_env().containers.list()
         containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
         for c in containers:
             if c.name == name:
