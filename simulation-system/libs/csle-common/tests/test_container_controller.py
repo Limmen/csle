@@ -1,7 +1,7 @@
 import pytest_mock
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
-import logging
+
 import io
 import pytest
 
@@ -39,11 +39,22 @@ class TestContainerControllerSuite:
             class containers:
 
                 def list(all=False):
+                    class image():
+                        def __init__(self) -> None:
+                            self.short_id = '1'
+                            self.tags = ['tags']
+            
                     class element():
 
                         def __init__(self) -> None:
-                            self.name = constants.CSLE.NAME
+                            self.name = constants.CONTAINER_IMAGES.CSLE_PREFIX + 'JohnDoe' + '-' + constants.CSLE.NAME
                             self.status = constants.DOCKER.CONTAINER_EXIT_STATUS
+                            self.labels = {constants.DOCKER.CFG: 'config_path',
+                                           constants.DOCKER.CONTAINER_CONFIG_DIR: 'dir_path',
+                                           constants.DOCKER.EMULATION: "JDoeEmulation"}
+                            self.id = '1'
+                            self.short_id = '1'
+                            self.image = image()
 
                         def stop(self):
                             return None
@@ -67,6 +78,8 @@ class TestContainerControllerSuite:
                                           constants.DOCKER.IMAGE_OS: "os",
                                           constants.DOCKER.IMAGE_ARCHITECTURE: "csle-architecture",
                                           constants.DOCKER.IMAGE_SIZE: 100}
+                            self.short_id = '1'
+                            self.tags = ['tags']
                     return [element()]
 
                 def remove(image, force):
@@ -74,6 +87,33 @@ class TestContainerControllerSuite:
                 
         from_env_mocker = mocker.MagicMock(side_effect=from_env)
         return from_env_mocker
+
+    @pytest.fixture
+    def client_2(self, mocker: pytest_mock.MockFixture):
+        """
+        Pytest fixture for mocking the docker.APIClient
+        
+        :param mocker: the Pytest mocker object
+        :return: the mocked object
+        """
+        class APIClient():
+            def __init__(self, base_url) -> None:
+                self.base_url = base_url
+            
+            def inspect_container(self, param: int):
+                dict = {constants.DOCKER.NETWORK_SETTINGS:
+                        {constants.DOCKER.NETWORKS:
+                         {'net_key': {constants.DOCKER.IP_ADDRESS_INFO: "123.456.78.99",
+                                      constants.DOCKER.NETWORK_ID_INFO: 1,
+                                      constants.DOCKER.GATEWAY_INFO: "null",
+                                      constants.DOCKER.MAC_ADDRESS_INFO: "null",
+                                      constants.DOCKER.IP_PREFIX_LEN_INFO: 1}}},
+                        constants.DOCKER.CREATED_INFO: "created_info",
+                        constants.DOCKER.CONFIG: {constants.DOCKER.HOSTNAME_INFO: "JDoeHost",
+                                                  constants.DOCKER.IMAGE: "JDoeImage"}}
+                return dict
+        api_mocker = mocker.MagicMock(side_effect=APIClient)
+        return api_mocker
 
     @pytest.fixture
     def file_opener(self, mocker: pytest_mock.MockFixture):
@@ -221,3 +261,33 @@ class TestContainerControllerSuite:
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         assert ContainerController.start_all_stopped_containers() is None
+
+    def test_start_container(self, mocker: pytest_mock.MockFixture,
+                             client_1: pytest_mock.MockFixture) -> None:
+        """
+        Testing the start_container method in the ContainerController
+        
+        :param mocker: the Pytest mocker object
+        :param client_1: pytest fixture for mocking the ContainerController
+        :return: None
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        assert ContainerController.start_container(constants.CSLE.NAME) is True
+        assert ContainerController.start_container("JohnDoe") is False
+
+    def test_list_all_running_containers(self, mocker: pytest_mock.MockFixture,
+                                         client_1: pytest_mock.MockFixture,
+                                         client_2: pytest_mock.MockFixture) -> None:
+        """
+        Testing the list_all_running_containers method in the ContainerController
+
+        :param mocker: the pytest mocker object
+        :param client_1: pytest fixture for mocking the ContainerController
+        :return: None
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        for parsed_env_tuple in ContainerController.list_all_running_containers():
+            assert parsed_env_tuple[0] == "csle_JohnDoe-csle"
+            assert parsed_env_tuple[1] == "JDoeImage"
+            assert parsed_env_tuple[2] == "123.456.78.99"
