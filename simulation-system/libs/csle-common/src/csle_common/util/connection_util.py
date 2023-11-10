@@ -634,8 +634,10 @@ class ConnectionUtil:
                 proxy=None, ip=s.emulation_env_config.containers_config.agent_ip)
             return c
         s.attacker_obs_state.sort_machines()
-
+        err_str = ""
         for m in s.attacker_obs_state.machines:
+            err_str = err_str + (f"ips: {m.ips}, logged in: {m.logged_in}, tools installed: {m.tools_installed}, "
+                                 f"reachable: {m.reachable} \n")
             if m.logged_in and m.tools_installed and m.backdoor_installed and ip in m.reachable:
 
                 # Start with ssh connections
@@ -649,7 +651,7 @@ class ConnectionUtil:
                     alive = ConnectionUtil.test_connection(c)
                     if alive:
                         return c
-        raise ValueError("No JumpHost found")
+        raise ValueError(f"No JumpHost found for ip: {ip}, topology: {err_str}")
 
     @staticmethod
     def test_connection(c: EmulationConnectionObservationState) -> bool:
