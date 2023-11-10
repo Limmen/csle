@@ -147,15 +147,15 @@ class ContainerController:
             filter(lambda x: (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]) or constants.OS.KALI
                               in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
         for img in non_base_images:
-            if img == name:
+            if img.name == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in non_os_base_images:
-            if img == name:
+            if img.name == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in os_base_images:
-            if img == name:
+            if img.name == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
 

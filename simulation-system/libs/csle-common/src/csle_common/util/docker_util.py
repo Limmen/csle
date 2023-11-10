@@ -6,7 +6,6 @@ import json
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.docker.docker_env_metadata import DockerEnvMetadata
 from csle_common.metastore.metastore_facade import MetastoreFacade
-
 import csle_common.constants.constants as constants
 
 
@@ -90,10 +89,8 @@ class DockerUtil:
         parsed_envs = []
         for em in emulations:
             em_containers = list(filter(lambda x: x.emulation == em, containers))
-            
             subnet_prefix = constants.COMMANDS.DOT_DELIM.join(em_containers[0].ip.rsplit(
                 constants.COMMANDS.DOT_DELIM)[0:-1])
-
             subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(em_containers[0].ip_prefix_len)
 
             config = None

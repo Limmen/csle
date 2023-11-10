@@ -1,7 +1,6 @@
 import pytest_mock
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
-
 import io
 import pytest
 
@@ -80,6 +79,7 @@ class TestContainerControllerSuite:
                                           constants.DOCKER.IMAGE_SIZE: 100}
                             self.short_id = '1'
                             self.tags = ['tags']
+                            self.name = constants.CSLE.NAME
                     return [element()]
 
                 def remove(image, force):
@@ -152,7 +152,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.stop_container(constants.CSLE.NAME) is True
+        assert ContainerController.stop_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
+                                                  'JohnDoe' + '-' + constants.CSLE.NAME) is True
         assert ContainerController.stop_container("John Doe") is False
 
     def test_rm_all_stopped_containers(self, mocker: pytest_mock.MockFixture,
@@ -176,7 +177,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.rm_container(constants.CSLE.NAME) is True
+        assert ContainerController.rm_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
+                                                'JohnDoe' + '-' + constants.CSLE.NAME) is True
         assert ContainerController.rm_container("JohnDoe") is False
 
     def test_rm_all_images(self, mocker: pytest_mock.MockFixture,
@@ -201,7 +203,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.list_all_images() is None
+        assert ContainerController.rm_image(constants.CSLE.NAME) is True
+        assert ContainerController.rm_image("JDoeName") is False
 
     def test_list_all_images(self, mocker: pytest_mock.MockFixture,
                              client_1: pytest_mock.MockFixture) -> None:
@@ -272,7 +275,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.start_container(constants.CSLE.NAME) is True
+        assert ContainerController.start_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
+                                                   'JohnDoe' + '-' + constants.CSLE.NAME) is True
         assert ContainerController.start_container("JohnDoe") is False
 
     def test_list_all_running_containers(self, mocker: pytest_mock.MockFixture,
