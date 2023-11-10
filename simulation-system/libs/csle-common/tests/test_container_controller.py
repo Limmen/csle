@@ -50,6 +50,9 @@ class TestContainerControllerSuite:
 
                         def remove(self):
                             return None
+
+                        def start(self):
+                            return None
                     return [element()]
 
             class images:
@@ -206,3 +209,15 @@ class TestContainerControllerSuite:
         test_networks_ids_str = ContainerController.list_all_networks()
         assert test_networks_ids_str[0] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}1"
         assert test_networks_ids_str[1] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}2"
+
+    def test_start_all_stopped_containers(self, mocker: pytest_mock.MockFixture,
+                                          client_1: pytest_mock.MockFixture) -> None:
+        """
+        Testing the start_all_stopped_containers method in the ContainerController
+
+        :param mocker: the pytest mocker object
+        :param client_1: pytest fixture for mocking the ContainerController
+        :return: None
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        assert ContainerController.start_all_stopped_containers() is None
