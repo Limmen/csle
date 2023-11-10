@@ -5,6 +5,7 @@ import logging
 import io
 import pytest
 
+
 class TestContainerControllerSuite:
     """
     Test suite for the container controller
@@ -17,6 +18,7 @@ class TestContainerControllerSuite:
 
                 def __init__(self) -> None:
                     pass
+
                 def list(self):
                     return ["JohnDoe"]
         from_env_mocker = mocker.MagicMock(side_effect=from_env)
@@ -33,18 +35,25 @@ class TestContainerControllerSuite:
         class from_env():
             def __init__(self) -> None:
                 pass
+
             class containers:
+
                 def list(all=False):
                     class element():
+
                         def __init__(self) -> None:
                             self.name = constants.CSLE.NAME
                             self.status = constants.DOCKER.CONTAINER_EXIT_STATUS
+
                         def stop(self):
                             return None
+
                         def remove(self):
                             return None
                     return [element()]
+
             class images:
+
                 def list():
                     class element():
                         def __init__(self) -> None:
@@ -56,6 +65,7 @@ class TestContainerControllerSuite:
                                           constants.DOCKER.IMAGE_ARCHITECTURE: "csle-architecture",
                                           constants.DOCKER.IMAGE_SIZE: 100}
                     return [element()]
+
                 def remove(image, force):
                     return None
                 
@@ -78,8 +88,6 @@ class TestContainerControllerSuite:
             return file
         popen_mocker = mocker.MagicMock(side_effect=popen)
         return popen_mocker
-
-
 
     def test_stop_all_running_containers(self, mocker: pytest_mock.MockFixture, client_1) -> None:
         """
@@ -175,7 +183,7 @@ class TestContainerControllerSuite:
         Tests the list_docker_networks method inte the ContainerController
 
         :param mocker: the Pytest mocker object
-        :param client_1: fixture for mocking the ContainerController
+        :param file_opener: fixture for mocking the ContainerController
         :return: None
         """
         mocker.patch('os.popen', side_effect=file_opener)
@@ -184,3 +192,17 @@ class TestContainerControllerSuite:
         assert test_networks_ids_str[1] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}2"
         assert test_network_ids[0] == 1
         assert test_network_ids[1] == 2
+
+    def test_list_all_networks(self, mocker: pytest_mock.MockFixture,
+                               file_opener: pytest_mock.MockFixture) -> None:
+        """
+        Tests the list_all_networks method
+        
+        :param mocker: the pytest mocker object
+        :param file_opener: fixture for mocking the ContainerController
+        :return: None
+        """
+        mocker.patch('os.popen', side_effect=file_opener)
+        test_networks_ids_str = ContainerController.list_all_networks()
+        assert test_networks_ids_str[0] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}1"
+        assert test_networks_ids_str[1] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}2"
