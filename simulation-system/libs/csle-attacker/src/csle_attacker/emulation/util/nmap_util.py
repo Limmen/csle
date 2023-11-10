@@ -474,6 +474,9 @@ class NmapUtil:
         if masscan:
             cmds = a.masscan_cmds()
 
+        Logger.__call__().get_logger().info(
+            f"Running NMAP scan on container: {s.emulation_env_config.containers_config.agent_ip}, commands: " 
+            f"{','.join(cmds)}")
         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=s.emulation_env_config.get_hacker_connection())
         total_time = sum(list(map(lambda x: x[2], results)))
 
@@ -736,6 +739,9 @@ class PivotNMAPScanThread(threading.Thread):
             c2 = c
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                 try:
+                    Logger.__call__().get_logger().info(
+                        f"Running NMAP scan on container: {self.machine.ips}, commands: "
+                        f"{','.join(cmds)}")
                     results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c2.conn)
                     break
                 except Exception as e:
