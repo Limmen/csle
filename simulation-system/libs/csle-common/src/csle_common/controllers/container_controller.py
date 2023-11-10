@@ -188,9 +188,11 @@ class ContainerController:
         stream = os.popen(cmd)
         networks_str: str = stream.read()
         networks: List[str] = networks_str.split("\n")
+
         networks_list: List[List[str]] = list(map(lambda x: x.split(), networks))
         networks_list = list(filter(lambda x: len(x) > 1, networks_list))
         networks_ids_str: List[str] = list(map(lambda x: x[1], networks_list))
+
         networks_ids_str = list(filter(lambda x: re.match(
             r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x), networks_ids_str))
         network_ids: List[int] = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),

@@ -2,6 +2,7 @@ import pytest_mock
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
 import logging
+import io
 import pytest
 
 class TestContainerControllerSuite:
@@ -24,8 +25,10 @@ class TestContainerControllerSuite:
     @pytest.fixture
     def client_1(self, mocker: pytest_mock.MockFixture):
         '''
-        Pytest fixture
+        Pytest fixture for mocking the docker.from_env() method
         
+        :param mocker: the Pytest mocker object
+        :return: the mocked function
         '''
         class from_env():
             def __init__(self) -> None:
@@ -58,6 +61,25 @@ class TestContainerControllerSuite:
                 
         from_env_mocker = mocker.MagicMock(side_effect=from_env)
         return from_env_mocker
+
+    @pytest.fixture
+    def file_opener(self, mocker: pytest_mock.MockFixture):
+        """
+        Pytest fixture for mocking the os.popen method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def popen(cmd: str):
+            file = io.StringIO()
+            file.write(f" test {constants.CSLE.CSLE_NETWORK_PREFIX}1 \n")
+            file.write(f" test {constants.CSLE.CSLE_NETWORK_PREFIX}2\n")
+            file.seek(0)
+            return file
+        popen_mocker = mocker.MagicMock(side_effect=popen)
+        return popen_mocker
+
+
 
     def test_stop_all_running_containers(self, mocker: pytest_mock.MockFixture, client_1) -> None:
         """
@@ -148,7 +170,7 @@ class TestContainerControllerSuite:
         assert images_names[4] == 100
 
     def test_list_docker_networks(self, mocker: pytest_mock.MockFixture,
-                                  client_1: pytest_mock.MockFixture) -> None:
+                                  file_opener: pytest_mock.MockFixture) -> None:
         """
         Tests the list_docker_networks method inte the ContainerController
 
@@ -156,10 +178,9 @@ class TestContainerControllerSuite:
         :param client_1: fixture for mocking the ContainerController
         :return: None
         """
-        mocker.patch('docker.from_env', side_effect=client_1)
-        images_names = ContainerController.list_all_images()[0]
-        assert images_names[0] == constants.CSLE.NAME
-        assert images_names[1] == "yes"
-        assert images_names[2] == "os"
-        assert images_names[3] == "csle-architecture"
-        assert images_names[4] == 100
+        mocker.patch('os.popen', side_effect=file_opener)
+        test_networks_ids_str, test_network_ids = ContainerController.list_docker_networks()
+        assert test_networks_ids_str[0] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}1"
+        assert test_networks_ids_str[1] == f"{constants.CSLE.CSLE_NETWORK_PREFIX}2"
+        assert test_network_ids[0] == 1
+        assert test_network_ids[1] == 2
