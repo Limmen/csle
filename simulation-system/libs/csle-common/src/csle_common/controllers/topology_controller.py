@@ -86,43 +86,53 @@ class TopologyController:
             # Setup iptables and arptables
             for output_node in node_fw_config.output_accept:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d {output_node} -j {constants.FIREWALL.ACCEPT}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d {output_node} -j {constants.FIREWALL.ACCEPT}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for input_node in node_fw_config.input_accept:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -s {input_node} -j {constants.FIREWALL.ACCEPT}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -s {input_node} -j {constants.FIREWALL.ACCEPT}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for forward_node in node_fw_config.forward_accept:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d {forward_node} -j {constants.FIREWALL.ACCEPT}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for output_node in node_fw_config.output_drop:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d {output_node} -j {constants.FIREWALL.DROP}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d {output_node} -j {constants.FIREWALL.DROP}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for input_node in node_fw_config.input_drop:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -s {input_node} -j {constants.FIREWALL.DROP}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -s {input_node} -j {constants.FIREWALL.DROP}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for forward_node in node_fw_config.forward_drop:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d {forward_node} -j {constants.FIREWALL.DROP}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
@@ -130,34 +140,68 @@ class TopologyController:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_output}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                                         wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_output}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                                         wait_for_completion=True)
 
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_input}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_input}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_input}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
                 cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_FORWARD} -d " \
                       f"{default_network_fw_config.network.subnet_mask} -j " \
                       f"{default_network_fw_config.default_input}"
+                logger.info(f"Adding firewall rule: {cmd}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
+
+            # Default drops
+            execution_subnet_mask = (f"{emulation_env_config.execution_id}.{emulation_env_config.level}"
+                                     f"{constants.CSLE.CSLE_LEVEL_SUBNETMASK_SUFFIX}")
+            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d " \
+                  f"{execution_subnet_mask} -j " \
+                  f"{constants.FIREWALL.DROP}"
+            logger.info(f"Adding firewall rule: {cmd}")
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
+                                          wait_for_completion=True)
+            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d " \
+                  f"{execution_subnet_mask} -j " \
+                  f"{constants.FIREWALL.DROP}"
+            logger.info(f"Adding firewall rule: {cmd}")
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
+                                          wait_for_completion=True)
+            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d " \
+                  f"{execution_subnet_mask} -j " \
+                  f"{constants.FIREWALL.DROP}"
+            logger.info(f"Adding firewall rule: {cmd}")
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
+                                          wait_for_completion=True)
+            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_FORWARD} -d " \
+                  f"{execution_subnet_mask} -j " \
+                  f"{constants.FIREWALL.DROP}"
+            logger.info(f"Adding firewall rule: {cmd}")
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
+                                          wait_for_completion=True)
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
