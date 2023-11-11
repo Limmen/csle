@@ -29,6 +29,9 @@
     <a href="https://pypi.org/user/Limmen/">
         <img src="https://img.shields.io/pypi/dm/csle-collector" alt="PyPi downloads">
     </a>
+    <a href="https://codecov.io/gh/Limmen/csle" > 
+        <img src="https://codecov.io/gh/Limmen/csle/graph/badge.svg?token=YOV2SEDZWF"/> 
+    </a>
 </p>
 
 # The Cyber Security Learning Environment (CSLE)
