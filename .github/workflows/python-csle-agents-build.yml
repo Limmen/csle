@@ -32,3 +32,4 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          files: simulation-system/libs/csle-agents/coverage.yml
