@@ -28,3 +28,7 @@ jobs:
           pip install tox tox-gh-actions
       - name: Tox tests csle-agents
         run: cd simulation-system/libs/csle-agents; tox
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
