@@ -147,15 +147,15 @@ class ContainerController:
             filter(lambda x: (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]) or constants.OS.KALI
                               in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
         for img in non_base_images:
-            if img.name == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in non_os_base_images:
-            if img.name == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in os_base_images:
-            if img.name == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
 
@@ -271,6 +271,7 @@ class ContainerController:
         stopped_emulation_containers = []
         running_containers = ContainerController.list_all_running_containers()
         running_containers_names = list(map(lambda x: x[0], running_containers))
+        logging.getLogger().info(running_containers_names)
         for c in emulation_env_config.containers_config.containers:
             if c.full_name_str in running_containers_names:
                 running_emulation_containers.append(c)
