@@ -166,8 +166,8 @@ class NmapUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data, action: EmulationAttackerAction) -> Tuple[List[NmapPort], List[NmapVuln],
-                                                                                  List[NmapBruteCredentials]]:
+    def _parse_nmap_ports_xml(xml_data, action: EmulationAttackerAction) \
+            -> Tuple[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
@@ -322,10 +322,9 @@ class NmapUtil:
 
     @staticmethod
     def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str,
-                           action: EmulationAttackerAction) -> Tuple[Union[List[NmapVuln],
-                                                                           List[NmapBruteCredentials],
-                                                                           NmapHttpEnum, NmapHttpGrep,
-                                                                           NmapVulscan, None], Union[NmapVuln, None]]:
+                           action: EmulationAttackerAction) \
+            -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan, None],
+                     Union[NmapVuln, None]]:
         """
         Parses a XML script element
 
@@ -475,7 +474,7 @@ class NmapUtil:
             cmds = a.masscan_cmds()
 
         Logger.__call__().get_logger().info(
-            f"Running NMAP scan on container: {s.emulation_env_config.containers_config.agent_ip}, commands: " 
+            f"Running NMAP scan on container: {s.emulation_env_config.containers_config.agent_ip}, commands: "
             f"{','.join(cmds)}")
         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=s.emulation_env_config.get_hacker_connection())
         total_time = sum(list(map(lambda x: x[2], results)))

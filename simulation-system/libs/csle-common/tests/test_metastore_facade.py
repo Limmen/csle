@@ -2430,7 +2430,7 @@ class TestMetastoreFacadeSuite:
             system_identification_job=example_system_identification_job_config)
         mocked_cursor.execute.assert_called_once_with(
             f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
-            f"(config, emulation_name, pid) "
+            f"(id, config, emulation_name, pid) "
             f"VALUES (%s, %s, %s, %s) RETURNING id", (example_system_identification_job_config.id,
                                                       example_system_identification_job_config.to_json_str(),
                                                       example_system_identification_job_config.emulation_env_name,
