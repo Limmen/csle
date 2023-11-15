@@ -1743,7 +1743,7 @@ class MetastoreFacade:
                 system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
-                            f"(config, emulation_name, pid) "
+                            f"(id, config, emulation_name, pid) "
                             f"VALUES (%s, %s, %s, %s) RETURNING id", (id, system_identification_job_json,
                                                                       system_identification_job.emulation_env_name,
                                                                       system_identification_job.pid))
