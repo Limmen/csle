@@ -664,9 +664,9 @@ def example_node_container_config(example_container_network: ContainerNetwork) -
     :param example_container_network: an example ContainerNetwork
     :return: an example NodeContainerConfig object
     """
-    return NodeContainerConfig(name="Container1",
+    return NodeContainerConfig(name="csle_",
                                ips_and_networks=[("123.456.78.99", example_container_network)],
-                               version="null", level="null",
+                               version="null", level="csle",
                                restart_policy="JDoePolicy", suffix="null",
                                os="null", execution_ip_first_octet=-1,
                                docker_gw_bridge_ip="123.456.78.99",

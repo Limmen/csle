@@ -1,8 +1,10 @@
 import pytest_mock
+
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
 import io
 import pytest
+import logging
 
 
 class TestContainerControllerSuite:
@@ -46,7 +48,8 @@ class TestContainerControllerSuite:
                     class element():
 
                         def __init__(self) -> None:
-                            self.name = constants.CONTAINER_IMAGES.CSLE_PREFIX + 'JohnDoe' + '-' + constants.CSLE.NAME
+                            self.name = constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
                             self.status = constants.DOCKER.CONTAINER_EXIT_STATUS
                             self.labels = {constants.DOCKER.CFG: 'config_path',
                                            constants.DOCKER.CONTAINER_CONFIG_DIR: 'dir_path',
@@ -295,3 +298,21 @@ class TestContainerControllerSuite:
             assert parsed_env_tuple[0] == "csle_JohnDoe-csle"
             assert parsed_env_tuple[1] == "JDoeImage"
             assert parsed_env_tuple[2] == "123.456.78.99"
+
+    def test_list_all_running_containers_in_emulation(self, mocker: pytest_mock.MockFixture,
+                                                      example_emulation_env_config,
+                                                      client_1: pytest_mock.MockFixture,
+                                                      client_2: pytest_mock.MockFixture) -> None:
+        """
+        Testing the list_all_running_containers_in_emulation in the ContainerController
+        
+        """
+        # mocker.patch('emulation_env_config', side_effect=example_emulation_env_config)
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        running_emulation_containers, stopped_emulation_containers = ContainerController.\
+            list_all_running_containers_in_emulation(example_emulation_env_config)
+        assert running_emulation_containers[0].to_dict() == example_emulation_env_config.\
+            containers_config.containers[0].to_dict()
+        assert running_emulation_containers[1].to_dict() == example_emulation_env_config.\
+            kafka_config.container.to_dict()

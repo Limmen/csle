@@ -271,7 +271,6 @@ class ContainerController:
         stopped_emulation_containers = []
         running_containers = ContainerController.list_all_running_containers()
         running_containers_names = list(map(lambda x: x[0], running_containers))
-        logging.getLogger().info(running_containers_names)
         for c in emulation_env_config.containers_config.containers:
             if c.full_name_str in running_containers_names:
                 running_emulation_containers.append(c)
@@ -281,12 +280,15 @@ class ContainerController:
             running_emulation_containers.append(emulation_env_config.kafka_config.container)
         else:
             stopped_emulation_containers.append(emulation_env_config.kafka_config.container)
+
         if emulation_env_config.elk_config.container.full_name_str in running_containers_names:
             running_emulation_containers.append(emulation_env_config.elk_config.container)
         else:
             stopped_emulation_containers.append(emulation_env_config.elk_config.container)
+
         if emulation_env_config.sdn_controller_config is not None:
             if emulation_env_config.sdn_controller_config.container.full_name_str in running_containers_names:
+
                 running_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
             else:
                 stopped_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
