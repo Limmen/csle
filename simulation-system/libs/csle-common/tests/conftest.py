@@ -642,7 +642,7 @@ def example_container_network() -> ContainerNetwork:
 
     :return: an example ContainerNetwork object
     """
-    return ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
+    return ContainerNetwork(name=f'{constants.CSLE.CSLE_NETWORK_PREFIX}1', subnet_mask="Subnet1", bitmask="null",
                             subnet_prefix="null", interface="eth0")
 
 

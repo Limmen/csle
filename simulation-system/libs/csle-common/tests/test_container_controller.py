@@ -325,3 +325,19 @@ class TestContainerControllerSuite:
         assert running_emulation_containers[3].to_dict() == example_emulation_env_config.\
                     sdn_controller_config.container.to_dict()
 
+    def test_list_all_active_networks_for_emulation(self, mocker: pytest_mock.MockFixture,
+                                                    example_emulation_env_config,
+                                                    client_1: pytest_mock.MockFixture,
+                                                    client_2: pytest_mock.MockFixture,
+                                                    file_opener) -> None:
+        """
+        Testing the list_all_active_networks_for_emulation in the ContainerController
+        :param mocker: the pytest mocker object
+        :param example_emulation_env_config: an example object being the emulation environmnt configuration
+        :param client_1: pytest fixture for mocking the ContainerController
+        :return: None
+        """
+        mocker.patch("os.popen", side_effect=file_opener)
+        active_emulation_networks, inactive_emulation_networks = ContainerController.list_all_active_networks_for_emulation(example_emulation_env_config)
+        assert inactive_emulation_networks == []
+        assert active_emulation_networks[0].to_dict() == example_emulation_env_config.containers_config.networks[0].to_dict()
