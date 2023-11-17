@@ -155,8 +155,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.stop_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
-                                                  'JohnDoe' + '-' + constants.CSLE.NAME) is True
+        assert ContainerController.stop_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                                  'null' + '-' + 'level' + constants.CSLE.NAME + '--1') is True
         assert ContainerController.stop_container("John Doe") is False
 
     def test_rm_all_stopped_containers(self, mocker: pytest_mock.MockFixture,
@@ -180,8 +180,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.rm_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
-                                                'JohnDoe' + '-' + constants.CSLE.NAME) is True
+        assert ContainerController.rm_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                                'null' + '-' + 'level' + constants.CSLE.NAME + '--1') is True
         assert ContainerController.rm_container("JohnDoe") is False
 
     def test_rm_all_images(self, mocker: pytest_mock.MockFixture,
@@ -278,8 +278,8 @@ class TestContainerControllerSuite:
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
-        assert ContainerController.start_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +
-                                                   'JohnDoe' + '-' + constants.CSLE.NAME) is True
+        assert ContainerController.start_container(constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                                   'null' + '-' + 'level' + constants.CSLE.NAME + '--1') is True
         assert ContainerController.start_container("JohnDoe") is False
 
     def test_list_all_running_containers(self, mocker: pytest_mock.MockFixture,
@@ -295,7 +295,8 @@ class TestContainerControllerSuite:
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
         for parsed_env_tuple in ContainerController.list_all_running_containers():
-            assert parsed_env_tuple[0] == "csle_JohnDoe-csle"
+            assert parsed_env_tuple[0] == constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
             assert parsed_env_tuple[1] == "JDoeImage"
             assert parsed_env_tuple[2] == "123.456.78.99"
 
@@ -305,13 +306,16 @@ class TestContainerControllerSuite:
                                                       client_2: pytest_mock.MockFixture) -> None:
         """
         Testing the list_all_running_containers_in_emulation in the ContainerController
-        
+        :param mocker: the pytest mocker object
+        :param example_emulation_env_config: an example object being the emulation environmnt configuration
+        :param client_1: pytest fixture for mocking the ContainerController
+        :return: None
         """
-        # mocker.patch('emulation_env_config', side_effect=example_emulation_env_config)
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
         running_emulation_containers, stopped_emulation_containers = ContainerController.\
             list_all_running_containers_in_emulation(example_emulation_env_config)
+        assert stopped_emulation_containers == []
         assert running_emulation_containers[0].to_dict() == example_emulation_env_config.\
             containers_config.containers[0].to_dict()
         assert running_emulation_containers[1].to_dict() == example_emulation_env_config.\
@@ -320,3 +324,4 @@ class TestContainerControllerSuite:
                     elk_config.container.to_dict()
         assert running_emulation_containers[3].to_dict() == example_emulation_env_config.\
                     sdn_controller_config.container.to_dict()
+
