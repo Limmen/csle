@@ -68,6 +68,14 @@ class TestContainerControllerSuite:
                             return None
                     return [element()]
 
+            class networks:
+                def list():
+                    class element():
+                        def __init__(self) -> None:
+                            self.name = constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
+                    return [element()]
+
             class images:
 
                 def list():
@@ -327,17 +335,83 @@ class TestContainerControllerSuite:
 
     def test_list_all_active_networks_for_emulation(self, mocker: pytest_mock.MockFixture,
                                                     example_emulation_env_config,
-                                                    client_1: pytest_mock.MockFixture,
-                                                    client_2: pytest_mock.MockFixture,
                                                     file_opener) -> None:
         """
         Testing the list_all_active_networks_for_emulation in the ContainerController
         :param mocker: the pytest mocker object
         :param example_emulation_env_config: an example object being the emulation environmnt configuration
-        :param client_1: pytest fixture for mocking the ContainerController
+        :param file_opener: fixture for mocking the ContainerController
         :return: None
         """
         mocker.patch("os.popen", side_effect=file_opener)
         active_emulation_networks, inactive_emulation_networks = ContainerController.list_all_active_networks_for_emulation(example_emulation_env_config)
         assert inactive_emulation_networks == []
         assert active_emulation_networks[0].to_dict() == example_emulation_env_config.containers_config.networks[0].to_dict()
+
+    def test_list_running_emulations(self, mocker: pytest_mock.MockFixture,
+                                     example_emulation_env_config,
+                                     client_1: pytest_mock.MockFixture,
+                                     client_2: pytest_mock.MockFixture) -> None:
+        """
+        Testing the list_running_emulations method in the ContainerController
+        
+        :param mocker:the pytest mocker object
+        :param example_emulation_env_config: fixture for mocking, fetched fromtheconftest file
+        :param client_1: fixture for mocking the ContainerController
+        :param client_2: fixture for mocking the ContainerController
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        emulation_name_list = ContainerController.list_running_emulations()
+        assert emulation_name_list[0] == example_emulation_env_config.name
+
+    def test_is_emulation_running(self, mocker: pytest_mock.MockFixture,
+                                  example_emulation_env_config,
+                                  client_1: pytest_mock.MockFixture,
+                                  client_2: pytest_mock.MockFixture) -> None:
+        """
+        Testing the is_emulation_running method in the ContainerController
+
+        :param mocker:the pytest mocker object
+        :param example_emulation_env_config: fixture for mocking, fetched fromtheconftest file
+        :param client_1: fixture for mocking the ContainerController
+        :param client_2: fixture for mocking the ContainerController
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        test_bool_1 = ContainerController.is_emulation_running(example_emulation_env_config)
+        example_emulation_env_config.name = "null"
+        test_bool_2 = ContainerController.is_emulation_running(example_emulation_env_config)
+        assert test_bool_1 is True
+        assert test_bool_2 is False
+
+    def test_list_all_stopped_containers(self, mocker: pytest_mock.MockFixture, client_1: pytest_mock.MockFixture,
+                                         client_2: pytest_mock.MockFixture) -> None:
+        """
+        Testing the is_emulation_running method in the ContainerController
+
+        :param mocker:the pytest mocker object
+        :param example_emulation_env_config: fixture for mocking, fetched fromtheconftest file
+        :param client_1: fixture for mocking the ContainerController
+        :param client_2: fixture for mocking the ContainerController
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        test_tuple = ContainerController.list_all_stopped_containers()[0]
+        assert test_tuple[0] == constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+            'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
+        assert test_tuple[1] == 'JDoeImage'
+        assert test_tuple[2] == '123.456.78.99'
+
+    def test_get_network_references(self, mocker: pytest_mock.MockFixture,
+                                    client_1: pytest_mock.MockFixture) -> None:
+        """
+        Testing the get_network_references method in the ContainerController
+
+        :param mocker:the pytest mocker object
+        :param client_1: fixture for mocking the ContainerController
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        test_networks = ContainerController.get_network_references()
+        assert test_networks[0].name == constants.CONTAINER_IMAGES.CSLE_PREFIX +\
+                                'null' + '-' + 'level' + constants.CSLE.NAME + '--1'

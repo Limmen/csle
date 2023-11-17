@@ -1263,7 +1263,7 @@ def example_emulation_env_config(
     :param example_beats_config: an example BeatsConfig
     :return: example EmulationEnvConfig object
     """
-    return EmulationEnvConfig(name="Johndoe", containers_config=example_containers_config,
+    return EmulationEnvConfig(name="JDoeEmulation", containers_config=example_containers_config,
                               users_config=example_users_config,
                               flags_config=example_flags_config,
                               vuln_config=example_vulnerabilities_config,
