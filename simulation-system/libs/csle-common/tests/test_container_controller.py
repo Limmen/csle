@@ -316,3 +316,7 @@ class TestContainerControllerSuite:
             containers_config.containers[0].to_dict()
         assert running_emulation_containers[1].to_dict() == example_emulation_env_config.\
             kafka_config.container.to_dict()
+        assert running_emulation_containers[2].to_dict() == example_emulation_env_config.\
+                    elk_config.container.to_dict()
+        assert running_emulation_containers[3].to_dict() == example_emulation_env_config.\
+                    sdn_controller_config.container.to_dict()
