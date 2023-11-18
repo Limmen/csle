@@ -60,6 +60,8 @@ class AggregatedSnortIdsRuleLogConsumerThread(threading.Thread):
         """
         :return: aggregated alert counters from the list
         """
+        import logging
+        logging.info(len(self.snort_ids_rule_counters_list))
         if len(self.snort_ids_rule_counters_list) == 0:
             return self.snort_ids_rule_counters.copy()
         if len(self.snort_ids_rule_counters_list) == 1:

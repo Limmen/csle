@@ -6,8 +6,11 @@ from csle_common.consumer_threads.host_metrics_consumer_thread import HostMetric
 from csle_common.consumer_threads.aggregated_host_metrics_thread import AggregatedHostMetricsThread
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
 from csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread import AggregatedOSSECIdsLogConsumerThread
 from csle_common.consumer_threads.aggregated_snort_ids_log_consumer_thread import AggregatedSnortIdsLogConsumerThread
+from csle_common.consumer_threads.aggregated_snort_ids_rule_log_consumer_thread import (
+    AggregatedSnortIdsRuleLogConsumerThread)
 
 
 class TestConsumerThreadsSuiteSuite:
@@ -279,3 +282,62 @@ class TestConsumerThreadsSuiteSuite:
             assert (aggregated_snort_ids_alert_counters.class_alerts[idx] ==
                     example_snort_ids_alert_counters.class_alerts[idx] +
                     example_snort_ids_alert_counters_2.class_alerts[idx])
+
+    def test_aggregated_snort_ids_rule_log_consumer_thread(self) -> None:
+        """
+        Tests creation of a snort ids rule log consumer thread and its methods
+
+        :param example_snort_ids_rule_alert_counters: an object of SnortIdsRuleAlertCounters
+        :return: None
+        """
+        example_snort_ids_rule_alert_counters = SnortIdsRuleCounters()
+
+        example_snort_ids_rule_alert_counters.rule_alerts = {}
+        example_snort_ids_rule_alert_counters.rule_alerts[1] = 10
+        example_snort_ids_rule_alert_counters.rule_alerts[2] = 3
+        example_snort_ids_rule_alert_counters.ip = "1.2.3.4"
+        example_snort_ids_rule_alert_counters.ts = 1234
+
+        thread = AggregatedSnortIdsRuleLogConsumerThread(
+            kafka_server_ip="1.2.3.4", kafka_port=1234,
+            snort_ids_rule_counters=example_snort_ids_rule_alert_counters.copy()
+        )
+
+        assert thread.snort_ids_rule_counters == example_snort_ids_rule_alert_counters
+        assert thread.kafka_port == 1234
+        assert thread.kafka_server_ip == "1.2.3.4"
+
+        # Test empty list
+        thread.snort_ids_rule_counters_list = []
+        aggregated_snort_ids_rule_alert_counters = thread.get_aggregated_ids_rule_counters()
+        assert aggregated_snort_ids_rule_alert_counters == example_snort_ids_rule_alert_counters
+
+        # Test singleton list
+        thread.snort_ids_rule_counters_list = [example_snort_ids_rule_alert_counters.copy()]
+        aggregated_snort_ids_rule_alert_counters = thread.get_aggregated_ids_rule_counters()
+        assert aggregated_snort_ids_rule_alert_counters == example_snort_ids_rule_alert_counters
+
+        # Test list with 10 identical objects
+        thread.snort_ids_rule_counters_list = [example_snort_ids_rule_alert_counters.copy()] * 10
+        aggregated_snort_ids_rule_alert_counters = thread.get_aggregated_ids_rule_counters()
+
+        for k, v in aggregated_snort_ids_rule_alert_counters.rule_alerts.items():
+            assert (aggregated_snort_ids_rule_alert_counters.rule_alerts[k] ==
+                    10 * example_snort_ids_rule_alert_counters.rule_alerts[k])
+
+        # Test list with two different objects
+        example_snort_ids_rule_alert_counters_2 = SnortIdsRuleCounters()
+        example_snort_ids_rule_alert_counters_2.rule_alerts = {}
+        example_snort_ids_rule_alert_counters_2.rule_alerts[1] = 12
+        example_snort_ids_rule_alert_counters_2.rule_alerts[2] = 8
+        example_snort_ids_rule_alert_counters_2.ip = "1.2.3.4"
+        example_snort_ids_rule_alert_counters_2.ts = 1234
+
+        thread.snort_ids_rule_counters_list = [example_snort_ids_rule_alert_counters,
+                                               example_snort_ids_rule_alert_counters_2]
+        aggregated_snort_ids_rule_alert_counters = thread.get_aggregated_ids_rule_counters()
+
+        for k, v in aggregated_snort_ids_rule_alert_counters.rule_alerts.items():
+            assert (aggregated_snort_ids_rule_alert_counters.rule_alerts[k] ==
+                    example_snort_ids_rule_alert_counters.rule_alerts[k] +
+                    example_snort_ids_rule_alert_counters_2.rule_alerts[k])
