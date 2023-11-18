@@ -28,7 +28,7 @@ class SnortIdsRuleCounters(JSONSerializable):
             if k not in self.rule_alerts:
                 self.rule_alerts[k] = int(alert_counters.rule_alerts[k])
             else:
-                self.rule_alerts[k] = int(self.rule_alerts[k] + alert_counters.rule_alerts[k])
+                self.rule_alerts[k] = int(self.rule_alerts[k]) + int(alert_counters.rule_alerts[k])
 
     def count(self, alerts: List[SnortIdsFastLogAlert]) -> None:
         """
@@ -135,7 +135,7 @@ class SnortIdsRuleCounters(JSONSerializable):
         c = SnortIdsRuleCounters()
         c.ip = self.ip
         c.ts = self.ts
-        c.rule_alerts = self.rule_alerts
+        c.rule_alerts = self.rule_alerts.copy()
         return c
 
     @staticmethod
