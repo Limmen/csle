@@ -8,8 +8,8 @@ from csle_system_identification.expectation_maximization.expectation_maximizatio
 import csle_system_identification.constants.constants as system_identification_constants
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-030")
-    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=4)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-040")
+    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=3)
     system_identifcation_config = SystemIdentificationConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}em_level9_test",
         title="Expectation-Maximization level 9 test",
