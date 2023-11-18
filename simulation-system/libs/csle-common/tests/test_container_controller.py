@@ -1,10 +1,16 @@
 import pytest_mock
-
+from typing import Tuple
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
 import io
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+import subprocess
 import pytest
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+import docker
 import logging
+
 
 
 class TestContainerControllerSuite:
@@ -26,7 +32,7 @@ class TestContainerControllerSuite:
         return from_env_mocker
 
     @pytest.fixture
-    def client_1(self, mocker: pytest_mock.MockFixture):
+    def client_1(self, mocker: pytest_mock.MockFixture) -> docker.from_env:
         '''
         Pytest fixture for mocking the docker.from_env() method
         
@@ -76,6 +82,9 @@ class TestContainerControllerSuite:
                                 'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
                     return [element()]
 
+                def create(name: str, driver: str, ipam: docker.types.IPAMConfig, attachable: bool):
+                    return None
+
             class images:
 
                 def list():
@@ -98,6 +107,28 @@ class TestContainerControllerSuite:
                 
         from_env_mocker = mocker.MagicMock(side_effect=from_env)
         return from_env_mocker
+
+    @pytest.fixture
+    def ipam_pool(self, mocker: pytest_mock.MockFixture) -> docker.types.IPAMPool:
+        """
+        Pytest fixture for mockingthe dockre.types.IPAMPool class
+        
+        :param mocker: the pytet mocker object
+        :return: the mocked object
+        """
+        class IPAMPool():
+            def __init__(self, subnet) -> None:
+                pass
+        ipampool_mocker = mocker.MagicMock(side_effect=IPAMPool)
+        return ipampool_mocker
+
+    @pytest.fixture
+    def ipam_config(self, mocker: pytest_mock.MockFixture) -> docker.types.IPAMConfig:
+        class IPAMConfig():
+            def __init__(self, pool_configs) -> None:
+                pass
+        ipamconfig_mocker = mocker.MagicMock(side_effect=IPAMConfig)
+        return ipamconfig_mocker
 
     @pytest.fixture
     def client_2(self, mocker: pytest_mock.MockFixture):
@@ -127,7 +158,7 @@ class TestContainerControllerSuite:
         return api_mocker
 
     @pytest.fixture
-    def file_opener(self, mocker: pytest_mock.MockFixture):
+    def file_opener(self, mocker: pytest_mock.MockFixture) -> io.StringIO:
         """
         Pytest fixture for mocking the os.popen method
 
@@ -142,6 +173,160 @@ class TestContainerControllerSuite:
             return file
         popen_mocker = mocker.MagicMock(side_effect=popen)
         return popen_mocker
+
+    @pytest.fixture
+    def sub_popen(self, mocker: pytest_mock.MockFixture) -> subprocess.Popen:
+        """
+        Pytest fixture for mocking the suboprocess.Popen class
+        :param mocker: the pytest mocker object
+        :return: the mocked version
+        """
+        class Popen():
+            def __init__(self, cmd: str, stdout: subprocess.DEVNULL, shell: bool) -> None:
+                pass
+
+            def __iter__(self,):
+                pass
+            def communicate(self) -> None:
+                return (constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER + '37752', None)
+
+        sub_popen_mocker = mocker.MagicMock(side_effect=Popen)
+        return sub_popen_mocker
+
+    @pytest.fixture
+    def true_running_stats_manager(self, mocker: pytest_mock.MockFixture) -> bool:
+        """
+        Pytest fixture for mocking the is_statsmanager_running mehthod
+        :param mocker: the pytest mocker object
+        :return: True from the mocked function
+        """
+        def is_statsmanager_running():
+            return True
+        is_statsmanager_running_mock = mocker.MagicMock(side_effect=is_statsmanager_running)
+        return is_statsmanager_running_mock
+
+    @pytest.fixture
+    def false_running_stats_manager(self, mocker: pytest_mock.MockFixture) -> bool:
+        """
+        Pytest fixture for mocking the is_statsmanager_running mehthod
+        :param mocker: the pytest mocker object
+        :return: False from the mocked function
+        """
+        def is_statsmanager_running():
+            return False
+        is_statsmanager_running_mock = mocker.MagicMock(side_effect=is_statsmanager_running)
+        return is_statsmanager_running_mock
+
+    @pytest.fixture
+    def pid_file(self, mocker: pytest_mock.MockFixture) -> int:
+        """
+        Pytest fixture for mocking the read_pid_file in the ManagementSystemController
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def read_pid_file(path: str):
+            return 100
+        pid_file_mocker = mocker.MagicMock(side_effect=read_pid_file)
+        return pid_file_mocker
+
+    @pytest.fixture
+    def start_fixture(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Pytest fixture for mocking the start_docker_stats_monitor in the csle_collector environment
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        def start_docker_stats_monitor(stub: str, emulation: EmulationEnvConfig,
+                                       kafka_ip: str, stats_queue_maxsize: int,
+                                       time_step_len_seconds: int,
+                                       kafka_port: str, containers: NodeContainerConfig,
+                                       execution_first_ip_octet: str):
+            return None
+        start_mocker = mocker.MagicMock(side_effect=start_docker_stats_monitor)
+        return start_mocker
+
+    @pytest.fixture
+    def host_ip(self, mocker: pytest_mock.MockFixture) -> str:
+        """
+        Pytest fixture for mocking the get_host_ip method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_host_ip():
+            return "123.456.78.99"
+        host_ip_mocker = mocker.MagicMock(side_effect=get_host_ip)
+        return host_ip_mocker
+
+    @pytest.fixture
+    def stop_fixture(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Pytest fixture for mocking the stop_docker_stats_monitor in the csle_collector environment
+        :param mocker: the pytest mocker object
+        :return: None
+        """
+        def stop_docker_stats_monitor(stub: str, emulation: str,
+                                      execution_first_ip_octet: str):
+            return None
+        stop_mocker = mocker.MagicMock(side_effect=stop_docker_stats_monitor)
+        return stop_mocker
+
+    @pytest.fixture
+    def true_stop_fixture(self, mocker: pytest_mock.MockFixture) -> bool:
+        """
+        Pytest fixture for mocking the stop_docker_statsmanager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_docker_statsmanager(logger: logging.Logger,  port: int, log_file: str,
+                                     log_dir: str, max_workers: int):
+            return True
+        stop_fixture = mocker.MagicMock(side_effect=stop_docker_statsmanager)
+        return stop_fixture
+
+    @pytest.fixture
+    def false_stop_fixture(self, mocker: pytest_mock.MockFixture) -> bool:
+        """
+        Pytest fixture for mocking the stop_docker_statsmanager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_docker_statsmanager(logger: logging.Logger,  port: int, log_file: str,
+                                     log_dir: str, max_workers: int):
+            return False
+        stop_fixture = mocker.MagicMock(side_effect=stop_docker_statsmanager)
+        return stop_fixture
+
+    @pytest.fixture
+    def dsm_status(self, mocker: pytest_mock.MockFixture):
+        """
+        Pytest fixture for mocking the get_docker_stats_manager_status method in the csle_collector environment
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_docker_stats_manager_status(stub):
+            return DockerStatsMonitorDTO(num_monitors=10, emulations = ['JDoeEmulation'],
+                                         emulation_executions=[10])
+            # return csle_collector. \
+            #     docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(num_monitors=10,
+            #                                                                         emulations = ['JDoeEmulation'],
+            #                                                                         emulation_executions=[10])
+        dsm_status_mocker = mocker.MagicMock(side_effect=get_docker_stats_manager_status)
+        return dsm_status_mocker
+
+    @pytest.fixture
+    def stub(self, mocker: pytest_mock.MockFixture):
+        """
+        Pytest fixture for mocking the parameter stub fetched from csle_collector
+        :param mocker: the pytest mocker object
+        :return: the mocked object
+        """
+        class DockerStatsManagerStub():
+            def __init__(self, channel) -> None:
+                pass
+        stub_mocker = mocker.MagicMock(side_effect=DockerStatsManagerStub)
+        return stub_mocker
 
     def test_stop_all_running_containers(self, mocker: pytest_mock.MockFixture, client_1) -> None:
         """
@@ -415,3 +600,130 @@ class TestContainerControllerSuite:
         test_networks = ContainerController.get_network_references()
         assert test_networks[0].name == constants.CONTAINER_IMAGES.CSLE_PREFIX +\
                                 'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
+
+    def test_create_networks(self, mocker: pytest_mock.MockFixture, client_1,
+                             example_containers_config, example_config, ipam_pool,
+                             ipam_config) -> None:
+        """
+        Testing the create_networks method in the ContainerController
+        
+        
+        """
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', result=example_config)
+        mocker.patch('docker.types.IPAMPool', side_effect=ipam_pool)
+        mocker.patch('docker.types.IPAMConfig', side_effect=ipam_config)
+        creation = ContainerController.create_networks(example_containers_config, logging.Logger("test"))
+        assert creation is None
+
+    def test_connect_containers_to_networks(self, mocker, example_emulation_env_config,
+                                            sub_popen, client_1, client_2, file_opener) -> None:
+        """
+        Testing the connect_containers_to_networks method
+        :param mocker: the pytest mocker object
+        :param example_emulation_env_config: EmulationEnvironmentConfig fetched from the conftest file
+        :sub_popen: fixture mocking the subprocess.Popen
+
+        """
+        
+        mocker.patch('subprocess.Popen', side_effect=sub_popen)
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        mocker.patch('os.popen', side_effect=file_opener)
+        connection = ContainerController.connect_containers_to_networks(example_emulation_env_config, '123.456.78.99',
+                                                                        logger=logging.Logger("test"))
+        assert connection is None
+
+    def test_connect_container_to_network(self, mocker, example_node_container_config, sub_popen,
+                                          file_opener, client_1, client_2,) -> None:
+        """
+        Testing connect_container_to_network method in the ContainerController
+        
+        :param mocker: the pytest mocker object
+        :param example_node_container_config: an example NodeContainerConfig fetched from the conftest file
+        :param sub_popen: fixture mocking the subprocess.Popen
+        :param file_opener: fixture mocking the os.popen
+        :return: None
+        """
+        mocker.patch('subprocess.Popen', side_effect=sub_popen)
+        mocker.patch('docker.from_env', side_effect=client_1)
+        mocker.patch('docker.APIClient', side_effect=client_2)
+        mocker.patch('os.popen', side_effect=file_opener)
+        connection = ContainerController.connect_container_to_network(example_node_container_config, logging.Logger("test"))
+        assert connection is None
+
+    def test_start_docker_stats_thread(self, mocker, example_emulation_execution, true_running_stats_manager,
+                                       false_running_stats_manager, sub_popen, start_fixture) -> None:
+        """
+        Testing the start_docker_stats_thread in the ContainerController
+
+        :param mocker: the pytest mocker object
+        :param example_node_container_config: an example NodeContainerConfig fetched from the conftest file
+        :param sub_popen: fixture mocking the subprocess.Popen
+        :param file_opener: fixture mocking the os.popen
+        :return: None
+        """
+        mocker.patch('subprocess.Popen', side_effect=sub_popen)
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.is_statsmanager_running',
+                     side_effect=true_running_stats_manager)
+        mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor',
+                     side_effect=start_fixture)
+
+        # mocker.patch('csle_common.controllers.management_system_controller', side_effect=pid_file)
+        starter = ContainerController.start_docker_stats_thread(example_emulation_execution,
+                                                                physical_server_ip='123.456.78.99',
+                                                                logger=logging.Logger("test"))
+        assert starter is None
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.is_statsmanager_running',
+                     side_effect=false_running_stats_manager)
+
+        # mocker.patch('csle_common.controllers.management_system_controller', side_effect=pid_file)
+        starter = ContainerController.start_docker_stats_thread(example_emulation_execution,
+                                                                physical_server_ip='123.456.78.99',
+                                                                logger=logging.Logger("test"))
+
+    def test_stop_docker_stats_thread(self, mocker, example_emulation_execution,
+                                      true_stop_fixture, false_running_stats_manager,
+                                      true_running_stats_manager, 
+                                      false_stop_fixture, stop_fixture):
+        """
+        Testing the stop_docker_stats_thread
+
+        :param mocker: the pytest mocker object
+        :param example_emulation_execution: EmulationExecution object fetched from the config file
+        :param true_stop_fixture: pytest fixture
+        :param false_running_stats_manager: pytest fixture
+        :param true_running_stats_manager: pytest fixture
+        :param false_stop_fixture: pytest fixture
+        :param stop_fixture: pytest fixture
+        """
+        mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor',
+                     side_effect=stop_fixture)
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.is_statsmanager_running',
+                     side_effect=true_running_stats_manager)
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_statsmanager',
+                     side_effect=true_stop_fixture)
+        stopper = ContainerController.stop_docker_stats_thread(example_emulation_execution, "123.456.78.99",
+                                                               logging.getLogger("test"))
+        assert stopper is None
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_statsmanager',
+                     side_effect=false_stop_fixture)
+        stopper = ContainerController.stop_docker_stats_thread(example_emulation_execution, "123.456.78.99",
+                                                               logging.getLogger("test"))
+        assert stopper is None
+        mocker.patch('csle_common.controllers.management_system_controller.ManagementSystemController.is_statsmanager_running',
+                     side_effect=false_running_stats_manager)
+        stopper = ContainerController.stop_docker_stats_thread(example_emulation_execution, "123.456.78.99",
+                                                               logging.getLogger("test"))
+        assert stopper is None
+
+    def test_get_docker_stats_manager_status(self, mocker, host_ip, example_docker_stats_manager_config, dsm_status, stub):
+        mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', side_effet=host_ip)
+        mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status',
+                     side_effect=dsm_status)
+        mocker.patch('csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub', side_effect=stub)
+        dsm_dto = ContainerController.get_docker_stats_manager_status(example_docker_stats_manager_config)
+        test_dto = dsm_status
+        assert dsm_dto.num_monitors == 10
+        assert dsm_dto.emulations == ["JDoeEmulation"]
+        assert dsm_dto.emulation_executions == [10]

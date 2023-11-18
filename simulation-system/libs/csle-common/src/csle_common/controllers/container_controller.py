@@ -487,7 +487,7 @@ class ContainerController:
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
                 max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
             )
-            time.sleep(5)
+            # time.sleep(5)
         ip = physical_server_ip
         logger.info(
             f"connecting to: {ip}:"
@@ -526,7 +526,7 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.start_docker_statsmanager(
+            ManagementSystemController.stop_docker_statsmanager(
                 logger=logger,
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
@@ -570,6 +570,7 @@ class ContainerController:
         try:
             with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+
                 docker_stats_monitor_dto = \
                     csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
                         stub=stub)
