@@ -642,7 +642,7 @@ def example_container_network() -> ContainerNetwork:
 
     :return: an example ContainerNetwork object
     """
-    return ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
+    return ContainerNetwork(name=f'{constants.CSLE.CSLE_NETWORK_PREFIX}1', subnet_mask="Subnet1", bitmask="null",
                             subnet_prefix="null", interface="eth0")
 
 
@@ -664,9 +664,9 @@ def example_node_container_config(example_container_network: ContainerNetwork) -
     :param example_container_network: an example ContainerNetwork
     :return: an example NodeContainerConfig object
     """
-    return NodeContainerConfig(name="Container1",
+    return NodeContainerConfig(name="csle_",
                                ips_and_networks=[("123.456.78.99", example_container_network)],
-                               version="null", level="null",
+                               version="null", level="csle",
                                restart_policy="JDoePolicy", suffix="null",
                                os="null", execution_ip_first_octet=-1,
                                docker_gw_bridge_ip="123.456.78.99",
@@ -1263,7 +1263,7 @@ def example_emulation_env_config(
     :param example_beats_config: an example BeatsConfig
     :return: example EmulationEnvConfig object
     """
-    return EmulationEnvConfig(name="Johndoe", containers_config=example_containers_config,
+    return EmulationEnvConfig(name="JDoeEmulation", containers_config=example_containers_config,
                               users_config=example_users_config,
                               flags_config=example_flags_config,
                               vuln_config=example_vulnerabilities_config,

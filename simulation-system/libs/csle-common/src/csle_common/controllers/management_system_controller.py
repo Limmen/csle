@@ -503,6 +503,7 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         if pid == -1:
             return False
+        logging.getLogger().info(pid)
         cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
                constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
                constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER)
