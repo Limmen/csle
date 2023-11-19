@@ -650,7 +650,7 @@ class TestContainerControllerSuite:
         :sub_popen: fixture mocking the subprocess.Popen
 
         """
-        
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch('subprocess.Popen', side_effect=sub_popen)
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -670,6 +670,7 @@ class TestContainerControllerSuite:
         :param file_opener: fixture mocking the os.popen
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch('subprocess.Popen', side_effect=sub_popen)
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -689,6 +690,7 @@ class TestContainerControllerSuite:
         :param file_opener: fixture mocking the os.popen
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch('subprocess.Popen', side_effect=sub_popen)
         mocker.patch('csle_common.controllers.management_system_controller.' +
                      'ManagementSystemController.is_statsmanager_running',

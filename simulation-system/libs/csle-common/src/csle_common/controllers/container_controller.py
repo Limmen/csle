@@ -487,7 +487,7 @@ class ContainerController:
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
                 max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
             )
-            # time.sleep(5)
+            time.sleep(5)
         ip = physical_server_ip
         logger.info(
             f"connecting to: {ip}:"
