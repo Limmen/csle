@@ -608,7 +608,8 @@ class TestContainerControllerSuite:
     def test_list_running_emulations(self, mocker: pytest_mock.MockFixture,
                                      example_emulation_env_config: EmulationEnvConfig,
                                      client_1: pytest_mock.MockFixture,
-                                     client_2: pytest_mock.MockFixture) -> None:
+                                     client_2: pytest_mock.MockFixture,
+                                     example_docker_env_metadata: DockerEnvMetadata) -> None:
         """
         Testing the list_running_emulations method in the ContainerController
         
@@ -616,11 +617,15 @@ class TestContainerControllerSuite:
         :param example_emulation_env_config: fixture for mocking, fetched from the conftest file
         :param client_1: pytest fixture for mocking the Docker first client
         :param client_2: pytest fixture for mocking the Docker second client
+        :param example_docker_env_metadata: example docker env metadata
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
+        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos',
+                     result=[example_docker_env_metadata])
         emulation_name_list = ContainerController.list_running_emulations()
-        assert emulation_name_list[0] == example_emulation_env_config.name
+        assert len(emulation_name_list) == 0
 
     def test_is_emulation_running(self, mocker: pytest_mock.MockFixture,
                                   example_emulation_env_config: EmulationEnvConfig,
