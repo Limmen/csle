@@ -630,7 +630,8 @@ class TestContainerControllerSuite:
     def test_is_emulation_running(self, mocker: pytest_mock.MockFixture,
                                   example_emulation_env_config: EmulationEnvConfig,
                                   client_1: pytest_mock.MockFixture,
-                                  client_2: pytest_mock.MockFixture) -> None:
+                                  client_2: pytest_mock.MockFixture,
+                                  example_docker_env_metadata: DockerEnvMetadata) -> None:
         """
         Testing the is_emulation_running method in the ContainerController
 
@@ -641,11 +642,9 @@ class TestContainerControllerSuite:
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
-        test_bool_1 = ContainerController.is_emulation_running(example_emulation_env_config)
-        example_emulation_env_config.name = "null"
-        test_bool_2 = ContainerController.is_emulation_running(example_emulation_env_config)
-        assert test_bool_1 is True
-        assert test_bool_2 is False
+        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos',
+                     result=[example_docker_env_metadata])
+        assert not ContainerController.is_emulation_running(example_emulation_env_config)
 
     def test_list_all_stopped_containers(self, mocker: pytest_mock.MockFixture, client_1: pytest_mock.MockFixture,
                                          client_2: pytest_mock.MockFixture) -> None:
