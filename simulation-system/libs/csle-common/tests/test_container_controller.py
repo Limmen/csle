@@ -16,7 +16,6 @@ from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.docker.docker_env_metadata import DockerEnvMetadata
-from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 
 
 class TestContainerControllerSuite:
@@ -540,60 +539,51 @@ class TestContainerControllerSuite:
         assert ContainerController.start_container("JohnDoe") is False
 
     def test_list_all_running_containers(self, mocker: pytest_mock.MockFixture, client_1: pytest_mock.MockFixture,
-                                         client_2: pytest_mock.MockFixture) -> None:
+                                         client_2: pytest_mock.MockFixture,
+                                         example_docker_env_metadata: DockerEnvMetadata) -> None:
         """
         Testing the list_all_running_containers method in the ContainerController
 
         :param mocker: the pytest mocker object
-        :param client_1: pytest fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the docker client 1
+        :param client_2: pytest fixture for mocking the docker client 2
+        :param example_docker_env_metadata: example docker env metadata
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
-        example_envs = [
-            DockerEnvMetadata(
-                containers=[
-                    DockerContainerMetadata(
-                        name="testname", status="teststatus", short_id="testshortid", image_short_id="testshortId",
-                        image_tags=["testtag1"], id="testid", created="testcreated", ip="testip", network_id=0,
-                        gateway="testgw", mac="testmac", ip_prefix_len=10, dir="testdir", config_path="testconfig",
-                        container_handle=None, emulation="testem,", kafka_container="testcont", hostname="testhost",
-                        image_name="testimg", level="testlevel", name2="testname2", net="testnet"
-                    )
-                ], name="testenv", subnet_prefix="testprefix", subnet_mask="testmask", level="testlevel",
-                config=None, kafka_config=None
-            )
-        ]
-        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos', result=example_envs)
-        for parsed_env_tuple in ContainerController.list_all_running_containers():
-            assert parsed_env_tuple[0] == constants.CONTAINER_IMAGES.CSLE_PREFIX + \
-                   'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
-            assert parsed_env_tuple[1] == "JDoeImage"
-            assert parsed_env_tuple[2] == "123.456.78.99"
+        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos',
+                     result=[example_docker_env_metadata])
+        assert len(ContainerController.list_all_running_containers()) == 0
 
     def test_list_all_running_containers_in_emulation(self, mocker: pytest_mock.MockFixture,
                                                       example_emulation_env_config, client_1: pytest_mock.MockFixture,
-                                                      client_2: pytest_mock.MockFixture) -> None:
+                                                      client_2: pytest_mock.MockFixture,
+                                                      example_docker_env_metadata: DockerEnvMetadata) -> None:
         """
         Testing the list_all_running_containers_in_emulation in the ContainerController
 
         :param mocker: the pytest mocker object
         :param example_emulation_env_config: an example object being the emulation environmnt configuration
-        :param client_1: pytest fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
+        :param example_docker_env_metadata: example docker env metadata
         :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
+        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos',
+                     result=[example_docker_env_metadata])
         running_emulation_containers, stopped_emulation_containers = ContainerController. \
             list_all_running_containers_in_emulation(example_emulation_env_config)
-        assert stopped_emulation_containers == []
-        assert running_emulation_containers[0].to_dict() == example_emulation_env_config. \
+        assert len(running_emulation_containers) == 0
+        assert stopped_emulation_containers[0].to_dict() == example_emulation_env_config. \
             containers_config.containers[0].to_dict()
-        assert running_emulation_containers[1].to_dict() == example_emulation_env_config. \
+        assert stopped_emulation_containers[1].to_dict() == example_emulation_env_config. \
             kafka_config.container.to_dict()
-        assert running_emulation_containers[2].to_dict() == \
+        assert stopped_emulation_containers[2].to_dict() == \
                example_emulation_env_config.elk_config.container.to_dict()
-        assert running_emulation_containers[3].to_dict() == \
+        assert stopped_emulation_containers[3].to_dict() == \
                example_emulation_env_config.sdn_controller_config.container.to_dict()
 
     def test_list_all_active_networks_for_emulation(self, mocker: pytest_mock.MockFixture,
@@ -624,8 +614,8 @@ class TestContainerControllerSuite:
         
         :param mocker:the pytest mocker object
         :param example_emulation_env_config: fixture for mocking, fetched from the conftest file
-        :param client_1: fixture for mocking the ContainerController
-        :param client_2: fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -641,8 +631,8 @@ class TestContainerControllerSuite:
 
         :param mocker:the pytest mocker object
         :param example_emulation_env_config: fixture for mocking, fetched from the conftest file
-        :param client_1: fixture for mocking the ContainerController
-        :param client_2: fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -659,8 +649,8 @@ class TestContainerControllerSuite:
 
         :param mocker:the pytest mocker object
         :param example_emulation_env_config: fixture for mocking, fetched from the conftest file
-        :param client_1: fixture for mocking the ContainerController
-        :param client_2: fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -675,7 +665,8 @@ class TestContainerControllerSuite:
         Testing the get_network_references method in the ContainerController
 
         :param mocker:the pytest mocker object
-        :param client_1: fixture for mocking the ContainerController
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         test_networks = ContainerController.get_network_references()
@@ -689,12 +680,13 @@ class TestContainerControllerSuite:
         Testing the create_networks method in the ContainerController
 
         :param mocker: the pytest mocker object
-        :param client_1: fixture mock of a Docker client
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
         :param example_containers_config: example containers config
         :param example_config: example config DTO
         :param ipam_pool: fixture for the Docker ipam_pool
         :param ipam_config: fixture for the Docker ipam_config
-        :return:
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('csle_common.dao.emulation_config.config.Config.get_current_config', result=example_config)
@@ -711,8 +703,10 @@ class TestContainerControllerSuite:
 
         :param mocker: the pytest mocker object
         :param example_emulation_env_config: EmulationEnvironmentConfig fetched from the conftest file
-        :sub_popen: fixture mocking the subprocess.Popen
-
+        :param sub_popen: fixture mocking the subprocess.Popen
+        :param client_1: pytest fixture for mocking the Docker first client
+        :param client_2: pytest fixture for mocking the Docker second client
+        :return: None
         """
         mocker.patch('time.sleep', return_value=None)
         mocker.patch('subprocess.Popen', side_effect=sub_popen)
@@ -789,6 +783,7 @@ class TestContainerControllerSuite:
         :param true_running_stats_manager: pytest fixture
         :param false_stop_fixture: pytest fixture
         :param stop_fixture: pytest fixture
+        :return: None
         """
         mocker.patch('time.sleep', return_value=None)
         mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor',
@@ -826,6 +821,7 @@ class TestContainerControllerSuite:
         :param example_docker_stats_manager_config: the example_docker_stats_manager_config fixture
         :param dsm_status: the dsm_status fixture
         :param stub: the stub fixture
+        :return: None
         """
         mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', side_effect=host_ip)
         mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status',
@@ -846,6 +842,7 @@ class TestContainerControllerSuite:
         :param host_ip: the host_ip fixture
         :param dsm_status: the dsm_status fixture
         :param stub: the stub fixture
+        :return: None
         """
         mocker.patch('csle_common.util.general_util.GeneralUtil.get_host_ip', side_effet=host_ip)
         mocker.patch('csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status',
@@ -867,6 +864,7 @@ class TestContainerControllerSuite:
         :param ipam_pool: the ipam_pool fixture
         :param ipam_config: the ipam_confoig fixture
         :param example_config: the example_config fixture from conftest
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.types.IPAMPool', side_effect=ipam_pool)
@@ -884,6 +882,7 @@ class TestContainerControllerSuite:
         :param ipam_pool: the ipam_pool fixture
         :param ipam_config: the ipam_confoig fixture
         :param example_config: the example_config fixture from conftest
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.types.IPAMPool', side_effect=ipam_pool)
@@ -898,6 +897,7 @@ class TestContainerControllerSuite:
 
         :param mocker: the pytest mocker object
         :param client_1: the client_1 fixture
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         remover = ContainerController.remove_network(constants.CONTAINER_IMAGES.CSLE_PREFIX +
@@ -911,6 +911,7 @@ class TestContainerControllerSuite:
 
         :param mocker: the pytests mocker object
         :param client_1: the client_1 fixture
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         remover = ContainerController.remove_networks([constants.CONTAINER_IMAGES.CSLE_PREFIX +
@@ -925,6 +926,7 @@ class TestContainerControllerSuite:
         Testing the rm_all_networks method in the ContainerController
         :param mocker_ the pytest mocker object
         :param client_1: the client_1 fixture
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         remover = ContainerController.rm_all_networks(logging.getLogger())
@@ -936,6 +938,7 @@ class TestContainerControllerSuite:
 
         :param mocker: the pytest mocker object
         :param client_1: the client_1 fixture
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         remover = ContainerController.rm_network(constants.CSLE.NAME, logging.getLogger())
@@ -950,6 +953,7 @@ class TestContainerControllerSuite:
         :param mocker: the pytest mocker object
         :param client_1: the client_1 fixture
         :param client_2: the client_2 fixture
+        :return: None
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
@@ -964,6 +968,7 @@ class TestContainerControllerSuite:
         :param mocker: the pytest mocker object
         :param host_ip: the host_ip fixture
         :param example_emulation_env_config: the example_emulation_env_config fixture from the conftest
+        :return: None
         """
         mocker.patch('socket.socket', side_effect=socket_fix)
         ip = ContainerController.get_docker_stats_managers_ips(example_emulation_env_config)
@@ -975,6 +980,7 @@ class TestContainerControllerSuite:
 
         :param mocker: the pytest mocker object
         :pram example_emulation_config: the example_emulation_config fixture fetched from the conftest file
+        :return: None
         """
         test_list = ContainerController.get_docker_stats_managers_ports(example_emulation_env_config)
         assert test_list[0] == 50046
@@ -992,6 +998,7 @@ class TestContainerControllerSuite:
         :param host_ip: the host_ip fixture
         :param dsm_status: the dsm_status fixture
         :param stub: the stub fixture
+        :return: None
         """
         mocker.patch('time.sleep', return_value=None)
         mocker.patch('socket.socket', side_effect=socket_fix)
