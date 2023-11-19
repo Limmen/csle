@@ -526,13 +526,7 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.stop_docker_statsmanager(
-                logger=logger,
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
-                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
-                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
-                max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
-            )
+            ManagementSystemController.stop_docker_statsmanager(logger=logger)
             time.sleep(5)
         ip = physical_server_ip
         with grpc.insecure_channel(
@@ -694,9 +688,14 @@ class ContainerController:
         """
         client_1 = docker.from_env()
         networks = client_1.networks.list()
-        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        networks_names = []
         for net in networks:
-            if net == name:
+            if constants.CSLE.NAME in net.name:
+                net.name = constants.CSLE.NAME
+                networks_names.append(net)
+        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        for net in networks_names:
+            if net.name == name:
                 ContainerController.remove_network(name=net.name, logger=logger)
                 return True
         return False
