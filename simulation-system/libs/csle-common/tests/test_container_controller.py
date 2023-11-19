@@ -1,8 +1,11 @@
-from typing import Tuple, Any
+from typing import Tuple, Any, Dict
+import io
+import docker
+import logging
+import pytest
 import pytest_mock
 from csle_common.controllers.container_controller import ContainerController
 import csle_common.constants.constants as constants
-import io
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
@@ -11,10 +14,9 @@ from csle_common.dao.emulation_config.docker_stats_manager_config import DockerS
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.config import Config
-import pytest
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
-import docker
-import logging
+from csle_common.dao.docker.docker_env_metadata import DockerEnvMetadata
+from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 
 
 class TestContainerControllerSuite:
@@ -157,14 +159,21 @@ class TestContainerControllerSuite:
             def __init__(self, base_url) -> None:
                 self.base_url = base_url
 
-            def inspect_container(self, param: int):
-                dict = {constants.DOCKER.NETWORK_SETTINGS: {constants.DOCKER.NETWORKS: {
-                    'net_key': {constants.DOCKER.IP_ADDRESS_INFO: "123.456.78.99", constants.DOCKER.NETWORK_ID_INFO: 1,
+            def inspect_container(self, param: int) -> Dict[str, Any]:
+                dict = {
+                    constants.DOCKER.NETWORK_SETTINGS: {
+                        constants.DOCKER.NETWORKS: {
+                            'net_key': {
+                                constants.DOCKER.IP_ADDRESS_INFO: "123.456.78.99", constants.DOCKER.NETWORK_ID_INFO: 1,
                                 constants.DOCKER.GATEWAY_INFO: "null", constants.DOCKER.MAC_ADDRESS_INFO: "null",
-                                constants.DOCKER.IP_PREFIX_LEN_INFO: 1}}},
-                        constants.DOCKER.CREATED_INFO: "created_info",
-                        constants.DOCKER.CONFIG: {constants.DOCKER.HOSTNAME_INFO: "JDoeHost",
-                                                  constants.DOCKER.IMAGE: "JDoeImage"}}
+                                constants.DOCKER.IP_PREFIX_LEN_INFO: 1}
+                        }
+                    },
+                    constants.DOCKER.CREATED_INFO: "created_info",
+                    constants.DOCKER.CONFIG: {
+                        constants.DOCKER.HOSTNAME_INFO: "JDoeHost",
+                        constants.DOCKER.IMAGE: "JDoeImage"}
+                }
                 return dict
 
         api_mocker = mocker.MagicMock(side_effect=APIClient)
@@ -541,6 +550,21 @@ class TestContainerControllerSuite:
         """
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.APIClient', side_effect=client_2)
+        example_envs = [
+            DockerEnvMetadata(
+                containers=[
+                    DockerContainerMetadata(
+                        name="testname", status="teststatus", short_id="testshortid", image_short_id="testshortId",
+                        image_tags=["testtag1"], id="testid", created="testcreated", ip="testip", network_id=0,
+                        gateway="testgw", mac="testmac", ip_prefix_len=10, dir="testdir", config_path="testconfig",
+                        container_handle=None, emulation="testem,", kafka_container="testcont", hostname="testhost",
+                        image_name="testimg", level="testlevel", name2="testname2", net="testnet"
+                    )
+                ], name="testenv", subnet_prefix="testprefix", subnet_mask="testmask", level="testlevel",
+                config=None, kafka_config=None
+            )
+        ]
+        mocker.patch('csle_common.util.docker_util.DockerUtil.parse_runnning_emulation_infos', result=example_envs)
         for parsed_env_tuple in ContainerController.list_all_running_containers():
             assert parsed_env_tuple[0] == constants.CONTAINER_IMAGES.CSLE_PREFIX + \
                    'null' + '-' + 'level' + constants.CSLE.NAME + '--1'
