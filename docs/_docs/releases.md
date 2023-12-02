@@ -28,7 +28,7 @@ To generate a new release of CSLE, the following steps must be performed:
      ./simulation-system/libs/make_release.py
     ```
    <p class="captionFig">
-   Listing 134: File to generate Python releases.
+   Listing 136: File to generate Python releases.
    </p>
 
 5. Run the command below to build all the Python libraries and push the built artifacts to PyPi:
@@ -36,7 +36,7 @@ To generate a new release of CSLE, the following steps must be performed:
      python ./simulation-system/libs/make_release.py
     ```
    <p class="captionFig">
-   Listing 135: Command to generate a new Python release.
+   Listing 137: Command to generate a new Python release.
    </p>
 
 **Documentation releases.** After making a new Python release, 
@@ -47,7 +47,7 @@ simulation-system/libs/generate_docs.sh
 ```
 
 <p class="captionFig">
-Listing 136: Command to generate release documentation.
+Listing 138: Command to generate release documentation.
 </p>
 
 **Docker releases.** To make a new Docker release, do the following:
@@ -57,35 +57,35 @@ Listing 136: Command to generate release documentation.
     ./emulation-system/base_images/Makefile
     ```
    <p class="captionFig">
-   Listing 137: Makefile for base Docker images in CSLE.
+   Listing 139: Makefile for base Docker images in CSLE.
    </p>
 2. Edit the `VERSION` variable in the file:
      ```bash 
       ./emulation-system/derived_images/Makefile
      ```
    <p class="captionFig">
-   Listing 138: Makefile for derived Docker images in CSLE.
+   Listing 140: Makefile for derived Docker images in CSLE.
    </p>
 3. Edit the versions of the derived images in the Dockerfiles inside the following directory:
     ```bash
      ./emulation-system/derived_images/
     ```
    <p class="captionFig">
-   Listing 139: Directory with derived Docker images in CSLE.
+   Listing 141: Directory with derived Docker images in CSLE.
    </p>
 4. Edit the versions of the base images in the Dockerfiles inside the following directory:
     ```bash
      ./emulation-system/base_images/
     ```
    <p class="captionFig">
-   Listing 140: Directory with base Docker images in CSLE.
+   Listing 142: Directory with base Docker images in CSLE.
    </p>   
 5. Edit the version parameters in all emulation configurations in the following directory:
    ```bash
    ./emulation-system/envs
    ```
    <p class="captionFig">
-   Listing 141: Directory with emulation configurations.
+   Listing 143: Directory with emulation configurations.
    </p>
 6. Make a new release of `https://github.com/Limmen/exploit-CVE-2017-7494`:
     - Clone the repo by runnign the command: `git clone https://github.com/Limmen/exploit-CVE-2017-7494`
@@ -97,21 +97,21 @@ Listing 136: Command to generate release documentation.
       cd emulation-system/; make build
     ```
    <p class="captionFig">
-   Listing 142: Command to build the Docker images in CSLE.
+   Listing 144: Command to build the Docker images in CSLE.
    </p>
 7. Push the images to DockerHub by running the command:
     ```bash
      cd emulation-system/; make push
     ```
    <p class="captionFig">
-   Listing 143: Command to push Docker images to DockerHub.
+   Listing 145: Command to push Docker images to DockerHub.
    </p>
 8. Insert the new emulation configuration into the metastore by running the command:
     ```bash
      cd emulation-system/; make emulations
     ```
    <p class="captionFig">
-   Listing 144: Command to insert emulation configurations into the metastore.
+   Listing 146: Command to insert emulation configurations into the metastore.
    </p>
 
 **GitHub releases.** To make a release in GitHub, 
