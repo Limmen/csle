@@ -12,4 +12,4 @@ class TestAptGameUtilSuite(object):
 
         :return: None
         """
-        assert sum(AptGameUtil.b1()) == 1
+        assert sum(AptGameUtil.b1(N=5)) == 1

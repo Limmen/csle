@@ -198,8 +198,21 @@ def default_reward_function_config(N: int) -> RewardFunctionConfig:
     :param: N: the number of servers
     :return: the default reward function configuration
     """
+    cost_tensor = AptGameUtil.cost_tensor(N=N)
+    expanded_cost_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for a1 in AptGameUtil.defender_actions():
+            a1_tensor = []
+            for _ in AptGameUtil.attacker_actions():
+                a2_tensor = []
+                for s in AptGameUtil.state_space(N=N):
+                    a2_tensor.append(cost_tensor[a1][s])
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_cost_tensor.append(l_tensor)
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(AptGameUtil.cost_tensor(N=N))
+        reward_tensor=list(expanded_cost_tensor)
     )
     return reward_function_config
 
@@ -211,9 +224,23 @@ def default_transition_operator_config(N: int, p_a: float) -> TransitionOperator
     :param p_a: the intrusion success probability
     :return: the default transition tensor configuration
     """
-    transition_operator_config = TransitionOperatorConfig(
-        transition_tensor=list(AptGameUtil.transition_tensor(N=N, p_a=p_a))
-    )
+    transition_tensor = AptGameUtil.transition_tensor(N=N, p_a=p_a)
+    expanded_transition_tensor = []
+    for _ in [1]:
+        l_tensor = []
+        for a1 in AptGameUtil.defender_actions():
+            a1_tensor = []
+            for a2 in AptGameUtil.attacker_actions():
+                a2_tensor = []
+                for s in AptGameUtil.state_space(N=N):
+                    s_tensor = []
+                    for s_prime in AptGameUtil.state_space(N=N):
+                        s_tensor.append(transition_tensor[a1][a2][s][s_prime])
+                    a2_tensor.append(s_tensor)
+                a1_tensor.append(a2_tensor)
+            l_tensor.append(a1_tensor)
+        expanded_transition_tensor.append(l_tensor)
+    transition_operator_config = TransitionOperatorConfig(transition_tensor=list(expanded_transition_tensor))
     return transition_operator_config
 
 

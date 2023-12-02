@@ -19,7 +19,7 @@ class AptGameUtil:
         :param N: the number of servers
         :return: the initial belief
         """
-        b1 = [0]*(N+1)
+        b1 = [0] * (N + 1)
         b1[0] = 1
         return np.array(b1)
 
@@ -154,7 +154,7 @@ class AptGameUtil:
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
         Z = []
         Z.append(no_intrusion_dist)
-        for s in range(1, N+1):
+        for s in range(1, N + 1):
             Z.append(intrusion_dist)
         return np.array(Z)
 

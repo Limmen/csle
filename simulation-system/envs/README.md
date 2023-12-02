@@ -11,6 +11,9 @@ This folder contains simulation environments.
 - *Local intrusion response POMDP from the defender's perspective* [env](local_intrusion_response_pomdp_defender): A local intrusion response POMDP from the defender's perspective
 - *Workflow intrusion response POMDP from the defender's perspective* [env](workflow_intrusion_response_pomdp_defender): A workflow intrusion response POMDP from the defender's perspective
 - *Workflow intrusion response POMDP from the attacker's perspective* [env](workflow_intrusion_response_pomdp_attacker): A workflow intrusion response POMDP from the attacker's perspective
+- *APT game* [env](apt_game): A two-player zero-sum one-sided partially observed stochastic APT game
+- *APT MDP from the attacker's perspective* [env](apt_mdp_attacker): A fully observed optimal stopping problem from the attacker's perspective
+- *APT POMDP from the defender's perspective* [env](apt_pomdp_defender): A partially observed optimal stopping problem from the defender's perspective
 
 ## Useful commands:
 
