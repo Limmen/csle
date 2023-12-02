@@ -1,0 +1,35 @@
+name: python-gym-csle-apt-game-build
+run-name: ${{ github.actor }} python-gym-csle-apt-game-build
+on:
+  push:
+    branches:
+      - "master"
+#  pull_request:
+#    branches:
+#      - "master"
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.9']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install python build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox tox-gh-actions
+      - name: Tox tests gym-csle-apt-game
+        run: cd simulation-system/libs/gym-csle-apt-game; tox
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          files: simulation-system/libs/gym-csle-apt-game/coverage.yml

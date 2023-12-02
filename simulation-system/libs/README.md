@@ -72,6 +72,11 @@ This folder contains python projects that implement the functionality of the sim
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-tolerance)
   - An intrusion-tolerant system: Tolerance: (T)w(o)-(l)ev(e)l (r)ecovery (a)nd respo(n)se (c)ontrol with f(e)edback.
 
+- **gym-csle-apt-game** ([gym-csle-apt-game](./gym-csle-apt-game)):
+  - [![PyPI version](https://badge.fury.io/py/gym-csle-apt-game.svg)](https://badge.fury.io/py/gym-csle-apt-game)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-apt-game)
+  - A gym environment for an APT Dynking game
+
 ## Commands
 To generate API docs, execute:
 ```bash

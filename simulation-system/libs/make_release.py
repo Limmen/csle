@@ -44,6 +44,9 @@ RELEASE_CONFIG = {
     },
     "csle-tolerance": {
         "new_version": "'0.4.5'"
+    },
+    "gym-csle-apt-game": {
+        "new_version": "'0.4.5'"
     }
 }
 

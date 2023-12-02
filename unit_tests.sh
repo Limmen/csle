@@ -24,5 +24,7 @@ echo "Running Python unit tests for gym-csle-intrusion-response-game"
 cd simulation-system/libs/gym-csle-intrusion-response-game; pytest; cd ../../../
 echo "Running Python unit tests for csle-tolerance"
 cd simulation-system/libs/csle-tolerance; pytest; cd ../../../
+echo "Running Python unit tests for gym-csle-apt-game"
+cd simulation-system/libs/gym-csle-apt-game; pytest; cd ../../../
 echo "Running JavaScript unit tests for csle-mgmt-webapp"
 cd management-system/csle-mgmt-webapp; npm test -- --watchAll=false; cd ../../

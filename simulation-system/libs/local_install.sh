@@ -10,6 +10,7 @@ cd csle-defender; pip install -e .; cd ..
 cd gym-csle-intrusion-response-game; pip install -e .; cd ..
 cd csle-system-identification; pip install -e .; cd ..
 cd gym-csle-stopping-game; pip install -e .; cd ..
+cd gym-csle-apt-game; pip install -e .; cd ..
 cd csle-tolerance; pip install -e .; cd ..
 cd csle-agents; pip install -e .; cd ..
 cd csle-rest-api; pip install -e .; cd ..
