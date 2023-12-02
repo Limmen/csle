@@ -67,17 +67,17 @@ class AptGameEnv(BaseEnv):
         # Compute r, s', b',o'
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
         self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                          T=self.config.T,
-                                                          S=self.config.S, s=self.state.s)
+                                                     T=self.config.T,
+                                                     S=self.config.S, s=self.state.s)
         o = max(self.config.O)
         if self.state.s == 2:
             done = True
         else:
             o = AptGameUtil.sample_next_observation(Z=self.config.Z,
-                                                         O=self.config.O, s_prime=self.state.s)
+                                                    O=self.config.O, s_prime=self.state.s)
             self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                        config=self.config,
-                                                        l=self.state.l, a2=a2)
+                                                   config=self.config,
+                                                   l=self.state.l, a2=a2)
 
         # Update stops remaining
         self.state.l = self.state.l - a1
@@ -135,17 +135,17 @@ class AptGameEnv(BaseEnv):
         # Compute r, s', b',o'
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
         self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                          T=self.config.T,
-                                                          S=self.config.S, s=self.state.s)
+                                                     T=self.config.T,
+                                                     S=self.config.S, s=self.state.s)
         o = max(self.config.O)
         if self.state.s == 2:
             done = True
         else:
             o = AptGameUtil.sample_next_observation(Z=sample_Z,
-                                                         O=self.config.O, s_prime=self.state.s)
+                                                    O=self.config.O, s_prime=self.state.s)
             self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                        config=self.config,
-                                                        l=self.state.l, a2=a2)
+                                                   config=self.config,
+                                                   l=self.state.l, a2=a2)
         # Update stops remaining
         self.state.l = self.state.l - a1
 
@@ -204,8 +204,8 @@ class AptGameEnv(BaseEnv):
             # Compute r, s', b',o'
             r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
             self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                              T=self.config.T,
-                                                              S=self.config.S, s=self.state.s)
+                                                         T=self.config.T,
+                                                         S=self.config.S, s=self.state.s)
             o = max(self.config.O)
             if self.state.s == 2:
                 done = True
@@ -214,8 +214,8 @@ class AptGameEnv(BaseEnv):
                 if o >= len(self.config.O):
                     o = len(self.config.O) - 1
                 self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                            config=self.config,
-                                                            l=self.state.l, a2=a2)
+                                                       config=self.config,
+                                                       l=self.state.l, a2=a2)
 
             # Update stops remaining
             self.state.l = self.state.l - a1

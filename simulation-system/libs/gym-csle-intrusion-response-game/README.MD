@@ -83,7 +83,7 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../gym_csle_intrusion_response_game/
+sphinx-apidoc -f -o source/ ../src/gym_csle_intrusion_response_game/
 make html
 ```
 To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),

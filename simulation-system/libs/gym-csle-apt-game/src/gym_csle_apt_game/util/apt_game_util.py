@@ -438,7 +438,7 @@ class AptGameUtil:
         b_prime = np.zeros(len(config.S))
         for s_prime in config.S:
             b_prime[s_prime] = AptGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
-                                                             pi2=pi2, config=config, l=l)
+                                                        pi2=pi2, config=config, l=l)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "
                   f"a2: {a2}, s:{s}")

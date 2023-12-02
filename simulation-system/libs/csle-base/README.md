@@ -77,7 +77,7 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_base/
+sphinx-apidoc -f -o source/ ../src/csle_base/
 make html
 ```
 To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), 

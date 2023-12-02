@@ -17,6 +17,7 @@ and game-theoretic algorithms for finding defender policies.
 - `csle-defender`
 - `csle-system-identification`
 - `gym-csle-stopping-game`
+- `gym-csle-apt-game`
 - `gym-csle-intrusion-response-game`
 - `csle-tolerance`
 - `pulp` (for linear and convex optimization)
@@ -93,7 +94,7 @@ echo $CSLE_HOME
 Then generate the documentation with the commands:
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_agents/
+sphinx-apidoc -f -o source/ ../src/csle_agents/
 make html
 ```
 To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:

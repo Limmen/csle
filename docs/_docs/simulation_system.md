@@ -26,43 +26,48 @@ configuration, a simulation is defined by a *simulation configuration*, which in
 Table 18. Each simulation environment is implemented in Python and the configuration files are stored in the metastore.
 Simulations are typically based either on Markov decision processes or game-theoretic models.
 
-| Name                                        | Description                                                           |
-|---------------------------------------------|-----------------------------------------------------------------------|
-| Optimal stopping game                       | Zero-sum one-sided partially observed stochastic game.                |
-| Optimal stopping MDP                        | MDP based on an optimal stopping formulation.                         |
-| Optimal stopping POMDP                      | POMDP based on an optimal stopping formulation.                       |
-| Local intrusion response game               | Zero-sum partially observed stochastic game with public observations. |
-| Local intrusion response POMDP attacker     | POMDP for the attacker in the local intrusion response game.          |
-| Local intrusion response POMDP defender     | POMDP for the defender in the local intrusion response game.          |
-| Workflow intrusion response game            | Zero-sum partially observed stochastic game with public observations. |
-| Workflow intrusion response POMDP attacker  | POMDP for the attacker in the workflow intrusion response game.       |
-| Workflow intrusion response POMDP defender  | POMDP for the defender in the workflow intrusion response game.       |
+| Name                                       | Description                                                           |
+|--------------------------------------------|-----------------------------------------------------------------------|
+| Optimal stopping game                      | Zero-sum one-sided partially observed stochastic game.                |
+| Optimal stopping MDP                       | MDP based on an optimal stopping formulation.                         |
+| Optimal stopping POMDP                     | POMDP based on an optimal stopping formulation.                       |
+| Local intrusion response game              | Zero-sum partially observed stochastic game with public observations. |
+| Local intrusion response POMDP attacker    | POMDP for the attacker in the local intrusion response game.          |
+| Local intrusion response POMDP defender    | POMDP for the defender in the local intrusion response game.          |
+| Workflow intrusion response game           | Zero-sum partially observed stochastic game with public observations. |
+| Workflow intrusion response POMDP attacker | POMDP for the attacker in the workflow intrusion response game.       |
+| Workflow intrusion response POMDP defender | POMDP for the defender in the workflow intrusion response game.       |
+| APT stopping game                          | Zero-sum one-sided partially observed stochastic APT game.            |
+| APT stopping MDP                           | MDP based on an optimal stopping formulation of APT.                  |
+| APT stopping POMDP                         | POMDP based on an optimal stopping formulation of APT.                |
+| Intrusion recovery POMDP                   | POMDP formulation of intrusion recovery                               |
+| Intrusion response CMDP                    | CMDP formulation of intrusion response and replication factor control |
 
 <p class="captionFig">
 Table 17: Simulation environments.
 </p>
 
-| *Configuration property*                      | *Description*                                                            |
-|-----------------------------------------------|--------------------------------------------------------------------------|
+| *Configuration property*               | *Description*                                                            |
+|----------------------------------------|--------------------------------------------------------------------------|
 | `name`                                 | Name of the simulation environment.                                      |
-| `gym_env_name`                       | Name of the OpenAI gym environment.                                      |
+| `gym_env_name`                         | Name of the OpenAI gym environment.                                      |
 | `descr`                                | Description of the simulation environment.                               |
-| `simulation_env_input_config`       | Input configuration to the simulation.                                   |
-| `players_config`                      | Players configuration of the simulation.                                 |
-| `state_space_config`                 | State space configuration of the simulation.                             |
-| `joint_action_space_config`         | Joint action space configuration of the simulation.                      |
-| `joint_observation_space_config`    | Joint observation space config of the simulation.                        |
-| `time_step_type`                     | Time-step type of the simulation                                         |
-| `reward_function_config`             | Reward function configuration of the of the simulation.                  |
-| `transition_operator_config`         | Transition operator configuration of the simulation.                     |
-| `observation_function_config`        | Observation function configuration of the simulation.                    |
-| `emulation_statistic_id`             | Id of the emulation statistic.                                           |
-| `initial_state_distribution_config` | Initial state distribution configuration of the simulation.              |
+| `simulation_env_input_config`          | Input configuration to the simulation.                                   |
+| `players_config`                       | Players configuration of the simulation.                                 |
+| `state_space_config`                   | State space configuration of the simulation.                             |
+| `joint_action_space_config`            | Joint action space configuration of the simulation.                      |
+| `joint_observation_space_config`       | Joint observation space config of the simulation.                        |
+| `time_step_type`                       | Time-step type of the simulation                                         |
+| `reward_function_config`               | Reward function configuration of the of the simulation.                  |
+| `transition_operator_config`           | Transition operator configuration of the simulation.                     |
+| `observation_function_config`          | Observation function configuration of the simulation.                    |
+| `emulation_statistic_id`               | Id of the emulation statistic.                                           |
+| `initial_state_distribution_config`    | Initial state distribution configuration of the simulation.              |
 | `version`                              | Version of the simulation environment.                                   |
-| `env_parameters_config`              | Parameters that are not part of the state but that the poliy depends on. |
-| `plot_transition_probabilities`      | Boolean parameter whether to plot transition probabilities or not.       |
-| `plot_observation_function`          | Boolean parameter whether to plot the observation function or not.       |
-| `plot_reward_function`               | Boolean parameter whether to plot the reward function or not.            |
+| `env_parameters_config`                | Parameters that are not part of the state but that the poliy depends on. |
+| `plot_transition_probabilities`        | Boolean parameter whether to plot transition probabilities or not.       |
+| `plot_observation_function`            | Boolean parameter whether to plot the observation function or not.       |
+| `plot_reward_function`                 | Boolean parameter whether to plot the reward function or not.            |
 
 <p class="captionFig">
 Table 18: Properties of a simulation environment configuration.

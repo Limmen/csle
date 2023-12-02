@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_apt_game.envs.apt_game_pomdp_defender_env &mdash; gym_csle_apt_game 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> gym_csle_apt_game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym_csle_apt_game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_apt_game.envs.apt_game_pomdp_defender_env</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_apt_game.envs.apt_game_pomdp_defender_env</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.dao.apt_game_defender_pomdp_config</span> <span class="kn">import</span> <span class="n">AptGameDefenderPomdpConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_simulation_trace</span> <span class="kn">import</span> <span class="n">EmulationSimulationTrace</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_trace</span> <span class="kn">import</span> <span class="n">EmulationTrace</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.envs.apt_game_env</span> <span class="kn">import</span> <span class="n">AptGameEnv</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.util.apt_game_util</span> <span class="kn">import</span> <span class="n">AptGameUtil</span>
+
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv">[docs]</a><span class="k">class</span> <span class="nc">AptGamePomdpDefenderEnv</span><span class="p">(</span><span class="n">BaseEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    OpenAI Gym Env for the MDP of the defender when facing a static attacker</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameDefenderPomdpConfig</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the environment</span>
+
+<span class="sd">        :param config: the environment configuration</span>
+<span class="sd">        :param attacker_strategy: the strategy of the static attacker</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span> <span class="o">=</span> <span class="n">AptGameEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stopping_game_config</span><span class="p">)</span>
+
+        <span class="c1"># Setup spaces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stopping_game_config</span><span class="o">.</span><span class="n">defender_observation_space</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stopping_game_config</span><span class="o">.</span><span class="n">defender_action_space</span><span class="p">()</span>
+
+        <span class="c1"># Setup static attacker strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">attacker_strategy</span>
+
+        <span class="c1"># Setup Config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;render.modes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;video.frames_per_second&#39;</span><span class="p">:</span> <span class="mi">50</span>  <span class="c1"># Video rendering speed</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Reset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.step"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a step in the environment by executing the given action</span>
+
+<span class="sd">        :param a1: defender action</span>
+<span class="sd">        :return: (obs, reward, terminated, truncated, info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get attacker action from static strategy</span>
+        <span class="n">pi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">))</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Step the game</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">step</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">a2</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.step_test"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step_test">[docs]</a>    <span class="k">def</span> <span class="nf">step_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sample_Z</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a step in the environment by executing the given action</span>
+
+<span class="sd">        :param a1: defender action</span>
+<span class="sd">        :return: (obs, reward, done, info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get attacker action from static strategy</span>
+        <span class="n">pi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">))</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_idx</span><span class="p">)</span>
+
+        <span class="c1"># Step the game</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">step_test</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">a2</span><span class="p">)),</span> <span class="n">sample_Z</span><span class="o">=</span><span class="n">sample_Z</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.reset"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">soft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the environment state, this should be called whenever step() returns &lt;done&gt;</span>
+
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param soft: boolean flag indicating whether it is a soft reset or not</span>
+<span class="sd">        :param options: optional configuration parameters</span>
+<span class="sd">        :return: initial observation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="nb">dict</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.render"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</span>
+
+<span class="sd">        :param mode: the rendering mode</span>
+<span class="sd">        :return: True (if human mode) otherwise an rgb array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Rendering is not implemented for this environment&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.step_trace"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step_trace">[docs]</a>    <span class="k">def</span> <span class="nf">step_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">EmulationTrace</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility method for stopping a pre-recorded trace</span>
+
+<span class="sd">        :param trace: the trace to step</span>
+<span class="sd">        :param a1: the action to step with</span>
+<span class="sd">        :return: the result of the step according to the trace</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="o">.</span><span class="n">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span><span class="p">))</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">step_trace</span><span class="p">(</span><span class="n">trace</span><span class="o">=</span><span class="n">trace</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.is_defense_action_legal"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.is_defense_action_legal">[docs]</a>    <span class="k">def</span> <span class="nf">is_defense_action_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether a defender action in the environment is legal or not</span>
+
+<span class="sd">        :param defense_action_id: the id of the action</span>
+<span class="sd">        :return: True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.is_attack_action_legal"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.is_attack_action_legal">[docs]</a>    <span class="k">def</span> <span class="nf">is_attack_action_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attack_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether an attacker action in the environment is legal or not</span>
+
+<span class="sd">        :param attack_action_id: the id of the attacker action</span>
+<span class="sd">        :return: True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.get_traces"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.get_traces">[docs]</a>    <span class="k">def</span> <span class="nf">get_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the list of simulation traces</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.reset_traces"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.reset_traces">[docs]</a>    <span class="k">def</span> <span class="nf">reset_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the list of traces</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">reset_traces</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.set_model"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.set_model">[docs]</a>    <span class="k">def</span> <span class="nf">set_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract</span>
+
+<span class="sd">        :param model: the model</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="AptGamePomdpDefenderEnv.manual_play"><a class="viewcode-back" href="../../../gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.manual_play">[docs]</a>    <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An interactive loop to test the environment manually</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="p">)</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="n">raw_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;help&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter an action id to execute the action, &quot;</span>
+                      <span class="s2">&quot;press R to reset,&quot;</span>
+                      <span class="s2">&quot;press S to print the state, press A to print the actions, &quot;</span>
+                      <span class="s2">&quot;press D to check if done&quot;</span>
+                      <span class="s2">&quot;press H to print the history of actions&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Action space: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resetting the state&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">action_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a1</span><span class="o">=</span><span class="n">action_idx</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

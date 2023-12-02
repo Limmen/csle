@@ -7,5 +7,7 @@ csle-attacker==0.4.5
 csle-defender==0.4.5
 csle-system-identification==0.4.5
 gym-csle-stopping-game==0.4.5
+gym-csle-apt-game==0.4.5
+csle-tolerance==0.4.5
 gym-csle-intrusion-response-game==0.4.5
 csle-agents==0.4.5

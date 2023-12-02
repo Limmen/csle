@@ -21,6 +21,8 @@ The Python unit tests are available at:
 - `csle/simulation-system/libs/gym-csle-stopping-game/tests`
 - `csle/simulation-system/libs/csle-cluster/tests`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/tests`
+- `csle/simulation-system/libs/gym-csle-apt-game/tests`
+- `csle/simulation-system/libs/csle-tolerance/tests`
 
 To run the Python unit tests, execute the command:
 

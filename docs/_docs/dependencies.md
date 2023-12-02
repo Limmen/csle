@@ -45,6 +45,9 @@ The Python dependencies are defined in the following files:
 - `csle/simulation-system/libs/gym-csle-stopping-game/requirements.txt`
 - `csle/simulation-system/libs/gym-csle-stopping-game/requirements_dev.txt`
 - `csle/simulation-system/libs/gym-csle-stopping-game/setup.cfg`
+- `csle/simulation-system/libs/gym-csle-apt-game/requirements.txt`
+- `csle/simulation-system/libs/gym-csle-apt-game/requirements_dev.txt`
+- `csle/simulation-system/libs/gym-csle-apt-game/setup.cfg`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements.txt`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements_dev.txt`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/setup.cfg`
