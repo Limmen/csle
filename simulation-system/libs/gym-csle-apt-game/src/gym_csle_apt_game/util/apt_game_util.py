@@ -6,7 +6,7 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
 
 
 class AptGameUtil:
@@ -364,7 +364,7 @@ class AptGameUtil:
 
     @staticmethod
     def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any], l: int,
-                     config: StoppingGameConfig) -> float:
+                     config: AptGameConfig) -> float:
         """
         A Bayesian filter to compute the belief of player 1
         of being in s_prime when observing o after taking action a in belief b given that the opponent follows
@@ -401,7 +401,7 @@ class AptGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: StoppingGameConfig) -> float:
+    def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: AptGameConfig) -> float:
         """
         Computes P[o|a,b]
 
@@ -421,7 +421,7 @@ class AptGameUtil:
 
     @staticmethod
     def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
-                    config: StoppingGameConfig, l: int, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
+                    config: AptGameConfig, l: int, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -437,7 +437,7 @@ class AptGameUtil:
         """
         b_prime = np.zeros(len(config.S))
         for s_prime in config.S:
-            b_prime[s_prime] = StoppingGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
+            b_prime[s_prime] = AptGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
                                                              pi2=pi2, config=config, l=l)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "

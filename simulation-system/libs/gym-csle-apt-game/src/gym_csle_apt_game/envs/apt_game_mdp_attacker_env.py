@@ -8,7 +8,7 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 from gym_csle_apt_game.dao.apt_game_attacker_mdp_config import AptGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
-import gym_csle_stopping_game.constants.constants as env_constants
+import gym_csle_apt_game.constants.constants as env_constants
 from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
 
 
@@ -24,11 +24,11 @@ class AptGameMdpAttackerEnv(BaseEnv):
         :param config: the configuration of the environment
         """
         self.config = config
-        self.stopping_game_env: AptGameEnv = AptGameEnv(config=self.config.stopping_game_config)
+        self.apt_game_env: AptGameEnv = AptGameEnv(config=self.config.apt_game_config)
 
         # Setup spaces
-        self.observation_space = self.config.stopping_game_config.attacker_observation_space()
-        self.action_space = self.config.stopping_game_config.attacker_action_space()
+        self.observation_space = self.config.apt_game_config.attacker_observation_space()
+        self.action_space = self.config.apt_game_config.attacker_action_space()
 
         # Setup static defender
         self.static_defender_strategy = self.config.defender_strategy
@@ -66,7 +66,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
                 if self.latest_attacker_obs is None:
                     raise ValueError("Attacker observation is None")
                 pi2 = self.calculate_stage_policy(o=list(self.latest_attacker_obs))
-                a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
+                a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.apt_game_env.state.s)
             else:
                 pi2 = np.array(pi2)
                 try:
@@ -75,7 +75,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
                     pi2 = self.calculate_stage_policy(o=list(self.latest_attacker_obs))
                 except Exception:
                     pass
-                a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
+                a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.apt_game_env.state.s)
 
         # a2 = pi2
         # pi2 = np.array([
@@ -83,14 +83,14 @@ class AptGameMdpAttackerEnv(BaseEnv):
         #     [0.5,0.5],
         #     [0.5,0.5]
         # ])
-        assert pi2.shape[0] == len(self.config.stopping_game_config.S)
-        assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
+        assert pi2.shape[0] == len(self.config.apt_game_config.S)
+        assert pi2.shape[1] == len(self.config.apt_game_config.A1)
 
         # Get defender action from static strategy
         a1 = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
-        o, r, d, _, info = self.stopping_game_env.step((int(a1), (pi2, int(a2))))
+        o, r, d, _, info = self.apt_game_env.step((int(a1), (pi2, int(a2))))
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
@@ -111,7 +111,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
         :param options: optional configuration parameters
         :return: initial observation
         """
-        o, _ = self.stopping_game_env.reset()
+        o, _ = self.apt_game_env.reset()
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
@@ -136,7 +136,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
         """
         if self.model is None:
             stage_policy = []
-            for s in self.config.stopping_game_config.S:
+            for s in self.config.apt_game_config.S:
                 if s != 2:
                     dist = [0.0, 0.0]
                     dist[a2] = 1.0
@@ -150,7 +150,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
             b1 = o[1]
             l = int(o[0])
             stage_policy = []
-            for s in self.config.stopping_game_config.S:
+            for s in self.config.apt_game_config.S:
                 if s != 2:
                     o = [l, b1, s]
                     stage_policy.append(self._get_attacker_dist(obs=o))
@@ -207,7 +207,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
         """
         :return: the list of simulation traces
         """
-        return self.stopping_game_env.get_traces()
+        return self.apt_game_env.get_traces()
 
     def reset_traces(self) -> None:
         """
@@ -215,7 +215,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
 
         :return: None
         """
-        return self.stopping_game_env.reset_traces()
+        return self.apt_game_env.reset_traces()
 
     def manual_play(self) -> None:
         """
@@ -236,11 +236,11 @@ class AptGameMdpAttackerEnv(BaseEnv):
             elif raw_input == "A":
                 print(f"Action space: {self.action_space}")
             elif raw_input == "S":
-                print(self.stopping_game_env.state)
+                print(self.apt_game_env.state)
             elif raw_input == "D":
                 print(done)
             elif raw_input == "H":
-                print(self.stopping_game_env.trace)
+                print(self.apt_game_env.trace)
             elif raw_input == "R":
                 print("Resetting the state")
                 self.reset()
