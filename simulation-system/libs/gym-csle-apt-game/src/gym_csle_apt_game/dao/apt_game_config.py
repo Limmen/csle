@@ -13,8 +13,7 @@ class AptGameConfig(SimulationEnvInputConfig):
     def __init__(self, env_name: str,
                  T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
                  R: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
-                 A2: npt.NDArray[np.int_], L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int,
-                 b1: npt.NDArray[np.float_],
+                 A2: npt.NDArray[np.int_], b1: npt.NDArray[np.float_], N: int, p_a: float,
                  save_dir: str, checkpoint_traces_freq: int, gamma: float = 1) -> None:
         """
         Initializes the DTO
@@ -27,11 +26,8 @@ class AptGameConfig(SimulationEnvInputConfig):
         :param S: the state space
         :param A1: the action space of the defender
         :param A2: the action space of the attacker
-        :param L: the maximum number of stops of the defender
-        :param R_INT: the R_INT constant for the reward function
-        :param R_COST: the R_COST constant for the reward function
-        :param R_SLA: the R_SLA constant for the reward function
-        :param R_ST: the R_ST constant for the reward function
+        :param N: the number of servers
+        :param p_a: the attack success probability
         :param b1: the initial belief
         :param save_dir: the directory to save artefacts produced by the environment
         :param checkpoint_traces_freq: how frequently to checkpoint traces to disk
@@ -43,11 +39,8 @@ class AptGameConfig(SimulationEnvInputConfig):
         self.Z = Z
         self.R = R
         self.S = S
-        self.L = L
-        self.R_INT = R_INT
-        self.R_COST = R_COST
-        self.R_SLA = R_SLA
-        self.R_ST = R_ST
+        self.N = N
+        self.p_a = p_a
         self.A1 = A1
         self.A2 = A2
         self.b1 = b1
@@ -68,14 +61,11 @@ class AptGameConfig(SimulationEnvInputConfig):
         d["Z"] = list(self.Z.tolist())
         d["R"] = list(self.R.tolist())
         d["S"] = list(self.S.tolist())
-        d["L"] = self.L
-        d["R_INT"] = self.R_INT
-        d["R_COST"] = self.R_COST
-        d["R_SLA"] = self.R_SLA
-        d["R_ST"] = self.R_ST
         d["A1"] = list(self.A1.tolist())
         d["A2"] = list(self.A2.tolist())
         d["b1"] = list(self.b1.tolist())
+        d["N"] = self.N
+        d["p_a"] = self.p_a
         d["save_dir"] = self.save_dir
         d["env_name"] = self.env_name
         d["checkpoint_traces_freq"] = self.checkpoint_traces_freq
@@ -92,9 +82,9 @@ class AptGameConfig(SimulationEnvInputConfig):
         """
         obj = AptGameConfig(
             T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
-            A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
-            R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"],
-            env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"]
+            A1=np.array(d["A1"]), A2=np.array(d["A2"]), b1=np.array(d["b1"]), save_dir=d["save_dir"],
+            env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"],
+            N=d["N"], p_a=d["p_a"]
         )
         return obj
 
@@ -102,26 +92,26 @@ class AptGameConfig(SimulationEnvInputConfig):
         """
         :return: a string representation of the object
         """
-        return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, L:{self.L}, " \
-               f"R_INT:{self.R_INT}, R_COST:{self.R_COST}, R_SLA:{self.R_SLA}, R_ST:{self.R_ST}, b1:{self.b1}, " \
-               f"save_dir: {self.save_dir}, env_name: {self.env_name}, " \
+        return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, " \
+               f"b1:{self.b1}, N: {self.N}, p_a: {self.p_a}, " \
+               f"save_dir: {self.save_dir}, env_name: {self.env_name}," \
                f"checkpoint_traces_freq: {self.checkpoint_traces_freq}, gamma: {self.gamma}"
 
     def attacker_observation_space(self) -> gym.spaces.Box:
         """
         :return: the attacker's observation space
         """
-        return gym.spaces.Box(low=np.array([np.float64(0), np.float64(0), np.float64(0)]),
-                              high=np.array([np.float64(self.L), np.float64(1), np.float64(2)]),
-                              dtype=np.float64, shape=(3,))
+        return gym.spaces.Box(low=np.array([np.float64(0), np.float64(0)]),
+                              high=np.array([np.float64(1), np.float64(2)]),
+                              dtype=np.float64, shape=(2,))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Box(low=np.array([np.float64(0), np.float64(0)]),
-                              high=np.array([np.float64(self.L), np.float64(1)]),
-                              dtype=np.float64, shape=(2,))
+        return gym.spaces.Box(low=np.array([np.float64(0)]),
+                              high=np.array([np.float64(1)]),
+                              dtype=np.float64, shape=(1,))
 
     def attacker_action_space(self) -> gym.spaces.Discrete:
         """

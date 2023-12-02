@@ -10,8 +10,6 @@ from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
 from gym_csle_apt_game.dao.apt_game_state import AptGameState
 import gym_csle_apt_game.constants.constants as env_constants
-from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 
 
 class AptGameEnv(BaseEnv):
@@ -28,7 +26,7 @@ class AptGameEnv(BaseEnv):
         self.config = config
 
         # Initialize environment state
-        self.state = AptGameState(b1=self.config.b1, L=self.config.L)
+        self.state = AptGameState(b1=self.config.b1)
 
         # Setup spaces
         self.attacker_observation_space = self.config.attacker_observation_space()
@@ -86,7 +84,6 @@ class AptGameEnv(BaseEnv):
         self.state.t += 1
 
         # Populate info dict
-        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
         info[env_constants.ENV_METRICS.STATE] = self.state.s
         info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
@@ -115,147 +112,6 @@ class AptGameEnv(BaseEnv):
 
         return (defender_obs, attacker_obs), (r, -r), done, done, info
 
-    def step_test(self, action_profile: Tuple[int, Tuple[npt.NDArray[Any], int]], sample_Z) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
-        """
-        Takes a step in the environment by executing the given action
-
-        :param action_profile: the actions to take (both players actions
-        :return: (obs, reward, done, info)
-        """
-
-        # Setup initial values
-        a1, a2_profile = action_profile
-        pi2, a2 = a2_profile
-        assert pi2.shape[0] == len(self.config.S)
-        assert pi2.shape[1] == len(self.config.A1)
-        done = False
-        info: Dict[str, Any] = {}
-
-        # Compute r, s', b',o'
-        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-        self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                     T=self.config.T,
-                                                     S=self.config.S, s=self.state.s)
-        o = max(self.config.O)
-        if self.state.s == 2:
-            done = True
-        else:
-            o = AptGameUtil.sample_next_observation(Z=sample_Z,
-                                                    O=self.config.O, s_prime=self.state.s)
-            self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                   config=self.config,
-                                                   l=self.state.l, a2=a2)
-        # Update stops remaining
-        self.state.l = self.state.l - a1
-
-        # Update time-step
-        self.state.t += 1
-
-        # Populate info dict
-        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
-        info[env_constants.ENV_METRICS.STATE] = self.state.s
-        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
-        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = o
-        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
-
-        # Get observations
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
-
-        # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
-        self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
-        self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
-        self.trace.infrastructure_metrics.append(o)
-        if not done:
-            self.trace.attacker_observations.append(attacker_obs)
-            self.trace.defender_observations.append(defender_obs)
-
-        # Populate info
-        info = self._info(info)
-
-        return (defender_obs, attacker_obs), (r, -r), done, info
-
-    def step_trace(self, trace: EmulationTrace, a1: int, pi2: npt.NDArray[Any]) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
-        """
-        Utility function for stepping a given trace
-
-        :param trace: the trace to step
-        :param a1: the action to step with
-        :param pi2: the policy of the attacker
-        :return: the result of the step
-        """
-        done = False
-        info: Dict[str, Any] = {}
-        if (self.state.t - 1) < len(trace.attacker_actions):
-            a2_emulation_action = trace.attacker_actions[self.state.t - 1]
-            a2 = 0
-            if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE and self.state.s == 0:
-                a2 = 1
-            if self.state.s == 1:
-                a2 = 0
-            # Compute r, s', b',o'
-            r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-            self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                         T=self.config.T,
-                                                         S=self.config.S, s=self.state.s)
-            o = max(self.config.O)
-            if self.state.s == 2:
-                done = True
-            else:
-                o = trace.defender_observation_states[self.state.t - 1].avg_snort_ids_alert_counters.warning_alerts
-                if o >= len(self.config.O):
-                    o = len(self.config.O) - 1
-                self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                       config=self.config,
-                                                       l=self.state.l, a2=a2)
-
-            # Update stops remaining
-            self.state.l = self.state.l - a1
-        else:
-            self.state.s = 2
-            done = True
-            a2 = 0
-            o = 0
-            r = 0
-
-        # Update time-step
-        self.state.t += 1
-
-        # Populate info dict
-        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
-        info[env_constants.ENV_METRICS.STATE] = self.state.s
-        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
-        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = o
-        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
-
-        # Get observations
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
-
-        # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
-        self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
-        self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
-        self.trace.infrastructure_metrics.append(o)
-        if not done:
-            self.trace.attacker_observations.append(attacker_obs)
-            self.trace.defender_observations.append(defender_obs)
-        info = self._info(info)
-        return (defender_obs, attacker_obs), (r, -r), done, info
-
     def mean(self, prob_vector):
         """
         Utility function for getting the mean of a vector
@@ -267,19 +123,6 @@ class AptGameEnv(BaseEnv):
         for i in range(len(prob_vector)):
             m += prob_vector[i] * i
         return m
-
-    def weighted_intrusion_prediction_distance(self, intrusion_start: int, first_stop: int):
-        """
-        Computes the weighted intrusion start time prediction distance (Wang, Hammar, Stadler, 2022)
-
-        :param intrusion_start: the intrusion start time
-        :param first_stop: the predicted start time
-        :return: the weighted distance
-        """
-        if first_stop <= intrusion_start:
-            return 1 - (10 / 10)
-        else:
-            return 1 - (min(10, (first_stop - (intrusion_start + 1))) / 2) / 10
 
     def _info(self, info: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -293,55 +136,6 @@ class AptGameEnv(BaseEnv):
             R += self.trace.defender_rewards[i] * math.pow(self.config.gamma, i)
         info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
-        stop = self.config.L
-        for i in range(1, self.config.L + 1):
-            info[f"{env_constants.ENV_METRICS.STOP}_{i}"] = len(self.trace.states)
-        for i in range(len(self.trace.defender_actions)):
-            if self.trace.defender_actions[i] == 1:
-                info[f"{env_constants.ENV_METRICS.STOP}_{stop}"] = i
-                stop -= 1
-        intrusion_start = len(self.trace.defender_actions)
-        for i in range(len(self.trace.attacker_actions)):
-            if self.trace.attacker_actions[i] == 1:
-                intrusion_start = i
-                break
-        intrusion_end = len(self.trace.attacker_actions)
-        info[env_constants.ENV_METRICS.INTRUSION_START] = intrusion_start
-        info[env_constants.ENV_METRICS.INTRUSION_END] = intrusion_end
-        info[env_constants.ENV_METRICS.START_POINT_CORRECT] = \
-            int(intrusion_start == (info[f"{env_constants.ENV_METRICS.STOP}_1"] + 1))
-        info[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = \
-            self.weighted_intrusion_prediction_distance(intrusion_start=intrusion_start,
-                                                        first_stop=info[f"{env_constants.ENV_METRICS.STOP}_1"])
-        info[env_constants.ENV_METRICS.INTRUSION_LENGTH] = intrusion_end - intrusion_start
-        upper_bound_return = 0
-        defender_baseline_stop_on_first_alert_return = 0
-        upper_bound_stops_remaining = self.config.L
-        defender_baseline_stop_on_first_alert_stops_remaining = self.config.L
-        for i in range(len(self.trace.states)):
-            if defender_baseline_stop_on_first_alert_stops_remaining > 0:
-                if self.trace.infrastructure_metrics[i] > 0:
-                    defender_baseline_stop_on_first_alert_return += \
-                        self.config.R[int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][1][
-                            self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
-                    defender_baseline_stop_on_first_alert_stops_remaining -= 1
-                else:
-                    defender_baseline_stop_on_first_alert_return += \
-                        self.config.R[int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][0][
-                            self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
-            if upper_bound_stops_remaining > 0:
-                if self.trace.states[i] == 0:
-                    r = self.config.R[int(upper_bound_stops_remaining) - 1][0][self.trace.attacker_actions[i]][
-                        self.trace.states[i]]
-                    upper_bound_return += r * math.pow(self.config.gamma, i)
-                else:
-                    r = self.config.R[int(upper_bound_stops_remaining) - 1][1][self.trace.attacker_actions[i]][
-                        self.trace.states[i]]
-                    upper_bound_return += r * math.pow(self.config.gamma, i)
-                    upper_bound_stops_remaining -= 1
-        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
-        info[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = \
-            defender_baseline_stop_on_first_alert_return
         return info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \

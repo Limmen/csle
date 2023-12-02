@@ -1,11 +1,8 @@
-from typing import List, Dict, Tuple, Any
+from typing import List, Any
+import math
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import betabinom
-from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
-from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
-from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
-from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
 
 
@@ -24,13 +21,14 @@ class AptGameUtil:
         return np.array([1, 0, 0])
 
     @staticmethod
-    def state_space():
+    def state_space(N: int):
         """
         Gets the state space
 
+        :param N: the number of servers
         :return: the state space of the game
         """
-        return np.array([0, 1, 2])
+        return np.array(list(range(N + 1)))
 
     @staticmethod
     def defender_actions() -> npt.NDArray[np.int_]:
@@ -61,219 +59,82 @@ class AptGameUtil:
         return np.array(list(range(n + 1)))
 
     @staticmethod
-    def reward_tensor(R_SLA: int, R_INT: int, R_COST: int, L: int, R_ST: int) -> npt.NDArray[Any]:
+    def cost_function(s: int, a_1: int) -> float:
+        """
+        The cost function of the game
+
+        :param s: the state
+        :param a_1: the defender action
+        :return: the immediate cost
+        """
+        return math.pow(s, 5 / 4) * (1 - a_1) + a_1 - 2 * a_1 * np.sign(s)
+
+    @staticmethod
+    def cost_tensor(N: int) -> npt.NDArray[Any]:
         """
         Gets the reward tensor
 
-        :param R_SLA: the R_SLA constant
-        :param R_INT: the R_INT constant
-        :param R_COST: the R_COST constant
-        :param R_ST: the R_ST constant
-        :return: a |L|x|A1|x|A2|x|S| tensor
+        :return: a |A1|x|S| tensor
         """
-        R_l = []
-        for l in range(1, L + 1):
-            R = [
-                # Defender continues
-                [
-                    # Attacker continues
-                    [R_SLA, R_SLA + R_INT, 0],
-                    # Attacker stops
-                    [R_SLA, R_SLA, 0]
-                ],
-                # Defender stops
-                [
-                    # Attacker continues
-                    [R_COST / l, R_ST / l, 0],
-                    # Attacker stops
-                    [R_COST / l, R_SLA, 0]
-                ]
-            ]
-            R_l.append(R)
-        return np.array(R_l)
+        cost_tensor = []
+        for a1 in [0, 1]:
+            a_costs = []
+            for s in range(N + 1):
+                a_costs.append(AptGameUtil.cost_function(s=s, a_1=a1))
+            cost_tensor.append(a_costs)
+        return np.array(cost_tensor)
 
     @staticmethod
-    def transition_tensor(L: int, p: float) -> npt.NDArray[Any]:
+    def transition_function(N: int, p_a: float, s: int, s_prime: int, a_1: int, a_2: int):
+        """
+        The transition function of the game
+
+        :param N: the number of servers
+        :param p_a: the intrusion probability
+        :param s: the state
+        :param s_prime: the next state
+        :param a_1: the defender action
+        :param a_2: the attacker action
+        :return: f(s_prime | s, a_1, a_2)
+        """
+        if a_1 == 1 and s_prime == 0:
+            return 1
+        if a_1 == 0 and a_2 == 0 and s_prime == s:
+            return 1
+        if a_1 == 0 and s == N and s_prime == N:
+            return 1
+        if a_1 == 0 and a_2 == 1 and s == s_prime:
+            return 1 - p_a
+        if a_1 == 0 and a_2 == 1 and s_prime == (s + 1):
+            return p_a
+
+    @staticmethod
+    def transition_tensor(N: int, p_a: float) -> npt.NDArray[Any]:
         """
         Gets the transition tensor
 
         :param L: the maximum number of stop actions
-        :return: a |L|x|A1|x|A2||S|^2 tensor
+        :return: a |A1|x|A2||S|^2 tensor
         """
-        T_l = []
-        for l in range(1, L + 1):
-            if l == 1:
-                T = [
-                    # Defender continues
-                    [
-                        # Attacker continues
-                        [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ],
-                        # Attacker stops
-                        [
-                            [0, 1, 0],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ]
-                    ],
-
-                    # Defender stops
-                    [
-                        # Attacker continues
-                        [
-                            [0, 0, 1],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ],
-                        # Attacker stops
-                        [
-                            [0, 0, 1],  # No Intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ]
-                    ]
-                ]
-            else:
-                T = [
-                    # Defender continues
-                    [
-                        # Attacker continues
-                        [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ],
-                        # Attacker stops
-                        [
-                            [0, 1, 0],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ]
-                    ],
-
-                    # Defender stops
-                    [
-                        # Attacker continues
-                        [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ],
-                        # Attacker stops
-                        [
-                            [0, 1, 0],  # No Intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
-                        ]
-                    ]
-                ]
-            T_l.append(T)
-        return np.array(T_l)
-
-    @staticmethod
-    def observation_tensor_from_emulation_statistics(emulation_statistic: EmulationStatistics,
-                                                     observation_space_defender: ObservationSpaceConfig,
-                                                     joint_action_space: JointActionSpaceConfig,
-                                                     state_space: StateSpaceConfig) \
-            -> Tuple[npt.NDArray[Any], Dict[str, List[Any]]]:
-        """
-        Returns an observation tensor based on measured emulation statistics
-
-        :param emulation_statistic: the measured statistics
-        :param observation_space_defender: the observation space of the defender
-        :param joint_action_space: the joint action space
-        :param state_space: the state space
-        :return: a |A1|x|A2|x|S|x|O| tensor
-        """
-        intrusion_severe_alerts_probabilities: List[float] = []
-        intrusion_warning_alerts_probabilities: List[float] = []
-        intrusion_login_attempts_probabilities: List[float] = []
-        norm = sum(emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"].values())
-        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"][severe_alert_obs.id]
-            intrusion_severe_alerts_probabilities.append(count / norm)
-        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["warning_alerts"][warning_alert_obs.id]
-            intrusion_warning_alerts_probabilities.append(count / norm)
-        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["login_attempts"][login_attempt_obs.id]
-            intrusion_login_attempts_probabilities.append(count / norm)
-
-        no_intrusion_severe_alerts_probabilities = []
-        no_intrusion_warning_alerts_probabilities = []
-        no_intrusion_login_attempts_probabilities = []
-        norm = sum(emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"].values())
-        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
-            no_intrusion_severe_alerts_probabilities.append(count / norm)
-        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
-            no_intrusion_warning_alerts_probabilities.append(count / norm)
-        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["login_attempts"][login_attempt_obs.id]
-            no_intrusion_login_attempts_probabilities.append(count / norm)
-
-        component_observation_tensors = {}
-        observation_tensor = []
-        severe_alerts_tensor = []
-        warning_alerts_tensor = []
-        login_attempts_tensor = []
-        for a1 in range(len(joint_action_space.action_spaces[0].actions)):
-            a1_a2_s_o_dist = []
-            severe_alerts_a1_a2_s_o_dist = []
-            warning_alerts_a1_a2_s_o_dist = []
-            login_attempts_a1_a2_s_o_dist = []
-            for a2 in range(len(joint_action_space.action_spaces[1].actions)):
-                a2_s_o_dist = []
-                severe_alerts_a2_s_o_dist: List[List[float]] = []
-                warning_alerts_a2_s_o_dist: List[List[float]] = []
-                login_attempts_a2_s_o_dist: List[List[float]] = []
-                for s in range(len(state_space.states)):
-                    s_o_dist = []
-                    severe_alerts_s_o_dist: List[float] = []
-                    warning_alerts_s_o_dist: List[float] = []
-                    login_attempts_s_o_dist: List[float] = []
-                    for o in range(len(observation_space_defender.observations)):
-                        obs_vector = observation_space_defender.observation_id_to_observation_id_vector[o]
-                        if s == 0:
-                            severe_alerts_s_o_dist.append(no_intrusion_severe_alerts_probabilities[obs_vector[0]])
-                            warning_alerts_s_o_dist.append(no_intrusion_warning_alerts_probabilities[obs_vector[0]])
-                            login_attempts_s_o_dist.append(no_intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = (no_intrusion_severe_alerts_probabilities[obs_vector[0]] *
-                                 no_intrusion_warning_alerts_probabilities[obs_vector[1]] *
-                                 no_intrusion_login_attempts_probabilities[obs_vector[2]])
-                        else:
-                            severe_alerts_s_o_dist.append(intrusion_severe_alerts_probabilities[obs_vector[0]])
-                            warning_alerts_s_o_dist.append(intrusion_warning_alerts_probabilities[obs_vector[0]])
-                            login_attempts_s_o_dist.append(intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = (intrusion_severe_alerts_probabilities[obs_vector[0]] *
-                                 intrusion_warning_alerts_probabilities[obs_vector[1]] *
-                                 intrusion_login_attempts_probabilities[obs_vector[2]])
-                        s_o_dist.append(p)
-                    a2_s_o_dist.append(s_o_dist)
-                    severe_alerts_a2_s_o_dist.append(severe_alerts_s_o_dist)
-                    warning_alerts_a2_s_o_dist.append(warning_alerts_s_o_dist)
-                    login_attempts_a2_s_o_dist.append(login_attempts_s_o_dist)
-                a1_a2_s_o_dist.append(a2_s_o_dist)
-                severe_alerts_a1_a2_s_o_dist.append(severe_alerts_a2_s_o_dist)
-                warning_alerts_a1_a2_s_o_dist.append(warning_alerts_a2_s_o_dist)
-                login_attempts_a1_a2_s_o_dist.append(login_attempts_a2_s_o_dist)
-            observation_tensor.append(a1_a2_s_o_dist)
-            severe_alerts_tensor.append(severe_alerts_a1_a2_s_o_dist)
-            warning_alerts_tensor.append(warning_alerts_a1_a2_s_o_dist)
-            login_attempts_tensor.append(login_attempts_a1_a2_s_o_dist)
-        component_observation_tensors["severe_alerts"] = severe_alerts_tensor
-        component_observation_tensors["warning_alerts"] = warning_alerts_tensor
-        component_observation_tensors["login_attempts"] = login_attempts_tensor
-        return np.array(observation_tensor), component_observation_tensors
+        transition_tensor = []
+        for a_1 in [0, 1]:
+            a1_transitions = []
+            for a_2 in [0, 1]:
+                a2_transitions = []
+                for s in range(N + 1):
+                    s_a_transitions = []
+                    for s_prime in range(N + 1):
+                        s_a_transitions.append(AptGameUtil.transition_function(N=N, p_a=p_a, s=s, s_prime=s_prime,
+                                                                               a_1=a_1, a_2=a_2))
+                    a2_transitions.append(s_a_transitions)
+                a1_transitions.append(a2_transitions)
+            transition_tensor.append(a1_transitions)
+        return transition_tensor
 
     @staticmethod
     def observation_tensor(n):
         """
-        :return: a |A1|x|A2|x|S|x|O| tensor
+        :return: a |S|x|O| tensor
         """
         intrusion_dist = []
         no_intrusion_dist = []
@@ -284,34 +145,7 @@ class AptGameUtil:
         for i in range(n + 1):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
-        Z = np.array(
-            [
-                [
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                ],
-                [
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                ]
-            ]
-        )
+        Z = np.array([no_intrusion_dist, intrusion_dist])
         return Z
 
     @staticmethod
@@ -353,17 +187,12 @@ class AptGameUtil:
         """
         observation_probs = []
         for o in O:
-            if len(Z.shape) == 4:
-                observation_probs.append(Z[0][0][s_prime][o])
-            elif len(Z.shape) == 3:
-                observation_probs.append(Z[0][s_prime][o])
-            elif len(Z.shape) == 2:
-                observation_probs.append(Z[s_prime][o])
+            observation_probs.append(Z[s_prime][o])
         o = np.random.choice(np.arange(0, len(O)), p=observation_probs)
         return int(o)
 
     @staticmethod
-    def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any], l: int,
+    def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
                      config: AptGameConfig) -> float:
         """
         A Bayesian filter to compute the belief of player 1
@@ -375,26 +204,24 @@ class AptGameUtil:
         :param a1: the action of player 1
         :param b: the current belief point
         :param pi2: the policy of player 2
-        :param l: stops remaining
         :return: b_prime(s_prime)
         """
-        l = l - 1
         norm = 0
         for s in config.S:
             for a2 in config.A2:
                 for s_prime_1 in config.S:
                     prob_1 = config.Z[a1][a2][s_prime_1][o]
-                    norm += b[s] * prob_1 * config.T[l][a1][a2][s][s_prime_1] * pi2[s][a2]
+                    norm += b[s] * prob_1 * config.T[a1][a2][s][s_prime_1] * pi2[s][a2]
         if norm == 0:
             return 0
         temp = 0
 
         for s in config.S:
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime][o] * config.T[l][a1][a2][s][s_prime] * b[s] * pi2[s][a2]
+                temp += config.Z[a1][a2][s_prime][o] * config.T[a1][a2][s][s_prime] * b[s] * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
-            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, l:{l}, o:{o}, pi2:{pi2}")
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
         assert round(b_prime_s_prime, 2) <= 1
         if s_prime == 2 and o != config.O[-1]:
             assert round(b_prime_s_prime, 2) <= 0.01
@@ -437,8 +264,7 @@ class AptGameUtil:
         """
         b_prime = np.zeros(len(config.S))
         for s_prime in config.S:
-            b_prime[s_prime] = AptGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
-                                                        pi2=pi2, config=config, l=l)
+            b_prime[s_prime] = AptGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b, pi2=pi2, config=config)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "
                   f"a2: {a2}, s:{s}")

@@ -10,17 +10,15 @@ class AptGameState(JSONSerializable):
     Represents the state of the optimal APT game
     """
 
-    def __init__(self, b1: npt.NDArray[np.float_], L: int) -> None:
+    def __init__(self, b1: npt.NDArray[np.float_]) -> None:
         """
         Intializes the state
 
         :param b1: the initial belief
         :param L: the maximum number of stop actions of the defender
         """
-        self.L = L
         self.b1 = b1
         self.b = self.b1.copy()
-        self.l = self.L
         self.s = AptGameUtil.sample_initial_state(b1=self.b1)
         self.t = 1
 
@@ -30,7 +28,6 @@ class AptGameState(JSONSerializable):
 
         :return: None
         """
-        self.l = self.L
         self.t = 1
         self.s = AptGameUtil.sample_initial_state(b1=self.b1)
         self.b = self.b1.copy()
@@ -39,19 +36,19 @@ class AptGameState(JSONSerializable):
         """
         :return: the attacker's observation
         """
-        return np.array([np.float64(self.l), np.float64(self.b[1]), np.float64(self.s)])
+        return np.array([np.float64(self.b[1]), np.float64(self.s)])
 
     def defender_observation(self) -> npt.NDArray[Any]:
         """
         :return: the defender's observation
         """
-        return np.array([np.float64(self.l), np.float64(self.b[1])])
+        return np.array([np.float64(self.b[1])])
 
     def __str__(self) -> str:
         """
-        :return: a string representation of the objectn
+        :return: a string representation of the object
         """
-        return f"s:{self.s}, L:{self.L}, l: {self.l}, b:{self.b}, b1:{self.b1}, t:{self.t}"
+        return f"s:{self.s}, b:{self.b}, b1:{self.b1}, t:{self.t}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "AptGameState":
@@ -61,7 +58,7 @@ class AptGameState(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = AptGameState(b1=np.array(d["b1"]), L=d["L"])
+        obj = AptGameState(b1=np.array(d["b1"]))
         obj.t = d["t"]
         obj.l = d["l"]
         obj.s = d["s"]
@@ -75,10 +72,8 @@ class AptGameState(JSONSerializable):
         :return: a dict representation of the object
         """
         d: Dict[str, Any] = {}
-        d["L"] = self.L
         d["b1"] = list(self.b1)
         d["b"] = list(self.b)
-        d["l"] = self.l
         d["s"] = self.s
         d["t"] = self.t
         return d
