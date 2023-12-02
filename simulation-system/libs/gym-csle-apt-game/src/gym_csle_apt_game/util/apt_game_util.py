@@ -12,13 +12,16 @@ class AptGameUtil:
     """
 
     @staticmethod
-    def b1() -> npt.NDArray[np.int_]:
+    def b1(N: int) -> npt.NDArray[np.int_]:
         """
         Gets the initial belief
 
+        :param N: the number of servers
         :return: the initial belief
         """
-        return np.array([1, 0, 0])
+        b1 = [0]*(N+1)
+        b1[0] = 1
+        return np.array(b1)
 
     @staticmethod
     def state_space(N: int):
@@ -49,14 +52,14 @@ class AptGameUtil:
         return np.array([0, 1])
 
     @staticmethod
-    def observation_space(n):
+    def observation_space(num_observations: int):
         """
         Returns the observation space of size n
 
-        :param n: the maximum observation
+        :param num_observations: the number of observations
         :return: the observation space
         """
-        return np.array(list(range(n + 1)))
+        return np.array(list(range(num_observations)))
 
     @staticmethod
     def cost_function(s: int, a_1: int) -> float:
@@ -67,7 +70,7 @@ class AptGameUtil:
         :param a_1: the defender action
         :return: the immediate cost
         """
-        return math.pow(s, 5 / 4) * (1 - a_1) + a_1 - 2 * a_1 * np.sign(s)
+        return float(math.pow(s, 5 / 4) * (1 - a_1) + a_1 - 2 * a_1 * np.sign(s))
 
     @staticmethod
     def cost_tensor(N: int) -> npt.NDArray[Any]:
@@ -129,24 +132,31 @@ class AptGameUtil:
                     a2_transitions.append(s_a_transitions)
                 a1_transitions.append(a2_transitions)
             transition_tensor.append(a1_transitions)
-        return transition_tensor
+        return np.array(transition_tensor)
 
     @staticmethod
-    def observation_tensor(n):
+    def observation_tensor(num_observations, N: int) -> npt.NDArray[Any]:
         """
-        :return: a |S|x|O| tensor
+        Gets the observation tensor of the game
+
+        :param num_observations: the number of observations
+        :param N: the number of servers
+        :return: a |S|x|O| observation tensor
         """
         intrusion_dist = []
         no_intrusion_dist = []
-        terminal_dist = np.zeros(n + 1)
+        terminal_dist = np.zeros(num_observations)
         terminal_dist[-1] = 1
-        intrusion_rv = betabinom(n=n, a=1, b=0.7)
-        no_intrusion_rv = betabinom(n=n, a=0.7, b=3)
-        for i in range(n + 1):
+        intrusion_rv = betabinom(n=num_observations, a=1, b=0.7)
+        no_intrusion_rv = betabinom(n=num_observations, a=0.7, b=3)
+        for i in range(num_observations):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
-        Z = np.array([no_intrusion_dist, intrusion_dist])
-        return Z
+        Z = []
+        Z.append(no_intrusion_dist)
+        for s in range(1, N+1):
+            Z.append(intrusion_dist)
+        return np.array(Z)
 
     @staticmethod
     def sample_next_state(T: npt.NDArray[Any], l: int, s: int, a1: int, a2: int, S: npt.NDArray[np.int_]) -> int:
