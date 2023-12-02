@@ -4,12 +4,7 @@ import numpy.typing as npt
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import AptGameDefenderPomdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
-from csle_common.dao.training.policy import Policy
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 
