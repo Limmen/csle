@@ -148,8 +148,8 @@ class AptGameUtil:
         no_intrusion_dist = []
         terminal_dist = np.zeros(num_observations)
         terminal_dist[-1] = 1
-        intrusion_rv = betabinom(n=num_observations-1, a=1, b=0.7)
-        no_intrusion_rv = betabinom(n=num_observations-1, a=0.7, b=3)
+        intrusion_rv = betabinom(n=num_observations - 1, a=1, b=0.7)
+        no_intrusion_rv = betabinom(n=num_observations - 1, a=0.7, b=3)
         for i in range(num_observations):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
@@ -196,9 +196,10 @@ class AptGameUtil:
         :return: o
         """
         observation_probs = []
-        for o in O:
-            observation_probs.append(Z[s_prime][o])
-        o = np.random.choice(np.arange(0, len(O)), p=observation_probs)
+        for i, o in enumerate(O):
+            observation_probs.append(Z[s_prime][i])
+        print(sum(observation_probs))
+        o = np.random.choice(O, p=observation_probs)
         return int(o)
 
     @staticmethod
@@ -288,3 +289,91 @@ class AptGameUtil:
         :return: a2 (the attacker action
         """
         return int(np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s]))
+
+    @staticmethod
+    def generate_transitions(game_config: AptGameConfig) -> List[str]:
+        """
+        Generates the transition rows of the POSG config file of HSVI
+
+        :param game_config: the game configuration
+        :return: list of transition rows
+        """
+        transitions = []
+        for s in game_config.S:
+            for a1 in game_config.A1:
+                for a2 in game_config.A1:
+                    for s_prime in game_config.S:
+                        for i, _ in enumerate(game_config.O):
+                            tr_prob = game_config.T[a1][a2][s][s_prime]
+                            obs_prob = game_config.Z[s_prime][i]
+                            prob = tr_prob * obs_prob
+                            if prob > 0:
+                                transition = f"{s} {a1} {a2} {i} {s_prime} {prob}"
+                                transitions.append(transition)
+
+        return transitions
+
+    @staticmethod
+    def generate_rewards(game_config: AptGameConfig) -> List[str]:
+        """
+        Generates the reward rows of the POSG config file of HSVI
+
+        :param game_config: the game configuration
+        :return: list of reward rows
+        """
+        rewards = []
+        for s in game_config.S:
+            for a1 in game_config.A1:
+                for a2 in game_config.A2:
+                    r = -game_config.C[a1][s]
+                    if r != 0:
+                        rew = f"{s} {a1} {a2} {r}"
+                        rewards.append(rew)
+        return rewards
+
+    @staticmethod
+    def generate_os_posg_game_file(game_config: AptGameConfig) -> str:
+        """
+        Generates the POSG game file for HSVI
+
+        :param game_config: the game configuration
+        :return: a string with the contents of the config file
+        """
+        num_partitions = 1
+        transitions = AptGameUtil.generate_transitions(game_config=game_config)
+        rewards = AptGameUtil.generate_rewards(game_config=game_config)
+        game_description = f"{len(game_config.S)} {num_partitions} {len(game_config.A1)} {len(game_config.A2)} " \
+                           f"{len(game_config.O)} {len(transitions)} " \
+                           f"{len(rewards)} {game_config.gamma}"
+        state_desriptions = []
+        for s in game_config.S:
+            state_desriptions.append(f"{s} {0}")
+        player_1_actions = ["CONTINUE", "STOP"]
+        player_2_actions = ["CONTINUE", "STOP"]
+
+        player_2_legal_actions = []
+        for _ in game_config.S:
+            player_2_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.A2))))
+
+        player_1_legal_actions = []
+        player_1_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.A1))))
+
+        obs_desriptions = []
+        for i, o in enumerate(game_config.O):
+            obs_desriptions.append(f"o_{o}")
+
+        initial_belief_str = f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
+        game_file_str = ""
+        game_file_str = game_file_str + game_description + "\n"
+        game_file_str = game_file_str + "\n".join(state_desriptions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_1_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_2_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(obs_desriptions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_2_legal_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_1_legal_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(transitions) + "\n"
+        game_file_str = game_file_str + "\n".join(rewards) + "\n"
+        game_file_str = game_file_str + initial_belief_str
+        with open('apt_game.txt', 'w') as f:
+            f.write(game_file_str)
+        return game_file_str
