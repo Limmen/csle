@@ -88,7 +88,7 @@ class AptGameUtil:
         return np.array(cost_tensor)
 
     @staticmethod
-    def transition_function(N: int, p_a: float, s: int, s_prime: int, a_1: int, a_2: int):
+    def transition_function(N: int, p_a: float, s: int, s_prime: int, a_1: int, a_2: int) -> float:
         """
         The transition function of the game
 
@@ -101,15 +101,16 @@ class AptGameUtil:
         :return: f(s_prime | s, a_1, a_2)
         """
         if a_1 == 1 and s_prime == 0:
-            return 1
+            return 1.0
         if a_1 == 0 and a_2 == 0 and s_prime == s:
-            return 1
+            return 1.0
         if a_1 == 0 and s == N and s_prime == N:
-            return 1
+            return 1.0
         if a_1 == 0 and a_2 == 1 and s == s_prime:
             return 1 - p_a
         if a_1 == 0 and a_2 == 1 and s_prime == (s + 1):
             return p_a
+        return 0.0
 
     @staticmethod
     def transition_tensor(N: int, p_a: float) -> npt.NDArray[Any]:
@@ -147,8 +148,8 @@ class AptGameUtil:
         no_intrusion_dist = []
         terminal_dist = np.zeros(num_observations)
         terminal_dist[-1] = 1
-        intrusion_rv = betabinom(n=num_observations, a=1, b=0.7)
-        no_intrusion_rv = betabinom(n=num_observations, a=0.7, b=3)
+        intrusion_rv = betabinom(n=num_observations-1, a=1, b=0.7)
+        no_intrusion_rv = betabinom(n=num_observations-1, a=0.7, b=3)
         for i in range(num_observations):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
@@ -159,7 +160,7 @@ class AptGameUtil:
         return np.array(Z)
 
     @staticmethod
-    def sample_next_state(T: npt.NDArray[Any], l: int, s: int, a1: int, a2: int, S: npt.NDArray[np.int_]) -> int:
+    def sample_next_state(T: npt.NDArray[Any], s: int, a1: int, a2: int, S: npt.NDArray[np.int_]) -> int:
         """
         Samples the next state
 
@@ -168,12 +169,11 @@ class AptGameUtil:
         :param a1: the defender action
         :param a2: the attacker action
         :param S: the state space
-        :param l: the number of stops remaining
         :return: s'
         """
         state_probs = []
         for s_prime in S:
-            state_probs.append(T[l - 1][a1][a2][s][s_prime])
+            state_probs.append(T[a1][a2][s][s_prime])
         return int(np.random.choice(np.arange(0, len(S)), p=state_probs))
 
     @staticmethod
@@ -220,7 +220,7 @@ class AptGameUtil:
         for s in config.S:
             for a2 in config.A2:
                 for s_prime_1 in config.S:
-                    prob_1 = config.Z[a1][a2][s_prime_1][o]
+                    prob_1 = config.Z[s_prime_1][o]
                     norm += b[s] * prob_1 * config.T[a1][a2][s][s_prime_1] * pi2[s][a2]
         if norm == 0:
             return 0
@@ -228,13 +228,11 @@ class AptGameUtil:
 
         for s in config.S:
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime][o] * config.T[a1][a2][s][s_prime] * b[s] * pi2[s][a2]
+                temp += config.Z[s_prime][o] * config.T[a1][a2][s][s_prime] * b[s] * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
         assert round(b_prime_s_prime, 2) <= 1
-        if s_prime == 2 and o != config.O[-1]:
-            assert round(b_prime_s_prime, 2) <= 0.01
         return b_prime_s_prime
 
     @staticmethod
@@ -258,7 +256,7 @@ class AptGameUtil:
 
     @staticmethod
     def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
-                    config: AptGameConfig, l: int, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
+                    config: AptGameConfig, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -267,7 +265,6 @@ class AptGameUtil:
         :param b: the current belief
         :param pi2: the policy of player 2
         :param config: the game config
-        :param l: stops remaining
         :param a2: the attacker action (for debugging, should be consistent with pi2)
         :param s: the true state (for debugging)
         :return: the new belief

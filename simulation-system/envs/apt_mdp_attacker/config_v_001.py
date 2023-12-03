@@ -305,7 +305,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         T=np.array(transition_tensor_config.transition_tensor),
         O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
         Z=np.array(observation_function_config.observation_tensor),
-        R=np.array(reward_function_config.reward_tensor),
+        C=np.array(reward_function_config.reward_tensor),
         S=AptGameUtil.state_space(N=N),
         env_name="csle-apt-game-mdp-attacker-v1", checkpoint_traces_freq=100000,
         gamma=1, N=N, p_a=p_a)

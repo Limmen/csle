@@ -12,7 +12,7 @@ class AptGameConfig(SimulationEnvInputConfig):
 
     def __init__(self, env_name: str,
                  T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
-                 R: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
+                 C: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
                  A2: npt.NDArray[np.int_], b1: npt.NDArray[np.float_], N: int, p_a: float,
                  save_dir: str, checkpoint_traces_freq: int, gamma: float = 1) -> None:
         """
@@ -22,7 +22,7 @@ class AptGameConfig(SimulationEnvInputConfig):
         :param T: the transition tensor
         :param O: the observation space
         :param Z: the observation tensor
-        :param R: the reward function
+        :param C: the cost tensor
         :param S: the state space
         :param A1: the action space of the defender
         :param A2: the action space of the attacker
@@ -37,7 +37,7 @@ class AptGameConfig(SimulationEnvInputConfig):
         self.T = T
         self.O = O
         self.Z = Z
-        self.R = R
+        self.C = C
         self.S = S
         self.N = N
         self.p_a = p_a
@@ -59,7 +59,7 @@ class AptGameConfig(SimulationEnvInputConfig):
         d["T"] = list(self.T.tolist())
         d["O"] = list(self.O.tolist())
         d["Z"] = list(self.Z.tolist())
-        d["R"] = list(self.R.tolist())
+        d["R"] = list(self.C.tolist())
         d["S"] = list(self.S.tolist())
         d["A1"] = list(self.A1.tolist())
         d["A2"] = list(self.A2.tolist())
@@ -81,7 +81,7 @@ class AptGameConfig(SimulationEnvInputConfig):
         :return: the created instance
         """
         obj = AptGameConfig(
-            T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
+            T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), C=np.array(d["R"]), S=np.array(d["S"]),
             A1=np.array(d["A1"]), A2=np.array(d["A2"]), b1=np.array(d["b1"]), save_dir=d["save_dir"],
             env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"],
             N=d["N"], p_a=d["p_a"]
@@ -92,7 +92,7 @@ class AptGameConfig(SimulationEnvInputConfig):
         """
         :return: a string representation of the object
         """
-        return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, " \
+        return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.C}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, " \
                f"b1:{self.b1}, N: {self.N}, p_a: {self.p_a}, " \
                f"save_dir: {self.save_dir}, env_name: {self.env_name}," \
                f"checkpoint_traces_freq: {self.checkpoint_traces_freq}, gamma: {self.gamma}"

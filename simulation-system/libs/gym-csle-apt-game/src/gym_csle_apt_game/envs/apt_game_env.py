@@ -62,23 +62,11 @@ class AptGameEnv(BaseEnv):
         done = False
         info: Dict[str, Any] = {}
 
-        # Compute r, s', b',o'
-        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-        self.state.s = AptGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                     T=self.config.T,
-                                                     S=self.config.S, s=self.state.s)
-        o = max(self.config.O)
-        if self.state.s == 2:
-            done = True
-        else:
-            o = AptGameUtil.sample_next_observation(Z=self.config.Z,
-                                                    O=self.config.O, s_prime=self.state.s)
-            self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                   config=self.config,
-                                                   l=self.state.l, a2=a2)
-
-        # Update stops remaining
-        self.state.l = self.state.l - a1
+        # Compute c, s', b',o'
+        c = self.config.C[a1][self.state.s]
+        self.state.s = AptGameUtil.sample_next_state(a1=a1, a2=a2, T=self.config.T, S=self.config.S, s=self.state.s)
+        o = AptGameUtil.sample_next_observation(Z=self.config.Z, O=self.config.O, s_prime=self.state.s)
+        self.state.b = AptGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2, config=self.config, a2=a2)
 
         # Update time-step
         self.state.t += 1
@@ -95,13 +83,13 @@ class AptGameEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
 
         # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
+        self.trace.defender_rewards.append(c)
+        self.trace.attacker_rewards.append(-c)
         self.trace.attacker_actions.append(a2)
         self.trace.defender_actions.append(a1)
         self.trace.infos.append(info)
         self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
+        self.trace.beliefs.append(self.state.b)
         self.trace.infrastructure_metrics.append(o)
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
@@ -110,7 +98,7 @@ class AptGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return (defender_obs, attacker_obs), (r, -r), done, done, info
+        return (defender_obs, attacker_obs), (c, -c), done, done, info
 
     def mean(self, prob_vector):
         """
