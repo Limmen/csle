@@ -165,7 +165,7 @@ class AptGameUtil:
         Samples the next state
 
         :param T: the transition operator
-        :param s: the currrent state
+        :param s: the current state
         :param a1: the defender action
         :param a2: the attacker action
         :param S: the state space
@@ -198,7 +198,6 @@ class AptGameUtil:
         observation_probs = []
         for i, o in enumerate(O):
             observation_probs.append(Z[s_prime][i])
-        print(sum(observation_probs))
         o = np.random.choice(O, p=observation_probs)
         return int(o)
 
@@ -377,3 +376,19 @@ class AptGameUtil:
         with open('apt_game.txt', 'w') as f:
             f.write(game_file_str)
         return game_file_str
+
+    @staticmethod
+    def expected_cost(C: List[List[float]], b: List[float], S: List[int], a1: int) -> float:
+        """
+        Gets the expected cost of defender action a1 in belief state b
+
+        :param C: the cost tensor
+        :param b: the belief state
+        :param S: the state space
+        :param a1: the defender action
+        :return: the expected cost
+        """
+        cost = 0.0
+        for s in S:
+            cost += b[s] * C[a1][s]
+        return cost

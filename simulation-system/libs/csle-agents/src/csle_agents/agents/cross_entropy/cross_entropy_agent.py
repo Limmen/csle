@@ -243,7 +243,9 @@ class CrossEntropyAgent(BaseAgent):
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        J_opt = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
+        J_opt = -1
+        if agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN in avg_metrics:
+            J_opt = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
@@ -276,11 +278,14 @@ class CrossEntropyAgent(BaseAgent):
                 if isinstance(theta_sample, np.floating):
                     theta_sample = np.array([theta_sample])
                 policy = self.get_policy(theta=list(theta_sample), L=L)
+                print(f"{k}/{K}")
                 avg_metrics = self.eval_theta(
                     policy=policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                OPT_J = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
+                OPT_J = -1
+                if agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN in avg_metrics:
+                    OPT_J = round(avg_metrics[agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN], 3)
                 theta_samples_and_returns.append((theta_sample, J, OPT_J))
             if objective_type == ObjectiveType.MAX:
                 sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
@@ -383,7 +388,7 @@ class CrossEntropyAgent(BaseAgent):
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
                 Logger.__call__().get_logger().info(
-                    f"[CROSS-ENTROPY] i: {i}, J:{J}, "
+                    f"[CROSS-ENTROPY] i: {i}/{N}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{J_opt}, "

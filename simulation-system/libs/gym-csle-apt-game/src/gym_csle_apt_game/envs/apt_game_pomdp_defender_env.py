@@ -4,7 +4,6 @@ import numpy.typing as npt
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import AptGameDefenderPomdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
-from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 
@@ -22,11 +21,11 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         :param attacker_strategy: the strategy of the static attacker
         """
         self.config = config
-        self.stopping_game_env = AptGameEnv(config=self.config.stopping_game_config)
+        self.stopping_game_env = AptGameEnv(config=self.config.apt_game_config)
 
         # Setup spaces
-        self.observation_space = self.config.stopping_game_config.defender_observation_space()
-        self.action_space = self.config.stopping_game_config.defender_action_space()
+        self.observation_space = self.config.apt_game_config.defender_observation_space()
+        self.action_space = self.config.apt_game_config.defender_action_space()
 
         # Setup static attacker strategy
         self.static_attacker_strategy = self.config.attacker_strategy
@@ -43,7 +42,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[npt.NDArray[Any], int, bool, bool, Dict[str, Any]]:
+    def step(self, a1: int) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -58,26 +57,8 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         o, r, d, _, info = self.stopping_game_env.step((a1, (pi2, a2)))
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-
-        return defender_obs, r[0], d, d, info
-
-    def step_test(self, a1: int, sample_Z) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
-        """
-        Takes a step in the environment by executing the given action
-
-        :param a1: defender action
-        :return: (obs, reward, done, info)
-        """
-        # Get attacker action from static strategy
-        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
-
-        # Step the game
-        o, r, d, info = self.stopping_game_env.step_test((a1, (pi2, a2)), sample_Z=sample_Z)
-        self.latest_attacker_obs = o[1]
-        defender_obs = o[0]
-
-        return defender_obs, r[0], d, info
+        defender_obs = np.array([1, sum(defender_obs[1:])])
+        return defender_obs, float(r[0]), d, d, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
@@ -92,8 +73,9 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         o, _ = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
+        defender_obs_prime = np.array([1, sum(defender_obs[1:])])
         dict: Dict[str, Any] = {}
-        return defender_obs, dict
+        return defender_obs_prime, dict
 
     def render(self, mode: str = 'human'):
         """
@@ -103,20 +85,6 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         :return: True (if human mode) otherwise an rgb array
         """
         raise NotImplementedError("Rendering is not implemented for this environment")
-
-    def step_trace(self, trace: EmulationTrace, a1: int) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
-        """
-        Utility method for stopping a pre-recorded trace
-
-        :param trace: the trace to step
-        :param a1: the action to step with
-        :return: the result of the step according to the trace
-        """
-        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        o, r, d, info = self.stopping_game_env.step_trace(trace=trace, a1=a1, pi2=pi2)
-        self.latest_attacker_obs = o[1]
-        defender_obs = o[0]
-        return defender_obs, r[0], d, info
 
     def is_defense_action_legal(self, defense_action_id: int) -> bool:
         """

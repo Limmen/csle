@@ -24,8 +24,11 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.player_type import PlayerType
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
+from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import AptGameDefenderPomdpConfig
 
 
 def default_config(N: int, p_a: float, num_observations: int,
@@ -53,7 +56,8 @@ def default_config(N: int, p_a: float, num_observations: int,
         reward_function_config=reward_function_config,
         transition_tensor_config=transition_operator_config,
         observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config, N=N, p_a=p_a)
+        initial_state_distribution_config=initial_state_distribution_config, N=N, p_a=p_a,
+        action_space_config=joint_action_space_config, state_space_config=state_space_config)
     env_parameters_config = default_env_parameters_config()
     descr = "A two-player zero-sum one-sided partially observed stochastic APT game."
     simulation_env_config = SimulationEnvConfig(
@@ -286,6 +290,8 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
                          initial_state_distribution_config: InitialStateDistributionConfig,
+                         state_space_config: StateSpaceConfig,
+                         action_space_config: JointActionSpaceConfig,
                          N: int, p_a: float) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
@@ -295,11 +301,13 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     :param transition_tensor_config: the transition tensor configuration
     :param observation_function_config: the observation function configuration
     :param initial_state_distribution_config: the initial state distribution configuration
+    :param state_space_config: the state space configuration
+    :param action_space_config: the joint action space configuration
     :param: N: the number of servers
     :param p_a: the intrusion success probability
     :return: The default input configuration to the OpenAI gym environment
     """
-    config = AptGameConfig(
+    game_config = AptGameConfig(
         A1=AptGameUtil.attacker_actions(), A2=AptGameUtil.defender_actions(),
         b1=np.array(initial_state_distribution_config.initial_state_distribution),
         save_dir=ExperimentUtil.default_output_dir() + "/results",
@@ -308,8 +316,20 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         Z=np.array(observation_function_config.observation_tensor),
         C=np.array(reward_function_config.reward_tensor),
         S=AptGameUtil.state_space(N=N),
-        env_name="csle-stopping-game-pomdp-defender-v1", checkpoint_traces_freq=100000,
+        env_name="csle-apt-game-v1", checkpoint_traces_freq=100000,
         gamma=1, N=N, p_a=p_a)
+    p_intrusion = 0.5
+    pi2 = []
+    for _ in state_space_config.states:
+        pi2.append([1 - p_intrusion, p_intrusion])
+    pi2 = np.array(pi2)
+    attacker_strategy = RandomPolicy(actions=action_space_config.action_spaces[1].actions,
+                                     player_type=PlayerType.ATTACKER, stage_policy_tensor=list(pi2))
+    config = AptGameDefenderPomdpConfig(
+        env_name="csle-stopping-game-pomdp-defender-v1",
+        apt_game_config=game_config, apt_game_name="csle-apt-game-v1",
+        attacker_strategy=attacker_strategy
+    )
     return config
 
 
@@ -320,7 +340,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-stopping-pomdp-defender-001", version="0.0.1", N=5, p_a=0.1, num_observations=10)
+    config = default_config(name="csle-apt-pomdp-defender-001", version="0.0.1", N=5, p_a=0.1, num_observations=10)
 
     if args.install:
         SimulationEnvController.install_simulation(config=config)

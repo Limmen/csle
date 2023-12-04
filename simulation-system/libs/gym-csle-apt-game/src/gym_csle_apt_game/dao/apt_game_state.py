@@ -36,13 +36,13 @@ class AptGameState(JSONSerializable):
         """
         :return: the attacker's observation
         """
-        return np.array([np.float64(self.b), np.int32(self.s)])
+        return np.array([self.b, np.int32(self.s)])
 
     def defender_observation(self) -> npt.NDArray[Any]:
         """
         :return: the defender's observation
         """
-        return np.array([np.float64(self.b)])
+        return np.array([self.b])
 
     def __str__(self) -> str:
         """

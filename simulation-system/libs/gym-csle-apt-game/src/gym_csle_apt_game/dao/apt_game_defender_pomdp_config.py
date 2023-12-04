@@ -73,7 +73,7 @@ class AptGameDefenderPomdpConfig(SimulationEnvInputConfig):
         """
         :return:  a string representation of the object
         """
-        return f"apt_game_config: {self.apt_game_config}, " \
+        return f"APT stopping defender pomdp config; apt_game_config: {self.apt_game_config}, " \
                f"attacker_strategy: {self.attacker_strategy}, apt_game_name: {self.apt_game_name}," \
                f"env_name: {self.env_name}"
 
