@@ -86,7 +86,10 @@ class MultiThresholdStoppingPolicy(Policy):
         """
         s = o[2]
         l = int(o[0])
-        theta_val = self.theta[int(s * self.L + l - 1)]
+        if int(s * self.L + l - 1) <= len(self.theta):
+            theta_val = self.theta[int(s * self.L + l - 1)]
+        else:
+            theta_val = self.theta[0]
         if defender_stopping_prob is None:
             if self.opponent_strategy is None:
                 raise ValueError("The opponent strategy is None")

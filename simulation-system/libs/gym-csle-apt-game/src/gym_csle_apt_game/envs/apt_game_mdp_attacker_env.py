@@ -8,7 +8,6 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 from gym_csle_apt_game.dao.apt_game_attacker_mdp_config import AptGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
-import gym_csle_apt_game.constants.constants as env_constants
 from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
 
 
@@ -94,12 +93,8 @@ class AptGameMdpAttackerEnv(BaseEnv):
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
-
-        info[env_constants.ENV_METRICS.RETURN] = -info[env_constants.ENV_METRICS.RETURN]
-        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = \
-            -info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]
-
-        return attacker_obs, r[1], d, d, info
+        attacker_obs_prime = np.array([1, sum(attacker_obs[0][1:]), 0])
+        return attacker_obs_prime, r[0], d, d, info
 
     def reset(self, seed: Union[int, None] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
@@ -115,8 +110,9 @@ class AptGameMdpAttackerEnv(BaseEnv):
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
+        attacker_obs_prime = np.array([1, sum(attacker_obs[0][1:]), 0])
         info: Dict[str, Any] = {}
-        return attacker_obs, info
+        return attacker_obs_prime, info
 
     def set_model(self, model) -> None:
         """

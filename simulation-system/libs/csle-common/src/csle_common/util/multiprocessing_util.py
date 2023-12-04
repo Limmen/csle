@@ -26,7 +26,7 @@ class NoDaemonProcess(multiprocessing.Process):
         pass
 
 
-class NoDaemonContext(type(multiprocessing.get_context())): # type: ignore
+class NoDaemonContext(type(multiprocessing.get_context())):  # type: ignore
     """
     Context of a non-daemon process
     """

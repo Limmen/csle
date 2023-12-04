@@ -24,8 +24,11 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.player_type import PlayerType
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
+from gym_csle_apt_game.dao.apt_game_attacker_mdp_config import AptGameAttackerMdpConfig
 
 
 def default_config(N: int, p_a: float, num_observations: int,
@@ -53,7 +56,8 @@ def default_config(N: int, p_a: float, num_observations: int,
         reward_function_config=reward_function_config,
         transition_tensor_config=transition_operator_config,
         observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config, N=N, p_a=p_a)
+        initial_state_distribution_config=initial_state_distribution_config, N=N, p_a=p_a,
+        action_space_config=joint_action_space_config)
     env_parameters_config = default_env_parameters_config()
     descr = "A two-player zero-sum one-sided partially observed stochastic APT game."
     simulation_env_config = SimulationEnvConfig(
@@ -285,6 +289,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
                          initial_state_distribution_config: InitialStateDistributionConfig,
+                         action_space_config: JointActionSpaceConfig,
                          N: int, p_a: float) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
@@ -294,11 +299,12 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     :param transition_tensor_config: the transition tensor configuration
     :param observation_function_config: the observation function configuration
     :param initial_state_distribution_config: the initial state distribution configuration
+    :param action_space_config: the joint action space configuration
     :param: N: the number of servers
     :param p_a: the intrusion success probability
     :return: The default input configuration to the OpenAI gym environment
     """
-    config = AptGameConfig(
+    game_config = AptGameConfig(
         A1=AptGameUtil.attacker_actions(), A2=AptGameUtil.defender_actions(),
         b1=np.array(initial_state_distribution_config.initial_state_distribution),
         save_dir=ExperimentUtil.default_output_dir() + "/results",
@@ -307,8 +313,15 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         Z=np.array(observation_function_config.observation_tensor),
         C=np.array(reward_function_config.reward_tensor),
         S=AptGameUtil.state_space(N=N),
-        env_name="csle-apt-game-mdp-attacker-v1", checkpoint_traces_freq=100000,
+        env_name="csle-apt-game-v1", checkpoint_traces_freq=100000,
         gamma=1, N=N, p_a=p_a)
+    defender_strategy = RandomPolicy(actions=action_space_config.action_spaces[0].actions,
+                                     player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
+    config = AptGameAttackerMdpConfig(
+        env_name="csle-stopping-game-mdp-attacker-v1",
+        apt_game_config=game_config, apt_game_name="csle-apt-game-v1",
+        defender_strategy=defender_strategy
+    )
     return config
 
 
