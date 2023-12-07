@@ -244,8 +244,16 @@ const EmulationStatistics = (props) => {
                 setFilteredEmulationStatisticIds(statisticsIds)
                 setLoading(false)
                 if (statisticsIds.length > 0) {
-                    setSelectedEmulationStatisticId(statisticsIds[0])
-                    fetchEmulationStatistic(statisticsIds[0])
+                    var minIdx = 0
+                    var minId = Number.MAX_VALUE
+                    for (let i = 0; i < statisticsIds.length; i++) {
+                        if (statisticsIds[i].value <= minId) {
+                            minId = statisticsIds[i].value
+                            minIdx = i
+                        }
+                    }
+                    setSelectedEmulationStatisticId(statisticsIds[minIdx])
+                    fetchEmulationStatistic(statisticsIds[minIdx])
                     setLoadingSelectedEmulationStatistic(true)
                 } else {
                     setLoadingSelectedEmulationStatistic(false)
@@ -367,8 +375,16 @@ const EmulationStatistics = (props) => {
                 }
             }
             if (!selectedStatRemoved) {
-                setSelectedEmulationStatisticId(filteredEmStatsIds[0])
-                fetchEmulationStatistic(filteredEmStatsIds[0])
+                var minIdx = 0
+                var minId = Number.MAX_VALUE
+                for (let i = 0; i < filteredEmStatsIds.length; i++) {
+                    if (filteredEmStatsIds[i].value <= minId) {
+                        minId = filteredEmStatsIds[i].value
+                        minIdx = i
+                    }
+                }
+                setSelectedEmulationStatisticId(filteredEmStatsIds[minIdx])
+                fetchEmulationStatistic(filteredEmStatsIds[minIdx])
                 setLoadingSelectedEmulationStatistic(true)
             }
         } else {
