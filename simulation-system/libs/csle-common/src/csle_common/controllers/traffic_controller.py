@@ -625,6 +625,7 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            logger.info(f"Getting traffic information from node: {node_traffic_config.ip}")
             if node_traffic_config.docker_gw_bridge_ip not in active_ips or not EmulationUtil.physical_ip_match(
                     emulation_env_config=emulation_env_config, ip=node_traffic_config.docker_gw_bridge_ip,
                     physical_host_ip=physical_host_ip):
@@ -637,8 +638,9 @@ class TrafficController:
                         port=node_traffic_config.traffic_manager_port, ip=node_traffic_config.docker_gw_bridge_ip)
                     running = True
                 except Exception as e:
-                    logger.debug(f"Could not fetch traffic manager status on IP"
-                                 f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
+                    logger.info(f"Could not fetch traffic manager status on IP"
+                                 f":{node_traffic_config.docker_gw_bridge_ip}:"
+                                 f"{node_traffic_config.traffic_manager_port}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
                 else:

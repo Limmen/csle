@@ -104,13 +104,15 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         :param context: the gRPC context
         :return: a TrafficDTO with the state of the traffic manager
         """
+        logging.info(f"Getting traffic manager status")
         running = TrafficManagerServicer._get_traffic_status()
         script_file_str = TrafficManagerServicer._read_traffic_script()
+        logging.info(f"Returning traffic manager status")
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO(running=running,
                                                                                     script=script_file_str)
         return traffic_dto
 
-    def stopTraffic(self, request: csle_collector.traffic_manager.traffic_manager_pb2.StartTrafficMsg,
+    def stopTraffic(self, request: csle_collector.traffic_manager.traffic_manager_pb2.StopTrafficMsg,
                     context: grpc.ServicerContext):
         """
         Stops the traffic generator
@@ -123,6 +125,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         cmd = "sudo pkill -f traffic_generator.sh"
         os.system(cmd)
         script_file_str = TrafficManagerServicer._read_traffic_script()
+        logging.info("Traffic generator stopped")
         return csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO(running=False, script=script_file_str)
 
     def startTraffic(self, request: csle_collector.traffic_manager.traffic_manager_pb2.StartTrafficMsg,
@@ -144,6 +147,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         script_file_str = TrafficManagerServicer._read_traffic_script()
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO(
             running=True, script=script_file_str)
+        logging.info("Traffic generator started")
         return traffic_dto
 
 

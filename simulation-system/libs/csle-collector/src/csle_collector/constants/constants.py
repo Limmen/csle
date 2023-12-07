@@ -212,7 +212,7 @@ class GRPC:
     """
     Constants related to GRPC
     """
-    TIMEOUT_SECONDS = 120
+    TIMEOUT_SECONDS = 60
     CONFIG_TIMEOUT_SECONDS = 300
     OPERATION_TIMEOUT_SECONDS = 30000
 
