@@ -54,6 +54,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
                 return script_file_str
         except Exception as e:
             logging.info(f"Could not read the script file: {str(e)}, {repr(e)}")
+            return ""
 
     @staticmethod
     def _create_traffic_script(commands: List[str], sleep_time: int) -> None:
