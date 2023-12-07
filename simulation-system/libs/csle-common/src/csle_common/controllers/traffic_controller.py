@@ -639,8 +639,8 @@ class TrafficController:
                     running = True
                 except Exception as e:
                     logger.info(f"Could not fetch traffic manager status on IP"
-                                 f":{node_traffic_config.docker_gw_bridge_ip}:"
-                                 f"{node_traffic_config.traffic_manager_port}, error: {str(e)}, {repr(e)}")
+                                f":{node_traffic_config.docker_gw_bridge_ip}:"
+                                f"{node_traffic_config.traffic_manager_port}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
                 else:

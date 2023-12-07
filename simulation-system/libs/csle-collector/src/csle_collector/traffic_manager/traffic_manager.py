@@ -105,10 +105,10 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         :param context: the gRPC context
         :return: a TrafficDTO with the state of the traffic manager
         """
-        logging.info(f"Getting traffic manager status")
+        logging.info("Getting traffic manager status")
         running = TrafficManagerServicer._get_traffic_status()
         script_file_str = TrafficManagerServicer._read_traffic_script()
-        logging.info(f"Returning traffic manager status")
+        logging.info("Returning traffic manager status")
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO(running=running,
                                                                                     script=script_file_str)
         return traffic_dto
