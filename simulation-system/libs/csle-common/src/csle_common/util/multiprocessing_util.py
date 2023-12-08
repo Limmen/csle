@@ -1,4 +1,4 @@
-import multiprocessing
+import multiprocessing.pool
 
 
 class NoDaemonProcess(multiprocessing.Process):

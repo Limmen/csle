@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 import numpy as np
 import numpy.typing as npt
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
@@ -32,11 +32,11 @@ class AptGameState(JSONSerializable):
         self.s = AptGameUtil.sample_initial_state(b1=self.b1)
         self.b = self.b1.copy()
 
-    def attacker_observation(self) -> npt.NDArray[Any]:
+    def attacker_observation(self) -> Tuple[npt.NDArray[Any], int]:
         """
         :return: the attacker's observation
         """
-        return np.array([self.b, np.int32(self.s)])
+        return (self.b, int(self.s))
 
     def defender_observation(self) -> npt.NDArray[Any]:
         """

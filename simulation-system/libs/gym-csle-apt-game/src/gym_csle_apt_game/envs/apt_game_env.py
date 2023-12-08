@@ -46,7 +46,8 @@ class AptGameEnv(BaseEnv):
         super().__init__()
 
     def step(self, action_profile: Tuple[int, Tuple[npt.NDArray[Any], int]]) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, bool, Dict[str, Any]]:
+            -> Tuple[
+                Tuple[npt.NDArray[Any], Tuple[npt.NDArray[Any], int]], Tuple[int, int], bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -128,7 +129,7 @@ class AptGameEnv(BaseEnv):
         return info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Dict[str, Any]]:
+            -> Tuple[Tuple[npt.NDArray[Any], Tuple[npt.NDArray[Any], int]], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 

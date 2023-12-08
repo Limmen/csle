@@ -40,7 +40,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
         }
 
         self.latest_defender_obs: Union[None, List[Any], npt.NDArray[Any]] = None
-        self.latest_attacker_obs: Union[None, List[Any], npt.NDArray[Any]] = None
+        self.latest_attacker_obs: Union[None, List[Any], npt.NDArray[Any], Tuple[npt.NDArray[Any], int]] = None
         self.model: Union[None, Any] = None
 
         # Reset

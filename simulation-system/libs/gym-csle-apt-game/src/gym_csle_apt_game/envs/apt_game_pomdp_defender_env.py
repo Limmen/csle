@@ -37,7 +37,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
             'video.frames_per_second': 50  # Video rendering speed
         }
 
-        self.latest_attacker_obs: Union[None, npt.NDArray[Any]] = None
+        self.latest_attacker_obs: Union[None, Tuple[npt.NDArray[Any], int]] = None
         # Reset
         self.reset()
         super().__init__()
