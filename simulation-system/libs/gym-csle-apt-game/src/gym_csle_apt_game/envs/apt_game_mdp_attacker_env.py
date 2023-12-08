@@ -76,12 +76,6 @@ class AptGameMdpAttackerEnv(BaseEnv):
                     pass
                 a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.apt_game_env.state.s)
 
-        # a2 = pi2
-        # pi2 = np.array([
-        #     [0.5,0.5],
-        #     [0.5,0.5],
-        #     [0.5,0.5]
-        # ])
         assert pi2.shape[0] == len(self.config.apt_game_config.S)
         assert pi2.shape[1] == len(self.config.apt_game_config.A1)
 

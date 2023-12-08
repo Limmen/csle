@@ -285,9 +285,22 @@ class AptGameUtil:
 
         :param pi2: the attacker action
         :param s: the game state
-        :return: a2 (the attacker action
+        :return: a2 (the attacker action)
         """
         return int(np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s]))
+
+    @staticmethod
+    def sample_defender_action(alpha: float, b: List[float]) -> int:
+        """
+        Samples the attacker action
+
+        :param alpha: the defender threshold
+        :param b: the belief state
+        :return: a1 (the defender action)
+        """
+        if sum(b[1:]) >= alpha:
+            return 1
+        return 0
 
     @staticmethod
     def generate_transitions(game_config: AptGameConfig) -> List[str]:
