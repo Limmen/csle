@@ -68,7 +68,8 @@ class AptGameEnv(BaseEnv):
         self.state.s = AptGameUtil.sample_next_state(a1=a1, a2=a2, T=self.config.T, S=self.config.S, s=self.state.s)
         o = AptGameUtil.sample_next_observation(Z=self.config.Z, O=self.config.O, s_prime=self.state.s)
         o_idx = list(self.config.O).index(o)
-        self.state.b = AptGameUtil.next_belief(o=o_idx, a1=a1, b=self.state.b, pi2=pi2, config=self.config, a2=a2)
+        self.state.b = AptGameUtil.next_belief(o=o_idx, a1=a1, b=self.state.b, pi2=pi2, config=self.config, a2=a2,
+                                               s=self.state.s)
 
         # Update time-step
         self.state.t += 1

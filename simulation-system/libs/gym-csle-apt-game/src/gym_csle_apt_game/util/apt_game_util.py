@@ -274,7 +274,7 @@ class AptGameUtil:
             b_prime[s_prime] = AptGameUtil.bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b, pi2=pi2, config=config)
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "
-                  f"a2: {a2}, s:{s}")
+                  f"a2: {a2}, s:{s}, P[O|s]={config.Z[s][o]}, b[s]={b[s]}")
         assert round(sum(b_prime), 2) == 1
         return b_prime
 

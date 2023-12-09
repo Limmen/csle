@@ -153,7 +153,6 @@ class RolloutUtil:
         else:
             A_costs = []
             for a1 in config.A1:
-                print(f"{a1}/{len(config.A1)}, ell: {ell}")
                 expected_immediate_cost = AptGameUtil.expected_cost(C=list(config.C), S=list(config.S), b=b, a1=a1)
                 expected_future_cost = 0.0
                 for a2 in config.A2:
@@ -194,11 +193,11 @@ class RolloutUtil:
         """
         if ell == 0:
             return 0, RolloutUtil.eval_defender_base_parallel(alpha=alpha, pi2=pi2, config=config,
-                                                              num_samples=num_samples, horizon=horizon, s=s, b=b.copy())
+                                                              num_samples=num_samples, horizon=horizon, s=None,
+                                                              b=b.copy())
         else:
             A_costs = []
             for a1 in config.A1:
-                print(f"{a1}/{len(config.A1)}, ell: {ell}")
                 if s is None:
                     expected_immediate_cost = AptGameUtil.expected_cost(C=list(config.C), S=list(config.S), b=b, a1=a1)
                 else:
@@ -250,7 +249,6 @@ class RolloutUtil:
                     a1 = 1
             expected_immediate_cost = AptGameUtil.expected_cost(C=list(config.C), S=list(config.S), b=b, a1=a1)
             for a2 in config.A2:
-                print(f"{a2}/{len(config.A1)}, ell: {ell}")
                 p = NestablePool(num_samples)
                 args = []
                 for i in range(num_samples):
