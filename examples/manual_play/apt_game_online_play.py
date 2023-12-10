@@ -1,3 +1,4 @@
+import time
 from typing import List, Any, Union
 import random
 import numpy as np
@@ -146,8 +147,10 @@ def online_play(T: int, b1: List[float], pi_d_1: float, pi_a_1: npt.NDArray[Any]
     data = {}
     data["discrepancy"] = []
     data["mu_1"] = []
+    data["costs"] = []
+    start = time.time()
     for t in range(2, T):
-        print(f"t:{t}, b:{np.round(b, 3)}, s: {s}, a1: {a1}, a2: {a2}")
+        print(f"t:{t}, b:{np.round(b, 3)}, s: {s}, a1: {a1}, a2: {a2}, time: {time.time()-start}")
         o = AptGameUtil.sample_next_observation(Z=game_config.Z, s_prime=s, O=game_config.O)
         for i, ell in enumerate(cal_L):
             true_a2 = None
@@ -159,12 +162,13 @@ def online_play(T: int, b1: List[float], pi_d_1: float, pi_a_1: npt.NDArray[Any]
         for i, ell in enumerate(cal_L):
             discrepancies[i].append(empirical_discrepancy(feedback_probabilities=feedback_probabilities, ell_a_hat=ell,
                                                           ell_a=ell_a, cal_L=cal_L))
-        print(f"feedback probs: {list(map(lambda x: x[-1], feedback_probabilities))}")
-        print(f"discrepenacies: {list(map(lambda x: x[-1], discrepancies))}")
+        # print(f"feedback probs: {list(map(lambda x: x[-1], feedback_probabilities))}")
+        # print(f"discrepenacies: {list(map(lambda x: x[-1], discrepancies))}")
         mu = bayesian_estimator(mu=mu, cal_L=cal_L, feedback_probabilities=feedback_probabilities)
         expected_d = expected_discrepancy(discrepancies=discrepancies, cal_L=cal_L, mu=mu)
         data["discrepancy"].append(expected_d)
         data["mu_1"].append(mu[1])
+        data["discrepancies"] = discrepancies
         print(f"posterior: {mu}, E[discrepancy]: {expected_d}")
         ell_a_bar = int(np.random.choice(np.arange(0, len(mu)), p=mu))
         b = AptGameUtil.next_belief(o=game_config.O.index(o), a1=a1, b=b, pi2=pi_a_1, config=game_config)
@@ -185,6 +189,9 @@ def online_play(T: int, b1: List[float], pi_d_1: float, pi_a_1: npt.NDArray[Any]
         attacker_history[2].append(a1)
         attacker_history[3].append(a2)
         attacker_history[4].append(s)
+        c = AptGameUtil.cost_function(s=s, a_1=a1)
+        data["costs"].append(c)
+        print(f"costs: {data['costs']}")
         s = AptGameUtil.sample_next_state(T=game_config.T, s=s, a1=a1, a2=a2, S=game_config.S)
         # if random.random() < (1 - gamma):
         #     b = b1
