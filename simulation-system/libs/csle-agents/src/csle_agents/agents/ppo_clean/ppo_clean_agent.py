@@ -12,6 +12,7 @@ import numpy as np
 import math
 import torch
 import torch.nn as nn
+import torch.optim as optim
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
 from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -38,6 +39,11 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
+def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
+    torch.nn.init.orthogonal_(layer.weight, std)
+    torch.nn.init.constant_(layer.bias, bias_const)
+    return layer
+
 class Agent(nn.Module):
     def __init__(self, envs):
         super().__init__()
@@ -60,6 +66,22 @@ class PPOCleanAgent(BaseAgent):
     """
     A PPO agent using the implementation from CleanRL
     """
+
+
+    def make_env(self, env_id, seed, run_name, idx=1, capture_video=False):
+        def thunk():
+            if capture_video and idx == 0:
+                env = gym.make(env_id)
+                env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
+            else:
+                env = gym.make(env_id)
+            env = gym.wrappers.RecordEpisodeStatistics(env)
+            env.seed(seed)
+            env.action_space.seed(seed)
+            env.observation_space.seed(seed)
+            return env
+
+        return thunk
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
@@ -140,13 +162,17 @@ class PPOCleanAgent(BaseAgent):
         self.exp_execution.id = exp_execution_id
 
         # Setup gym environment
+        # perhaps the right params are in the config
         config = self.simulation_env_config.simulation_env_input_config
-        orig_env: BaseEnv = gymnasium.make(self.simulation_env_config.gym_env_name, config=config)
-        env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
-                           n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
-                           env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
-        env = VecMonitor(env)
-
+        orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        # env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
+                           # n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
+                           # env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
+        # env = VecMonitor(env)
+        
+        # the seed = 10 right now, don't know where to fetch it
+        num_envs = 2
+        envs = gym.vector.SyncVectorEnv([self.make_env(self.simulation_env_config.gym_env_name, 10 + i, i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
             self.start: float = time.time()
@@ -183,29 +209,15 @@ class PPOCleanAgent(BaseAgent):
                 gym_env_name=self.simulation_env_config.gym_env_name,
                 start=self.start, save_to_metastore=self.save_to_metastore
             )
-        def make_env(self, env_id, seed, idx, capture_video, run_name):
-            def thunk():
-                if capture_video and idx == 0:
-                    env = gym.make(env_id)
-                    env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
-                else:
-                    env = gym.make(env_id)
-                env = gym.wrappers.RecordEpisodeStatistics(env)
-                env.seed(seed)
-                env.action_space.seed(seed)
-                env.observation_space.seed(seed)
-                return env
 
-            return thunk
 
             # Create PPO Agent
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
                           ] * self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value)
-            envs = gym.vector.SyncVectorEnv([self.make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)])
-            model = Agent()
-            
-            model = PPO(
+            model = Agent(envs=envs)
+            optimizer = optim.Adam(model.parameters(), lr=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value, eps=1e-5)
+            """model = PPO(
                 agents_constants.PPO.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
                 n_steps=self.experiment_config.hparams[agents_constants.PPO.STEPS_BETWEEN_UPDATES].value,
                 batch_size=self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value,
@@ -218,15 +230,7 @@ class PPOCleanAgent(BaseAgent):
                 ent_coef=self.experiment_config.hparams[agents_constants.PPO.ENT_COEF].value,
                 vf_coef=self.experiment_config.hparams[agents_constants.PPO.VF_COEF].value,
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
-                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value)
-            if self.experiment_config.player_type == PlayerType.ATTACKER \
-                    and "stopping" in self.simulation_env_config.gym_env_name:
-                orig_env.set_model(model)
-
-            # Train
-            model.learn(total_timesteps=self.experiment_config.hparams[
-                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value, callback=cb)
-
+                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value)"""
             # Save policy
             exp_result = cb.exp_result
             ts = time.time()
