@@ -68,17 +68,19 @@ class PPOCleanAgent(BaseAgent):
     """
 
 
-    def make_env(self, env_id, seed, run_name, idx=1, capture_video=False):
+    def make_env(self, env_id, seed, idx, run_name, capture_video=False):
         def thunk():
+            # print(env_id)
             if capture_video and idx == 0:
                 env = gym.make(env_id)
                 env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
             else:
                 env = gym.make(env_id)
+            print(env)
             env = gym.wrappers.RecordEpisodeStatistics(env)
-            env.seed(seed)
-            env.action_space.seed(seed)
-            env.observation_space.seed(seed)
+            # env.seed(seed)
+            # env.action_space.seed(seed)
+            # env.observation_space.seed(seed)
             return env
 
         return thunk
@@ -164,7 +166,7 @@ class PPOCleanAgent(BaseAgent):
         # Setup gym environment
         # perhaps the right params are in the config
         config = self.simulation_env_config.simulation_env_input_config
-        orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name)
         # env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
                            # n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            # env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
@@ -172,7 +174,8 @@ class PPOCleanAgent(BaseAgent):
         
         # the seed = 10 right now, don't know where to fetch it
         num_envs = 2
-        envs = gym.vector.SyncVectorEnv([self.make_env(self.simulation_env_config.gym_env_name, 10 + i, i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
+        self.simulation_env_config.name = "JohnDoe"
+        envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name, seed=10 + i, idx=i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
             self.start: float = time.time()
@@ -215,27 +218,23 @@ class PPOCleanAgent(BaseAgent):
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
                           ] * self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value)
+            
+            # device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
             model = Agent(envs=envs)
+            model.cpu()
             optimizer = optim.Adam(model.parameters(), lr=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value, eps=1e-5)
-            """model = PPO(
-                agents_constants.PPO.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
-                n_steps=self.experiment_config.hparams[agents_constants.PPO.STEPS_BETWEEN_UPDATES].value,
-                batch_size=self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value,
-                learning_rate=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value,
-                seed=seed, device=self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value,
-                gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value,
-                gae_lambda=self.experiment_config.hparams[agents_constants.PPO.GAE_LAMBDA].value,
-                clip_range=self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE].value,
-                clip_range_vf=self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE_VF].value,
-                ent_coef=self.experiment_config.hparams[agents_constants.PPO.ENT_COEF].value,
-                vf_coef=self.experiment_config.hparams[agents_constants.PPO.VF_COEF].value,
-                max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
-                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value)"""
+
+            # Train
+            optimizer.zero_grad()
+            optimizer.step()
+
             # Save policy
             exp_result = cb.exp_result
             ts = time.time()
             save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
-            model.save(save_path)
+            torch.save(model, save_path)
+            # model.save(save_path)
+            print(exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN])
             policy = PPOPolicy(
                 model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,
                 states=self.simulation_env_config.state_space_config.states,
