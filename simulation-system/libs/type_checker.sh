@@ -20,6 +20,10 @@ echo "Running type checker for gym-csle-stopping-game"
 cd gym-csle-stopping-game; mypy src tests; cd ../
 echo "Running type checker for gym-csle-intrusion-response-game"
 cd gym-csle-intrusion-response-game; mypy src tests; cd ../
+echo "Running type checker for gym-csle-apt-game"
+cd gym-csle-apt-game; mypy src tests; cd ../
+echo "Running type checker for csle-tolerance"
+cd csle-tolerance; mypy src tests; cd ../
 echo "Running type checker for csle-base"
 cd csle-base; mypy src; cd ../
 echo "Running type checker for csle-cli"

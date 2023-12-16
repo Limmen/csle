@@ -739,7 +739,7 @@ class PivotNMAPScanThread(threading.Thread):
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                 try:
                     Logger.__call__().get_logger().info(
-                        f"Running NMAP scan on container: {self.machine.ips}, commands: "
+                        f"Running NMAP scan on container(s): {self.machine.ips}, commands: "
                         f"{','.join(cmds)}")
                     results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c2.conn)
                     break

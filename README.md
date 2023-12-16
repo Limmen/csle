@@ -113,6 +113,7 @@ features. We currently support each release for a window of 6 months.
 | [gym-csle-intrusion-response-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml/badge.svg) |
 | [python-linter](https://github.com/Limmen/csle/actions/workflows/python-linter.yml)                                                          | ![status](https://github.com/Limmen/csle/actions/workflows/python-linter.yml/badge.svg)                                 |
 | [csle-tolerance-build](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml)                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml/badge.svg)                   |
+| [gym-csle-apt-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml)                               | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml/badge.svg)                |
 | [management-system](https://github.com/Limmen/csle/actions/workflows/js-management-system-build)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/js-management-system-build.yml/badge.svg)                    |
 
 ## Supported Platforms

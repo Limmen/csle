@@ -16,6 +16,8 @@ The command-line-interface (CLI) tool for CSLE.
 - `csle-defender`
 - `csle-system-identification`
 - `gym-csle-stopping-game`
+- `gym-csle-apt-game`
+- `csle-tolerance`
 - `gym-csle-intrusion-response-game`
 - `csle-agents`
 

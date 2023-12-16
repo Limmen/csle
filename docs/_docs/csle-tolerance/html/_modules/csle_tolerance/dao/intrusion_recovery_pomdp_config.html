@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_tolerance.dao.intrusion_recovery_pomdp_config &mdash; csle-tolerance 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-tolerance
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.constants.html">csle_tolerance.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.dao.html">csle_tolerance.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.envs.html">csle_tolerance.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_tolerance.util.html">csle_tolerance.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-tolerance</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_tolerance.dao.intrusion_recovery_pomdp_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_tolerance.dao.intrusion_recovery_pomdp_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_input_config</span> <span class="kn">import</span> <span class="n">SimulationEnvInputConfig</span>
+
+
+<div class="viewcode-block" id="IntrusionRecoveryPomdpConfig"><a class="viewcode-back" href="../../../csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig">[docs]</a><span class="k">class</span> <span class="nc">IntrusionRecoveryPomdpConfig</span><span class="p">(</span><span class="n">SimulationEnvInputConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO containing the configuration of an intrusion recovery POMDP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_c_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">BTR</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">negate_costs</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">observations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+                 <span class="n">cost_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">observation_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+                 <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span> <span class="n">b1</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">T</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">simulation_env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">gym_env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_horizon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param eta: the scaling factor for the cost function</span>
+<span class="sd">        :param p_a: the intrusion probability</span>
+<span class="sd">        :param p_c_1: the crash probability in the healthy state</span>
+<span class="sd">        :param p_c_2: the crash probability in the compromised state</span>
+<span class="sd">        :param p_u: the software upgrade probability</span>
+<span class="sd">        :param BTR: the periodic recovery interval</span>
+<span class="sd">        :param negate_costs: boolean flag indicating whether costs should be negated or not</span>
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param discount_factor: the discount factor</span>
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param actions: the list of actions</span>
+<span class="sd">        :param observations: the list of observations</span>
+<span class="sd">        :param cost_tensor: the cost tensor</span>
+<span class="sd">        :param observation_tensor: the observation tensor</span>
+<span class="sd">        :param transition_tensor: the transition tensor</span>
+<span class="sd">        :param b1: the initial belief</span>
+<span class="sd">        :param T: the time horizon</span>
+<span class="sd">        :param simulation_env_name: name of the simulation environment</span>
+<span class="sd">        :param gym_env_name: name of the gym environment</span>
+<span class="sd">        :param max_horizon: the maximum horizon to avoid infinie simulations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_a</span> <span class="o">=</span> <span class="n">p_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_c_1</span> <span class="o">=</span> <span class="n">p_c_1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_c_2</span> <span class="o">=</span> <span class="n">p_c_2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_u</span> <span class="o">=</span> <span class="n">p_u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BTR</span> <span class="o">=</span> <span class="n">BTR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negate_costs</span> <span class="o">=</span> <span class="n">negate_costs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discount_factor</span> <span class="o">=</span> <span class="n">discount_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="n">observations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_tensor</span> <span class="o">=</span> <span class="n">cost_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_tensor</span> <span class="o">=</span> <span class="n">observation_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span> <span class="o">=</span> <span class="n">transition_tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">b1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span> <span class="o">=</span> <span class="n">simulation_env_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gym_env_name</span> <span class="o">=</span> <span class="n">gym_env_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_horizon</span> <span class="o">=</span> <span class="n">max_horizon</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eta: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="si">}</span><span class="s2">, p_a: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_a</span><span class="si">}</span><span class="s2">, p_c_1: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_c_1</span><span class="si">}</span><span class="s2">, p_c_2: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_c_2</span><span class="si">}</span><span class="s2">, p_u: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">p_u</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;BTR: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BTR</span><span class="si">}</span><span class="s2">, negate_costs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">negate_costs</span><span class="si">}</span><span class="s2">, seed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;discount_factor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">discount_factor</span><span class="si">}</span><span class="s2">, states: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="si">}</span><span class="s2">, actions: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;observations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_tensor</span><span class="si">}</span><span class="s2">, cost_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_tensor</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;observation_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_tensor</span><span class="si">}</span><span class="s2">, transition_tensor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;b1:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="si">}</span><span class="s2">, T: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="si">}</span><span class="s2">, simulation_env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;gym_env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gym_env_name</span><span class="si">}</span><span class="s2">, max_horizon: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_horizon</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntrusionRecoveryPomdpConfig.from_dict"><a class="viewcode-back" href="../../../csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;IntrusionRecoveryPomdpConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpConfig</span><span class="p">(</span>
+            <span class="n">eta</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">],</span> <span class="n">p_a</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_a&quot;</span><span class="p">],</span> <span class="n">p_c_1</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_c_1&quot;</span><span class="p">],</span> <span class="n">p_c_2</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_c_2&quot;</span><span class="p">],</span> <span class="n">p_u</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_u&quot;</span><span class="p">],</span> <span class="n">BTR</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;BTR&quot;</span><span class="p">],</span>
+            <span class="n">negate_costs</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;negate_costs&quot;</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">],</span> <span class="n">discount_factor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;discount_factor&quot;</span><span class="p">],</span> <span class="n">states</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span> <span class="n">observations</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">],</span> <span class="n">cost_tensor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cost_tensor&quot;</span><span class="p">],</span>
+            <span class="n">observation_tensor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_tensor&quot;</span><span class="p">],</span> <span class="n">transition_tensor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_tensor&quot;</span><span class="p">],</span> <span class="n">b1</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;b1&quot;</span><span class="p">],</span>
+            <span class="n">T</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">],</span> <span class="n">simulation_env_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_name&quot;</span><span class="p">],</span> <span class="n">gym_env_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;gym_env_name&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryPomdpConfig.to_dict"><a class="viewcode-back" href="../../../csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a dict representation of the object</span>
+
+<span class="sd">        :return: A dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_a</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_c_1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_c_1</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_c_2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_c_2</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;p_u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_u</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;BTR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BTR</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;negate_costs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">negate_costs</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;discount_factor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_factor</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;observations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cost_tensor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_tensor</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;observation_tensor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation_tensor</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;transition_tensor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_tensor</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;b1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;gym_env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_name</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="IntrusionRecoveryPomdpConfig.from_json_file"><a class="viewcode-back" href="../../../csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;IntrusionRecoveryPomdpConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">IntrusionRecoveryPomdpConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

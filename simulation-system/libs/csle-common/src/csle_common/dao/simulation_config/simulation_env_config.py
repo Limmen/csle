@@ -84,6 +84,9 @@ class SimulationEnvConfig(JSONSerializable):
         from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
         from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
         from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+        from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
+        from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import AptGameDefenderPomdpConfig
+        from gym_csle_apt_game.dao.apt_game_attacker_mdp_config import AptGameAttackerMdpConfig
         from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config \
             import IntrusionResponseGameLocalPOMDPDefenderConfig
         from gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config \
@@ -97,6 +100,8 @@ class SimulationEnvConfig(JSONSerializable):
         input_config = None
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
+                           AptGameConfig.from_dict, AptGameAttackerMdpConfig.from_dict,
+                           AptGameDefenderPomdpConfig.from_dict,
                            IntrusionResponseGameLocalPOMDPDefenderConfig.from_dict,
                            IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict,
                            WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict,

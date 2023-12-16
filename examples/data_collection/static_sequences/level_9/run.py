@@ -74,10 +74,9 @@ def run() -> None:
 
     :return: None
     """
-    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level9-010")
+    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level9-040")
     emulation_env_config = executions[0].emulation_env_config
     assert emulation_env_config is not None
-    # assert ContainerController.is_emulation_running(emulation_env_config=emulation_env_config) is True
     # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     # attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     attacker_sequence = expert_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
@@ -88,10 +87,10 @@ def run() -> None:
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
                                   defender_sequence=defender_sequence, repeat_times=5000,
                                   sleep_time=emulation_env_config.kafka_config.time_step_len_seconds,
-                                  descr="Intrusion data collected against novice attacker",
+                                  descr="Intrusion data collected against expert attacker",
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,
-                                  emulation_statistics=em_statistic, intrusion_start_p=0.2,
+                                  emulation_statistics=em_statistic, intrusion_start_p=0.8,
                                   intrusion_continue=1, restart_client_population=True)
 
 

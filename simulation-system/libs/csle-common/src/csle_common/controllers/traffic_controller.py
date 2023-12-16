@@ -125,13 +125,13 @@ class TrafficController:
                                                     ip=node_traffic_config.docker_gw_bridge_ip))
 
     @staticmethod
-    def start_client_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
+    def start_client_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> bool:
         """
         Utility method starting the client manager
 
         :param emulation_env_config: the emulation env config
         :param logger: the logger to use for logging
-        :return: None
+        :return: True if the client manager was started, False otherwise
         """
         # Connect
         EmulationUtil.connect_admin(
@@ -139,8 +139,8 @@ class TrafficController:
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip)
 
         # Check if client_manager is already running
-        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
-               constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME)
+        cmd = (f"{constants.COMMANDS.PS_AUX} {constants.COMMANDS.PIPE_DELIM} {constants.COMMANDS.GREP} "
+               f"{constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME}")
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(
@@ -148,8 +148,10 @@ class TrafficController:
 
         if constants.COMMANDS.SEARCH_CLIENT_MANAGER not in str(o):
             logger.info(
-                f"Starting client manager on node "
-                f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
+                f"Starting client manager on container "
+                f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
+                f"since it was not running. "
+                f"Output of :{cmd}, was: {str(o)}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -167,6 +169,8 @@ class TrafficController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip))
             time.sleep(2)
+            return True
+        return False
 
     @staticmethod
     def stop_client_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
@@ -206,7 +210,8 @@ class TrafficController:
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
-            port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+            logger=logger)
 
         if client_dto.client_process_active:
             # Open a gRPC session
@@ -234,12 +239,18 @@ class TrafficController:
             f"Starting client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
-        TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
+        client_manager_started = (
+            TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger))
+
+        if client_manager_started:
+            # If client manager was started we need to first start the client population
+            TrafficController.start_client_population(emulation_env_config=emulation_env_config,
+                                                      physical_server_ip=physical_server_ip, logger=logger)
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
-            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
-        )
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+            logger=logger)
         if not client_dto.producer_active:
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -276,8 +287,8 @@ class TrafficController:
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
-            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
-        )
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+            logger=logger)
 
         if client_dto.producer_active:
             # Open a gRPC session
@@ -310,8 +321,8 @@ class TrafficController:
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
-            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
-        )
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+            logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -356,19 +367,23 @@ class TrafficController:
 
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
-            port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+            logger=logger)
         return client_dto
 
     @staticmethod
-    def get_clients_dto_by_ip_and_port(ip: str, port: int) -> \
+    def get_clients_dto_by_ip_and_port(ip: str, port: int, logger: logging.Logger) -> \
             csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         A method that sends a request to the ClientManager on a specific container
         to get its status
 
-        :param emulation_env_config: the emulation config
+        :param ip: the ip of the container
+        :param port: the port of the client manager running on the container
+        :param logger: the logger to use for logging
         :return: the status of the clientmanager
         """
+        logger.info(f"Get client manager status from container with ip: {ip} and client manager port: {port}")
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
@@ -530,8 +545,8 @@ class TrafficController:
             status = None
             try:
                 status = TrafficController.get_clients_dto_by_ip_and_port(
-                    ip=ip,
-                    port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+                    ip=ip, port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
+                    logger=logger)
                 running = True
             except Exception as e:
                 logger.info(
@@ -610,6 +625,7 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            logger.info(f"Getting traffic information from node: {node_traffic_config.ip}")
             if node_traffic_config.docker_gw_bridge_ip not in active_ips or not EmulationUtil.physical_ip_match(
                     emulation_env_config=emulation_env_config, ip=node_traffic_config.docker_gw_bridge_ip,
                     physical_host_ip=physical_host_ip):
@@ -622,8 +638,9 @@ class TrafficController:
                         port=node_traffic_config.traffic_manager_port, ip=node_traffic_config.docker_gw_bridge_ip)
                     running = True
                 except Exception as e:
-                    logger.debug(f"Could not fetch traffic manager status on IP"
-                                 f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
+                    logger.info(f"Could not fetch traffic manager status on IP"
+                                f":{node_traffic_config.docker_gw_bridge_ip}:"
+                                f"{node_traffic_config.traffic_manager_port}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
                 else:

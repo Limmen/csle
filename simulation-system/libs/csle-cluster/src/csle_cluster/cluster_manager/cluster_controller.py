@@ -3501,6 +3501,7 @@ class ClusterController:
         config = MetastoreFacade.get_config(id=1)
         infos = []
         for node in config.cluster_config.cluster_nodes:
+            Logger.__call__().get_logger().info(f"getting execution info for node: {node.ip}")
             infos.append(
                 ClusterController.get_execution_info(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,

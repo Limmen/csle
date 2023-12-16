@@ -284,7 +284,7 @@ Then generate the documentation with the commands:
 
 ```bash
 cd docs
-sphinx-apidoc -f -o source/ ../csle_rest_api/
+sphinx-apidoc -f -o source/ ../src/csle_rest_api/
 make html
 ```
 

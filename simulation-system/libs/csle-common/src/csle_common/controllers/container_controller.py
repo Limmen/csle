@@ -147,15 +147,15 @@ class ContainerController:
             filter(lambda x: (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]) or constants.OS.KALI
                               in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
         for img in non_base_images:
-            if img == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in non_os_base_images:
-            if img == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
         for img in os_base_images:
-            if img == name:
+            if img.attrs[constants.DOCKER.REPO_TAGS][0] == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
                 return True
 
@@ -188,9 +188,11 @@ class ContainerController:
         stream = os.popen(cmd)
         networks_str: str = stream.read()
         networks: List[str] = networks_str.split("\n")
+
         networks_list: List[List[str]] = list(map(lambda x: x.split(), networks))
         networks_list = list(filter(lambda x: len(x) > 1, networks_list))
         networks_ids_str: List[str] = list(map(lambda x: x[1], networks_list))
+
         networks_ids_str = list(filter(lambda x: re.match(
             r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x), networks_ids_str))
         network_ids: List[int] = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
@@ -278,12 +280,15 @@ class ContainerController:
             running_emulation_containers.append(emulation_env_config.kafka_config.container)
         else:
             stopped_emulation_containers.append(emulation_env_config.kafka_config.container)
+
         if emulation_env_config.elk_config.container.full_name_str in running_containers_names:
             running_emulation_containers.append(emulation_env_config.elk_config.container)
         else:
             stopped_emulation_containers.append(emulation_env_config.elk_config.container)
+
         if emulation_env_config.sdn_controller_config is not None:
             if emulation_env_config.sdn_controller_config.container.full_name_str in running_containers_names:
+
                 running_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
             else:
                 stopped_emulation_containers.append(emulation_env_config.sdn_controller_config.container)
@@ -521,13 +526,7 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.start_docker_statsmanager(
-                logger=logger,
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
-                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
-                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
-                max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
-            )
+            ManagementSystemController.stop_docker_statsmanager(logger=logger)
             time.sleep(5)
         ip = physical_server_ip
         with grpc.insecure_channel(
@@ -565,6 +564,7 @@ class ContainerController:
         try:
             with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+
                 docker_stats_monitor_dto = \
                     csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
                         stub=stub)
@@ -688,9 +688,14 @@ class ContainerController:
         """
         client_1 = docker.from_env()
         networks = client_1.networks.list()
-        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        networks_names = []
         for net in networks:
-            if net == name:
+            if constants.CSLE.NAME in net.name:
+                net.name = constants.CSLE.NAME
+                networks_names.append(net)
+        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        for net in networks_names:
+            if net.name == name:
                 ContainerController.remove_network(name=net.name, logger=logger)
                 return True
         return False

@@ -13,6 +13,7 @@ csle clean emulations
 csle rm emulations
 pip uninstall gym-csle-stopping-game
 pip uninstall gym-csle-intrusion-response-game
+pip uninstall gym-csle-apt-game
 pip uninstall csle-tolerance
 pip uninstall csle-common
 pip uninstall csle-collector
@@ -29,7 +30,7 @@ cd metastore; make clean
 ```
 
 <p class="captionFig">
-Listing 92: Commands to uninstall CSLE.
+Listing 94: Commands to uninstall CSLE.
 </p>
 
 Also remove the `CSLE_HOME` environment variable from `.bashrc`.

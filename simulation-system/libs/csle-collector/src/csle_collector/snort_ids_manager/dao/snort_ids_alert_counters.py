@@ -232,8 +232,8 @@ class SnortIdsAlertCounters(JSONSerializable):
         :return: a copy of the object
         """
         c = SnortIdsAlertCounters()
-        c.class_alerts = self.class_alerts
-        c.priority_alerts = self.priority_alerts
+        c.class_alerts = self.class_alerts.copy()
+        c.priority_alerts = self.priority_alerts.copy()
         c.ip = self.ip
         c.ts = self.ts
         c.total_alerts = self.total_alerts

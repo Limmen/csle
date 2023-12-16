@@ -52,6 +52,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
+        logging.info("Getting client information")
         num_clients = 0
         clients_time_step_len_seconds = 0.0
         producer_time_step_len_seconds = 0.0
