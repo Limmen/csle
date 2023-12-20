@@ -7,20 +7,13 @@ Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 import random
 from typing import Union, List, Optional
 import time
-from torch.distributions.categorical import Categorical
 import gymnasium as gym
 import os
 import numpy as np
-import math
 import torch
 from ppo_network import PPONetwork
 import torch.nn as nn
 import torch.optim as optim
-from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
-from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
-from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.callbacks import BaseCallback
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -32,12 +25,7 @@ from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-from csle_common.dao.training.ppo_policy import PPOPolicy
-from csle_common.dao.simulation_config.state import State
-from csle_common.dao.simulation_config.action import Action
-from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.general_util import GeneralUtil
-from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -46,6 +34,7 @@ def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
     torch.nn.init.orthogonal_(layer.weight, std)
     torch.nn.init.constant_(layer.bias, bias_const)
     return layer
+
 
 class PPOCleanAgent(BaseAgent):
     """
@@ -138,7 +127,6 @@ class PPOCleanAgent(BaseAgent):
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
-
         # size- and parameter setup of run
         num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
         
@@ -161,7 +149,9 @@ class PPOCleanAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
 
             envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name,
-                                                           seed=seed + i, idx=i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
+                                                           seed=seed + i, idx=i,
+                                                           run_name=self.simulation_env_config.name)
+                                             for i in range(num_envs)])
 
             self.start: float = time.time()
             exp_result.all_metrics[seed] = {}
@@ -186,13 +176,7 @@ class PPOCleanAgent(BaseAgent):
             torch_deterministic = True
             torch.backends.cudnn.deterministic = torch_deterministic
 
-            # here, I exclude the writer-init
-
-
             # Setup gym environment
-            # perhaps the right params are in the config
-            config = self.simulation_env_config.simulation_env_input_config
-            orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name)
             learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
             gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
             gae_lambda = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
@@ -209,9 +193,6 @@ class PPOCleanAgent(BaseAgent):
             next_obs, _ = envs.reset(seed=seed)
             next_obs = torch.Tensor(next_obs).to(device)
             next_done = torch.zeros(num_envs).to(device)
-
-
-            # model.cpu()
 
             optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-5)
 
@@ -231,7 +212,7 @@ class PPOCleanAgent(BaseAgent):
                         action, logprob, _, value = model.get_action_and_value(next_obs)
                         values[step] = value.flatten()
                     actions[step] = action
-                    logprobs[step] = logprob  
+                    logprobs[step] = logprob
 
                     # TRY NOT TO MODIFY: execute the game and log data.
                     next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
@@ -278,13 +259,13 @@ class PPOCleanAgent(BaseAgent):
                         end = start + minibatch_size
                         mb_inds = b_inds[start:end]
 
-                        _, newlogprob, entropy, newvalue = model.get_action_and_value(b_obs[mb_inds], b_actions.long()[mb_inds])
+                        _, newlogprob, entropy, newvalue = \
+                            model.get_action_and_value(b_obs[mb_inds], b_actions.long()[mb_inds])
                         logratio = newlogprob - b_logprobs[mb_inds]
                         ratio = logratio.exp()
 
                         with torch.no_grad():
                             # calculate approx_kl http://joschu.net/blog/kl-approx.html
-                            old_approx_kl = (-logratio).mean()
                             approx_kl = ((ratio - 1) - logratio).mean()
                             clipfracs += [((ratio - 1.0).abs() > clip_coef).float().mean().item()]
 
@@ -322,11 +303,6 @@ class PPOCleanAgent(BaseAgent):
 
                     if target_kl is not None and approx_kl > target_kl:
                         break
-
-                y_pred, y_true = b_values.cpu().numpy(), b_returns.cpu().numpy()
-                var_y = np.var(y_true)
-                explained_var = np.nan if var_y == 0 else 1 - np.var(y_true - y_pred) / var_y
-
                 # TRY NOT TO MODIFY: record rewards for plotting purposes
 
                 print("SPS:", int(global_step / (time.time() - start_time)))
