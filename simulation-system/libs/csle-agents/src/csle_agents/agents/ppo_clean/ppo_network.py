@@ -25,15 +25,15 @@ class PPONetwork(nn.Module):
         self.actor = nn.Sequential()
         for layer in range(num_hl):
             self.critic.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_size, num_hl_neur)))
-            self.critic.add_module(name=f'activation', module=nn.Tanh())
+            self.critic.add_module(name='activation', module=nn.Tanh())
             self.actor.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_size, num_hl_neur)))
-            self.actor.add_module(name=f'activation', module=nn.Tanh())
+            self.actor.add_module(name='activation', module=nn.Tanh())
             input_size = num_hl_neur
-        self.critic.add_module(name=f'Classifier',
+        self.critic.add_module(name='Classifier',
                                module=self.layer_init(nn.Linear(num_hl_neur, self.output_size_critic), std=std_critic))
-        self.actor.add_module(name=f'Classifier',
-                               module=self.layer_init(nn.Linear(num_hl_neur, self.output_size_action), std=std_action))
-
+        self.actor.add_module(name='Classifier',
+                              module=self.layer_init(nn.Linear(num_hl_neur, self.output_size_action),
+                                                     std=std_action))
 
     def layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
