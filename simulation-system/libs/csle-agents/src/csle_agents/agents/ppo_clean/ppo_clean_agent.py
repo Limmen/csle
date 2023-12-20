@@ -42,8 +42,6 @@ import csle_agents.constants.constants as agents_constants
 
 
 def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
-    # print(np.shape(layer.weight))
-    # print(np.shape(layer.bias))
     torch.nn.init.orthogonal_(layer.weight, std)
     torch.nn.init.constant_(layer.bias, bias_const)
     return layer
@@ -179,11 +177,11 @@ class PPOCleanAgent(BaseAgent):
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
+
+        # size- and parameter setup of run
         num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
         
         num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
-
-        # size- and parameter setup of run
 
         batch_size = int(num_envs * num_steps)
         total_timesteps = batch_size * 10
@@ -233,7 +231,8 @@ class PPOCleanAgent(BaseAgent):
             config = self.simulation_env_config.simulation_env_input_config
             orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name)
             learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
-
+            gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
+            gae_lambda = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
             obs = torch.zeros((num_steps, num_envs) + envs.single_observation_space.shape).to(device)
             actions = torch.zeros((num_steps, num_envs) + envs.single_action_space.shape).to(device)
             logprobs = torch.zeros((num_steps, num_envs)).to(device)
@@ -254,7 +253,6 @@ class PPOCleanAgent(BaseAgent):
             optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-5)
 
             for iteration in range(1, num_iterations + 1):
-                print(iteration)
                 # Annealing the rate if instructed to do so.
                 anneal_lr = True
                 if anneal_lr:
@@ -262,12 +260,10 @@ class PPOCleanAgent(BaseAgent):
                     lrnow = frac * learning_rate
                     optimizer.param_groups[0]["lr"] = lrnow
                 for step in range(0, num_steps):
-                    print(step)
                     global_step += num_envs
                     obs[step] = next_obs
                     dones[step] = next_done
                     # ALGO LOGIC: action logic
-                    # print(next_obs)
                     with torch.no_grad():
                         action, logprob, _, value = model.get_action_and_value(next_obs)
                         values[step] = value.flatten()
@@ -298,8 +294,8 @@ class PPOCleanAgent(BaseAgent):
                         else:
                             nextnonterminal = 1.0 - dones[t + 1]
                             nextvalues = values[t + 1]
-                        delta = rewards[t] + args.gamma * nextvalues * nextnonterminal - values[t]
-                        advantages[t] = lastgaelam = delta + args.gamma * args.gae_lambda * nextnonterminal * lastgaelam
+                        delta = rewards[t] + gamma * nextvalues * nextnonterminal - values[t]
+                        advantages[t] = lastgaelam = delta + gamma * gae_lambda * nextnonterminal * lastgaelam
                     returns = advantages + values
 
                 # flatten the batch
