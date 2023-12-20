@@ -13,6 +13,7 @@ import os
 import numpy as np
 import math
 import torch
+from ppo_network import PPONetwork
 import torch.nn as nn
 import torch.optim as optim
 from stable_baselines3 import PPO
@@ -46,35 +47,6 @@ def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
     torch.nn.init.constant_(layer.bias, bias_const)
     return layer
 
-class Agent(nn.Module):
-    def __init__(self, envs):
-        super().__init__()
-        self.critic = nn.Sequential(
-            layer_init(nn.Linear(np.array(envs.single_observation_space.shape).prod(), 64)),
-            nn.Tanh(),
-            layer_init(nn.Linear(64, 64)),
-            nn.Tanh(),
-            layer_init(nn.Linear(64, 1), std=1.0),
-        )
-        self.actor = nn.Sequential(
-            layer_init(nn.Linear(np.array(envs.single_observation_space.shape).prod(), 64)),
-            nn.Tanh(),
-            layer_init(nn.Linear(64, 64)),
-            nn.Tanh(),
-            layer_init(nn.Linear(64, envs.single_action_space.n), std=0.01),
-        )
-
-
-    def get_value(self, x):
-        return self.critic(x)
-
-    def get_action_and_value(self, x, action=None):
-        logits = self.actor(x)
-        probs = Categorical(logits=logits)
-        if action is None:
-            action = probs.sample()
-        return action, probs.log_prob(action), probs.entropy(), self.critic(x)
-
 class PPOCleanAgent(BaseAgent):
     """
     A PPO agent using the implementation from CleanRL
@@ -99,24 +71,13 @@ class PPOCleanAgent(BaseAgent):
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
-    def make_env(self, env_id, seed, idx, run_name, capture_video=False):
+    def make_env(self, env_id, seed, idx, run_name):
         def thunk():
-            # print(env_id)
-            if capture_video and idx == 0:
-                env = gym.make(env_id)
-                env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
-            else:
-                env = gym.make(env_id)
-            # print(env)
+            env = gym.make(env_id)
             env = gym.wrappers.RecordEpisodeStatistics(env)
-            # env.seed(seed)
-            # env.action_space.seed(seed)
-            # env.observation_space.seed(seed)
             return env
 
         return thunk
-
-    
 
     def train(self) -> ExperimentExecution:
         """
@@ -199,8 +160,8 @@ class PPOCleanAgent(BaseAgent):
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
 
-            self.simulation_env_config.name = "JohnDoe"
-            envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name, seed=seed + i, idx=i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
+            envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name,
+                                                           seed=seed + i, idx=i, run_name=self.simulation_env_config.name) for i in range(num_envs)])
 
             self.start: float = time.time()
             exp_result.all_metrics[seed] = {}
@@ -215,7 +176,9 @@ class PPOCleanAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
             cuda = False
             device = torch.device("cuda" if torch.cuda.is_available() and cuda else "cpu")
-            model = Agent(envs=envs).to(device)
+            num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
+            num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+            model = PPONetwork(envs=envs, num_hl=num_hl, num_hl_neur=num_hl_neur).to(device)
             # seeding
             random.seed(seed)
             np.random.seed(seed)
@@ -310,7 +273,6 @@ class PPOCleanAgent(BaseAgent):
                 b_inds = np.arange(batch_size)
                 clipfracs = []
                 for epoch in range(update_epochs):
-                    print(epoch)
                     np.random.shuffle(b_inds)
                     for start in range(0, batch_size, minibatch_size):
                         end = start + minibatch_size
