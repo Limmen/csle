@@ -40,11 +40,11 @@ if __name__ == '__main__':
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=164,
-                                                          name=agents_constants.PPO_CLEAN.NUM_STEPS,
-                                                          descr="number of steps in each time step"),
+                                                         name=agents_constants.PPO_CLEAN.NUM_STEPS,
+                                                         descr="number of steps in each time step"),
             agents_constants.PPO_CLEAN.ANNEAL_LR: HParam(value=True,
-                                                          name=agents_constants.PPO_CLEAN.ANNEAL_LR,
-                                                          descr="anneal learning rate for updating the policy"),
+                                                         name=agents_constants.PPO_CLEAN.ANNEAL_LR,
+                                                         descr="anneal learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
                                                      name=constants.NEURAL_NETWORKS.DEVICE,
                                                      descr="the device to train on (cpu or cuda:x)"),
@@ -68,7 +68,7 @@ if __name__ == '__main__':
             agents_constants.PPO_CLEAN.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
                                                        descr="the coefficient of the value network for the loss"),
             agents_constants.PPO_CLEAN.NUM_MINIBATCHES: HParam(value=4, name=agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
-                                                 descr="the number of minibatches"),
+                                                               descr="the number of minibatches"),
             agents_constants.PPO_CLEAN.MAX_GRAD_NORM: HParam(
                 value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
             agents_constants.PPO_CLEAN.NORM_ADV: HParam(
@@ -76,8 +76,8 @@ if __name__ == '__main__':
             agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
                 value=4, name=agents_constants.PPO_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
             agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
-                                                   name=agents_constants.PPO_CLEAN.TARGET_KL,
-                                                   descr="the target kl"),
+                                                         name=agents_constants.PPO_CLEAN.TARGET_KL,
+                                                         descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
