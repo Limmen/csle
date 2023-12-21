@@ -50,7 +50,7 @@ class PPOCleanAgent(BaseAgent):
         super(PPOCleanAgent, self).__init__(simulation_env_config=simulation_env_config,
                                             emulation_env_config=emulation_env_config,
                                             experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.PPO
+        assert experiment_config.agent_type == AgentType.PPO_CLEAN
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 

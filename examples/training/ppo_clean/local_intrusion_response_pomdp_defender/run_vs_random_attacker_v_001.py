@@ -25,7 +25,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO_clean test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="PPO_clean test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO_CLEAN,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -167,18 +167,3 @@ if __name__ == '__main__':
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
-
-    def hparam_names(self) -> List[str]:
-        """
-        :return: a list with the hyperparameter names
-        """
-        return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
-                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
-                agents_constants.PPO.STEPS_BETWEEN_UPDATES,
-                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
-                agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
-                agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
-                agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
-                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
-                agents_constants.COMMON.EVAL_BATCH_SIZE, constants.NEURAL_NETWORKS.DEVICE,
-                agents_constants.COMMON.SAVE_EVERY]
