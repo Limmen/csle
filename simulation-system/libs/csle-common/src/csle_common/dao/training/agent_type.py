@@ -36,3 +36,4 @@ class AgentType(IntEnum):
     CMA_ES = 28
     NELDER_MEAD = 29
     PARTICLE_SWARM = 30
+    PPO_CLEAN = 32
