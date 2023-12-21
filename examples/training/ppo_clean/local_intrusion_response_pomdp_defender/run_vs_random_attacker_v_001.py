@@ -67,9 +67,9 @@ if __name__ == '__main__':
             agents_constants.PPO_CLEAN.MAX_GRAD_NORM: HParam(
                 value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
             agents_constants.PPO_CLEAN.NORM_ADV: HParam(
-                value=0.5, name=agents_constants.PPO:CLEAN.NORM_ADV, descr="norm_av param value"),
+                value=0.5, name=agents_constants.PPO_CLEAN.NORM_ADV, descr="norm_av param value"),
             agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
-                value=4, name=agents_constants.PPO:CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
+                value=4, name=agents_constants.PPO_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
             agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
                                                    name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                    descr="the target kl"),
