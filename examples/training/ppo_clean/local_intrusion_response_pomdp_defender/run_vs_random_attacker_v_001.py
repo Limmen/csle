@@ -34,13 +34,13 @@ if __name__ == '__main__':
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
-            agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
-                value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
-                descr="number of steps in the environment for doing rollouts between policy updates"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=0.00001,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
+                                                          descr="learning rate for updating the policy"),
+            agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=164,
+                                                          name=agents_constants.PPO_CLEAN.NUM_STEPS,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
                                                      name=constants.NEURAL_NETWORKS.DEVICE,
@@ -48,24 +48,30 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                 value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                 descr="the nunmber of parallel environments for training"),
+            agents_constants.PPO_CLEAN.CLIP_VLOSS: HParam(
+                value=True, name=agents_constants.PPO_CLEAN.CLIP_VLOSS, descr="the clip-vloss"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
-            agents_constants.PPO.GAE_LAMBDA: HParam(
-                value=0.95, name=agents_constants.PPO.GAE_LAMBDA, descr="the GAE weighting term"),
-            agents_constants.PPO.CLIP_RANGE: HParam(
-                value=0.2, name=agents_constants.PPO.CLIP_RANGE, descr="the clip range for PPO"),
-            agents_constants.PPO.CLIP_RANGE_VF: HParam(
-                value=None, name=agents_constants.PPO.CLIP_RANGE_VF,
+            agents_constants.PPO_CLEAN.GAE_LAMBDA: HParam(
+                value=0.95, name=agents_constants.PPO_CLEAN.GAE_LAMBDA, descr="the GAE weighting term"),
+            agents_constants.PPO_CLEAN.CLIP_RANGE: HParam(
+                value=0.2, name=agents_constants.PPO_CLEAN.CLIP_RANGE, descr="the clip range for PPO"),
+            agents_constants.PPO_CLEAN.CLIP_RANGE_VF: HParam(
+                value=0.5, name=agents_constants.PPO_CLEAN.CLIP_RANGE_VF,
                 descr="the clip range for PPO-update of the value network"),
-            agents_constants.PPO.ENT_COEF: HParam(
-                value=0.0, name=agents_constants.PPO.ENT_COEF,
+            agents_constants.PPO_CLEAN.ENT_COEF: HParam(
+                value=0.01, name=agents_constants.PPO_CLEAN.ENT_COEF,
                 descr="the entropy coefficient for exploration"),
             agents_constants.PPO.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
                                                  descr="the coefficient of the value network for the loss"),
-            agents_constants.PPO.MAX_GRAD_NORM: HParam(
-                value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
-            agents_constants.PPO.TARGET_KL: HParam(value=None,
-                                                   name=agents_constants.PPO.TARGET_KL,
+            agents_constants.PPO_CLEAN.MAX_GRAD_NORM: HParam(
+                value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
+            agents_constants.PPO_CLEAN.NORM_ADV: HParam(
+                value=0.5, name=agents_constants.PPO:CLEAN.NORM_ADV, descr="norm_av param value"),
+            agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
+                value=4, name=agents_constants.PPO:CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
+            agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
+                                                   name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
