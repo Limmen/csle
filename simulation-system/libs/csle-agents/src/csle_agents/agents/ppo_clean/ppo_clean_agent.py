@@ -54,6 +54,30 @@ class PPOCleanAgent(BaseAgent):
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
+        # size- and parameter setup of run
+        self.num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
+
+        self.num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
+
+        self.batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
+        self.total_timesteps = self.experiment_config.hparams[
+            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
+        self.num_minibatches = self.experiment_config.hparams[agents_constants.PPO_CLEAN.NUM_MINIBATCHES].value
+        self.minibatch_size = int(self.batch_size // self.num_minibatches)
+        self.num_iterations = self.total_timesteps // self.batch_size
+        self.update_epochs = self.experiment_config.hparams[agents_constants.PPO_CLEAN.UPDATE_EPOCHS].value
+        self.clip_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE].value
+        self.clip_vloss = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_VLOSS].value
+        self.norm_adv = self.experiment_config.hparams[agents_constants.PPO_CLEAN.NORM_ADV].value
+        self.vf_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE_VF].value
+        self.ent_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ENT_COEF].value
+        self.max_grad_norm = self.experiment_config.hparams[agents_constants.PPO_CLEAN.MAX_GRAD_NORM].value
+        self.target_kl = self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value
+        self.anneal_lr = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ANNEAL_LR].value
+        self.gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
+        self.gae_lambda = self.experiment_config.hparams[agents_constants.PPO_CLEAN.GAE_LAMBDA].value
+        self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
+
     def make_env(self, env_id, seed, idx, run_name):
         def thunk():
             env = gym.make(env_id)
@@ -61,6 +85,50 @@ class PPOCleanAgent(BaseAgent):
             return env
 
         return thunk
+
+    def next_setter(self, global_step, envs, obs, dones, actions, rewards, device,
+                    logprobs, values, model, next_obs, next_done):
+        for step in range(0, self.num_steps):
+            global_step += self.num_envs
+            obs[step] = next_obs
+            dones[step] = next_done
+            # ALGO LOGIC: action logic
+            with torch.no_grad():
+                action, logprob, _, value = model.get_action_and_value(next_obs)
+                values[step] = value.flatten()
+            actions[step] = action
+            logprobs[step] = logprob
+
+            # TRY NOT TO MODIFY: execute the game and log data.
+            next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
+            next_done = np.logical_or(terminations, truncations)
+            rewards[step] = torch.tensor(reward).to(device).view(-1)
+            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
+
+            if "final_info" in infos:
+                for info in infos["final_info"]:
+                    if info and "episode" in info:
+                        pass
+                        print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
+
+        return next_obs, next_done, global_step
+
+    def bootstrap(self, model, next_obs, rewards, device, next_done, dones, values):
+        with torch.no_grad():
+            next_value = model.get_value(next_obs).reshape(1, -1)
+            advantages = torch.zeros_like(rewards).to(device)
+            lastgaelam = 0
+            for t in reversed(range(self.num_steps)):
+                if t == self.num_steps - 1:
+                    nextnonterminal = 1.0 - next_done
+                    nextvalues = next_value
+                else:
+                    nextnonterminal = 1.0 - dones[t + 1]
+                    nextvalues = values[t + 1]
+                delta = rewards[t] + self.gamma * nextvalues * nextnonterminal - values[t]
+                advantages[t] = lastgaelam = delta + self.gamma * self.gae_lambda * nextnonterminal * lastgaelam
+            returns = advantages + values
+            return returns, advantages
 
     def train(self) -> ExperimentExecution:
         """
@@ -121,32 +189,13 @@ class PPOCleanAgent(BaseAgent):
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
-        # size- and parameter setup of run
-        num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
-
-        num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
-
-        batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
-        total_timesteps = self.experiment_config.hparams[
-            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
-        num_minibatches = 4
-        minibatch_size = int(batch_size // num_minibatches)
-        num_iterations = total_timesteps // batch_size
-        update_epochs = self.experiment_config.hparams[agents_constants.PPO_CLEAN.UPDATE_EPOCHS].value
-        clip_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE].value
-        clip_vloss = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_VLOSS].value
-        norm_adv = self.experiment_config.hparams[agents_constants.PPO_CLEAN.NORM_ADV].value
-        vf_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE_VF].value
-        ent_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ENT_COEF].value
-        max_grad_norm = self.experiment_config.hparams[agents_constants.PPO_CLEAN.MAX_GRAD_NORM].value
-        target_kl = self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
 
             envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name,
                                                            seed=seed + i, idx=i,
                                                            run_name=self.simulation_env_config.name)
-                                             for i in range(num_envs)])
+                                             for i in range(self.num_envs)])
 
             self.start: float = time.time()
             exp_result.all_metrics[seed] = {}
@@ -174,70 +223,35 @@ class PPOCleanAgent(BaseAgent):
             torch.backends.cudnn.deterministic = torch_deterministic
 
             # Setup gym environment
-            learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
-            gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
-            gae_lambda = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
-            obs = torch.zeros((num_steps, num_envs) + envs.single_observation_space.shape).to(device)
-            actions = torch.zeros((num_steps, num_envs) + envs.single_action_space.shape).to(device)
-            logprobs = torch.zeros((num_steps, num_envs)).to(device)
-            rewards = torch.zeros((num_steps, num_envs)).to(device)
-            dones = torch.zeros((num_steps, num_envs)).to(device)
-            values = torch.zeros((num_steps, num_envs)).to(device)
+            obs = torch.zeros((self.num_steps, self.num_envs) + envs.single_observation_space.shape).to(device)
+            actions = torch.zeros((self.num_steps, self.num_envs) + envs.single_action_space.shape).to(device)
+            logprobs = torch.zeros((self.num_steps, self.num_envs)).to(device)
+            rewards = torch.zeros((self.num_steps, self.num_envs)).to(device)
+            dones = torch.zeros((self.num_steps, self.num_envs)).to(device)
+            values = torch.zeros((self.num_steps, self.num_envs)).to(device)
 
             # TRY NOT TO MODIFY: start the game
             global_step = 0
             start_time = time.time()
             next_obs, _ = envs.reset(seed=seed)
             next_obs = torch.Tensor(next_obs).to(device)
-            next_done = torch.zeros(num_envs).to(device)
+            next_done = torch.zeros(self.num_envs).to(device)
 
-            optimizer = optim.Adam(model.parameters(), lr=learning_rate, eps=1e-5)
+            optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, eps=1e-5)
 
-            for iteration in range(1, num_iterations + 1):
+            for iteration in range(1, self.num_iterations + 1):
                 # Annealing the rate if instructed to do so.
-                anneal_lr = True
-                if anneal_lr:
-                    frac = 1.0 - (iteration - 1.0) / num_iterations
-                    lrnow = frac * learning_rate
+
+                if self.anneal_lr:
+                    frac = 1.0 - (iteration - 1.0) / self.num_iterations
+                    lrnow = frac * self.learning_rate
                     optimizer.param_groups[0]["lr"] = lrnow
-                for step in range(0, num_steps):
-                    global_step += num_envs
-                    obs[step] = next_obs
-                    dones[step] = next_done
-                    # ALGO LOGIC: action logic
-                    with torch.no_grad():
-                        action, logprob, _, value = model.get_action_and_value(next_obs)
-                        values[step] = value.flatten()
-                    actions[step] = action
-                    logprobs[step] = logprob
+                next_obs, next_done, global_step = \
+                    self.next_setter(global_step, envs, obs, dones, actions, rewards, device,
+                                     logprobs, values, model, next_obs, next_done)
 
-                    # TRY NOT TO MODIFY: execute the game and log data.
-                    next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
-                    next_done = np.logical_or(terminations, truncations)
-                    rewards[step] = torch.tensor(reward).to(device).view(-1)
-                    next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
-
-                    if "final_info" in infos:
-                        for info in infos["final_info"]:
-                            if info and "episode" in info:
-                                pass
-                                print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
-
-                # bootstrap value if not done
-                with torch.no_grad():
-                    next_value = model.get_value(next_obs).reshape(1, -1)
-                    advantages = torch.zeros_like(rewards).to(device)
-                    lastgaelam = 0
-                    for t in reversed(range(num_steps)):
-                        if t == num_steps - 1:
-                            nextnonterminal = 1.0 - next_done
-                            nextvalues = next_value
-                        else:
-                            nextnonterminal = 1.0 - dones[t + 1]
-                            nextvalues = values[t + 1]
-                        delta = rewards[t] + gamma * nextvalues * nextnonterminal - values[t]
-                        advantages[t] = lastgaelam = delta + gamma * gae_lambda * nextnonterminal * lastgaelam
-                    returns = advantages + values
+                returns, advantages = self.bootstrap(model, next_obs, rewards, device, next_done,
+                                                     dones, values)
 
                 # flatten the batch
                 b_obs = obs.reshape((-1,) + envs.single_observation_space.shape)
@@ -248,12 +262,12 @@ class PPOCleanAgent(BaseAgent):
                 b_values = values.reshape(-1)
 
                 # Optimizing the policy and value network
-                b_inds = np.arange(batch_size)
+                b_inds = np.arange(self.batch_size)
                 clipfracs = []
-                for epoch in range(update_epochs):
+                for epoch in range(self.update_epochs):
                     np.random.shuffle(b_inds)
-                    for start in range(0, batch_size, minibatch_size):
-                        end = start + minibatch_size
+                    for start in range(0, self.batch_size, self.minibatch_size):
+                        end = start + self.minibatch_size
                         mb_inds = b_inds[start:end]
 
                         _, newlogprob, entropy, newvalue = \
@@ -264,25 +278,25 @@ class PPOCleanAgent(BaseAgent):
                         with torch.no_grad():
                             # calculate approx_kl http://joschu.net/blog/kl-approx.html
                             approx_kl = ((ratio - 1) - logratio).mean()
-                            clipfracs += [((ratio - 1.0).abs() > clip_coef).float().mean().item()]
+                            clipfracs += [((ratio - 1.0).abs() > self.clip_coef).float().mean().item()]
 
                         mb_advantages = b_advantages[mb_inds]
-                        if norm_adv:
+                        if self.norm_adv:
                             mb_advantages = (mb_advantages - mb_advantages.mean()) / (mb_advantages.std() + 1e-8)
 
                         # Policy loss
                         pg_loss1 = -mb_advantages * ratio
-                        pg_loss2 = -mb_advantages * torch.clamp(ratio, 1 - clip_coef, 1 + clip_coef)
+                        pg_loss2 = -mb_advantages * torch.clamp(ratio, 1 - self.clip_coef, 1 + self.clip_coef)
                         pg_loss = torch.max(pg_loss1, pg_loss2).mean()
 
                         # Value loss
                         newvalue = newvalue.view(-1)
-                        if clip_vloss:
+                        if self.clip_vloss:
                             v_loss_unclipped = (newvalue - b_returns[mb_inds]) ** 2
                             v_clipped = b_values[mb_inds] + torch.clamp(
                                 newvalue - b_values[mb_inds],
-                                -clip_coef,
-                                clip_coef,
+                                -self.clip_coef,
+                                self.clip_coef,
                             )
                             v_loss_clipped = (v_clipped - b_returns[mb_inds]) ** 2
                             v_loss_max = torch.max(v_loss_unclipped, v_loss_clipped)
@@ -291,17 +305,17 @@ class PPOCleanAgent(BaseAgent):
                             v_loss = 0.5 * ((newvalue - b_returns[mb_inds]) ** 2).mean()
 
                         entropy_loss = entropy.mean()
-                        loss = pg_loss - ent_coef * entropy_loss + v_loss * vf_coef
+                        loss = pg_loss - self.ent_coef * entropy_loss + v_loss * self.vf_coef
 
                         optimizer.zero_grad()
                         loss.backward()
-                        nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
+                        nn.utils.clip_grad_norm_(model.parameters(), self.max_grad_norm)
                         optimizer.step()
 
-                    if target_kl is not None and approx_kl > target_kl:
+                    if self.target_kl is not None and approx_kl > self.target_kl:
                         break
-                # TRY NOT TO MODIFY: record rewards for plotting purposes
 
+                # TRY NOT TO MODIFY: record rewards for plotting purposes
                 print("SPS:", int(global_step / (time.time() - start_time)))
             envs.close()
 
@@ -312,10 +326,10 @@ class PPOCleanAgent(BaseAgent):
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.PPO.STEPS_BETWEEN_UPDATES,
-                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
+                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.self.batch_size,
                 agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
                 agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
                 agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
-                agents_constants.COMMON.EVAL_BATCH_SIZE, constants.NEURAL_NETWORKS.DEVICE,
+                agents_constants.COMMON.EVAL_self.batch_size, constants.NEURAL_NETWORKS.DEVICE,
                 agents_constants.COMMON.SAVE_EVERY]
