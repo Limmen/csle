@@ -30,12 +30,6 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
-    torch.nn.init.orthogonal_(layer.weight, std)
-    torch.nn.init.constant_(layer.bias, bias_const)
-    return layer
-
-
 class PPOCleanAgent(BaseAgent):
     """
     A PPO agent using the implementation from CleanRL
@@ -129,22 +123,23 @@ class PPOCleanAgent(BaseAgent):
 
         # size- and parameter setup of run
         num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
-        
+
         num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
 
-        batch_size = int(num_envs * num_steps)
-        total_timesteps = batch_size * 10
+        batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
+        total_timesteps = self.experiment_config.hparams[
+            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
         num_minibatches = 4
         minibatch_size = int(batch_size // num_minibatches)
         num_iterations = total_timesteps // batch_size
-        update_epochs = 4
-        clip_coef = 0.2
-        clip_vloss = True
-        norm_adv = True
-        vf_coef = 0.5
-        ent_coef = 0.01
-        max_grad_norm = 0.5
-        target_kl = None
+        update_epochs = self.experiment_config.hparams[agents_constants.PPO_CLEAN.UPDATE_EPOCHS].value
+        clip_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE].value
+        clip_vloss = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_VLOSS].value
+        norm_adv = self.experiment_config.hparams[agents_constants.PPO_CLEAN.NORM_ADV].value
+        vf_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE_VF].value
+        ent_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ENT_COEF].value
+        max_grad_norm = self.experiment_config.hparams[agents_constants.PPO_CLEAN.MAX_GRAD_NORM].value
+        target_kl = self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
 
@@ -165,7 +160,9 @@ class PPOCleanAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
             ExperimentUtil.set_seed(seed)
             cuda = False
-            device = torch.device("cuda" if torch.cuda.is_available() and cuda else "cpu")
+
+            device = torch.device("cuda" if torch.cuda.is_available() and cuda else 
+                                  self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
             num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
             num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
             model = PPONetwork(envs=envs, num_hl=num_hl, num_hl_neur=num_hl_neur).to(device)
