@@ -39,7 +39,7 @@ class PPOCleanAgent(BaseAgent):
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
-        Intializes the agent
+        Intializes the agent, and sets the hyper-parameters as attibutes of the class representing the agent.
 
         :param simulation_env_config: the simulation environment configuration
         :param emulation_env_config: the emulation environment configuration
@@ -88,6 +88,22 @@ class PPOCleanAgent(BaseAgent):
 
     def next_setter(self, global_step, envs, obs, dones, actions, rewards, device,
                     logprobs, values, model, next_obs, next_done):
+        """
+        Help function the executes the game, sets the next frame and logs the event
+        :param global step: the global step in the iteration
+        :param envs: list of environments
+        :param obs: torch tensor of observations
+        :param dones: tensor of done events
+        :param actions: tensor of available actions
+        :param rewards: tensor of available rewards
+        :param device: the device acted upon
+        :param logprobs: logrithmic probabilities
+        :param values: tensor of values
+        :param model: the neural network model
+        :param next_obs: the next observation
+        :param next_done: logical or operation between terminations and truncations
+        :return: next_obs, next_done, global_step
+        """
         for step in range(0, self.num_steps):
             global_step += self.num_envs
             obs[step] = next_obs
@@ -114,6 +130,18 @@ class PPOCleanAgent(BaseAgent):
         return next_obs, next_done, global_step
 
     def bootstrap(self, model, next_obs, rewards, device, next_done, dones, values):
+        """
+        help function that sets bootstrap value if the teration id not complete
+        :param device: the device acted upon
+        :param values: tensor of values
+        :param model: the neural network model
+        :param rewards: tensor of available rewards
+        :param next_obs: the next observation
+        :param dones: tensor of done events
+        :param next_done: logical or operation between terminations and truncations
+        :return: returns, advantages
+        """
+        
         with torch.no_grad():
             next_value = model.get_value(next_obs).reshape(1, -1)
             advantages = torch.zeros_like(rewards).to(device)
@@ -210,7 +238,7 @@ class PPOCleanAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
             cuda = False
 
-            device = torch.device("cuda" if torch.cuda.is_available() and cuda else 
+            device = torch.device("cuda" if torch.cuda.is_available() and cuda else
                                   self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
             num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
             num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
@@ -325,11 +353,14 @@ class PPOCleanAgent(BaseAgent):
         """
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
-                agents_constants.PPO.STEPS_BETWEEN_UPDATES,
-                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.self.batch_size,
-                agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
-                agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
-                agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
-                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
-                agents_constants.COMMON.EVAL_self.batch_size, constants.NEURAL_NETWORKS.DEVICE,
+                agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
+                agents_constants.COMMON.NUM_PARALLEL_ENVS, agents_constants.COMMON.BATCH_SIZE,
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.PPO_CLEAN.GAE_LAMBDA,
+                agents_constants.PPO_CLEAN.CLIP_RANGE, agents_constants.COMMON.LEARNING_RATE,
+                agents_constants.PPO_CLEAN.NORM_ADV, agents_constants.COMMON.GAMMA,
+                agents_constants.PPO_CLEAN.CLIP_RANGE_VF, agents_constants.PPO_CLEAN.ENT_COEF,
+                agents_constants.PPO_CLEAN.VF_COEF, agents_constants.PPO_CLEAN.UPDATE_EPOCHS,
+                agents_constants.PPO_CLEAN.TARGET_KL, agents_constants.PPO_CLEAN.MAX_GRAD_NORM,
+                agents_constants.COMMON.EVAL_EVERY, constants.NEURAL_NETWORKS.DEVICE,
+                agents_constants.PPO_CLEAN.CLIP_VLOSS, agents_constants.PPO_CLEAN.ANNEAL_LR,
                 agents_constants.COMMON.SAVE_EVERY]
