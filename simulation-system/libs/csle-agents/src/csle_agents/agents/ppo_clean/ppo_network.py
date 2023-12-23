@@ -62,7 +62,7 @@ class PPONetwork(nn.Module):
         return self.critic(x)
 
     def get_action_and_value(self, x: torch.Tensor, action: Union[torch.Tensor, None] = None) \
-            -> Tuple[torch.Tensor, float, float, torch.Tensor]:
+            -> Tuple[torch.Tensor, float, torch.Tensor, torch.Tensor]:
         """
         Gets the action and the value prediction of the network for a given input tensor x
 
