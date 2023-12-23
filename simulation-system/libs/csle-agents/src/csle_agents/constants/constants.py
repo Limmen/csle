@@ -72,6 +72,9 @@ class PPO:
 
 
 class PPO_CLEAN:
+    """
+    String constants related to PPO clean
+    """
     STEPS_BETWEEN_UPDATES = "steps_between_updates"
     GAE_LAMBDA = "gae_lambda"
     CLIP_RANGE = "clip_range"
@@ -90,6 +93,7 @@ class PPO_CLEAN:
     CLIP_VLOSS = "clip_vloss"
     REWARD_SCALER = "reward_scaler"
     NORM_ADV = "norm_adv"
+    CUDA = "cuda"
 
 
 class T_FP:

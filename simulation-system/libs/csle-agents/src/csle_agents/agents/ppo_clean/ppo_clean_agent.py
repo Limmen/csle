@@ -5,7 +5,7 @@ Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
 
 import random
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Callable
 import time
 import gymnasium as gym
 import os
@@ -37,9 +37,9 @@ class PPOCleanAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True) -> None:
         """
-        Intializes the agent, and sets the hyper-parameters as attibutes of the class representing the agent.
+        Initializes the agent, and sets the hyperparameters as attributes of the class representing the agent.
 
         :param simulation_env_config: the simulation environment configuration
         :param emulation_env_config: the emulation environment configuration
@@ -53,12 +53,8 @@ class PPOCleanAgent(BaseAgent):
         assert experiment_config.agent_type == AgentType.PPO_CLEAN
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-
-        # size- and parameter setup of run
         self.num_steps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
-
         self.num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
-
         self.batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
         self.total_timesteps = self.experiment_config.hparams[
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
@@ -72,13 +68,22 @@ class PPOCleanAgent(BaseAgent):
         self.vf_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.CLIP_RANGE_VF].value
         self.ent_coef = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ENT_COEF].value
         self.max_grad_norm = self.experiment_config.hparams[agents_constants.PPO_CLEAN.MAX_GRAD_NORM].value
-        self.target_kl = self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value
+        self.target_kl = None
+        if self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value != -1:
+            self.target_kl = self.experiment_config.hparams[agents_constants.PPO_CLEAN.TARGET_KL].value
         self.anneal_lr = self.experiment_config.hparams[agents_constants.PPO_CLEAN.ANNEAL_LR].value
         self.gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
         self.gae_lambda = self.experiment_config.hparams[agents_constants.PPO_CLEAN.GAE_LAMBDA].value
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
 
-    def make_env(self, env_id, seed, idx, run_name):
+    def make_env(self, env_id: str) -> Callable[[], gym.Env]:
+        """
+        Helper function for creating the environment to use for training
+
+        :param env_id: the name of the environment
+        :return: a function that creates the environment
+        """
+
         def thunk():
             env = gym.make(env_id)
             env = gym.wrappers.RecordEpisodeStatistics(env)
@@ -90,6 +95,7 @@ class PPOCleanAgent(BaseAgent):
                     logprobs, values, model, next_obs, next_done):
         """
         Help function the executes the game, sets the next frame and logs the event
+
         :param global step: the global step in the iteration
         :param envs: list of environments
         :param obs: torch tensor of observations
@@ -131,7 +137,8 @@ class PPOCleanAgent(BaseAgent):
 
     def bootstrap(self, model, next_obs, rewards, device, next_done, dones, values):
         """
-        help function that sets bootstrap value if the teration id not complete
+        help function that sets bootstrap value if the iteration is not complete
+
         :param device: the device acted upon
         :param values: tensor of values
         :param model: the neural network model
@@ -141,7 +148,7 @@ class PPOCleanAgent(BaseAgent):
         :param next_done: logical or operation between terminations and truncations
         :return: returns, advantages
         """
-        
+
         with torch.no_grad():
             next_value = model.get_value(next_obs).reshape(1, -1)
             advantages = torch.zeros_like(rewards).to(device)
@@ -176,7 +183,7 @@ class PPOCleanAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
-        descr = f"Training of policies with PPO using " \
+        descr = f"Training of policies with Clean-PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         # Setup training job
@@ -220,11 +227,10 @@ class PPOCleanAgent(BaseAgent):
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
 
-            envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name,
-                                                           seed=seed + i, idx=i,
-                                                           run_name=self.simulation_env_config.name)
-                                             for i in range(self.num_envs)])
+            envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name)
+                                             for _ in range(self.num_envs)])
 
+            # Setup training metrics
             self.start: float = time.time()
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
@@ -238,17 +244,18 @@ class PPOCleanAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
             cuda = False
 
-            device = torch.device("cuda" if torch.cuda.is_available() and cuda else
+            # Create neural network
+            device = torch.device(agents_constants.PPO_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                                   self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
             num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
             num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
             model = PPONetwork(envs=envs, num_hl=num_hl, num_hl_neur=num_hl_neur).to(device)
+
             # seeding
             random.seed(seed)
             np.random.seed(seed)
             torch.manual_seed(seed)
-            torch_deterministic = True
-            torch.backends.cudnn.deterministic = torch_deterministic
+            torch.backends.cudnn.deterministic = True
 
             # Setup gym environment
             obs = torch.zeros((self.num_steps, self.num_envs) + envs.single_observation_space.shape).to(device)
@@ -258,18 +265,18 @@ class PPOCleanAgent(BaseAgent):
             dones = torch.zeros((self.num_steps, self.num_envs)).to(device)
             values = torch.zeros((self.num_steps, self.num_envs)).to(device)
 
-            # TRY NOT TO MODIFY: start the game
+            # Initialize the environment and optimizers
             global_step = 0
             start_time = time.time()
             next_obs, _ = envs.reset(seed=seed)
             next_obs = torch.Tensor(next_obs).to(device)
             next_done = torch.zeros(self.num_envs).to(device)
-
             optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, eps=1e-5)
 
+            # Training
             for iteration in range(1, self.num_iterations + 1):
-                # Annealing the rate if instructed to do so.
 
+                # Annealing the rate if instructed to do so.
                 if self.anneal_lr:
                     frac = 1.0 - (iteration - 1.0) / self.num_iterations
                     lrnow = frac * self.learning_rate
@@ -332,9 +339,13 @@ class PPOCleanAgent(BaseAgent):
                         else:
                             v_loss = 0.5 * ((newvalue - b_returns[mb_inds]) ** 2).mean()
 
+                        # Entropy loss
                         entropy_loss = entropy.mean()
+
+                        # Total loss
                         loss = pg_loss - self.ent_coef * entropy_loss + v_loss * self.vf_coef
 
+                        # Backpropagation and update weights
                         optimizer.zero_grad()
                         loss.backward()
                         nn.utils.clip_grad_norm_(model.parameters(), self.max_grad_norm)
@@ -343,7 +354,7 @@ class PPOCleanAgent(BaseAgent):
                     if self.target_kl is not None and approx_kl > self.target_kl:
                         break
 
-                # TRY NOT TO MODIFY: record rewards for plotting purposes
+                # Record rewards for plotting purposes
                 print("SPS:", int(global_step / (time.time() - start_time)))
             envs.close()
 

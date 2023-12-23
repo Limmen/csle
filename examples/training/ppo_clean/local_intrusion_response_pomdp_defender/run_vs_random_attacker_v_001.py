@@ -75,9 +75,11 @@ if __name__ == '__main__':
                 value=0.5, name=agents_constants.PPO_CLEAN.NORM_ADV, descr="norm_av param value"),
             agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
                 value=4, name=agents_constants.PPO_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
-            agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
+            agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=-1,
                                                          name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                          descr="the target kl"),
+            agents_constants.PPO_CLEAN.CUDA: HParam(value=False, name=agents_constants.PPO_CLEAN.TARGET_KL,
+                                                    descr="boolean flag indicating whether GPU should be used"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
