@@ -5,13 +5,12 @@ Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
 
 import random
-from typing import Union, List, Optional, Callable
+from typing import Union, List, Optional, Callable, Tuple
 import time
 import gymnasium as gym
 import os
 import numpy as np
 import torch
-from ppo_network import PPONetwork
 import torch.nn as nn
 import torch.optim as optim
 import csle_common.constants.constants as constants
@@ -27,6 +26,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
+from csle_agents.agents.ppo_clean.ppo_network import PPONetwork
 import csle_agents.constants.constants as agents_constants
 
 
@@ -91,10 +91,13 @@ class PPOCleanAgent(BaseAgent):
 
         return thunk
 
-    def next_setter(self, global_step, envs, obs, dones, actions, rewards, device,
-                    logprobs, values, model, next_obs, next_done):
+    def update_trajectory_buffers(self, global_step: int, envs: gym.vector.SyncVectorEnv, obs: torch.Tensor,
+                                  dones: torch.Tensor, actions: torch.Tensor, rewards: torch.Tensor,
+                                  device: torch.device, logprobs: torch.Tensor, values: torch.Tensor,
+                                  model: PPONetwork, next_obs: torch.Tensor, next_done: torch.Tensor) \
+            -> Tuple[torch.Tensor, torch.Tensor, int]:
         """
-        Help function the executes the game, sets the next frame and logs the event
+        Updates the buffers of trajectories collected from the environment
 
         :param global step: the global step in the iteration
         :param envs: list of environments
@@ -114,30 +117,30 @@ class PPOCleanAgent(BaseAgent):
             global_step += self.num_envs
             obs[step] = next_obs
             dones[step] = next_done
-            # ALGO LOGIC: action logic
             with torch.no_grad():
                 action, logprob, _, value = model.get_action_and_value(next_obs)
                 values[step] = value.flatten()
             actions[step] = action
             logprobs[step] = logprob
 
-            # TRY NOT TO MODIFY: execute the game and log data.
+            # Step the environment
             next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
             next_done = np.logical_or(terminations, truncations)
             rewards[step] = torch.tensor(reward).to(device).view(-1)
             next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
 
-            if "final_info" in infos:
-                for info in infos["final_info"]:
-                    if info and "episode" in info:
-                        pass
-                        print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
+            # if "final_info" in infos:
+            #     for info in infos["final_info"]:
+            #         if info and "episode" in info:
+            #             pass
+            #             print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
 
         return next_obs, next_done, global_step
 
-    def bootstrap(self, model, next_obs, rewards, device, next_done, dones, values):
+    def generalized_advantage_estimation(self, model, next_obs, rewards, device, next_done, dones, values):
         """
-        help function that sets bootstrap value if the iteration is not complete
+        Computes the generalized advantage estimation (i.e., exponentially weighted average of n-step returns)
+        See (HIGH-DIMENSIONAL CONTINUOUS CONTROL USING GENERALIZED ADVANTAGE ESTIMATION, 2016, ICLR)
 
         :param device: the device acted upon
         :param values: tensor of values
@@ -226,12 +229,12 @@ class PPOCleanAgent(BaseAgent):
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
+            Logger.__call__().get_logger().info(f"[CleanPPO] Start training; seed: {seed}")
 
             envs = gym.vector.SyncVectorEnv([self.make_env(env_id=self.simulation_env_config.gym_env_name)
                                              for _ in range(self.num_envs)])
 
             # Setup training metrics
-            self.start: float = time.time()
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
@@ -275,18 +278,17 @@ class PPOCleanAgent(BaseAgent):
 
             # Training
             for iteration in range(1, self.num_iterations + 1):
-
                 # Annealing the rate if instructed to do so.
                 if self.anneal_lr:
                     frac = 1.0 - (iteration - 1.0) / self.num_iterations
                     lrnow = frac * self.learning_rate
                     optimizer.param_groups[0]["lr"] = lrnow
                 next_obs, next_done, global_step = \
-                    self.next_setter(global_step, envs, obs, dones, actions, rewards, device,
-                                     logprobs, values, model, next_obs, next_done)
+                    self.update_trajectory_buffers(global_step, envs, obs, dones, actions, rewards, device,
+                                                   logprobs, values, model, next_obs, next_done)
 
-                returns, advantages = self.bootstrap(model, next_obs, rewards, device, next_done,
-                                                     dones, values)
+                returns, advantages = self.generalized_advantage_estimation(model, next_obs, rewards, device, next_done,
+                                                                            dones, values)
 
                 # flatten the batch
                 b_obs = obs.reshape((-1,) + envs.single_observation_space.shape)
@@ -354,8 +356,30 @@ class PPOCleanAgent(BaseAgent):
                     if self.target_kl is not None and approx_kl > self.target_kl:
                         break
 
-                # Record rewards for plotting purposes
-                print("SPS:", int(global_step / (time.time() - start_time)))
+                # Logging
+                time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
+                avg_R = round(float(np.mean(returns.flatten().cpu().numpy())), 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+                # self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(
+                #     round(avg_T, 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
+                running_avg_J = ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                    round(running_avg_J, 3))
+                # running_avg_T = ExperimentUtil.running_average(
+                #     self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
+                #     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                # self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                #     round(running_avg_T, 3))
+                Logger.__call__().get_logger().info(
+                    f"[CleanPPO] Iteration: {iteration}/{self.num_iterations}, " 
+                    f"avg R: {avg_R}, " 
+                    f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
+                    f"{running_avg_J}, " 
+                    f"runtime: {time_elapsed_minutes} min")
             envs.close()
 
     def hparam_names(self) -> List[str]:

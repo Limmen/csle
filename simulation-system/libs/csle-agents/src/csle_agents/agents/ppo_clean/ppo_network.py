@@ -52,7 +52,7 @@ class PPONetwork(nn.Module):
         torch.nn.init.constant_(layer.bias, bias_const)
         return layer
 
-    def get_value(self, x: torch.Tensor) -> float:
+    def get_value(self, x: torch.Tensor) -> torch.Tensor:
         """
         Computes the value function V(x)
 
@@ -61,8 +61,8 @@ class PPONetwork(nn.Module):
         """
         return self.critic(x)
 
-    def get_action_and_value(self, x: torch.Tensor, action: Union[int, None] = None) \
-            -> Tuple[int, float, float, float]:
+    def get_action_and_value(self, x: torch.Tensor, action: Union[torch.Tensor, None] = None) \
+            -> Tuple[torch.Tensor, float, float, torch.Tensor]:
         """
         Gets the action and the value prediction of the network for a given input tensor x
 

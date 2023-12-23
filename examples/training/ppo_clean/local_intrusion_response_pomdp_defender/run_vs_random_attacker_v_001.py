@@ -39,7 +39,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
-            agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=164,
+            agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=64,
                                                          name=agents_constants.PPO_CLEAN.NUM_STEPS,
                                                          descr="number of steps in each time step"),
             agents_constants.PPO_CLEAN.ANNEAL_LR: HParam(value=True,
