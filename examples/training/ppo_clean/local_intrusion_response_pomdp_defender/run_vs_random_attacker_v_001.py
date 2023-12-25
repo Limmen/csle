@@ -20,7 +20,6 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
     simulation_name = "csle-intrusion-response-game-local-pomdp-defender-001"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
-    simulation_env_config.gym_env_name = "CartPole-v1"
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
@@ -34,14 +33,14 @@ if __name__ == '__main__':
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
-            agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
+            agents_constants.COMMON.BATCH_SIZE: HParam(value=32, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
-            agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=64,
+            agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=32,
                                                          name=agents_constants.PPO_CLEAN.NUM_STEPS,
-                                                         descr="number of steps in each time step"),
+                                                         descr="number of steps in each iteration"),
             agents_constants.PPO_CLEAN.ANNEAL_LR: HParam(value=True,
                                                          name=agents_constants.PPO_CLEAN.ANNEAL_LR,
                                                          descr="anneal learning rate for updating the policy"),
@@ -81,7 +80,7 @@ if __name__ == '__main__':
             agents_constants.PPO_CLEAN.CUDA: HParam(value=False, name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                     descr="boolean flag indicating whether GPU should be used"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(1000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
@@ -166,6 +165,6 @@ if __name__ == '__main__':
     agent = PPOCleanAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                           experiment_config=experiment_config)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
+    MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
