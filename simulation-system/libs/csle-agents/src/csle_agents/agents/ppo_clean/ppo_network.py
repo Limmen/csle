@@ -1,7 +1,6 @@
 from typing import Union, Tuple
 import torch
 import torch.nn as nn
-import gymnasium as gym
 from torch.distributions.categorical import Categorical
 import numpy as np
 
@@ -9,35 +8,47 @@ import numpy as np
 class PPONetwork(nn.Module):
     """
     Class for instantiating a neural network for PPO training
-
-    :param envs: envs parameter
-    :param num_hl: number of hidden layers in the neural network
-    :param num_hl_neur: number of neurons in a hidden layer in the network
-    :param output_size_critic: the output size of the critic function/policy in the model
-    :param outout_size_actor: the output size of the actor function/policy in the model
     """
 
-    def __init__(self, envs: gym.vector.SyncVectorEnv, num_hl: int, num_hl_neur: int, output_size_critic: int = 1,
-                 std_critic: float = 1.0, std_action: float = 0.01) -> None:
+    def __init__(self, input_dim: int, output_dim_critic: int, output_dim_action: int,
+                 num_hidden_layers: int, hidden_layer_dim: int, std_critic: float = 1.0,
+                 std_action: float = 0.01) -> None:
+        """
+        Initializes the neural network
+
+        :param input_dim: the dimension of the input
+        :param output_dim_critic: the dimension of the critic output (generally 1)
+        :param output_dim_action: the dimension of the actor output (action space dimension)
+        :param num_hidden_layers: the number of hidden layers
+        :param hidden_layer_dim: the dimension of a hidden layer
+        :param std_critic: the standard deviation of the critic for sampling
+        :param std_action: the standard deviation of the actor for sampling
+        """
         super(PPONetwork, self).__init__()
-
-        input_size = np.array(envs.single_observation_space.shape).prod()
-        self.output_size_critic = output_size_critic
-        self.output_size_action = envs.single_action_space.n
-
+        self.input_dim = input_dim
+        self.output_dim_critic = output_dim_critic
+        self.output_dim_action = output_dim_action
+        self.std_critic = std_critic
+        self.std_action = std_action
         self.critic = nn.Sequential()
         self.actor = nn.Sequential()
-        for layer in range(num_hl):
-            self.critic.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_size, num_hl_neur)))
+        self.num_hidden_layers = num_hidden_layers
+        self.hidden_layer_dim = hidden_layer_dim
+        input_dim = self.input_dim
+        for layer in range(num_hidden_layers):
+            self.critic.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_dim,
+                                                                                           hidden_layer_dim)))
             self.critic.add_module(name='activation', module=nn.Tanh())
-            self.actor.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_size, num_hl_neur)))
+            self.actor.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_dim,
+                                                                                          hidden_layer_dim)))
             self.actor.add_module(name='activation', module=nn.Tanh())
-            input_size = num_hl_neur
+            input_dim = hidden_layer_dim
         self.critic.add_module(name='Classifier',
-                               module=self.layer_init(nn.Linear(num_hl_neur, self.output_size_critic), std=std_critic))
+                               module=self.layer_init(nn.Linear(hidden_layer_dim, self.output_dim_critic),
+                                                      std=self.std_critic))
         self.actor.add_module(name='Classifier',
-                              module=self.layer_init(nn.Linear(num_hl_neur, self.output_size_action),
-                                                     std=std_action))
+                              module=self.layer_init(nn.Linear(hidden_layer_dim, self.output_dim_action),
+                                                     std=self.std_action))
 
     def layer_init(self, layer: nn.Linear, std: float = np.sqrt(2), bias_const: float = 0.0) -> nn.Linear:
         """
@@ -75,3 +86,45 @@ class PPONetwork(nn.Module):
         if action is None:
             action = probs.sample()
         return action, probs.log_prob(action), probs.entropy(), self.critic(x)
+
+    def save(self, path: str) -> None:
+        """
+        Saves the model to disk
+
+        :param path: the path on disk to save the model
+        :return: None
+        """
+        state_dict = self.state_dict()
+        state_dict["input_dim"] = self.input_dim
+        state_dict["output_dim_critic"] = self.output_dim_critic
+        state_dict["output_dim_action"] = self.output_dim_action
+        state_dict["std_critic"] = self.std_critic
+        state_dict["std_action"] = self.std_action
+        state_dict["num_hidden_layers"] = self.num_hidden_layers
+        state_dict["hidden_layer_dim"] = self.hidden_layer_dim
+        torch.save(state_dict, path)
+
+    @staticmethod
+    def load(path: str) -> "PPONetwork":
+        """
+        Loads the model from a given path
+
+        :param path: the path to load the model from
+        :return: None
+        """
+        state_dict = torch.load(path)
+        model = PPONetwork(input_dim=state_dict["input_dim"], output_dim_action=state_dict["output_dim_action"],
+                           output_dim_critic=state_dict["output_dim_critic"],
+                           num_hidden_layers=state_dict["num_hidden_layers"],
+                           hidden_layer_dim=state_dict["hidden_layer_dim"], std_critic=state_dict["std_critic"],
+                           std_action=state_dict["std_action"])
+        del state_dict["input_dim"]
+        del state_dict["output_dim_critic"]
+        del state_dict["output_dim_action"]
+        del state_dict["std_critic"]
+        del state_dict["std_action"]
+        del state_dict["num_hidden_layers"]
+        del state_dict["hidden_layer_dim"]
+        model.load_state_dict(state_dict)
+        model.eval()
+        return model

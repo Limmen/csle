@@ -144,22 +144,22 @@ class PPOCleanAgent(BaseAgent):
             exp_result, env, model = self.run_ppo(exp_result=exp_result, seed=seed)
 
             # Save policy
-            # ts = time.time()
-            # save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
-            # model.save(save_path)
-            # policy = PPOPolicy(
-            #     model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,
-            #     states=self.simulation_env_config.state_space_config.states,
-            #     actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-            #         self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
-            #     experiment_config=self.experiment_config,
-            #     avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
-            # exp_result.policies[seed] = policy
+            ts = time.time()
+            save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
+            model.save(save_path)
+            policy = PPOPolicy(
+                model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,
+                states=self.simulation_env_config.state_space_config.states,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
+                experiment_config=self.experiment_config,
+                avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
+            exp_result.policies[seed] = policy
 
             # Save policy metadata
-            # if self.save_to_metastore:
-            #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
-            #     os.chmod(save_path, 0o777)
+            if self.save_to_metastore:
+                MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+                os.chmod(save_path, 0o777)
 
             # Save trace
             traces = env.get_traces()
@@ -219,9 +219,12 @@ class PPOCleanAgent(BaseAgent):
         # Create neural network
         device = torch.device(agents_constants.PPO_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
-        num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
-        num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
-        model = PPONetwork(envs=envs, num_hl=num_hl, num_hl_neur=num_hl_neur).to(device)
+        num_hidden_layers = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
+        hidden_layer_dim = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+        input_dim = np.array(envs.single_observation_space.shape).prod()
+        action_dim = envs.single_action_space.n
+        model = PPONetwork(input_dim=input_dim, output_dim_critic=1, output_dim_action=action_dim,
+                           num_hidden_layers=num_hidden_layers, hidden_layer_dim=hidden_layer_dim).to(device)
 
         # seeding
         random.seed(seed)

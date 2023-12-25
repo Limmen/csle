@@ -165,6 +165,7 @@ if __name__ == '__main__':
     agent = PPOCleanAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                           experiment_config=experiment_config)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    for policy in experiment_execution.result.policies.values():
+        id = MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+        policy.id = id
+    MetastoreFacade.update_experiment_execution(experiment_execution, id=experiment_execution.id)
