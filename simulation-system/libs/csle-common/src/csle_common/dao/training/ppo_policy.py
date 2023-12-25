@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Any, Optional
+from typing import List, Dict, Union, Any
 import numpy as np
 import numpy.typing as npt
 import torch
@@ -13,6 +13,7 @@ from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
 from csle_common.logging.log import Logger
+from csle_agents.agents.ppo_clean.ppo_network import PPONetwork
 
 
 class PPOPolicy(Policy):
@@ -20,9 +21,9 @@ class PPOPolicy(Policy):
     A neural network policy learned with PPO
     """
 
-    def __init__(self, model: Optional[PPO], simulation_name: str, save_path: str, player_type: PlayerType,
-                 states: List[State],
-                 actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
+    def __init__(self, model: Union[None, PPO, PPONetwork], simulation_name: str, save_path: str,
+                 player_type: PlayerType, states: List[State], actions: List[Action],
+                 experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
 
@@ -42,10 +43,13 @@ class PPOPolicy(Policy):
         if self.model is None and self.save_path != "":
             try:
                 self.model = PPO.load(path=self.save_path)
-            except Exception as e:
-                Logger.__call__().get_logger().warning(
-                    f"There was an exception loading the model from path: {self.save_path}, "
-                    f"exception: {str(e)}, {repr(e)}")
+            except Exception as e1:
+                try:
+                    self.model = PPONetwork.load(path=self.save_path)
+                except Exception as e2:
+                    Logger.__call__().get_logger().warning(
+                        f"There was an exception loading the model from path: {self.save_path}, "
+                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
@@ -61,7 +65,13 @@ class PPOPolicy(Policy):
         """
         if self.model is None:
             raise ValueError("The model is None")
-        a = self.model.predict(np.array(o), deterministic=False)[0]
+        if isinstance(self.model, PPO):
+            a = self.model.predict(np.array(o), deterministic=False)[0]
+        elif isinstance(self.model, PPONetwork):
+            action_tensor, _, _, _ = self.model.get_action_and_value(x=torch.tensor(o))
+            a = action_tensor.item()
+        else:
+            raise ValueError(f"Model: {self.model} not recognized")
         try:
             return int(a)
         except Exception:
@@ -77,8 +87,14 @@ class PPOPolicy(Policy):
         """
         if self.model is None:
             raise ValueError("The model is None")
-        prob = math.exp(self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
-            x=torch.tensor(a)).item())
+        if isinstance(self.model, PPO):
+            log_prob = self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
+                x=torch.tensor(a)).item()
+        elif isinstance(self.model, PPONetwork):
+            _, log_prob, _, _ = self.model.get_action_and_value(x=torch.tensor(o), action=torch.tensor(a))
+        else:
+            raise ValueError(f"Model: {self.model} not recognized")
+        prob = math.exp(log_prob)
         return prob
 
     def to_dict(self) -> Dict[str, Any]:
@@ -90,8 +106,11 @@ class PPOPolicy(Policy):
         d["simulation_name"] = self.simulation_name
         d["save_path"] = self.save_path
         if self.model is not None:
-            d["policy_kwargs"] = self.model.policy_kwargs
             self.model.save(path=self.save_path)
+            d["policy_kwargs"] = {}
+            d["policy_kwargs"]["net_arch"] = []
+            if isinstance(self.model, PPO):
+                d["policy_kwargs"] = self.model.policy_kwargs
         else:
             d["policy_kwargs"] = {}
             d["policy_kwargs"]["net_arch"] = []
@@ -146,8 +165,14 @@ class PPOPolicy(Policy):
         obs = np.array([obs])
         if self.model is None:
             raise ValueError("The model is None")
-        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
-        action = actions[0]
+        if isinstance(self.model, PPO):
+            actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+            action = actions[0]
+        elif isinstance(self.model, PPONetwork):
+            action_tensor, log_prob, _, _ = self.model.get_action_and_value(x=torch.tensor(obs))
+            action = action_tensor.item()
+        else:
+            raise ValueError(f"Model: {self.model} not recognized")
         if action == 1:
             stop_prob = math.exp(log_prob)
         else:
