@@ -99,6 +99,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 30) {
         return "PARTICLE SWARM"
     }
+    if(agentType === 31) {
+        return "PPO CLEAN"
+    }
     else {
         return "Unknown"
     }
