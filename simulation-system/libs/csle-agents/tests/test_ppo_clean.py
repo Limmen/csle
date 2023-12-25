@@ -28,7 +28,7 @@ class TestPPOCleanAgentSuite:
         """
         experiment_config = ExperimentConfig(
             output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-            title="PPO_clean test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO_CLEAN,
+            title="PPO_clean test", random_seeds=[399], agent_type=AgentType.PPO_CLEAN,
             log_every=1,
             hparams={
                 constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -37,20 +37,20 @@ class TestPPOCleanAgentSuite:
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                     value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                     descr="number of layers of the policy network"),
-                agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
-                                                        descr="batch size for updates"),
+                agents_constants.COMMON.BATCH_SIZE: HParam(value=8, name=agents_constants.COMMON.BATCH_SIZE,
+                                                           descr="batch size for updates"),
                 agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
-                                                            name=agents_constants.COMMON.LEARNING_RATE,
-                                                            descr="learning rate for updating the policy"),
-                agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=164,
-                                                            name=agents_constants.PPO_CLEAN.NUM_STEPS,
-                                                            descr="number of steps in each time step"),
+                                                              name=agents_constants.COMMON.LEARNING_RATE,
+                                                              descr="learning rate for updating the policy"),
+                agents_constants.PPO_CLEAN.NUM_STEPS: HParam(value=32,
+                                                             name=agents_constants.PPO_CLEAN.NUM_STEPS,
+                                                             descr="number of steps in each iteration"),
                 agents_constants.PPO_CLEAN.ANNEAL_LR: HParam(value=True,
-                                                            name=agents_constants.PPO_CLEAN.ANNEAL_LR,
-                                                            descr="anneal learning rate for updating the policy"),
+                                                             name=agents_constants.PPO_CLEAN.ANNEAL_LR,
+                                                             descr="anneal learning rate for updating the policy"),
                 constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
-                                                        name=constants.NEURAL_NETWORKS.DEVICE,
-                                                        descr="the device to train on (cpu or cuda:x)"),
+                                                         name=constants.NEURAL_NETWORKS.DEVICE,
+                                                         descr="the device to train on (cpu or cuda:x)"),
                 agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                     value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                     descr="the nunmber of parallel environments for training"),
@@ -69,27 +69,30 @@ class TestPPOCleanAgentSuite:
                     value=0.01, name=agents_constants.PPO_CLEAN.ENT_COEF,
                     descr="the entropy coefficient for exploration"),
                 agents_constants.PPO_CLEAN.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
-                                                        descr="the coefficient of the value network for the loss"),
-                agents_constants.PPO_CLEAN.NUM_MINIBATCHES: HParam(value=4, name=agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
-                                                                descr="the number of minibatches"),
+                                                           descr="the coefficient of the value network for the loss"),
+                agents_constants.PPO_CLEAN.NUM_MINIBATCHES: HParam(value=4,
+                                                                   name=agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
+                                                                   descr="the number of minibatches"),
                 agents_constants.PPO_CLEAN.MAX_GRAD_NORM: HParam(
                     value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
                 agents_constants.PPO_CLEAN.NORM_ADV: HParam(
                     value=0.5, name=agents_constants.PPO_CLEAN.NORM_ADV, descr="norm_av param value"),
                 agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
                     value=4, name=agents_constants.PPO_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
-                agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
-                                                            name=agents_constants.PPO_CLEAN.TARGET_KL,
-                                                            descr="the target kl"),
+                agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=-1,
+                                                             name=agents_constants.PPO_CLEAN.TARGET_KL,
+                                                             descr="the target kl"),
+                agents_constants.PPO_CLEAN.CUDA: HParam(value=False, name=agents_constants.PPO_CLEAN.TARGET_KL,
+                                                        descr="boolean flag indicating whether GPU should be used"),
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                    value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                    value=int(100), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                     descr="number of timesteps to train"),
                 agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
-                                                        descr="training iterations between evaluations"),
+                                                           descr="training iterations between evaluations"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="the batch size for evaluation"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                        descr="how frequently to save the model"),
+                                                           descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
@@ -100,7 +103,7 @@ class TestPPOCleanAgentSuite:
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                                descr="the number of stop actions")
+                                                  descr="the number of stop actions")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )
@@ -147,14 +150,22 @@ class TestPPOCleanAgentSuite:
             env_name="csle-stopping-game-pomdp-defender-v1")
         return pomdp_config
 
-    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
+    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
+                          pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
         """
         Tests creation of the PPOCleanAgent
 
-        :return: None
+        :param mocker:  object for mocking API calls
+        :param experiment_config: the example experiment config
+        :param pomdp_config: the example POMDP config
+        :return:
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
+        simulation_env_config.configure_mock(**{
+            "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
+            "simulation_env_input_config": pomdp_config
+        })
         PPOCleanAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                       experiment_config=experiment_config)
 

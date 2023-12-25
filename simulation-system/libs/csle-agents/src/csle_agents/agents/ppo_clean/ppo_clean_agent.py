@@ -4,14 +4,16 @@ MIT License
 Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
 
-import random
 from typing import Union, List, Optional, Callable, Tuple
+import random
 import time
 import gymnasium as gym
+from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+from gymnasium.spaces.discrete import Discrete
 import os
 import numpy as np
 import torch
-import torch.nn as nn
+import torch.nn.utils.clip_grad as clip_grad
 import torch.optim as optim
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -77,6 +79,8 @@ class PPOCleanAgent(BaseAgent):
         self.gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
         self.gae_lambda = self.experiment_config.hparams[agents_constants.PPO_CLEAN.GAE_LAMBDA].value
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
+        config = self.simulation_env_config.simulation_env_input_config
+        self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
     def train(self) -> ExperimentExecution:
         """
@@ -222,7 +226,9 @@ class PPOCleanAgent(BaseAgent):
         num_hidden_layers = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
         hidden_layer_dim = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
         input_dim = np.array(envs.single_observation_space.shape).prod()
-        action_dim = envs.single_action_space.n
+        env: BaseEnv = self.orig_env
+        action_space: Discrete = env.action_space
+        action_dim = int(action_space.n)
         model = PPONetwork(input_dim=input_dim, output_dim_critic=1, output_dim_action=action_dim,
                            num_hidden_layers=num_hidden_layers, hidden_layer_dim=hidden_layer_dim).to(device)
 
@@ -233,13 +239,19 @@ class PPOCleanAgent(BaseAgent):
         torch.backends.cudnn.deterministic = True
 
         # Setup gym environment
-        obs = torch.zeros((self.num_steps, self.num_envs) + envs.single_observation_space.shape).to(device)
-        actions = torch.zeros((self.num_steps, self.num_envs) + envs.single_action_space.shape).to(device)
+        obs_shape: Tuple[int, ...] = (1,)
+        action_shape: Tuple[int, ...] = (1,)
+        if envs.single_observation_space.shape is not None:
+            obs_shape = envs.single_observation_space.shape
+        if envs.single_action_space.shape is not None:
+            action_shape = envs.single_action_space.shape
+        obs = torch.zeros((self.num_steps, self.num_envs) + obs_shape).to(device)
+        actions = torch.zeros((self.num_steps, self.num_envs) + action_shape).to(device)
         logprobs = torch.zeros((self.num_steps, self.num_envs)).to(device)
         rewards = torch.zeros((self.num_steps, self.num_envs)).to(device)
         dones = torch.zeros((self.num_steps, self.num_envs)).to(device)
         values = torch.zeros((self.num_steps, self.num_envs)).to(device)
-        horizons = []
+        horizons: List[int] = []
 
         # Initialize the environment and optimizers
         global_step = 0
@@ -267,9 +279,9 @@ class PPOCleanAgent(BaseAgent):
                                                                         dones=dones, values=values)
 
             # flatten the batch
-            b_obs = obs.reshape((-1,) + envs.single_observation_space.shape)
+            b_obs = obs.reshape((-1,) + obs_shape)
             b_logprobs = logprobs.reshape(-1)
-            b_actions = actions.reshape((-1,) + envs.single_action_space.shape)
+            b_actions = actions.reshape((-1,) + action_shape)
             b_advantages = advantages.reshape(-1)
             b_returns = returns.reshape(-1)
             b_values = values.reshape(-1)
@@ -281,7 +293,7 @@ class PPOCleanAgent(BaseAgent):
                 np.random.shuffle(b_inds)
                 for start in range(0, self.batch_size, self.minibatch_size):
                     end = start + self.minibatch_size
-                    mb_inds = b_inds[start:end]
+                    mb_inds = list(b_inds[start:end])
 
                     _, newlogprob, entropy, newvalue = \
                         model.get_action_and_value(b_obs[mb_inds], b_actions.long()[mb_inds])
@@ -326,7 +338,7 @@ class PPOCleanAgent(BaseAgent):
                     # Backpropagation and update weights
                     optimizer.zero_grad()
                     loss.backward()
-                    nn.utils.clip_grad_norm_(model.parameters(), self.max_grad_norm)
+                    clip_grad.clip_grad_norm_(model.parameters(), self.max_grad_norm)
                     optimizer.step()
 
                 if self.target_kl is not None and approx_kl > self.target_kl:
@@ -361,17 +373,17 @@ class PPOCleanAgent(BaseAgent):
                 f"runtime: {time_elapsed_minutes} min")
 
         envs.close()
-        env: BaseEnv = envs.envs[0].env.env.env
-        return exp_result, env, model
+        base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
+        return exp_result, base_env, model
 
-    def make_env(self) -> Callable[[], gym.Env]:
+    def make_env(self) -> Callable[[], RecordEpisodeStatistics]:
         """
         Helper function for creating the environment to use for training
 
         :return: a function that creates the environment
         """
 
-        def thunk() -> gym.wrappers.RecordEpisodeStatistics:
+        def thunk() -> RecordEpisodeStatistics:
             """
             Function for creating a new environment
 
@@ -379,7 +391,7 @@ class PPOCleanAgent(BaseAgent):
             """
             config = self.simulation_env_config.simulation_env_input_config
             orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
-            env = gym.wrappers.RecordEpisodeStatistics(orig_env)
+            env = RecordEpisodeStatistics(orig_env)
             return env
 
         return thunk
@@ -425,9 +437,9 @@ class PPOCleanAgent(BaseAgent):
 
             # Step the environment
             next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
-            next_done = np.logical_or(terminations, truncations)
+            next_done_np = np.logical_or(terminations, truncations)
             rewards[step] = torch.tensor(reward).to(device).view(-1)
-            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
+            next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done_np).to(device)
         return next_obs, next_done, global_step, horizons
 
     def generalized_advantage_estimation(self, model: PPONetwork, next_obs: torch.Tensor, rewards: torch.Tensor,

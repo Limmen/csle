@@ -41,23 +41,15 @@ class PPOPolicy(Policy):
         self.simulation_name = simulation_name
         self.save_path = save_path
         if self.model is None and self.save_path != "":
-            if isinstance(self.model, PPO):
-                try:
-                    self.model = PPO.load(path=self.save_path)
-                except Exception as e:
-                    Logger.__call__().get_logger().warning(
-                        f"There was an exception loading the model from path: {self.save_path}, "
-                        f"exception: {str(e)}, {repr(e)}")
-            elif isinstance(self.model, PPONetwork):
+            try:
+                self.model = PPO.load(path=self.save_path)
+            except Exception as e1:
                 try:
                     self.model = PPONetwork.load(path=self.save_path)
-                except Exception as e:
+                except Exception as e2:
                     Logger.__call__().get_logger().warning(
                         f"There was an exception loading the model from path: {self.save_path}, "
-                        f"exception: {str(e)}, {repr(e)}")
-            else:
-                Logger.__call__().get_logger().warning(f"There was an exception loading the model "
-                                                       f"from path: {self.save_path},")
+                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config

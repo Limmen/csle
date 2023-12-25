@@ -1,5 +1,4 @@
 import numpy as np
-from typing import List
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade

@@ -70,7 +70,8 @@ class PPONetwork(nn.Module):
         :param x: the input observation
         :return: The value
         """
-        return self.critic(x)
+        value: torch.Tensor = self.critic(x)
+        return value
 
     def get_action_and_value(self, x: torch.Tensor, action: Union[torch.Tensor, None] = None) \
             -> Tuple[torch.Tensor, float, torch.Tensor, torch.Tensor]:
