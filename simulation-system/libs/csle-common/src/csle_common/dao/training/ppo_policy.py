@@ -13,7 +13,7 @@ from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
 from csle_common.logging.log import Logger
-from csle_agents.agents.ppo_clean.ppo_network import PPONetwork
+from csle_common.models.ppo_network import PPONetwork
 
 
 class PPOPolicy(Policy):

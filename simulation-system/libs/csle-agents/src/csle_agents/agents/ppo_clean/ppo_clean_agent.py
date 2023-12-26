@@ -30,7 +30,7 @@ from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_agents.agents.base.base_agent import BaseAgent
-from csle_agents.agents.ppo_clean.ppo_network import PPONetwork
+from csle_common.models.ppo_network import PPONetwork
 import csle_agents.constants.constants as agents_constants
 
 
