@@ -56,7 +56,7 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> Union[int, npt.NDArray[Any]]:
+    def action(self, o: Union[List[float], List[int]]) -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
@@ -67,15 +67,18 @@ class PPOPolicy(Policy):
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
             a = self.model.predict(np.array(o), deterministic=False)[0]
+            try:
+                return int(a)
+            except Exception:
+                return a
         elif isinstance(self.model, PPONetwork):
             action_tensor, _, _, _ = self.model.get_action_and_value(x=torch.tensor(o))
-            a = action_tensor.item()
+            try:
+                return int(action_tensor.item())
+            except Exception:
+                return action_tensor.item()
         else:
             raise ValueError(f"Model: {self.model} not recognized")
-        try:
-            return int(a)
-        except Exception:
-            return a
 
     def probability(self, o: Union[List[float], List[int]], a: int) -> float:
         """
@@ -166,11 +169,12 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
-            action = actions[0]
+            actions, values, log_prob_tensor = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+            log_prob = float(log_prob_tensor.item())
+            action = int(actions[0])
         elif isinstance(self.model, PPONetwork):
             action_tensor, log_prob, _, _ = self.model.get_action_and_value(x=torch.tensor(obs))
-            action = action_tensor.item()
+            action = int(action_tensor.item())
         else:
             raise ValueError(f"Model: {self.model} not recognized")
         if action == 1:

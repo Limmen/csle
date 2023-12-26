@@ -37,7 +37,7 @@ class MixedPPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_PPO_POLICY
 
-    def action(self, o: List[float]) -> Union[int, npt.NDArray[Any]]:
+    def action(self, o: List[float]) -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
