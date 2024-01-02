@@ -640,7 +640,7 @@ docker swarm join --token <my_roken> leader_ip:2377
 <p class="captionFig">
 Listing 57: Commands to add a worker node to the Docker swarm.
 </p>
-
+You can verify the Docker swarm configuration by running `docker node ls`.
 
 After completing the Docker installation, pull the base images of CSLE from DockerHub by running the commands:
 

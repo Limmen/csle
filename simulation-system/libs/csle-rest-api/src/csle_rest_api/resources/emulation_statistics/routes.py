@@ -88,7 +88,6 @@ def emulation_statistic(statistics_id: int) -> Tuple[Response, int]:
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
-
     statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
     response = jsonify({})
     if statistic is not None:

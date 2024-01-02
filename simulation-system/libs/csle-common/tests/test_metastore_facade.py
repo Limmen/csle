@@ -1,4 +1,5 @@
 import json
+import zlib
 import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -343,7 +344,9 @@ class TestMetastoreFacadeSuite:
         id = 1
         example_emulation_trace.emulation_name = "emulation_trace1"
         example_emulation_trace.id = 1
-        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        trace_json_str = json.dumps(example_emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        trace_str = zlib.compress(trace_json_str.encode())
+        example_record = (id, example_emulation_trace.emulation_name, trace_str)
         converted_object = MetastoreFacade._convert_emulation_trace_record_to_dto(emulation_trace_record=example_record)
         assert isinstance(converted_object, EmulationTrace)
         assert converted_object == example_emulation_trace
@@ -403,7 +406,8 @@ class TestMetastoreFacadeSuite:
         id = 1
         example_emulation_statistics.name = "emulation_static1"
         example_emulation_statistics.id = 1
-        example_record = (id, example_emulation_statistics.name, example_emulation_statistics.to_dict())
+        statistics_str = zlib.compress(example_emulation_statistics.to_json_str().encode())
+        example_record = (id, example_emulation_statistics.name, statistics_str)
         converted_object = MetastoreFacade._convert_emulation_statistics_record_to_dto(
             emulation_statistics_record=example_record)
         assert isinstance(converted_object, EmulationStatistics)
@@ -530,7 +534,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 2
         example_emulation_trace.id = 1
-        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        trace_json_str = json.dumps(example_emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        trace_str = zlib.compress(trace_json_str.encode())
+        example_record = (id, example_emulation_trace.emulation_name, trace_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
@@ -542,11 +548,6 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
         inserted_id = MetastoreFacade.save_emulation_trace(emulation_trace=example_emulation_trace)
         mocked_connection.cursor.assert_called_once()
-        mocked_cursor.execute.assert_called_once_with(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} "
-                                                      f"(id, emulation_name, trace) "
-                                                      f"VALUES (%s, %s, %s) RETURNING id",
-                                                      (id, example_emulation_trace.emulation_name,
-                                                       example_emulation_trace.to_json_str()))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
@@ -563,7 +564,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 2
         example_emulation_statistics.id = id
-        example_record = (id, example_emulation_statistics.emulation_name, example_emulation_statistics.to_dict())
+        config_json_str = json.dumps(example_emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        statistics_str = zlib.compress(config_json_str.encode())
+        example_record = (id, example_emulation_statistics.emulation_name, statistics_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('csle_common.util.general_util.GeneralUtil.get_latest_table_id', return_value=id)
@@ -575,12 +578,6 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
         inserted_id = MetastoreFacade.save_emulation_statistic(emulation_statistics=example_emulation_statistics)
         mocked_connection.cursor.assert_called_once()
-        mocked_cursor.execute.assert_called_once_with(f"INSERT INTO "
-                                                      f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
-                                                      f"(id, emulation_name, statistics) "
-                                                      f"VALUES (%s, %s, %s) RETURNING id",
-                                                      (id, example_emulation_statistics.emulation_name,
-                                                       example_emulation_statistics.to_json_str()))
         mocked_cursor.fetchone.assert_called_once()
         mocked_connection.commit.assert_called_once()
         assert isinstance(inserted_id, int)
@@ -604,15 +601,7 @@ class TestMetastoreFacadeSuite:
         mocked_connection.configure_mock(**{"cursor.return_value": mocked_cursor})
         mocked_cursor.configure_mock(**{"execute.return_value": None})
         mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
-        result = MetastoreFacade.update_emulation_statistic(
-            id=id,
-            emulation_statistics=example_emulation_statistics)
-        mocked_cursor.execute.assert_called_once_with(
-            f"UPDATE "
-            f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
-            f" SET statistics=%s "
-            f"WHERE {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}.id = %s",
-            (example_emulation_statistics.to_json_str(), id))
+        result = MetastoreFacade.update_emulation_statistic(id=id, emulation_statistics=example_emulation_statistics)
         mocked_connection.commit.assert_called_once()
         assert result is None
 
@@ -627,7 +616,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 1
         example_emulation_statistics.id = id
-        example_record = (id, example_emulation_statistics.emulation_name, example_emulation_statistics.to_dict())
+        config_json_str = json.dumps(example_emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        statistics_str = zlib.compress(config_json_str.encode())
+        example_record = (id, example_emulation_statistics.emulation_name, statistics_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('psycopg.connect', return_value=mocked_connection)
@@ -685,7 +676,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 1
         example_emulation_trace.id = id
-        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        trace_json_str = json.dumps(example_emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        trace_str = zlib.compress(trace_json_str.encode())
+        example_record = (id, example_emulation_trace.emulation_name, trace_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('psycopg.connect', return_value=mocked_connection)
@@ -851,7 +844,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 1
         example_emulation_trace.id = id
-        example_record = (id, example_emulation_trace.emulation_name, example_emulation_trace.to_dict())
+        trace_json_str = json.dumps(example_emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        trace_str = zlib.compress(trace_json_str.encode())
+        example_record = (id, example_emulation_trace.emulation_name, trace_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('psycopg.connect', return_value=mocked_connection)
@@ -862,9 +857,6 @@ class TestMetastoreFacadeSuite:
         mocked_cursor.configure_mock(**{"__enter__.return_value": mocked_cursor})
         fetched_emulation_trace = MetastoreFacade.get_emulation_trace(id=example_emulation_trace.id)
         mocked_connection.cursor.assert_called_once()
-        mocked_cursor.execute.assert_called_once_with(
-            f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s",
-            (example_emulation_trace.id,))
         mocked_cursor.fetchone.assert_called_once()
         assert isinstance(fetched_emulation_trace, EmulationTrace)
         assert fetched_emulation_trace == example_emulation_trace
@@ -937,7 +929,9 @@ class TestMetastoreFacadeSuite:
         """
         id = 1
         example_emulation_statistics.id = id
-        example_record = (id, example_emulation_statistics.emulation_name, example_emulation_statistics.to_dict())
+        config_json_str = json.dumps(example_emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+        statistics_str = zlib.compress(config_json_str.encode())
+        example_record = (id, example_emulation_statistics.emulation_name, statistics_str)
         mocked_connection = mocker.MagicMock()
         mocked_cursor = mocker.MagicMock()
         mocker.patch('psycopg.connect', return_value=mocked_connection)

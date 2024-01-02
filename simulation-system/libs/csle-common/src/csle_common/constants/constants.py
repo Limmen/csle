@@ -967,6 +967,7 @@ class COMMANDS:
     PING = "ping"
     NGINX_STATUS = "service nginx status"
     POSTGRESQL_STATUS = "service postgresql status"
+    POSTGRESQL_STATUS_VERSION = "service postgresql@15-main status"
     DOCKER_ENGINE_STATUS = "service docker status"
     POSTGRESQL_START = "sudo service postgresql start"
     POSTGRESQL_STOP = "sudo service postgresql stop"

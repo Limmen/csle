@@ -83,6 +83,10 @@ class ManagementSystemController:
         """
         output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS.split(" "), capture_output=True, text=True)
         postgresql_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
+        if postgresql_running:
+            return postgresql_running
+        output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS_VERSION.split(" "), capture_output=True, text=True)
+        postgresql_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
         return postgresql_running
 
     @staticmethod

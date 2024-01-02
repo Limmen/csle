@@ -15,7 +15,7 @@ SELECT create_reference_table('emulations');
 CREATE TABLE IF NOT EXISTS emulation_traces (
     id serial PRIMARY KEY,
     emulation_name TEXT references emulations(name) ON DELETE CASCADE,
-    trace json NOT NULL
+    trace bytea NOT NULL
 );
 GRANT ALL ON emulation_traces TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulation_traces_id_seq TO csle;
@@ -25,7 +25,7 @@ SELECT create_reference_table('emulation_traces');
 CREATE TABLE IF NOT EXISTS emulation_statistics (
     id serial PRIMARY KEY,
     emulation_name TEXT references emulations(name) ON DELETE CASCADE,
-    statistics json NOT NULL
+    statistics bytea NOT NULL
 );
 GRANT ALL ON emulation_statistics TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulation_statistics_id_seq TO csle;

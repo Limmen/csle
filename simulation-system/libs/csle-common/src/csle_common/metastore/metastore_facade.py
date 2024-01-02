@@ -1,7 +1,9 @@
+
 from typing import List, Union, Any, Tuple
 import psycopg
 import json
 import time
+import zlib
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -208,7 +210,7 @@ class MetastoreFacade:
         :param emulation_trace_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_trace_json_str = json.dumps(emulation_trace_record[2], indent=4, sort_keys=True, cls=NpEncoder)
+        emulation_trace_json_str = zlib.decompress(emulation_trace_record[2]).decode()
         emulation_trace: EmulationTrace = EmulationTrace.from_dict(json.loads(emulation_trace_json_str))
         emulation_trace.id = emulation_trace_record[0]
         return emulation_trace
@@ -257,8 +259,7 @@ class MetastoreFacade:
         :param emulation_statistics_record: the record to convert
         :return: the DTO representing the record
         """
-        emulation_statistics_json_str = json.dumps(emulation_statistics_record[2], indent=4, sort_keys=True,
-                                                   cls=NpEncoder)
+        emulation_statistics_json_str = zlib.decompress(emulation_statistics_record[2]).decode()
         emulation_statistics: EmulationStatistics = EmulationStatistics.from_dict(
             json.loads(emulation_statistics_json_str,
                        object_hook=lambda d: {int(k.split(".", 1)[0]) if k.split(".", 1)[0].lstrip('-').isdigit()
@@ -415,9 +416,12 @@ class MetastoreFacade:
                 id = GeneralUtil.get_latest_table_id(cur=cur,
                                                      table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 config_json_str = json.dumps(emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                # Need to compress due to postgres size limits
+                compressed_json_str = zlib.compress(config_json_str.encode())
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} "
                             f"(id, emulation_name, trace) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace.emulation_name, config_json_str))
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace.emulation_name,
+                                                                  compressed_json_str))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -447,11 +451,13 @@ class MetastoreFacade:
                 id = GeneralUtil.get_latest_table_id(cur=cur,
                                                      table_name=constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                # Need to compress due to postgres size limits
+                compressed_json_str = zlib.compress(config_json_str.encode())
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
                             f"(id, emulation_name, statistics) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_statistics.emulation_name,
-                                                                  config_json_str))
+                                                                  compressed_json_str))
                 record = cur.fetchone()
                 id_of_new_row = None
                 if record is not None:
@@ -479,11 +485,12 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                compressed_json_str = zlib.compress(config_json_str.encode())
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
                             f" SET statistics=%s "
                             f"WHERE {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}.id = %s",
-                            (config_json_str, id))
+                            (compressed_json_str, id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Statistics for emulation "
                                                      f"{emulation_statistics.emulation_name} with id {id} "
