@@ -110,19 +110,6 @@ const EmulationStatistics = (props) => {
                 }
                 setSelectedEmulationStatistic(response)
                 setLoadingSelectedEmulationStatistic(false)
-                setFetchProgressState({
-                    eta: "N/A",
-                    percentage: 0,
-                    remaining: "N/A",
-                    speed: "N/A",
-                    total: "N/A",
-                    transferred: "N/A"
-                })
-                setProgressStarted(false)
-                setInterval(() => {
-                    setFetchProgressState((prev) => Math.min(100, prev + 1))
-                }, 10);
-
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     const conditionalOptions = Object.keys(response.conditionals_counts).map(
                         (conditionalName, index) => {
@@ -142,6 +129,15 @@ const EmulationStatistics = (props) => {
                     })
                     setMetrics(metricOptions)
                     setSelectedMetric(metricOptions[0])
+                    setProgressStarted(false)
+                    setFetchProgressState({
+                        eta: "N/A",
+                        percentage: 0,
+                        remaining: "N/A",
+                        speed: "N/A",
+                        total: "N/A",
+                        transferred: "N/A"
+                    })
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -241,6 +237,15 @@ const EmulationStatistics = (props) => {
 
     const updateEmulationStatisticId = (emulationStatisticId) => {
         setSelectedEmulationStatisticId(emulationStatisticId)
+        setProgressStarted(false)
+        setFetchProgressState({
+            eta: "N/A",
+            percentage: 0,
+            remaining: "N/A",
+            speed: "N/A",
+            total: "N/A",
+            transferred: "N/A"
+        })
         fetchEmulationStatistic(emulationStatisticId)
         setSelectedConditionals(null)
         setSelectedMetric(null)
