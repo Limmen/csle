@@ -5,6 +5,7 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/user-event": "^13.5.0",
+    "fetch-progress": "^1.3.0",
     "rc-slider": "^9.7.4",
     "react": "18.0.0",
     "react-alert": "^7.0.3",

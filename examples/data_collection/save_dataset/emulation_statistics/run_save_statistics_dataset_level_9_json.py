@@ -11,7 +11,7 @@ if __name__ == '__main__':
     zip_file_path = "/media/lagring/statistics_dataset_14_nov_22_json.zip"
     name = "emulation_statistics_level_9_14_nov_json_2022"
     url = "-"
-    date_added = float(datetime.datetime.now().timestamp())
+    date_added = datetime.datetime.now()
     citation = "Intrusion Prevention through Optimal Stopping (Hammar & Stadler 2022)"
     (num_files, dir_size_uncompressed_gb, size_compressed_gb, file_format, added_by, num_measurements,
      num_metrics, metrics, conditions, num_conditions) = \

@@ -41,3 +41,19 @@
     margin-left:30px;
     margin-bottom:50px
 }
+
+.myProgress {
+    margin-left: 25%;
+    margin-right:25%;
+    height:50px;
+}
+
+.progressInfo{
+    font-size: 14px;
+}
+
+.progressLabel {
+    font-size: 14px;
+    color: black!important;
+    text-decoration-color: black!important;
+}

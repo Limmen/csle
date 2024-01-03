@@ -4,6 +4,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import Select from 'react-select'
 import ConditionalHistogramDistribution from "./ConditionalHistogramDistribution/ConditionalHistogramDistribution";
 import './EmulationStatistics.css';
@@ -16,10 +17,11 @@ import {useDebouncedCallback} from 'use-debounce';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
+import {useNavigate} from "react-router-dom";
+import {useAlert} from "react-alert";
+import fetchProgress from 'fetch-progress';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
@@ -31,6 +33,7 @@ import {
     TOKEN_QUERY_PARAM,
     IDS_QUERY_PARAM
 } from "../../Common/constants";
+import formatBytes from "../../Common/formatBytes";
 
 /**
  * Component representing the /statistics-page
@@ -46,6 +49,7 @@ const EmulationStatistics = (props) => {
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedEmulationStatistic, setLoadingSelectedEmulationStatistic] = useState(true);
+    const [progressStarted, setProgressStarted] = useState(true);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [deltaCountsOpen, setDeltaCountsOpen] = useState(false);
@@ -53,6 +57,14 @@ const EmulationStatistics = (props) => {
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
     const [initialProbsOpen, setInitialProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
+    const [fetchProgressState, setFetchProgressState] = useState({
+        eta: "N/A",
+        percentage: 0,
+        remaining: "N/A",
+        speed: "N/A",
+        total: "N/A",
+        transferred: "N/A"
+    });
     const animationDuration = 5
     const ip = serverIp
     const port = serverPort
@@ -71,8 +83,20 @@ const EmulationStatistics = (props) => {
                 })
             }
         )
+            .then(
+                fetchProgress({
+                    onProgress(progress) {
+                        if (progress.percentage > 0) {
+                            setProgressStarted(true)
+                            if (progress.percentage < fetchProgressState.percentage) {
+                                progress.percentage = fetchProgressState.percentage
+                            }
+                            setFetchProgressState(progress)
+                        }
+                    },
+                }))
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
@@ -81,11 +105,23 @@ const EmulationStatistics = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 setSelectedEmulationStatistic(response)
                 setLoadingSelectedEmulationStatistic(false)
+                setFetchProgressState({
+                    eta: "N/A",
+                    percentage: 0,
+                    remaining: "N/A",
+                    speed: "N/A",
+                    total: "N/A",
+                    transferred: "N/A"
+                })
+                setProgressStarted(false)
+                setInterval(() => {
+                    setFetchProgressState((prev) => Math.min(100, prev + 1))
+                }, 10);
 
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     const conditionalOptions = Object.keys(response.conditionals_counts).map(
@@ -128,6 +164,7 @@ const EmulationStatistics = (props) => {
 
     const refresh = () => {
         setLoading(true)
+        setProgressStarted(false)
         resetState()
         fetchEmulationStatisticsIds()
     }
@@ -222,7 +259,7 @@ const EmulationStatistics = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
@@ -231,7 +268,7 @@ const EmulationStatistics = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 const statisticsIds = response.map((id_obj, index) => {
@@ -265,13 +302,22 @@ const EmulationStatistics = (props) => {
 
     useEffect(() => {
         setLoading(true)
+        setProgressStarted(false)
+        setFetchProgressState({
+            eta: "N/A",
+            percentage: 0,
+            remaining: "N/A",
+            speed: "N/A",
+            total: "N/A",
+            transferred: "N/A"
+        })
         fetchEmulationStatisticsIds()
     }, [fetchEmulationStatisticsIds]);
 
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}`+
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -281,7 +327,7 @@ const EmulationStatistics = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
@@ -290,7 +336,7 @@ const EmulationStatistics = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 fetchEmulationStatisticsIds()
@@ -323,7 +369,7 @@ const EmulationStatistics = (props) => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -582,13 +628,33 @@ const EmulationStatistics = (props) => {
         if (props.loadingSelectedEmulationStatistic || props.selectedEmulationStatistic === null
             || props.selectedEmulationStatistic === undefined) {
             if (props.loadingSelectedEmulationStatistic) {
-                return (
-                    <h3>
-                        <span className="spinnerLabel"> Fetching emulation statistic... </span>
-                        <Spinner animation="border" role="status">
-                            <span className="visually-hidden"></span>
-                        </Spinner>
-                    </h3>)
+                if (!props.progressStarted) {
+                    return (
+                        <h3>
+                            <span className="spinnerLabel"> Fetching emulation statistic... </span>
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden"></span>
+                            </Spinner>
+                        </h3>
+                    )
+                } else {
+                    return (
+                        <div>
+                            <h3>
+                                <span className="spinnerLabel"> Fetching emulation statistic... </span>
+                            </h3>
+                            <p className="progressInfo">Speed: {formatBytes(fetchProgressState.speed)}/s,
+                                transferred: {formatBytes(fetchProgressState.transferred)}/
+                                {formatBytes(fetchProgressState.total)}</p>
+                            <ProgressBar animated now={fetchProgressState.percentage}
+                                         variant="info"
+                                         label={
+                                             <span className="progressLabel">{fetchProgressState.percentage}%</span>
+                                         }
+                                         className="text-center myProgress"/>
+                        </div>
+                    )
+                }
             } else {
                 return (
                     <p></p>
@@ -716,7 +782,8 @@ const EmulationStatistics = (props) => {
                                 <div id="initialCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <h3 className="chartsTitle">
-                                            {"Initial counts of:" + props.selectedMetric.value} (downsampled to 100 samples)
+                                            {"Initial counts of:" + props.selectedMetric.value} (downsampled to 100
+                                            samples)
                                         </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.initial_distributions_counts}
@@ -750,7 +817,8 @@ const EmulationStatistics = (props) => {
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <h3 className="chartsTitle">
-                                            {"Delta probabilities: " + props.selectedMetric.value} (downsampled to 100 samples)
+                                            {"Delta probabilities: " + props.selectedMetric.value} (downsampled to 100
+                                            samples)
                                         </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.conditionals_probs}
@@ -785,7 +853,8 @@ const EmulationStatistics = (props) => {
                                 <div id="initialProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <h3 className="chartsTitle">
-                                            {"Initial counts of::" + props.selectedMetric.value} (downsampled to 100 samples)
+                                            {"Initial counts of::" + props.selectedMetric.value} (downsampled to 100
+                                            samples)
                                         </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.initial_distributions_probs}
@@ -954,6 +1023,7 @@ const EmulationStatistics = (props) => {
                                             selectedEmulationStatistic={selectedEmulationStatistic}
                                             animationDuration={animationDuration}
                                             animationDurationFactor={animationDurationFactor}
+                                            progressStarted={progressStarted}
             />
         </div>
     );
