@@ -15,7 +15,7 @@ const Footer = () => (
                       <i className="fa fa-github" aria-hidden="true"/>
                   </a>
               </p>
-              <p className="text-muted">Copyright 2020-2023@Kim Hammar</p>
+              <p className="text-muted">Copyright 2020-2024@Kim Hammar</p>
               <img src={CDISLogo} alt="CDIS" width={40} height={40}/>
               <img src={KTHLogo} alt="KTH" width={40} height={40} className="kthLogo"/>
           </div>

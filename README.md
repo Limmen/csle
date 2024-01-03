@@ -163,7 +163,7 @@ Thanks go to these people!
 ## 🔖 Copyright and license
 
 <p>
-<a href="./LICENSE.md">Creative Commons (C) 2020-2023, Kim Hammar</a>
+<a href="./LICENSE.md">Creative Commons (C) 2020-2024, Kim Hammar</a>
 </p>
 
 <p align="center">
