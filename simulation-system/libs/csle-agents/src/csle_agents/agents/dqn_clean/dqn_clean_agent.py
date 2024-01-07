@@ -10,10 +10,11 @@ import torch.optim as optim
 import gymnasium as gym
 import os
 import random
-
+import tyro
 import numpy as np
 from stable_baselines3.common.buffers import ReplayBuffer
 from dqn_network import QNetwork
+from torch.utils.tensorboard import SummaryWriter
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -35,7 +36,7 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class DQNAgent(BaseAgent):
+class DQNCleanAgent(BaseAgent):
     """
     A DQN agent using the implementation from OpenAI baselines
     """
@@ -51,11 +52,15 @@ class DQNAgent(BaseAgent):
         :param training_job: the training job configuration
         :param save_to_metastore: boolean flag indicating whether job information should be saved to the metastore
         """
-        super(DQNAgent, self).__init__(simulation_env_config=simulation_env_config,
-                                       emulation_env_config=emulation_env_config,
-                                       experiment_config=experiment_config)
+        super(DQNCleanAgent, self).__init__(simulation_env_config=simulation_env_config,
+                                            emulation_env_config=emulation_env_config,
+                                            experiment_config=experiment_config)
+        # print(experiment_config.agent_type)
         assert experiment_config.agent_type == AgentType.DQN_CLEAN
         self.training_job = training_job
+        self.num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
+        self.num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
+        self.config = self.simulation_env_config.simulation_env_input_config
         self.save_to_metastore = save_to_metastore
         self.exp_name: str = self.simulation_env_config.name
         self.env_id = self.simulation_env_config.gym_env_name
@@ -80,7 +85,7 @@ class DQNAgent(BaseAgent):
         self.target_network_frequency = self.experiment_config.hparams[agents_constants.DQN_CLEAN.T_N_FREQ].value
         self.buffer_size = self.experiment_config.hparams[agents_constants.DQN_CLEAN.BUFFER_SIZE].value
         self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
-        self.deice = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
+        self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
         # Algorithm specific arguments
         env_id: str = "CartPole-v1"
         """the id of the environment"""
@@ -114,7 +119,7 @@ class DQNAgent(BaseAgent):
 
     def make_env(self, seed, idx, run_name):
         def thunk():
-            env = gym.make(self.env_id)
+            env = gym.make(self.env_id, config=self.config)
             env = gym.wrappers.RecordEpisodeStatistics(env)
             return env
 
@@ -168,20 +173,20 @@ class DQNAgent(BaseAgent):
         self.exp_execution.id = exp_execution_id
 
         # Setup gym environment
-        config = self.simulation_env_config.simulation_env_input_config
-        orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        # config = self.simulation_env_config.simulation_env_input_config
+        # orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
 
-            args = tyro.cli(Args)
+            # args = tyro.cli(Args)
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
             run_name = f"{self.env_id}__{self.exp_name}__{seed}__{int(time.time())}"
             writer = SummaryWriter(f"runs/{run_name}")
-            writer.add_text(
-                "hyperparameters",
-                "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
-            )
+            # writer.add_text(
+            #     "hyperparameters",
+            #     "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+            # )
 
             # TRY NOT TO MODIFY: seeding
             random.seed(seed)
@@ -197,9 +202,9 @@ class DQNAgent(BaseAgent):
             )
             assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
-            q_network = QNetwork(envs).to(device)
+            q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
             optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate)
-            target_network = QNetwork(envs).to(device)
+            target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
             target_network.load_state_dict(q_network.state_dict())
 
             rb = ReplayBuffer(
@@ -293,3 +298,23 @@ class DQNAgent(BaseAgent):
 
             envs.close()
             writer.close()
+
+    def hparam_names(self) -> List[str]:
+        """
+        Gets the hyperparameters
+
+        :return: a list with the hyperparameter names
+        """
+        return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
+                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
+                agents_constants.COMMON.GAMMA,
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
+                agents_constants.COMMON.EVAL_BATCH_SIZE,
+                constants.NEURAL_NETWORKS.DEVICE,
+                agents_constants.COMMON.SAVE_EVERY, agents_constants.DQN.EXPLORATION_INITIAL_EPS,
+                agents_constants.DQN.EXPLORATION_FINAL_EPS, agents_constants.DQN.EXPLORATION_FRACTION,
+                agents_constants.DQN.MLP_POLICY, agents_constants.DQN.MAX_GRAD_NORM,
+                agents_constants.DQN.GRADIENT_STEPS, agents_constants.DQN.N_EPISODES_ROLLOUT,
+                agents_constants.DQN.TARGET_UPDATE_INTERVAL, agents_constants.DQN.LEARNING_STARTS,
+                agents_constants.DQN.BUFFER_SIZE, agents_constants.DQN.DQN_BATCH_SIZE]

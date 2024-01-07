@@ -20,7 +20,7 @@ class PPONetwork(nn.Module):
         input_size = np.array(envs.single_observation_space.shape).prod()
         self.output_size_critic = output_size_critic
         self.output_size_action = envs.single_action_space.n
-
+        print(dir(nn.Module.layer_init))
         self.critic = nn.Sequential()
         self.actor = nn.Sequential()
         for layer in range(num_hl):

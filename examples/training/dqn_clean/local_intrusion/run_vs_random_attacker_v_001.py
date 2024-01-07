@@ -14,18 +14,17 @@ from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config i
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-030"
+    emulation_name = "csle-level9-040"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
     simulation_name = "csle-intrusion-response-game-local-pomdp-defender-001"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
-    simulation_env_config.gym_env_name = "CartPole-v1"
     if simulation_env_config is None:
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO_clean test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO_CLEAN,
+        title="DQN_clean test", random_seeds=[399, 98912, 999], agent_type=AgentType.DQN_CLEAN,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -34,8 +33,16 @@ if __name__ == '__main__':
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
+            agents_constants.DQN_CLEAN.EXP_FRAC: HParam(value=0.5, name=agents_constants.DQN_CLEAN.EXP_FRAC,
+                                                        descr="the fraction of `total-timesteps` it takes from start-e to go end-e"),
+            agents_constants.DQN_CLEAN.TAU: HParam(value=1.0, name=agents_constants.DQN_CLEAN.TAU, descr="target network update rate"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
+            agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000, name=agents_constants.DQN_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
+            agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10, name=agents_constants.DQN_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
+            agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500, name=agents_constants.DQN_CLEAN.T_N_FREQ, descr="the batch size of sample from the reply memory"),
+            agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=10000, name=agents_constants.DQN_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
+            agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False, name=agents_constants.DQN_CLEAN.SAVE_MODEL, descr="decision param for model saving"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
@@ -158,7 +165,7 @@ if __name__ == '__main__':
         )
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
 
-    agent = DQNCleanAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+    agent = DQNCleanAgent(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                           experiment_config=experiment_config)
     experiment_execution = agent.train()
     # MetastoreFacade.save_experiment_execution(experiment_execution)
