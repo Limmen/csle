@@ -65,7 +65,8 @@ class ClientPopulationConsumerThread(threading.Thread):
             return self.client_population_metrics.copy()
         if len(self.client_population_metrics_list) == 1:
             return self.client_population_metrics_list[0].copy()
-        avg_client_population_metrics = ClientPopulationMetrics()
+        avg_client_population_metrics = ClientPopulationMetrics(num_clients=0, rate=0)
+
         for i in range(len(self.client_population_metrics_list)):
             avg_client_population_metrics.num_clients = (avg_client_population_metrics.num_clients +
                                                          self.client_population_metrics_list[i].num_clients)

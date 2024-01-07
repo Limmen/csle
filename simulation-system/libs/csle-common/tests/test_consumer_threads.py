@@ -17,9 +17,11 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id impo
 from csle_common.consumer_threads.attacker_actions_consumer_thread import AttackerActionsConsumerThread
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import \
     EmulationDefenderMachineObservationState
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_common.consumer_threads.avg_host_metrics_thread import AvgHostMetricsThread
+from csle_common.consumer_threads.client_population_consumer_thread import ClientPopulationConsumerThread
 
 
 class TestConsumerThreadsSuiteSuite:
@@ -381,3 +383,47 @@ class TestConsumerThreadsSuiteSuite:
                                       machines=[emulation_defender_machine_observation_state_example], sleep_time=1)
         assert thread.host_metrics == example_host_metrics
         assert thread.machines[0] == emulation_defender_machine_observation_state_example
+
+    def test_client_population_consumer_thread(self) -> None:
+        """
+        Tests creation of a client population consumer thread and its methods
+
+        :return: None
+        """
+        example_client_population_metric = ClientPopulationMetrics()
+        thread = ClientPopulationConsumerThread(kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                                client_population_metrics=example_client_population_metric)
+        assert thread.client_population_metrics == example_client_population_metric
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+
+        # Test empty list
+        thread.client_population_metrics_list = []
+        avg_client_population_metrics = thread.get_average_client_population_metrics()
+        assert avg_client_population_metrics == example_client_population_metric
+
+        # Test singleton list
+        thread.client_population_metrics_list = [example_client_population_metric.copy()]
+        avg_client_population_metrics = thread.get_average_client_population_metrics()
+        assert avg_client_population_metrics == example_client_population_metric
+
+        # Test list with 10 identical objects
+        thread.client_population_metrics_list = []
+        for i in range(10):
+            thread.client_population_metrics_list.append(example_client_population_metric.copy())
+        avg_client_population_metrics = thread.get_average_client_population_metrics()
+
+        assert avg_client_population_metrics.num_clients == example_client_population_metric.num_clients
+        assert avg_client_population_metrics.rate == example_client_population_metric.rate
+
+        example_client_population_metric_1 = ClientPopulationMetrics(num_clients=10, rate=40)
+        thread.client_population_metrics_list = [example_client_population_metric.copy(),
+                                                 example_client_population_metric_1]
+
+        avg_client_population_metrics = thread.get_average_client_population_metrics()
+
+        assert (avg_client_population_metrics.num_clients ==
+                round((example_client_population_metric.num_clients +
+                       example_client_population_metric_1.num_clients) / 2))
+        assert (avg_client_population_metrics.rate ==
+                round(example_client_population_metric.rate + example_client_population_metric_1.rate) / 2)
