@@ -22,6 +22,14 @@ from csle_collector.docker_stats_manager.dao.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_common.consumer_threads.avg_host_metrics_thread import AvgHostMetricsThread
 from csle_common.consumer_threads.client_population_consumer_thread import ClientPopulationConsumerThread
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
+from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
+from csle_common.consumer_threads.defender_actions_consumer_thread import DefenderActionsConsumerThread
+from csle_common.consumer_threads.docker_host_stats_consumer_thread import DockerHostStatsConsumerThread
+from csle_common.consumer_threads.docker_stats_consumer_thread import DockerStatsConsumerThread
+from csle_common.consumer_threads.ossec_ids_log_consumer_thread import OSSECIdsLogConsumerThread
+from csle_common.consumer_threads.snort_ids_log_consumer_thread import SnortIdsLogConsumerThread
 
 
 class TestConsumerThreadsSuiteSuite:
@@ -427,3 +435,78 @@ class TestConsumerThreadsSuiteSuite:
                        example_client_population_metric_1.num_clients) / 2))
         assert (avg_client_population_metrics.rate ==
                 round(example_client_population_metric.rate + example_client_population_metric_1.rate) / 2)
+
+    def test_defender_actions_consumer_thread(self) -> None:
+        """
+        Tests creation of a defender actions consumer thread and its methods
+
+        :return: None
+        """
+        example_defender_action = EmulationDefenderAction(id=EmulationDefenderActionId.CONTINUE, name="test",
+                                                          cmds=["test"], type=EmulationDefenderActionType.CONTINUE,
+                                                          descr="test", ips=["1.1.1.1"], index=1)
+        thread = DefenderActionsConsumerThread(kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                               defender_actions=[example_defender_action])
+
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+        assert thread.defender_actions[0] == example_defender_action
+
+    def test_docker_host_stats_consumer_thread(self) -> None:
+        """
+        Tests creation of a docker host stats consumer thread and its methods
+
+        :return: None
+        """
+        example_docker_host_stats = DockerStats()
+        thread = DockerHostStatsConsumerThread(kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                               docker_stats=example_docker_host_stats, host_ip="1.2.3.4")
+
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+        assert thread.docker_stats == example_docker_host_stats
+        assert thread.host_ip == "1.2.3.4"
+
+    def test_docker_stats_consumer_thread(self) -> None:
+        """
+        Tests creation of a docker stats consumer thread and its methods
+
+        :return: None
+        """
+        example_docker_host_stats = DockerStats()
+        thread = DockerStatsConsumerThread(kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                           docker_stats=example_docker_host_stats)
+
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+        assert thread.docker_stats == example_docker_host_stats
+
+    def test_ossec_ids_log_consumer_thread(self) -> None:
+        """
+        Tests creation of a ossec ids log consumer thread and its methods
+
+        :return: None
+        """
+        example_ossec_ids_alerts = OSSECIdsAlertCounters()
+        thread = OSSECIdsLogConsumerThread(host_ip="1.2.3.4", kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                           ossec_ids_alert_counters=example_ossec_ids_alerts)
+
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+        assert thread.ossec_ids_alert_counters == example_ossec_ids_alerts
+        assert thread.host_ip == "1.2.3.4"
+
+    def test_snort_ids_log_consumer_thread(self) -> None:
+        """
+        Tests creation of a snort ids log consumer thread and its methods
+
+        :return: None
+        """
+        example_snort_ids_alerts_counter = SnortIdsIPAlertCounters()
+        thread = SnortIdsLogConsumerThread(host_ip="1.2.3.4", kafka_server_ip="1.1.1.1", kafka_port=1234,
+                                           snort_ids_alert_counters=example_snort_ids_alerts_counter)
+
+        assert thread.kafka_server_ip == "1.1.1.1"
+        assert thread.kafka_port == 1234
+        assert thread.snort_ids_alert_counters == example_snort_ids_alerts_counter
+        assert thread.host_ip == "1.2.3.4"
