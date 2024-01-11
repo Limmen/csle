@@ -5,7 +5,7 @@ all: install_dev install unit_tests tests release
 release: build push
 
 install_dev:
-    pip install -r requirements_dev.txt
+	pip install -r requirements_dev.txt
 
 tests:
 	tox
@@ -20,7 +20,7 @@ lint:
 	flake8 .
 
 docs:
-	cd docs; sphinx-apidoc -f -o source/ ../csle_ryu/ && make html && cp -r build/html ../../../../docs/_docs/csle-ryu
+	cd docs; sphinx-apidoc -f -o source/ ../src/ && make html && cp -r build/html ../../../../docs/_docs/csle-ryu
 
 install:
 	pip install -e .

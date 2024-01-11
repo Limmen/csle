@@ -5,7 +5,7 @@ all: install_dev install unit_tests tests release
 release: build push
 
 install_dev:
-    pip install -r requirements_dev.txt
+	pip install -r requirements_dev.txt
 
 tests:
 	tox
