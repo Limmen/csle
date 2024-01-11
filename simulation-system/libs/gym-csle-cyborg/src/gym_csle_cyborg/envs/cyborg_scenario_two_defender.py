@@ -71,7 +71,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: initial observation and info
         """
         super().reset(seed=seed)
-        return self.cyborg_challenge_env.reset()
+        o, d = self.cyborg_challenge_env.reset()
+        return np.array(o), dict(d)
 
     def render(self, mode: str = 'human'):
         """
