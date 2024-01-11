@@ -373,7 +373,7 @@ class PPOCleanAgent(BaseAgent):
                 f"runtime: {time_elapsed_minutes} min")
 
         envs.close()
-        base_env: BaseEnv = envs.envs[0].cyborg_challenge_env.cyborg_challenge_env.cyborg_challenge_env  # type: ignore
+        base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
         return exp_result, base_env, model
 
     def make_env(self) -> Callable[[], RecordEpisodeStatistics]:

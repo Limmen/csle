@@ -28,3 +28,5 @@ echo "Running type checker for csle-tolerance"
 cd simulation-system/libs/csle-tolerance; mypy src; cd ../../../
 echo "Running type checker for gym-csle-apt-game"
 cd simulation-system/libs/gym-csle-apt-game; mypy src tests; cd ../../../
+echo "Running type checker for gym-csle-cyborg"
+cd simulation-system/libs/gym-csle-cyborg; mypy src tests; cd ../../../
