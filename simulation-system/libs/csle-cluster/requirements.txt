@@ -4,6 +4,7 @@ csle-collector==0.4.11
 csle-ryu==0.4.11
 gym-csle-stopping-game==0.4.11
 gym-csle-apt-game==0.4.11
+gym-csle-cyborg==0.4.11
 gym-csle-intrusion-response-game==0.4.11
 csle-tolerance==0.4.11
 grpcio==1.57.0
