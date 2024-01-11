@@ -12,34 +12,34 @@ perform the following steps:
        csle/simulation-system/envs/
      ```
    <p class="captionFig">
-   Listing 162: Directory with simulation configurations.
+   Listing 168: Directory with simulation configurations.
    </p>
 2. Add the simulation configuration file `config_v_001.py` to the directory:
      ```bash
        1 csle/simulation-system/envs/test_env
      ```
    <p class="captionFig">
-   Listing 163: Directory with configuration file for the simulation environment with the name `test_env`.
+   Listing 169: Directory with configuration file for the simulation environment with the name `test_env`.
    </p>
 3. Update the following README file:
     ```bash
       csle/simulation-system/envs/README.md
     ```
    <p class="captionFig">
-   Listing 164:
+   Listing 170:
    </p>
 4. Update the following Makefile with installation instructions:
     ```bash
       csle/simulation-system/envs/Makefile
     ```
    <p class="captionFig">
-   Listing 165: Makefile for simulation configurations.
+   Listing 171: Makefile for simulation configurations.
    </p>
 5. Insert the simulation configuration into the metastore by running the command:
      ```bash
        csle/simulation-system/envs; make install
      ```
    <p class="captionFig">
-   Listing 166: Command to insert simulation configurations into the metastore.
+   Listing 172: Command to insert simulation configurations into the metastore.
    </p>
 

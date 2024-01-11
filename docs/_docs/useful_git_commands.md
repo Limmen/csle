@@ -16,7 +16,7 @@ git checkout master
 git pull origin master
 ```
 <p class="captionFig">
-Listing 177: Commands for pulling the latest code changes from the master branch.
+Listing 183: Commands for pulling the latest code changes from the master branch.
 </p>
 
 If the above command did not succeed due to code conflicts you can either resolve the conflicts or choose to reset 
@@ -27,7 +27,7 @@ git reset --hard origin/master
 git clean -fd
 ```
 <p class="captionFig">
-Listing 178: Commands for resetting the local version of the code to the upstream version. 
+Listing 184: Commands for resetting the local version of the code to the upstream version. 
 (Warning: this will override any local changes to the code.)
 </p>
 
@@ -37,7 +37,7 @@ Next, create a new branch for your code changes by running the command:
 git checkout -b mybranchname
 ```
 <p class="captionFig">
-Listing 179: Command for creating a new branch with name `mybranchname`.
+Listing 185: Command for creating a new branch with name `mybranchname`.
 </p>
 
 Then you can make your code changes. When you have made a set of changes you can commit them by running the commands:
@@ -47,7 +47,7 @@ git add --all
 git commit -m "comment for the commit"
 ```
 <p class="captionFig">
-Listing 180: Commands committing new code changes.
+Listing 186: Commands committing new code changes.
 </p>
 
 You can make several commits. When you feel that your new feature is ready to be merged into m
@@ -57,7 +57,7 @@ aster you can push the code to GitHub by running the command:
 git push origin mybranchname
 ```
 <p class="captionFig">
-Listing 181: Command for pushing the branch `mybranchname` to GitHub.
+Listing 187: Command for pushing the branch `mybranchname` to GitHub.
 </p>
 
 After pushing the changes you can go with your web browser to:
@@ -73,7 +73,7 @@ git pull origin master
 git branch -d mybranchname
 ```
 <p class="captionFig">
-Listing 182: Commands for (1) switching to the master branch; (2) pulling the latest changes; and (3) 
+Listing 188: Commands for (1) switching to the master branch; (2) pulling the latest changes; and (3) 
 delete the old feature branch with name `mybranchname`.
 </p>
 
@@ -82,5 +82,5 @@ After running the above commands you can verify that your commits are available 
 git log
 ```
 <p class="captionFig">
-Listing 183: Command for viewing git commits.
+Listing 189: Command for viewing git commits.
 </p>
