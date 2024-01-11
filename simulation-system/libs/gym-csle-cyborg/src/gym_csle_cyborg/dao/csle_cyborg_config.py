@@ -7,14 +7,14 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
     DTO representing the input configuration to a gym-csle-cyborg environment
     """
 
-    def __init__(self, env_name: str, scenario: int) -> None:
+    def __init__(self, gym_env_name: str, scenario: int) -> None:
         """
         Initializes the DTO
 
-        :param env_name: the name of the environment
+        :param gym_env_name: the name of the environment
         :param scenario: the Cage scenario number
         """
-        self.env_name = env_name
+        self.gym_env_name = gym_env_name
         self.scenario = scenario
 
     def to_dict(self) -> Dict[str, Any]:
@@ -24,7 +24,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :return: a dict representation of the object
         """
         d: Dict[str, Any] = {}
-        d["env_name"] = self.env_name
+        d["gym_env_name"] = self.gym_env_name
         d["scenario"] = self.scenario
         return d
 
@@ -36,14 +36,14 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = CSLECyborgConfig(env_name=d["env_name"], scenario=d["scenario"])
+        obj = CSLECyborgConfig(gym_env_name=d["gym_env_name"], scenario=d["scenario"])
         return obj
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"env_name: {self.env_name}, scenario: {self.scenario}"
+        return f"gym_env_name: {self.gym_env_name}, scenario: {self.scenario}"
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgConfig":

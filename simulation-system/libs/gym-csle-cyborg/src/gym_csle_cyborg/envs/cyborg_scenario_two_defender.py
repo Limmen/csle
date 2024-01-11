@@ -44,7 +44,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         # Setup traces
         self.traces: List[SimulationTrace] = []
-        self.trace = SimulationTrace(simulation_env=self.config.env_name)
+        self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
 
         # Reset
         self.reset()

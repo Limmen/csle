@@ -12,6 +12,6 @@ class TestCSLECyborgConfigSuite(object):
 
         :return: None
         """
-        config = CSLECyborgConfig(scenario=2, env_name="mytest")
+        config = CSLECyborgConfig(scenario=2, gym_env_name="mytest")
         assert config.scenario == 2
-        assert config.env_name == "mytest"
+        assert config.gym_env_name == "mytest"
