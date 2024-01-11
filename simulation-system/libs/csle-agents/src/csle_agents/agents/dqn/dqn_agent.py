@@ -373,7 +373,8 @@ class DQNTrainingCallback(BaseCallback):
             progress = round(steps_done / total_steps_done, 2)
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
-            self.training_job.simulation_traces.append(self.env.get_traces()[-1])
+            if len(self.env.get_traces()) > 0:
+                self.training_job.simulation_traces.append(self.env.get_traces()[-1])
             if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
                 self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)

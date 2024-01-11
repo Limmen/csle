@@ -407,8 +407,10 @@ class PPOTrainingCallback(BaseCallback):
                     avg_heuristic_returns.append(info[agents_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN])
                 else:
                     avg_heuristic_returns.append(-1)
-
-                avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                if agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in info:
+                    avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                else:
+                    avg_upper_bounds.append(-1)
             avg_R = np.mean(avg_rewards)
             avg_T = np.mean(avg_horizons)
             avg_random_return = np.mean(avg_random_returns)
