@@ -250,7 +250,7 @@ Listing 21: Command to install Python 3.9 using Anaconda.
 
 The simulation system includes 10 Python libraries: 
 `csle-base`, `csle-collector`, `csle-ryu`, `csle-common`, `csle-attacker`, 
-`csle-defender`, `csle-system-identification`, `gym-csle-stopping-game`, `gym-csle-apt-game`, 
+`csle-defender`, `csle-system-identification`, `gym-csle-stopping-game`, `gym-csle-apt-game`, `gym-csle-cyborg`, 
 `csle-agents`, `csle-rest-api`, `csle-cli`, `csle-cluster`, `gym-csle-intrusion-response-game`, and `csle-tolerance` 
 These libraries can either be installed from 
 <a href="https://pypi.org/">PyPi</a> or directly from source.
@@ -258,7 +258,7 @@ These libraries can either be installed from
 To install all libraries at once from PyPi, run the command:
 
 ```bash
-pip install csle-base csle-collector csle-ryu csle-common csle-attacker csle-defender csle-system-identification gym-csle-stopping-game csle-agents csle-rest-api csle-cli csle-cluster gym-csle-intrusion-response-game csle-tolerance gym-csle-apt-game
+pip install csle-base csle-collector csle-ryu csle-common csle-attacker csle-defender csle-system-identification gym-csle-stopping-game csle-agents csle-rest-api csle-cli csle-cluster gym-csle-intrusion-response-game csle-tolerance gym-csle-apt-game gym-csle-cyborg
 ```
 
 <p class="captionFig">
@@ -579,6 +579,28 @@ cd ../../../
 
 <p class="captionFig">
 Listing 52: Commands to install `gym-csle-apt-game` from source.
+</p>
+
+Next, install `gym-csle-cyborg` from PyPi by running the command:
+
+```bash
+pip install gym-csle-cyborg
+```
+
+<p class="captionFig">
+Listing 51: Command to install `gym-csle-cyborg` from PyPi.
+</p>
+
+Alternatively, install `gym-csle-cyborg` from source by running the commands:
+
+```bash
+cd simulation-system/libs/gym-csle-cyborg/
+pip install -e .
+cd ../../../
+```
+
+<p class="captionFig">
+Listing 53: Commands to install `gym-csle-cyborg` from source.
 </p>
 
 

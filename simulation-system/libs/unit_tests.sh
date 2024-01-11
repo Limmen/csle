@@ -20,6 +20,8 @@ echo "Running unit tests for gym-csle-stopping-game"
 cd gym-csle-stopping-game; pytest; cd ../
 echo "Running unit tests for gym-csle-apt-game"
 cd gym-csle-apt-game; pytest; cd ../
+echo "Running unit tests for gym-csle-cyborg"
+cd gym-csle-cyborg; pytest; cd ../
 echo "Running unit tests for csle-tolerance"
 cd csle-tolerance; pytest; cd ../
 echo "Running unit tests for csle-cluster"

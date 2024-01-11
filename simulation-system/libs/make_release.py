@@ -47,6 +47,9 @@ RELEASE_CONFIG = {
     },
     "gym-csle-apt-game": {
         "new_version": "'0.4.11'"
+    },
+    "gym-csle-cyborg": {
+        "new_version": "'0.4.11'"
     }
 }
 

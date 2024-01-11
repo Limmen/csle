@@ -55,6 +55,7 @@ should help you with that.
 - `simulation-system/libs/gym-csle-intrusion-response-game`. A gym environment for an intrusion response game.
 - `simulation-system/libs/csle-tolerance`. An intrusion-tolerant system: Tolerance: (T)w(o)-(l)ev(e)l (r)ecovery (a)nd respo(n)se (c)ontrol with f(e)edback.
 - `simulation-system/libs/gym-csle-apt-game`. A gym environment for an APT game.
+- `simulation-system/libs/gym-csle-cyborg`. A gym environment wrapper for CybORG.
 
 #### Code Readability
 

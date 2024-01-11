@@ -19,6 +19,7 @@ csle/simulation-system/libs/csle-defender; pip install -r requirements_dev.txt
 csle/simulation-system/libs/csle-system-identification; pip install -r requirements_dev.txt
 csle/simulation-system/libs/gym-csle-stopping-game; pip install -r requirements_dev.txt
 csle/simulation-system/libs/gym-csle-apt-game; pip install -r requirements_dev.txt
+csle/simulation-system/libs/gym-csle-cyborg; pip install -r requirements_dev.txt
 csle/simulation-system/libs/csle-agents; pip install -r requirements_dev.txt
 csle/simulation-system/libs/csle-rest-api; pip install -r requirements_dev.txt
 csle/simulation-system/libs/csle-cli; pip install -r requirements_dev.txt

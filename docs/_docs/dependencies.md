@@ -48,6 +48,9 @@ The Python dependencies are defined in the following files:
 - `csle/simulation-system/libs/gym-csle-apt-game/requirements.txt`
 - `csle/simulation-system/libs/gym-csle-apt-game/requirements_dev.txt`
 - `csle/simulation-system/libs/gym-csle-apt-game/setup.cfg`
+- `csle/simulation-system/libs/gym-csle-cyborg/requirements.txt`
+- `csle/simulation-system/libs/gym-csle-cyborg/requirements_dev.txt`
+- `csle/simulation-system/libs/gym-csle-cyborg/setup.cfg`- 
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements.txt`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/requirements_dev.txt`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/setup.cfg`
