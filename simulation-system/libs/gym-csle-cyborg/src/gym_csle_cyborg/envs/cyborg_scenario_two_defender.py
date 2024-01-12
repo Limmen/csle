@@ -4,7 +4,6 @@ import numpy.typing as npt
 import time
 import inspect
 from csle_cyborg.main import Main
-from csle_cyborg.agents.simple_agents.b_line import B_lineAgent
 from csle_cyborg.agents.wrappers.challenge_wrapper import ChallengeWrapper
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -30,9 +29,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                             f"{env_constants.CYBORG.SCENARIO_CONFIGS_DIR}"
                                             f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
                                             f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
-        cyborg = Main(self.cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION, agents={
-            env_constants.CYBORG.RED: B_lineAgent
-        })
+        cyborg = Main(self.cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
+                      agents=self.config.get_agents_dict())
         self.cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE)
 
         # Setup spaces
@@ -46,6 +44,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
 
+        # State
+        self.t = 1
+
         # Reset
         self.reset()
         super().__init__()
@@ -58,6 +59,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: (obs, reward, terminated, truncated, info)
         """
         o, r, done, _, info = self.cyborg_challenge_env.step(action=action)
+        self.t += 1
+        if self.t >= self.config.maximum_steps:
+            done = True
         return np.array(o), float(r), bool(done), bool(done), info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
@@ -72,6 +76,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         super().reset(seed=seed)
         o, d = self.cyborg_challenge_env.reset()
+        self.t = 1
         return np.array(o), dict(d)
 
     def render(self, mode: str = 'human'):

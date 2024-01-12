@@ -1,4 +1,5 @@
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 
 class TestCSLECyborgConfigSuite(object):
@@ -12,6 +13,9 @@ class TestCSLECyborgConfigSuite(object):
 
         :return: None
         """
-        config = CSLECyborgConfig(scenario=2, gym_env_name="mytest")
+        config = CSLECyborgConfig(scenario=2, gym_env_name="mytest", maximum_steps=100,
+                                  baseline_red_agent=RedAgentType.B_LINE_AGENT)
         assert config.scenario == 2
         assert config.gym_env_name == "mytest"
+        assert config.maximum_steps == 100
+        assert config.baseline_red_agent == RedAgentType.B_LINE_AGENT

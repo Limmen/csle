@@ -24,6 +24,7 @@ from csle_common.dao.simulation_config.env_parameters_config import EnvParameter
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 
 def default_config(name: str, version: str = "0.0.1") -> SimulationEnvConfig:
@@ -239,7 +240,8 @@ def default_input_config() -> SimulationEnvInputConfig:
 
     :return: The default input configuration to the OpenAI gym environment
     """
-    config = CSLECyborgConfig(gym_env_name="csle-cyborg-scenario-two-v1", scenario=2)
+    config = CSLECyborgConfig(gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, maximum_steps=100,
+                              baseline_red_agent=RedAgentType.B_LINE_AGENT)
     return config
 
 

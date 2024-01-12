@@ -6,6 +6,8 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
+from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-040"
@@ -73,7 +75,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
@@ -83,10 +85,12 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    # simulation_env_config.simulation_env_input_config
+    simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
+        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agent=RedAgentType.B_LINE_AGENT,
+        maximum_steps=100)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                     experiment_config=experiment_config)
+                     experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    # MetastoreFacade.save_experiment_execution(experiment_execution)
+    # for policy in experiment_execution.result.policies.values():
+    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
