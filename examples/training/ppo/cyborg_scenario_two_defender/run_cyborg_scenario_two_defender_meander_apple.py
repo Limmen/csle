@@ -20,7 +20,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="Apple PPO Cyborg Meander", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -66,7 +66,7 @@ if __name__ == '__main__':
                                                             name=agents_constants.PPO.NUM_GRADIENT_STEPS,
                                                             descr="number of gradient steps"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(60000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(2048) * 500, name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                 value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
-                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                value=50, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions"),
@@ -92,12 +92,12 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
-        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
+        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.MEANDER_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, scanned_state=False,
         decoy_state=False)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_ppo_policy(ppo_policy=policy)

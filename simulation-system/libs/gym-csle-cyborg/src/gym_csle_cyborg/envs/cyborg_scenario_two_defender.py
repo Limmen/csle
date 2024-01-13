@@ -2,7 +2,7 @@ from typing import Tuple, Dict, List, Any, Union
 import time
 import numpy as np
 import numpy.typing as npt
-import gym.spaces
+import gymnasium as gym
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -61,8 +61,14 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.type_and_host_to_action_id = type_and_host_to_action_id
 
         # Setup gym spaces
-        self.defender_observation_space = gym.spaces.Box(-1, 2, (5 * len(self.cyborg_hostnames),), np.float32)
-        self.defender_action_space = gym.spaces.Discrete(len(list(self.action_id_to_type_and_host.keys())))
+        if self.config.scanned_state:
+            self.defender_observation_space = gym.spaces.Box(-1, 2, (5 * len(self.cyborg_hostnames),), np.float32)
+        else:
+            self.defender_observation_space = self.cyborg_challenge_env.observation_space
+        if self.config.reduced_action_space:
+            self.defender_action_space = gym.spaces.Discrete(len(list(self.action_id_to_type_and_host.keys())))
+        else:
+            self.defender_action_space = self.cyborg_challenge_env.action_space
 
         self.action_space = self.defender_action_space
         self.observation_space = self.defender_observation_space
@@ -111,6 +117,20 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.t += 1
         if self.t >= self.config.maximum_steps:
             done = True
+
+        # Log trace
+        self.trace.defender_rewards.append(float(r))
+        self.trace.attacker_rewards.append(-float(r))
+        self.trace.attacker_actions.append(0)
+        self.trace.defender_actions.append(action)
+        self.trace.infos.append({})
+        self.trace.states.append(0.0)
+        self.trace.beliefs.append(0.0)
+        self.trace.infrastructure_metrics.append(o)
+        if not done:
+            self.trace.attacker_observations.append(o)
+            self.trace.defender_observations.append(o)
+
         return np.array(o), float(r), bool(done), bool(done), info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None,
@@ -131,8 +151,12 @@ class CyborgScenarioTwoDefender(BaseEnv):
             self.cyborg_challenge_env = updated_env
         o, info = self.cyborg_challenge_env.reset()
         info = self.populate_info(info=dict(info), obs=o)
-        o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
+        if self.config.scanned_state:
+            o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
         self.t = 1
+        if len(self.trace.defender_rewards) > 0:
+            self.traces.append(self.trace)
+        self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
         return np.array(o), info
 
     def populate_info(self, info: Dict[str, Any], obs: npt.NDArray[Any]) -> Dict[str, Any]:
@@ -143,6 +167,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param info: the dict to populate
         :return: the populated dict
         """
+        info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
+        info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
         info[env_constants.CYBORG.BLUE_TABLE] = self.cyborg_challenge_env.env.env.env.info
         info[env_constants.CYBORG.VECTOR_OBS_PER_HOST] = []
         info[env_constants.CYBORG.OBS_PER_HOST] = []
