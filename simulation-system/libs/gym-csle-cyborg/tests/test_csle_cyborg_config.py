@@ -14,8 +14,13 @@ class TestCSLECyborgConfigSuite(object):
         :return: None
         """
         config = CSLECyborgConfig(scenario=2, gym_env_name="mytest", maximum_steps=100,
-                                  baseline_red_agent=RedAgentType.B_LINE_AGENT)
+                                  baseline_red_agents=[RedAgentType.B_LINE_AGENT], red_agent_distribution=[1.0],
+                                  reduced_action_space=False, scanned_state=False, decoy_state=False)
         assert config.scenario == 2
         assert config.gym_env_name == "mytest"
         assert config.maximum_steps == 100
-        assert config.baseline_red_agent == RedAgentType.B_LINE_AGENT
+        assert config.baseline_red_agents == [RedAgentType.B_LINE_AGENT]
+        assert config.red_agent_distribution == [1.0]
+        assert not config.reduced_action_space
+        assert not config.scanned_state
+        assert not config.decoy_state

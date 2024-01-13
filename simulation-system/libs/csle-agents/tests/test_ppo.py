@@ -57,6 +57,9 @@ class TestPPOAgentSuite:
                     value=0.95, name=agents_constants.PPO.GAE_LAMBDA, descr="the GAE weighting term"),
                 agents_constants.PPO.CLIP_RANGE: HParam(
                     value=0.2, name=agents_constants.PPO.CLIP_RANGE, descr="the clip range for PPO"),
+                agents_constants.PPO.NUM_GRADIENT_STEPS: HParam(value=10,
+                                                                name=agents_constants.PPO.NUM_GRADIENT_STEPS,
+                                                                descr="number of gradient steps"),
                 agents_constants.PPO.CLIP_RANGE_VF: HParam(
                     value=None, name=agents_constants.PPO.CLIP_RANGE_VF,
                     descr="the clip range for PPO-update of the value network"),
@@ -89,7 +92,10 @@ class TestPPOAgentSuite:
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.L: HParam(value=1, name=agents_constants.COMMON.L,
-                                                  descr="the number of stop actions")
+                                                  descr="the number of stop actions"),
+                agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                    value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                    descr="boolean flag indicating whether the evaluation should be with discount or not")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

@@ -175,7 +175,9 @@ class PPOAgent(BaseAgent):
                 ent_coef=self.experiment_config.hparams[agents_constants.PPO.ENT_COEF].value,
                 vf_coef=self.experiment_config.hparams[agents_constants.PPO.VF_COEF].value,
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
-                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value)
+                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
+                n_epochs=self.experiment_config.hparams[agents_constants.PPO.NUM_GRADIENT_STEPS].value
+            )
             if self.experiment_config.player_type == PlayerType.ATTACKER \
                     and "stopping" in self.simulation_env_config.gym_env_name:
                 orig_env.set_model(model)
@@ -247,9 +249,10 @@ class PPOAgent(BaseAgent):
                 agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
                 agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
                 agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
+                agents_constants.PPO.NUM_GRADIENT_STEPS,
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, constants.NEURAL_NETWORKS.DEVICE,
-                agents_constants.COMMON.SAVE_EVERY]
+                agents_constants.COMMON.SAVE_EVERY, agents_constants.COMMON.EVALUATE_WITH_DISCOUNT]
 
 
 class PPOTrainingCallback(BaseCallback):
@@ -386,8 +389,11 @@ class PPOTrainingCallback(BaseCallback):
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
                     o, r, done, _, info = self.env.step(a)
-                    cumulative_reward += r * math.pow(
-                        self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
+                    if self.experiment_config.hparams[agents_constants.COMMON.EVALUATE_WITH_DISCOUNT].value:
+                        cumulative_reward += r * math.pow(
+                            self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
+                    else:
+                        cumulative_reward += r
                     t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)

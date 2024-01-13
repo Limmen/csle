@@ -62,6 +62,9 @@ if __name__ == '__main__':
             agents_constants.PPO.TARGET_KL: HParam(value=None,
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
+            agents_constants.PPO.NUM_GRADIENT_STEPS: HParam(value=10,
+                                                            name=agents_constants.PPO.NUM_GRADIENT_STEPS,
+                                                            descr="number of gradient steps"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(6000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
@@ -81,13 +84,20 @@ if __name__ == '__main__':
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                              descr="the number of stop actions")
+                                              descr="the number of stop actions"),
+            agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                descr="boolean flag indicating whether the evaluation should be with discount or not"),
+            agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                descr="boolean flag indicating whether the evaluation should be with discount or not")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
-        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agent=RedAgentType.B_LINE_AGENT,
-        maximum_steps=100)
+        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
+        maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, scanned_state=False,
+        decoy_state=False)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()

@@ -54,6 +54,7 @@ class COMMON:
     LEARNING_RATE_EXP_DECAY = "learning_rate_exp_decay"
     LEARNING_RATE_DECAY_RATE = "learning_rate_decay_rate"
     RUNTIME = "runtime"
+    EVALUATE_WITH_DISCOUNT = "evaluate_with_discount"
 
 
 class PPO:
@@ -69,6 +70,7 @@ class PPO:
     MAX_GRAD_NORM = "max_grad_norm"
     TARGET_KL = "target_kl"
     MLP_POLICY = "MlpPolicy"
+    NUM_GRADIENT_STEPS = "num_gradient_steps"
 
 
 class PPO_CLEAN:

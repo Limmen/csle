@@ -67,6 +67,9 @@ if __name__ == '__main__':
             agents_constants.PPO.TARGET_KL: HParam(value=None,
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
+            agents_constants.PPO.NUM_GRADIENT_STEPS: HParam(value=10,
+                                                            name=agents_constants.PPO.NUM_GRADIENT_STEPS,
+                                                            descr="number of gradient steps"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(600000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
@@ -88,7 +91,10 @@ if __name__ == '__main__':
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions"),
             agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
-                                                      descr="the number of nodes in the network")
+                                                      descr="the number of nodes in the network"),
+            agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                descr="boolean flag indicating whether the evaluation should be with discount or not")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

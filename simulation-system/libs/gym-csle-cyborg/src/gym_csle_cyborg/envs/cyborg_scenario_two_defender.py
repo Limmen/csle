@@ -1,15 +1,18 @@
 from typing import Tuple, Dict, List, Any, Union
+import time
 import numpy as np
 import numpy.typing as npt
-import time
-import inspect
-from csle_cyborg.main import Main
-from csle_cyborg.agents.wrappers.challenge_wrapper import ChallengeWrapper
+import gym.spaces
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
+from gym_csle_cyborg.dao.acitvity_type import ActivityType
+from gym_csle_cyborg.dao.compromised_type import CompromisedType
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
+from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
 
 
 class CyborgScenarioTwoDefender(BaseEnv):
@@ -24,18 +27,42 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param config: the environment configuration
         """
         self.config = config
-        self.cyborg_scenario_config_path = str(inspect.getfile(Main))
-        self.cyborg_scenario_config_path = (f"{self.cyborg_scenario_config_path[:-7]}"
-                                            f"{env_constants.CYBORG.SCENARIO_CONFIGS_DIR}"
-                                            f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
-                                            f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
-        cyborg = Main(self.cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
-                      agents=self.config.get_agents_dict())
-        self.cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE)
 
-        # Setup spaces
-        self.defender_observation_space = self.cyborg_challenge_env.observation_space
-        self.defender_action_space = self.cyborg_challenge_env.action_space
+        # Setup Cyborg Env
+        (cyborg_scenario_config_path, cyborg_challenge_env, cyborg_hostnames, cyborg_hostname_to_id,
+         cyborg_subnets, cyborg_subnet_to_id, cyborg_action_id_to_type_and_host, cyborg_action_type_and_host_to_id,
+         red_agent_type) = CyborgEnvUtil.setup_cyborg_env(config=self.config)
+        self.cyborg_scenario_config_path = cyborg_scenario_config_path
+        self.cyborg_challenge_env = cyborg_challenge_env
+        self.cyborg_hostnames = cyborg_hostnames
+        self.cyborg_hostname_to_id = cyborg_hostname_to_id
+        self.cyborg_subnets = cyborg_subnets
+        self.cyborg_subnet_to_id = cyborg_subnet_to_id
+        self.cyborg_action_id_to_type_and_host = cyborg_action_id_to_type_and_host
+        self.cyborg_action_type_and_host_to_id = cyborg_action_type_and_host_to_id
+        self.red_agent_type = red_agent_type
+
+        # Setup defender decoy actions
+        self.decoy_action_types = CyborgEnvUtil.get_decoy_action_types(scenario=self.config.scenario)
+        self.decoy_actions_per_host = CyborgEnvUtil.get_decoy_actions_per_host(scenario=self.config.scenario)
+
+        # Initialize defender state
+        self.scan_state: List[int] = []
+        self.decoy_state: List[List[BlueAgentActionType]] = []
+        for i in range(len(self.cyborg_hostnames)):
+            self.scan_state.append(env_constants.CYBORG.NOT_SCANNED)
+            self.decoy_state.append([])
+        self.t = 1
+
+        # Setup reduced action space
+        action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(
+            scenario=self.config.scenario)
+        self.action_id_to_type_and_host = action_id_to_type_and_host
+        self.type_and_host_to_action_id = type_and_host_to_action_id
+
+        # Setup gym spaces
+        self.defender_observation_space = gym.spaces.Box(-1, 2, (5 * len(self.cyborg_hostnames),), np.float32)
+        self.defender_action_space = gym.spaces.Discrete(len(list(self.action_id_to_type_and_host.keys())))
 
         self.action_space = self.defender_action_space
         self.observation_space = self.defender_observation_space
@@ -43,9 +70,6 @@ class CyborgScenarioTwoDefender(BaseEnv):
         # Setup traces
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
-
-        # State
-        self.t = 1
 
         # Reset
         self.reset()
@@ -58,26 +82,90 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param action_profile: the actions to take (both players actions
         :return: (obs, reward, terminated, truncated, info)
         """
+
+        # Convert between different action spaces
+        if self.config.reduced_action_space or self.config.decoy_state:
+            action_type, host = self.action_id_to_type_and_host[action]
+            action = self.cyborg_action_type_and_host_to_id[(action_type, host)]
+            if action_type in self.decoy_action_types:
+                host_id = self.cyborg_hostname_to_id[host]
+                decoy_found = False
+                for decoy_action in self.decoy_actions_per_host[host_id]:
+                    if decoy_action not in self.decoy_state[host_id]:
+                        action_type = decoy_action
+                        action = self.cyborg_action_type_and_host_to_id[(action_type, host)]
+                        self.decoy_state[host_id].append(action_type)
+                        decoy_found = True
+                        break
+                if not decoy_found:
+                    action_type = BlueAgentActionType.REMOVE
+                    action = self.cyborg_action_type_and_host_to_id[(action_type, host)]
+
         o, r, done, _, info = self.cyborg_challenge_env.step(action=action)
+        info = self.populate_info(info=dict(info), obs=o)
+
+        # Add scanned state to observation
+        if self.config.scanned_state:
+            o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
+
         self.t += 1
         if self.t >= self.config.maximum_steps:
             done = True
         return np.array(o), float(r), bool(done), bool(done), info
 
-    def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
-            -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
+    def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None,
+              new_red_agent: Union[RedAgentType, None] = None) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :param seed: the random seed
         :param soft: boolean flag indicating whether it is a soft reset or not
         :param options: optional configuration parameters
+        :param new_red_agent: optional red agent specification
         :return: initial observation and info
         """
         super().reset(seed=seed)
-        o, d = self.cyborg_challenge_env.reset()
+        updated_env = CyborgEnvUtil.update_red_agent(config=self.config, current_red_agent=self.red_agent_type,
+                                                     new_red_agent=new_red_agent)
+        if updated_env is not None:
+            self.cyborg_challenge_env = updated_env
+        o, info = self.cyborg_challenge_env.reset()
+        info = self.populate_info(info=dict(info), obs=o)
+        o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
         self.t = 1
-        return np.array(o), dict(d)
+        return np.array(o), info
+
+    def populate_info(self, info: Dict[str, Any], obs: npt.NDArray[Any]) -> Dict[str, Any]:
+        """
+        Populates the info dict
+
+        :param obs: the latest obs
+        :param info: the dict to populate
+        :return: the populated dict
+        """
+        info[env_constants.CYBORG.BLUE_TABLE] = self.cyborg_challenge_env.env.env.env.info
+        info[env_constants.CYBORG.VECTOR_OBS_PER_HOST] = []
+        info[env_constants.CYBORG.OBS_PER_HOST] = []
+        idx = 0
+        for i in range(len(self.cyborg_hostnames)):
+            host_vector_obs = obs[idx:idx + 4].tolist()
+            idx += 4
+            host_obs = {}
+            host_obs[env_constants.CYBORG.COMPROMISED] = self.cyborg_challenge_env.env.env.env.info[
+                self.cyborg_hostnames[i]][env_constants.CYBORG.COMPROMISED_BLUE_TABLE_IDX]
+            host_obs[env_constants.CYBORG.COMPROMISED] = CompromisedType.from_str(
+                host_obs[env_constants.CYBORG.COMPROMISED])
+            host_obs[env_constants.CYBORG.ACTIVITY] = self.cyborg_challenge_env.env.env.env.info[
+                self.cyborg_hostnames[i]][env_constants.CYBORG.ACTIVITY_BLUE_TABLE_IDX]
+            host_obs[env_constants.CYBORG.ACTIVITY] = ActivityType.from_str(host_obs[env_constants.CYBORG.ACTIVITY])
+            if host_obs[env_constants.CYBORG.ACTIVITY] == ActivityType.SCAN:
+                self.scan_state = [1 if x == 2 else x for x in self.scan_state]
+                self.scan_state[i] = 2
+            host_obs[env_constants.CYBORG.SCANNED_STATE] = self.scan_state[i]
+            info[env_constants.CYBORG.OBS_PER_HOST].append(host_obs)
+            host_vector_obs.append(self.scan_state[i])
+            info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
+        return info
 
     def render(self, mode: str = 'human'):
         """
