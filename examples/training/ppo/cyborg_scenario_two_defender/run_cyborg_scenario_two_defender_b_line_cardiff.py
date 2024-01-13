@@ -20,7 +20,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="Apple PPO Cyborg BLine", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="Cardiff PPO Cyborg BLine", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
