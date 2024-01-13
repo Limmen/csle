@@ -1648,6 +1648,7 @@ class METADATA_STORE:
     SESSION_TOKENS_TABLE = "session_tokens"
     TRACES_DATASETS_TABLE = "traces_datasets"
     STATISTICS_DATASETS_TABLE = "statistics_datasets"
+    NUM_RETRIES_UPDATE_TRAINING_JOB = 5
 
 
 class CONTAINER_POOLS:

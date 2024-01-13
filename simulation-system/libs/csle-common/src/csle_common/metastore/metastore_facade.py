@@ -1449,7 +1449,7 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating training job with id: {id} in the metastore")
-        for i in range(5):
+        for i in range(constants.METADATA_STORE.NUM_RETRIES_UPDATE_TRAINING_JOB):
             try:
                 with psycopg.connect(
                         f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
@@ -1465,6 +1465,7 @@ class MetastoreFacade:
                                     (config_json_str, id))
                         conn.commit()
                         Logger.__call__().get_logger().debug(f"Training job with id: {id} updated successfully")
+                        break
             except Exception:
                 pass
 
