@@ -1,6 +1,7 @@
 from typing import Tuple, Dict, List, Any, Union
 import time
 import numpy as np
+from prettytable import PrettyTable
 import numpy.typing as npt
 import gymnasium as gym
 import csle_common.constants.constants as constants
@@ -192,6 +193,38 @@ class CyborgScenarioTwoDefender(BaseEnv):
             host_vector_obs.append(self.scan_state[i])
             info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
         return info
+
+    def get_table(self) -> PrettyTable:
+        """
+        Gets the table observation
+
+        :return: a table with the defender's observations
+        """
+        defender_table: PrettyTable = self.cyborg_challenge_env.env.env.env.get_table()
+        return defender_table
+
+    def get_true_table(self) -> PrettyTable:
+        """
+        Gets the true table state
+
+        :return: a table with the true state of the game
+        """
+        true_table: PrettyTable = self.cyborg_challenge_env.env.env.env.env.get_table()
+        return true_table
+
+    def get_actions_table(self) -> PrettyTable:
+        """
+        Gets a table with the actions
+
+        :return: a table with the actions
+        """
+        table = PrettyTable(["t", env_constants.CYBORG.BLUE, env_constants.CYBORG.Green, env_constants.CYBORG.RED])
+        actions = self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions
+        for i in range(len(actions[env_constants.CYBORG.RED])):
+            row = [str(i), str(actions[env_constants.CYBORG.BLUE][i]), str(actions[env_constants.CYBORG.Green][i]),
+                   str(actions[env_constants.CYBORG.RED][i]), ]
+            table.add_row(row)
+        return table
 
     def render(self, mode: str = 'human'):
         """

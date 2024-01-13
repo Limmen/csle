@@ -33,7 +33,8 @@ class CyborgEnvUtil:
         if not agent_type.value == current_red_agent.value:
             cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
                           agents=agents_dict)
-            cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE)
+            cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
+                                                    max_steps=config.maximum_steps)
         return cyborg_challenge_env
 
     @staticmethod
@@ -58,7 +59,8 @@ class CyborgEnvUtil:
         agents_dict, red_agent_type = config.get_agents_dict(agent=None)
         cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
                       agents=agents_dict)
-        cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE)
+        cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
+                                                max_steps=config.maximum_steps)
         cyborg_hostnames = list(cyborg_challenge_env.env.env.env.info.keys())
         cyborg_hostname_to_id = {}
         for i in range(len(cyborg_hostnames)):

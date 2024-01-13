@@ -1,4 +1,3 @@
-
 from typing import List, Union, Any, Tuple
 import psycopg
 import json
@@ -1450,19 +1449,24 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating training job with id: {id} in the metastore")
-        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
-                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
-                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
-                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
-            with conn.cursor() as cur:
-                config_json_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
-                cur.execute(f"UPDATE "
-                            f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
-                            f" SET config=%s "
-                            f"WHERE {constants.METADATA_STORE.TRAINING_JOBS_TABLE}.id = %s",
-                            (config_json_str, id))
-                conn.commit()
-                Logger.__call__().get_logger().debug(f"Training job with id: {id} updated successfully")
+        for i in range(5):
+            try:
+                with psycopg.connect(
+                        f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                        f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                        f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                        f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+                    with conn.cursor() as cur:
+                        config_json_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                        cur.execute(f"UPDATE "
+                                    f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
+                                    f" SET config=%s "
+                                    f"WHERE {constants.METADATA_STORE.TRAINING_JOBS_TABLE}.id = %s",
+                                    (config_json_str, id))
+                        conn.commit()
+                        Logger.__call__().get_logger().debug(f"Training job with id: {id} updated successfully")
+            except Exception:
+                pass
 
     @staticmethod
     def update_experiment_execution(experiment_execution: ExperimentExecution, id: int) -> None:

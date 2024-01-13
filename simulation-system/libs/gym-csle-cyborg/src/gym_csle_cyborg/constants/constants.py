@@ -43,6 +43,7 @@ class CYBORG:
     SIMULATION = "sim"
     RED = "Red"
     BLUE = "Blue"
+    Green = "Green"
     ALL_HOSTNAME = "ALL"
     HOSTNAME = "hostname"
     SUBNET_BLUE_TABLE_IDX = 0
