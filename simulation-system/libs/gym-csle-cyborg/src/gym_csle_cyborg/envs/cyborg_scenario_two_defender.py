@@ -212,6 +212,51 @@ class CyborgScenarioTwoDefender(BaseEnv):
         true_table: PrettyTable = self.cyborg_challenge_env.env.env.env.env.get_table()
         return true_table
 
+    def get_ip_map(self) -> Dict[str, Any]:
+        """
+        Gets the map of hostnames to ips
+
+        :return: a dict with hostnames to ips mappings
+        """
+        ip_map: Dict[str, Any] = self.cyborg_challenge_env.get_ip_map()
+        return ip_map
+
+    def get_rewards(self) -> Dict[str, Any]:
+        """
+        Gets the rewards
+
+        :return: a dict with agent names to rewards mappings
+        """
+        rewards_map: Dict[str, Any] = self.cyborg_challenge_env.get_rewards()
+        return rewards_map
+
+    def get_observation(self, agent: str) -> Dict[str, Any]:
+        """
+        Gets the observation of an agent
+
+        :param agent: the name of the agent to get the observation of (e.g., 'Red')
+        :return: the observation of the agent
+        """
+        observation_map: Dict[str, Any] = self.cyborg_challenge_env.get_observation(agent=agent)
+        return observation_map
+
+    def get_last_action(self, agent: str) -> Any:
+        """
+        Gets the last action of an agent
+
+        :param agent: the name of the agent to get the last action of of (e.g., 'Red')
+        :return: the action of the agent
+        """
+        return self.cyborg_challenge_env.get_last_action(agent=agent)
+
+    def get_true_state(self) -> Any:
+        """
+        Gets the true state of the environment
+
+        :return: the true state of the environment
+        """
+        return self.cyborg_challenge_env.get_agent_state(agent="True")
+
     def get_actions_table(self) -> PrettyTable:
         """
         Gets a table with the actions
