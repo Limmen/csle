@@ -15,13 +15,13 @@ class StoppingGameUtil:
     """
 
     @staticmethod
-    def b1() -> npt.NDArray[np.int_]:
+    def b1() -> npt.NDArray[np.float_]:
         """
         Gets the initial belief
 
         :return: the initial belief
         """
-        return np.array([1, 0, 0])
+        return np.array([1.0, 0.0, 0.0])
 
     @staticmethod
     def state_space():
