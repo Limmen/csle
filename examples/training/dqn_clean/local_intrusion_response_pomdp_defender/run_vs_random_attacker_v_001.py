@@ -33,7 +33,7 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                value=7, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
@@ -63,7 +63,7 @@ if __name__ == '__main__':
             agents_constants.PPO_CLEAN.CLIP_VLOSS: HParam(
                 value=True, name=agents_constants.PPO_CLEAN.CLIP_VLOSS, descr="the clip-vloss"),
             agents_constants.COMMON.GAMMA: HParam(
-                value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
+                value=0.99, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
             agents_constants.PPO_CLEAN.GAE_LAMBDA: HParam(
                 value=0.95, name=agents_constants.PPO_CLEAN.GAE_LAMBDA, descr="the GAE weighting term"),
             agents_constants.PPO_CLEAN.CLIP_RANGE: HParam(
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     eta = 0.5
     reachable = True
     beta = 3
-    gamma = 0.99
+    gamma = experiment_config.hparams[agents_constants.COMMON.GAMMA].value
     initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)

@@ -10,6 +10,7 @@ import torch.optim as optim
 import gymnasium as gym
 import os
 import random
+import torch.nn.functional as F
 import tyro
 import numpy as np
 from stable_baselines3.common.buffers import ReplayBuffer
@@ -55,7 +56,6 @@ class DQNCleanAgent(BaseAgent):
         super(DQNCleanAgent, self).__init__(simulation_env_config=simulation_env_config,
                                             emulation_env_config=emulation_env_config,
                                             experiment_config=experiment_config)
-        # print(experiment_config.agent_type)
         assert experiment_config.agent_type == AgentType.DQN_CLEAN
         self.training_job = training_job
         self.num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
@@ -87,30 +87,6 @@ class DQNCleanAgent(BaseAgent):
         self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
         # Algorithm specific arguments
-        env_id: str = "CartPole-v1"
-        """the id of the environment"""
-        total_timesteps: int = 500000
-        """total timesteps of the experiments"""
-        learning_rate: float = 2.5e-4
-        """the number of parallel game environments"""
-        buffer_size: int = 10000
-        """the replay memory buffer size"""
-        gamma: float = 0.99
-        """the discount factor gamma"""
-        tau: float = 1.0
-        """the target network update rate"""
-        target_network_frequency: int = 500
-        """the batch size of sample from the reply memory"""
-        start_e: float = 1
-        """the starting epsilon for exploration"""
-        end_e: float = 0.05
-        """the ending epsilon for exploration"""
-        exploration_fraction: float = 0.5
-        """the fraction of `total-timesteps` it takes from start-e to go end-e"""
-        learning_starts: int = 10000
-        """timestep to start learning"""
-        train_frequency: int = 10
-        """the frequency of training"""
 
 
     def linear_schedule(self, start_e: float, end_e: float, duration: int, t: int):
@@ -199,6 +175,7 @@ class DQNCleanAgent(BaseAgent):
             q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
             optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate)
             target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+
             target_network.load_state_dict(q_network.state_dict())
 
             rb = ReplayBuffer(
@@ -218,12 +195,8 @@ class DQNCleanAgent(BaseAgent):
                 if random.random() < epsilon:
                     actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
                 else:
-                    # TODO: HÄR ÄR PROBLEMET, FIXA
                     q_values = q_network(torch.Tensor(obs).to(device))
-                    # print(q_values)
-                    # print(len(q_values[0]))
                     actions = torch.argmax(q_values, dim=1).cpu().numpy()
-                    # print(actions)
 
                 # TRY NOT TO MODIFY: execute the game and log data.
                 next_obs, rewards, terminations, truncations, infos = envs.step(actions)
@@ -251,9 +224,9 @@ class DQNCleanAgent(BaseAgent):
                     if global_step % self.train_frequency == 0:
                         data = rb.sample(self.batch_size)
                         with torch.no_grad():
-                            target_max, _ = target_network(data.next_observations).max(dim=1)
+                            target_max, _ = target_network(data.next_observations.to(dtype=torch.float32)).max(dim=1)
                             td_target = data.rewards.flatten() + self.gamma * target_max * (1 - data.dones.flatten())
-                        old_val = q_network(data.observations).gather(1, data.actions).squeeze()
+                        old_val = q_network(data.observations.to(dtype=torch.float32)).gather(1, data.actions).squeeze()
                         loss = F.mse_loss(td_target, old_val)
 
                         if global_step % 100 == 0:
@@ -278,7 +251,7 @@ class DQNCleanAgent(BaseAgent):
                 model_path = f"runs/{run_name}/{self.exp_name}.cleanrl_model"
                 torch.save(q_network.state_dict(), model_path)
                 print(f"model saved to {model_path}")
-                from dqn_clean_eval import evaluate
+                from clean_eval import evaluate
 
                 episodic_returns = evaluate(
                     model_path,
@@ -286,9 +259,10 @@ class DQNCleanAgent(BaseAgent):
                     self.env_id,
                     eval_episodes=10,
                     run_name=f"{run_name}-eval",
-                    Model=QNetwork,
+                    Model=q_network,
                     device=device,
-                    epsilon=0.05,
+                    epsilon=epsilon,
+                    seed=seed
                 )
                 for idx, episodic_return in enumerate(episodic_returns):
                     writer.add_scalar("eval/episodic_return", episodic_return, idx)
