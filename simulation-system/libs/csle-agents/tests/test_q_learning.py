@@ -70,7 +70,10 @@ class TestQLearningSuite:
                     descr="the exploration parameter"),
                 agents_constants.Q_LEARNING.N: HParam(
                     value=2, name=agents_constants.Q_LEARNING.N,
-                    descr="the number of iterations")
+                    descr="the number of iterations"),
+                agents_constants.Q_LEARNING.EPSILON_DECAY_RATE: HParam(
+                    value=0.99999, name=agents_constants.Q_LEARNING.EPSILON_DECAY_RATE,
+                    descr="epsilon decay rate")
             },
             player_type=PlayerType.ATTACKER, player_idx=1
         )

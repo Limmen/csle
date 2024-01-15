@@ -94,7 +94,7 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.MEANDER_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
-        decoy_state=True)
+        decoy_state=True, decoy_optimization=False)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()

@@ -393,6 +393,7 @@ class Q_LEARNING:
     S = "S"
     A = "A"
     INITIAL_STATE_VALUES = "initial_state_values"
+    EPSILON_DECAY_RATE = "epsilon_decay_rate"
 
 
 class SARSA:

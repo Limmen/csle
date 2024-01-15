@@ -56,10 +56,16 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.t = 1
 
         # Setup reduced action space
-        action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(
-            scenario=self.config.scenario)
+        action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(config=self.config)
         self.action_id_to_type_and_host = action_id_to_type_and_host
         self.type_and_host_to_action_id = type_and_host_to_action_id
+
+        # Setup state space
+        states, lookup_table, hosts_lookup_tables = CyborgEnvUtil.get_decoy_state_space(config=config)
+        self.decoy_hosts = CyborgEnvUtil.get_decoy_hosts(scenario=config.scenario)
+        self.decoy_state_space = states
+        self.decoy_state_space_lookup = lookup_table
+        self.decoy_state_space_hosts_lookup = hosts_lookup_tables
 
         # Setup gym spaces
         if self.config.scanned_state:
@@ -91,7 +97,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
 
         # Convert between different action spaces
-        if self.config.reduced_action_space or self.config.decoy_state:
+        if self.config.reduced_action_space or self.config.decoy_optimization:
             action_type, host = self.action_id_to_type_and_host[action]
             action = self.cyborg_action_type_and_host_to_id[(action_type, host)]
             if action_type in self.decoy_action_types:
@@ -114,6 +120,14 @@ class CyborgScenarioTwoDefender(BaseEnv):
         # Add scanned state to observation
         if self.config.scanned_state:
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
+
+        if self.config.decoy_optimization:
+            d_state = []
+            for host_id in self.decoy_hosts:
+                dec_state = len(self.decoy_state[host_id])
+                scanned = min(self.scan_state[host_id], 1)
+                d_state.append(self.decoy_state_space_hosts_lookup[host_id][(scanned, dec_state)])
+            o = np.array([self.decoy_state_space_lookup[tuple(d_state)]])
 
         self.t += 1
         if self.t >= self.config.maximum_steps:
@@ -151,10 +165,24 @@ class CyborgScenarioTwoDefender(BaseEnv):
         if updated_env is not None:
             self.cyborg_challenge_env = updated_env
         o, info = self.cyborg_challenge_env.reset()
+        self.scan_state = []
+        self.decoy_state = []
+        for i in range(len(self.cyborg_hostnames)):
+            self.scan_state.append(env_constants.CYBORG.NOT_SCANNED)
+            self.decoy_state.append([])
         info = self.populate_info(info=dict(info), obs=o)
         if self.config.scanned_state:
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
+        if self.config.decoy_optimization:
+            d_state = []
+            for host in self.decoy_hosts:
+                dec_state = len(self.decoy_state[host])
+                scanned = min(self.scan_state[host], 1)
+                d_state.append(self.decoy_state_space_hosts_lookup[host][(scanned, dec_state)])
+            o = np.array([self.decoy_state_space_lookup[tuple(d_state)]])
         self.t = 1
+        if len(self.traces) > 100:
+            self.reset_traces()
         if len(self.trace.defender_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)

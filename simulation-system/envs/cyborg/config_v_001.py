@@ -242,7 +242,8 @@ def default_input_config() -> SimulationEnvInputConfig:
     """
     config = CSLECyborgConfig(gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, maximum_steps=100,
                               baseline_red_agents=[RedAgentType.B_LINE_AGENT], red_agent_distribution=[1.0],
-                              reduced_action_space=False, scanned_state=False, decoy_state=False)
+                              reduced_action_space=False, scanned_state=False, decoy_state=False,
+                              decoy_optimization=False)
     return config
 
 

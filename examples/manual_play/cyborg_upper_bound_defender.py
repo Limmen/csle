@@ -22,7 +22,7 @@ def get_host_value(hostname: str):
         return 1
 
 
-def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env):
+def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env, decoy_actions_order):
     """
     Gets the next decoy host to check
 
@@ -44,42 +44,50 @@ def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env):
         return "Enterprise0"
     if t == 1:
         return "Enterprise1"
-    if t == 2:
-        return "Enterprise0"
-    if t == 3:
-        return "Enterprise1"
-    if t == 4:
-        if true_table.rows[host_id_enterprise_0][3]:
-            return "Enterprise0"
-        elif true_table.rows[host_id_enterprise_1][3]:
+    if t >= 2:
+        if (true_table.rows[host_id_user_1][4] or true_table.rows[host_id_user_2][4]) and len(
+                decoy_state["Enterprise1"]) < len(decoy_actions_order["Enterprise1"]) and \
+                true_table.rows[host_id_enterprise_1][5] == "None":
             return "Enterprise1"
+        elif (true_table.rows[host_id_user_3][4] or true_table.rows[host_id_user_4][4]) and len(
+                decoy_state["Enterprise0"]) < len(decoy_actions_order["Enterprise0"]) and \
+                true_table.rows[host_id_enterprise_0][5] == "None":
+            return "Enterprise0"
+    # if t == 3:
+    #     return "Enterprise1"
+    # if t == 4:
+    #     if true_table.rows[host_id_enterprise_0][3]:
+    #         return "Enterprise0"
+    #     elif true_table.rows[host_id_enterprise_1][3]:
+    #         return "Enterprise1"
 
-    if true_table.rows[host_id_enterprise_0][4] and true_table.rows[host_id_enterprise_0][5] == "None" \
-            and not len(decoy_state["Enterprise0"]) == 5:
-        return "Enterprise0"
-
-    if true_table.rows[host_id_enterprise_1][4] and true_table.rows[host_id_enterprise_1][5] == "None" \
-            and not len(decoy_state["Enterprise1"]) == 5:
-        return "Enterprise1"
-
-    if true_table.rows[host_id_enterprise_2][4] and true_table.rows[host_id_enterprise_2][5] == "None" \
-            and not len(decoy_state["Enterprise2"]) == 5:
+    # if true_table.rows[host_id_enterprise_0][4] and true_table.rows[host_id_enterprise_0][5] == "None" \
+    #         and not len(decoy_state["Enterprise0"]) == 5:
+    #     return "Enterprise0"
+    #
+    # if true_table.rows[host_id_enterprise_1][4] and true_table.rows[host_id_enterprise_1][5] == "None" \
+    #         and not len(decoy_state["Enterprise1"]) == 5:
+    #     return "Enterprise1"
+    #
+    if true_table.rows[host_id_enterprise_2][5] == "None" and len(decoy_state["Enterprise2"]) < len(
+            decoy_actions_order["Enterprise2"]):
         return "Enterprise2"
 
-    if true_table.rows[host_id_user_1][4] and not len(decoy_state["User1"]) == 5 and \
-            true_table.rows[host_id_user_1][5] == "None":
-        return "User1"
-    if true_table.rows[host_id_user_2][4] and not len(decoy_state["User2"]) == 5 and \
-            true_table.rows[host_id_user_2][5] == "None":
-        return "User2"
-    if true_table.rows[host_id_user_3][4] and not len(decoy_state["User3"]) == 5 and \
-            true_table.rows[host_id_user_3][5] == "None":
-        return "User3"
-    if true_table.rows[host_id_user_4][4] and not len(decoy_state["User4"]) == 5 and \
-            true_table.rows[host_id_user_4][5] == "None":
-        return "User4"
+    # if true_table.rows[host_id_user_1][4] and not len(decoy_state["User1"]) == 5 and \
+    #         true_table.rows[host_id_user_1][5] == "None":
+    #     return "User1"
+    # if true_table.rows[host_id_user_2][4] and not len(decoy_state["User2"]) == 5 and \
+    #         true_table.rows[host_id_user_2][5] == "None":
+    #     return "User2"
+    # if true_table.rows[host_id_user_3][4] and not len(decoy_state["User3"]) == 5 and \
+    #         true_table.rows[host_id_user_3][5] == "None":
+    #     return "User3"
+    # if true_table.rows[host_id_user_4][4] and not len(decoy_state["User4"]) == 5 and \
+    #         true_table.rows[host_id_user_4][5] == "None":
+    #     return "User4"
 
-    if true_table.rows[host_id_op_server][5] == "None" and not len(decoy_state["Op_Server0"]) == 5:
+    if true_table.rows[host_id_op_server][5] == "None" and len(decoy_state["Op_Server0"]) < len(
+            decoy_actions_order["Enterprise1"]):
         return "Op_Server0"
     return None
 
@@ -119,18 +127,31 @@ def eval(csle_cyborg_env) -> float:
     decoy_state["User2"] = []
     decoy_state["User3"] = []
     decoy_state["User4"] = []
-    decoy_actions_order = [
-        BlueAgentActionType.DECOY_FEMITTER,
-        BlueAgentActionType.DECOY_HARAKA_SMPT,
-        BlueAgentActionType.DECOY_TOMCAT,
-        BlueAgentActionType.DECOY_SMSS,
-        BlueAgentActionType.DECOY_SVCHOST,
-        BlueAgentActionType.DECOY_SSHD
-    ]
+    decoy_actions_order = {
+        "Enterprise0": [
+            BlueAgentActionType.DECOY_HARAKA_SMPT,
+            BlueAgentActionType.DECOY_TOMCAT,
+            BlueAgentActionType.DECOY_VSFTPD,
+            BlueAgentActionType.DECOY_APACHE
+        ],
+        "Enterprise1": [
+            BlueAgentActionType.DECOY_FEMITTER
+        ],
+        "Enterprise2": [
+            BlueAgentActionType.DECOY_FEMITTER
+        ],
+        "Op_Server0": [
+            BlueAgentActionType.DECOY_HARAKA_SMPT,
+            BlueAgentActionType.DECOY_APACHE,
+            BlueAgentActionType.DECOY_TOMCAT,
+            BlueAgentActionType.DECOY_VSFTPD
+        ]
+    }
     R = 0
     true_table = csle_cyborg_env.get_true_table()
-    decoy_host = get_decoy_host(t=0, decoy_state=decoy_state, true_table=true_table, csle_cyborg_env=csle_cyborg_env)
-    decoy_action = decoy_actions_order[len(decoy_state[decoy_host])]
+    decoy_host = get_decoy_host(t=0, decoy_state=decoy_state, true_table=true_table, csle_cyborg_env=csle_cyborg_env,
+                                decoy_actions_order=decoy_actions_order)
+    decoy_action = decoy_actions_order[decoy_host][len(decoy_state[decoy_host])]
     decoy_state[decoy_host].append(decoy_action)
     a = csle_cyborg_env.cyborg_action_type_and_host_to_id[(decoy_action, decoy_host)]
     for t in range(100):
@@ -139,13 +160,13 @@ def eval(csle_cyborg_env) -> float:
         # print(f"time-step: {t+1}, cumulative reward: {R}, a: {a}")
         true_table = csle_cyborg_env.get_true_table()
         decoy_host = get_decoy_host(t=t + 1, decoy_state=decoy_state, true_table=true_table,
-                                    csle_cyborg_env=csle_cyborg_env)
+                                    csle_cyborg_env=csle_cyborg_env, decoy_actions_order=decoy_actions_order)
         is_key_compromised = is_enterprise_or_opserver_compromised(true_table=true_table,
                                                                    csle_cyborg_env=csle_cyborg_env)
         if decoy_host is not None and true_table.rows[csle_cyborg_env.cyborg_hostnames.index(decoy_host)][5] != "None":
             is_key_compromised = True
         if not is_key_compromised and decoy_host is not None:
-            decoy_action = decoy_actions_order[len(decoy_state[decoy_host])]
+            decoy_action = decoy_actions_order[decoy_host][len(decoy_state[decoy_host])]
             decoy_state[decoy_host].append(decoy_action)
             a = csle_cyborg_env.cyborg_action_type_and_host_to_id[(decoy_action, decoy_host)]
         else:
@@ -171,9 +192,9 @@ def eval(csle_cyborg_env) -> float:
                     break
             if len(host_recovery_actions) == 0:
                 decoy_host = get_decoy_host(t=t + 1, decoy_state=decoy_state, true_table=true_table,
-                                            csle_cyborg_env=csle_cyborg_env)
+                                            csle_cyborg_env=csle_cyborg_env, decoy_actions_order=decoy_actions_order)
                 if decoy_host is not None:
-                    decoy_action = decoy_actions_order[len(decoy_state[decoy_host])]
+                    decoy_action = decoy_actions_order[decoy_host][len(decoy_state[decoy_host])]
                     decoy_state[decoy_host].append(decoy_action)
                     a = csle_cyborg_env.cyborg_action_type_and_host_to_id[(decoy_action, decoy_host)]
                 a = 1
@@ -187,12 +208,13 @@ if __name__ == '__main__':
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, decoy_state=False,
-        scanned_state=False)
+        scanned_state=False, decoy_optimization=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     csle_cyborg_env.reset()
     returns = []
-    for i in range(20):
-        print(f"{i}/{20}")
+    num_evals = 100
+    for i in range(num_evals):
+        print(f"{i}/{num_evals}")
         returns.append(eval(csle_cyborg_env=csle_cyborg_env))
     print(np.mean(returns))
 

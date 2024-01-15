@@ -1,5 +1,6 @@
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict, Union, Any
 import inspect
+import itertools
 from csle_cyborg.main import Main
 from csle_cyborg.agents.wrappers.challenge_wrapper import ChallengeWrapper
 import gym_csle_cyborg.constants.constants as env_constants
@@ -139,71 +140,147 @@ class CyborgEnvUtil:
             raise ValueError(f"Scenario: {scenario} not recognized")
 
     @staticmethod
-    def get_action_dicts(scenario: int) -> Tuple[Dict[int, Tuple[BlueAgentActionType, str]],
-                                                 Dict[Tuple[BlueAgentActionType, str], int]]:
+    def get_action_dicts(config: CSLECyborgConfig) \
+            -> Tuple[Dict[int, Tuple[BlueAgentActionType, str]], Dict[Tuple[BlueAgentActionType, str], int]]:
         """
         Gets action lookup dicts for a given scenario and the reduced action space
 
-        :param scenario: the cage scenario number
+        :param config: the cage scenario configuration
         :return: a dict id -> (action_type, host) and a dict (action_type, host) -> id
         """
-        if scenario == 2:
+        if config.scenario == 2:
             action_id_to_type_and_host = {}
             type_and_host_to_action_id = {}
-            action_id_to_type_and_host[0] = (BlueAgentActionType.RESTORE, "Enterprise0")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise0")] = 0
-            action_id_to_type_and_host[1] = (BlueAgentActionType.RESTORE, "Enterprise1")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise1")] = 1
-            action_id_to_type_and_host[2] = (BlueAgentActionType.RESTORE, "Enterprise2")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise2")] = 2
-            action_id_to_type_and_host[3] = (BlueAgentActionType.RESTORE, "Op_Server0")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Op_Server0")] = 3
-            action_id_to_type_and_host[4] = (BlueAgentActionType.ANALYZE, "Enterprise0")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise0")] = 4
-            action_id_to_type_and_host[5] = (BlueAgentActionType.ANALYZE, "Enterprise1")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise1")] = 5
-            action_id_to_type_and_host[6] = (BlueAgentActionType.ANALYZE, "Enterprise2")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise2")] = 6
-            action_id_to_type_and_host[7] = (BlueAgentActionType.ANALYZE, "Op_Server0")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Op_Server0")] = 7
-            action_id_to_type_and_host[8] = (BlueAgentActionType.REMOVE, "Enterprise0")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise0")] = 8
-            action_id_to_type_and_host[9] = (BlueAgentActionType.REMOVE, "Enterprise1")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise1")] = 9
-            action_id_to_type_and_host[10] = (BlueAgentActionType.REMOVE, "Enterprise2")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise2")] = 10
-            action_id_to_type_and_host[11] = (BlueAgentActionType.REMOVE, "Op_Server0")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Op_Server0")] = 11
-            action_id_to_type_and_host[12] = (BlueAgentActionType.ANALYZE, "User1")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User1")] = 12
-            action_id_to_type_and_host[13] = (BlueAgentActionType.ANALYZE, "User2")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User2")] = 13
-            action_id_to_type_and_host[14] = (BlueAgentActionType.ANALYZE, "User3")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User3")] = 14
-            action_id_to_type_and_host[15] = (BlueAgentActionType.ANALYZE, "User4")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User4")] = 15
-            action_id_to_type_and_host[16] = (BlueAgentActionType.RESTORE, "User1")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User1")] = 16
-            action_id_to_type_and_host[17] = (BlueAgentActionType.RESTORE, "User2")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User2")] = 17
-            action_id_to_type_and_host[18] = (BlueAgentActionType.RESTORE, "User3")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User3")] = 18
-            action_id_to_type_and_host[19] = (BlueAgentActionType.RESTORE, "User4")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User4")] = 19
-            action_id_to_type_and_host[20] = (BlueAgentActionType.RESTORE, "Defender")
-            type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Defender")] = 20
-            action_id_to_type_and_host[21] = (BlueAgentActionType.ANALYZE, "Defender")
-            type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Defender")] = 21
-            action_id_to_type_and_host[22] = (BlueAgentActionType.REMOVE, "User1")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User1")] = 22
-            action_id_to_type_and_host[23] = (BlueAgentActionType.REMOVE, "User2")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User2")] = 23
-            action_id_to_type_and_host[24] = (BlueAgentActionType.REMOVE, "User3")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User3")] = 24
-            action_id_to_type_and_host[25] = (BlueAgentActionType.REMOVE, "User4")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User4")] = 25
-            action_id_to_type_and_host[26] = (BlueAgentActionType.REMOVE, "Defender")
-            type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Defender")] = 26
+            if config.reduced_action_space and config.decoy_state and not config.decoy_optimization:
+                action_id_to_type_and_host[0] = (BlueAgentActionType.RESTORE, "Enterprise0")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise0")] = 0
+                action_id_to_type_and_host[1] = (BlueAgentActionType.RESTORE, "Enterprise1")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise1")] = 1
+                action_id_to_type_and_host[2] = (BlueAgentActionType.RESTORE, "Enterprise2")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise2")] = 2
+                action_id_to_type_and_host[3] = (BlueAgentActionType.RESTORE, "Op_Server0")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Op_Server0")] = 3
+                action_id_to_type_and_host[4] = (BlueAgentActionType.ANALYZE, "Enterprise0")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise0")] = 4
+                action_id_to_type_and_host[5] = (BlueAgentActionType.ANALYZE, "Enterprise1")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise1")] = 5
+                action_id_to_type_and_host[6] = (BlueAgentActionType.ANALYZE, "Enterprise2")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise2")] = 6
+                action_id_to_type_and_host[7] = (BlueAgentActionType.ANALYZE, "Op_Server0")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Op_Server0")] = 7
+                action_id_to_type_and_host[8] = (BlueAgentActionType.REMOVE, "Enterprise0")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise0")] = 8
+                action_id_to_type_and_host[9] = (BlueAgentActionType.REMOVE, "Enterprise1")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise1")] = 9
+                action_id_to_type_and_host[10] = (BlueAgentActionType.REMOVE, "Enterprise2")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise2")] = 10
+                action_id_to_type_and_host[11] = (BlueAgentActionType.REMOVE, "Op_Server0")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Op_Server0")] = 11
+                action_id_to_type_and_host[12] = (BlueAgentActionType.ANALYZE, "User1")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User1")] = 12
+                action_id_to_type_and_host[13] = (BlueAgentActionType.ANALYZE, "User2")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User2")] = 13
+                action_id_to_type_and_host[14] = (BlueAgentActionType.ANALYZE, "User3")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User3")] = 14
+                action_id_to_type_and_host[15] = (BlueAgentActionType.ANALYZE, "User4")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User4")] = 15
+                action_id_to_type_and_host[16] = (BlueAgentActionType.RESTORE, "User1")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User1")] = 16
+                action_id_to_type_and_host[17] = (BlueAgentActionType.RESTORE, "User2")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User2")] = 17
+                action_id_to_type_and_host[18] = (BlueAgentActionType.RESTORE, "User3")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User3")] = 18
+                action_id_to_type_and_host[19] = (BlueAgentActionType.RESTORE, "User4")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User4")] = 19
+                action_id_to_type_and_host[20] = (BlueAgentActionType.RESTORE, "Defender")
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Defender")] = 20
+                action_id_to_type_and_host[21] = (BlueAgentActionType.ANALYZE, "Defender")
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Defender")] = 21
+                action_id_to_type_and_host[22] = (BlueAgentActionType.REMOVE, "User1")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User1")] = 22
+                action_id_to_type_and_host[23] = (BlueAgentActionType.REMOVE, "User2")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User2")] = 23
+                action_id_to_type_and_host[24] = (BlueAgentActionType.REMOVE, "User3")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User3")] = 24
+                action_id_to_type_and_host[25] = (BlueAgentActionType.REMOVE, "User4")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User4")] = 25
+                action_id_to_type_and_host[26] = (BlueAgentActionType.REMOVE, "Defender")
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Defender")] = 26
+                action_id_to_type_and_host[27] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")] = 27
+                action_id_to_type_and_host[28] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")] = 28
+                action_id_to_type_and_host[29] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")] = 29
+                action_id_to_type_and_host[30] = (BlueAgentActionType.DECOY_FEMITTER, "User1")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 30
+                action_id_to_type_and_host[31] = (BlueAgentActionType.DECOY_FEMITTER, "User2")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 31
+                action_id_to_type_and_host[32] = (BlueAgentActionType.DECOY_FEMITTER, "User3")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User3")] = 32
+                action_id_to_type_and_host[33] = (BlueAgentActionType.DECOY_FEMITTER, "User4")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User4")] = 33
+                action_id_to_type_and_host[34] = (BlueAgentActionType.DECOY_FEMITTER, "Defender")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Defender")] = 34
+                action_id_to_type_and_host[35] = (BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")] = 35
+            elif config.decoy_optimization:
+                action_id_to_type_and_host[0] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")] = 0
+                action_id_to_type_and_host[1] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")] = 1
+                action_id_to_type_and_host[2] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")] = 2
+                action_id_to_type_and_host[3] = (BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")] = 3
             return action_id_to_type_and_host, type_and_host_to_action_id
         else:
+            raise ValueError(f"Scenario: {config.scenario} not recognized")
+
+    @staticmethod
+    def get_decoy_hosts(scenario: int) -> List[int]:
+        """
+        Gets the list of hosts to put decoys
+
+        :param scenario: the cage scenario number
+        :return: the list of lists of decoy hosts
+        """
+        if scenario == 2:
+            return [1, 2, 3, 7]
+        else:
             raise ValueError(f"Scenario: {scenario} not recognized")
+
+    @staticmethod
+    def get_decoy_state_space(config: CSLECyborgConfig) -> Tuple[List[int], Dict[Any, int], Dict[int, Any]]:
+        """
+        Gets the numeric decoy state space
+
+        :param config: the configuration of the scenario
+        :return: the state space and a lookup table
+        """
+        if config.scenario == 2:
+            decoy_actions = CyborgEnvUtil.get_decoy_actions_per_host(scenario=config.scenario)
+            decoy_host_ids = CyborgEnvUtil.get_decoy_hosts(scenario=config.scenario)
+            lookup_table = {}
+            hosts_lookup_tables: Dict[int, Dict[Tuple[int, int], int]] = {}
+            states = []
+            host_states = []
+            for host_id in decoy_host_ids:
+                hosts_lookup_tables[host_id] = {}
+                h_states = []
+                h_state = 0
+                for scanned in [0, 1]:
+                    for host_state in range(len(decoy_actions[host_id]) + 1):
+                        h_states.append(h_state)
+                        hosts_lookup_tables[host_id][(scanned, host_state)] = h_state
+                        h_state += 1
+                host_states.append(h_states)
+            state = 1
+            all_states = list(itertools.product(*host_states))
+            for s in all_states:
+                states.append(state)
+                lookup_table[s] = state
+                state += 1
+            return states, lookup_table, hosts_lookup_tables
+        else:
+            raise ValueError(f"Scenario: {config.scenario} not recognized")

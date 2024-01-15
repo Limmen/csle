@@ -12,7 +12,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
 
     def __init__(self, gym_env_name: str, scenario: int, baseline_red_agents: List[RedAgentType], maximum_steps: int,
                  red_agent_distribution: List[float], reduced_action_space: bool,
-                 scanned_state: bool, decoy_state: bool) -> None:
+                 scanned_state: bool, decoy_state: bool, decoy_optimization) -> None:
         """
         Initializes the DTO
 
@@ -24,6 +24,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :param reduced_action_space: boolean flag indicating whether a reduced action space should be used
         :param scanned_state: boolean flag indicating whether the scanned defender state should be used
         :param decoy_state: boolean flag indicating whether the decoy defender state should be used
+        :param decoy_optimization: boolean flag indicating whether the special decoy optimization should be used
         """
         self.gym_env_name = gym_env_name
         self.scenario = scenario
@@ -33,6 +34,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         self.reduced_action_space = reduced_action_space
         self.scanned_state = scanned_state
         self.decoy_state = decoy_state
+        self.decoy_optimization = decoy_optimization
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -49,6 +51,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         d["reduced_action_space"] = self.reduced_action_space
         d["scanned_state"] = self.scanned_state
         d["decoy_state"] = self.decoy_state
+        d["decoy_optimization"] = self.decoy_optimization
         return d
 
     def get_agents_dict(self, agent: Union[RedAgentType, None] = None) -> Tuple[Dict[str, Any], RedAgentType]:
@@ -88,7 +91,8 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
                                baseline_red_agents=d["baseline_red_agents"], maximum_steps=d["maximum_steps"],
                                red_agent_distribution=d["red_agent_distribution"],
                                reduced_action_space=d["reduced_action_space"],
-                               scanned_state=d["scanned_state"], decoy_state=d["decoy_state"])
+                               scanned_state=d["scanned_state"], decoy_state=d["decoy_state"],
+                               decoy_optimization=d["decoy_optimization"])
         return obj
 
     def __str__(self) -> str:
@@ -99,7 +103,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
                f"baseline_red_agents: {self.baseline_red_agents}, maximum_steps: {self.maximum_steps}, " \
                f"red_agent_distribution: {self.red_agent_distribution}, " \
                f"reduced_action_space: {self.reduced_action_space}, scanned_state: {self.scanned_state}, " \
-               f"decoy_state: {self.decoy_state}"
+               f"decoy_state: {self.decoy_state}, decoy_optimization: {self.decoy_optimization}"
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgConfig":

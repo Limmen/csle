@@ -159,7 +159,8 @@ class QLearningAgent(BaseAgent):
         return [agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.GAMMA,
                 agents_constants.Q_LEARNING.EPSILON, agents_constants.Q_LEARNING.N,
-                agents_constants.Q_LEARNING.S, agents_constants.Q_LEARNING.A]
+                agents_constants.Q_LEARNING.S, agents_constants.Q_LEARNING.A,
+                agents_constants.Q_LEARNING.EPSILON_DECAY_RATE]
 
     def q_learning(self, exp_result: ExperimentResult, seed: int) -> ExperimentResult:
         """
@@ -174,11 +175,12 @@ class QLearningAgent(BaseAgent):
         A = self.experiment_config.hparams[agents_constants.Q_LEARNING.A].value
         epsilon = self.experiment_config.hparams[agents_constants.Q_LEARNING.EPSILON].value
         N = self.experiment_config.hparams[agents_constants.Q_LEARNING.N].value
+        epsilon_decay = self.experiment_config.hparams[agents_constants.Q_LEARNING.EPSILON_DECAY_RATE].value
         Logger.__call__().get_logger().info(f"Starting the q-learning algorithm, N:{N}, "
                                             f"num_states:{len(S)}, discount_factor: {discount_factor}, "
                                             f"num_actions: {len(A)}, epsilon: {epsilon}")
         avg_returns, running_avg_returns, initial_state_values, q_table, policy = self.train_q_learning(
-            A=A, S=S, gamma=discount_factor, N=N, epsilon=epsilon)
+            A=A, S=S, gamma=discount_factor, N=N, epsilon=epsilon, epsilon_decay=epsilon_decay)
         exp_result.all_metrics[seed][agents_constants.Q_LEARNING.INITIAL_STATE_VALUES] = initial_state_values
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = avg_returns
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = running_avg_returns
@@ -191,7 +193,8 @@ class QLearningAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def train_q_learning(self, A: List[int], S: List[int], gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
+    def train_q_learning(self, A: List[int], S: List[int], gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2,
+                         epsilon_decay: float = 1.0) \
             -> Tuple[List[float], List[float], List[float], List[List[float]], List[List[float]]]:
         """
         Runs the Q learning algorithm
@@ -201,6 +204,7 @@ class QLearningAgent(BaseAgent):
         :param gamma: the discount factor
         :param N: the number of iterations
         :param epsilon: the exploration parameter
+        :param epsilon_decay: the epsilon decay rate
         :return: the average returns, the running average returns, the initial state values, the q table, policy
         """
         if self.env is None:
@@ -209,48 +213,47 @@ class QLearningAgent(BaseAgent):
         average_returns: List[float] = []
         running_average_returns: List[float] = []
 
-        Logger.__call__().get_logger().info("Starting Q Learning, gamma:{}, n_iter:{}, eps:{}".format(gamma, N,
-                                                                                                      epsilon))
+        Logger.__call__().get_logger().info(f"Starting Q Learning, gamma:{gamma}, n_iter:{N}, eps:{epsilon}")
         q_table = self.initialize_q_table(n_states=len(S), n_actions=len(A))
-        count_table = self.initialize_count_table(n_states=256, n_actions=5)
+        count_table = self.initialize_count_table(n_states=len(S), n_actions=len(A))
         steps = []
+        prog = 0.0
 
         o, _ = self.env.reset()
         if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
             s = int(o[2])
         else:
-            s = o
+            s = int(o[0])
         for i in range(N):
             a = self.eps_greedy(q_table=q_table, A=A, s=s, epsilon=epsilon)
+            epsilon = epsilon * epsilon_decay
             o, r, done, _, _ = self.env.step(a)
             if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                 s_prime = int(o[2])
             else:
-                s_prime = o
-            q_table, count_table = self.q_learning_update(q_table=q_table, count_table=count_table,
-                                                          s=s, a=a, r=r, s_prime=s_prime, gamma=gamma)
+                s_prime = int(o[0])
+            q_table, count_table, alpha = self.q_learning_update(q_table=q_table, count_table=count_table,
+                                                                 s=s, a=a, r=r, s_prime=s_prime, gamma=gamma, done=done)
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 steps.append(i)
-                state_val = np.sum(
-                    np.dot(
-                        np.array(list(map(lambda x: sum(q_table[x]), S))),
-                        np.array(
-                            self.simulation_env_config.initial_state_distribution_config.initial_state_distribution)))
                 prog = float(i / N)
-                init_state_values.append(state_val)
-
                 policy = self.create_policy_from_q_table(num_states=len(S), num_actions=len(A), q_table=q_table)
+                initial_state = int(np.random.choice(
+                    S, p=self.simulation_env_config.initial_state_distribution_config.initial_state_distribution))
+                state_val = q_table[initial_state][int(np.argmax(policy[initial_state]))]
+                init_state_values.append(state_val)
                 avg_return = self.evaluate_policy(policy=policy, eval_batch_size=self.experiment_config.hparams[
                     agents_constants.COMMON.EVAL_BATCH_SIZE].value)
                 average_returns.append(avg_return)
                 running_avg_J = ExperimentUtil.running_average(
                     average_returns, self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
                 running_average_returns.append(running_avg_J)
+                done = True
 
             if i % self.experiment_config.log_every == 0 or i == 0:
                 Logger.__call__().get_logger().info(
-                    "[Q-Learning] i:{}, progress:{}, V(s0):{}, J:{}, running_avg_J:{}".format(
-                        i, prog, state_val, avg_return, running_average_returns))
+                    f"[Q-Learning] i:{i}/{N}, progress:{prog}, V(s0):{state_val}, J:{avg_return}, "
+                    f"running_avg_J:{running_avg_J}, epsilon: {epsilon}, alpha: {alpha}")
 
             s = s_prime
             if done:
@@ -258,7 +261,7 @@ class QLearningAgent(BaseAgent):
                 if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                     s = int(o[2])
                 else:
-                    s = o
+                    s = int(o[0])
 
         policy = self.create_policy_from_q_table(num_states=len(S), num_actions=len(A), q_table=q_table)
         return (average_returns, running_average_returns, init_state_values, list(q_table.tolist()),
@@ -272,7 +275,7 @@ class QLearningAgent(BaseAgent):
         :param n_actions: the number of actions in the MDP
         :return: the initialized Q table
         """
-        q_table = np.zeros((n_states, n_actions))
+        q_table = np.full((n_states, n_actions), -300.0, dtype=float)
         return q_table
 
     def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> npt.NDArray[Any]:
@@ -312,8 +315,8 @@ class QLearningAgent(BaseAgent):
         return float(1) / math.pow(n, 2 / 3)
 
     def q_learning_update(self, q_table: npt.NDArray[Any], count_table: npt.NDArray[Any],
-                          s: int, a: int, r: float, s_prime: int, gamma: float) \
-            -> Tuple[npt.NDArray[Any], npt.NDArray[Any]]:
+                          s: int, a: int, r: float, s_prime: int, gamma: float, done: bool) \
+            -> Tuple[npt.NDArray[Any], npt.NDArray[Any], float]:
         """
         Watkin's Q-learning update
 
@@ -324,12 +327,16 @@ class QLearningAgent(BaseAgent):
         :param r: the reward
         :param s_prime: the next sampled state
         :param gamma: the discount factor
-        :return: the updated q table and updated count table
+        :param done: boolean flag indicating whether s_prime is terminal
+        :return: the updated q table and updated count table and the updated learning rate
         """
         count_table[s][a] = count_table[s_prime][a] + 1
         alpha = self.step_size(count_table[s][a])
-        q_table[s][a] = q_table[s][a] + alpha * ((r + gamma * np.max(q_table[s_prime])) - q_table[s][a])
-        return q_table, count_table
+        if not done:
+            q_table[s][a] = q_table[s][a] + alpha * ((r + gamma * np.max(q_table[s_prime])) - q_table[s][a])
+        else:
+            q_table[s][a] = q_table[s][a] + alpha * (r - q_table[s][a])
+        return q_table, count_table, alpha
 
     def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: npt.NDArray[Any]) \
             -> npt.NDArray[Any]:
@@ -363,10 +370,24 @@ class QLearningAgent(BaseAgent):
         returns = []
         for i in range(eval_batch_size):
             done = False
-            s = self.env.reset()
+            o, _ = self.env.reset()
+            if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
+                s = int(o[2])
+            else:
+                s = int(o[0])
             R = 0
+            t = 0
             while not done:
-                s, r, done, _, info = self.env.step(policy)
+                t += 1
+                if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
+                    o, r, done, _, info = self.env.step(policy)
+                else:
+                    a = int(np.argmax(policy[s]))
+                    o, r, done, _, info = self.env.step(a)
+                if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
+                    s = int(o[2])
+                else:
+                    s = int(o[0])
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)
