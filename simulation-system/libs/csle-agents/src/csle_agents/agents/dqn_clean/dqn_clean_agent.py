@@ -178,15 +178,9 @@ class DQNCleanAgent(BaseAgent):
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
-
-            # args = tyro.cli(Args)
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
             run_name = f"{self.env_id}__{self.exp_name}__{seed}__{int(time.time())}"
             writer = SummaryWriter(f"runs/{run_name}")
-            # writer.add_text(
-            #     "hyperparameters",
-            #     "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
-            # )
 
             # TRY NOT TO MODIFY: seeding
             random.seed(seed)
@@ -226,7 +220,10 @@ class DQNCleanAgent(BaseAgent):
                 else:
                     # TODO: HÄR ÄR PROBLEMET, FIXA
                     q_values = q_network(torch.Tensor(obs).to(device))
+                    # print(q_values)
+                    # print(len(q_values[0]))
                     actions = torch.argmax(q_values, dim=1).cpu().numpy()
+                    # print(actions)
 
                 # TRY NOT TO MODIFY: execute the game and log data.
                 next_obs, rewards, terminations, truncations, infos = envs.step(actions)

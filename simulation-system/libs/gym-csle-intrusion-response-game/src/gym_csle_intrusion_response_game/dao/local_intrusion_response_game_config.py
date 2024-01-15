@@ -102,6 +102,8 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         """
         :return: the defender's action space
         """
+        print("här är jag nu")
+        print(self.A1)
         return gym.spaces.Discrete(len(self.A1))
 
     def defender_action_space_stopping(self) -> gym.spaces.Discrete:
