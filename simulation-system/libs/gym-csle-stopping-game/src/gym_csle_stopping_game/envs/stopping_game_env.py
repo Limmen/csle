@@ -3,6 +3,7 @@ import numpy as np
 import numpy.typing as npt
 import time
 import math
+import logging
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -77,6 +78,8 @@ class StoppingGameEnv(BaseEnv):
         done = False
         info: Dict[str, Any] = {}
 
+        # logging.getLogger().info(a1)
+        logging.getLogger().info(len(self.config.R[self.state.l - 1]))
         # Compute r, s', b',o'
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
         self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,

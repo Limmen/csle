@@ -110,7 +110,7 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    experiment_config.name = f"workflow_ppo_nodes={1}"
+    experiment_config.name = f"workflow_dqn_nodes={1}"
     number_of_zones = 6
     X_max = 100
     eta = 0.5
@@ -173,6 +173,3 @@ if __name__ == '__main__':
     agent = DQNCleanAgent(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                           experiment_config=experiment_config)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)

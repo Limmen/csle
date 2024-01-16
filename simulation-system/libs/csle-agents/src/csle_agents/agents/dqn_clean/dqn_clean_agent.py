@@ -6,6 +6,7 @@ Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 from typing import List, Optional
 import time
 import torch
+import logging
 import torch.optim as optim
 import gymnasium as gym
 import os
@@ -194,9 +195,13 @@ class DQNCleanAgent(BaseAgent):
                 epsilon = self.linear_schedule(self.start_e, self.end_e, self.exploration_fraction * self.total_timesteps, global_step)
                 if random.random() < epsilon:
                     actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
+                    # logging.getLogger().info("if-sats i dqn clean")
+                    # logging.getLogger().info(envs.single_action_space.sample())
                 else:
+                    # logging.getLogger().info("else-sats i dqn clean")
                     q_values = q_network(torch.Tensor(obs).to(device))
                     actions = torch.argmax(q_values, dim=1).cpu().numpy()
+                    # logging.getLogger().info(q_values)
 
                 # TRY NOT TO MODIFY: execute the game and log data.
                 next_obs, rewards, terminations, truncations, infos = envs.step(actions)

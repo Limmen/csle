@@ -5,6 +5,7 @@ from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.policy import Policy
+import logging
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
@@ -56,6 +57,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: (obs, reward, terminated, truncated, info)
         """
         # Get attacker action from static strategy
+        # logging.getLogger().info(a1)
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
