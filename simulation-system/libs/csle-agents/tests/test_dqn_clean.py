@@ -1,6 +1,11 @@
 import numpy as np
 import pytest
 import pytest_mock
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import (
+    LocalIntrusionResponseGameConfig,
+)
+from csle_common.dao.training.tabular_policy import TabularPolicy
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -12,7 +17,9 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-
+from gym_csle_intrusion_response_game.util.intrusion_response_game_util import (
+    IntrusionResponseGameUtil,
+)
 
 class TestDQNCleanAgentSuite:
     """
@@ -112,21 +119,78 @@ class TestDQNCleanAgentSuite:
         return experiment_config
 
     @pytest.fixture
-    def pomdp_config(self) -> StoppingGameDefenderPomdpConfig:
+    def localk_irg_pomdp_config(self) -> StoppingGameDefenderPomdpConfig:
         """
         Fixture, which is run before every test. It sets up an input POMDP config
 
         :return: The example config
         """
-        L = 1
-        R_INT = -5
-        R_COST = -5
-        R_SLA = 1
-        R_ST = 5
-        p = 0.1
-        n = 100
-
-        attacker_stage_strategy = np.zeros((3, 2))
+        # L = 1
+        # R_INT = -5
+        # R_COST = -5
+        # R_SLA = 1
+        # R_ST = 5
+        # p = 0.1
+        # n = 100
+        number_of_zones = 6
+        X_max = 100
+        eta = 0.5
+        reachable = True
+        beta = 3
+        gamma = self.experiment_config().hparams[agents_constants.COMMON.GAMMA].value
+        initial_zone = 3
+        initial_state = [initial_zone, 0]
+        zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
+        Z_D_P = np.array([0, 0.8, 0.5, 0.1, 0.05, 0.025])
+        S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
+        states_to_idx = {}
+        for i, s in enumerate(S):
+            states_to_idx[(s[env_constants.STATES.D_STATE_INDEX], s[env_constants.STATES.A_STATE_INDEX])] = i
+        S_A = IntrusionResponseGameUtil.local_attacker_state_space()
+        S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
+        A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
+        C_D = np.array([0, 35, 30, 25, 20, 20, 20, 15])
+        A2 = IntrusionResponseGameUtil.local_attacker_actions()
+        A_P = np.array([1, 1, 0.75, 0.85])
+        O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
+        T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
+        Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
+        Z_U = np.array([0, 0, 2.5, 5, 10, 15])
+        R = np.array(
+            [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
+                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
+        d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
+        a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D, initial_zone=initial_zone)
+        initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
+                                        initial_state[env_constants.STATES.A_STATE_INDEX])]
+        env_name = "csle-intrusion-response-game-pomdp-defender-v1"
+        attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
+        for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
+            if s_a == env_constants.ATTACK_STATES.HEALTHY:
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
+            elif s_a == env_constants.ATTACK_STATES.RECON:
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
+            else:
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
+                attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0
+        attacker_strategy = TabularPolicy(
+            player_type=PlayerType.ATTACKER, actions=A2,
+            simulation_name="csle-intrusion-response-game-pomdp-defender-001",
+            value_function=None, q_table=None,
+            lookup_table=list(attacker_stage_strategy.tolist()),
+            agent_type=AgentType.RANDOM, avg_R=-1)
+        simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config = \
+            LocalIntrusionResponseGameConfig(
+                env_name=env_name, T=T, O=O, Z=Z, R=R, S=S, S_A=S_A, S_D=S_D, s_1_idx=initial_state_idx, zones=zones,
+                A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1, gamma=gamma, beta=beta, C_D=C_D, A_P=A_P, Z_D_P=Z_D_P, Z_U=Z_U,
+                eta=eta
+            )
+        simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
+        '''attacker_stage_strategy = np.zeros((3, 2))
         attacker_stage_strategy[0][0] = 0.9
         attacker_stage_strategy[0][1] = 0.1
         attacker_stage_strategy[1][0] = 0.9
@@ -144,12 +208,13 @@ class TestDQNCleanAgentSuite:
             R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
             S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq=100000,
             gamma=1)
+
         pomdp_config = StoppingGameDefenderPomdpConfig(
             stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
             attacker_strategy=RandomPolicy(actions=list(stopping_game_config.A2),
                                            player_type=PlayerType.ATTACKER,
                                            stage_policy_tensor=list(attacker_stage_strategy)),
-            env_name="csle-stopping-game-pomdp-defender-v1")
+            env_name="csle-stopping-game-pomdp-defender-v1")'''
         return pomdp_config
 
     def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
@@ -172,7 +237,7 @@ class TestDQNCleanAgentSuite:
                       experiment_config=experiment_config)
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
-                       pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
+                       pomdp_irg_config: StoppingGameDefenderPomdpConfig) -> None:
         """
         Tests running the agent
 
@@ -189,7 +254,11 @@ class TestDQNCleanAgentSuite:
         # Set attributes of the mocks
         simulation_env_config.configure_mock(**{
             "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
-            "simulation_env_input_config": pomdp_config
+            "simulation_env_input_config.local_intrusion_response_game_config.": pomdp_irg_config
+        })
+        simulation_env_config.configure_mock(**{
+            "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
+            "simulation_env_input_config.local_intrusion_response_game_config.": pomdp_irg_config
         })
         emulation_env_config.configure_mock(**{
             "name": "emulation-test-env"
