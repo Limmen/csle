@@ -86,12 +86,13 @@ class DQNPolicy(Policy):
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["save_path"] = self.save_path
-        if self.model is not None:
-            d["policy_kwargs"] = self.model.policy_kwargs
-            self.model.save(path=self.save_path)
-        else:
-            d["policy_kwargs"] = {}
-            d["policy_kwargs"]["net_arch"] = []
+        # TODO: fix kwargs
+        # if self.model is not None:
+        #     d["policy_kwargs"] = self.model.policy_kwargs
+        #     self.model.save(path=self.save_path)
+        # else:
+        #     d["policy_kwargs"] = {}
+        #     d["policy_kwargs"]["net_arch"] = []
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
