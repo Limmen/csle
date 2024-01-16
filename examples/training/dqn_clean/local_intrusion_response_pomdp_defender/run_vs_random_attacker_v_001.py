@@ -88,7 +88,7 @@ if __name__ == '__main__':
                                                          name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                          descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(1000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
