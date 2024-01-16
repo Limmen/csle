@@ -46,7 +46,7 @@ if __name__ == '__main__':
             agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000, name=agents_constants.DQN_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
             agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10, name=agents_constants.DQN_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
             agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500, name=agents_constants.DQN_CLEAN.T_N_FREQ, descr="the batch size of sample from the reply memory"),
-            agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=10000, name=agents_constants.DQN_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
+            agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=1000, name=agents_constants.DQN_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
             agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False, name=agents_constants.DQN_CLEAN.SAVE_MODEL, descr="decision param for model saving"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
                                                           name=agents_constants.COMMON.LEARNING_RATE,

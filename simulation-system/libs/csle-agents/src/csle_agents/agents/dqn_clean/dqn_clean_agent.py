@@ -91,7 +91,6 @@ class DQNCleanAgent(BaseAgent):
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
         # Algorithm specific arguments
 
-
     def linear_schedule(self, duration: int, t: int):
         slope = (self.end_e - self.start_e) / duration
         return max(slope * t + self.start_e, self.end_e)
@@ -197,7 +196,7 @@ class DQNCleanAgent(BaseAgent):
         :param seed: the random seed
         :retur: the updated experiment results, the environment and the trained model
         """
-        Logger.__call__().get_logger().info(f"[CleanPPO] Start training; seed: {seed}")
+        Logger.__call__().get_logger().info(f"[CleanDQN] Start training; seed: {seed}")
         # writer = SummaryWriter(f"runs/{run_name}")
         envs = gym.vector.SyncVectorEnv([self.make_env() for _ in range(self.num_envs)])
         assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
@@ -229,7 +228,10 @@ class DQNCleanAgent(BaseAgent):
         torch.backends.cudnn.deterministic = self.torch_deterministic
 
         target_network.load_state_dict(q_network.state_dict())
-
+        # print(self.buffer_size)
+        # print(envs.single_observation_space)
+        # print(envs.single_action_space)
+        # print(device)
         rb = ReplayBuffer(
             self.buffer_size,
             envs.single_observation_space,
@@ -238,7 +240,6 @@ class DQNCleanAgent(BaseAgent):
             handle_timeout_termination=False,
         )
         start_time = time.time()
-
         # TRY NOT TO MODIFY: start the game
         obs, _ = envs.reset(seed=seed)
         for global_step in range(self.total_timesteps):
@@ -250,24 +251,18 @@ class DQNCleanAgent(BaseAgent):
                 q_values = q_network(torch.Tensor(obs).to(device))
                 actions = torch.argmax(q_values, dim=1).cpu().numpy()
 
-            values = torch.zeros((self.num_steps, self.num_envs)).to(device)
-            dones = torch.zeros((self.num_steps, self.num_envs)).to(device)
-            rewards = torch.zeros((self.num_steps, self.num_envs)).to(device)
-            logprobs = torch.zeros((self.num_steps, self.num_envs)).to(device)
+
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
-            returns, advantages = self.generalized_advantage_estimation(model=q_network, next_obs=next_obs, rewards=rewards,
-                                                                        device=device, next_done=next_done,
-                                                                        dones=dones, values=values)
-
             # TRY NOT TO MODIFY: record rewards for plotting purposes
+
             if "final_info" in infos:
                 for info in infos["final_info"]:
                     if info and "episode" in info:
                         print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
-
+            
             # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
@@ -301,67 +296,19 @@ class DQNCleanAgent(BaseAgent):
                             self.tau * q_network_param.data + (1.0 - self.tau) * target_network_param.data
                         )
         # Logging
+        # OBS: It is buffer_size that determines the reward vector length
+        # print(np.mean(rb.rewards))
+
+
+        print(infos)
         time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
-        avg_R = round(float(np.mean(returns.flatten().cpu().numpy())), 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
-        # avg_T = float(np.mean(horizons))
-        # exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(
-        #     round(avg_T, 3))
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
-        running_avg_J = ExperimentUtil.running_average(
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-            round(running_avg_J, 3))
-        running_avg_T = ExperimentUtil.running_average(
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
-        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
-            round(running_avg_T, 3))
-        # Logger.__call__().get_logger().info(
-        #     f"[CleanPPO] Iteration: {iteration}/{self.num_iterations}, "
-        #     f"avg R: {avg_R}, "
-        #     f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-        #     f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
-        #     f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
-        #     f"{round(running_avg_T, 3)}, "
-        #     f"runtime: {time_elapsed_minutes} min")
+        # avg_R = round(float(np.mean(rb.rewards), 3))
+        # exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+        # no horizons 
         envs.close()
         base_env: BaseEnv = envs.envs[0].env.env.env
         return exp_result, base_env, q_network
-                        
-    def generalized_advantage_estimation(self, model: QNetwork, next_obs: torch.Tensor, rewards: torch.Tensor,
-                                         device: torch.device, next_done: torch.Tensor, dones: torch.Tensor,
-                                         values: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """
-        Computes the generalized advantage estimation (i.e., exponentially weighted average of n-step returns)
-        See (HIGH-DIMENSIONAL CONTINUOUS CONTROL USING GENERALIZED ADVANTAGE ESTIMATION, 2016, ICLR)
-
-        :param device: the device acted upon
-        :param values: tensor of values
-        :param model: the neural network model
-        :param rewards: tensor of available rewards
-        :param next_obs: the next observation
-        :param dones: tensor of done events
-        :param next_done: logical or operation between terminations and truncations
-        :return: returns, advantages
-        """
-        with torch.no_grad():
-            next_value = model.get_value(next_obs).reshape(1, -1)
-            advantages = torch.zeros_like(rewards).to(device)
-            lastgaelam = 0
-            for t in reversed(range(self.num_steps)):
-                if t == self.num_steps - 1:
-                    nextnonterminal = 1.0 - next_done
-                    nextvalues = next_value
-                else:
-                    nextnonterminal = 1.0 - dones[t + 1]
-                    nextvalues = values[t + 1]
-                delta = rewards[t] + self.gamma * nextvalues * nextnonterminal - values[t]
-                advantages[t] = lastgaelam = delta + self.gamma * self.gae_lambda * nextnonterminal * lastgaelam
-            returns = advantages + values
-            return returns, advantages
 
 
     def hparam_names(self) -> List[str]:
