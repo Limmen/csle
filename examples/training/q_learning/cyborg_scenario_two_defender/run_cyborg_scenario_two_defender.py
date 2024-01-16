@@ -22,13 +22,13 @@ if __name__ == '__main__':
 
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
-        maximum_steps=12, red_agent_distribution=[1.0], reduced_action_space=False, scanned_state=False,
+        maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, scanned_state=False,
         decoy_state=False, decoy_optimization=True)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = list(range(len(csle_cyborg_env.decoy_hosts)))
     S = csle_cyborg_env.decoy_state_space
     initial_state_dist = []
-    initial_state = csle_cyborg_env.decoy_state_space_lookup[(0, 0, 0, 0)]
+    initial_state = csle_cyborg_env.decoy_state_space_lookup[(0, 0, 0, 0, 0, 0, 0, 0)]
     for s in S:
         if s == initial_state:
             initial_state_dist.append(1)
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     )
 
     agent = QLearningAgent(simulation_env_config=simulation_env_config,
-                           experiment_config=experiment_config, save_to_metastore=True)
+                           experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

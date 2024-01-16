@@ -243,10 +243,24 @@ class CyborgEnvUtil:
         Gets the list of hosts to put decoys
 
         :param scenario: the cage scenario number
-        :return: the list of lists of decoy hosts
+        :return: the list of decoy hosts
         """
         if scenario == 2:
             return [1, 2, 3, 7]
+        else:
+            raise ValueError(f"Scenario: {scenario} not recognized")
+
+    @staticmethod
+    def get_hosts(scenario: int) -> List[int]:
+        """
+        Gets the list of hosts
+
+        :param scenario: the cage scenario number
+        :return: the list of hosts
+        """
+        if scenario == 2:
+            return [1, 2, 3, 7, 9, 10, 11, 12]
+            # return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         else:
             raise ValueError(f"Scenario: {scenario} not recognized")
 
@@ -261,16 +275,21 @@ class CyborgEnvUtil:
         if config.scenario == 2:
             decoy_actions = CyborgEnvUtil.get_decoy_actions_per_host(scenario=config.scenario)
             decoy_host_ids = CyborgEnvUtil.get_decoy_hosts(scenario=config.scenario)
+            host_ids = CyborgEnvUtil.get_hosts(scenario=config.scenario)
             lookup_table = {}
             hosts_lookup_tables: Dict[int, Dict[Tuple[int, int], int]] = {}
             states = []
             host_states = []
-            for host_id in decoy_host_ids:
+            for host_id in host_ids:
                 hosts_lookup_tables[host_id] = {}
                 h_states = []
                 h_state = 0
                 for scanned in [0, 1]:
-                    for host_state in range(len(decoy_actions[host_id]) + 1):
+                    if host_id in decoy_host_ids:
+                        decoy_a = decoy_actions[host_id]
+                    else:
+                        decoy_a = []
+                    for host_state in range(len(decoy_a) + 1):
                         h_states.append(h_state)
                         hosts_lookup_tables[host_id][(scanned, host_state)] = h_state
                         h_state += 1

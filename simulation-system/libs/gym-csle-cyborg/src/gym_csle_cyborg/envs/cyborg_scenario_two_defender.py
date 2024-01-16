@@ -95,7 +95,6 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param action_profile: the actions to take (both players actions
         :return: (obs, reward, terminated, truncated, info)
         """
-
         # Convert between different action spaces
         if self.config.reduced_action_space or self.config.decoy_optimization:
             action_type, host = self.action_id_to_type_and_host[action]
@@ -122,12 +121,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
 
         if self.config.decoy_optimization:
-            d_state = []
-            for host_id in self.decoy_hosts:
-                dec_state = len(self.decoy_state[host_id])
-                scanned = min(self.scan_state[host_id], 1)
-                d_state.append(self.decoy_state_space_hosts_lookup[host_id][(scanned, dec_state)])
-            o = np.array([self.decoy_state_space_lookup[tuple(d_state)]])
+            o = np.array([self.get_decoy_state()])
 
         self.t += 1
         if self.t >= self.config.maximum_steps:
@@ -174,12 +168,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         if self.config.scanned_state:
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
         if self.config.decoy_optimization:
-            d_state = []
-            for host in self.decoy_hosts:
-                dec_state = len(self.decoy_state[host])
-                scanned = min(self.scan_state[host], 1)
-                d_state.append(self.decoy_state_space_hosts_lookup[host][(scanned, dec_state)])
-            o = np.array([self.decoy_state_space_lookup[tuple(d_state)]])
+            o = np.array([self.get_decoy_state()])
         self.t = 1
         if len(self.traces) > 100:
             self.reset_traces()
@@ -299,6 +288,19 @@ class CyborgScenarioTwoDefender(BaseEnv):
             table.add_row(row)
         return table
 
+    def get_decoy_state(self) -> int:
+        """
+        Gets the current decoy state
+
+        :return: the decoy state
+        """
+        d_state = []
+        for host_id in CyborgEnvUtil.get_hosts(scenario=self.config.scenario):
+            dec_state = len(self.decoy_state[host_id])
+            scanned = min(self.scan_state[host_id], 1)
+            d_state.append(self.decoy_state_space_hosts_lookup[host_id][(scanned, dec_state)])
+        return self.decoy_state_space_lookup[tuple(d_state)]
+
     def render(self, mode: str = 'human'):
         """
         Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array
@@ -357,6 +359,15 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: None
         """
         self.model = model
+
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        raise NotImplementedError("This environment does not support the set_state method")
 
     def manual_play(self) -> None:
         """

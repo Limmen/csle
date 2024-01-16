@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 descr="number of steps in the environment for doing rollouts between policy updates"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=16, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
-            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.00005148,
+            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.002,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
@@ -66,7 +66,7 @@ if __name__ == '__main__':
                                                             name=agents_constants.PPO.NUM_GRADIENT_STEPS,
                                                             descr="number of gradient steps"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(2048) * 1500, name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(2048) * 3500, name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),

@@ -41,9 +41,9 @@ def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env, decoy_actions_or
     host_id_user_3 = csle_cyborg_env.cyborg_hostnames.index("User3")
     host_id_user_4 = csle_cyborg_env.cyborg_hostnames.index("User4")
     if t == 0:
-        return "Enterprise0"
+        return "User2"
     if t == 1:
-        return "Enterprise1"
+        return "User2"
     if t >= 2:
         if (true_table.rows[host_id_user_1][4] or true_table.rows[host_id_user_2][4]) and len(
                 decoy_state["Enterprise1"]) < len(decoy_actions_order["Enterprise1"]) and \
@@ -145,6 +145,10 @@ def eval(csle_cyborg_env) -> float:
             BlueAgentActionType.DECOY_APACHE,
             BlueAgentActionType.DECOY_TOMCAT,
             BlueAgentActionType.DECOY_VSFTPD
+        ],
+        "User2": [
+            BlueAgentActionType.DECOY_VSFTPD,
+            BlueAgentActionType.DECOY_SSHD
         ]
     }
     R = 0
@@ -157,7 +161,7 @@ def eval(csle_cyborg_env) -> float:
     for t in range(100):
         o, r, done, _, info = csle_cyborg_env.step(a)
         R += r
-        # print(f"time-step: {t+1}, cumulative reward: {R}, a: {a}")
+
         true_table = csle_cyborg_env.get_true_table()
         decoy_host = get_decoy_host(t=t + 1, decoy_state=decoy_state, true_table=true_table,
                                     csle_cyborg_env=csle_cyborg_env, decoy_actions_order=decoy_actions_order)
@@ -212,12 +216,15 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     csle_cyborg_env.reset()
     returns = []
-    num_evals = 100
+    num_evals = 1000
+    import random
+    random.seed(0)
     for i in range(num_evals):
-        print(f"{i}/{num_evals}")
+        print(f"{i}/{num_evals}, {np.mean(returns)}")
+        csle_cyborg_env.reset()
         returns.append(eval(csle_cyborg_env=csle_cyborg_env))
     print(np.mean(returns))
 
     # print(csle_cyborg_env.get_true_table())
-    # print(csle_cyborg_env.get_actions_table())
+    print(csle_cyborg_env.get_actions_table())
     # print(csle_cyborg_env.get_true_table())

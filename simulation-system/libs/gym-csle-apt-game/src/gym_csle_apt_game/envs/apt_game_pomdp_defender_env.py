@@ -21,7 +21,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         :param attacker_strategy: the strategy of the static attacker
         """
         self.config = config
-        self.stopping_game_env = AptGameEnv(config=self.config.apt_game_config)
+        self.apt_game_env = AptGameEnv(config=self.config.apt_game_config)
 
         # Setup spaces
         self.observation_space = self.config.apt_game_config.defender_observation_space()
@@ -51,10 +51,10 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
+        a2 = AptGameUtil.sample_attacker_action(pi2=pi2, s=self.apt_game_env.state.s)
 
         # Step the game
-        o, r, d, _, info = self.stopping_game_env.step((a1, (pi2, a2)))
+        o, r, d, _, info = self.apt_game_env.step((a1, (pi2, a2)))
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
         defender_obs = np.array([1, sum(defender_obs[1:])])
@@ -70,7 +70,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         :param options: optional configuration parameters
         :return: initial observation
         """
-        o, _ = self.stopping_game_env.reset()
+        o, _ = self.apt_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
         defender_obs_prime = np.array([1, sum(defender_obs[1:])])
@@ -108,7 +108,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         """
         :return: the list of simulation traces
         """
-        return self.stopping_game_env.get_traces()
+        return self.apt_game_env.get_traces()
 
     def reset_traces(self) -> None:
         """
@@ -116,7 +116,7 @@ class AptGamePomdpDefenderEnv(BaseEnv):
 
         :return: None
         """
-        return self.stopping_game_env.reset_traces()
+        return self.apt_game_env.reset_traces()
 
     def set_model(self, model) -> None:
         """
@@ -126,6 +126,15 @@ class AptGamePomdpDefenderEnv(BaseEnv):
         :return: None
         """
         self.model = model
+
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        self.apt_game_env.set_state(state=state)
 
     def manual_play(self) -> None:
         """
@@ -146,11 +155,11 @@ class AptGamePomdpDefenderEnv(BaseEnv):
             elif raw_input == "A":
                 print(f"Action space: {self.action_space}")
             elif raw_input == "S":
-                print(self.stopping_game_env.state)
+                print(self.apt_game_env.state)
             elif raw_input == "D":
                 print(done)
             elif raw_input == "H":
-                print(self.stopping_game_env.trace)
+                print(self.apt_game_env.trace)
             elif raw_input == "R":
                 print("Resetting the state")
                 self.reset()

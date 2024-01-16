@@ -7,7 +7,7 @@ if __name__ == '__main__':
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, decoy_state=False,
-        scanned_state=False)
+        scanned_state=False, decoy_optimization=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     a = 1
     R = 0

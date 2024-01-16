@@ -55,6 +55,8 @@ class COMMON:
     LEARNING_RATE_DECAY_RATE = "learning_rate_decay_rate"
     RUNTIME = "runtime"
     EVALUATE_WITH_DISCOUNT = "evaluate_with_discount"
+    STATE = "s"
+    OBSERVATION = "o"
 
 
 class PPO:

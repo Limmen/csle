@@ -186,6 +186,15 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        self.stopping_game_env.set_state(state=state)
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

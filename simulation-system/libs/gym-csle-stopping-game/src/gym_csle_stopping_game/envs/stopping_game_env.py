@@ -528,6 +528,24 @@ class StoppingGameEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: Union[StoppingGameState, int, Tuple[int, int]]) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        if isinstance(state, StoppingGameState):
+            self.state = state
+        elif type(state) is int or type(state) is np.int64:
+            self.state.s = state
+            self.state.l = self.config.L
+        elif type(state) is tuple:
+            self.state.s = state[0]
+            self.state.l = state[1]
+        else:
+            raise ValueError(f"state: {state} not valid")
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually
