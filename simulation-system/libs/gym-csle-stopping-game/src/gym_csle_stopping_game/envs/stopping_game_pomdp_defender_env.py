@@ -206,6 +206,15 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         return self.stopping_game_env.get_observation_from_history(
             history=history, pi2=self.static_attacker_strategy.stage_policy(o=0), l=l)
 
+    def is_state_terminal(self, state: Any) -> bool:
+        """
+        Utility funciton to check whether a state is terminal or not
+
+        :param state: the state
+        :return: None
+        """
+        return self.stopping_game_env.is_state_terminal(state=state)
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

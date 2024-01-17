@@ -1,4 +1,5 @@
-from typing import List, Union, Any
+from typing import List, Union, Any, Dict
+from csle_agents.agents.pomcp.node import Node
 from csle_agents.agents.pomcp.action_node import ActionNode
 from csle_agents.agents.pomcp.belief_node import BeliefNode
 
@@ -16,7 +17,7 @@ class BeliefTree:
         :param root_particles: the particles to add to the root belief node
         """
         self.tree_size = 0
-        self.nodes = {}
+        self.nodes: Dict[int, Union[Node, None]] = {}
         self.root = self.add(history=[], particle=root_particles, parent=None)
 
     def add(self, history: List[int], parent: Union[ActionNode, BeliefNode, None], action: Union[int, None] = None,
@@ -34,11 +35,13 @@ class BeliefTree:
         """
         # Create the node
         if action is not None:
-            new_node = ActionNode(self.tree_size, history, parent=parent, action=action)
+            new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action)
         else:
+            if observation is None:
+                raise ValueError("Invalid observation")
             new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation)
 
-        if particle is not None:
+        if particle is not None and isinstance(new_node, BeliefNode):
             new_node.add_particle(particle)
 
         # add the node to belief tree

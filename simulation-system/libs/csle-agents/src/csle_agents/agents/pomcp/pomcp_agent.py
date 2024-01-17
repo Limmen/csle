@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Optional, Any
+from typing import Union, List, Dict, Optional
 import math
 import time
 import gymnasium as gym
@@ -114,11 +114,6 @@ class POMCPAgent(BaseAgent):
             exp_result = self.pomcp(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                     random_seeds=self.experiment_config.random_seeds)
 
-            # Save latest trace
-            if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
-            self.env.reset_traces()
-
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
         exp_result.std_metrics = {}
@@ -153,9 +148,6 @@ class POMCPAgent(BaseAgent):
                 exp_result.avg_metrics[metric] = avg_metrics
                 exp_result.std_metrics[metric] = std_metrics
 
-        traces = self.env.get_traces()
-        if len(traces) > 0 and self.save_to_metastore:
-            MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
@@ -189,9 +181,9 @@ class POMCPAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         start: float = time.time()
-        objective_type = self.experiment_config.hparams[agents_constants.POMCP.OBJECTIVE_TYPE].value
+        # objective_type = self.experiment_config.hparams[agents_constants.POMCP.OBJECTIVE_TYPE].value
         rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
-        value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
+        # value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
@@ -205,13 +197,14 @@ class POMCPAgent(BaseAgent):
         c = self.experiment_config.hparams[agents_constants.POMCP.C].value
         max_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_DEPTH].value
         config = self.simulation_env_config.simulation_env_input_config
+        eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
         # Run N episodes
         for i in range(N):
 
             # Setup environments
             done = False
-            eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+            eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
             eval_env.reset()
             train_env.reset()
@@ -220,7 +213,8 @@ class POMCPAgent(BaseAgent):
                           planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy)
             R = 0
             t = 1
-
+            if t % log_steps_frequency == 0:
+                Logger.__call__().get_logger().info(f"[POMCP] t: {t}, b: {belief}")
             # Run episode
             while not done and t <= max_env_steps:
                 pomcp.solve(max_depth=max_depth)
@@ -257,8 +251,8 @@ class POMCPAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.get_traces()[-1])
+                if eval_env is not None and len(eval_env.get_traces()) > 0:
+                    training_job.simulation_traces.append(eval_env.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
                 if self.save_to_metastore:
@@ -271,6 +265,12 @@ class POMCPAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
+
+        if eval_env is not None:
+            # Save latest trace
+            if self.save_to_metastore:
+                MetastoreFacade.save_simulation_trace(eval_env.get_traces()[-1])
+            eval_env.reset_traces()
         return exp_result
 
     @staticmethod

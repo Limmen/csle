@@ -1,21 +1,26 @@
 from typing import List, Dict, Union
 import numpy as np
-import numpy.typing as npt
+from csle_agents.agents.pomcp.node import Node
 from collections import Counter
 
 
 class POMCPUtil:
+    """
+    Class with utility functions related to POMCP
+    """
 
     @staticmethod
-    def sample_from_distribution(probability_vector: List[float]) -> npt.NDArray[float]:
+    def sample_from_distribution(probability_vector: List[float]) -> int:
         """
-        Utility function to normalize a probability vector and avoid numpy floating point issues
+        Utility function to sample from a probability vector
 
-        :param probability_vector: the probability vector to normalize
-        :return: the normalized vector
+        :param probability_vector: the probability vector to sample from
+        :return: the sampled element
         """
-        probability_vector = np.array(probability_vector)
-        return np.random.choice(list(range(len(probability_vector))), p=probability_vector / probability_vector.sum())
+        probability_vector_np = np.array(probability_vector)
+        sample = np.random.choice(list(range(len(probability_vector_np))),
+                                  p=probability_vector_np / probability_vector_np.sum())
+        return int(sample)
 
     @staticmethod
     def rand_choice(candidates: List[int]) -> int:
@@ -25,7 +30,7 @@ class POMCPUtil:
         :param candidates: the list to sample from
         :return: the sample
         """
-        return np.random.choice(candidates)
+        return int(np.random.choice(candidates))
 
     @staticmethod
     def convert_samples_to_distribution(samples) -> Dict[int, float]:
@@ -53,7 +58,7 @@ class POMCPUtil:
         # by default use uniform distribution for particles generation
         if probability_vector is None:
             probability_vector = [1 / len(states)] * len(states)
-        return [states[POMCPUtil.sample_from_distribution(probability_vector)] for _ in range(num_particles)]
+        return [states[int(POMCPUtil.sample_from_distribution(probability_vector))] for _ in range(num_particles)]
 
     @staticmethod
     def ucb(history_visit_count, action_visit_count):
@@ -74,7 +79,7 @@ class POMCPUtil:
         return np.sqrt(np.log(history_visit_count) / action_visit_count)
 
     @staticmethod
-    def ucb_acquisition_function(action: "ActionNode", c: float) -> float:
+    def ucb_acquisition_function(action: "Node", c: float) -> float:
         """
         The UCB acquisition function
 
@@ -82,4 +87,4 @@ class POMCPUtil:
         :param c: the exploration parameter
         :return: the acquisition value of the action
         """
-        return action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count)
+        return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))

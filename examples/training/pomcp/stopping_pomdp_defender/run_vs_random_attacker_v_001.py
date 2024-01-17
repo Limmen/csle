@@ -54,7 +54,7 @@ if __name__ == '__main__':
     O = simulation_env_config.simulation_env_input_config.stopping_game_config.O
     b1 = simulation_env_config.simulation_env_input_config.stopping_game_config.b1
     rollout_policy = MultiThresholdStoppingPolicy(
-        theta=[0.7], simulation_name=simulation_name, L=stopping_game_config.L,
+        theta=[0.75], simulation_name=simulation_name, L=stopping_game_config.L,
         states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions, experiment_config=None,
         avg_R=-1, agent_type=AgentType.POMCP, opponent_strategy=None)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                                                  descr="the discount factor"),
             agents_constants.POMCP.INITIAL_BELIEF: HParam(value=b1, name=agents_constants.POMCP.INITIAL_BELIEF,
                                                           descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=40, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=60, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
@@ -90,8 +90,8 @@ if __name__ == '__main__':
                                                      descr="the maximum depth for planning"),
             agents_constants.POMCP.C: HParam(value=0.2, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
-            agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY,
-                                             descr="frequency of logging time-steps"),
+            agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
+                value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of evaluation episodes"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(

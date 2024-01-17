@@ -72,7 +72,7 @@ class POMCP:
         """
         if depth > max_depth:
             return 0
-        if self.rollout_policy is None:
+        if self.rollout_policy is None or self.env.is_state_terminal(state):
             a = POMCPUtil.rand_choice(self.A)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history))
@@ -83,7 +83,7 @@ class POMCP:
         return float(r) + self.gamma * self.rollout(state=s_prime, history=history + [a, o], depth=depth + 1,
                                                     max_depth=max_depth)
 
-    def simulate(self, state: int, max_depth: int, c: float, depth=0, history: Union[List[int], None] = None,
+    def simulate(self, state: int, max_depth: int, c: float, history: List[int], depth=0,
                  parent=Union[None, BeliefNode, ActionNode]) -> float:
         """
         Performs the POMCP simulation starting from a given belief node and a sampled state
@@ -102,10 +102,8 @@ class POMCP:
             return 0
 
         # Check if the new history has already been visited in the past of should be added as a new node to the tree
-        obs_h = None
-        if history is not None and len(history) > 0:
-            obs_h = history[-1]
-        current_node = self.tree.find_or_create(history=history, parent=parent, observation=obs_h)
+        observation = history[-1]
+        current_node = self.tree.find_or_create(history=history, parent=parent, observation=observation)
 
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
@@ -169,7 +167,7 @@ class POMCP:
         """
         root = self.tree.root
         action_vals = [(action.value, action.action) for action in root.children]
-        return max(action_vals)[1]
+        return int(max(action_vals)[1])
 
     def update_tree_with_new_samples(self, action: int, observation: int) -> List[float]:
         """
@@ -203,6 +201,7 @@ class POMCP:
                                          observation=observation, particle=particles)
 
         # Check how many new particles are left to fill
+        new_root.particles = []
         particle_slots = self.max_particles - len(new_root.particles)
         if particle_slots > 0:
             # fill particles by Monte-Carlo using reject sampling

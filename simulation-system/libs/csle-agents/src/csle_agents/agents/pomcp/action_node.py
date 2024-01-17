@@ -19,10 +19,10 @@ class ActionNode(Node):
         :param value: the value of the node
         :param visit_count: the visit count of the node
         """
-        Node.__init__(self, id=id, history=history, parent=parent, value=value, visit_count=visit_count)
+        Node.__init__(self, id=id, history=history, parent=parent, value=value, visit_count=visit_count, action=action,
+                      observation=-1)
         self.mean_immediate_reward: float = 0.0
-        self.action: int = action
-        self.observation_to_node_map: Dict[int, "BeliefNode"] = {}
+        self.observation_to_node_map: Dict[int, Node] = {}
 
     def update_stats(self, immediate_reward: float) -> None:
         """
@@ -34,7 +34,7 @@ class ActionNode(Node):
         self.mean_immediate_reward = (self.mean_immediate_reward * self.visit_count + immediate_reward) / \
                                      (self.visit_count + 1)
 
-    def add_child(self, node: "BeliefNode") -> None:
+    def add_child(self, node: Node) -> None:
         """
         Adds a child node to the tree. Since an action is always followed by an observation in the history, the next
         node will be an observation/belief node
@@ -45,11 +45,11 @@ class ActionNode(Node):
         self.children.append(node)
         self.observation_to_node_map[node.observation] = node
 
-    def get_child(self, observation: int) -> Union[None, "BeliefNode"]:
+    def get_child(self, key: int) -> Union[None, Node]:
         """
         Gets the child node corresponding to a specific observation
 
-        :param observation: the observation to get the node for
+        :param key: the observation to get the node for
         :return: the child node or None if it was not found
         """
-        return self.observation_to_node_map.get(observation, None)
+        return self.observation_to_node_map.get(key, None)

@@ -21,12 +21,12 @@ class BeliefNode(Node):
         :param value: the value of the node (mean return of all simulations starting from this node)
         :param visit_count: the number of times the node has been visited in simulations
         """
-        Node.__init__(self, id=id, history=history, parent=parent, value=value, visit_count=visit_count)
-        self.observation = observation
-        self.particles = []
-        self.action_to_node_map: Dict[int, "ActionNode"] = {}
+        Node.__init__(self, id=id, history=history, parent=parent, value=value, visit_count=visit_count,
+                      observation=observation, action=-1)
+        self.particles: List[int] = []
+        self.action_to_node_map: Dict[int, Node] = {}
 
-    def add_child(self, node: "ActionNode") -> None:
+    def add_child(self, node: Node) -> None:
         """
         Adds a child node to this node. Since an observation is always followed by an action in the history, the next
         node will be an action node
@@ -37,14 +37,14 @@ class BeliefNode(Node):
         self.children.append(node)
         self.action_to_node_map[node.action] = node
 
-    def get_child(self, action: int) -> Union["ActionNode", None]:
+    def get_child(self, key: int) -> Union[Node, None]:
         """
         Gets the child node corresponding to a specific action
 
-        :param action: the action to get the node for
+        :param key: the action to get the node for
         :return: the node or None if it was not found
         """
-        return self.action_to_node_map.get(action, None)
+        return self.action_to_node_map.get(key, None)
 
     def sample_state(self) -> int:
         """
@@ -63,5 +63,5 @@ class BeliefNode(Node):
         """
         if type(particle) is list:
             self.particles.extend(particle)
-        else:
+        elif type(particle) is int:
             self.particles.append(particle)

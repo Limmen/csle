@@ -431,7 +431,6 @@ class StoppingGameEnv(BaseEnv):
                     attacker_action = intrusion_seq[t]
                 else:
                     attacker_action = EmulationAttackerStoppingActions.CONTINUE(index=-1)
-                print(f"emulation a1:{defender_action}, emulation a2:{attacker_action}")
                 emulation_trace, s = Emulator.run_actions(
                     s=s,
                     emulation_env_config=emulation_env_config, attacker_action=attacker_action,
@@ -546,7 +545,23 @@ class StoppingGameEnv(BaseEnv):
         else:
             raise ValueError(f"state: {state} not valid")
 
-    def get_observation_from_history(self, history: List[int], pi2: npt.NDArray, l: int) -> List[Any]:
+    def is_state_terminal(self, state: Union[StoppingGameState, int, Tuple[int, int]]) -> bool:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        if isinstance(state, StoppingGameState):
+            return state.s == 2
+        elif type(state) is int or type(state) is np.int64:
+            return state == 2
+        elif type(state) is tuple:
+            return state[0] == 2
+        else:
+            raise ValueError(f"state: {state} not valid")
+
+    def get_observation_from_history(self, history: List[int], pi2: npt.NDArray[Any], l: int) -> List[Any]:
         """
         Utility method to get a hidden observation based on a history
 
@@ -558,13 +573,13 @@ class StoppingGameEnv(BaseEnv):
         b = self.config.b1.copy()
         l = l
         t = 0
-        while t < len(history)-1:
-            o = history[t]
-            a1 = history[t+1]
+        while t < len(history) - 1:
+            a1 = history[t]
+            o = history[t + 1]
             b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=pi2, config=self.config, l=l, a2=0)
-            l = l-a1
-            t+=2
-        return [l, b]
+            l = l - a1
+            t += 2
+        return [l, b[1]]
 
     def manual_play(self) -> None:
         """
