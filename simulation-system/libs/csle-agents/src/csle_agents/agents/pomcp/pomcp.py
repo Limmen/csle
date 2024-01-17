@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Callable, Any
 import time
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -17,7 +17,8 @@ class POMCP:
 
     def __init__(self, S: List[int], O: List[int], A: List[int], gamma: float, env: BaseEnv, c: float,
                  initial_belief: List[float], planning_time: float = 0.5, max_particles: int = 350,
-                 reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None) -> None:
+                 reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
+                 value_function: Union[Callable[[Any], float], None] = None) -> None:
         """
         Initializes the solver
 
@@ -43,6 +44,7 @@ class POMCP:
         self.max_particles = max_particles
         self.reinvigorated_particles_ratio = reinvigorated_particles_ratio
         self.rollout_policy = rollout_policy
+        self.value_function = value_function
         root_particles = POMCPUtil.generate_particles(
             states=self.S, num_particles=self.max_particles, probability_vector=initial_belief)
         self.tree = BeliefTree(root_particles=root_particles)
@@ -71,7 +73,11 @@ class POMCP:
         :return: the estimated value of the root node
         """
         if depth > max_depth:
-            return 0
+            if self.value_function is not None:
+                o = self.env.get_observation_from_history(history=history)
+                return self.value_function(o)
+            else:
+                return 0
         if self.rollout_policy is None or self.env.is_state_terminal(state):
             a = POMCPUtil.rand_choice(self.A)
         else:
@@ -99,10 +105,16 @@ class POMCP:
 
         # Check if we have reached the maximum depth of the tree
         if depth > max_depth:
-            return 0
+            if len(history) > 0 and self.value_function is not None:
+                o = self.env.get_observation_from_history(history=history)
+                return self.value_function(o)
+            else:
+                return 0
 
         # Check if the new history has already been visited in the past of should be added as a new node to the tree
-        observation = history[-1]
+        observation = -1
+        if len(history) > 0:
+            observation = history[-1]
         current_node = self.tree.find_or_create(history=history, parent=parent, observation=observation)
 
         # If a new node was created, then it has no children, in which case we should stop the search and

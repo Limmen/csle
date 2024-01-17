@@ -38,7 +38,7 @@ class BeliefTree:
             new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action)
         else:
             if observation is None:
-                raise ValueError("Invalid observation")
+                observation = 0
             new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation)
 
         if particle is not None and isinstance(new_node, BeliefNode):

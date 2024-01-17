@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 import numpy as np
 from csle_agents.agents.pomcp.node import Node
 from collections import Counter
@@ -23,14 +23,14 @@ class POMCPUtil:
         return int(sample)
 
     @staticmethod
-    def rand_choice(candidates: List[int]) -> int:
+    def rand_choice(candidates: List[int]) -> Any:
         """
         Selects an element from a given list uniformly at random
 
         :param candidates: the list to sample from
         :return: the sample
         """
-        return int(np.random.choice(candidates))
+        return np.random.choice(candidates)
 
     @staticmethod
     def convert_samples_to_distribution(samples) -> Dict[int, float]:

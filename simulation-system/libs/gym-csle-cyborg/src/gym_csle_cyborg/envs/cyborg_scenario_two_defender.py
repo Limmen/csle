@@ -369,6 +369,15 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         raise NotImplementedError("This environment does not support the set_state method")
 
+    def get_observation_from_history(self, history: List[int]) -> List[Any]:
+        """
+        Utility function to get a defender observation from a history
+
+        :param history: the history to get the observation form
+        :return: the observation
+        """
+        raise NotImplementedError("This environment does not support the get_observation_from_history method")
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

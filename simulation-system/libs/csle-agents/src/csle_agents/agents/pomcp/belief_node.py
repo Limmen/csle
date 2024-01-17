@@ -52,7 +52,8 @@ class BeliefNode(Node):
 
         :return: the sampled state
         """
-        return POMCPUtil.rand_choice(self.particles)
+        sample = POMCPUtil.rand_choice(self.particles)
+        return int(sample)
 
     def add_particle(self, particle: Union[int, List[int]]) -> None:
         """

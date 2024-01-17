@@ -577,7 +577,7 @@ class StoppingGameEnv(BaseEnv):
             a1 = history[t]
             o = history[t + 1]
             b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=pi2, config=self.config, l=l, a2=0)
-            l = l - a1
+            l = max(l - a1, 0)
             t += 2
         return [l, b[1]]
 

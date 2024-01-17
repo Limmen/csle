@@ -181,9 +181,8 @@ class POMCPAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         start: float = time.time()
-        # objective_type = self.experiment_config.hparams[agents_constants.POMCP.OBJECTIVE_TYPE].value
         rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
-        # value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
+        value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
@@ -210,7 +209,8 @@ class POMCPAgent(BaseAgent):
             train_env.reset()
             belief = b1.copy()
             pomcp = POMCP(S=S, O=O, A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
-                          planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy)
+                          planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy,
+                          value_function=value_function)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
