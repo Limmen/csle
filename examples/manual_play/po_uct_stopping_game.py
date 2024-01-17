@@ -14,29 +14,6 @@ import csle_agents.constants.constants as constants
 from collections import Counter
 
 
-def simulate_action(transition_tensor, states, observations, observation_tensor, reward_tensor,
-                    si, ai, a2, l):
-    """
-    Query the resultant new state, observation and rewards, if action ai is taken from state si
-
-    si: current state
-    ai: action taken at the current state
-    return: next state, observation and reward
-    """
-    # get new state
-    s_probs = [transition_tensor[l][ai][a2][si][sj] for sj in states]
-    state = states[sample_from_distribution(s_probs)]
-
-    # get new observation
-    o_probs = [observation_tensor[ai][a2][state][oj] for oj in observations]
-    observation = observations[sample_from_distribution(o_probs)]
-
-    # get new reward
-    # reward = self.reward_function(ai, si, sj, observation) #  --- THIS IS MORE GENERAL!
-    reward = reward_tensor[l][ai][a2][si]
-    return state, observation, reward
-
-
 def sample_from_distribution(probability_vector: List[float]) -> npt.NDArray[float]:
     """
     Utility function to normalize a probability vector and avoid numpy floating point issues

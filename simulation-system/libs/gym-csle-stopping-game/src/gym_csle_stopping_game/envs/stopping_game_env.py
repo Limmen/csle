@@ -546,6 +546,26 @@ class StoppingGameEnv(BaseEnv):
         else:
             raise ValueError(f"state: {state} not valid")
 
+    def get_observation_from_history(self, history: List[int], pi2: npt.NDArray, l: int) -> List[Any]:
+        """
+        Utility method to get a hidden observation based on a history
+
+        :param history: the history to get the observation from
+        :param pi2: the attacker stage strategy
+        :param l: the number of stops remaining
+        :return: the observation
+        """
+        b = self.config.b1.copy()
+        l = l
+        t = 0
+        while t < len(history)-1:
+            o = history[t]
+            a1 = history[t+1]
+            b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=pi2, config=self.config, l=l, a2=0)
+            l = l-a1
+            t+=2
+        return [l, b]
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

@@ -24,7 +24,7 @@ if __name__ == '__main__':
         agent_type=AgentType.RANDOM_SEARCH,
         log_every=1,
         hparams={
-            agents_constants.RANDOM_SEARCH.N: HParam(value=50, name=constants.T_SPSA.N,
+            agents_constants.RANDOM_SEARCH.N: HParam(value=50, name=agents_constants.RANDOM_SEARCH.N,
                                                      descr="the number of training iterations"),
             agents_constants.RANDOM_SEARCH.DELTA: HParam(value=0.5, name=agents_constants.RANDOM_SEARCH.DELTA,
                                                          descr="the step size for random perturbations"),

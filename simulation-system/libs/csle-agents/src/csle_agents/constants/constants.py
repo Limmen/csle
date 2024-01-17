@@ -541,3 +541,23 @@ class LOCAL_DFSP:
     AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
     RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
     N_2 = "N_2"
+
+
+class POMCP:
+    """
+    String constants related to POMCP
+    """
+    ROLLOUT_POLICY = "rollout_policy"
+    VALUE_FUNCTION = "value_function"
+    OBJECTIVE_TYPE = "objective_type"
+    S = "S"
+    N = "N"
+    A = "A"
+    O = "O"
+    GAMMA = "gamma"
+    INITIAL_BELIEF = "initial_belief"
+    PLANNING_TIME = "planning_time"
+    MAX_PARTICLES = "max_particles"
+    C = "c"
+    MAX_DEPTH = "max_depth"
+    LOG_STEP_FREQUENCY = "log_step_frequency"

@@ -195,6 +195,17 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         self.stopping_game_env.set_state(state=state)
 
+    def get_observation_from_history(self, history: List[int]) -> List[Any]:
+        """
+        Utiltiy function to get a defender observatin (belief) from a history
+
+        :param history: the history to get the observation form
+        :return: the observation
+        """
+        l = self.config.stopping_game_config.L
+        return self.stopping_game_env.get_observation_from_history(
+            history=history, pi2=self.static_attacker_strategy.stage_policy(o=0), l=l)
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually
