@@ -102,3 +102,22 @@ def example_defender_strategy(
         theta=theta, simulation_name="test", L=2, player_type=PlayerType.DEFENDER, states=[example_state],
         actions=[example_action], experiment_config=example_experiment_config, avg_R=0.9, agent_type=AgentType.T_SPSA,
         opponent_strategy=None)
+
+
+@pytest.fixture
+def example_attacker_strategy(
+        example_state: State, example_action: Action, example_experiment_config: ExperimentConfig) \
+        -> MultiThresholdStoppingPolicy:
+    """
+    Fixture that returns an example MultiThresholdStoppingPolicy object
+
+    :param example_state: an example State
+    :param example_action: an example Action
+    :param example_experiment_config: an example ExperimentConfig
+    :return: an example MultiThresholdStoppingPolicy object
+    """
+    theta = [0.2, 0.8]
+    return MultiThresholdStoppingPolicy(
+        theta=theta, simulation_name="test", L=2, player_type=PlayerType.DEFENDER, states=[example_state],
+        actions=[example_action], experiment_config=example_experiment_config, avg_R=0.9, agent_type=AgentType.T_SPSA,
+        opponent_strategy=None)
