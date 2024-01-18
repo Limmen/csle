@@ -1,4 +1,5 @@
 from typing import Tuple, Dict, List, Any, Union
+from copy import deepcopy
 import time
 import numpy as np
 from prettytable import PrettyTable
@@ -10,7 +11,7 @@ from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
-from gym_csle_cyborg.dao.acitvity_type import ActivityType
+from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
@@ -84,7 +85,13 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
 
+        # Lookup dict of states
+        self.visited_cyborg_states: Dict[int, Any] = {}
+        self.visited_scanned_states: Dict[int, List[int]] = {}
+        self.visited_decoy_states: Dict[int, List[List[BlueAgentActionType]]] = {}
+
         # Reset
+        self.initial_belief = {1: 1.0}
         self.reset()
         super().__init__()
 
@@ -164,7 +171,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         for i in range(len(self.cyborg_hostnames)):
             self.scan_state.append(env_constants.CYBORG.NOT_SCANNED)
             self.decoy_state.append([])
-        info = self.populate_info(info=dict(info), obs=o)
+        info = self.populate_info(info=dict(info), obs=o, reset=True)
         if self.config.scanned_state:
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
         if self.config.decoy_optimization:
@@ -177,12 +184,13 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
         return np.array(o), info
 
-    def populate_info(self, info: Dict[str, Any], obs: npt.NDArray[Any]) -> Dict[str, Any]:
+    def populate_info(self, info: Dict[str, Any], obs: npt.NDArray[Any], reset: bool = False) -> Dict[str, Any]:
         """
         Populates the info dict
 
         :param obs: the latest obs
         :param info: the dict to populate
+        :param reset: boolean flag indicating whether this was called from reset or not
         :return: the populated dict
         """
         info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
@@ -209,6 +217,39 @@ class CyborgScenarioTwoDefender(BaseEnv):
             info[env_constants.CYBORG.OBS_PER_HOST].append(host_obs)
             host_vector_obs.append(self.scan_state[i])
             info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
+        host_ids = list(self.cyborg_hostname_to_id.values())
+        state_vector = CyborgEnvUtil.state_to_vector(state=self.get_true_table().rows,
+                                                     decoy_state=self.decoy_state,
+                                                     host_ids=host_ids,
+                                                     scan_state=self.scan_state)
+        state_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=state_vector)
+        if reset:
+            self.initial_belief = {state_id: 1}
+        obs_vector = CyborgEnvUtil.state_to_vector(state=self.get_table().rows,
+                                                   decoy_state=self.decoy_state,
+                                                   host_ids=host_ids, scan_state=self.scan_state, observation=True)
+        obs_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vector, observation=True)
+        info[env_constants.ENV_METRICS.STATE] = state_id
+        info[env_constants.ENV_METRICS.OBSERVATION] = obs_id
+        if state_id not in self.visited_cyborg_states:
+            agent_interfaces_copy = {}
+            for k, v in self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces.items():
+                agent_interfaces_copy[k] = v.copy()
+            self.visited_cyborg_states[state_id] = \
+                (deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.state),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.scanned_ips),
+                 agent_interfaces_copy,
+                 self.cyborg_challenge_env.env.env.env.env.env.environment_controller.done,
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.reward),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions),
+                 self.cyborg_challenge_env.env.env.env.env.env.environment_controller.step,
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.hostname_ip_map),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.subnet_cidr_map),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation),
+                 self.cyborg_challenge_env.env.env.env.env.step_counter
+                 )
+            self.visited_scanned_states[state_id] = self.scan_state.copy()
+            self.visited_decoy_states[state_id] = self.decoy_state.copy()
         return info
 
     def get_table(self) -> PrettyTable:
@@ -367,7 +408,37 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param state: the state
         :return: None
         """
-        raise NotImplementedError("This environment does not support the set_state method")
+        s = int(state)
+        if s in self.visited_cyborg_states:
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.state = \
+                self.visited_cyborg_states[s][0]
+            self.cyborg_challenge_env.env.env.env.env.scanned_ips = self.visited_cyborg_states[s][1]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces \
+                = self.visited_cyborg_states[s][2]
+            for k, v in self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces.items():
+                v.action_space.create_action_params()
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.done = self.visited_cyborg_states[s][3]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.reward = \
+                self.visited_cyborg_states[s][4]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions = \
+                self.visited_cyborg_states[s][5]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.step = \
+                self.visited_cyborg_states[s][6]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.hostname_ip_map = \
+                self.visited_cyborg_states[s][7]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.subnet_cidr_map = \
+                self.visited_cyborg_states[s][8]
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation = \
+                self.visited_cyborg_states[s][9]
+            self.cyborg_challenge_env.env.env.env.env.step_counter = self.visited_cyborg_states[s][10]
+            # self.cyborg_challenge_env.env.env.env.env.observation_change(
+            #     self.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation)
+            # self.cyborg_challenge_env.env.env.env.observation_change(
+            #     self.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation)
+            self.decoy_state = self.visited_decoy_states[s]
+            self.scan_state = self.visited_scanned_states[s]
+        else:
+            raise NotImplementedError(f"Unknown state: {s}")
 
     def get_observation_from_history(self, history: List[int]) -> List[Any]:
         """
@@ -376,7 +447,20 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param history: the history to get the observation form
         :return: the observation
         """
-        raise NotImplementedError("This environment does not support the get_observation_from_history method")
+        obs_id = history[-1]
+        obs = CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)
+        return obs
+
+    def get_action_space(self) -> List[int]:
+        """
+        Gets the action space of the defender
+
+        :return: a list of action ids
+        """
+        if self.config.reduced_action_space:
+            return list(self.action_id_to_type_and_host.keys())
+        else:
+            return list(self.cyborg_action_id_to_type_and_host.keys())
 
     def manual_play(self) -> None:
         """

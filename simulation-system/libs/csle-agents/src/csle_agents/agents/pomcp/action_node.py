@@ -7,7 +7,7 @@ class ActionNode(Node):
     A node in the POMCP history tree where the last element of the history was an action
     """
 
-    def __init__(self, id: int, history: List[int], action: int, parent=None, value: float = 0.0,
+    def __init__(self, id: int, history: List[int], action: int, parent=None, value: float = -2000,
                  visit_count: int = 0) -> None:
         """
         Initializes the node

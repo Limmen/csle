@@ -1,4 +1,4 @@
-from typing import List, Union, Callable, Any
+from typing import List, Union, Callable, Any, Dict
 import time
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -8,6 +8,7 @@ from csle_agents.agents.pomcp.belief_node import BeliefNode
 from csle_agents.agents.pomcp.action_node import ActionNode
 from csle_agents.agents.pomcp.pomcp_util import POMCPUtil
 import csle_agents.constants.constants as constants
+from csle_common.logging.log import Logger
 
 
 class POMCP:
@@ -15,15 +16,16 @@ class POMCP:
     Class that implements the POMCP algorithm
     """
 
-    def __init__(self, S: List[int], O: List[int], A: List[int], gamma: float, env: BaseEnv, c: float,
-                 initial_belief: List[float], planning_time: float = 0.5, max_particles: int = 350,
+    def __init__(self, A: List[int], gamma: float, env: BaseEnv, c: float,
+                 initial_belief: Dict[int, float], planning_time: float = 0.5, max_particles: int = 350,
+                 reinvigoration: bool = False,
                  reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
-                 value_function: Union[Callable[[Any], float], None] = None) -> None:
+                 value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
+                 default_node_value: float = 0) -> None:
         """
         Initializes the solver
 
         :param S: the state space
-        :param O: the observation space
         :param A: the action space
         :param gamma: the discount factor
         :param env: the environment for sampling
@@ -32,10 +34,11 @@ class POMCP:
         :param planning_time: the planning time
         :param max_particles: the maximum number of particles (samples) for the belief state
         :param reinvigorated_particles_ratio: probability of new particles added when updating the belief state
+        :param reinvigoration: boolean flag indicating whether reinvigoration should be done
         :param rollout_policy: the rollout policy
+        :param verbose: boolean flag indicating whether logging should be verbose
+        :param default_node_value: the default value of nodes in the tree
         """
-        self.S = S
-        self.O = O
         self.A = A
         self.env = env
         self.gamma = gamma
@@ -45,20 +48,23 @@ class POMCP:
         self.reinvigorated_particles_ratio = reinvigorated_particles_ratio
         self.rollout_policy = rollout_policy
         self.value_function = value_function
-        root_particles = POMCPUtil.generate_particles(
-            states=self.S, num_particles=self.max_particles, probability_vector=initial_belief)
-        self.tree = BeliefTree(root_particles=root_particles)
+        self.initial_belief = initial_belief
+        self.reinvigoration = reinvigoration
+        self.default_node_value = default_node_value
+        root_particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=initial_belief)
+        self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value)
+        self.verbose = verbose
 
-    def compute_belief(self) -> List[float]:
+    def compute_belief(self) -> Dict[int, float]:
         """
         Computes the belief state based on the particles
 
         :return: the belief state
         """
-        belief_state = [0.0] * len(self.S)
+        belief_state = {}
         particle_distribution = POMCPUtil.convert_samples_to_distribution(self.tree.root.particles)
         for state, prob in particle_distribution.items():
-            belief_state[list(self.S).index(state)] = round(prob, 6)
+            belief_state[state] = round(prob, 6)
         return belief_state
 
     def rollout(self, state: int, history: List[int], depth: int, max_depth: int) -> float:
@@ -85,6 +91,8 @@ class POMCP:
         self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]
+        if s_prime not in self.initial_belief:
+            self.initial_belief[s_prime] = 0.0
         o = info[constants.COMMON.OBSERVATION]
         return float(r) + self.gamma * self.rollout(state=s_prime, history=history + [a, o], depth=depth + 1,
                                                     max_depth=max_depth)
@@ -122,7 +130,7 @@ class POMCP:
         if not current_node.children:
             # since the node does not have any children, we first add them to the node
             for action in self.A:
-                self.tree.add(history + [action], parent=current_node, action=action)
+                self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
             # Perform the rollout and return the value
             return self.rollout(state, history, depth, max_depth)
 
@@ -138,6 +146,8 @@ class POMCP:
         _, r, _, _, info = self.env.step(a)
         o = info[constants.COMMON.OBSERVATION]
         s_prime = info[constants.COMMON.STATE]
+        if s_prime not in self.initial_belief:
+            self.initial_belief[s_prime] = 0.0
 
         # Recursive call, continue the simulation from the new node
         R = float(r) + self.gamma * self.simulate(
@@ -169,6 +179,8 @@ class POMCP:
             n += 1
             state = self.tree.root.sample_state()
             self.simulate(state, max_depth=max_depth, history=self.tree.root.history, c=self.c)
+            if self.verbose:
+                Logger.__call__().get_logger().info(f"Simulation time left {self.planning_time - time.time() + begin}s")
 
     def get_action(self) -> int:
         """
@@ -179,9 +191,13 @@ class POMCP:
         """
         root = self.tree.root
         action_vals = [(action.value, action.action) for action in root.children]
+        if self.verbose:
+            for a in root.children:
+                Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
+                                                    f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action: int, observation: int) -> List[float]:
+    def update_tree_with_new_samples(self, action: int, observation: int) -> Dict[int, float]:
         """
         Updates the tree after an action has been selected and a new observation been received
 
@@ -193,7 +209,11 @@ class POMCP:
 
         # Since we executed an action we advance the tree and update the root to the the node corresponding to the
         # action that was selected
-        new_root = root.get_child(action).get_child(observation)
+        child = root.get_child(action)
+        if child is not None:
+            new_root = child.get_child(observation)
+        else:
+            raise ValueError("Could not find child node")
 
         # If we did not have a node in the tree corresponding to the observation that was observed, we select a random
         # belief node to be the new root (note that the action child node will always exist by definition of the
@@ -201,24 +221,32 @@ class POMCP:
         if new_root is None:
             # Get the action node
             action_node = root.get_child(action)
+            if action_node is None:
+                raise ValueError("Chould not find the action node")
 
             if action_node.children:
                 # If the action node has belief state nodes, select a random of them to be the new root
                 new_root = POMCPUtil.rand_choice(action_node.children)
             else:
                 # or create the new belief node randomly
-                particles = POMCPUtil.generate_particles(states=self.S, num_particles=self.max_particles,
-                                                         probability_vector=None)
+                random_belief = {}
+                for s in list(self.initial_belief.keys()):
+                    random_belief[s] = 1 / len(self.initial_belief)
+                particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=random_belief)
                 new_root = self.tree.add(history=action_node.history + [observation], parent=action_node,
-                                         observation=observation, particle=particles)
+                                         observation=observation, particle=particles, value=self.default_node_value)
 
         # Check how many new particles are left to fill
-        new_root.particles = []
-        particle_slots = self.max_particles - len(new_root.particles)
+        if isinstance(new_root, BeliefNode):
+            particle_slots = self.max_particles - len(new_root.particles)
+        else:
+            raise ValueError("Invalid root node")
         if particle_slots > 0:
             # fill particles by Monte-Carlo using reject sampling
             particles = []
             while len(particles) < particle_slots:
+                if self.verbose:
+                    Logger.__call__().get_logger().info(f"Filling particles {len(particles)}/{particle_slots}")
                 s = root.sample_state()
                 self.env.set_state(state=s)
                 _, r, _, _, info = self.env.step(action)
@@ -237,11 +265,16 @@ class POMCP:
 
         # To avoid particle deprivation (i.e., that the algorithm gets stuck with the wrong belief)
         # we do particle reinvigoration here
-        if any([prob == 0.0 for prob in new_belief]):
+        if self.reinvigoration and len(self.initial_belief) > 0 and any([prob == 0.0 for prob in new_belief.values()]):
+            if self.verbose:
+                Logger.__call__().get_logger().info("Starting reinvigoration")
             # Generate same new particles randomly
+            random_belief = {}
+            for s in list(self.initial_belief.keys()):
+                random_belief[s] = 1 / len(self.initial_belief)
             mutations = POMCPUtil.generate_particles(
-                states=self.S, num_particles=int(self.max_particles * self.reinvigorated_particles_ratio),
-                probability_vector=None)
+                num_particles=int(self.max_particles * self.reinvigorated_particles_ratio),
+                belief=random_belief)
 
             # Randomly exchange some old particles for the new ones
             for particle in mutations:

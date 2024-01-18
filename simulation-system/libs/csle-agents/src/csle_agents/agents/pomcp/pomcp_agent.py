@@ -1,6 +1,7 @@
 from typing import Union, List, Dict, Optional
 import math
 import time
+import random
 import gymnasium as gym
 import os
 import numpy as np
@@ -30,7 +31,7 @@ class POMCPAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
                  experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True) -> None:
         """
         Initializes the POMCP Agent
 
@@ -161,10 +162,11 @@ class POMCPAgent(BaseAgent):
         :return: a list with the hyperparameter names
         """
         return [agents_constants.POMCP.OBJECTIVE_TYPE, agents_constants.POMCP.ROLLOUT_POLICY,
-                agents_constants.POMCP.VALUE_FUNCTION, agents_constants.POMCP.N, agents_constants.POMCP.S,
-                agents_constants.POMCP.O, agents_constants.POMCP.A, agents_constants.POMCP.GAMMA,
+                agents_constants.POMCP.VALUE_FUNCTION, agents_constants.POMCP.N, agents_constants.POMCP.REINVIGORATION,
+                agents_constants.POMCP.A, agents_constants.POMCP.GAMMA,
                 agents_constants.POMCP.INITIAL_BELIEF, agents_constants.POMCP.PLANNING_TIME,
-                agents_constants.POMCP.LOG_STEP_FREQUENCY,
+                agents_constants.POMCP.LOG_STEP_FREQUENCY, agents_constants.POMCP.VERBOSE,
+                agents_constants.POMCP.DEFAULT_NODE_VALUE,
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C, agents_constants.POMCP.MAX_DEPTH,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
@@ -184,11 +186,12 @@ class POMCPAgent(BaseAgent):
         rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
         value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
+        verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
+        default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
-        S = self.experiment_config.hparams[agents_constants.POMCP.S].value
-        O = self.experiment_config.hparams[agents_constants.POMCP.O].value
         A = self.experiment_config.hparams[agents_constants.POMCP.A].value
+        reinvigoration = self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATION].value
         gamma = self.experiment_config.hparams[agents_constants.POMCP.GAMMA].value
         b1 = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_BELIEF].value
         planning_time = self.experiment_config.hparams[agents_constants.POMCP.PLANNING_TIME].value
@@ -208,9 +211,10 @@ class POMCPAgent(BaseAgent):
             eval_env.reset()
             train_env.reset()
             belief = b1.copy()
-            pomcp = POMCP(S=S, O=O, A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
+            pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
                           planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy,
-                          value_function=value_function)
+                          value_function=value_function, reinvigoration=reinvigoration, verbose=verbose,
+                          default_node_value=default_node_value)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
@@ -226,8 +230,10 @@ class POMCPAgent(BaseAgent):
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
+                    b = list(map(lambda x: belief[x], random.sample(list(belief.keys()), min(10, len(belief.keys())))))
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {o}, "
-                                                        f"s_prime: {s_prime}, b: {belief}")
+                                                        f"s_prime: {s_prime}, b: {b}")
+                    Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
 
             if i % self.experiment_config.log_every == 0:
                 # Logging

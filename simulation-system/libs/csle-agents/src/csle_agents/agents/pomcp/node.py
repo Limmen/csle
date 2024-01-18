@@ -7,7 +7,7 @@ class Node:
     Abstract node type, represents a node in the lookahead tree
     """
 
-    def __init__(self, id: int, history: List[int], parent=None, value: float = 0, visit_count: int = 0,
+    def __init__(self, id: int, history: List[int], parent=None, value: float = -2000, visit_count: int = 0,
                  observation: int = -1, action: int = -1) -> None:
         """
         Initializes the node

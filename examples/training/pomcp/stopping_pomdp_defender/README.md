@@ -1,4 +1,4 @@
-# Random Search for POMDP
+# POMCP for defenderp planning in stopping POMDP
 
 This directory contains example scripts for optimizing defender policies using random search for the POMDP from [https://ieeexplore.ieee.org/document/9779345](https://ieeexplore.ieee.org/document/9779345)
 

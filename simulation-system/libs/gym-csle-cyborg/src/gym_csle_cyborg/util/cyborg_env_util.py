@@ -7,6 +7,7 @@ import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
+from gym_csle_cyborg.dao.activity_type import ActivityType
 
 
 class CyborgEnvUtil:
@@ -303,3 +304,104 @@ class CyborgEnvUtil:
             return states, lookup_table, hosts_lookup_tables
         else:
             raise ValueError(f"Scenario: {config.scenario} not recognized")
+
+    @staticmethod
+    def state_to_vector(state: List[List[Any]], decoy_state: List[List[BlueAgentActionType]], host_ids: List[int],
+                        scan_state: List[int], observation: bool = False) -> List[List[int]]:
+        """
+        Creates the state vector
+
+        :param state: the state of the environment
+        :param decoy_state: the decoy state
+        :param scan_state: the scan state
+        :param host_ids: the list of host ids
+        :param observation: boolean flag indicating whether it is the true state or an observation of the state
+        :return: the state vector
+        """
+        state_vector = []
+        for host_id in host_ids:
+            host_known = -1
+            activity = -1
+            if not observation:
+                host_known = int(state[host_id][3])
+                host_scanned = int(state[host_id][4])
+                host_access = state[host_id][5]
+            else:
+                host_scanned = scan_state[host_id]
+                activity = ActivityType.from_str(state[host_id][3]).value
+                host_access = state[host_id][4]
+            if host_access == "None":
+                host_access = 0
+            elif host_access == "User":
+                host_access = 1
+            else:
+                host_access = 2
+            host_decoy_state = len(decoy_state[host_id])
+            if not observation:
+                state_vector.append([host_known, host_scanned, host_access, host_decoy_state])
+            else:
+                state_vector.append([activity, host_scanned, host_access, host_decoy_state])
+        return state_vector
+
+    @staticmethod
+    def state_vector_to_state_id(state_vector: List[List[int]], observation: bool = False) -> int:
+        """
+        Converts a state vector to an id
+
+        :param state_vector: the state vector to convert
+        :param observation: boolean flag indicating whether it is the true state or an observation of the state
+        :return: the id
+        """
+        binary_id_str = ""
+        for host_vec in state_vector:
+            host_binary_id_str = ""
+            for i, elem in enumerate(host_vec):
+                if not observation:
+                    if i == 0:
+                        host_binary_id_str += format(elem, '01b')
+                    if i == 1:
+                        host_binary_id_str += format(elem, '01b')
+                else:
+                    if i == 0:
+                        host_binary_id_str += format(elem, '02b')
+                    if i == 1:
+                        host_binary_id_str += format(elem, '02b')
+                if i == 2:
+                    host_binary_id_str += format(elem, '02b')
+                if i == 3:
+                    host_binary_id_str += format(elem, '03b')
+            binary_id_str += host_binary_id_str
+        state_id = int(binary_id_str, 2)
+        return state_id
+
+    @staticmethod
+    def state_id_to_state_vector(state_id: int, observation: bool = False) -> List[List[int]]:
+        """
+        Converts a state id to a state vector
+
+        :param state_id: the state id to convert
+        :param observation: boolean flag indicating whether it is the true state or an observation of the state
+        :return: the state vector
+        """
+        if not observation:
+            binary_id_str = format(state_id, "091b")
+            host_binary_ids_str = [binary_id_str[i:i + 7] for i in range(0, len(binary_id_str), 7)]
+        else:
+            binary_id_str = format(state_id, "0117b")
+            host_binary_ids_str = [binary_id_str[i:i + 9] for i in range(0, len(binary_id_str), 9)]
+        state_vector = []
+        for host_bin in host_binary_ids_str:
+            if not observation:
+                known = int(host_bin[0:1], 2)
+                scanned = int(host_bin[1:2], 2)
+                access = int(host_bin[2:4], 2)
+                decoy = int(host_bin[4:7], 2)
+                host_vector = [known, scanned, access, decoy]
+            else:
+                activity = int(host_bin[0:2], 2)
+                scanned = int(host_bin[2:4], 2)
+                access = int(host_bin[4:6], 2)
+                decoy = int(host_bin[6:9], 2)
+                host_vector = [activity, scanned, access, decoy]
+            state_vector.append(host_vector)
+        return state_vector

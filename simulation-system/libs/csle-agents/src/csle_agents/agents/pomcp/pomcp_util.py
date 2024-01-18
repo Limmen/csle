@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Any
 import numpy as np
 from csle_agents.agents.pomcp.node import Node
 from collections import Counter
@@ -23,7 +23,7 @@ class POMCPUtil:
         return int(sample)
 
     @staticmethod
-    def rand_choice(candidates: List[int]) -> Any:
+    def rand_choice(candidates: List[Any]) -> Any:
         """
         Selects an element from a given list uniformly at random
 
@@ -45,20 +45,16 @@ class POMCPUtil:
         return {k: v / _sum for k, v in cnt.items()}
 
     @staticmethod
-    def generate_particles(states: List[int], num_particles: int, probability_vector: Union[None, List[float]]):
+    def generate_particles(num_particles: int, belief: Dict[int, float]) -> List[int]:
         """
         Generates a list of particles (sample states) for a given list of states
         with a frequency determined by a given probability vector
 
-        :param states: the
-        :param n:
-        :param probability_vector: (optional) probability vector to determine the frequency of each sample
-        :return:
+        :param probability_vector: probability vector to determine the frequency of each sample
+        :return: sampled particles (states)
         """
-        # by default use uniform distribution for particles generation
-        if probability_vector is None:
-            probability_vector = [1 / len(states)] * len(states)
-        return [states[int(POMCPUtil.sample_from_distribution(probability_vector))] for _ in range(num_particles)]
+        states = list(belief.keys())
+        return [states[int(POMCPUtil.sample_from_distribution(list(belief.values())))] for _ in range(num_particles)]
 
     @staticmethod
     def ucb(history_visit_count, action_visit_count):

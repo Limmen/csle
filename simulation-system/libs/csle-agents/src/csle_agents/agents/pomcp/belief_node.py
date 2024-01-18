@@ -9,7 +9,7 @@ class BeliefNode(Node):
     It also holds the received observation after which the belief is updated accordingly
     """
 
-    def __init__(self, id: int, history: List[int], observation: int, parent=None, value: float = 0.0,
+    def __init__(self, id: int, history: List[int], observation: int, parent=None, value: float = -2000,
                  visit_count: int = 0) -> None:
         """
         Initializing the node

@@ -10,18 +10,25 @@ class BeliefTree:
     of actions and observations.
     """
 
-    def __init__(self, root_particles: List[int]) -> None:
+    def __init__(self, root_particles: List[int], default_node_value) -> None:
         """
         Initializes the tree with a belief node with a set of particles
 
         :param root_particles: the particles to add to the root belief node
+        :param default_node_value: the default value of nodes in the tree
         """
         self.tree_size = 0
         self.nodes: Dict[int, Union[Node, None]] = {}
-        self.root = self.add(history=[], particle=root_particles, parent=None)
+        self.default_node_value = default_node_value
+        node: Node = self.add(history=[], particle=root_particles, parent=None, value=default_node_value)
+        if isinstance(node, BeliefNode):
+            self.root: BeliefNode = node
+        else:
+            raise ValueError("Invalid root node")
 
-    def add(self, history: List[int], parent: Union[ActionNode, BeliefNode, None], action: Union[int, None] = None,
-            observation: Union[int, None] = None, particle: Union[Any, None] = None):
+    def add(self, history: List[int], parent: Union[Node, ActionNode, BeliefNode, None],
+            action: Union[int, None] = None, observation: Union[int, None] = None, particle: Union[Any, None] = None,
+            value: float = 0) -> Node:
         """
         Creates and adds a new belief node or action node to the belief search tree
 
@@ -31,15 +38,16 @@ class BeliefTree:
         :param observation: observation
         :param particle: new node's particle set
         :param cost: action cost of an action node
-        :return:
+        :param value: the value of the node
+        :return: The newly added node
         """
         # Create the node
         if action is not None:
-            new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action)
+            new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action, value=value)
         else:
             if observation is None:
                 observation = 0
-            new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation)
+            new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation, value=value)
 
         if particle is not None and isinstance(new_node, BeliefNode):
             new_node.add_particle(particle)
@@ -58,17 +66,19 @@ class BeliefTree:
         Search for the node corresponds to given history, otherwise create one using given params
         """
         # Start the search from the root node
-        current_node = self.root
+        root_node = self.root
+        current_node: Union[None, Node] = root_node
 
         # Start from the root node and then traverse down to the depth of the given history to see if the node
         # of this history  exists or not, otherwise add it
         history_length, root_history_length = len(history), len(self.root.history)
         for step in range(root_history_length, history_length):
-            current_node = current_node.get_child(history[step])
+            if current_node is not None:
+                current_node = current_node.get_child(history[step])
 
             # Node of this history does not exists so we add it
             if current_node is None:
-                return self.add(history=history, parent=parent, observation=observation)
+                return self.add(history=history, parent=parent, observation=observation, value=self.default_node_value)
         return current_node
 
     def prune(self, node, exclude=None):
