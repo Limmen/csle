@@ -330,11 +330,11 @@ class CyborgEnvUtil:
                 host_scanned = scan_state[host_id]
                 activity = ActivityType.from_str(state[host_id][3]).value
                 host_access = state[host_id][4]
-            if host_access == "None":
+            if host_access == "No" or host_access == "None":
                 host_access = 0
-            elif host_access == "User":
+            if host_access == "User":
                 host_access = 1
-            else:
+            if host_access == "Privileged":
                 host_access = 2
             host_decoy_state = len(decoy_state[host_id])
             if not observation:

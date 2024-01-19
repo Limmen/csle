@@ -55,7 +55,7 @@ if __name__ == '__main__':
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
-            agents_constants.POMCP.MAX_DEPTH: HParam(value=500, name=agents_constants.POMCP.MAX_DEPTH,
+            agents_constants.POMCP.MAX_DEPTH: HParam(value=100, name=agents_constants.POMCP.MAX_DEPTH,
                                                      descr="the maximum depth for planning"),
             agents_constants.POMCP.C: HParam(value=0.35, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),

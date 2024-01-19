@@ -11,10 +11,15 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     o, info = csle_cyborg_env.reset()
     initial_state_id = info[env_constants.ENV_METRICS.STATE]
-    csle_cyborg_env.step(1)
+    o, r, done, _, info = csle_cyborg_env.step(1)
+    # csle_cyborg_env.get_table()
+    obs = info[env_constants.ENV_METRICS.OBSERVATION]
+    # print("FIRST OBS:")
+    # print(csle_cyborg_env.get_observation_from_id(obs_id=obs))
     csle_cyborg_env.set_state(state=initial_state_id)
     # print(csle_cyborg_env.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation["Red"].data["User0"])
     csle_cyborg_env.step(1)
+    csle_cyborg_env.get_table()
 
     # print("INITIAL2 STATE")
     # print(csle_cyborg_env.get_true_table())

@@ -208,7 +208,8 @@ class POMCPAgent(BaseAgent):
             done = False
             eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
-            eval_env.reset()
+            _, info = eval_env.reset()
+            s = info[agents_constants.COMMON.STATE]
             train_env.reset()
             belief = b1.copy()
             pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
@@ -218,7 +219,7 @@ class POMCPAgent(BaseAgent):
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
-                Logger.__call__().get_logger().info(f"[POMCP] t: {t}, b: {belief}")
+                Logger.__call__().get_logger().info(f"[POMCP] t: {t}, b: {belief}, s: {s}")
             # Run episode
             while not done and t <= max_env_steps:
                 pomcp.solve(max_depth=max_depth)
