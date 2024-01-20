@@ -52,20 +52,24 @@ class TestStoppingGameUtilSuite(object):
         n = 6
         assert len(StoppingGameUtil.observation_space(n)) == n + 1
 
-    def test_reward_tensor(self) -> None:
+    def test_reward_tensor(self, example_stopping_game_util: StoppingGameUtil) -> None:
         """
         Tests the observation space function
 
+        :param: example_stopping_game_util an example object of StoppingGameUtil
         :return: None
         """
         l = 6
         example_reward_vector = StoppingGameUtil.reward_tensor(R_SLA=1, R_INT=3, R_COST=2, L=l, R_ST=5)
-        assert example_reward_vector.shape == (l, 2, 2, 3)
+        assert example_reward_vector.shape == (l, len(example_stopping_game_util.defender_actions()),
+                                               len(example_stopping_game_util.attacker_actions()),
+                                               len(example_stopping_game_util.state_space()))
 
-    def test_transition_tensor(self) -> None:
+    def test_transition_tensor(self, example_stopping_game_util: StoppingGameUtil) -> None:
         """
         Tests the transition tensor function
 
+        :param: example_stopping_game_util an example object of StoppingGameUtil
         :return: None
         """
         l = 6
@@ -75,17 +79,23 @@ class TestStoppingGameUtilSuite(object):
                 for k in range(2):
                     for m in range(3):
                         assert sum(example_transition_tensor[i, j, k, m])
-        assert example_transition_tensor.shape == (l, 2, 2, 3, 3)
+        assert example_transition_tensor.shape == (l, len(example_stopping_game_util.defender_actions()),
+                                                   len(example_stopping_game_util.attacker_actions()),
+                                                   len(example_stopping_game_util.state_space()),
+                                                   len(example_stopping_game_util.state_space()))
 
-    def test_observation_tensor(self) -> None:
+    def test_observation_tensor(self, example_stopping_game_util: StoppingGameUtil) -> None:
         """
         Tests the observation tensor function
 
+        :param: example_stopping_game_util an example object of StoppingGameUtil
         :return: None
         """
         n = 6
         example_observation_tensor = StoppingGameUtil.observation_tensor(n=n)
-        assert example_observation_tensor.shape == (2, 2, 3, n + 1)
+        assert example_observation_tensor.shape == (len(example_stopping_game_util.defender_actions()),
+                                                    len(example_stopping_game_util.attacker_actions()),
+                                                    len(example_stopping_game_util.state_space()), n + 1)
 
     def test_sample_next_state(self, example_stopping_game_util: StoppingGameUtil) -> None:
         """
@@ -97,7 +107,7 @@ class TestStoppingGameUtilSuite(object):
         example_sample_next_state = StoppingGameUtil.sample_next_state(
             T=example_stopping_game_util.transition_tensor(L=3, p=0.1), l=3, s=2, a1=1, a2=1,
             S=example_stopping_game_util.state_space())
-        assert example_sample_next_state in [0, 1, 2]
+        assert example_sample_next_state in example_stopping_game_util.state_space()
 
     def test_sample_initial_state(self, example_stopping_game_util: StoppingGameUtil) -> None:
         """
@@ -165,7 +175,7 @@ class TestStoppingGameUtilSuite(object):
         o = positive_o[0]
         example_next_belief = StoppingGameUtil.next_belief(o=o, a1=0, b=StoppingGameUtil.b1(),
                                                            pi2=pi2, config=example_stopping_game_config, l=1)
-        assert len(example_next_belief) == 3
+        assert len(example_next_belief) == len(b1)
         assert sum(example_next_belief) == 1
 
     def test_sample_attacker_action(self, example_attacker_strategy: MultiThresholdStoppingPolicy):
@@ -177,4 +187,4 @@ class TestStoppingGameUtilSuite(object):
         """
         example_sample_attacker_action = StoppingGameUtil.sample_attacker_action(
             pi2=example_attacker_strategy.stage_policy([0, 0]), s=1)
-        assert example_sample_attacker_action in [0, 1]
+        assert example_sample_attacker_action in StoppingGameUtil.attacker_actions()
