@@ -347,6 +347,7 @@ class StoppingGameUtil:
         """
         Samples the next observation
 
+        :param Z: observation tensor which include the observation probables
         :param s_prime: the new state
         :param O: the observation space
         :return: o
@@ -398,7 +399,7 @@ class StoppingGameUtil:
         assert round(b_prime_s_prime, 2) <= 1
         if s_prime == 2 and o != config.O[-1]:
             assert round(b_prime_s_prime, 2) <= 0.01
-        return b_prime_s_prime
+        return float(b_prime_s_prime)
 
     @staticmethod
     def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: StoppingGameConfig) -> float:

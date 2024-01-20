@@ -1,4 +1,6 @@
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
 class TestStoppingGameUtilSuite(object):
@@ -89,6 +91,7 @@ class TestStoppingGameUtilSuite(object):
         """
         Tests the sample next state function
 
+        :param: example_stopping_game_util an example object of StoppingGameUtil
         :return: None
         """
         example_sample_next_state = StoppingGameUtil.sample_next_state(
@@ -100,8 +103,37 @@ class TestStoppingGameUtilSuite(object):
         """
         Tests the sample initial state function
 
+        :param: example_stopping_game_util an example object of StoppingGameUtil
         :return: None
         """
         example_sample_initial_state = StoppingGameUtil.sample_initial_state(example_stopping_game_util.b1())
         assert example_sample_initial_state in example_stopping_game_util.b1()
         assert sum(example_stopping_game_util.b1()) == 1
+
+    def test_sample_next_observation(self, example_stopping_game_util: StoppingGameUtil) -> None:
+        """
+        Tests the sample next observation function
+
+        :param: example_stopping_game_util an example object of StoppingGameUtil
+        :return: None
+        """
+        n = 6
+        z = example_stopping_game_util.observation_tensor(n)
+        O = StoppingGameUtil.observation_space(n=n)
+        example_next_obs = StoppingGameUtil.sample_next_observation(
+            Z=z, s_prime=2, O=O)
+        assert example_next_obs in O
+
+    def test_bayes_filter(self, example_stopping_game_util: StoppingGameUtil,
+                          example_attacker_strategy: MultiThresholdStoppingPolicy,
+                          example_stopping_game_config: StoppingGameConfig) -> None:
+        """
+        Tests the byte filter function
+
+        :param: example_stopping_game_util an example object of StoppingGameUtil
+        :return: None
+        """
+        b_prime_s_prime = StoppingGameUtil.bayes_filter(s_prime=0, o=0, a1=0, b=example_stopping_game_util.b1(),
+                                                        pi2=example_attacker_strategy.stage_policy([0, 0]), l=1,
+                                                        config=example_stopping_game_config)
+        assert b_prime_s_prime <= 1 and b_prime_s_prime >= 0
