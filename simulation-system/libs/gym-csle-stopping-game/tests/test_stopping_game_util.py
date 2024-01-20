@@ -137,3 +137,44 @@ class TestStoppingGameUtilSuite(object):
                                                         pi2=example_attacker_strategy.stage_policy([0, 0]), l=1,
                                                         config=example_stopping_game_config)
         assert b_prime_s_prime <= 1 and b_prime_s_prime >= 0
+
+    def test_next_belief(self, example_stopping_game_config: StoppingGameConfig,
+                         example_attacker_strategy: MultiThresholdStoppingPolicy,
+                         example_stopping_game_util: StoppingGameUtil) -> None:
+        """
+        Tests the byte filter function
+
+        :param: example_stopping_game_config an example object of StoppingGameConfig
+        :param: example_attacker_strategy an example object of MultiThresholdStoppingPolicy
+        :param: example_stopping_game_util an example object of StoppingGameUtil
+        :return: None
+        """
+        pi2 = example_attacker_strategy.stage_policy([0, 0])
+        b1 = StoppingGameUtil.b1()
+        a1 = 0
+        l = 0
+        positive_o = []
+        for o in example_stopping_game_util.observation_space(5):
+            for s in example_stopping_game_config.S:
+                for a2 in example_stopping_game_config.A2:
+                    for s_prime_1 in example_stopping_game_config.S:
+                        prob_1 = (b1[s] * example_stopping_game_config.Z[a1][a2][s_prime_1][o] *
+                                  example_stopping_game_config.T[l][a1][a2][s][s_prime_1] * pi2[s][a2])
+                        if prob_1 > 0:
+                            positive_o.append(o)
+        o = positive_o[0]
+        example_next_belief = StoppingGameUtil.next_belief(o=o, a1=0, b=StoppingGameUtil.b1(),
+                                                           pi2=pi2, config=example_stopping_game_config, l=1)
+        assert len(example_next_belief) == 3
+        assert sum(example_next_belief) == 1
+
+    def test_sample_attacker_action(self, example_attacker_strategy: MultiThresholdStoppingPolicy):
+        """
+        Tests the byte filter function
+
+        :param: example_attacker_strategy an example object of MultiThresholdStoppingPolicy
+        :return: None
+        """
+        example_sample_attacker_action = StoppingGameUtil.sample_attacker_action(
+            pi2=example_attacker_strategy.stage_policy([0, 0]), s=1)
+        assert example_sample_attacker_action in [0, 1]

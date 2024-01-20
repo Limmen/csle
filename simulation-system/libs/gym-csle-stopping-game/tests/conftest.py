@@ -37,7 +37,7 @@ def example_stopping_game_config(example_stopping_game_util: StoppingGameUtil) -
                               S=example_stopping_game_util.state_space(),
                               A1=example_stopping_game_util.defender_actions(),
                               A2=example_stopping_game_util.attacker_actions(),
-                              L=2, R_INT=1, R_COST=3, R_SLA=1, R_ST=1,
+                              L=1, R_INT=1, R_COST=3, R_SLA=1, R_ST=1,
                               b1=example_stopping_game_util.b1(),
                               save_dir="test_dir", checkpoint_traces_freq=1)
 

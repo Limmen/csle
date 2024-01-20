@@ -1,11 +1,7 @@
-from typing import List, Dict, Tuple, Any
+from typing import Any
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import betabinom
-from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
-from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
-from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
-from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
@@ -174,103 +170,6 @@ class StoppingGameUtil:
         return np.array(T_l)
 
     @staticmethod
-    def observation_tensor_from_emulation_statistics(emulation_statistic: EmulationStatistics,
-                                                     observation_space_defender: ObservationSpaceConfig,
-                                                     joint_action_space: JointActionSpaceConfig,
-                                                     state_space: StateSpaceConfig) \
-            -> Tuple[npt.NDArray[Any], Dict[str, List[Any]]]:
-        """
-        Returns an observation tensor based on measured emulation statistics
-
-        :param emulation_statistic: the measured statistics
-        :param observation_space_defender: the observation space of the defender
-        :param joint_action_space: the joint action space
-        :param state_space: the state space
-        :return: a |A1|x|A2|x|S|x|O| tensor
-        """
-        intrusion_severe_alerts_probabilities: List[float] = []
-        intrusion_warning_alerts_probabilities: List[float] = []
-        intrusion_login_attempts_probabilities: List[float] = []
-        norm = sum(emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"].values())
-        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"][severe_alert_obs.id]
-            intrusion_severe_alerts_probabilities.append(count / norm)
-        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["warning_alerts"][warning_alert_obs.id]
-            intrusion_warning_alerts_probabilities.append(count / norm)
-        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals_counts["intrusion"]["login_attempts"][login_attempt_obs.id]
-            intrusion_login_attempts_probabilities.append(count / norm)
-
-        no_intrusion_severe_alerts_probabilities = []
-        no_intrusion_warning_alerts_probabilities = []
-        no_intrusion_login_attempts_probabilities = []
-        norm = sum(emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"].values())
-        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
-            no_intrusion_severe_alerts_probabilities.append(count / norm)
-        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
-            no_intrusion_warning_alerts_probabilities.append(count / norm)
-        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals_counts["no_intrusion"]["login_attempts"][login_attempt_obs.id]
-            no_intrusion_login_attempts_probabilities.append(count / norm)
-
-        component_observation_tensors = {}
-        observation_tensor = []
-        severe_alerts_tensor = []
-        warning_alerts_tensor = []
-        login_attempts_tensor = []
-        for a1 in range(len(joint_action_space.action_spaces[0].actions)):
-            a1_a2_s_o_dist = []
-            severe_alerts_a1_a2_s_o_dist = []
-            warning_alerts_a1_a2_s_o_dist = []
-            login_attempts_a1_a2_s_o_dist = []
-            for a2 in range(len(joint_action_space.action_spaces[1].actions)):
-                a2_s_o_dist = []
-                severe_alerts_a2_s_o_dist: List[List[float]] = []
-                warning_alerts_a2_s_o_dist: List[List[float]] = []
-                login_attempts_a2_s_o_dist: List[List[float]] = []
-                for s in range(len(state_space.states)):
-                    s_o_dist = []
-                    severe_alerts_s_o_dist: List[float] = []
-                    warning_alerts_s_o_dist: List[float] = []
-                    login_attempts_s_o_dist: List[float] = []
-                    for o in range(len(observation_space_defender.observations)):
-                        obs_vector = observation_space_defender.observation_id_to_observation_id_vector[o]
-                        if s == 0:
-                            severe_alerts_s_o_dist.append(no_intrusion_severe_alerts_probabilities[obs_vector[0]])
-                            warning_alerts_s_o_dist.append(no_intrusion_warning_alerts_probabilities[obs_vector[0]])
-                            login_attempts_s_o_dist.append(no_intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = (no_intrusion_severe_alerts_probabilities[obs_vector[0]] *
-                                 no_intrusion_warning_alerts_probabilities[obs_vector[1]] *
-                                 no_intrusion_login_attempts_probabilities[obs_vector[2]])
-                        else:
-                            severe_alerts_s_o_dist.append(intrusion_severe_alerts_probabilities[obs_vector[0]])
-                            warning_alerts_s_o_dist.append(intrusion_warning_alerts_probabilities[obs_vector[0]])
-                            login_attempts_s_o_dist.append(intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = (intrusion_severe_alerts_probabilities[obs_vector[0]] *
-                                 intrusion_warning_alerts_probabilities[obs_vector[1]] *
-                                 intrusion_login_attempts_probabilities[obs_vector[2]])
-                        s_o_dist.append(p)
-                    a2_s_o_dist.append(s_o_dist)
-                    severe_alerts_a2_s_o_dist.append(severe_alerts_s_o_dist)
-                    warning_alerts_a2_s_o_dist.append(warning_alerts_s_o_dist)
-                    login_attempts_a2_s_o_dist.append(login_attempts_s_o_dist)
-                a1_a2_s_o_dist.append(a2_s_o_dist)
-                severe_alerts_a1_a2_s_o_dist.append(severe_alerts_a2_s_o_dist)
-                warning_alerts_a1_a2_s_o_dist.append(warning_alerts_a2_s_o_dist)
-                login_attempts_a1_a2_s_o_dist.append(login_attempts_a2_s_o_dist)
-            observation_tensor.append(a1_a2_s_o_dist)
-            severe_alerts_tensor.append(severe_alerts_a1_a2_s_o_dist)
-            warning_alerts_tensor.append(warning_alerts_a1_a2_s_o_dist)
-            login_attempts_tensor.append(login_attempts_a1_a2_s_o_dist)
-        component_observation_tensors["severe_alerts"] = severe_alerts_tensor
-        component_observation_tensors["warning_alerts"] = warning_alerts_tensor
-        component_observation_tensors["login_attempts"] = login_attempts_tensor
-        return np.array(observation_tensor), component_observation_tensors
-
-    @staticmethod
     def observation_tensor(n):
         """
         :return: a |A1|x|A2|x|S|x|O| tensor
@@ -402,25 +301,6 @@ class StoppingGameUtil:
         return float(b_prime_s_prime)
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: StoppingGameConfig) -> float:
-        """
-        Computes P[o|a,b]
-
-        :param o: the observation
-        :param b: the belief point
-        :param a1: the action of player 1
-        :param a2: the action of player 2
-        :param config: the game config
-        :return: the probability of observing o when taking action a in belief point b
-        """
-        prob = 0
-        for s in config.S:
-            for s_prime in config.S:
-                prob += b[s] * config.T[a1][a2][s][s_prime] * config.Z[a1][a2][s_prime][o]
-        assert prob < 1
-        return prob
-
-    @staticmethod
     def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
                     config: StoppingGameConfig, l: int, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
         """
@@ -451,8 +331,8 @@ class StoppingGameUtil:
         """
         Samples the attacker action
 
-        :param pi2: the attacker action
+        :param pi2: the attacker policy
         :param s: the game state
-        :return: a2 (the attacker action
+        :return: a2 is the attacker action
         """
         return int(np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s]))
