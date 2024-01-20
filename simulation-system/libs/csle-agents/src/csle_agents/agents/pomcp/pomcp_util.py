@@ -1,7 +1,10 @@
 from typing import List, Dict, Any
 import numpy as np
-from csle_agents.agents.pomcp.node import Node
 from collections import Counter
+from csle_common.logging.log import Logger
+from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_agents.agents.pomcp.node import Node
+import csle_agents.constants.constants as constants
 
 
 class POMCPUtil:
@@ -84,3 +87,35 @@ class POMCPUtil:
         :return: the acquisition value of the action
         """
         return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+
+    @staticmethod
+    def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,
+                                        verbose: bool = False) -> List[int]:
+        """
+        Performs trajectory simulations to find possible states matching to the given observation
+
+        :param o: the observation to match against
+        :param env: the black-box simulator to sue for generating trajectories
+        :param action_sequence: the action sequence for the trajectory
+        :param num_particles: the number of particles to collect
+        :param verbose: boolean flag indicating whether logging should be verbose or not
+        :return: the list of particles matching the given observation
+        """
+        particles: List[int] = []
+        while len(particles) < num_particles:
+            done = False
+            _, info = env.reset()
+            s = info[constants.COMMON.STATE]
+            t = 0
+            while not done and t < len(action_sequence):
+                _, r, done, _, info = env.step(action=action_sequence[t])
+                sampled_o = info[constants.COMMON.OBSERVATION]
+                if t == len(action_sequence) - 1 and sampled_o == o:
+                    particles.append(s)
+                s = info[constants.COMMON.STATE]
+                t += 1
+            if verbose:
+                Logger.__call__().get_logger().info(f"Filling particles {len(particles)}/{num_particles} "
+                                                    f"through trajectory simulations, "
+                                                    f"action sequence: {action_sequence}, observation: {o}")
+        return particles

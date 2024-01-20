@@ -559,6 +559,7 @@ class POMCP:
     REINVIGORATION = "reinvigoration"
     PLANNING_TIME = "planning_time"
     MAX_PARTICLES = "max_particles"
+    MAX_NEGATIVE_SAMPLES = "max_negative_samples"
     C = "c"
     MAX_DEPTH = "max_depth"
     LOG_STEP_FREQUENCY = "log_step_frequency"

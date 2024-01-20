@@ -94,6 +94,9 @@ if __name__ == '__main__':
                                                      descr="the maximum depth for planning"),
             agents_constants.POMCP.C: HParam(value=0.35, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
+            agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
+                value=200, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
+                descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),

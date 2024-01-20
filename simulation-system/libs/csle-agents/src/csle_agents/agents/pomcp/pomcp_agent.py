@@ -166,7 +166,7 @@ class POMCPAgent(BaseAgent):
                 agents_constants.POMCP.A, agents_constants.POMCP.GAMMA,
                 agents_constants.POMCP.INITIAL_BELIEF, agents_constants.POMCP.PLANNING_TIME,
                 agents_constants.POMCP.LOG_STEP_FREQUENCY, agents_constants.POMCP.VERBOSE,
-                agents_constants.POMCP.DEFAULT_NODE_VALUE,
+                agents_constants.POMCP.DEFAULT_NODE_VALUE, agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C, agents_constants.POMCP.MAX_DEPTH,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
@@ -188,6 +188,7 @@ class POMCPAgent(BaseAgent):
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
+        max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
         A = self.experiment_config.hparams[agents_constants.POMCP.A].value
@@ -203,9 +204,8 @@ class POMCPAgent(BaseAgent):
 
         # Run N episodes
         for i in range(N):
-
-            # Setup environments
             done = False
+            action_sequence = []
             eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
             _, info = eval_env.reset()
@@ -225,9 +225,11 @@ class POMCPAgent(BaseAgent):
                 pomcp.solve(max_depth=max_depth)
                 action = pomcp.get_action()
                 _, r, done, _, info = eval_env.step(action)
+                action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 o = info[agents_constants.COMMON.OBSERVATION]
-                belief = pomcp.update_tree_with_new_samples(action=action, observation=o)
+                belief = pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=o,
+                                                            max_negative_samples=max_negative_samples)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
@@ -235,6 +237,7 @@ class POMCPAgent(BaseAgent):
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {o}, "
                                                         f"s_prime: {s_prime}, b: {b}")
                     Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
+                s = s_prime
 
             if i % self.experiment_config.log_every == 0:
                 # Logging

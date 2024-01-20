@@ -336,6 +336,8 @@ class CyborgEnvUtil:
                 host_access = 1
             if host_access == "Privileged":
                 host_access = 2
+            if host_access == "Unknown":
+                host_access = 3
             host_decoy_state = len(decoy_state[host_id])
             if not observation:
                 state_vector.append([host_known, host_scanned, host_access, host_decoy_state])
@@ -353,6 +355,7 @@ class CyborgEnvUtil:
         :return: the id
         """
         binary_id_str = ""
+        host_bins = []
         for host_vec in state_vector:
             host_binary_id_str = ""
             for i, elem in enumerate(host_vec):
@@ -371,6 +374,7 @@ class CyborgEnvUtil:
                 if i == 3:
                     host_binary_id_str += format(elem, '03b')
             binary_id_str += host_binary_id_str
+            host_bins.append(host_binary_id_str)
         state_id = int(binary_id_str, 2)
         return state_id
 

@@ -51,7 +51,7 @@ if __name__ == '__main__':
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.INITIAL_BELIEF: HParam(value=b1, name=agents_constants.POMCP.INITIAL_BELIEF,
                                                           descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=300, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=2000, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
@@ -61,6 +61,9 @@ if __name__ == '__main__':
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
+            agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
+                value=20, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
+                descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
@@ -72,7 +75,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,

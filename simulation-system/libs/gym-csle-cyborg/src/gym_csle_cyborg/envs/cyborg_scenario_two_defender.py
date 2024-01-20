@@ -31,18 +31,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.config = config
 
         # Setup Cyborg Env
-        (cyborg_scenario_config_path, cyborg_challenge_env, cyborg_hostnames, cyborg_hostname_to_id,
-         cyborg_subnets, cyborg_subnet_to_id, cyborg_action_id_to_type_and_host, cyborg_action_type_and_host_to_id,
-         red_agent_type) = CyborgEnvUtil.setup_cyborg_env(config=self.config)
-        self.cyborg_scenario_config_path = cyborg_scenario_config_path
-        self.cyborg_challenge_env = cyborg_challenge_env
-        self.cyborg_hostnames = cyborg_hostnames
-        self.cyborg_hostname_to_id = cyborg_hostname_to_id
-        self.cyborg_subnets = cyborg_subnets
-        self.cyborg_subnet_to_id = cyborg_subnet_to_id
-        self.cyborg_action_id_to_type_and_host = cyborg_action_id_to_type_and_host
-        self.cyborg_action_type_and_host_to_id = cyborg_action_type_and_host_to_id
-        self.red_agent_type = red_agent_type
+        self.create_cyborg_env()
 
         # Setup defender decoy actions
         self.decoy_action_types = CyborgEnvUtil.get_decoy_action_types(scenario=self.config.scenario)
@@ -94,6 +83,25 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.initial_belief = {1: 1.0}
         self.reset()
         super().__init__()
+
+    def create_cyborg_env(self) -> None:
+        """
+        Creates the cyborg environment
+
+        :return: None
+        """
+        (cyborg_scenario_config_path, cyborg_challenge_env, cyborg_hostnames, cyborg_hostname_to_id,
+         cyborg_subnets, cyborg_subnet_to_id, cyborg_action_id_to_type_and_host, cyborg_action_type_and_host_to_id,
+         red_agent_type) = CyborgEnvUtil.setup_cyborg_env(config=self.config)
+        self.cyborg_scenario_config_path = cyborg_scenario_config_path
+        self.cyborg_challenge_env = cyborg_challenge_env
+        self.cyborg_hostnames = cyborg_hostnames
+        self.cyborg_hostname_to_id = cyborg_hostname_to_id
+        self.cyborg_subnets = cyborg_subnets
+        self.cyborg_subnet_to_id = cyborg_subnet_to_id
+        self.cyborg_action_id_to_type_and_host = cyborg_action_id_to_type_and_host
+        self.cyborg_action_type_and_host_to_id = cyborg_action_type_and_host_to_id
+        self.red_agent_type = red_agent_type
 
     def step(self, action: int) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
@@ -217,18 +225,10 @@ class CyborgScenarioTwoDefender(BaseEnv):
             info[env_constants.CYBORG.OBS_PER_HOST].append(host_obs)
             host_vector_obs.append(self.scan_state[i])
             info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
-        host_ids = list(self.cyborg_hostname_to_id.values())
-        state_vector = CyborgEnvUtil.state_to_vector(state=self.get_true_table().rows,
-                                                     decoy_state=self.decoy_state,
-                                                     host_ids=host_ids,
-                                                     scan_state=self.scan_state)
-        state_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=state_vector)
+        state_id = self.get_state_id()
+        obs_id = self.get_observation_id()
         if reset:
             self.initial_belief = {state_id: 1}
-        obs_vector = CyborgEnvUtil.state_to_vector(state=self.get_table().rows,
-                                                   decoy_state=self.decoy_state,
-                                                   host_ids=host_ids, scan_state=self.scan_state, observation=True)
-        obs_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vector, observation=True)
         info[env_constants.ENV_METRICS.STATE] = state_id
         info[env_constants.ENV_METRICS.OBSERVATION] = obs_id
         if state_id not in self.visited_cyborg_states:
@@ -242,7 +242,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.done),
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.reward),
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions),
-                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.step),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.steps),
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.hostname_ip_map),
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.subnet_cidr_map),
                  deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.observation),
@@ -250,7 +250,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
                  deepcopy(self.cyborg_challenge_env.env.env.env.success),
                  deepcopy(self.cyborg_challenge_env.env.env.env.baseline),
                  deepcopy(self.cyborg_challenge_env.env.env.env.info),
-                 deepcopy(self.cyborg_challenge_env.env.env.env.blue_info)
+                 deepcopy(self.cyborg_challenge_env.env.env.env.blue_info),
+                 deepcopy(self.cyborg_challenge_env.step_counter),
+                 deepcopy(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.INFO_DICT),
                  )
             self.visited_scanned_states[state_id] = deepcopy(self.scan_state)
             self.visited_decoy_states[state_id] = deepcopy(self.decoy_state)
@@ -427,7 +429,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                 deepcopy(self.visited_cyborg_states[s][4])
             self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions = \
                 deepcopy(self.visited_cyborg_states[s][5])
-            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.step = \
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.steps = \
                 deepcopy(self.visited_cyborg_states[s][6])
             self.cyborg_challenge_env.env.env.env.env.env.environment_controller.hostname_ip_map = \
                 deepcopy(self.visited_cyborg_states[s][7])
@@ -440,6 +442,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
             self.cyborg_challenge_env.env.env.env.baseline = deepcopy(self.visited_cyborg_states[s][12])
             self.cyborg_challenge_env.env.env.env.info = deepcopy(self.visited_cyborg_states[s][13])
             self.cyborg_challenge_env.env.env.env.blue_info = deepcopy(self.visited_cyborg_states[s][14])
+            self.cyborg_challenge_env.step_counter = deepcopy(self.visited_cyborg_states[s][15])
+            self.cyborg_challenge_env.env.env.env.env.env.environment_controller.INFO_DICT = \
+                deepcopy(self.visited_cyborg_states[s][16])
             self.decoy_state = deepcopy(self.visited_decoy_states[s])
             self.scan_state = deepcopy(self.visited_scanned_states[s])
             self.cyborg_challenge_env.env.env.env.env.observation_change(obs)
@@ -494,3 +499,35 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: the observation vector
         """
         return CyborgEnvUtil.state_id_to_state_vector(state_id=state_id, observation=False)
+
+    def get_observation_id_from_vector(self, observation_vector: List[Any]) -> int:
+        """
+        Converts an observation vector to an id
+
+        :param observation_vector: the vector to convert
+        :return: the observation id
+        """
+        return CyborgEnvUtil.state_vector_to_state_id(state_vector=observation_vector, observation=True)
+
+    def get_observation_id(self) -> int:
+        """
+        :return: the current observation id
+        """
+        host_ids = list(self.cyborg_hostname_to_id.values())
+        obs_vector = CyborgEnvUtil.state_to_vector(state=self.get_table().rows,
+                                                   decoy_state=self.decoy_state,
+                                                   host_ids=host_ids, scan_state=self.scan_state, observation=True)
+        obs_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vector, observation=True)
+        return obs_id
+
+    def get_state_id(self) -> int:
+        """
+        :return: the current state id
+        """
+        host_ids = list(self.cyborg_hostname_to_id.values())
+        state_vector = CyborgEnvUtil.state_to_vector(state=self.get_true_table().rows,
+                                                     decoy_state=self.decoy_state,
+                                                     host_ids=host_ids,
+                                                     scan_state=self.scan_state)
+        state_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=state_vector)
+        return state_id

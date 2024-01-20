@@ -3,12 +3,12 @@ import time
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy import Policy
+from csle_common.logging.log import Logger
 from csle_agents.agents.pomcp.belief_tree import BeliefTree
 from csle_agents.agents.pomcp.belief_node import BeliefNode
 from csle_agents.agents.pomcp.action_node import ActionNode
 from csle_agents.agents.pomcp.pomcp_util import POMCPUtil
 import csle_agents.constants.constants as constants
-from csle_common.logging.log import Logger
 
 
 class POMCP:
@@ -197,15 +197,23 @@ class POMCP:
                                                     f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action: int, observation: int) -> Dict[int, float]:
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int,
+                                     max_negative_samples: int = 20) -> Dict[int, float]:
         """
         Updates the tree after an action has been selected and a new observation been received
 
-        :param action: the action that was executed
+        :param action_sequence: the action sequence that was executed
         :param observation: the observation that was received
+        :param max_negative_samples: the maximum number of negative samples that can be collected before
+              trajectory simulation is initialized
         :return: the updated belief state
         """
+        observation = self.env.get_observation_id_from_vector(
+            observation_vector=self.env.get_observation_from_history(history=[observation]))
         root = self.tree.root
+        if len(action_sequence) == 0:
+            raise ValueError("Invalid action sequencee")
+        action = action_sequence[0]
 
         # Since we executed an action we advance the tree and update the root to the the node corresponding to the
         # action that was selected
@@ -241,19 +249,28 @@ class POMCP:
             particle_slots = self.max_particles - len(new_root.particles)
         else:
             raise ValueError("Invalid root node")
+        negative_samples_count = 0
         if particle_slots > 0:
             # fill particles by Monte-Carlo using reject sampling
             particles = []
             while len(particles) < particle_slots:
                 if self.verbose:
                     Logger.__call__().get_logger().info(f"Filling particles {len(particles)}/{particle_slots}")
-                s = root.sample_state()
-                self.env.set_state(state=s)
-                _, r, _, _, info = self.env.step(action)
-                s_prime = info[constants.COMMON.STATE]
-                o = info[constants.COMMON.OBSERVATION]
-                if o == observation:
-                    particles.append(s_prime)
+                if negative_samples_count >= max_negative_samples:
+                    particles += POMCPUtil.trajectory_simulation_particles(
+                        o=observation, env=self.env, action_sequence=action_sequence, verbose=self.verbose,
+                        num_particles=(particle_slots - len(particles)))
+                else:
+                    s = root.sample_state()
+                    self.env.set_state(state=s)
+                    _, r, _, _, info = self.env.step(action)
+                    s_prime = info[constants.COMMON.STATE]
+                    o = info[constants.COMMON.OBSERVATION]
+                    if o == observation:
+                        particles.append(s_prime)
+                        negative_samples_count = 0
+                    else:
+                        negative_samples_count += 1
             new_root.particles += particles
 
         # We now prune the old root from the tree
