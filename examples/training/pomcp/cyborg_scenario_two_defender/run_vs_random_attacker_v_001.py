@@ -27,6 +27,8 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     b1 = csle_cyborg_env.initial_belief
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=18)
+    value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
         random_seeds=[399, 98912, 999, 555],
@@ -39,10 +41,10 @@ if __name__ == '__main__':
                 value=ObjectiveType.MAX, name=agents_constants.POMCP.OBJECTIVE_TYPE,
                 descr="the type of objective (max or min)"),
             agents_constants.POMCP.ROLLOUT_POLICY: HParam(
-                value=None, name=agents_constants.POMCP.ROLLOUT_POLICY,
+                value=rollout_policy, name=agents_constants.POMCP.ROLLOUT_POLICY,
                 descr="the policy to use for rollouts"),
             agents_constants.POMCP.VALUE_FUNCTION: HParam(
-                value=lambda x: 0, name=agents_constants.POMCP.VALUE_FUNCTION,
+                value=value_function, name=agents_constants.POMCP.VALUE_FUNCTION,
                 descr="the value function to use for truncated rollouts"),
             agents_constants.POMCP.A: HParam(value=A, name=agents_constants.POMCP.A, descr="the action space"),
             agents_constants.POMCP.GAMMA: HParam(value=0.99, name=agents_constants.POMCP.GAMMA,

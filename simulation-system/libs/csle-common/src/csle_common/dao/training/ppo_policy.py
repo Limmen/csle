@@ -100,6 +100,22 @@ class PPOPolicy(Policy):
         prob = math.exp(log_prob)
         return prob
 
+    def value(self, o: Union[List[float], List[int]]) -> float:
+        """
+        Gets the value of a given observation, computed by the critic network
+
+        :param o: the observation to get the value of
+        :return: V(o)
+        """
+        if self.model is None:
+            raise ValueError("The model is None")
+        if isinstance(self.model, PPO):
+            return self.model.policy.predict_values(obs=torch.tensor([o]).to(self.model.device)).item()
+        elif isinstance(self.model, PPONetwork):
+            return self.model.get_value(x=torch.tensor(o)).item()
+        else:
+            raise ValueError(f"Model: {self.model} not recognized")
+
     def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy

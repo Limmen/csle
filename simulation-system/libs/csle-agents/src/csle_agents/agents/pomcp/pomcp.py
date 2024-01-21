@@ -41,6 +41,8 @@ class POMCP:
         """
         self.A = A
         self.env = env
+        o, info = self.env.reset()
+        self.root_observation = info[constants.COMMON.OBSERVATION]
         self.gamma = gamma
         self.c = c
         self.planning_time = planning_time
@@ -52,7 +54,8 @@ class POMCP:
         self.reinvigoration = reinvigoration
         self.default_node_value = default_node_value
         root_particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=initial_belief)
-        self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value)
+        self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value,
+                               root_observation=self.root_observation)
         self.verbose = verbose
 
     def compute_belief(self) -> Dict[int, float]:
@@ -98,7 +101,7 @@ class POMCP:
                                                     max_depth=max_depth)
 
     def simulate(self, state: int, max_depth: int, c: float, history: List[int], depth=0,
-                 parent=Union[None, BeliefNode, ActionNode]) -> float:
+                 parent: Union[None, BeliefNode, ActionNode] = None) -> float:
         """
         Performs the POMCP simulation starting from a given belief node and a sampled state
 
@@ -137,8 +140,8 @@ class POMCP:
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
         np.random.shuffle(current_node.children)
-        next_action_node = sorted(current_node.children,
-                                  key=lambda x: POMCPUtil.ucb_acquisition_function(x, c=c), reverse=True)[0]
+        next_action_node = sorted(current_node.children, key=lambda x: POMCPUtil.ucb_acquisition_function(x, c=c),
+                                  reverse=True)[0]
 
         # Simulate the outcome of the selected action
         a = next_action_node.action
@@ -178,9 +181,15 @@ class POMCP:
         while time.time() - begin < self.planning_time:
             n += 1
             state = self.tree.root.sample_state()
-            self.simulate(state, max_depth=max_depth, history=self.tree.root.history, c=self.c)
+            self.simulate(state, max_depth=max_depth, history=self.tree.root.history, c=self.c, parent=self.tree.root)
             if self.verbose:
-                Logger.__call__().get_logger().info(f"Simulation time left {self.planning_time - time.time() + begin}s")
+                action_values = [action.value for action in self.tree.root.children]
+                best_action_idx = np.argmax(action_values)
+                Logger.__call__().get_logger().info(
+                    f"Planning time left {self.planning_time - time.time() + begin}s, "
+                    f"best action: {self.tree.root.children[best_action_idx].action}, "
+                    f"value: {action_values[best_action_idx]}, "
+                    f"count: {self.tree.root.children[best_action_idx].visit_count}")
 
     def get_action(self) -> int:
         """
@@ -197,7 +206,7 @@ class POMCP:
                                                     f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int,
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, observation_vector: List[int],
                                      max_negative_samples: int = 20) -> Dict[int, float]:
         """
         Updates the tree after an action has been selected and a new observation been received
@@ -206,10 +215,10 @@ class POMCP:
         :param observation: the observation that was received
         :param max_negative_samples: the maximum number of negative samples that can be collected before
               trajectory simulation is initialized
+        :param observation_vector: the observation vector that was received
         :return: the updated belief state
         """
-        observation = self.env.get_observation_id_from_vector(
-            observation_vector=self.env.get_observation_from_history(history=[observation]))
+        self.env.add_observation_vector(obs_vector=observation_vector, obs_id=observation)
         root = self.tree.root
         if len(action_sequence) == 0:
             raise ValueError("Invalid action sequencee")
@@ -253,9 +262,9 @@ class POMCP:
         if particle_slots > 0:
             # fill particles by Monte-Carlo using reject sampling
             particles = []
+            if self.verbose:
+                Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
             while len(particles) < particle_slots:
-                if self.verbose:
-                    Logger.__call__().get_logger().info(f"Filling particles {len(particles)}/{particle_slots}")
                 if negative_samples_count >= max_negative_samples:
                     particles += POMCPUtil.trajectory_simulation_particles(
                         o=observation, env=self.env, action_sequence=action_sequence, verbose=self.verbose,

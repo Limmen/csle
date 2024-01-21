@@ -27,10 +27,10 @@ class TestStoppingGameUtilSuite(object):
 
     def test_defender_actions(self) -> None:
         """
-                Tests the defender actions function
+        Tests the defender actions function
 
-                :return: None
-                """
+        :return: None
+        """
         assert sum(StoppingGameUtil.defender_actions()) == 1
         assert len(StoppingGameUtil.defender_actions()) == 2
 

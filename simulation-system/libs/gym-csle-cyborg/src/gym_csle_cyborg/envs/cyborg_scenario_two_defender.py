@@ -74,10 +74,11 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
 
-        # Lookup dict of states
+        # Lookup dict of statesand observatons
         self.visited_cyborg_states: Dict[int, Any] = {}
         self.visited_scanned_states: Dict[int, List[int]] = {}
         self.visited_decoy_states: Dict[int, List[List[BlueAgentActionType]]] = {}
+        self.observation_id_to_tensor: Dict[int, npt.NDArray[Any]] = {}
 
         # Reset
         self.initial_belief = {1: 1.0}
@@ -138,6 +139,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
         if self.config.decoy_optimization:
             o = np.array([self.get_decoy_state()])
 
+        if info[env_constants.ENV_METRICS.OBSERVATION] not in self.observation_id_to_tensor:
+            self.observation_id_to_tensor[info[env_constants.ENV_METRICS.OBSERVATION]] = np.array(o)
+
         self.t += 1
         if self.t >= self.config.maximum_steps:
             done = True
@@ -184,6 +188,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
             o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
         if self.config.decoy_optimization:
             o = np.array([self.get_decoy_state()])
+        if info[env_constants.ENV_METRICS.OBSERVATION] not in self.observation_id_to_tensor:
+            self.observation_id_to_tensor[info[env_constants.ENV_METRICS.OBSERVATION]] = np.array(o)
         self.t = 1
         if len(self.traces) > 100:
             self.reset_traces()
@@ -460,8 +466,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: the observation
         """
         obs_id = history[-1]
-        obs = CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)
-        return obs
+        obs = self.observation_id_to_tensor[obs_id]
+        return list(obs)
 
     def get_action_space(self) -> List[int]:
         """
@@ -531,3 +537,23 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                                      scan_state=self.scan_state)
         state_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=state_vector)
         return state_id
+
+    def is_state_terminal(self, state: int) -> bool:
+        """
+        Checks whether a given state is terminal or not
+
+        :param state: the state id
+        :return: True if terminal, else False
+        """
+        return bool(self.visited_cyborg_states[state][10] > self.config.maximum_steps)
+
+    def add_observation_vector(self, obs_vector: List[Any], obs_id: int) -> None:
+        """
+        Adds an observation vector to the history
+
+        :param obs_vector: the observation vector to add
+        :param obs_id: the id of the observation
+        :return: None
+        """
+        if obs_id not in self.observation_id_to_tensor:
+            self.observation_id_to_tensor[obs_id] = np.array(obs_vector)

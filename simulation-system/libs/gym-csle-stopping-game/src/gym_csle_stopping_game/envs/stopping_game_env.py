@@ -547,10 +547,10 @@ class StoppingGameEnv(BaseEnv):
 
     def is_state_terminal(self, state: Union[StoppingGameState, int, Tuple[int, int]]) -> bool:
         """
-        Sets the state. Allows to simulate samples from specific states
+        Checks whether a given state is terminal or not
 
         :param state: the state
-        :return: None
+        :return: True if terminal, else false
         """
         if isinstance(state, StoppingGameState):
             return state.s == 2

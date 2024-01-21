@@ -224,20 +224,20 @@ class POMCPAgent(BaseAgent):
             while not done and t <= max_env_steps:
                 pomcp.solve(max_depth=max_depth)
                 action = pomcp.get_action()
-                _, r, done, _, info = eval_env.step(action)
+                o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
-                o = info[agents_constants.COMMON.OBSERVATION]
-                belief = pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=o,
-                                                            max_negative_samples=max_negative_samples)
+                obs_id = info[agents_constants.COMMON.OBSERVATION]
+                belief = pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
+                                                            max_negative_samples=max_negative_samples,
+                                                            observation_vector=o)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
                     b = list(map(lambda x: belief[x], random.sample(list(belief.keys()), min(10, len(belief.keys())))))
-                    Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {o}, "
+                    Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
                                                         f"s_prime: {s_prime}, b: {b}")
                     Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
-                s = s_prime
 
             if i % self.experiment_config.log_every == 0:
                 # Logging

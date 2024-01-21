@@ -10,17 +10,21 @@ class BeliefTree:
     of actions and observations.
     """
 
-    def __init__(self, root_particles: List[int], default_node_value) -> None:
+    def __init__(self, root_particles: List[int], default_node_value: float, root_observation: int) -> None:
         """
         Initializes the tree with a belief node with a set of particles
 
         :param root_particles: the particles to add to the root belief node
         :param default_node_value: the default value of nodes in the tree
+        :param root_observation: the root observation
+        :return: None
         """
         self.tree_size = 0
+        self.root_observation = root_observation
         self.nodes: Dict[int, Union[Node, None]] = {}
         self.default_node_value = default_node_value
-        node: Node = self.add(history=[], particle=root_particles, parent=None, value=default_node_value)
+        node: Node = self.add(history=[root_observation], particle=root_particles, parent=None,
+                              value=default_node_value)
         if isinstance(node, BeliefNode):
             self.root: BeliefNode = node
         else:
@@ -63,7 +67,7 @@ class BeliefTree:
 
     def find_or_create(self, history: List[int], parent: Union[None, BeliefNode, ActionNode], observation: int):
         """
-        Search for the node corresponds to given history, otherwise create one using given params
+        Search for the node that corresponds to given history, otherwise create one using given params
         """
         # Start the search from the root node
         root_node = self.root

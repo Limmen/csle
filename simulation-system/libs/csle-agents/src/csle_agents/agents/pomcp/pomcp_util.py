@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
@@ -68,7 +68,7 @@ class POMCPUtil:
         :param action_visit_count: counter of the number of times the action has been taken in the history
         :return: the ucb acquisition value
         """
-        # If we have never seen this history before, its utility is initialized to zero
+        # If we have never seen this history before, its exploration utility is initialized to zero
         if history_visit_count == 0:
             return 0.0
         # If we have never taken this action before, its utility is infinity to encourage exploration
@@ -82,7 +82,7 @@ class POMCPUtil:
         """
         The UCB acquisition function
 
-        :param action: the action
+        :param action: the action node
         :param c: the exploration parameter
         :return: the acquisition value of the action
         """
@@ -102,6 +102,10 @@ class POMCPUtil:
         :return: the list of particles matching the given observation
         """
         particles: List[int] = []
+        if verbose:
+            Logger.__call__().get_logger().info(f"Filling {num_particles} particles"
+                                                f"through trajectory simulations, "
+                                                f"action sequence: {action_sequence}, observation: {o}")
         while len(particles) < num_particles:
             done = False
             _, info = env.reset()
@@ -114,8 +118,28 @@ class POMCPUtil:
                     particles.append(s)
                 s = info[constants.COMMON.STATE]
                 t += 1
-            if verbose:
-                Logger.__call__().get_logger().info(f"Filling particles {len(particles)}/{num_particles} "
-                                                    f"through trajectory simulations, "
-                                                    f"action sequence: {action_sequence}, observation: {o}")
         return particles
+
+    @staticmethod
+    def get_default_value(particles: List[int], action: int, default_value: float, env: BaseEnv,
+                          value_function: Callable[[Any], float]) -> float:
+        """
+        Gets the default value of a node
+
+        :param particles: the particles of the parent node
+        :param action: the action of the node
+        :param default_value: the default value
+        :param env: the black-box simulator
+        :param value_function: the value function
+        :return: the value
+        """
+        node_value = default_value
+        if value_function is not None:
+            sample_values = []
+            for i in range(20):
+                state = int(POMCPUtil.rand_choice(particles))
+                env.set_state(state=state)
+                o, r, _, _, info = env.step(action)
+                sample_values.append(value_function(o))
+            node_value = float(np.mean(sample_values))
+        return node_value
