@@ -15,8 +15,15 @@ if __name__ == '__main__':
         scanned_state=True, decoy_optimization=False, cache_visited_states=True)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     #324519791598466012163466353442816
-    POMCPUtil.trajectory_simulation_particles(o=324519791598466012163474943377408,
-                                              env=csle_cyborg_env, action_sequence=[31, 34, 28], num_particles=100)
+    # POMCPUtil.trajectory_simulation_particles(o=324519791598466012163474943377408,
+    #                                           env=csle_cyborg_env, action_sequence=[31, 34, 28], num_particles=100)
+    from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+    vec = CyborgEnvUtil.state_id_to_state_vector(state_id=14507109835375640432425280, observation=False)
+    print(vec)
+    vec = CyborgEnvUtil.state_id_to_state_vector(state_id=16018267109893926900808000, observation=False)
+    print(vec)
+
+    print(csle_cyborg_env.cyborg_hostnames)
     #324519791598466012163474943377408
     # 324518553658426726783181790642176
 
