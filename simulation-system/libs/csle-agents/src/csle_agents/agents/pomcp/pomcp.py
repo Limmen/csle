@@ -21,7 +21,8 @@ class POMCP:
                  reinvigoration: bool = False,
                  reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
                  value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
-                 default_node_value: float = 0, parallel_rollout: bool = False) -> None:
+                 default_node_value: float = 0, parallel_rollout: bool = False,
+                 num_parallel_processes: int = 10, num_evals_per_process: int = 10, prior_weight: float = 1.0) -> None:
         """
         Initializes the solver
 
@@ -39,6 +40,9 @@ class POMCP:
         :param verbose: boolean flag indicating whether logging should be verbose
         :param default_node_value: the default value of nodes in the tree
         :param parallel_rollout: boolean flag indicating whether parallel rollout should be used
+        :param num_parallel_processes: number of parallel processes
+        :param num_evals_per_process: number of evaluations per process
+        :param prior_weight: the weight to put on the prior
         """
         self.A = A
         self.env = env
@@ -56,6 +60,9 @@ class POMCP:
         self.reinvigoration = reinvigoration
         self.default_node_value = default_node_value
         self.parallel_rollout = parallel_rollout
+        self.num_parallel_processes = num_parallel_processes
+        self.num_evals_per_process = num_evals_per_process
+        self.prior_weight = prior_weight
         root_particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=initial_belief)
         self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value,
                                root_observation=self.root_observation, initial_visit_count=self.initial_visit_count)
@@ -138,9 +145,15 @@ class POMCP:
             for action in self.A:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
-            # Perform the rollout frmo the current state and return the value
-            self.env.set_state(state=state)
-            return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth)
+            # Perform the rollout from the current state and return the value
+            if self.parallel_rollout and self.rollout_policy is not None:
+                return self.env.parallel_rollout(policy_id=self.rollout_policy.id,
+                                                 num_processes=self.num_parallel_processes,
+                                                 num_evals_per_process=self.num_evals_per_process,
+                                                 max_horizon=max_rollout_depth, state_id=state)
+            else:
+                self.env.set_state(state=state)
+                return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth)
 
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
@@ -148,7 +161,7 @@ class POMCP:
         o = self.env.get_observation_from_history(current_node.history)
         next_action_node = sorted(
             current_node.children, key=lambda x: POMCPUtil.ucb_acquisition_function(
-                x, c=c, rollout_policy=self.rollout_policy, o=o), reverse=True)[0]
+                x, c=c, rollout_policy=self.rollout_policy, o=o, prior_weight=self.prior_weight), reverse=True)[0]
 
         # Simulate the outcome of the selected action
         a = next_action_node.action
@@ -198,13 +211,19 @@ class POMCP:
             self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history, c=self.c,
                           parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
             if self.verbose:
-                action_values = [action.value for action in self.tree.root.children]
-                best_action_idx = np.argmax(action_values)
+                action_values = np.zeros((len(self.A),))
+                best_action_idx = 0
+                best_value = -np.inf
+                for i, action_node in enumerate(self.tree.root.children):
+                    action_values[action_node.action] = action_node.value
+                    if action_node.value > best_value:
+                        best_action_idx = i
+                        best_value = action_node.value
                 Logger.__call__().get_logger().info(
                     f"Planning time left {self.planning_time - time.time() + begin}s, "
                     f"best action: {self.tree.root.children[best_action_idx].action}, "
-                    f"value: {action_values[best_action_idx]}, "
-                    f"count: {self.tree.root.children[best_action_idx].visit_count}")
+                    f"value: {self.tree.root.children[best_action_idx].value}, "
+                    f"count: {self.tree.root.children[best_action_idx].visit_count}, 31:{action_values[31]}")
 
     def get_action(self) -> int:
         """

@@ -795,7 +795,6 @@ class CyborgScenarioTwoDefender(BaseEnv):
                    self.decoy_state_space_lookup, self.decoy_state_space_hosts_lookup,
                    self.cyborg_action_id_to_type_and_host, state_id)
                   for i in range(num_processes)]
-        Logger.__call__().get_logger().info("Starting parallel rollouts")
         with Pool(num_processes) as p:
             returns = p.map(CyborgScenarioTwoDefender.process_rollout, inputs)
             return float(np.mean(returns))
@@ -876,6 +875,6 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
                 R += r
                 t += 1
-            returns.append(R)
+            returns.append(R + policy.value(o))
         config.cache_visited_states = config_cache_val
         return float(np.mean(returns))

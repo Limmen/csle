@@ -27,7 +27,8 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     b1 = csle_cyborg_env.initial_belief
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=5)
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=15)
+    # value_function = lambda x: 0
     value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
@@ -53,24 +54,31 @@ if __name__ == '__main__':
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.INITIAL_BELIEF: HParam(value=b1, name=agents_constants.POMCP.INITIAL_BELIEF,
                                                           descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=6000, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=100, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
-                value=25, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
-            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=25, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+                value=20, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=1, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
+            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=5, name=agents_constants.POMCP.PRIOR_WEIGHT,
+                                                        descr="the weight on the prior"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
             agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
                 value=20, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
-                value=True, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
+                value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
                                                                                 "parallel rollout should be used"),
+            agents_constants.POMCP.NUM_PARALLEL_PROCESSES: HParam(
+                value=5, name=agents_constants.POMCP.NUM_PARALLEL_PROCESSES, descr="number of parallel processes"),
+            agents_constants.POMCP.NUM_EVALS_PER_PROCESS: HParam(
+                value=20, name=agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
+                descr="number of evaluations per process"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
@@ -90,6 +98,8 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
+    import torch
+    torch.multiprocessing.set_start_method('spawn')
     agent = POMCPAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()

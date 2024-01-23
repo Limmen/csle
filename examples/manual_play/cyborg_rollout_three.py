@@ -3,14 +3,24 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
+import csle_agents.constants.constants as constants
+from csle_agents.agents.pomcp.pomcp_util import POMCPUtil
+import math
 
 if __name__ == '__main__':
-    # ppo_policy = MetastoreFacade.get_ppo_policy(id=5)
+    ppo_policy = MetastoreFacade.get_ppo_policy(id=15)
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=True)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
+    #324519791598466012163466353442816
+    POMCPUtil.trajectory_simulation_particles(o=324519791598466012163474943377408,
+                                              env=csle_cyborg_env, action_sequence=[31, 34, 28], num_particles=100)
+    #324519791598466012163474943377408
+    # 324518553658426726783181790642176
+
+
     # o, _ = csle_cyborg_env.reset()
     # print(ppo_policy.probability(o=o, a=4))
     # import torch
@@ -35,7 +45,7 @@ if __name__ == '__main__':
     #                                               max_horizon=25, state_id=21474836480)
     # print(avg_return)
     # print(time.time() - start)
-    history_visit_count = 10
-    c=20
-    for action_visit_count in range(1, 100):
-        print(np.sqrt(np.log(history_visit_count) / action_visit_count)*c)
+    # history_visit_count = 10
+    # c=20
+    # for action_visit_count in range(1, 100):
+    #     print(np.sqrt(np.log(history_visit_count) / action_visit_count)*c)

@@ -98,7 +98,12 @@ if __name__ == '__main__':
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
                 value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
-                                                                                "parallel rollout should be used"),
+                                                                                 "parallel rollout should be used"),
+            agents_constants.POMCP.NUM_PARALLEL_PROCESSES: HParam(
+                value=50, name=agents_constants.POMCP.NUM_PARALLEL_PROCESSES, descr="number of parallel processes"),
+            agents_constants.POMCP.NUM_EVALS_PER_PROCESS: HParam(
+                value=10, name=agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
+                descr="number of evaluations per process"),
             agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
                 value=200, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),

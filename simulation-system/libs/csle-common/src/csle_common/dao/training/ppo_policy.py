@@ -110,7 +110,7 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            return self.model.policy.predict_values(obs=torch.tensor([o]).to(self.model.device)).item()
+            return self.model.policy.predict_values(obs=torch.tensor(np.array([o])).to(self.model.device)).item()
         elif isinstance(self.model, PPONetwork):
             return self.model.get_value(x=torch.tensor(o)).item()
         else:

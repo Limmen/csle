@@ -169,6 +169,8 @@ class POMCPAgent(BaseAgent):
                 agents_constants.POMCP.DEFAULT_NODE_VALUE, agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C,
                 agents_constants.POMCP.MAX_PLANNING_DEPTH, agents_constants.POMCP.PARALLEL_ROLLOUT,
+                agents_constants.POMCP.NUM_PARALLEL_PROCESSES, agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
+                agents_constants.POMCP.PRIOR_WEIGHT,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
 
@@ -191,6 +193,9 @@ class POMCPAgent(BaseAgent):
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
         max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
         parallel_rollout = self.experiment_config.hparams[agents_constants.POMCP.PARALLEL_ROLLOUT].value
+        num_processes = self.experiment_config.hparams[agents_constants.POMCP.NUM_PARALLEL_PROCESSES].value
+        num_evals_per_process = self.experiment_config.hparams[agents_constants.POMCP.NUM_EVALS_PER_PROCESS].value
+        prior_weight = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_WEIGHT].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
         A = self.experiment_config.hparams[agents_constants.POMCP.A].value
@@ -219,7 +224,9 @@ class POMCPAgent(BaseAgent):
             pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
                           planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy,
                           value_function=value_function, reinvigoration=reinvigoration, verbose=verbose,
-                          default_node_value=default_node_value)
+                          default_node_value=default_node_value, parallel_rollout=parallel_rollout,
+                          num_parallel_processes=num_processes, num_evals_per_process=num_evals_per_process,
+                          prior_weight=prior_weight)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:

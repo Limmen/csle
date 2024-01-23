@@ -35,8 +35,8 @@ class BaseAgent(ABC):
         try:
             if not os.path.exists(self.experiment_config.output_dir):
                 os.makedirs(self.experiment_config.output_dir)
-        except Exception:
-            Logger.__call__().get_logger().info("There was an error creating log dirs.")
+        except Exception as e:
+            Logger.__call__().get_logger().info(f"There was an error creating log dirs: {str(e)}, {repr(e)}")
 
     @abstractmethod
     def train(self) -> ExperimentExecution:
