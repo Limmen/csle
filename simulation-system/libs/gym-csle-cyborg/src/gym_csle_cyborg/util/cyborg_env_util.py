@@ -16,6 +16,28 @@ class CyborgEnvUtil:
     """
 
     @staticmethod
+    def create_cyborg_env(config: CSLECyborgConfig, red_agent_type: Union[RedAgentType, None] = None) \
+            -> Tuple[ChallengeWrapper, RedAgentType, str]:
+        """
+        Creates a new cyborg environment
+
+        :param config: the environment configuration
+        :param red_agent_type: the type of red agent
+        :return: the created environment, the red agent type, and the configuration path
+        """
+        cyborg_scenario_config_path = str(inspect.getfile(Main))
+        cyborg_scenario_config_path = (f"{cyborg_scenario_config_path[:-7]}"
+                                       f"{env_constants.CYBORG.SCENARIO_CONFIGS_DIR}"
+                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
+                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
+        agents_dict, red_agent_type = config.get_agents_dict(agent=red_agent_type)
+        cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
+                      agents=agents_dict)
+        cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
+                                                max_steps=config.maximum_steps)
+        return cyborg_challenge_env, red_agent_type, cyborg_scenario_config_path
+
+    @staticmethod
     def update_red_agent(config: CSLECyborgConfig, current_red_agent: RedAgentType,
                          new_red_agent: Union[RedAgentType, None] = None) -> Union[ChallengeWrapper, None]:
         """
@@ -25,26 +47,18 @@ class CyborgEnvUtil:
         :param config: the csle configuration
         :return: the updated environment with the new agent or None if the environment was not updated
         """
-        cyborg_scenario_config_path = str(inspect.getfile(Main))
-        cyborg_scenario_config_path = (f"{cyborg_scenario_config_path[:-7]}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIGS_DIR}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
         agents_dict, agent_type = config.get_agents_dict(agent=new_red_agent)
-        cyborg_challenge_env = None
         if not agent_type.value == current_red_agent.value:
-            cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
-                          agents=agents_dict)
-            cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
-                                                    max_steps=config.maximum_steps)
-        return cyborg_challenge_env
+            cyborg_challenge_env, red_agent_type, cyborg_scenario_config_path = CyborgEnvUtil.create_cyborg_env(
+                config=config, red_agent_type=new_red_agent)
+            return cyborg_challenge_env
+        return None
 
     @staticmethod
-    def setup_cyborg_env(config: CSLECyborgConfig) -> Tuple[
-        str, ChallengeWrapper, List[str], Dict[str, int], List[str], Dict[str, int],
-        Dict[int, Tuple[BlueAgentActionType, str]], Dict[Tuple[BlueAgentActionType, str], int],
-        RedAgentType
-    ]:
+    def setup_cyborg_env(config: CSLECyborgConfig) \
+            -> Tuple[str, ChallengeWrapper, List[str], Dict[str, int], List[str], Dict[str, int],
+                     Dict[int, Tuple[BlueAgentActionType, str]],
+                     Dict[Tuple[BlueAgentActionType, str], int], RedAgentType]:
         """
         Sets up the cyborg environment and associated metadata
 
@@ -53,16 +67,8 @@ class CyborgEnvUtil:
                  a dict hostname->host_id, a list of subnets, a dict subnet->subnet_id,
                  a dict action_id->(action_type,host), a dict (action_type, host) -> action_id
         """
-        cyborg_scenario_config_path = str(inspect.getfile(Main))
-        cyborg_scenario_config_path = (f"{cyborg_scenario_config_path[:-7]}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIGS_DIR}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
-                                       f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
-        agents_dict, red_agent_type = config.get_agents_dict(agent=None)
-        cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
-                      agents=agents_dict)
-        cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
-                                                max_steps=config.maximum_steps)
+        cyborg_challenge_env, red_agent_type, cyborg_scenario_config_path = \
+            CyborgEnvUtil.create_cyborg_env(config=config, red_agent_type=None)
         cyborg_hostnames = list(cyborg_challenge_env.env.env.env.info.keys())
         cyborg_hostname_to_id = {}
         for i in range(len(cyborg_hostnames)):
@@ -409,3 +415,36 @@ class CyborgEnvUtil:
                 host_vector = [activity, scanned, access, decoy]
             state_vector.append(host_vector)
         return state_vector
+
+    @staticmethod
+    def host_scan_state_one_hot_encoding(host_scan_state: int) -> List[int]:
+        """
+        One-hot encoding of the host scan state
+
+        :param host_scan_state: the host scan state to one-hot-encode
+        :return: the encoded vector
+        """
+        if host_scan_state == 0:
+            return [0, 0]
+        elif host_scan_state == 1:
+            return [0, 1]
+        elif host_scan_state == 2:
+            return [1, 1]
+        else:
+            raise ValueError(f"host scan state: {host_scan_state} not recognized")
+
+    @staticmethod
+    def host_decoy_state_one_hot_encoding(host_decoy_state: List[BlueAgentActionType], scenario: int) -> List[int]:
+        """
+        One-hot encoding of the host scan state
+
+        :param host_decoy_state: the host scan state to one-hot-encode
+        :param scenario: the scenario
+        :return: the encoded vector
+        """
+        decoy_action_types = CyborgEnvUtil.get_decoy_action_types(scenario=scenario)
+        encoded_state = [0] * len(decoy_action_types)
+        for i, decoy_action_type in enumerate(decoy_action_types):
+            if decoy_action_type in host_decoy_state:
+                encoded_state[i] = 1
+        return encoded_state

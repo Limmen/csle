@@ -167,7 +167,8 @@ class POMCPAgent(BaseAgent):
                 agents_constants.POMCP.INITIAL_BELIEF, agents_constants.POMCP.PLANNING_TIME,
                 agents_constants.POMCP.LOG_STEP_FREQUENCY, agents_constants.POMCP.VERBOSE,
                 agents_constants.POMCP.DEFAULT_NODE_VALUE, agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
-                agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C, agents_constants.POMCP.MAX_DEPTH,
+                agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C,
+                agents_constants.POMCP.MAX_PLANNING_DEPTH,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
 
@@ -198,7 +199,8 @@ class POMCPAgent(BaseAgent):
         planning_time = self.experiment_config.hparams[agents_constants.POMCP.PLANNING_TIME].value
         max_particles = self.experiment_config.hparams[agents_constants.POMCP.MAX_PARTICLES].value
         c = self.experiment_config.hparams[agents_constants.POMCP.C].value
-        max_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_DEPTH].value
+        max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
+        max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
         config = self.simulation_env_config.simulation_env_input_config
         eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
@@ -208,6 +210,7 @@ class POMCPAgent(BaseAgent):
             action_sequence = []
             eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+
             _, info = eval_env.reset()
             s = info[agents_constants.COMMON.STATE]
             train_env.reset()
@@ -222,7 +225,7 @@ class POMCPAgent(BaseAgent):
                 Logger.__call__().get_logger().info(f"[POMCP] t: {t}, b: {belief}, s: {s}")
             # Run episode
             while not done and t <= max_env_steps:
-                pomcp.solve(max_depth=max_depth)
+                pomcp.solve(max_rollout_depth=max_rollout_depth, max_planning_depth=max_planning_depth)
                 action = pomcp.get_action()
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)

@@ -20,7 +20,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="PPO test", random_seeds=[399], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 descr="number of steps in the environment for doing rollouts between policy updates"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=16, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
-            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.00005148,
+            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.001,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),
             constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
@@ -98,6 +98,6 @@ if __name__ == '__main__':
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    MetastoreFacade.save_experiment_execution(experiment_execution)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_ppo_policy(ppo_policy=policy)

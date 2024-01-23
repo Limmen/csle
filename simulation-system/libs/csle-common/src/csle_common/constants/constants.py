@@ -1835,3 +1835,10 @@ class NEURAL_NETWORKS:
     NUM_HIDDEN_LAYERS = "num_hidden_layers"
     ACTIVATION_FUNCTION = "activation_function"
     DEVICE = "device"
+
+
+class CUDA:
+    """
+    String constants related to cuda
+    """
+    CUDA_VISIBLE_DEVICES = "CUDA_VISIBLE_DEVICES"

@@ -70,7 +70,7 @@ class POMCP:
             belief_state[state] = round(prob, 6)
         return belief_state
 
-    def rollout(self, state: int, history: List[int], depth: int, max_depth: int) -> float:
+    def rollout(self, state: int, history: List[int], depth: int, max_rollout_depth: int) -> float:
         """
         Perform randomized recursive rollout search starting from the given history
         until the max depth has been achieved
@@ -78,10 +78,10 @@ class POMCP:
         :param state: the initial state of the rollout
         :param history: the history of the root node
         :param depth: current planning horizon
-        :param max_depth: max planning horizon
+        :param max_rollout_depth: max rollout depth
         :return: the estimated value of the root node
         """
-        if depth > max_depth:
+        if depth > max_rollout_depth:
             if self.value_function is not None:
                 o = self.env.get_observation_from_history(history=history)
                 return self.value_function(o)
@@ -91,22 +91,22 @@ class POMCP:
             a = POMCPUtil.rand_choice(self.A)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history))
-        self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]
         if s_prime not in self.initial_belief:
             self.initial_belief[s_prime] = 0.0
         o = info[constants.COMMON.OBSERVATION]
         return float(r) + self.gamma * self.rollout(state=s_prime, history=history + [a, o], depth=depth + 1,
-                                                    max_depth=max_depth)
+                                                    max_rollout_depth=max_rollout_depth)
 
-    def simulate(self, state: int, max_depth: int, c: float, history: List[int], depth=0,
-                 parent: Union[None, BeliefNode, ActionNode] = None) -> float:
+    def simulate(self, state: int, max_rollout_depth: int, c: float, history: List[int],
+                 max_planning_depth: int, depth=0, parent: Union[None, BeliefNode, ActionNode] = None) -> float:
         """
         Performs the POMCP simulation starting from a given belief node and a sampled state
 
         :param state: the sampled state from the belief state of the node
-        :param max_depth: the maximum depth of the simulation
+        :param max_rollout_depth: the maximum depth of rollout
+        :param max_planning_depth: the maximum depth of planning
         :param c: the weighting factor for the ucb acquisition function
         :param depth: the current depth of the simulation
         :param history: the current history (history of the start node plus the simulation history)
@@ -115,7 +115,7 @@ class POMCP:
         """
 
         # Check if we have reached the maximum depth of the tree
-        if depth > max_depth:
+        if depth > max_planning_depth:
             if len(history) > 0 and self.value_function is not None:
                 o = self.env.get_observation_from_history(history=history)
                 return self.value_function(o)
@@ -134,8 +134,10 @@ class POMCP:
             # since the node does not have any children, we first add them to the node
             for action in self.A:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
-            # Perform the rollout and return the value
-            return self.rollout(state, history, depth, max_depth)
+
+            # Perform the rollout frmo the current state and return the value
+            self.env.set_state(state=state)
+            return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth)
 
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
@@ -154,8 +156,9 @@ class POMCP:
 
         # Recursive call, continue the simulation from the new node
         R = float(r) + self.gamma * self.simulate(
-            state=s_prime, max_depth=max_depth, depth=depth + 1, history=history + [next_action_node.action, o],
-            parent=next_action_node, c=c)
+            state=s_prime, max_rollout_depth=max_rollout_depth, depth=depth + 1,
+            history=history + [next_action_node.action, o],
+            parent=next_action_node, c=c, max_planning_depth=max_planning_depth)
 
         # The simulation has completed, time to backpropagate the values
         # We start by updating the belief particles and the visit count of the current belief node
@@ -169,19 +172,26 @@ class POMCP:
 
         return R
 
-    def solve(self, max_depth: int) -> None:
+    def solve(self, max_rollout_depth: int, max_planning_depth: int) -> None:
         """
         Runs the POMCP algorithm with a given max depth for the lookahead
 
-        :param max_depth: the max depth for the lookahead
+        :param max_rollout_depth: the max depth for rollout
+        :param max_planning_depth: the max depth for planning
         :return: None
         """
+        Logger.__call__().get_logger().info(
+            f"Starting POMCP, max rollout depth: {max_rollout_depth}, max planning depth: {max_planning_depth}, "
+            f"c: {self.c}, planning time: {self.planning_time}, gamma: {self.gamma}, "
+            f"max particles: {self.max_particles}, "
+            f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}")
         begin = time.time()
         n = 0
         while time.time() - begin < self.planning_time:
             n += 1
             state = self.tree.root.sample_state()
-            self.simulate(state, max_depth=max_depth, history=self.tree.root.history, c=self.c, parent=self.tree.root)
+            self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history, c=self.c,
+                          parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
             if self.verbose:
                 action_values = [action.value for action in self.tree.root.children]
                 best_action_idx = np.argmax(action_values)

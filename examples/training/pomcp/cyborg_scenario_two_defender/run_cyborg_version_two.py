@@ -47,19 +47,21 @@ if __name__ == '__main__':
                 value=value_function, name=agents_constants.POMCP.VALUE_FUNCTION,
                 descr="the value function to use for truncated rollouts"),
             agents_constants.POMCP.A: HParam(value=A, name=agents_constants.POMCP.A, descr="the action space"),
-            agents_constants.POMCP.GAMMA: HParam(value=0.99, name=agents_constants.POMCP.GAMMA,
+            agents_constants.POMCP.GAMMA: HParam(value=1, name=agents_constants.POMCP.GAMMA,
                                                  descr="the discount factor"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=False, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.INITIAL_BELIEF: HParam(value=b1, name=agents_constants.POMCP.INITIAL_BELIEF,
                                                           descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=4000, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=6000, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
-            agents_constants.POMCP.MAX_DEPTH: HParam(value=5, name=agents_constants.POMCP.MAX_DEPTH,
-                                                     descr="the maximum depth for planning"),
-            agents_constants.POMCP.C: HParam(value=0.35, name=agents_constants.POMCP.C,
+            agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
+                value=2, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=25, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+                                                             descr="the maximum depth for rollout"),
+            agents_constants.POMCP.C: HParam(value=10, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
@@ -81,10 +83,7 @@ if __name__ == '__main__':
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg"),
-            agents_constants.COMMON.GAMMA: HParam(
-                value=0.99, name=agents_constants.COMMON.GAMMA,
-                descr="the discount factor")
+                descr="the number of samples to include when computing the running avg")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

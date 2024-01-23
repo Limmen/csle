@@ -218,6 +218,7 @@ if __name__ == '__main__':
     returns = []
     num_evals = 1000
     import random
+
     random.seed(0)
     for i in range(num_evals):
         print(f"{i}/{num_evals}, {np.mean(returns)}")

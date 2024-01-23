@@ -364,6 +364,14 @@ class PPOTrainingCallback(BaseCallback):
             Logger.__call__().get_logger().info(f"Saving model to path: {save_path}")
             self.model.save(save_path)
             os.chmod(save_path, 0o777)
+            policy = PPOPolicy(
+                model=self.model, simulation_name=self.simulation_name, save_path=save_path,
+                states=[],
+                actions=[], player_type=self.experiment_config.player_type,
+                experiment_config=self.experiment_config,
+                avg_R=self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
+            self.exp_result.policies[self.seed] = policy
+            MetastoreFacade.save_ppo_policy(ppo_policy=policy)
 
         # Eval model
         if self.iter % self.eval_every == 0:

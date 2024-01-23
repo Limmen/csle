@@ -20,14 +20,14 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="Cardiff PPO Cyborg BLine", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="Cardiff PPO Cyborg BLine", random_seeds=[399], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                value=256, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
-                value=1, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
+                value=2, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=2048, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                                                        descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
-            agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=50, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
@@ -94,10 +94,10 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
-        decoy_state=True, decoy_optimization=False)
+        decoy_state=True, decoy_optimization=False, cache_visited_states=False)
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                     experiment_config=experiment_config, save_to_metastore=False)
+                     experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    MetastoreFacade.save_experiment_execution(experiment_execution)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_ppo_policy(ppo_policy=policy)
