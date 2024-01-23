@@ -566,3 +566,4 @@ class POMCP:
     LOG_STEP_FREQUENCY = "log_step_frequency"
     DEFAULT_NODE_VALUE = "default_node_value"
     VERBOSE = "verbose"
+    PARALLEL_ROLLOUT = "parallel_rollout"

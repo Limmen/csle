@@ -1,7 +1,8 @@
-from typing import List, Dict, Any, Callable
+from typing import List, Dict, Any, Callable, Union
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
+from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.pomcp.node import Node
 import csle_agents.constants.constants as constants
@@ -78,15 +79,19 @@ class POMCPUtil:
         return np.sqrt(np.log(history_visit_count) / action_visit_count)
 
     @staticmethod
-    def ucb_acquisition_function(action: "Node", c: float) -> float:
+    def ucb_acquisition_function(action: "Node", c: float, rollout_policy: Union[Policy, None], o: List[Any]) -> float:
         """
         The UCB acquisition function
 
         :param action: the action node
         :param c: the exploration parameter
+        :param rollout_policy: the rollout policy
         :return: the acquisition value of the action
         """
-        return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+        prior = 1.0
+        if rollout_policy is not None:
+            prior = rollout_policy.probability(o=o, a=action.action)
+        return float(action.value + prior * c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,

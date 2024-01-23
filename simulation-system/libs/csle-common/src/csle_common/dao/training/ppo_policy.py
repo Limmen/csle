@@ -92,7 +92,7 @@ class PPOPolicy(Policy):
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
             log_prob = self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
-                x=torch.tensor(a)).item()
+                torch.tensor(a).to(self.model.device)).item()
         elif isinstance(self.model, PPONetwork):
             _, log_prob, _, _ = self.model.get_action_and_value(x=torch.tensor(o), action=torch.tensor(a))
         else:

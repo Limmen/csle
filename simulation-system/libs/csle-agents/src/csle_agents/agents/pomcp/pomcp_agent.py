@@ -168,7 +168,7 @@ class POMCPAgent(BaseAgent):
                 agents_constants.POMCP.LOG_STEP_FREQUENCY, agents_constants.POMCP.VERBOSE,
                 agents_constants.POMCP.DEFAULT_NODE_VALUE, agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C,
-                agents_constants.POMCP.MAX_PLANNING_DEPTH,
+                agents_constants.POMCP.MAX_PLANNING_DEPTH, agents_constants.POMCP.PARALLEL_ROLLOUT,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
 
@@ -190,6 +190,7 @@ class POMCPAgent(BaseAgent):
         verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
         max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
+        parallel_rollout = self.experiment_config.hparams[agents_constants.POMCP.PARALLEL_ROLLOUT].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
         A = self.experiment_config.hparams[agents_constants.POMCP.A].value

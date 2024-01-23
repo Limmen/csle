@@ -23,11 +23,11 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
-        decoy_state=True, decoy_optimization=False)
+        decoy_state=True, decoy_optimization=False, cache_visited_states=True)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     b1 = csle_cyborg_env.initial_belief
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=18)
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=5)
     value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
@@ -58,16 +58,19 @@ if __name__ == '__main__':
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
-                value=2, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+                value=25, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
             agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=25, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
-            agents_constants.POMCP.C: HParam(value=10, name=agents_constants.POMCP.C,
+            agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
             agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
                 value=20, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),
+            agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
+                value=True, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
+                                                                                "parallel rollout should be used"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),

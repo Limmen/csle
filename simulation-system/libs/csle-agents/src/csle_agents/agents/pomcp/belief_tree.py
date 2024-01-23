@@ -10,19 +10,22 @@ class BeliefTree:
     of actions and observations.
     """
 
-    def __init__(self, root_particles: List[int], default_node_value: float, root_observation: int) -> None:
+    def __init__(self, root_particles: List[int], default_node_value: float, root_observation: int,
+                 initial_visit_count: int = 0) -> None:
         """
         Initializes the tree with a belief node with a set of particles
 
         :param root_particles: the particles to add to the root belief node
         :param default_node_value: the default value of nodes in the tree
         :param root_observation: the root observation
+        :param initial_visit_count: the initial visit count
         :return: None
         """
         self.tree_size = 0
         self.root_observation = root_observation
         self.nodes: Dict[int, Union[Node, None]] = {}
         self.default_node_value = default_node_value
+        self.initial_visit_count = initial_visit_count
         node: Node = self.add(history=[root_observation], particle=root_particles, parent=None,
                               value=default_node_value)
         if isinstance(node, BeliefNode):
@@ -47,11 +50,13 @@ class BeliefTree:
         """
         # Create the node
         if action is not None:
-            new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action, value=value)
+            new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action, value=value,
+                                        visit_count=self.initial_visit_count)
         else:
             if observation is None:
                 observation = 0
-            new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation, value=value)
+            new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation, value=value,
+                                  visit_count=self.initial_visit_count)
 
         if particle is not None and isinstance(new_node, BeliefNode):
             new_node.add_particle(particle)

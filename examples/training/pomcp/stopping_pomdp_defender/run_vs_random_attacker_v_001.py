@@ -96,6 +96,9 @@ if __name__ == '__main__':
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=0.35, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
+            agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
+                value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
+                                                                                "parallel rollout should be used"),
             agents_constants.POMCP.MAX_NEGATIVE_SAMPLES: HParam(
                 value=200, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),

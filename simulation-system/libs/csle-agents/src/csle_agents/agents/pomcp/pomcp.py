@@ -21,7 +21,7 @@ class POMCP:
                  reinvigoration: bool = False,
                  reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
                  value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
-                 default_node_value: float = 0) -> None:
+                 default_node_value: float = 0, parallel_rollout: bool = False) -> None:
         """
         Initializes the solver
 
@@ -38,6 +38,7 @@ class POMCP:
         :param rollout_policy: the rollout policy
         :param verbose: boolean flag indicating whether logging should be verbose
         :param default_node_value: the default value of nodes in the tree
+        :param parallel_rollout: boolean flag indicating whether parallel rollout should be used
         """
         self.A = A
         self.env = env
@@ -49,13 +50,15 @@ class POMCP:
         self.max_particles = max_particles
         self.reinvigorated_particles_ratio = reinvigorated_particles_ratio
         self.rollout_policy = rollout_policy
+        self.initial_visit_count = 0
         self.value_function = value_function
         self.initial_belief = initial_belief
         self.reinvigoration = reinvigoration
         self.default_node_value = default_node_value
+        self.parallel_rollout = parallel_rollout
         root_particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=initial_belief)
         self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value,
-                               root_observation=self.root_observation)
+                               root_observation=self.root_observation, initial_visit_count=self.initial_visit_count)
         self.verbose = verbose
 
     def compute_belief(self) -> Dict[int, float]:
@@ -142,8 +145,10 @@ class POMCP:
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
         np.random.shuffle(current_node.children)
-        next_action_node = sorted(current_node.children, key=lambda x: POMCPUtil.ucb_acquisition_function(x, c=c),
-                                  reverse=True)[0]
+        o = self.env.get_observation_from_history(current_node.history)
+        next_action_node = sorted(
+            current_node.children, key=lambda x: POMCPUtil.ucb_acquisition_function(
+                x, c=c, rollout_policy=self.rollout_policy, o=o), reverse=True)[0]
 
         # Simulate the outcome of the selected action
         a = next_action_node.action

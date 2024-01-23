@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=50, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
