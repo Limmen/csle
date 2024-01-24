@@ -41,4 +41,3 @@ def evaluate(
         obs = next_obs
 
     return episodic_returns
-

@@ -1,11 +1,6 @@
 import numpy as np
 import pytest
 import pytest_mock
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import (
-    LocalIntrusionResponseGameConfig,
-)
-from csle_common.dao.training.tabular_policy import TabularPolicy
-import gym_csle_intrusion_response_game.constants.constants as env_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -17,9 +12,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-from gym_csle_intrusion_response_game.util.intrusion_response_game_util import (
-    IntrusionResponseGameUtil,
-)
+
 
 class TestDQNCleanAgentSuite:
     """
@@ -44,25 +37,39 @@ class TestDQNCleanAgentSuite:
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
                     value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                     descr="number of layers of the policy network"),
-                agents_constants.DQN_CLEAN.EXP_FRAC: HParam(value=0.5, name=agents_constants.DQN_CLEAN.EXP_FRAC,
-                                                            descr="the fraction of `total-timesteps` it takes from start-e to go end-e"),
-                agents_constants.DQN_CLEAN.TAU: HParam(value=1.0, name=agents_constants.DQN_CLEAN.TAU, descr="target network update rate"),
-                agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
-                                                        descr="batch size for updates"),
-                agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000, name=agents_constants.DQN_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
-                agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10, name=agents_constants.DQN_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
-                agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500, name=agents_constants.DQN_CLEAN.T_N_FREQ, descr="the batch size of sample from the reply memory"),
-                agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=10000, name=agents_constants.DQN_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
-                agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False, name=agents_constants.DQN_CLEAN.SAVE_MODEL, descr="decision param for model saving"),
+                agents_constants.DQN_CLEAN.EXP_FRAC: HParam(value=0.5,
+                                                            name=agents_constants.DQN_CLEAN.EXP_FRAC,
+                                                            descr="the fraction of `total-timesteps`"
+                                                            " it takes from start-e to go end-e"),
+                agents_constants.DQN_CLEAN.TAU: HParam(value=1.0, name=agents_constants.DQN_CLEAN.TAU,
+                                                       descr="target network update rate"),
+                agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.
+                                                           COMMON.BATCH_SIZE, descr="batch size for updates"),
+                agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000, name=agents_constants.
+                                                                   DQN_CLEAN.LEARNING_STARTS,
+                                                                   descr="timestep to start learning"),
+                agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10, name=agents_constants.
+                                                              DQN_CLEAN.TRAIN_FREQ,
+                                                              descr="the frequency of training"),
+                agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500,
+                                                            name=agents_constants.DQN_CLEAN.T_N_FREQ,
+                                                            descr="the batch size of sample"
+                                                            " from the reply memory"),
+                agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=10000,
+                                                               name=agents_constants.DQN_CLEAN.BUFFER_SIZE,
+                                                               descr="the replay memory buffer size"),
+                agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False,
+                                                              name=agents_constants.DQN_CLEAN.SAVE_MODEL,
+                                                              descr="decision param for model saving"),
                 agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
-                                                            name=agents_constants.COMMON.LEARNING_RATE,
-                                                            descr="learning rate for updating the policy"),
+                                                              name=agents_constants.COMMON.LEARNING_RATE,
+                                                              descr="learning rate for updating the policy"),
                 agents_constants.DQN_CLEAN.NUM_STEPS: HParam(value=164,
-                                                            name=agents_constants.PPO_CLEAN.NUM_STEPS,
-                                                            descr="number of steps in each time step"),
+                                                             name=agents_constants.PPO_CLEAN.NUM_STEPS,
+                                                             descr="number of steps in each time step"),
                 constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
-                                                        name=constants.NEURAL_NETWORKS.DEVICE,
-                                                        descr="the device to train on (cpu or cuda:x)"),
+                                                         name=constants.NEURAL_NETWORKS.DEVICE,
+                                                         descr="the device to train on (cpu or cuda:x)"),
                 agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                     value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                     descr="the nunmber of parallel environments for training"),
@@ -81,27 +88,29 @@ class TestDQNCleanAgentSuite:
                     value=0.01, name=agents_constants.PPO_CLEAN.ENT_COEF,
                     descr="the entropy coefficient for exploration"),
                 agents_constants.PPO_CLEAN.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
-                                                        descr="the coefficient of the value network for the loss"),
-                agents_constants.PPO_CLEAN.NUM_MINIBATCHES: HParam(value=4, name=agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
-                                                                descr="the number of minibatches"),
+                                                           descr="the coefficient of the value network for the loss"),
+                agents_constants.PPO_CLEAN.NUM_MINIBATCHES: HParam(value=4,
+                                                                   name=agents_constants.PPO_CLEAN.NUM_MINIBATCHES,
+                                                                   descr="the number of minibatches"),
                 agents_constants.PPO_CLEAN.MAX_GRAD_NORM: HParam(
-                    value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
+                    value=0.5, name=agents_constants.PPO_CLEAN.MAX_GRAD_NORM,
+                    descr="the maximum allows gradient norm"),
                 agents_constants.PPO_CLEAN.NORM_ADV: HParam(
                     value=0.5, name=agents_constants.PPO_CLEAN.NORM_ADV, descr="norm_av param value"),
                 agents_constants.PPO_CLEAN.UPDATE_EPOCHS: HParam(
                     value=4, name=agents_constants.PPO_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
                 agents_constants.PPO_CLEAN.TARGET_KL: HParam(value=None,
-                                                            name=agents_constants.PPO_CLEAN.TARGET_KL,
-                                                            descr="the target kl"),
+                                                             name=agents_constants.PPO_CLEAN.TARGET_KL,
+                                                             descr="the target kl"),
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                     value=int(1000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                     descr="number of timesteps to train"),
                 agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
-                                                        descr="training iterations between evaluations"),
+                                                           descr="training iterations between evaluations"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="the batch size for evaluation"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                        descr="how frequently to save the model"),
+                                                           descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
@@ -112,7 +121,7 @@ class TestDQNCleanAgentSuite:
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                                descr="the number of stop actions")
+                                                  descr="the number of stop actions")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )

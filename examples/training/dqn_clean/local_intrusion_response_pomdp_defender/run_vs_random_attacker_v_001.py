@@ -1,5 +1,3 @@
-from typing import List
-
 import csle_agents.constants.constants as agents_constants
 import csle_common.constants.constants as constants
 import gym_csle_intrusion_response_game.constants.constants as env_constants
@@ -39,15 +37,27 @@ if __name__ == '__main__':
                 value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.DQN_CLEAN.EXP_FRAC: HParam(value=0.5, name=agents_constants.DQN_CLEAN.EXP_FRAC,
-                                                        descr="the fraction of `total-timesteps` it takes from start-e to go end-e"),
-            agents_constants.DQN_CLEAN.TAU: HParam(value=1.0, name=agents_constants.DQN_CLEAN.TAU, descr="target network update rate"),
+                                                        descr="the fraction of `total-timesteps` "
+                                                        "it takes from start-e to go end-e"),
+            agents_constants.DQN_CLEAN.TAU: HParam(value=1.0, name=agents_constants.DQN_CLEAN.TAU,
+                                                   descr="target network update rate"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
-            agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000, name=agents_constants.DQN_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
-            agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10, name=agents_constants.DQN_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
-            agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500, name=agents_constants.DQN_CLEAN.T_N_FREQ, descr="the batch size of sample from the reply memory"),
-            agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=1000, name=agents_constants.DQN_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
-            agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False, name=agents_constants.DQN_CLEAN.SAVE_MODEL, descr="decision param for model saving"),
+            agents_constants.DQN_CLEAN.LEARNING_STARTS: HParam(value=10000,
+                                                               name=agents_constants.DQN_CLEAN.LEARNING_STARTS,
+                                                               descr="timestep to start learning"),
+            agents_constants.DQN_CLEAN.TRAIN_FREQ: HParam(value=10,
+                                                          name=agents_constants.DQN_CLEAN.TRAIN_FREQ,
+                                                          descr="the frequency of training"),
+            agents_constants.DQN_CLEAN.T_N_FREQ: HParam(value=500,
+                                                        name=agents_constants.DQN_CLEAN.T_N_FREQ,
+                                                        descr="the batch size of sample from the reply memory"),
+            agents_constants.DQN_CLEAN.BUFFER_SIZE: HParam(value=1000,
+                                                           name=agents_constants.DQN_CLEAN.BUFFER_SIZE,
+                                                           descr="the replay memory buffer size"),
+            agents_constants.DQN_CLEAN.SAVE_MODEL: HParam(value=False,
+                                                          name=agents_constants.DQN_CLEAN.SAVE_MODEL,
+                                                          descr="decision param for model saving"),
             agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
                                                           name=agents_constants.COMMON.LEARNING_RATE,
                                                           descr="learning rate for updating the policy"),

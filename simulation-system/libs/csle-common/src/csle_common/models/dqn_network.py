@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torch.distributions.categorical import Categorical
 import numpy as np
 
 
