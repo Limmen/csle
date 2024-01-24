@@ -84,6 +84,9 @@ class DQNCleanAgent(BaseAgent):
         self.buffer_size = self.experiment_config.hparams[agents_constants.DQN_CLEAN.BUFFER_SIZE].value
         self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
+        import logging
+        # logging.getLogger().info(self.simulation_env_config.gym_env_name)
+        # logging.getLogger().info(self.config)
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
         # Algorithm specific arguments
 
