@@ -27,7 +27,7 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     b1 = csle_cyborg_env.initial_belief
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=15)
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=98)
     # value_function = lambda x: 0
     value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
-                value=20, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+                value=30, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
             agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=1, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,

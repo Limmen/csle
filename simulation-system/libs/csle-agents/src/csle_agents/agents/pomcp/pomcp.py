@@ -147,10 +147,11 @@ class POMCP:
 
             # Perform the rollout from the current state and return the value
             if self.parallel_rollout and self.rollout_policy is not None:
-                return self.env.parallel_rollout(policy_id=self.rollout_policy.id,
-                                                 num_processes=self.num_parallel_processes,
-                                                 num_evals_per_process=self.num_evals_per_process,
-                                                 max_horizon=max_rollout_depth, state_id=state)
+                R = self.env.parallel_rollout(policy_id=self.rollout_policy.id,
+                                              num_processes=self.num_parallel_processes,
+                                              num_evals_per_process=self.num_evals_per_process,
+                                              max_horizon=max_rollout_depth, state_id=state)
+                return float(R)
             else:
                 self.env.set_state(state=state)
                 return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth)
@@ -188,7 +189,7 @@ class POMCP:
         next_action_node.visit_count += 1
         next_action_node.value += (R - next_action_node.value) / next_action_node.visit_count
 
-        return R
+        return float(R)
 
     def solve(self, max_rollout_depth: int, max_planning_depth: int) -> None:
         """
