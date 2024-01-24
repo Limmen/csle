@@ -3,7 +3,7 @@ MIT License
 
 Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
 import time
 import torch
 import torch.optim as optim
@@ -269,7 +269,7 @@ class DQNCleanAgent(BaseAgent):
         start_time = time.time()
         # TRY NOT TO MODIFY: start the game
         obs, _ = envs.reset(seed=seed)
-        R = []
+        R: List[Any] = []
         T = []
         i = 0
         for global_step in range(self.total_timesteps):
@@ -364,7 +364,8 @@ class DQNCleanAgent(BaseAgent):
             f"{round(running_avg_T, 3)}, "
             f"runtime: {time_elapsed_minutes} min")
         envs.close()
-        base_env: BaseEnv = envs.envs[0].env.env.env
+
+        base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
         return exp_result, base_env, q_network
 
     def hparam_names(self) -> List[str]:

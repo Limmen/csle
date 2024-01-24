@@ -122,6 +122,7 @@ class DQN_CLEAN:
     T_N_FREQ = "target_network_frequency"
     BUFFER_SIZE = "buffer_size"
     SAVE_MODEL = "save_model"
+    CUDA = "cuda"
 
 
 class T_FP:

@@ -1,5 +1,5 @@
 import random
-from typing import Callable
+from typing import Callable, Any, List
 
 import gymnasium as gym
 import numpy as np
@@ -9,7 +9,7 @@ import torch
 def evaluate(
     seed: int,
     model_path: str,
-    make_env: Callable,
+    make_env: Callable[[str, int, int, Any, str], Any],
     env_id: str,
     eval_episodes: int,
     run_name: str,
@@ -24,7 +24,7 @@ def evaluate(
     model.eval()
 
     obs, _ = envs.reset()
-    episodic_returns = []
+    episodic_returns: List[Any] = []
     while len(episodic_returns) < eval_episodes:
         if random.random() < epsilon:
             actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
