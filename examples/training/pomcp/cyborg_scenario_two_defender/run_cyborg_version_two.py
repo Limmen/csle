@@ -73,7 +73,7 @@ if __name__ == '__main__':
                 descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
                 value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
-                                                                                "parallel rollout should be used"),
+                                                                                 "parallel rollout should be used"),
             agents_constants.POMCP.NUM_PARALLEL_PROCESSES: HParam(
                 value=5, name=agents_constants.POMCP.NUM_PARALLEL_PROCESSES, descr="number of parallel processes"),
             agents_constants.POMCP.NUM_EVALS_PER_PROCESS: HParam(
@@ -99,6 +99,7 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     import torch
+
     torch.multiprocessing.set_start_method('spawn')
     agent = POMCPAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, save_to_metastore=False)

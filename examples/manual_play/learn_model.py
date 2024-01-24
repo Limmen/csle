@@ -1,4 +1,3 @@
-import numpy as np
 import io
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
@@ -6,8 +5,6 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
 import csle_agents.constants.constants as constants
 import json
-from csle_agents.agents.pomcp.pomcp_util import POMCPUtil
-import math
 
 if __name__ == '__main__':
     ppo_policy = MetastoreFacade.get_ppo_policy(id=22)
@@ -42,13 +39,15 @@ if __name__ == '__main__':
                 transition_probabilities[",".join([str(s), str(s_prime), str(a)])] = 1
                 new_transitions += 1
             else:
-                transition_probabilities[",".join([str(s), str(s_prime), str(a)])] = transition_probabilities[",".join([str(s), str(s_prime), str(a)])] + 1
+                transition_probabilities[",".join([str(s), str(s_prime), str(a)])] = transition_probabilities[",".join(
+                    [str(s), str(s_prime), str(a)])] + 1
             if ",".join([str(s), str(s_prime), str(a)]) not in reward_function:
                 reward_function[",".join([str(s), str(s_prime), str(a)])] = r
             if ",".join([str(s_prime), str(oid)]) not in observation_probabilities:
                 observation_probabilities[",".join([str(s_prime), str(oid)])] = 1
             else:
-                observation_probabilities[",".join([str(s_prime), str(oid)])] = observation_probabilities[",".join([str(s_prime), str(oid)])] + 1
+                observation_probabilities[",".join([str(s_prime), str(oid)])] = observation_probabilities[",".join(
+                    [str(s_prime), str(oid)])] + 1
             t_count += 1
         print(f"new transitions: {new_transitions}")
 
@@ -63,5 +62,3 @@ if __name__ == '__main__':
             json_str = json.dumps(model, indent=4, sort_keys=True)
             with io.open(f"/home/kim/cyborg_model_{i}.json", 'w', encoding='utf-8') as f:
                 f.write(json_str)
-
-

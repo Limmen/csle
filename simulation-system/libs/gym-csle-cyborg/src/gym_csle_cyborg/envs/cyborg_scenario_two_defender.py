@@ -14,7 +14,6 @@ import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.logging.log import Logger
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType

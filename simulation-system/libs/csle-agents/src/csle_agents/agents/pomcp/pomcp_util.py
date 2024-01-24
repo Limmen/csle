@@ -93,7 +93,7 @@ class POMCPUtil:
         if action.visit_count == 0:
             return np.inf
         else:
-            return action.value + (prior_weight*prior_weight)/action.visit_count
+            return action.value + (prior_weight * prior_weight) / action.visit_count
         # prior = 1.0
         # if rollout_policy is not None:
         #     prior = rollout_policy.probability(o=o, a=action.action)

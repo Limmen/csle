@@ -17,6 +17,7 @@ if __name__ == '__main__':
     actions = list(csle_cyborg_env.action_id_to_type_and_host.keys())
     # for i in range(25):
     import torch
+
     torch.multiprocessing.set_start_method('spawn')
     action_sequence = []
     returns = []
@@ -39,8 +40,8 @@ if __name__ == '__main__':
                 R = 0
                 for fictitious_state, prob in belief.items():
                     r = csle_cyborg_env.parallel_rollout(policy_id=15, num_processes=1, num_evals_per_process=1,
-                                                     max_horizon=1, state_id=fictitious_state)
-                    R += r*prob
+                                                         max_horizon=1, state_id=fictitious_state)
+                    R += r * prob
                 action_values.append(R)
             print(action_values)
             a_idx = np.argmax(action_values)

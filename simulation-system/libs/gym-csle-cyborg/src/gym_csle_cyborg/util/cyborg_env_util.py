@@ -56,9 +56,8 @@ class CyborgEnvUtil:
 
     @staticmethod
     def setup_cyborg_env(config: CSLECyborgConfig) \
-            -> Tuple[str, ChallengeWrapper, List[str], Dict[str, int], List[str], Dict[str, int],
-                     Dict[int, Tuple[BlueAgentActionType, str]],
-                     Dict[Tuple[BlueAgentActionType, str], int], RedAgentType]:
+            -> Tuple[str, ChallengeWrapper, List[str], Dict[str, int], List[str], Dict[str, int], Dict[
+                int, Tuple[BlueAgentActionType, str]], Dict[Tuple[BlueAgentActionType, str], int], RedAgentType]:
         """
         Sets up the cyborg environment and associated metadata
 
@@ -346,11 +345,9 @@ class CyborgEnvUtil:
                 host_access = 3
             host_decoy_state = len(decoy_state[host_id])
             if not observation:
-                state_vector.append([host_access])
-                # state_vector.append([host_known, host_scanned, host_access, host_decoy_state])
+                state_vector.append([host_known, host_scanned, host_access, host_decoy_state])
             else:
-                state_vector.append([activity, host_access])
-                # state_vector.append([activity, host_scanned, host_access, host_decoy_state])
+                state_vector.append([activity, host_scanned, host_access, host_decoy_state])
         return state_vector
 
     @staticmethod
@@ -370,10 +367,10 @@ class CyborgEnvUtil:
                 if not observation:
                     if i == 0:
                         host_binary_id_str += format(elem, '02b')
-                    # if i == 0:
-                    #     host_binary_id_str += format(elem, '01b')
-                    # if i == 1:
-                    #     host_binary_id_str += format(elem, '01b')
+                    if i == 0:
+                        host_binary_id_str += format(elem, '01b')
+                    if i == 1:
+                        host_binary_id_str += format(elem, '01b')
                 else:
                     if i == 0:
                         host_binary_id_str += format(elem, '02b')
@@ -398,33 +395,25 @@ class CyborgEnvUtil:
         :return: the state vector
         """
         if not observation:
-            # binary_id_str = format(state_id, "091b")
-            binary_id_str = format(state_id, "026b")
-            host_binary_ids_str = [binary_id_str[i:i + 2] for i in range(0, len(binary_id_str), 2)]
+            binary_id_str = format(state_id, "091b")
+            host_binary_ids_str = [binary_id_str[i:i + 7] for i in range(0, len(binary_id_str), 7)]
         else:
-            # binary_id_str = format(state_id, "0117b")
-            binary_id_str = format(state_id, "052b")
-            # host_binary_ids_str = [binary_id_str[i:i + 9] for i in range(0, len(binary_id_str), 9)]
-            host_binary_ids_str = [binary_id_str[i:i + 4] for i in range(0, len(binary_id_str), 4)]
+            binary_id_str = format(state_id, "0117b")
+            host_binary_ids_str = [binary_id_str[i:i + 9] for i in range(0, len(binary_id_str), 9)]
         state_vector = []
         for host_bin in host_binary_ids_str:
             if not observation:
-                access = int(host_bin[0:2], 2)
-                # known = int(host_bin[0:1], 2)
-                # scanned = int(host_bin[1:2], 2)
-                # access = int(host_bin[2:4], 2)
-                # decoy = int(host_bin[4:7], 2)
-                host_vector = [access]
-                # host_vector = [known, scanned, access, decoy]
+                known = int(host_bin[0:1], 2)
+                scanned = int(host_bin[1:2], 2)
+                access = int(host_bin[2:4], 2)
+                decoy = int(host_bin[4:7], 2)
+                host_vector = [known, scanned, access, decoy]
             else:
                 activity = int(host_bin[0:2], 2)
-                access = int(host_bin[2:4], 2)
-                # activity = int(host_bin[0:2], 2)
-                # scanned = int(host_bin[2:4], 2)
-                # access = int(host_bin[4:6], 2)
-                # decoy = int(host_bin[6:9], 2)
-                host_vector = [activity, access]
-                # host_vector = [activity, scanned, access, decoy]
+                scanned = int(host_bin[2:4], 2)
+                access = int(host_bin[4:6], 2)
+                decoy = int(host_bin[6:9], 2)
+                host_vector = [activity, scanned, access, decoy]
             state_vector.append(host_vector)
         return state_vector
 
