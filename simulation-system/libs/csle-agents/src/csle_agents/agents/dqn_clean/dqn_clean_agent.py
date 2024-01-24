@@ -54,7 +54,6 @@ class DQNCleanAgent(BaseAgent):
                                             experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.DQN_CLEAN
         self.training_job = training_job
-
         self.num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
         self.num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
         self.config = self.simulation_env_config.simulation_env_input_config
@@ -84,9 +83,6 @@ class DQNCleanAgent(BaseAgent):
         self.buffer_size = self.experiment_config.hparams[agents_constants.DQN_CLEAN.BUFFER_SIZE].value
         self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
-        import logging
-        # logging.getLogger().info(self.simulation_env_config.gym_env_name)
-        # logging.getLogger().info(self.config)
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
         # Algorithm specific arguments
 
@@ -283,12 +279,14 @@ class DQNCleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                import logging
                 
                 q_values = q_network(torch.Tensor(obs).to(device))
-                logging.getLogger().info(q_values)
+                # print(q_values)
                 actions = torch.argmax(q_values, dim=1).cpu().numpy()
-                logging.getLogger().info(actions)
+                # if actions[0] > 1 and self.simulation_env_config.simulation_env_input_config == :
+                #     actions
+                if self.simulation_env_config.simulation_env_input_config.env_name == "csle-stopping-game-pomdp-defender-v1":
+                    actions[0] = random.randrange(0,2)
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
@@ -348,7 +346,7 @@ class DQNCleanAgent(BaseAgent):
 
         running_avg_J = ExperimentUtil.running_average(
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].Value
+            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value
         )
 
         running_avg_T = ExperimentUtil.running_average(

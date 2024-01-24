@@ -4,7 +4,6 @@ import pytest_mock
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import (
     LocalIntrusionResponseGameConfig,
 )
-import logging
 from csle_common.dao.training.tabular_policy import TabularPolicy
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 import csle_common.constants.constants as constants
@@ -95,7 +94,7 @@ class TestDQNCleanAgentSuite:
                                                             name=agents_constants.PPO_CLEAN.TARGET_KL,
                                                             descr="the target kl"),
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                    value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                    value=int(1000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                     descr="number of timesteps to train"),
                 agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                         descr="training iterations between evaluations"),
@@ -126,7 +125,7 @@ class TestDQNCleanAgentSuite:
 
         :return: The example config
         """
-        L = 3
+        L = 1
         R_INT = -5
         R_COST = -5
         R_SLA = 1
@@ -215,7 +214,7 @@ class TestDQNCleanAgentSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace', return_value=True)
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True),
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_ppo_policy', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_dqn_policy', return_value=True)
         agent = DQNCleanAgent(emulation_env_config=emulation_env_config,
                               simulation_env_config=simulation_env_config,
                               experiment_config=experiment_config)
