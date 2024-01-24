@@ -120,13 +120,13 @@ class TestDQNCleanAgentSuite:
         return experiment_config
 
     @pytest.fixture
-    def pomdp_df_config(self) -> StoppingGameDefenderPomdpConfig:
+    def pomdp_config(self) -> StoppingGameDefenderPomdpConfig:
         """
         Fixture, which is run before every test. It sets up an input POMDP config
 
         :return: The example config
         """
-        L = 1
+        L = 3
         R_INT = -5
         R_COST = -5
         R_SLA = 1
@@ -162,7 +162,7 @@ class TestDQNCleanAgentSuite:
         return pomdp_config
 
     def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
-                          pomdp_df_config: StoppingGameDefenderPomdpConfig) -> None:
+                          pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
         """
         Tests creation of the DQNCleanAgent
 
@@ -175,16 +175,14 @@ class TestDQNCleanAgentSuite:
         simulation_env_config = mocker.MagicMock()
         simulation_env_config.configure_mock(**{
             "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
-            "simulation_env_input_config": pomdp_df_config
+            "simulation_env_input_config": pomdp_config
         })
-
-        logging.getLogger().info(simulation_env_config.simulation_env_input_config)
 
         DQNCleanAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                       experiment_config=experiment_config)
 
     def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
-                       pomdp_df_config: StoppingGameDefenderPomdpConfig) -> None:
+                       pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
         """
         Tests running the agent
 
@@ -201,13 +199,11 @@ class TestDQNCleanAgentSuite:
         # Set attributes of the mocks
         simulation_env_config.configure_mock(**{
             "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
-            "simulation_env_input_config.local_intrusion_response_game_config.": pomdp_df_config
+            "simulation_env_input_config": pomdp_config
         })
         emulation_env_config.configure_mock(**{
             "name": "emulation-test-env"
         })
-
-        logging.getLogger().info(simulation_env_config.simulation_env_input_config)
 
         # Mock metastore facade
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job', return_value=True)

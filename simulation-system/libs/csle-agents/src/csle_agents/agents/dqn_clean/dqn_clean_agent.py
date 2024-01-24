@@ -283,8 +283,12 @@ class DQNCleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
+                import logging
+                
                 q_values = q_network(torch.Tensor(obs).to(device))
+                logging.getLogger().info(q_values)
                 actions = torch.argmax(q_values, dim=1).cpu().numpy()
+                logging.getLogger().info(actions)
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
