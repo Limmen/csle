@@ -56,7 +56,7 @@ if __name__ == '__main__':
                                                           descr="the initial belief"),
             agents_constants.POMCP.PLANNING_TIME: HParam(value=100, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=20, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=30, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
@@ -77,10 +77,10 @@ if __name__ == '__main__':
             agents_constants.POMCP.NUM_PARALLEL_PROCESSES: HParam(
                 value=5, name=agents_constants.POMCP.NUM_PARALLEL_PROCESSES, descr="number of parallel processes"),
             agents_constants.POMCP.NUM_EVALS_PER_PROCESS: HParam(
-                value=20, name=agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
+                value=10, name=agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
                 descr="number of evaluations per process"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
-                value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
+                value=-20, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
             agents_constants.POMCP.VERBOSE: HParam(value=True, name=agents_constants.POMCP.VERBOSE,
                                                    descr="verbose logging flag"),

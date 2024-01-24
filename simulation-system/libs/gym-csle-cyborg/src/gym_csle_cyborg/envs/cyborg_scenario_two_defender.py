@@ -304,6 +304,30 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         return CyborgScenarioTwoDefender.true_table(env=self.cyborg_challenge_env)
 
+    def get_subnetworks(self) -> List[str]:
+        """
+        Gets the subnetworks
+
+        :return: a list of subnetworks
+        """
+        true_table_state = CyborgScenarioTwoDefender.true_table(env=self.cyborg_challenge_env)
+        subnetworks = set()
+        for row in true_table_state.rows:
+            subnetworks.add(str(row[0]))
+        return list(subnetworks)
+
+    def get_ip_to_host_mapping(self) -> Dict[str, str]:
+        """
+        Gets a mapping from ip to host
+
+        :return: a dictinary to map ip to host
+        """
+        true_table_state = CyborgScenarioTwoDefender.true_table(env=self.cyborg_challenge_env)
+        ip_to_host_mapping = {}
+        for row in true_table_state.rows:
+            ip_to_host_mapping[row[1]] = str(row[2])
+        return ip_to_host_mapping
+
     @staticmethod
     def true_table(env: ChallengeWrapper) -> PrettyTable:
         """
@@ -369,9 +393,18 @@ class CyborgScenarioTwoDefender(BaseEnv):
         actions = self.cyborg_challenge_env.env.env.env.env.env.environment_controller.actions
         for i in range(len(actions[env_constants.CYBORG.RED])):
             row = [str(i), str(actions[env_constants.CYBORG.BLUE][i]), str(actions[env_constants.CYBORG.Green][i]),
-                   str(actions[env_constants.CYBORG.RED][i]), ]
+                   str(actions[env_constants.CYBORG.RED][i])]
             table.add_row(row)
         return table
+
+    def get_host_decoy_state(self, host_id: int) -> int:
+        """
+        Gets the decoy state of a specific host
+
+        :param host_id: the host to get the decoy state of
+        :return: the decoy state
+        """
+        return len(self.decoy_state[host_id])
 
     def get_decoy_state(self) -> int:
         """
@@ -801,10 +834,10 @@ class CyborgScenarioTwoDefender(BaseEnv):
     @staticmethod
     def process_rollout(
             input: Tuple[CSLECyborgConfig, int, int, int, Dict[int, Any], Dict[Tuple[BlueAgentActionType, str], int],
-                         List[BlueAgentActionType], Dict[int, Tuple[BlueAgentActionType, str]], Dict[str, int],
-                         List[List[BlueAgentActionType]], List[List[BlueAgentActionType]], Dict[int, npt.NDArray[Any]],
-                         List[str], int, Dict[int, List[int]], Dict[int, List[List[BlueAgentActionType]]],
-                         Dict[int, Any], Dict[Any, Any], Dict[int, Tuple[BlueAgentActionType, str]], int]) -> float:
+            List[BlueAgentActionType], Dict[int, Tuple[BlueAgentActionType, str]], Dict[str, int],
+            List[List[BlueAgentActionType]], List[List[BlueAgentActionType]], Dict[int, npt.NDArray[Any]],
+            List[str], int, Dict[int, List[int]], Dict[int, List[List[BlueAgentActionType]]],
+            Dict[int, Any], Dict[Any, Any], Dict[int, Tuple[BlueAgentActionType, str]], int]) -> float:
         """
         Performs a rollout on a given parallel process
 
