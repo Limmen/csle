@@ -248,7 +248,7 @@ class POMCPAgent(BaseAgent):
                     b = list(map(lambda x: belief[x], random.sample(list(belief.keys()), min(10, len(belief.keys())))))
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
                                                         f"s_prime: {s_prime}, b: {b}")
-                    Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
+                    # Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
 
             if i % self.experiment_config.log_every == 0:
                 # Logging

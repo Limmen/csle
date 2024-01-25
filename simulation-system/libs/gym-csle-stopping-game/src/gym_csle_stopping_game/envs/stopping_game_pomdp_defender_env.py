@@ -94,11 +94,10 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param options: optional configuration parameters
         :return: initial observation
         """
-        o, _ = self.stopping_game_env.reset()
+        o, info = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-        dict: Dict[str, Any] = {}
-        return defender_obs, dict
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
@@ -214,6 +213,16 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: None
         """
         return self.stopping_game_env.is_state_terminal(state=state)
+
+    def add_observation_vector(self, obs_vector: List[Any], obs_id: int) -> None:
+        """
+        Adds an observation vector to the history
+
+        :param obs_vector: the observation vector to add
+        :param obs_id: the id of the observation
+        :return: None
+        """
+        pass
 
     def manual_play(self) -> None:
         """

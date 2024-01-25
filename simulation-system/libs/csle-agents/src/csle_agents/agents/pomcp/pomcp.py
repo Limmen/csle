@@ -224,7 +224,8 @@ class POMCP:
                     f"Planning time left {self.planning_time - time.time() + begin}s, "
                     f"best action: {self.tree.root.children[best_action_idx].action}, "
                     f"value: {self.tree.root.children[best_action_idx].value}, "
-                    f"count: {self.tree.root.children[best_action_idx].visit_count}, 31:{action_values[31]}")
+                    f"count: {self.tree.root.children[best_action_idx].visit_count}")
+                #, 31:{action_values[31]}
 
     def get_action(self) -> int:
         """
@@ -235,10 +236,9 @@ class POMCP:
         """
         root = self.tree.root
         action_vals = [(action.value, action.action) for action in root.children]
-        if self.verbose:
-            for a in root.children:
-                Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
-                                                    f"visit count: {a.visit_count}")
+        for a in root.children:
+            Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
+                                                f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
     def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, observation_vector: List[int],

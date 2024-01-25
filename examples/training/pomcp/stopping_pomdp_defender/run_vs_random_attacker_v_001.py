@@ -33,7 +33,8 @@ if __name__ == '__main__':
         A2=StoppingGameUtil.attacker_actions(),
         L=1, R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, b1=StoppingGameUtil.b1(),
         S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1",
-        save_dir="/home/kim/stopping_game_1", checkpoint_traces_freq=1000, gamma=1
+        save_dir="/home/kim/stopping_game_1", checkpoint_traces_freq=1000, gamma=1,
+        compute_beliefs=False, save_trace=False
     )
     attacker_stage_strategy = np.zeros((3, 2))
     attacker_stage_strategy[0][0] = 0.9
@@ -56,11 +57,8 @@ if __name__ == '__main__':
     initial_belief = {}
     for i in range(len(b1)):
         initial_belief[i] = b1[i]
-    rollout_policy = MultiThresholdStoppingPolicy(
-        theta=[0.75], simulation_name=simulation_name, L=stopping_game_config.L,
-        states=simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
-        actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions, experiment_config=None,
-        avg_R=-1, agent_type=AgentType.POMCP, opponent_strategy=None)
+    rollout_policy = None
+    value_function = None
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
         random_seeds=[399, 98912, 999, 555],
@@ -76,7 +74,7 @@ if __name__ == '__main__':
                 value=rollout_policy, name=agents_constants.POMCP.ROLLOUT_POLICY,
                 descr="the policy to use for rollouts"),
             agents_constants.POMCP.VALUE_FUNCTION: HParam(
-                value=lambda x: 0, name=agents_constants.POMCP.VALUE_FUNCTION,
+                value=value_function, name=agents_constants.POMCP.VALUE_FUNCTION,
                 descr="the value function to use for truncated rollouts"),
             agents_constants.POMCP.A: HParam(value=A, name=agents_constants.POMCP.A, descr="the action space"),
             agents_constants.POMCP.GAMMA: HParam(value=0.99, name=agents_constants.POMCP.GAMMA,
@@ -86,15 +84,15 @@ if __name__ == '__main__':
                                                           descr="the initial belief"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=True, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=120, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=30, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
-            agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(value=500, name=agents_constants.POMCP.MAX_PLANNING_DEPTH,
+            agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(value=100, name=agents_constants.POMCP.MAX_PLANNING_DEPTH,
                                                               descr="the maximum depth for planning"),
-            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=500, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=100, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
-            agents_constants.POMCP.C: HParam(value=0.35, name=agents_constants.POMCP.C,
+            agents_constants.POMCP.C: HParam(value=15, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
                 value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
@@ -116,6 +114,8 @@ if __name__ == '__main__':
                                                    descr="verbose logging flag"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of evaluation episodes"),
+            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=5, name=agents_constants.POMCP.PRIOR_WEIGHT,
+                                                        descr="the weight on the prior"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),

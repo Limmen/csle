@@ -90,18 +90,18 @@ class POMCPUtil:
         :param prior_weight: the weight to put on the prior
         :return: the acquisition value of the action
         """
-        if action.visit_count == 0:
-            return np.inf
-        else:
-            prior = 1.0
-        if rollout_policy is not None:
-            prior = rollout_policy.probability(o=o, a=action.action)
-        return action.value + (prior_weight * prior) / (action.visit_count)
-        # prior = 1.0
+        # if action.visit_count == 0:
+        #     return np.inf
+        # else:
+        #     prior = 1.0
         # if rollout_policy is not None:
         #     prior = rollout_policy.probability(o=o, a=action.action)
-        # return float(action.value + prior*prior_weight
-        #              + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+        # return action.value + (prior_weight * prior) / (action.visit_count)
+        prior = 1.0
+        if rollout_policy is not None:
+            prior = rollout_policy.probability(o=o, a=action.action)
+        return float(action.value + prior*prior_weight
+                     + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,
