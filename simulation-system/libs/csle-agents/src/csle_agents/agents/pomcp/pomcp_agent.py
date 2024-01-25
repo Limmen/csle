@@ -245,9 +245,13 @@ class POMCPAgent(BaseAgent):
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
+                    rollout_action = -1
+                    if rollout_policy is not None:
+                        rollout_action = rollout_policy.action(o=o)
                     b = list(map(lambda x: belief[x], random.sample(list(belief.keys()), min(10, len(belief.keys())))))
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
-                                                        f"s_prime: {s_prime}, b: {b}")
+                                                        f"s_prime: {s_prime}, b: {b}, rollout action: {rollout_action}"
+                                                        f", action sequence: {action_sequence}")
                     # Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
 
             if i % self.experiment_config.log_every == 0:

@@ -22,7 +22,8 @@ class POMCP:
                  reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
                  value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
                  default_node_value: float = 0, parallel_rollout: bool = False,
-                 num_parallel_processes: int = 10, num_evals_per_process: int = 10, prior_weight: float = 1.0) -> None:
+                 num_parallel_processes: int = 10, num_evals_per_process: int = 10, prior_weight: float = 1.0,
+                 particle_model: Dict[int, List[int]] = None, prior_confidence: int = 0) -> None:
         """
         Initializes the solver
 
@@ -43,6 +44,8 @@ class POMCP:
         :param num_parallel_processes: number of parallel processes
         :param num_evals_per_process: number of evaluations per process
         :param prior_weight: the weight to put on the prior
+        :param particle_model: the particle model (optional)
+        :param prior_confidence: the prior confidence (initial count)
         """
         self.A = A
         self.env = env
@@ -67,6 +70,8 @@ class POMCP:
         self.tree = BeliefTree(root_particles=root_particles, default_node_value=self.default_node_value,
                                root_observation=self.root_observation, initial_visit_count=self.initial_visit_count)
         self.verbose = verbose
+        self.particle_model = particle_model
+        self.prior_confidence = prior_confidence
 
     def compute_belief(self) -> Dict[int, float]:
         """
@@ -98,14 +103,16 @@ class POMCP:
             else:
                 return 0
         if self.rollout_policy is None or self.env.is_state_terminal(state):
-            # a = 4
             a = POMCPUtil.rand_choice(self.A)
         else:
-            # a = 4
-            # a = POMCPUtil.rand_choice(self.A)
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history))
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]
+        o = info[constants.COMMON.OBSERVATION]
+        if self.particle_model is not None:
+            if o not in self.particle_model:
+                self.particle_model[o] = []
+            self.particle_model[o].append(s_prime)
         if s_prime not in self.initial_belief:
             self.initial_belief[s_prime] = 0.0
         o = info[constants.COMMON.OBSERVATION]
@@ -140,7 +147,12 @@ class POMCP:
         observation = -1
         if len(history) > 0:
             observation = history[-1]
-        current_node = self.tree.find_or_create(history=history, parent=parent, observation=observation)
+        if observation != -1:
+            value = self.value_function(self.env.get_observation_from_history(history))
+        else:
+            value = self.default_node_value
+        current_node = self.tree.find_or_create(history=history, parent=parent, observation=observation,
+                                                initial_visit_count=self.prior_confidence, initial_value=value)
 
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
@@ -152,9 +164,10 @@ class POMCP:
             dist = self.rollout_policy.model.policy.get_distribution(obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
                 torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
             dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:5]))
-            for action in rollout_actions:
+            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
+            # rollout_actions = [27, 28, 29, 30, 31, 32, 33, 34, 35]
             # for action in self.A:
+            for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
             # Perform the rollout from the current state and return the value
@@ -183,6 +196,10 @@ class POMCP:
         _, r, _, _, info = self.env.step(a)
         o = info[constants.COMMON.OBSERVATION]
         s_prime = info[constants.COMMON.STATE]
+        if self.particle_model is not None:
+            if o not in self.particle_model:
+                self.particle_model[o] = []
+            self.particle_model[o].append(s_prime)
         if s_prime not in self.initial_belief:
             self.initial_belief[s_prime] = 0.0
 
@@ -196,10 +213,10 @@ class POMCP:
         # The simulation has completed, time to backpropagate the values
         # We start by updating the belief particles and the visit count of the current belief node
         current_node.particles += [state]
-        current_node.visit_count += 1
 
         # Next we update the statistics and visit counts of the action node
         next_action_node.update_stats(immediate_reward=r)
+        current_node.visit_count += 1
         next_action_node.visit_count += 1
         next_action_node.value += (R - next_action_node.value) / next_action_node.visit_count
 
@@ -305,8 +322,10 @@ class POMCP:
                 for s in list(self.initial_belief.keys()):
                     random_belief[s] = 1 / len(self.initial_belief)
                 particles = POMCPUtil.generate_particles(num_particles=self.max_particles, belief=random_belief)
+                initial_value = self.value_function(observation)
                 new_root = self.tree.add(history=action_node.history + [observation], parent=action_node,
-                                         observation=observation, particle=particles, value=self.default_node_value)
+                                         observation=observation, particle=particles, value=initial_value,
+                                         initial_visit_count=self.prior_confidence)
 
         # Check how many new particles are left to fill
         if isinstance(new_root, BeliefNode):
@@ -315,26 +334,35 @@ class POMCP:
             raise ValueError("Invalid root node")
         negative_samples_count = 0
         if particle_slots > 0:
-            # fill particles by Monte-Carlo using reject sampling
-            particles = []
             if self.verbose:
                 Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
-            while len(particles) < particle_slots:
-                if negative_samples_count >= max_negative_samples:
-                    particles += POMCPUtil.trajectory_simulation_particles(
-                        o=observation, env=self.env, action_sequence=action_sequence, verbose=self.verbose,
-                        num_particles=(particle_slots - len(particles)))
-                else:
-                    s = root.sample_state()
-                    self.env.set_state(state=s)
-                    _, r, _, _, info = self.env.step(action)
-                    s_prime = info[constants.COMMON.STATE]
-                    o = info[constants.COMMON.OBSERVATION]
-                    if o == observation:
-                        particles.append(s_prime)
-                        negative_samples_count = 0
+            particles = []
+            Logger.__call__().get_logger().info(f"{observation in self.particle_model}, {observation}")
+            if self.particle_model is not None and observation in self.particle_model:
+                particles = self.particle_model[observation]
+                Logger.__call__().get_logger().info(f"Got particles from particle model")
+            else:
+                # fill particles by Monte-Carlo using reject sampling
+                while len(particles) < particle_slots:
+                    if negative_samples_count >= max_negative_samples:
+                        particles += POMCPUtil.trajectory_simulation_particles(
+                            o=observation, env=self.env, action_sequence=action_sequence, verbose=self.verbose,
+                            num_particles=(particle_slots - len(particles)))
                     else:
-                        negative_samples_count += 1
+                        s = root.sample_state()
+                        self.env.set_state(state=s)
+                        _, r, _, _, info = self.env.step(action)
+                        s_prime = info[constants.COMMON.STATE]
+                        o = info[constants.COMMON.OBSERVATION]
+                        if self.particle_model is not None:
+                            if o not in self.particle_model:
+                                self.particle_model[o] = []
+                            self.particle_model[o].append(s_prime)
+                        if o == observation:
+                            particles.append(s_prime)
+                            negative_samples_count = 0
+                        else:
+                            negative_samples_count += 1
             new_root.particles += particles
 
         # We now prune the old root from the tree

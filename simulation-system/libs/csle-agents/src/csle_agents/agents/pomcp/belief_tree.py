@@ -35,7 +35,7 @@ class BeliefTree:
 
     def add(self, history: List[int], parent: Union[Node, ActionNode, BeliefNode, None],
             action: Union[int, None] = None, observation: Union[int, None] = None, particle: Union[Any, None] = None,
-            value: float = 0) -> Node:
+            value: float = 0, initial_visit_count: int = 0) -> Node:
         """
         Creates and adds a new belief node or action node to the belief search tree
 
@@ -46,17 +46,18 @@ class BeliefTree:
         :param particle: new node's particle set
         :param cost: action cost of an action node
         :param value: the value of the node
+        :param initial_visit_count: the initial visit count
         :return: The newly added node
         """
         # Create the node
         if action is not None:
             new_node: Node = ActionNode(self.tree_size, history, parent=parent, action=action, value=value,
-                                        visit_count=self.initial_visit_count)
+                                        visit_count=initial_visit_count)
         else:
             if observation is None:
                 observation = 0
             new_node = BeliefNode(self.tree_size, history, parent=parent, observation=observation, value=value,
-                                  visit_count=self.initial_visit_count)
+                                  visit_count=initial_visit_count)
 
         if particle is not None and isinstance(new_node, BeliefNode):
             new_node.add_particle(particle)
@@ -70,9 +71,17 @@ class BeliefTree:
             parent.add_child(node=new_node)
         return new_node
 
-    def find_or_create(self, history: List[int], parent: Union[None, BeliefNode, ActionNode], observation: int):
+    def find_or_create(self, history: List[int], parent: Union[None, BeliefNode, ActionNode], observation: int,
+                       initial_value: float, initial_visit_count: int) -> Node:
         """
         Search for the node that corresponds to given history, otherwise create one using given params
+
+        :param history: the current history
+        :param parent: the parent of the node
+        :param observation: the latest observation
+        :param initial_value: the initial value of a created node
+        :param initial_visit_count: the initial visit count of a created node
+        :return: the new node
         """
         # Start the search from the root node
         root_node = self.root
@@ -87,7 +96,8 @@ class BeliefTree:
 
             # Node of this history does not exists so we add it
             if current_node is None:
-                return self.add(history=history, parent=parent, observation=observation, value=self.default_node_value)
+                return self.add(history=history, parent=parent, observation=observation, value=initial_value,
+                                initial_visit_count=initial_visit_count)
         return current_node
 
     def prune(self, node, exclude=None):

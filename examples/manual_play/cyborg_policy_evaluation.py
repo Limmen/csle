@@ -12,7 +12,7 @@ if __name__ == '__main__':
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
-    num_evaluations = 1000
+    num_evaluations = 100
     max_horizon = 100
     returns = []
     print("Starting policy evaluation")
@@ -23,9 +23,13 @@ if __name__ == '__main__':
         t = 0
         while not done and t < max_horizon:
             a = ppo_policy.action(o=o)
-            type, host= csle_cyborg_env.action_id_to_type_and_host[a]
-            if type.value == BlueAgentActionType.REMOVE.value or type.value == BlueAgentActionType.RESTORE.value:
-                a = 4
+            if t == 0:
+                a = 31
+            if t == 1:
+                a = 30
+            # if a == 34:
+            #     import random
+            #     a = random.choice([27, 28, 29])
             o, r, done, _, info = csle_cyborg_env.step(a)
             # print(f"a: {csle_cyborg_env.action_id_to_type_and_host[a]}")
             # print(csle_cyborg_env.get_true_table())

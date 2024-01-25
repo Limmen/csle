@@ -11,6 +11,7 @@ if __name__ == '__main__':
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
+    print(csle_cyborg_env.cyborg_hostnames)
     for k, v in csle_cyborg_env.action_id_to_type_and_host.items():
         action_id = k
         type, host = v

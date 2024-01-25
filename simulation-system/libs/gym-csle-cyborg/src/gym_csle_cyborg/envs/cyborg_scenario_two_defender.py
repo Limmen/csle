@@ -841,10 +841,10 @@ class CyborgScenarioTwoDefender(BaseEnv):
     @staticmethod
     def process_rollout(
             input: Tuple[CSLECyborgConfig, int, int, int, Dict[int, Any], Dict[Tuple[BlueAgentActionType, str], int],
-            List[BlueAgentActionType], Dict[int, Tuple[BlueAgentActionType, str]], Dict[str, int],
-            List[List[BlueAgentActionType]], List[List[BlueAgentActionType]], Dict[int, npt.NDArray[Any]],
-            List[str], int, Dict[int, List[int]], Dict[int, List[List[BlueAgentActionType]]],
-            Dict[int, Any], Dict[Any, Any], Dict[int, Tuple[BlueAgentActionType, str]], int]) -> float:
+                         List[BlueAgentActionType], Dict[int, Tuple[BlueAgentActionType, str]], Dict[str, int],
+                         List[List[BlueAgentActionType]], List[List[BlueAgentActionType]], Dict[int, npt.NDArray[Any]],
+                         List[str], int, Dict[int, List[int]], Dict[int, List[List[BlueAgentActionType]]],
+                         Dict[int, Any], Dict[Any, Any], Dict[int, Tuple[BlueAgentActionType, str]], int]) -> float:
         """
         Performs a rollout on a given parallel process
 
@@ -888,8 +888,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
             R = 0
             t = 0
             while not done and t < max_horizon:
-                action = 4
-                # action = policy.action(o=o)
+                action = policy.action(o=o)
                 action, decoy_state = CyborgScenarioTwoDefender.encode_action(
                     action=action, config=config, action_id_to_type_and_host=action_id_to_type_and_host,
                     cyborg_action_type_and_host_to_id=cyborg_action_type_and_host_to_id,

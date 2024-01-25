@@ -18,17 +18,18 @@ if __name__ == '__main__':
     torch.multiprocessing.set_start_method('spawn')
     returns = []
     num_episodes = 100
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=98)
+    # rollout_policy = MetastoreFacade.get_ppo_policy(id=98)
     for episode in range(num_episodes):
         o, info = csle_cyborg_env.reset()
         s = info[constants.ENV_METRICS.STATE]
         # particles = [s]
         # belief = POMCPUtil.convert_samples_to_distribution(particles)
         total_R = 0
-        for t in range(100):
-            a = rollout_policy.action(o=o)
+        for t in range(25):
+            # a = rollout_policy.action(o=o)
+            a = 4
             if t == 0:
-                a = 34
+                a = 28
             o, r, done, _, info = csle_cyborg_env.step(action=a)
             total_R += r
             # print(f"t: {t}, a: {a}, r: {r}, s: {s}, cumulative_R: {total_R},")

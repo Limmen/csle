@@ -29,8 +29,8 @@ if __name__ == '__main__':
     b1 = csle_cyborg_env.initial_belief
     rollout_policy = MetastoreFacade.get_ppo_policy(id=98)
     # rollout_policy = None
-    value_function = lambda x: 0
-    # value_function = rollout_policy.value
+    # value_function = lambda x: 0
+    value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
         random_seeds=[399, 98912, 999, 555],
@@ -55,13 +55,13 @@ if __name__ == '__main__':
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.INITIAL_BELIEF: HParam(value=b1, name=agents_constants.POMCP.INITIAL_BELIEF,
                                                           descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=500, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=30, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=20, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=50, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
-            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=25, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=1, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=300, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
