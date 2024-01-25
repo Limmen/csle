@@ -40,19 +40,18 @@ def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env, decoy_actions_or
     host_id_user_2 = csle_cyborg_env.cyborg_hostnames.index("User2")
     host_id_user_3 = csle_cyborg_env.cyborg_hostnames.index("User3")
     host_id_user_4 = csle_cyborg_env.cyborg_hostnames.index("User4")
-    if t == 0:
-        return "User2"
-    if t == 1:
-        return "User2"
-    if t >= 2:
-        if (true_table.rows[host_id_user_1][4] or true_table.rows[host_id_user_2][4]) and len(
-                decoy_state["Enterprise1"]) < len(decoy_actions_order["Enterprise1"]) and \
-                true_table.rows[host_id_enterprise_1][5] == "None":
-            return "Enterprise1"
-        elif (true_table.rows[host_id_user_3][4] or true_table.rows[host_id_user_4][4]) and len(
-                decoy_state["Enterprise0"]) < len(decoy_actions_order["Enterprise0"]) and \
-                true_table.rows[host_id_enterprise_0][5] == "None":
-            return "Enterprise0"
+    # if t == 0:
+    #     return "User2"
+    # if t == 1:
+    #     return "User2"
+    if (true_table.rows[host_id_user_1][4] or true_table.rows[host_id_user_2][4]) and len(
+            decoy_state["Enterprise1"]) < len(decoy_actions_order["Enterprise1"]) and \
+            true_table.rows[host_id_enterprise_1][5] == "None":
+        return "Enterprise1"
+    elif (true_table.rows[host_id_user_3][4] or true_table.rows[host_id_user_4][4]) and len(
+            decoy_state["Enterprise0"]) < len(decoy_actions_order["Enterprise0"]) and \
+            true_table.rows[host_id_enterprise_0][5] == "None":
+        return "Enterprise0"
     # if t == 3:
     #     return "Enterprise1"
     # if t == 4:
@@ -73,18 +72,18 @@ def get_decoy_host(t, decoy_state, true_table, csle_cyborg_env, decoy_actions_or
             decoy_actions_order["Enterprise2"]):
         return "Enterprise2"
 
-    # if true_table.rows[host_id_user_1][4] and not len(decoy_state["User1"]) == 5 and \
-    #         true_table.rows[host_id_user_1][5] == "None":
-    #     return "User1"
-    # if true_table.rows[host_id_user_2][4] and not len(decoy_state["User2"]) == 5 and \
-    #         true_table.rows[host_id_user_2][5] == "None":
-    #     return "User2"
-    # if true_table.rows[host_id_user_3][4] and not len(decoy_state["User3"]) == 5 and \
-    #         true_table.rows[host_id_user_3][5] == "None":
-    #     return "User3"
-    # if true_table.rows[host_id_user_4][4] and not len(decoy_state["User4"]) == 5 and \
-    #         true_table.rows[host_id_user_4][5] == "None":
-    #     return "User4"
+    if true_table.rows[host_id_user_1][4] and not len(decoy_state["User1"]) == 5 and \
+            true_table.rows[host_id_user_1][5] == "None":
+        return "User1"
+    if true_table.rows[host_id_user_2][4] and not len(decoy_state["User2"]) == 5 and \
+            true_table.rows[host_id_user_2][5] == "None":
+        return "User2"
+    if true_table.rows[host_id_user_3][4] and not len(decoy_state["User3"]) == 5 and \
+            true_table.rows[host_id_user_3][5] == "None":
+        return "User3"
+    if true_table.rows[host_id_user_4][4] and not len(decoy_state["User4"]) == 5 and \
+            true_table.rows[host_id_user_4][5] == "None":
+        return "User4"
 
     if true_table.rows[host_id_op_server][5] == "None" and len(decoy_state["Op_Server0"]) < len(
             decoy_actions_order["Enterprise1"]):
@@ -158,7 +157,9 @@ def eval(csle_cyborg_env) -> float:
     decoy_action = decoy_actions_order[decoy_host][len(decoy_state[decoy_host])]
     decoy_state[decoy_host].append(decoy_action)
     a = csle_cyborg_env.cyborg_action_type_and_host_to_id[(decoy_action, decoy_host)]
-    for t in range(100):
+    for t in range(25):
+        print(f"a: {csle_cyborg_env.cyborg_action_id_to_type_and_host[a]}")
+        print(csle_cyborg_env.get_true_table())
         o, r, done, _, info = csle_cyborg_env.step(a)
         R += r
 
@@ -216,7 +217,7 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     csle_cyborg_env.reset()
     returns = []
-    num_evals = 1000
+    num_evals = 1
     import random
 
     random.seed(0)

@@ -23,7 +23,7 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=False, scanned_state=False,
-        decoy_state=False, decoy_optimization=True)
+        decoy_state=False, decoy_optimization=True, cache_visited_states=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=simulation_env_config.simulation_env_input_config)
     A = list(range(len(csle_cyborg_env.decoy_hosts)))
     S = csle_cyborg_env.decoy_state_space
@@ -45,7 +45,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.COMMON.EVAL_EVERY: HParam(value=5000,
+            agents_constants.COMMON.EVAL_EVERY: HParam(value=1000,
                                                        name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="how frequently to run evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,

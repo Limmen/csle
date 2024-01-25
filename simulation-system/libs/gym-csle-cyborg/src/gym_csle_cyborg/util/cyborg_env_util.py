@@ -239,6 +239,14 @@ class CyborgEnvUtil:
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")] = 2
                 action_id_to_type_and_host[3] = (BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")] = 3
+                action_id_to_type_and_host[4] = (BlueAgentActionType.DECOY_FEMITTER, "User1")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User1")] = 4
+                action_id_to_type_and_host[5] = (BlueAgentActionType.DECOY_FEMITTER, "User2")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 5
+                action_id_to_type_and_host[6] = (BlueAgentActionType.DECOY_FEMITTER, "User3")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User3")] = 6
+                action_id_to_type_and_host[7] = (BlueAgentActionType.DECOY_FEMITTER, "User4")
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User4")] = 7
             return action_id_to_type_and_host, type_and_host_to_action_id
         else:
             raise ValueError(f"Scenario: {config.scenario} not recognized")

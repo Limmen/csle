@@ -119,28 +119,33 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.decoy_state = decoy_state
 
         o, r, done, _, info = self.cyborg_challenge_env.step(action=action)
-        info, _ = CyborgScenarioTwoDefender.populate_info(info=dict(info), obs=o, trace=self.trace,
-                                                          env=self.cyborg_challenge_env,
-                                                          cyborg_hostnames=self.cyborg_hostnames,
-                                                          scan_state=self.scan_state,
-                                                          decoy_state=self.decoy_state, config=self.config,
-                                                          cyborg_hostname_to_id=self.cyborg_hostname_to_id,
-                                                          visited_cyborg_states=self.visited_cyborg_states,
-                                                          visited_scanned_states=self.visited_scanned_states,
-                                                          visited_decoy_states=self.visited_decoy_states, reset=False)
-        o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
-            config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
-            decoy_state_space_lookup=self.decoy_state_space_lookup,
-            decoy_state_space_hosts_lookup=self.decoy_state_space_hosts_lookup,
-            observation_id_to_tensor=self.observation_id_to_tensor)
-        self.observation_id_to_tensor = observation_id_to_tensor
+        if not self.config.decoy_optimization:
+            info, _ = CyborgScenarioTwoDefender.populate_info(info=dict(info), obs=o, trace=self.trace,
+                                                              env=self.cyborg_challenge_env,
+                                                              cyborg_hostnames=self.cyborg_hostnames,
+                                                              scan_state=self.scan_state,
+                                                              decoy_state=self.decoy_state, config=self.config,
+                                                              cyborg_hostname_to_id=self.cyborg_hostname_to_id,
+                                                              visited_cyborg_states=self.visited_cyborg_states,
+                                                              visited_scanned_states=self.visited_scanned_states,
+                                                              visited_decoy_states=self.visited_decoy_states,
+                                                              reset=False)
+            o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
+                config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
+                decoy_state_space_lookup=self.decoy_state_space_lookup,
+                decoy_state_space_hosts_lookup=self.decoy_state_space_hosts_lookup,
+                observation_id_to_tensor=self.observation_id_to_tensor,
+                o=o)
+            self.observation_id_to_tensor = observation_id_to_tensor
 
         self.t += 1
         if self.t >= self.config.maximum_steps:
             done = True
 
         # Log trace
-        self.trace = CyborgScenarioTwoDefender.log_trace(r=float(r), trace=self.trace, o=o, done=done, action=action)
+        if self.config.save_trace:
+            self.trace = CyborgScenarioTwoDefender.log_trace(r=float(r),
+                                                             trace=self.trace, o=o, done=done, action=action)
 
         return np.array(o), float(r), bool(done), bool(done), info
 
@@ -177,7 +182,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
             config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
             decoy_state_space_lookup=self.decoy_state_space_lookup,
             decoy_state_space_hosts_lookup=self.decoy_state_space_hosts_lookup,
-            observation_id_to_tensor=self.observation_id_to_tensor)
+            observation_id_to_tensor=self.observation_id_to_tensor, o=o)
         self.observation_id_to_tensor = observation_id_to_tensor
 
         self.t = 1
@@ -737,7 +742,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
                            decoy_state: List[List[BlueAgentActionType]], scan_state: List[int],
                            decoy_state_space_hosts_lookup: Dict[int, Any],
                            decoy_state_space_lookup: Dict[Any, Any],
-                           observation_id_to_tensor: Dict[int, npt.NDArray[Any]]) \
+                           observation_id_to_tensor: Dict[int, npt.NDArray[Any]],
+                           o: npt.NDArray[Any]) \
             -> Tuple[npt.NDArray[Any], Dict[int, npt.NDArray[Any]]]:
         """
         Encodes the observation
@@ -749,6 +755,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param decoy_state_space_hosts_lookup: a lookup dict from decoy state id to host
         :param decoy_state_space_lookup: a lookup dict form decoy state to decoy state id
         :param observation_id_to_tensor: a lookup dict from observation id to tensor
+        :param o: the observation to encode
         :return: the encoded observation and an updated observation_id_to_tensor dict
         """
         if config.scanned_state or config.decoy_state:
@@ -874,14 +881,15 @@ class CyborgScenarioTwoDefender(BaseEnv):
                 config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
                 decoy_state_space_lookup=decoy_state_space_lookup,
                 decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
-                observation_id_to_tensor=observation_id_to_tensor)
+                observation_id_to_tensor=observation_id_to_tensor, o=o)
             observation_id_to_tensor = observation_id_to_tensor
             trace = SimulationTrace(simulation_env=config.gym_env_name)
 
             R = 0
             t = 0
             while not done and t < max_horizon:
-                action = policy.action(o=o)
+                action = 4
+                # action = policy.action(o=o)
                 action, decoy_state = CyborgScenarioTwoDefender.encode_action(
                     action=action, config=config, action_id_to_type_and_host=action_id_to_type_and_host,
                     cyborg_action_type_and_host_to_id=cyborg_action_type_and_host_to_id,
@@ -902,7 +910,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                     config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
                     decoy_state_space_lookup=decoy_state_space_lookup,
                     decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
-                    observation_id_to_tensor=observation_id_to_tensor)
+                    observation_id_to_tensor=observation_id_to_tensor, o=o)
                 observation_id_to_tensor = observation_id_to_tensor
 
                 R += r

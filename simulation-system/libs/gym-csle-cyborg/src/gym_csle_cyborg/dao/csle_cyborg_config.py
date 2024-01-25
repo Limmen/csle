@@ -13,7 +13,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
     def __init__(self, gym_env_name: str, scenario: int, baseline_red_agents: List[RedAgentType], maximum_steps: int,
                  red_agent_distribution: List[float], reduced_action_space: bool,
                  scanned_state: bool, decoy_state: bool, decoy_optimization,
-                 cache_visited_states: bool = False) -> None:
+                 cache_visited_states: bool = False, save_trace: bool = False) -> None:
         """
         Initializes the DTO
 
@@ -27,6 +27,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :param decoy_state: boolean flag indicating whether the decoy defender state should be used
         :param decoy_optimization: boolean flag indicating whether the special decoy optimization should be used
         :param cache_visited_states: boolean flag indicating whether visited states should be cached
+        :param save_trace: boolean flag indicating whether traces should be saved
         """
         self.gym_env_name = gym_env_name
         self.scenario = scenario
@@ -38,6 +39,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         self.decoy_state = decoy_state
         self.decoy_optimization = decoy_optimization
         self.cache_visited_states = cache_visited_states
+        self.save_trace = save_trace
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -56,6 +58,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         d["decoy_state"] = self.decoy_state
         d["decoy_optimization"] = self.decoy_optimization
         d["cache_visited_states"] = self.cache_visited_states
+        d["save_trace"] = self.save_trace
         return d
 
     def get_agents_dict(self, agent: Union[RedAgentType, None] = None) -> Tuple[Dict[str, Any], RedAgentType]:
@@ -91,13 +94,16 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
+        save_trace = False
+        if "save_trace" in d:
+            save_trace = d["save_trace"]
         obj = CSLECyborgConfig(gym_env_name=d["gym_env_name"], scenario=d["scenario"],
                                baseline_red_agents=d["baseline_red_agents"], maximum_steps=d["maximum_steps"],
                                red_agent_distribution=d["red_agent_distribution"],
                                reduced_action_space=d["reduced_action_space"],
                                scanned_state=d["scanned_state"], decoy_state=d["decoy_state"],
                                decoy_optimization=d["decoy_optimization"],
-                               cache_visited_states=d["cache_visited_states"])
+                               cache_visited_states=d["cache_visited_states"], save_trace=save_trace)
         return obj
 
     def __str__(self) -> str:
@@ -109,7 +115,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
                f"red_agent_distribution: {self.red_agent_distribution}, " \
                f"reduced_action_space: {self.reduced_action_space}, scanned_state: {self.scanned_state}, " \
                f"decoy_state: {self.decoy_state}, decoy_optimization: {self.decoy_optimization}, " \
-               f"cache_visited_states: {self.cache_visited_states}"
+               f"cache_visited_states: {self.cache_visited_states}, save_trace: {self.save_trace}"
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgConfig":

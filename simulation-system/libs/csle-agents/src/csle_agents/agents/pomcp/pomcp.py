@@ -1,4 +1,4 @@
-from typing import List, Union, Callable, Any, Dict
+from typing import List, Union, Callable, Any, Dict, Tuple
 import time
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -98,8 +98,11 @@ class POMCP:
             else:
                 return 0
         if self.rollout_policy is None or self.env.is_state_terminal(state):
+            # a = 4
             a = POMCPUtil.rand_choice(self.A)
         else:
+            # a = 4
+            # a = POMCPUtil.rand_choice(self.A)
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history))
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]
@@ -110,7 +113,8 @@ class POMCP:
                                                     max_rollout_depth=max_rollout_depth)
 
     def simulate(self, state: int, max_rollout_depth: int, c: float, history: List[int],
-                 max_planning_depth: int, depth=0, parent: Union[None, BeliefNode, ActionNode] = None) -> float:
+                 max_planning_depth: int, depth=0, parent: Union[None, BeliefNode, ActionNode] = None) \
+            -> Tuple[float, int]:
         """
         Performs the POMCP simulation starting from a given belief node and a sampled state
 
@@ -121,16 +125,16 @@ class POMCP:
         :param depth: the current depth of the simulation
         :param history: the current history (history of the start node plus the simulation history)
         :param parent: the parent node in the tree
-        :return: the Monte-Carlo value of the node
+        :return: the Monte-Carlo value of the node and the current depth
         """
 
         # Check if we have reached the maximum depth of the tree
         if depth > max_planning_depth:
             if len(history) > 0 and self.value_function is not None:
                 o = self.env.get_observation_from_history(history=history)
-                return self.value_function(o)
+                return self.value_function(o), depth
             else:
-                return 0
+                return 0, depth
 
         # Check if the new history has already been visited in the past of should be added as a new node to the tree
         observation = -1
@@ -141,8 +145,16 @@ class POMCP:
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
+            import torch
+            import math
             # since the node does not have any children, we first add them to the node
-            for action in self.A:
+            obs_vector = self.env.get_observation_from_history(current_node.history)
+            dist = self.rollout_policy.model.policy.get_distribution(obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+                torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+            dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:5]))
+            for action in rollout_actions:
+            # for action in self.A:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
             # Perform the rollout from the current state and return the value
@@ -151,10 +163,11 @@ class POMCP:
                                               num_processes=self.num_parallel_processes,
                                               num_evals_per_process=self.num_evals_per_process,
                                               max_horizon=max_rollout_depth, state_id=state)
-                return float(R)
+                return float(R), depth
             else:
                 self.env.set_state(state=state)
-                return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth)
+                return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth), \
+                       depth
 
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
@@ -174,10 +187,11 @@ class POMCP:
             self.initial_belief[s_prime] = 0.0
 
         # Recursive call, continue the simulation from the new node
-        R = float(r) + self.gamma * self.simulate(
+        R, rec_depth = self.simulate(
             state=s_prime, max_rollout_depth=max_rollout_depth, depth=depth + 1,
             history=history + [next_action_node.action, o],
             parent=next_action_node, c=c, max_planning_depth=max_planning_depth)
+        R = float(r) + self.gamma * R
 
         # The simulation has completed, time to backpropagate the values
         # We start by updating the belief particles and the visit count of the current belief node
@@ -189,7 +203,7 @@ class POMCP:
         next_action_node.visit_count += 1
         next_action_node.value += (R - next_action_node.value) / next_action_node.visit_count
 
-        return float(R)
+        return float(R), rec_depth
 
     def solve(self, max_rollout_depth: int, max_planning_depth: int) -> None:
         """
@@ -206,10 +220,15 @@ class POMCP:
             f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}")
         begin = time.time()
         n = 0
+        state = self.tree.root.sample_state()
+        self.env.set_state(state)
+        print(self.env.get_true_table())
+        print(self.env.decoy_state)
+        print(self.env.scan_state)
         while time.time() - begin < self.planning_time:
             n += 1
             state = self.tree.root.sample_state()
-            self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history, c=self.c,
+            _, depth = self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history, c=self.c,
                           parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
             if self.verbose:
                 action_values = np.zeros((len(self.A),))
@@ -224,7 +243,8 @@ class POMCP:
                     f"Planning time left {self.planning_time - time.time() + begin}s, "
                     f"best action: {self.tree.root.children[best_action_idx].action}, "
                     f"value: {self.tree.root.children[best_action_idx].value}, "
-                    f"count: {self.tree.root.children[best_action_idx].visit_count}")
+                    f"count: {self.tree.root.children[best_action_idx].visit_count}, "
+                    f"planning depth: {depth}")
                 #, 31:{action_values[31]}
 
     def get_action(self) -> int:
@@ -257,7 +277,7 @@ class POMCP:
         root = self.tree.root
         if len(action_sequence) == 0:
             raise ValueError("Invalid action sequencee")
-        action = action_sequence[0]
+        action = action_sequence[-1]
 
         # Since we executed an action we advance the tree and update the root to the the node corresponding to the
         # action that was selected
@@ -265,7 +285,7 @@ class POMCP:
         if child is not None:
             new_root = child.get_child(observation)
         else:
-            raise ValueError("Could not find child node")
+            raise ValueError(f"Could not find child node for action: {action}")
 
         # If we did not have a node in the tree corresponding to the observation that was observed, we select a random
         # belief node to be the new root (note that the action child node will always exist by definition of the
