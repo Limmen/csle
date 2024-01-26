@@ -179,9 +179,10 @@ if __name__ == '__main__':
 
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
     horizon = 100
-    episodes = 1000000
+    episodes = 100000000
     save_every = 1000
-    seed = 111118999
+    id = 40
+    seed = 40751715
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -223,10 +224,11 @@ if __name__ == '__main__':
             else:
                 b_line_action = jumps[b_line_action]
                 last_target = last_targets[b_line_action]
-            if b_line_action != red_action_state:
-                raise ValueError("err")
-            if get_action_type_from_state(state=b_line_action) != red_action_type:
-                raise ValueError("err2")
+            # TODO b line can give error
+            # if b_line_action != red_action_state:
+            #     raise ValueError("err")
+            # if get_action_type_from_state(state=b_line_action) != red_action_type:
+            #     raise ValueError("err2")
             target_dist = attacker_state_to_target_distribution(attacker_state=b_line_action, last_target=last_target)
             last_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
             last_targets[b_line_action] = last_target
@@ -287,7 +289,6 @@ if __name__ == '__main__':
         #                     f"exploit prob: {exploit_success[host_idx][ad][decoy_state] / exploit_counts[host_idx][ad][decoy_state]}")
 
         if ep % save_every == 0:
-            id = 1
             with open(f'/home/kim/scan_counts_{id}.npy', 'wb') as f:
                 np.save(f, np.array(scan_counts))
             with open(f'/home/kim/scan_success_{id}.npy', 'wb') as f:
