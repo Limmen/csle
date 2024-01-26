@@ -156,7 +156,7 @@ if __name__ == '__main__':
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
-        scanned_state=True, decoy_optimization=False, cache_visited_states=True)
+        scanned_state=True, decoy_optimization=False, cache_visited_states=False, save_trace=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     cyborg_hosts = csle_cyborg_env.cyborg_hostnames
     defender_actions = csle_cyborg_env.get_action_space()
@@ -175,14 +175,14 @@ if __name__ == '__main__':
     privilege_escalation_counts = np.zeros((len(cyborg_hosts), len(defender_actions)))
     impact_success = np.zeros((len(cyborg_hosts), len(defender_actions)))
     impact_counts = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
+    # ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
 
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
     horizon = 100
     episodes = 100000000
-    save_every = 1000
-    id = 40
-    seed = 40751715
+    save_every = 100
+    id = 50
+    seed = 5024775
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
