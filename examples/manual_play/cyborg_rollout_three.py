@@ -17,23 +17,26 @@ if __name__ == '__main__':
     actions = list(csle_cyborg_env.action_id_to_type_and_host.keys())
     torch.multiprocessing.set_start_method('spawn')
     returns = []
-    num_episodes = 100
+    num_episodes = 10000
+    A = csle_cyborg_env.get_action_space()
     # rollout_policy = MetastoreFacade.get_ppo_policy(id=98)
-    for episode in range(num_episodes):
+    # for episode in range(num_episodes):
+    for ep in range(num_episodes):
         o, info = csle_cyborg_env.reset()
         s = info[constants.ENV_METRICS.STATE]
-        # particles = [s]
-        # belief = POMCPUtil.convert_samples_to_distribution(particles)
+        # print(csle_cyborg_env.get_true_table())
         total_R = 0
-        for t in range(25):
-            # a = rollout_policy.action(o=o)
-            a = 4
-            if t == 0:
-                a = 28
+        for t in range(100):
+            a = POMCPUtil.rand_choice(A)
+            a = 2
             o, r, done, _, info = csle_cyborg_env.step(action=a)
+            print(csle_cyborg_env.get_true_table())
+            print(csle_cyborg_env.get_last_action(agent="Red"))
             total_R += r
             # print(f"t: {t}, a: {a}, r: {r}, s: {s}, cumulative_R: {total_R},")
+            # print(csle_cyborg_env.get_true_table())
+            # print(csle_cyborg_env.get_last_action(agent="Red"))
             s = info[constants.ENV_METRICS.STATE]
             o_id = info[constants.ENV_METRICS.OBSERVATION]
-        returns.append(total_R)
-        print(f"average return: {np.mean(returns)}, ep {episode}/{num_episodes}")
+        # returns.append(total_R)
+        # print(f"average return: {np.mean(returns)}, ep {ep}/{num_episodes}")

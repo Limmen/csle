@@ -316,9 +316,15 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: a list of subnetworks
         """
         true_table_state = CyborgScenarioTwoDefender.true_table(env=self.cyborg_challenge_env)
-        subnetworks = set()
+        subnetworks = ["", "", ""]
         for row in true_table_state.rows:
-            subnetworks.add(str(row[0]))
+            subnet = str(row[0])
+            if "Enterprise" in str(row[2]):
+                subnetworks[1] = subnet
+            elif "User" in str(row[2]):
+                subnetworks[0] = subnet
+            elif "Op_Server0" in str(row[2]):
+                subnetworks[2] = subnet
         return list(subnetworks)
 
     def get_ip_to_host_mapping(self) -> Dict[str, str]:
@@ -690,6 +696,24 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         if obs_id not in self.observation_id_to_tensor:
             self.observation_id_to_tensor[obs_id] = np.array(obs_vector)
+
+    def get_action_success(self, agent: str) -> bool:
+        """
+        Returns true if the last actin by the agent was successful, else false
+
+        :param agent: the agent to check
+        :return: true if the action was successful, else false.
+        """
+        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].\
+            agent.success
+
+    def get_red_action_state(self) -> int:
+        """
+        Returns the current action state of the red agent
+
+        :return: the current action state of the red agent
+        """
+        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].agent.action
 
     @staticmethod
     def encode_action(action: int, config: CSLECyborgConfig,
