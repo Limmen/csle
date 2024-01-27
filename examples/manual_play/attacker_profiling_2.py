@@ -162,19 +162,6 @@ if __name__ == '__main__':
     defender_actions = csle_cyborg_env.get_action_space()
     subnets = csle_cyborg_env.get_subnetworks()
     decoys = CyborgEnvUtil.get_decoy_action_types(scenario=config.scenario)
-    scan_success = np.zeros((len(subnets), len(defender_actions)))
-    scan_counts = np.zeros((len(subnets), len(defender_actions)))
-    hostscan_success = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    hostscan_counts = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    exploit_success = np.zeros((len(cyborg_hosts), len(defender_actions), len(decoys)))
-    exploit_counts = np.zeros((len(cyborg_hosts), len(defender_actions), len(decoys)))
-    exploit_root = np.zeros((len(cyborg_hosts), len(defender_actions), len(decoys)))
-    exploit_user = np.zeros((len(cyborg_hosts), len(defender_actions), len(decoys)))
-    exploit_type_counts = np.zeros((len(cyborg_hosts), len(defender_actions), len(decoys)))
-    privilege_escalation_success = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    privilege_escalation_counts = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    impact_success = np.zeros((len(cyborg_hosts), len(defender_actions)))
-    impact_counts = np.zeros((len(cyborg_hosts), len(defender_actions)))
     # ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
 
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
@@ -186,6 +173,8 @@ if __name__ == '__main__':
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
+    reset_counts = 0
+    total_counts = 0
     for ep in range(episodes):
         print(f"{ep}/{episodes}")
         o, info = csle_cyborg_env.reset()
@@ -227,12 +216,16 @@ if __name__ == '__main__':
                 b_line_action = jumps[b_line_action]
                 last_target = last_targets[b_line_action]
             b_line_action_states.append(b_line_action)
-            if b_line_action != red_action_state:
-                raise ValueError(f"i: {i}, red_action_states: {red_action_states}, b_line_action: {b_line_action}, "
-                                 f"b_line_actions: {b_line_action_states}, success: {red_success}, blue action: {ad}, "
-                                 f"{(defender_action_type, defender_action_host)}")
-            if get_action_type_from_state(state=b_line_action) != red_action_type:
-                raise ValueError("err2")
+            if len(red_action_states) > 2 and red_action_states[-2] == 11:
+                total_counts += 1
+                if red_action_states[-1] == 1:
+                    reset_counts += 1
+            # if b_line_action != red_action_state:
+            #     raise ValueError(f"i: {i}, red_action_states: {red_action_states}, b_line_action: {b_line_action}, "
+            #                      f"b_line_actions: {b_line_action_states}, success: {red_success}, blue action: {ad}, "
+            #                      f"{(defender_action_type, defender_action_host)}")
+            # if get_action_type_from_state(state=b_line_action) != red_action_type:
+            #     raise ValueError("err2")
             target_dist = attacker_state_to_target_distribution(attacker_state=b_line_action, last_target=last_target)
             last_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
             last_targets[b_line_action] = last_target
@@ -242,80 +235,8 @@ if __name__ == '__main__':
                 true_prev_state_vec = (true_state_vec.copy(), b_line_action, last_target,
                                        defender_action_type, cyborg_hosts.index(defender_action_host))
                 continue
-            if prev_action[0] == 0:
-                subnet_idx = subnets.index(str(prev_action[2].subnet))
-                scan_success[subnet_idx][ad] += int(red_success)
-                scan_counts[subnet_idx][ad] += 1
-            elif prev_action[0] == 1:
-                host_idx = cyborg_hosts.index(ip_to_host[str(prev_action[2].ip_address)])
-                hostscan_success[host_idx][ad] += int(red_success)
-                hostscan_counts[host_idx][ad] += 1
-            elif prev_action[0] == 2:
-                host_idx = cyborg_hosts.index(ip_to_host[str(prev_action[2].ip_address)])
-                host_decoy_state = len(prev_action[3][host_idx])
-                exploit_success[host_idx][ad][host_decoy_state] += int(red_success)
-                exploit_counts[host_idx][ad][host_decoy_state] += 1
-                if red_success:
-                    exploit_type_counts[host_idx][ad][host_decoy_state] += 1
-                    if prev_action[4][host_idx][2] == 1:
-                        exploit_user[host_idx][ad][host_decoy_state] += 1
-                    elif prev_action[4][host_idx][2] == 1:
-                        exploit_root[host_idx][ad][host_decoy_state] += 1
-            elif prev_action[0] == 3:
-                host_idx = cyborg_hosts.index(prev_action[2].hostname)
-                privilege_escalation_success[host_idx][ad] += int(red_success)
-                privilege_escalation_counts[host_idx][ad] += 1
-            elif prev_action[0] == 4:
-                host_idx = cyborg_hosts.index(prev_action[2].hostname)
-                impact_success[host_idx][ad] += int(red_success)
-                impact_counts[host_idx][ad] += 1
 
-            # state_vec = update_state_vector(state_vector=state_vec, attacker_state=true_prev_state_vec[1],
-            #                                 last_target=true_prev_state_vec[2], success=red_success,
-            #                                 defender_action_type=true_prev_state_vec[3],
-            #                                 defender_action_host=true_prev_state_vec[4])
-
-            prev_action = (red_action_type, red_action_state, red_action, decoy_state, true_state_vec)
-            true_prev_state_vec = (true_state_vec.copy(), b_line_action, last_target,
-                                   defender_action_type, cyborg_hosts.index(defender_action_host))
-
-        # num_zeros = scan_counts.size - np.count_nonzero(scan_counts)
-        # num_zeros += hostscan_counts.size - np.count_nonzero(hostscan_counts)
-        # num_zeros += exploit_counts.size - np.count_nonzero(exploit_counts)
-        # num_zeros += privilege_escalation_counts.size - np.count_nonzero(privilege_escalation_counts)
-        # num_zeros += impact_counts.size - np.count_nonzero(impact_counts)
-
-        # for host_idx in range(exploit_counts.shape[0]):
-        #     for ad in range(exploit_counts.shape[1]):
-        #         for decoy_state in range(exploit_counts.shape[2]):
-        #             if exploit_counts[host_idx][ad][decoy_state] > 0:
-        #                 print(
-        #                     f"exploit prob: {exploit_success[host_idx][ad][decoy_state] / exploit_counts[host_idx][ad][decoy_state]}")
-
-        # if ep % save_every == 0:
-        #     with open(f'/home/kim/scan_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(scan_counts))
-        #     with open(f'/home/kim/scan_success_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(scan_success))
-        #     with open(f'/home/kim/hostscan_success_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(hostscan_success))
-        #     with open(f'/home/kim/hostscan_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(hostscan_counts))
-        #     with open(f'/home/kim/exploit_success_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(exploit_success))
-        #     with open(f'/home/kim/exploit_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(exploit_counts))
-        #     with open(f'/home/kim/exploit_root_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(exploit_root))
-        #     with open(f'/home/kim/exploit_user_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(exploit_user))
-        #     with open(f'/home/kim/exploit_type_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(exploit_type_counts))
-        #     with open(f'/home/kim/privilege_escalation_success_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(privilege_escalation_success))
-        #     with open(f'/home/kim/privilege_escalation_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(privilege_escalation_counts))
-        #     with open(f'/home/kim/impact_success_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(impact_success))
-        #     with open(f'/home/kim/impact_counts_{id}.npy', 'wb') as f:
-        #         np.save(f, np.array(impact_counts))
+        reset_prob = 0
+        if total_counts > 0:
+            reset_prob = reset_counts/total_counts
+        print(f"total count: {total_counts}, reset count: {reset_counts}, reset_prob: {reset_prob}")

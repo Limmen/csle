@@ -697,15 +697,23 @@ class CyborgScenarioTwoDefender(BaseEnv):
         if obs_id not in self.observation_id_to_tensor:
             self.observation_id_to_tensor[obs_id] = np.array(obs_vector)
 
-    def get_action_success(self, agent: str) -> bool:
+    def get_red_action_success(self) -> bool:
         """
-        Returns true if the last actin by the agent was successful, else false
+        Returns true if the last action by the red agent was successful, else false
 
-        :param agent: the agent to check
         :return: true if the action was successful, else false.
         """
         return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].\
             agent.success
+
+    def get_red_base_jump(self) -> bool:
+        """
+        Returns true if the last action by the red agent was as base jump, else false
+
+        :return: true if the action was a base jump, else false.
+        """
+        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"]. \
+            agent.base_jump
 
     def get_red_action_state(self) -> int:
         """
