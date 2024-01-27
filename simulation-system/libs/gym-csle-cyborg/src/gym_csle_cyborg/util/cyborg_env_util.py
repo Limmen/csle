@@ -8,6 +8,7 @@ from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.activity_type import ActivityType
+from gym_csle_cyborg.dao.compromised_type import CompromisedType
 
 
 class CyborgEnvUtil:
@@ -158,95 +159,95 @@ class CyborgEnvUtil:
             action_id_to_type_and_host = {}
             type_and_host_to_action_id = {}
             if config.reduced_action_space and config.decoy_state and not config.decoy_optimization:
-                action_id_to_type_and_host[0] = (BlueAgentActionType.RESTORE, "Enterprise0")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise0")] = 0
-                action_id_to_type_and_host[1] = (BlueAgentActionType.RESTORE, "Enterprise1")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise1")] = 1
-                action_id_to_type_and_host[2] = (BlueAgentActionType.RESTORE, "Enterprise2")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Enterprise2")] = 2
-                action_id_to_type_and_host[3] = (BlueAgentActionType.RESTORE, "Op_Server0")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Op_Server0")] = 3
-                action_id_to_type_and_host[4] = (BlueAgentActionType.ANALYZE, "Enterprise0")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise0")] = 4
-                action_id_to_type_and_host[5] = (BlueAgentActionType.ANALYZE, "Enterprise1")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise1")] = 5
-                action_id_to_type_and_host[6] = (BlueAgentActionType.ANALYZE, "Enterprise2")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Enterprise2")] = 6
-                action_id_to_type_and_host[7] = (BlueAgentActionType.ANALYZE, "Op_Server0")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Op_Server0")] = 7
-                action_id_to_type_and_host[8] = (BlueAgentActionType.REMOVE, "Enterprise0")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise0")] = 8
-                action_id_to_type_and_host[9] = (BlueAgentActionType.REMOVE, "Enterprise1")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise1")] = 9
-                action_id_to_type_and_host[10] = (BlueAgentActionType.REMOVE, "Enterprise2")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Enterprise2")] = 10
-                action_id_to_type_and_host[11] = (BlueAgentActionType.REMOVE, "Op_Server0")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Op_Server0")] = 11
-                action_id_to_type_and_host[12] = (BlueAgentActionType.ANALYZE, "User1")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User1")] = 12
-                action_id_to_type_and_host[13] = (BlueAgentActionType.ANALYZE, "User2")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User2")] = 13
-                action_id_to_type_and_host[14] = (BlueAgentActionType.ANALYZE, "User3")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User3")] = 14
-                action_id_to_type_and_host[15] = (BlueAgentActionType.ANALYZE, "User4")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "User4")] = 15
-                action_id_to_type_and_host[16] = (BlueAgentActionType.RESTORE, "User1")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User1")] = 16
-                action_id_to_type_and_host[17] = (BlueAgentActionType.RESTORE, "User2")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User2")] = 17
-                action_id_to_type_and_host[18] = (BlueAgentActionType.RESTORE, "User3")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User3")] = 18
-                action_id_to_type_and_host[19] = (BlueAgentActionType.RESTORE, "User4")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "User4")] = 19
-                action_id_to_type_and_host[20] = (BlueAgentActionType.RESTORE, "Defender")
-                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, "Defender")] = 20
-                action_id_to_type_and_host[21] = (BlueAgentActionType.ANALYZE, "Defender")
-                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, "Defender")] = 21
-                action_id_to_type_and_host[22] = (BlueAgentActionType.REMOVE, "User1")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User1")] = 22
-                action_id_to_type_and_host[23] = (BlueAgentActionType.REMOVE, "User2")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User2")] = 23
-                action_id_to_type_and_host[24] = (BlueAgentActionType.REMOVE, "User3")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User3")] = 24
-                action_id_to_type_and_host[25] = (BlueAgentActionType.REMOVE, "User4")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "User4")] = 25
-                action_id_to_type_and_host[26] = (BlueAgentActionType.REMOVE, "Defender")
-                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, "Defender")] = 26
-                action_id_to_type_and_host[27] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")] = 27
-                action_id_to_type_and_host[28] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")] = 28
-                action_id_to_type_and_host[29] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")] = 29
-                action_id_to_type_and_host[30] = (BlueAgentActionType.DECOY_FEMITTER, "User1")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 30
-                action_id_to_type_and_host[31] = (BlueAgentActionType.DECOY_FEMITTER, "User2")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 31
-                action_id_to_type_and_host[32] = (BlueAgentActionType.DECOY_FEMITTER, "User3")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User3")] = 32
-                action_id_to_type_and_host[33] = (BlueAgentActionType.DECOY_FEMITTER, "User4")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User4")] = 33
-                action_id_to_type_and_host[34] = (BlueAgentActionType.DECOY_FEMITTER, "Defender")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Defender")] = 34
-                action_id_to_type_and_host[35] = (BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")] = 35
+                action_id_to_type_and_host[0] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE0)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE0)] = 0
+                action_id_to_type_and_host[1] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE1)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE1)] = 1
+                action_id_to_type_and_host[2] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE2)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE2)] = 2
+                action_id_to_type_and_host[3] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.OP_SERVER0)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.OP_SERVER0)] = 3
+                action_id_to_type_and_host[4] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE0)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE0)] = 4
+                action_id_to_type_and_host[5] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE1)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE1)] = 5
+                action_id_to_type_and_host[6] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE2)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.ENTERPRISE2)] = 6
+                action_id_to_type_and_host[7] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.OP_SERVER0)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.OP_SERVER0)] = 7
+                action_id_to_type_and_host[8] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE0)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE0)] = 8
+                action_id_to_type_and_host[9] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE1)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE1)] = 9
+                action_id_to_type_and_host[10] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE2)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.ENTERPRISE2)] = 10
+                action_id_to_type_and_host[11] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.OP_SERVER0)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.OP_SERVER0)] = 11
+                action_id_to_type_and_host[12] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER1)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER1)] = 12
+                action_id_to_type_and_host[13] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER2)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER2)] = 13
+                action_id_to_type_and_host[14] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER3)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER3)] = 14
+                action_id_to_type_and_host[15] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER4)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.USER4)] = 15
+                action_id_to_type_and_host[16] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.USER1)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.USER1)] = 16
+                action_id_to_type_and_host[17] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.USER2)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.USER2)] = 17
+                action_id_to_type_and_host[18] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.USER3)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.USER3)] = 18
+                action_id_to_type_and_host[19] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.USER4)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.USER4)] = 19
+                action_id_to_type_and_host[20] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.DEFENDER)
+                type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.DEFENDER)] = 20
+                action_id_to_type_and_host[21] = (BlueAgentActionType.ANALYZE, env_constants.CYBORG.DEFENDER)
+                type_and_host_to_action_id[(BlueAgentActionType.ANALYZE, env_constants.CYBORG.DEFENDER)] = 21
+                action_id_to_type_and_host[22] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.USER1)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.USER1)] = 22
+                action_id_to_type_and_host[23] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.USER2)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.USER2)] = 23
+                action_id_to_type_and_host[24] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.USER3)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.USER3)] = 24
+                action_id_to_type_and_host[25] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.USER4)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.USER4)] = 25
+                action_id_to_type_and_host[26] = (BlueAgentActionType.REMOVE, env_constants.CYBORG.DEFENDER)
+                type_and_host_to_action_id[(BlueAgentActionType.REMOVE, env_constants.CYBORG.DEFENDER)] = 26
+                action_id_to_type_and_host[27] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)] = 27
+                action_id_to_type_and_host[28] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE1)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE1)] = 28
+                action_id_to_type_and_host[29] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE2)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE2)] = 29
+                action_id_to_type_and_host[30] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER1)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER1)] = 30
+                action_id_to_type_and_host[31] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER2)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER2)] = 31
+                action_id_to_type_and_host[32] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER3)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER3)] = 32
+                action_id_to_type_and_host[33] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER4)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER4)] = 33
+                action_id_to_type_and_host[34] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.DEFENDER)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.DEFENDER)] = 34
+                action_id_to_type_and_host[35] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)] = 35
             elif config.decoy_optimization:
-                action_id_to_type_and_host[0] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise0")] = 0
-                action_id_to_type_and_host[1] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise1")] = 1
-                action_id_to_type_and_host[2] = (BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Enterprise2")] = 2
-                action_id_to_type_and_host[3] = (BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "Op_Server0")] = 3
-                action_id_to_type_and_host[4] = (BlueAgentActionType.DECOY_FEMITTER, "User1")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User1")] = 4
-                action_id_to_type_and_host[5] = (BlueAgentActionType.DECOY_FEMITTER, "User2")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User2")] = 5
-                action_id_to_type_and_host[6] = (BlueAgentActionType.DECOY_FEMITTER, "User3")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User3")] = 6
-                action_id_to_type_and_host[7] = (BlueAgentActionType.DECOY_FEMITTER, "User4")
-                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, "User4")] = 7
+                action_id_to_type_and_host[0] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)] = 0
+                action_id_to_type_and_host[1] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE1)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE1)] = 1
+                action_id_to_type_and_host[2] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE2)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE2)] = 2
+                action_id_to_type_and_host[3] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)] = 3
+                action_id_to_type_and_host[4] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER1)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER1)] = 4
+                action_id_to_type_and_host[5] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER2)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER2)] = 5
+                action_id_to_type_and_host[6] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER3)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER3)] = 6
+                action_id_to_type_and_host[7] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER4)
+                type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER4)] = 7
             return action_id_to_type_and_host, type_and_host_to_action_id
         else:
             raise ValueError(f"Scenario: {config.scenario} not recognized")
@@ -342,14 +343,14 @@ class CyborgEnvUtil:
                 host_scanned = scan_state[host_id]
                 activity = ActivityType.from_str(state[host_id][3]).value
                 host_access = state[host_id][4]
-            if host_access == "No" or host_access == "None":
-                host_access = 0
-            if host_access == "User":
-                host_access = 1
-            if host_access == "Privileged":
-                host_access = 2
-            if host_access == "Unknown":
-                host_access = 3
+            if host_access == env_constants.CYBORG.NO or host_access == env_constants.CYBORG.NONE:
+                host_access = CompromisedType.NO.value
+            if host_access == env_constants.CYBORG.USER:
+                host_access = CompromisedType.USER.value
+            if host_access == env_constants.CYBORG.PRIVILEGED:
+                host_access = CompromisedType.PRIVILEGED.value
+            if host_access == env_constants.CYBORG.UNKNOWN:
+                host_access = CompromisedType.UNKNOWN.value
             host_decoy_state = len(decoy_state[host_id])
             if not observation:
                 state_vector.append([host_known, host_scanned, host_access, host_decoy_state])
@@ -454,3 +455,25 @@ class CyborgEnvUtil:
             if decoy_action_type in host_decoy_state:
                 encoded_state[i] = 1
         return encoded_state
+
+    @staticmethod
+    def get_compromised_values() -> List[int]:
+        """
+        :return: the list of possible compromised values
+        """
+        return [CompromisedType.NO.value, CompromisedType.USER.value, CompromisedType.PRIVILEGED.value]
+
+    @staticmethod
+    def get_compromised_observation_values() -> List[int]:
+        """
+        :return: the list of possible compromised observation values
+        """
+        return [CompromisedType.NO.value, CompromisedType.USER.value, CompromisedType.PRIVILEGED.value,
+                CompromisedType.UNKNOWN.value]
+
+    @staticmethod
+    def get_activity_values() -> List[int]:
+        """
+        :return: the list of possible activity values
+        """
+        return [ActivityType.NONE.value, ActivityType.SCAN.value, ActivityType.EXPLOIT.value]

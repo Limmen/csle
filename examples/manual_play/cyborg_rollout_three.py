@@ -30,8 +30,9 @@ if __name__ == '__main__':
             a = POMCPUtil.rand_choice(A)
             o, r, done, _, info = csle_cyborg_env.step(action=a)
             print(csle_cyborg_env.get_true_table())
+            print(csle_cyborg_env.get_table())
             print(csle_cyborg_env.get_last_action(agent="Red"))
-            print(f"action_success:{csle_cyborg_env.get_red_action_success()}")
+            # print(f"action_success:{csle_cyborg_env.get_red_action_success()}")
             total_R += r
             # print(f"t: {t}, a: {a}, r: {r}, s: {s}, cumulative_R: {total_R},")
             # print(csle_cyborg_env.get_true_table())
