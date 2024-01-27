@@ -28,6 +28,7 @@ class ENV_METRICS:
     DEFENDER_ACTION = "a1"
     ATTACKER_ACTION = "a2"
     OBSERVATION = "o"
+    OBSERVATION_VECTOR = "obs_vec"
     TIME_STEP = "t"
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
 
@@ -46,6 +47,8 @@ class CYBORG:
     Green = "Green"
     ALL_HOSTNAME = "ALL"
     HOSTNAME = "hostname"
+    SUBNET = "subnet"
+    IP_ADDRESS = "ip_address"
     SUBNET_BLUE_TABLE_IDX = 0
     IP_BLUE_TABLE_IDX = 1
     HOSTNAME_BLUE_TABLE_IDX = 2
@@ -78,3 +81,7 @@ class CYBORG:
     USER2 = "User2"
     USER3 = "User3"
     USER4 = "User4"
+    HOST_STATE_KNOWN_IDX = 0
+    HOST_STATE_SCANNED_IDX = 1
+    HOST_STATE_ACCESS_IDX = 2
+    HOST_STATE_DECOY_IDX = 3

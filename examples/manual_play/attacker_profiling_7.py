@@ -278,13 +278,13 @@ if __name__ == '__main__':
     activity_counts = np.zeros((len(cyborg_hosts), len(attacker_action_types),
                                 len(CyborgEnvUtil.get_activity_values())))
     compromised_counts = np.zeros((len(cyborg_hosts), len(CyborgEnvUtil.get_compromised_values()),
-                                   len(CyborgEnvUtil.get_compromised_observation_values())))
+                                   2, len(CyborgEnvUtil.get_compromised_observation_values())))
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
     horizon = 100
     episodes = 100000000
     save_every = 100
     id = 40
-    seed = 405624775
+    seed = 40741821
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -355,9 +355,13 @@ if __name__ == '__main__':
             if red_action_type in [1, 2, 3, 4]:
                 activity_value = obs_vec[red_target][0]
                 activity_counts[red_target][red_action_type][activity_value] += 1
-                compromised_val = obs_vec[red_target][2]
-                true_compromised_val = state_vec[red_target][2]
-                compromised_counts[red_target][true_compromised_val][compromised_val] += 1
+            for host_idx in range(len(true_state_vec)):
+                analyze_action = 0
+                if defender_action_type == BlueAgentActionType.ANALYZE:
+                    analyze_action = 1
+                compromised_val = obs_vec[host_idx][2]
+                true_compromised_val = state_vec[host_idx][2]
+                compromised_counts[host_idx][true_compromised_val][analyze_action][compromised_val] += 1
 
             if red_base_jump:
                 b_line_action = 1
@@ -375,12 +379,12 @@ if __name__ == '__main__':
             last_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
             last_targets[b_line_action] = last_target
 
-        # for host in range(activity_counts.shape[0]):
-        #     for attacker_action in range(activity_counts.shape[1]):
-        #         for activity_type in range(activity_counts.shape[2]):
-        #             print(f"host: {cyborg_hosts[host]}, attacker action: {attacker_action_types[attacker_action]}, "
-        #                   f"activity: {CyborgEnvUtil.get_activity_values()[activity_type]}, "
-        #                   f"count: {activity_counts[host][attacker_action][activity_type]}")
+        # for host in range(compromised_counts.shape[0]):
+        #     for attacker_action in range(compromised_counts.shape[1]):
+        #         for activity_type in range(compromised_counts.shape[2]):
+        #             print(f"host: {cyborg_hosts[host]}, acces: {attacker_action} "
+        #                   f"analyze: {activity_type} "
+        #                   f"counts: {compromised_counts[host][attacker_action][activity_type]}")
 
 
         if ep % save_every == 0:

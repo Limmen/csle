@@ -5,6 +5,7 @@ from csle_cyborg.main import Main
 from csle_cyborg.agents.wrappers.challenge_wrapper import ChallengeWrapper
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
+from gym_csle_cyborg.dao.red_agent_action_type import RedAgentActionType
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.activity_type import ActivityType
@@ -147,18 +148,21 @@ class CyborgEnvUtil:
             raise ValueError(f"Scenario: {scenario} not recognized")
 
     @staticmethod
-    def get_action_dicts(config: CSLECyborgConfig) \
+    def get_action_dicts(scenario: int, reduced_action_space: bool, decoy_state: bool, decoy_optimization: bool) \
             -> Tuple[Dict[int, Tuple[BlueAgentActionType, str]], Dict[Tuple[BlueAgentActionType, str], int]]:
         """
         Gets action lookup dicts for a given scenario and the reduced action space
 
-        :param config: the cage scenario configuration
+        :param scenario: the scenario
+        :param reduced_action_space: boolean flag indicating whether the action sapce is reduced or not
+        :param decoy_state: boolean flag indicating whether decoy state is included
+        :param decoy_optimization: boolean flag indicating whether decoy optimization is used
         :return: a dict id -> (action_type, host) and a dict (action_type, host) -> id
         """
-        if config.scenario == 2:
+        if scenario == 2:
             action_id_to_type_and_host = {}
             type_and_host_to_action_id = {}
-            if config.reduced_action_space and config.decoy_state and not config.decoy_optimization:
+            if reduced_action_space and decoy_state and not decoy_optimization:
                 action_id_to_type_and_host[0] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE0)
                 type_and_host_to_action_id[(BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE0)] = 0
                 action_id_to_type_and_host[1] = (BlueAgentActionType.RESTORE, env_constants.CYBORG.ENTERPRISE1)
@@ -231,7 +235,7 @@ class CyborgEnvUtil:
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.DEFENDER)] = 34
                 action_id_to_type_and_host[35] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.OP_SERVER0)] = 35
-            elif config.decoy_optimization:
+            elif decoy_optimization:
                 action_id_to_type_and_host[0] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE0)] = 0
                 action_id_to_type_and_host[1] = (BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.ENTERPRISE1)
@@ -250,7 +254,7 @@ class CyborgEnvUtil:
                 type_and_host_to_action_id[(BlueAgentActionType.DECOY_FEMITTER, env_constants.CYBORG.USER4)] = 7
             return action_id_to_type_and_host, type_and_host_to_action_id
         else:
-            raise ValueError(f"Scenario: {config.scenario} not recognized")
+            raise ValueError(f"Scenario: {scenario} not recognized")
 
     @staticmethod
     def get_decoy_hosts(scenario: int) -> List[int]:
@@ -477,3 +481,55 @@ class CyborgEnvUtil:
         :return: the list of possible activity values
         """
         return [ActivityType.NONE.value, ActivityType.SCAN.value, ActivityType.EXPLOIT.value]
+
+    @staticmethod
+    def get_cyborg_host_values() -> Dict[str, int]:
+        """
+        :return: a dict that maps hostnames to defender values
+        """
+        return {
+            env_constants.CYBORG.DEFENDER: 3,
+            env_constants.CYBORG.ENTERPRISE0: 3,
+            env_constants.CYBORG.ENTERPRISE1: 3,
+            env_constants.CYBORG.ENTERPRISE2: 4,
+            env_constants.CYBORG.OP_HOST0: 5,
+            env_constants.CYBORG.OP_HOST1: 5,
+            env_constants.CYBORG.OP_HOST2: 5,
+            env_constants.CYBORG.OP_SERVER0: 6,
+            env_constants.CYBORG.USER0: 1,
+            env_constants.CYBORG.USER1: 2,
+            env_constants.CYBORG.USER2: 2,
+            env_constants.CYBORG.USER3: 2,
+            env_constants.CYBORG.USER4: 2
+        }
+
+    @staticmethod
+    def get_red_agent_action_types() -> List[int]:
+        """
+        :return: a list of red agent action types
+        """
+        return [
+            RedAgentActionType.DISCOVER_REMOTE_SYSTEMS, RedAgentActionType.DISCOVER_NETWORK_SERVICES,
+            RedAgentActionType.EXPLOIT_REMOTE_SERVICE, RedAgentActionType.PRIVILEGE_ESCALATE, RedAgentActionType.IMPACT
+        ]
+
+    @staticmethod
+    def get_host_compromised_costs() -> Dict[int, float]:
+        """
+        :return: a dict that maps host ids to compromised costs
+        """
+        return {0: 0, 1: -1, 2: -1, 3: -1, 4: -0.1, 5: -0.1, 6: -0.1, 7: -1, 8: 0, 9: -0.1, 10: -0.1, 11: -0.1,
+                12: -0.1}
+
+    @staticmethod
+    def get_cyborg_hosts() -> List[str]:
+        """
+        :return: the list of cyborg hosts
+        """
+        return [
+            env_constants.CYBORG.DEFENDER, env_constants.CYBORG.ENTERPRISE0, env_constants.CYBORG.ENTERPRISE1,
+            env_constants.CYBORG.ENTERPRISE2, env_constants.CYBORG.OP_HOST0, env_constants.CYBORG.OP_HOST1,
+            env_constants.CYBORG.OP_HOST2, env_constants.CYBORG.OP_SERVER0, env_constants.CYBORG.USER0,
+            env_constants.CYBORG.USER1, env_constants.CYBORG.USER2, env_constants.CYBORG.USER3,
+            env_constants.CYBORG.USER4
+        ]

@@ -1,62 +1,41 @@
-import json
 import numpy as np
-import io
 from gym_csle_cyborg.envs.cyborg_model_wrapper import CyborgModelWrapper
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
-import csle_agents.constants.constants as agents_constants
+from csle_common.metastore.metastore_facade import MetastoreFacade
 
 if __name__ == '__main__':
-    # with io.open(f"/home/kim/particle_model.json", 'r', encoding='utf-8') as f:
-    #     json_str = f.read()
-    #     temp = json.loads(json_str)
-    # particle_model = {}
-    # for k, v in temp.items():
-    #     v_2 = [int(x) for x in v]
-    #     particle_model[int(k)] = v_2
+    with open(f'/home/kim/exploit_model.npy', 'rb') as f:
+        exploit_success_probabilities = np.load(f)
+    with open(f'/home/kim/exploit_root_model.npy', 'rb') as f:
+        exploit_root_probabilities = np.load(f)
+    with open(f'/home/kim/exploit_user_model.npy', 'rb') as f:
+        exploit_user_probabilities = np.load(f)
+    with open(f'/home/kim/activity_model.npy', 'rb') as f:
+        activity_probabilities = np.load(f)
+    with open(f'/home/kim/compromise_model.npy', 'rb') as f:
+        compromise_probabilities = np.load(f)
 
-
-    with io.open(f"/home/kim/observation_model.json", 'r', encoding='utf-8') as f:
-        json_str = f.read()
-        temp = json.loads(json_str)
-    observation_model = {}
-    for k, v in temp.items():
-        v_2 = [int(x) for x in v]
-        observation_model[int(k)] = v_2
-    print("loaded observation model")
-
-
-    with io.open(f"/home/kim/new_transition_model.json", 'r', encoding='utf-8') as f:
-        json_str = f.read()
-        temp = json.loads(json_str)
-    print("loaded model, converting to int")
-    transition_model = {}
-    for k, v in temp.items():
-        transition_model[int(k)] = {}
-        for k2, v2 in v.items():
-            v_2 = [int(x) for x in v2]
-            transition_model[int(k)][int(k2)] = v_2
-
-    config = CSLECyborgConfig(
-        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
-        maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
-        scanned_state=True, decoy_optimization=False, cache_visited_states=False)
-    csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
-    _, info = csle_cyborg_env.reset()
-    s = info[agents_constants.COMMON.STATE]
-    o = info[agents_constants.COMMON.OBSERVATION]
-    observation_model[s] = [o]
-    env = CyborgModelWrapper(transition_model=transition_model, observation_model=observation_model, initial_state=s,
-                             action_id_to_type_and_host=csle_cyborg_env.action_id_to_type_and_host)
-    # print(transition_model)
-    # print(list(transition_model[s].keys()))
-    A = csle_cyborg_env.get_action_space()
-    episodes = 1000
+    maximum_steps = 100
+    env = CyborgModelWrapper(exploit_success_probabilities=exploit_success_probabilities,
+                             exploit_root_probabilities=exploit_root_probabilities,
+                             exploit_user_probabilities=exploit_user_probabilities,
+                             activity_probabilities=activity_probabilities,
+                             compromise_probabilities=compromise_probabilities, maximum_steps=maximum_steps)
+    A = env.get_action_space()
+    ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
+    episodes = 1
     for ep in range(episodes):
         print(f"{ep}/{episodes}")
-        env.reset()
+        o, _ = env.reset()
+        r=0
+        print(f"r: {r}, s: {env.s}")
         for i in range(100):
-            a = np.random.choice(A)
+            # a = np.random.choice(A)
+            a = ppo_policy.action(o=np.array(o))
+            # print(a)
+            # a = 4
             o, r, done, _, info = env.step(a)
-            print(f"{o}: {o}, r: {r}")
+            print(info["obs_vec"])
+            print(f"r: {r}, s: {env.s}")

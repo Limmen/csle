@@ -62,7 +62,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.t = 1
 
         # Setup reduced action space
-        action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(config=self.config)
+        action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(
+            scenario=self.config.scenario, decoy_state=self.config.decoy_state,
+            reduced_action_space=self.config.reduced_action_space, decoy_optimization=self.config.decoy_optimization)
         self.action_id_to_type_and_host = action_id_to_type_and_host
         self.type_and_host_to_action_id = type_and_host_to_action_id
 
