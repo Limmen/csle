@@ -250,9 +250,9 @@ class DQNCleanAgent(BaseAgent):
         device = torch.device(agents_constants.DQN_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
 
-        q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
-        optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate)
-        target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+        q_network = QNetwork(envs, n_atoms=self.n_atoms, v_min=self.v_min, v_max=self.v_max).to(device)
+        optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
+        target_network = QNetwork(envs, n_atoms=self.n_atoms, v_min=self.v_min, v_max=self.v_max).to(device)
 
         # Seeding
         random.seed(seed)
@@ -281,12 +281,13 @@ class DQNCleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                
-                q_values = q_network(torch.Tensor(obs).to(device))
-                actions = torch.argmax(q_values, dim=1).cpu().numpy()
-                e_name = "csle-stopping-game-pomdp-defender-v1"
-                if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
-                    actions[0] = random.randrange(0, 2)
+                actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
+                actions = actions.cpu().numpy()
+                # q_values = q_network(torch.Tensor(obs).to(device))
+                # actions = torch.argmax(q_values, dim=1).cpu().numpy()
+                # e_name = "csle-stopping-game-pomdp-defender-v1"
+                # if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
+                #     actions[0] = random.randrange(0, 2)
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
@@ -315,10 +316,26 @@ class DQNCleanAgent(BaseAgent):
                 if global_step % self.train_frequency == 0:
                     data = rb.sample(self.batch_size)
                     with torch.no_grad():
-                        target_max, _ = target_network(data.next_observations.to(dtype=torch.float32)).max(dim=1)
-                        td_target = data.rewards.flatten() + self.gamma * target_max * (1 - data.dones.flatten())
-                    old_val = q_network(data.observations.to(dtype=torch.float32)).gather(1, data.actions).squeeze()
-                    loss = F.mse_loss(td_target, old_val)
+                        _, next_pmfs = target_network.get_action(data.next_observations)
+                        next_atoms = data.rewards + self.gamma * target_network.atoms * (1 - data.dones)
+                        # projection
+                        delta_z = target_network.atoms[1] - target_network.atoms[0]
+                        tz = next_atoms.clamp(self.v_min, self.v_max)
+
+                        b = (tz - self.v_min) / delta_z
+                        l = b.floor().clamp(0, self.n_atoms - 1)
+                        u = b.ceil().clamp(0, self.n_atoms - 1)
+                        # (l == u).float() handles the case where bj is exactly an integer
+                        # example bj = 1, then the upper ceiling should be uj= 2, and lj= 1
+                        d_m_l = (u + (l == u).float() - b) * next_pmfs
+                        d_m_u = (b - l) * next_pmfs
+                        target_pmfs = torch.zeros_like(next_pmfs)
+                        for i in range(target_pmfs.size(0)):
+                            target_pmfs[i].index_add_(0, l[i].long(), d_m_l[i])
+                            target_pmfs[i].index_add_(0, u[i].long(), d_m_u[i])
+
+                    _, old_pmfs = q_network.get_action(data.observations, data.actions.flatten())
+                    loss = (-(target_pmfs * old_pmfs.clamp(min=1e-5, max=1 - 1e-5).log()).sum(-1)).mean()
 
                     # optimize the model
                     optimizer.zero_grad()
@@ -327,11 +344,8 @@ class DQNCleanAgent(BaseAgent):
 
                 # update target network
                 if global_step % self.target_network_frequency == 0:
-                    for target_network_param, q_network_param in zip(target_network.parameters(),
-                                                                     q_network.parameters()):
-                        target_network_param.data.copy_(
-                            self.tau * q_network_param.data + (1.0 - self.tau) * target_network_param.data
-                        )
+                    target_network.load_state_dict(q_network.state_dict())
+
         # Logging
         R = np.array(R)
         T = np.array(T)
