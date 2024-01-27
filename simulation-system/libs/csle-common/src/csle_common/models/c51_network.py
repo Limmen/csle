@@ -12,7 +12,7 @@ class QNetwork(nn.Module):
     :param output_size_critic: the output size of the critic function/policy in the model
     :param outout_size_actor: the output size of the actor function/policy in the model
     """
-    def __init__(self, envs, num_hl, num_hl_neur, output_size_critic=1):
+    def __init__(self, envs, num_hl, num_hl_neur, n_atoms=101, output_size_critic=1):
 
         super(QNetwork, self).__init__()
         input_size = np.array(envs.single_observation_space.shape).prod()
@@ -20,13 +20,13 @@ class QNetwork(nn.Module):
         self.output_size_action = envs.single_action_space.n
         self.num_hl = num_hl
         self.num_hl_neur = num_hl_neur
-        self.env = env
+        # self.env = env
         self.n_atoms = n_atoms
-        self.register_buffer("atoms", torch.linspace(v_min, v_max, steps=n_atoms))
-        self.n = env.single_action_space.n
+        # self.register_buffer("atoms", torch.linspace(v_min, v_max, steps=n_atoms))
+        # self.n = env.single_action_space.n
         self.network = nn.Sequential()
         for layer in range(num_hl):
-            self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur))
+            self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur*n_atoms))
             self.network.add_module(name='activation', module=nn.ReLU())
             input_size = num_hl_neur
 

@@ -33,9 +33,9 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class DQNCleanAgent(BaseAgent):
+class C51CleanAgent(BaseAgent):
     """
-    A DQN agent using the implementation from OpenAI baselines
+    A C51 agent using the implementation from CleanRL documentation
     """
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Optional[EmulationEnvConfig], experiment_config: ExperimentConfig,
@@ -49,7 +49,7 @@ class DQNCleanAgent(BaseAgent):
         :param training_job: the training job configuration
         :param save_to_metastore: boolean flag indicating whether job information should be saved to the metastore
         """
-        super(DQNCleanAgent, self).__init__(simulation_env_config=simulation_env_config,
+        super(C51CleanAgent, self).__init__(simulation_env_config=simulation_env_config,
                                             emulation_env_config=emulation_env_config,
                                             experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.DQN_CLEAN
@@ -250,7 +250,7 @@ class DQNCleanAgent(BaseAgent):
         device = torch.device(agents_constants.DQN_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
 
-        q_network = QNetwork(envs, n_atoms=self.n_atoms, v_min=self.v_min, v_max=self.v_max).to(device)
+        q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
         target_network = QNetwork(envs, n_atoms=self.n_atoms, v_min=self.v_min, v_max=self.v_max).to(device)
 
