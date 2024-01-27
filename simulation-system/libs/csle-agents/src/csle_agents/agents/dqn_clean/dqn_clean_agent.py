@@ -61,11 +61,8 @@ class DQNCleanAgent(BaseAgent):
         self.exp_name: str = self.simulation_env_config.name
         self.env_id = self.simulation_env_config.gym_env_name
         self.torch_deterministic = True
-        """if toggled, `torch.backends.cudnn.deterministic=False`"""
         self.cuda: bool = True
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
-        """if toggled, cuda will be enabled by default"""
-        """whether to capture videos of the agent performances (check out `videos` folder)"""
         self.start_e = 1
         self.end_e = 0.05
         self.num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
@@ -84,7 +81,6 @@ class DQNCleanAgent(BaseAgent):
         self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
-        # Algorithm specific arguments
 
     def linear_schedule(self, duration: int, t: int):
         slope = (self.end_e - self.start_e) / duration
@@ -281,9 +277,7 @@ class DQNCleanAgent(BaseAgent):
             else:
                 
                 q_values = q_network(torch.Tensor(obs).to(device))
-                # print(q_values)
                 actions = torch.argmax(q_values, dim=1).cpu().numpy()
-                # if actions[0] > 1 and self.simulation_env_config.simulation_env_input_config == :
                 e_name = "csle-stopping-game-pomdp-defender-v1"
                 if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
                     actions[0] = random.randrange(0, 2)
