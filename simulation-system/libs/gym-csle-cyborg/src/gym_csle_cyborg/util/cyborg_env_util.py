@@ -533,3 +533,25 @@ class CyborgEnvUtil:
             env_constants.CYBORG.USER1, env_constants.CYBORG.USER2, env_constants.CYBORG.USER3,
             env_constants.CYBORG.USER4
         ]
+
+
+    @staticmethod
+    def cyborg_host_to_subnet() -> Dict[int, int]:
+        """
+        :return: a dict that maps cyborg hosts to subnet identifiers
+        """
+        return {
+            0: 1,
+            1: 1,
+            2: 1,
+            3: 1,
+            4: 2,
+            5: 2,
+            6: 2,
+            7: 2,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0
+        }

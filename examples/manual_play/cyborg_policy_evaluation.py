@@ -16,7 +16,7 @@ if __name__ == '__main__':
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
-    num_evaluations = 500
+    num_evaluations = 1
     max_horizon = 100
     returns = []
     seed = 346277
@@ -31,12 +31,13 @@ if __name__ == '__main__':
         R = 0
         t = 0
         while t < max_horizon:
-            a = np.random.choice(A)
+            # a = np.random.choice(A)
             # a = 31
             # if t > 20:
             #     a = 3
             # a = 4
-            # a = ppo_policy.action(o=o)
+            a = ppo_policy.action(o=o)
+            # a = 27
             # if t == 0:
             #     a = 31
             # if t == 1:
@@ -46,7 +47,18 @@ if __name__ == '__main__':
             #     a = random.choice([27, 28, 29])
             o, r, done, _, info = csle_cyborg_env.step(a)
             state_id = info[env_constants.ENV_METRICS.STATE]
+            oid = info[env_constants.ENV_METRICS.OBSERVATION]
             s = CyborgEnvUtil.state_id_to_state_vector(state_id=state_id)
+            obs = CyborgEnvUtil.state_id_to_state_vector(state_id=oid, observation=True)
+            print(f"t: {t}, r: {r}, a: {a}, {csle_cyborg_env.get_last_action(agent='Red')}")
+            print(s)
+            print(obs)
+            # print(o)
+            # if t == 0:
+            #     print(o)
+            #     print(type(o))
+            #     print(list(o.tolist()).index(1))
+
             # print(f"t: {t}, r: {r}, a: {a}, s: {s}")
             # print(f"a: {csle_cyborg_env.action_id_to_type_and_host[a]}")
             # print(csle_cyborg_env.get_true_table())

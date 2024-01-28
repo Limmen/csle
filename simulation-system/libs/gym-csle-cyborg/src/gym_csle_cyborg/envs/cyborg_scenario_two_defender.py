@@ -122,7 +122,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         o, r, done, _, info = self.cyborg_challenge_env.step(action=action)
         if not self.config.decoy_optimization:
-            info, _ = CyborgScenarioTwoDefender.populate_info(info=dict(info), obs=o, trace=self.trace,
+            info, _, scan_state = CyborgScenarioTwoDefender.populate_info(info=dict(info), obs=o, trace=self.trace,
                                                               env=self.cyborg_challenge_env,
                                                               cyborg_hostnames=self.cyborg_hostnames,
                                                               scan_state=self.scan_state,
@@ -132,6 +132,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                                               visited_scanned_states=self.visited_scanned_states,
                                                               visited_decoy_states=self.visited_decoy_states,
                                                               reset=False)
+            self.scan_state = scan_state
             o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
                 config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
                 decoy_state_space_lookup=self.decoy_state_space_lookup,
@@ -172,13 +173,14 @@ class CyborgScenarioTwoDefender(BaseEnv):
             cyborg_hostnames=self.cyborg_hostnames)
         self.scan_state = scan_state
         self.decoy_state = decoy_state
-        info, initial_belief = CyborgScenarioTwoDefender.populate_info(
+        info, initial_belief, scan_state = CyborgScenarioTwoDefender.populate_info(
             info=dict(info), obs=o, trace=self.trace, env=self.cyborg_challenge_env,
             cyborg_hostnames=self.cyborg_hostnames, scan_state=self.scan_state,
             decoy_state=self.decoy_state, config=self.config, cyborg_hostname_to_id=self.cyborg_hostname_to_id,
             visited_cyborg_states=self.visited_cyborg_states, visited_scanned_states=self.visited_scanned_states,
             visited_decoy_states=self.visited_decoy_states, reset=True)
         self.initial_belief = initial_belief
+        self.scan_state = scan_state
 
         o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
             config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
@@ -201,7 +203,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                       config: CSLECyborgConfig, cyborg_hostname_to_id: Dict[str, int],
                       visited_cyborg_states: Dict[int, Any], visited_scanned_states: Dict[int, Any],
                       visited_decoy_states: Dict[int, Any], reset: bool = False) \
-            -> Tuple[Dict[str, Any], Dict[int, float]]:
+            -> Tuple[Dict[str, Any], Dict[int, float], List[int]]:
         """
         Populates the info dict
 
@@ -218,7 +220,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param visited_scanned_states: a cache of visited scanned states
         :param visited_decoy_states: a cache of visited decoy states
         :param reset: boolean flag indicating whether this was called from reset or not
-        :return: the populated dict and the updated initial belief
+        :return: the populated dict, the updated initial belief, and the updated scan state
         """
         info[env_constants.ENV_METRICS.RETURN] = sum(trace.defender_rewards)
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(trace.defender_actions)
@@ -282,7 +284,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                  )
             visited_scanned_states[state_id] = deepcopy(scan_state)
             visited_decoy_states[state_id] = deepcopy(decoy_state)
-        return info, initial_belief
+        return info, initial_belief, scan_state
 
     def get_table(self) -> PrettyTable:
         """
@@ -905,12 +907,13 @@ class CyborgScenarioTwoDefender(BaseEnv):
             decoy_state, scan_state = CyborgScenarioTwoDefender.update_cyborg_state(
                 s=state_id, env=env, visited_cyborg_states=visited_cyborg_states,
                 visited_decoy_states=visited_decoy_states, visited_scanned_states=visited_scanned_states)
-            info, initial_belief = CyborgScenarioTwoDefender.populate_info(
+            info, initial_belief, scan_state = CyborgScenarioTwoDefender.populate_info(
                 info=dict(info), obs=o, trace=trace, env=env,
                 cyborg_hostnames=cyborg_hostnames, scan_state=scan_state,
                 decoy_state=decoy_state, config=config, cyborg_hostname_to_id=cyborg_hostname_to_id,
                 visited_cyborg_states=visited_cyborg_states, visited_scanned_states=visited_scanned_states,
                 visited_decoy_states=visited_decoy_states, reset=True)
+            scan_state = scan_state
             o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
                 config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
                 decoy_state_space_lookup=decoy_state_space_lookup,
@@ -931,13 +934,14 @@ class CyborgScenarioTwoDefender(BaseEnv):
                     cyborg_action_id_to_type_and_host=cyborg_action_id_to_type_and_host)
                 decoy_state = decoy_state
                 o, r, done, _, info = env.step(action=action)
-                info, _ = CyborgScenarioTwoDefender.populate_info(
+                info, _, scan_state = CyborgScenarioTwoDefender.populate_info(
                     info=dict(info), obs=o, trace=trace, env=env,
                     cyborg_hostnames=cyborg_hostnames, scan_state=scan_state, decoy_state=decoy_state,
                     config=config, cyborg_hostname_to_id=cyborg_hostname_to_id,
                     visited_cyborg_states=visited_cyborg_states,
                     visited_scanned_states=visited_scanned_states,
                     visited_decoy_states=visited_decoy_states, reset=False)
+                scan_state = scan_state
 
                 o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
                     config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,

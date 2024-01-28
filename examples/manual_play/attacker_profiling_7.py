@@ -29,6 +29,22 @@ attacker_action_types = [
     "DiscoverRemoteSystems", "DiscoverNetworkServices", "ExploitRemoteService", "PrivilegeEscalate", "Impact"
 ]
 
+host_to_subnet = {
+    0: 1,
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0
+}
+
 host_compromised_costs = {
     0: 0,
     1: -1,
@@ -278,13 +294,14 @@ if __name__ == '__main__':
     activity_counts = np.zeros((len(cyborg_hosts), len(attacker_action_types),
                                 len(CyborgEnvUtil.get_activity_values())))
     compromised_counts = np.zeros((len(cyborg_hosts), len(CyborgEnvUtil.get_compromised_values()),
+                                   len(attacker_action_types), len(CyborgEnvUtil.get_activity_values()),
                                    2, len(CyborgEnvUtil.get_compromised_observation_values())))
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
     horizon = 100
     episodes = 100000000
     save_every = 100
     id = 40
-    seed = 402741821
+    seed = 4022204182
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -356,12 +373,17 @@ if __name__ == '__main__':
                 activity_value = obs_vec[red_target][0]
                 activity_counts[red_target][red_action_type][activity_value] += 1
             for host_idx in range(len(true_state_vec)):
-                analyze_action = 0
-                if defender_action_type == BlueAgentActionType.ANALYZE:
-                    analyze_action = 1
-                compromised_val = obs_vec[host_idx][2]
-                true_compromised_val = true_state_vec[host_idx][2]
-                compromised_counts[host_idx][true_compromised_val][analyze_action][compromised_val] += 1
+                if host_idx == red_target or (red_action_type == 0 and host_to_subnet[host_idx] == red_target):
+                    analyze_action = 0
+                    if defender_action_type == BlueAgentActionType.ANALYZE:
+                        analyze_action = 1
+                    compromised_val = obs_vec[host_idx][2]
+                    true_compromised_val = true_state_vec[host_idx][2]
+                    if red_action_type != 0:
+                        activity_value = obs_vec[host_idx][0]
+                    else:
+                        activity_value = 0
+                    compromised_counts[host_idx][true_compromised_val][red_action_type][activity_value][analyze_action][compromised_val] += 1
 
             if red_base_jump:
                 b_line_action = 1
@@ -385,7 +407,8 @@ if __name__ == '__main__':
         #             print(f"host: {cyborg_hosts[host]}, acces: {attacker_action} "
         #                   f"analyze: {activity_type} "
         #                   f"counts: {compromised_counts[host][attacker_action][activity_type]}")
-        # print(compromised_counts[7][0][0])
+        # print(compromised_counts[1][2][2][2][0])
+        # print(compromised_counts[1][2][0][0][0])
 
 
         if ep % save_every == 0:

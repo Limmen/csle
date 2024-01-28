@@ -1,7 +1,8 @@
 import numpy as np
 
 if __name__ == '__main__':
-    ids = list(range(1, 66))
+    # ids = list(range(1, 66))
+    ids = list(range(1, 41))
     activity_counts_list = []
     compromised_counts_list = []
     for id in ids:
@@ -46,9 +47,12 @@ if __name__ == '__main__':
                         compromise_probabilities[j][k][l][m] += compromised_counts[j][k][l][m]/norm_constant
 
 
-    for host in range(activity_probabilities.shape[0]):
-        for attacker_action in range(activity_probabilities.shape[1]):
-            print(activity_probabilities[host][attacker_action])
+    print(compromise_probabilities[7][0][0])
+
+
+    # for host in range(activity_probabilities.shape[0]):
+    #     for attacker_action in range(activity_probabilities.shape[1]):
+    #         print(activity_probabilities[host][attacker_action])
 
     with open(f'/home/kim/activity_model.npy', 'wb') as f:
         np.save(f, np.array(activity_probabilities))

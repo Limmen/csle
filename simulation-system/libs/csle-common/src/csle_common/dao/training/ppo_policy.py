@@ -66,7 +66,7 @@ class PPOPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            a = self.model.predict(np.array(o), deterministic=False)[0]
+            a = self.model.predict(np.array(o), deterministic=True)[0]
             try:
                 return int(a)
             except Exception:

@@ -25,31 +25,35 @@ if __name__ == '__main__':
                              exploit_user_probabilities=exploit_user_probabilities,
                              activity_probabilities=activity_probabilities,
                              compromise_probabilities=compromise_probabilities, maximum_steps=maximum_steps)
-    print(compromise_probabilities[7][2][0])
     A = env.get_action_space()
-    seed = 6327
+    seed = 2623
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    # ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
+    ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
     episodes = 1
     returns = []
     for ep in range(episodes):
-        o, _ = env.reset()
+        o, info = env.reset()
         R = 0
         # print(f"s: {env.s}")
         for i in range(maximum_steps):
-            a = np.random.choice(A)
-            # a = 31
+            # a = np.random.choice(A)
+            # a = 27
             # if i > 20:
             #     a = 3
             # a = 4
-            # a = ppo_policy.action(o=np.array(o))
+            a = ppo_policy.action(o=o)
             # print(a)
             # a = 4
             o, r, done, _, info = env.step(a)
-            print(info["obs_vec"])
-            print(f"i: {i}, r: {r}, a: {a}, s: {env.s}")
+            print(f"t: {i}, r: {r}, a: {a}")
+            print(env.s)
+            print(info['obs_vec'])
+            if i == 0:
+                print(o)
+                print(type(o))
+                print(list(o.tolist()).index(1))
             R += r
         returns.append(R)
-        print(f"{ep}/{episodes}, R: {np.mean(returns)}")
+        print(f"{ep}/{episodes}, R: {np.mean(returns)}, R: {R}")

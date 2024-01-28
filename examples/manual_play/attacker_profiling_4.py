@@ -263,6 +263,12 @@ if __name__ == '__main__':
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
+    user_counts = {
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0
+    }
     for ep in range(episodes):
         print(f"{ep}/{episodes}")
         o, info = csle_cyborg_env.reset()
@@ -285,7 +291,8 @@ if __name__ == '__main__':
         red_action_types = []
         for i in range(horizon):
             # ad = np.random.choice(defender_actions)
-            ad = np.random.choice([27, 28, 29, 30, 31, 32 ,33, 34, 35])
+            # ad = np.random.choice([27, 28, 29, 30, 31, 32 ,33, 34, 35])
+            ad = 31
             # ad = 4
             # ad = 27
             o, r, done, _, info = csle_cyborg_env.step(action=ad)
@@ -316,6 +323,11 @@ if __name__ == '__main__':
 
                 if das and get_action_type(red_actions[-1]) == 2:
                     host_idx = cyborg_hosts.index(ip_to_host[str(red_actions[-1].ip_address)])
+                    host = ip_to_host[str(red_actions[-1].ip_address)]
+                    if i == 3:
+                        user_counts[host_idx] += 1
+                    # if host == "User2":
+                    #     print(f"i: {i}, Exploit {ip_to_host[str(red_actions[-1].ip_address)]}, id: {host_idx}, success: {red_success}")
                     host_decoy_state = sv[host_idx][3]
                     exploit_success[host_idx][host_decoy_state] += int(red_success)
                     exploit_counts[host_idx][host_decoy_state] += 1
@@ -376,8 +388,10 @@ if __name__ == '__main__':
         #             exploit_prob = exploit_success[host_idx][decoy_state] / exploit_counts[host_idx][decoy_state]
         #         print(f"host: {cyborg_hosts[host_idx]}, decoy_state: {decoy_state} "
         #               f"exploit prob: {exploit_prob}"
-        if exploit_counts[7][0] > 0:
-            print(exploit_success[7][0]/exploit_counts[7][0])
+        # if exploit_counts[10][0] > 0:
+        # print(exploit_success[10][3]/exploit_counts[10][3])
+        print(exploit_success[1][0]/exploit_counts[1][0])
+        # print(user_counts)
 
         # if ep % save_every == 0:
         #     with open(f'/home/kim/exploit_success_{id}.npy', 'wb') as f:

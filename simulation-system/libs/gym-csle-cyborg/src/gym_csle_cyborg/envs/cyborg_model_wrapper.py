@@ -27,6 +27,7 @@ class CyborgModelWrapper():
         self.compromise_probabilities = compromise_probabilities
         self.initial_observation = CyborgModelWrapper.initial_obs_vector()
         self.s = CyborgModelWrapper.initial_state_vector()
+        self.last_obs = CyborgModelWrapper.initial_obs_vector()
         self.hosts = CyborgEnvUtil.get_cyborg_hosts()
         self.host_compromised_costs = CyborgEnvUtil.get_host_compromised_costs()
         self.red_agent_action_types = CyborgEnvUtil.get_red_agent_action_types()
@@ -43,6 +44,7 @@ class CyborgModelWrapper():
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         self.scan_state = [0 for _ in self.hosts]
         self.next_target_fixed = False
+        self.host_to_subnet = CyborgEnvUtil.cyborg_host_to_subnet()
 
     def step(self, action: int) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
@@ -107,13 +109,15 @@ class CyborgModelWrapper():
         obs, obs_tensor, scan_state = CyborgModelWrapper.generate_observation(
             s=s_prime, scan_state=self.scan_state, activity_probabilities=self.activity_probabilities,
             compromise_probabilities=self.compromise_probabilities, red_agent_action_type=next_red_action_type,
+            red_agent_target=self.red_agent_target,
             decoy_action_types=self.decoy_action_types, decoy_actions_per_host=self.decoy_actions_per_host,
-            defender_action_type=defender_action_type, defender_action_host_id=defender_action_host_id)
+            defender_action_type=defender_action_type, defender_action_host_id=defender_action_host_id,
+            last_obs=self.last_obs, host_to_subnet=self.host_to_subnet)
         self.scan_state = scan_state
-        o = 1
         r = self.reward_function(defender_action_type=defender_action_type, red_action_type=next_red_action_type,
                                  red_success=(is_red_action_feasible and exploit_successful))
         self.s = s_prime
+        self.last_obs = obs
         info = {}
         info[env_constants.ENV_METRICS.STATE] = CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s,
                                                                                        observation=False)
@@ -125,7 +129,7 @@ class CyborgModelWrapper():
         if self.t >= self.maximum_steps:
             done = True
 
-        return obs_tensor, r, done, done, info
+        return np.array(obs_tensor), r, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
@@ -146,12 +150,14 @@ class CyborgModelWrapper():
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         obs_vec = self.initial_obs_vector()
         obs_tensor = self.initial_obs_tensor()
+        self.last_obs = obs_vec
         info = {}
         info[env_constants.ENV_METRICS.STATE] = CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s,
                                                                                        observation=False)
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vec,
                                                                                              observation=True)
-        return obs_tensor, info
+        info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs_vec
+        return np.array(obs_tensor), info
 
     def reward_function(self, defender_action_type: BlueAgentActionType,
                         red_action_type: RedAgentActionType, red_success: bool) -> float:
@@ -215,7 +221,7 @@ class CyborgModelWrapper():
         :return: gets the initial observation vector
         """
         return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
-                [0, 0, 0, 0], [1, 0, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+                [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
     @staticmethod
     def initial_obs_tensor() -> List[int]:
@@ -454,45 +460,57 @@ class CyborgModelWrapper():
                              compromise_probabilities: npt.NDArray[Any], red_agent_action_type: int,
                              decoy_action_types: List[BlueAgentActionType],
                              decoy_actions_per_host: List[List[BlueAgentActionType]],
-                             defender_action_type: BlueAgentActionType, defender_action_host_id: int) \
+                             defender_action_type: BlueAgentActionType, defender_action_host_id: int,
+                             red_agent_target: int, last_obs: List[List[int]], host_to_subnet: Dict[int, int]) \
             -> Tuple[List[List[int]], List[int], List[int]]:
         """
         Generates the defender observation based on the current state
 
         :param s: the current state
         :param scan_state: the current scanned state
-        :param activity_probabilities: the activity observationprobabilities
+        :param red_agent_target: the target of the red agent
+        :param activity_probabilities: the activity observation probabilities
         :param compromise_probabilities: the compromise observation probabilities
         :param red_agent_action_type: the type of the red agent's action
         :param decoy_action_types: the list of decoy action types
         :param decoy_actions_per_host: the list of decoy actions per host
         :param defender_action_type: the action type of the defender
         :param defender_action_host_id: the id of the targeted host of the defender
+        :param last_obs: the last observation
+        :param host_to_subnet: a map from host id to subnet id
         :return: the latest observation, the one-hot encoded observation, and the updated scanned state
         """
         obs = []
         obs_tensor = []
         for host_id in range(len(s)):
-            analyze = 0
-            if defender_action_host_id == host_id and defender_action_type == BlueAgentActionType.ANALYZE.value:
-                analyze = 1
-            activity_distribution = activity_probabilities[host_id][red_agent_action_type]
-            if sum(activity_distribution) == 0:
+            if host_id == 8:
+                host_obs = [0, 0, 0, 0]
+            else:
+                analyze = 0
+                if defender_action_host_id == host_id and defender_action_type == BlueAgentActionType.ANALYZE.value:
+                    analyze = 1
                 activity = ActivityType.NONE.value
-            else:
-                activity = np.random.choice(np.arange(0, len(activity_distribution)), p=activity_distribution)
-            host_access = s[host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX]
-            compromised_distribution = compromise_probabilities[host_id][host_access][analyze]
-            if sum(compromised_distribution) == 0:
-                compromised_obs =CompromisedType.NO.value
-            else:
-                compromised_obs = np.random.choice(np.arange(0, len(compromised_distribution)),
-                                                   p=compromised_distribution)
-            host_decoy_state = s[host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
-            if activity == ActivityType.SCAN:
-                scan_state = [1 if x == 2 else x for x in scan_state]
-                scan_state[host_id] = 2
-            host_obs = [activity, scan_state[host_id], compromised_obs, host_decoy_state]
+                if host_id == red_agent_target and \
+                        red_agent_action_type != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS.value:
+                    activity_distribution = activity_probabilities[host_id][red_agent_action_type]
+                    if sum(activity_distribution) != 0:
+                        activity = np.random.choice(np.arange(0, len(activity_distribution)), p=activity_distribution)
+                host_access = s[host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX]
+                compromised_obs = last_obs[host_id]
+                if red_agent_target == host_id or \
+                        (red_agent_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS.value
+                         and red_agent_target == host_to_subnet[host_id]):
+                    compromised_distribution = compromise_probabilities[host_id][host_access][analyze]
+                    if sum(compromised_distribution) == 0:
+                        compromised_obs =CompromisedType.NO.value
+                    else:
+                        compromised_obs = np.random.choice(np.arange(0, len(compromised_distribution)),
+                                                           p=compromised_distribution)
+                host_decoy_state = s[host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
+                if activity == ActivityType.SCAN:
+                    scan_state = [1 if x == 2 else x for x in scan_state]
+                    scan_state[host_id] = 2
+                host_obs = [activity, scan_state[host_id], compromised_obs, host_decoy_state]
             obs.append(host_obs)
             obs_tensor.extend(CyborgModelWrapper.host_obs_one_hot_encoding(
                 host_obs=host_obs, decoy_action_types=decoy_action_types,
