@@ -1,4 +1,6 @@
 import numpy as np
+import torch
+import random
 from gym_csle_cyborg.envs.cyborg_model_wrapper import CyborgModelWrapper
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
@@ -23,19 +25,31 @@ if __name__ == '__main__':
                              exploit_user_probabilities=exploit_user_probabilities,
                              activity_probabilities=activity_probabilities,
                              compromise_probabilities=compromise_probabilities, maximum_steps=maximum_steps)
+    print(compromise_probabilities[7][2][0])
     A = env.get_action_space()
-    ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
+    seed = 6327
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    # ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
     episodes = 1
+    returns = []
     for ep in range(episodes):
-        print(f"{ep}/{episodes}")
         o, _ = env.reset()
-        r=0
-        print(f"r: {r}, s: {env.s}")
-        for i in range(100):
-            # a = np.random.choice(A)
-            a = ppo_policy.action(o=np.array(o))
+        R = 0
+        # print(f"s: {env.s}")
+        for i in range(maximum_steps):
+            a = np.random.choice(A)
+            # a = 31
+            # if i > 20:
+            #     a = 3
+            # a = 4
+            # a = ppo_policy.action(o=np.array(o))
             # print(a)
             # a = 4
             o, r, done, _, info = env.step(a)
             print(info["obs_vec"])
-            print(f"r: {r}, s: {env.s}")
+            print(f"i: {i}, r: {r}, a: {a}, s: {env.s}")
+            R += r
+        returns.append(R)
+        print(f"{ep}/{episodes}, R: {np.mean(returns)}")

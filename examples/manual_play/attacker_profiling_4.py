@@ -286,6 +286,7 @@ if __name__ == '__main__':
         for i in range(horizon):
             # ad = np.random.choice(defender_actions)
             ad = np.random.choice([27, 28, 29, 30, 31, 32 ,33, 34, 35])
+            # ad = 4
             # ad = 27
             o, r, done, _, info = csle_cyborg_env.step(action=ad)
             s = info[agents_constants.COMMON.STATE]
@@ -374,16 +375,18 @@ if __name__ == '__main__':
         #         if exploit_counts[host_idx][decoy_state] > 0:
         #             exploit_prob = exploit_success[host_idx][decoy_state] / exploit_counts[host_idx][decoy_state]
         #         print(f"host: {cyborg_hosts[host_idx]}, decoy_state: {decoy_state} "
-        #               f"exploit prob: {exploit_prob}")
+        #               f"exploit prob: {exploit_prob}"
+        if exploit_counts[7][0] > 0:
+            print(exploit_success[7][0]/exploit_counts[7][0])
 
-        if ep % save_every == 0:
-            with open(f'/home/kim/exploit_success_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_success))
-            with open(f'/home/kim/exploit_counts_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_counts))
-            with open(f'/home/kim/exploit_root_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_root))
-            with open(f'/home/kim/exploit_user_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_user))
-            with open(f'/home/kim/exploit_type_counts_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_type_counts))
+        # if ep % save_every == 0:
+        #     with open(f'/home/kim/exploit_success_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(exploit_success))
+        #     with open(f'/home/kim/exploit_counts_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(exploit_counts))
+        #     with open(f'/home/kim/exploit_root_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(exploit_root))
+        #     with open(f'/home/kim/exploit_user_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(exploit_user))
+        #     with open(f'/home/kim/exploit_type_counts_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(exploit_type_counts))

@@ -28,8 +28,11 @@ if __name__ == '__main__':
     exploit_counts = exploit_counts_list[0]
     exploit_success = exploit_success_list[0]
     for i in range(1, len(exploit_counts_list)):
+        if i in list(range(10, 31)):
+            continue
         for j in range(exploit_counts.shape[0]):
             for k in range(exploit_counts.shape[1]):
+                # print(f"i: {i}, test: {exploit_success_list[i][7][0]/exploit_counts_list[i][7][0]}")
                 exploit_counts[j][k] += exploit_counts_list[i][j][k]
                 exploit_success[j][k] += exploit_success_list[i][j][k]
 
@@ -37,6 +40,8 @@ if __name__ == '__main__':
     exploit_user = exploit_user_list[0]
     exploit_type_counts = exploit_type_counts_list[0]
     for i in range(1, len(exploit_root_list)):
+        if i in list(range(10, 31)):
+            continue
         for j in range(exploit_root.shape[0]):
             for k in range(exploit_root.shape[1]):
                 exploit_root[j][k] += exploit_root_list[i][j][k]
@@ -57,9 +62,9 @@ if __name__ == '__main__':
                 exploit_root_probabilities[j][k] = exploit_root[j][k] / exploit_type_counts[j][k]
                 exploit_user_probabilities[j][k] = exploit_user[j][k] / exploit_type_counts[j][k]
 
-    for host in range(exploit_success_probabilities.shape[0]):
-        for decoy in range(exploit_success_probabilities.shape[1]):
-            print(exploit_success_probabilities[host][decoy])
+    # for host in range(exploit_success_probabilities.shape[0]):
+    #     for decoy in range(exploit_success_probabilities.shape[1]):
+    #         print(exploit_success_probabilities[host][decoy])
 
     with open(f'/home/kim/exploit_model.npy', 'wb') as f:
         np.save(f, np.array(exploit_success_probabilities))

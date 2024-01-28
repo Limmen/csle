@@ -284,7 +284,7 @@ if __name__ == '__main__':
     episodes = 100000000
     save_every = 100
     id = 40
-    seed = 40741821
+    seed = 402741821
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -360,7 +360,7 @@ if __name__ == '__main__':
                 if defender_action_type == BlueAgentActionType.ANALYZE:
                     analyze_action = 1
                 compromised_val = obs_vec[host_idx][2]
-                true_compromised_val = state_vec[host_idx][2]
+                true_compromised_val = true_state_vec[host_idx][2]
                 compromised_counts[host_idx][true_compromised_val][analyze_action][compromised_val] += 1
 
             if red_base_jump:
@@ -385,6 +385,7 @@ if __name__ == '__main__':
         #             print(f"host: {cyborg_hosts[host]}, acces: {attacker_action} "
         #                   f"analyze: {activity_type} "
         #                   f"counts: {compromised_counts[host][attacker_action][activity_type]}")
+        # print(compromised_counts[7][0][0])
 
 
         if ep % save_every == 0:

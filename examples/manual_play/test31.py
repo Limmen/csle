@@ -25,7 +25,8 @@ if __name__ == '__main__':
         for j in range(compromised_counts.shape[0]):
             for k in range(compromised_counts.shape[1]):
                 for l in range(compromised_counts.shape[2]):
-                    compromised_counts[j][k][l] += compromised_counts_list[i][j][k][l]
+                    for m in range(compromised_counts.shape[3]):
+                        compromised_counts[j][k][l][m] += compromised_counts_list[i][j][k][l][m]
 
     activity_probabilities = np.zeros(activity_counts.shape)
     for j in range(activity_counts.shape[0]):
@@ -38,10 +39,11 @@ if __name__ == '__main__':
     compromise_probabilities = np.zeros(compromised_counts.shape)
     for j in range(compromised_counts.shape[0]):
         for k in range(compromised_counts.shape[1]):
-            norm_constant = sum(compromised_counts[j][k])
             for l in range(compromised_counts.shape[2]):
-                if norm_constant > 0:
-                    compromise_probabilities[j][k][l] += compromised_counts[j][k][l]/norm_constant
+                norm_constant = sum(compromised_counts[j][k][l])
+                for m in range(compromised_counts.shape[3]):
+                    if norm_constant > 0:
+                        compromise_probabilities[j][k][l][m] += compromised_counts[j][k][l][m]/norm_constant
 
 
     for host in range(activity_probabilities.shape[0]):
