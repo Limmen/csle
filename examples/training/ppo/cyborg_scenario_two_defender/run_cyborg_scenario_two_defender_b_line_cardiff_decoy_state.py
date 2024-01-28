@@ -24,10 +24,10 @@ if __name__ == '__main__':
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                value=256, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
             constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
-                value=2, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
+                value=1, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=2048, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
