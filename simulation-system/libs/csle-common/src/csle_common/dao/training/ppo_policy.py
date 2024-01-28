@@ -56,17 +56,18 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> Union[int, float, npt.NDArray[Any]]:
+    def action(self, o: Union[List[float], List[int]], deterministic: bool = True) -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            a = self.model.predict(np.array(o), deterministic=True)[0]
+            a = self.model.predict(np.array(o), deterministic=deterministic)[0]
             try:
                 return int(a)
             except Exception:

@@ -50,15 +50,16 @@ class DQNPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.DQN
 
-    def action(self, o: List[float]) -> NDArray[Any]:
+    def action(self, o: List[float], deterministic: bool = True) -> NDArray[Any]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         if self.model is None:
-            raise ValueError("The model i None")
+            raise ValueError("The model is None")
         a = self.model.predict(np.array(o), deterministic=False)[0]
         return a
 

@@ -22,11 +22,12 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Any) -> Union[int, List[int], float, NDArray[Any]]:
+    def action(self, o: Any, deterministic: bool) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Calculates the next action
 
         :param o: the input observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the action
         """
         pass

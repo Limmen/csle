@@ -60,11 +60,12 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         """
         return self.action(o=o) == a
 
-    def action(self, o: List[float]) -> int:
+    def action(self, o: List[float], deterministic: bool = True) -> int:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         if not self.player_type == PlayerType.ATTACKER:

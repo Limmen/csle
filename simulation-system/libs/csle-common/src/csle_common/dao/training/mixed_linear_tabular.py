@@ -38,11 +38,12 @@ class MixedLinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> Union[int, List[int], float, NDArray[Any]]:
+    def action(self, o: List[float], deterministic: bool = True) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         policy = np.random.choice(self.linear_tabular_policies)

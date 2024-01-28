@@ -59,10 +59,12 @@ class CyborgModelWrapper():
                 defender_action_host == env_constants.CYBORG.OP_SERVER0:
             self.op_server_restored = True
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
-        s_prime = self.apply_defender_action_to_state(s=self.s, defender_action_type=defender_action_type,
+        s_prime, last_obs = self.apply_defender_action_to_state(s=self.s, defender_action_type=defender_action_type,
                                                       defender_action_host_id=defender_action_host_id,
                                                       decoy_action_types=self.decoy_action_types,
-                                                      decoy_actions_per_host=self.decoy_actions_per_host)
+                                                      decoy_actions_per_host=self.decoy_actions_per_host,
+                                                      last_obs=self.last_obs)
+        self.last_obs = last_obs
         next_red_action_type = CyborgModelWrapper.get_red_agent_action_type_from_state(
             red_agent_state=self.red_agent_state)
         is_red_action_feasible = CyborgModelWrapper.is_red_action_feasible(red_agent_state=self.red_agent_state,
@@ -350,7 +352,8 @@ class CyborgModelWrapper():
     @staticmethod
     def apply_defender_action_to_state(s: List[List[int]], defender_action_type: BlueAgentActionType,
                                        defender_action_host_id: int, decoy_action_types: List[BlueAgentActionType],
-                                       decoy_actions_per_host: List[List[BlueAgentActionType]]) -> List[List[int]]:
+                                       decoy_actions_per_host: List[List[BlueAgentActionType]],
+                                       last_obs: List[List[int]]) -> Tuple[List[List[int]], List[List[int]]]:
         """
         Applies a given defender action to the state
 
@@ -359,7 +362,8 @@ class CyborgModelWrapper():
         :param defender_action_host_id: the id of the host that the defender targets
         :param decoy_action_types: a list of decoy action types
         :param decoy_actions_per_host: a list of decoy action types per host
-        :return: the updated state
+        :param last_obs: the last observation
+        :return: the updated state and observation
         """
         if (defender_action_type in decoy_action_types
                 and s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX] ==
@@ -371,10 +375,13 @@ class CyborgModelWrapper():
                 len(decoy_actions_per_host[defender_action_host_id]))
         elif defender_action_type == BlueAgentActionType.RESTORE:
             s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
+            last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
         elif defender_action_type == BlueAgentActionType.REMOVE:
             if s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.USER.value:
                 s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
-        return s
+                last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
+                    CompromisedType.UNKNOWN.value
+        return s, last_obs
 
     @staticmethod
     def sample_next_red_agent_target(red_agent_state: int, red_agent_target: int) -> int:

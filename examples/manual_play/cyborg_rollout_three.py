@@ -31,7 +31,7 @@ if __name__ == '__main__':
         total_R = 0
         for t in range(100):
             # a = POMCPUtil.rand_choice(A)
-            a = 4
+            a = 10
             o, r, done, _, info = csle_cyborg_env.step(action=a)
             obs_vec = CyborgEnvUtil.state_id_to_state_vector(state_id=info[constants.ENV_METRICS.OBSERVATION], observation=True)
             # print(obs_vec)

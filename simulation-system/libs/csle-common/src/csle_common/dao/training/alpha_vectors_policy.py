@@ -40,11 +40,12 @@ class AlphaVectorsPolicy(Policy):
         self.states = states
         self.policy_type = PolicyType.ALPHA_VECTORS
 
-    def action(self, o: List[Union[int, float]]) -> int:
+    def action(self, o: List[Union[int, float]], deterministic: bool = True) -> int:
         """
         Selects the next action
 
         :param o: the belief
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the next action and its probability
         """
         b = o

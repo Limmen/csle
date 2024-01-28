@@ -31,11 +31,13 @@ class VectorPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.VECTOR
 
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, List[int], float, NDArray[Any]]:
+    def action(self, o: Union[List[Union[int, float]], int, float], deterministic: bool = True) \
+            -> Union[int, List[int], float, NDArray[Any]]:
         """
         Selects the next action
 
         :param o: the input observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the next action and its probability
         """
         return float(np.random.choice(np.arange(0, len(self.policy_vector)), p=self.policy_vector))
