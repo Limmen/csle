@@ -59,15 +59,15 @@ if __name__ == '__main__':
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=200, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
-                value=50, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
-            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=100, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+                value=100, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=5, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.C2: HParam(value=1200, name=agents_constants.POMCP.C2,
                                              descr="the weighting factor for AlphaGo exploration"),
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
-                value=True, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
+                value=False, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
             agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=80, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=0, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
-            agents_constants.POMCP.VERBOSE: HParam(value=False, name=agents_constants.POMCP.VERBOSE,
+            agents_constants.POMCP.VERBOSE: HParam(value=True, name=agents_constants.POMCP.VERBOSE,
                                                    descr="verbose logging flag"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of evaluation episodes"),

@@ -480,7 +480,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
         elif defender_action_type == BlueAgentActionType.RESTORE:
             s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
+            s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX] = 0
             last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
+            last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX] = 0
         elif defender_action_type == BlueAgentActionType.REMOVE:
             if s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.USER.value:
                 s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
