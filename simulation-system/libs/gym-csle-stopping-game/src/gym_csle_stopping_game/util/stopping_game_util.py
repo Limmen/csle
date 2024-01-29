@@ -67,6 +67,7 @@ class StoppingGameUtil:
         :param R_ST: the R_ST constant
         :return: a |L|x|A1|x|A2|x|S| tensor
         """
+
         R_l = []
         for l in range(1, L + 1):
             R = [
