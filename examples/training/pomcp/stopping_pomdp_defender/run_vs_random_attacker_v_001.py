@@ -6,6 +6,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.pomcp.pomcp_agent import POMCPAgent
+from csle_agents.agents.pomcp.pomcp_acquisition_function_type import POMCPAcquisitionFunctionType
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_agents.common.objective_type import ObjectiveType
@@ -53,9 +54,7 @@ if __name__ == '__main__':
     A = simulation_env_config.simulation_env_input_config.stopping_game_config.A1
     O = simulation_env_config.simulation_env_input_config.stopping_game_config.O
     b1 = simulation_env_config.simulation_env_input_config.stopping_game_config.b1
-    initial_belief = {}
-    for i in range(len(b1)):
-        initial_belief[i] = b1[i]
+    initial_particles = [np.argmax(b1)]
     rollout_policy = None
     value_function = None
     experiment_config = ExperimentConfig(
@@ -78,8 +77,8 @@ if __name__ == '__main__':
             agents_constants.POMCP.A: HParam(value=A, name=agents_constants.POMCP.A, descr="the action space"),
             agents_constants.POMCP.GAMMA: HParam(value=0.99, name=agents_constants.POMCP.GAMMA,
                                                  descr="the discount factor"),
-            agents_constants.POMCP.INITIAL_BELIEF: HParam(value=initial_belief,
-                                                          name=agents_constants.POMCP.INITIAL_BELIEF,
+            agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles,
+                                                          name=agents_constants.POMCP.INITIAL_PARTICLES,
                                                           descr="the initial belief"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=True, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
@@ -107,6 +106,9 @@ if __name__ == '__main__':
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=-2000, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
+            agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
+                value=POMCPAcquisitionFunctionType.UCB, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
+                descr="the type of acquisition function"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
             agents_constants.POMCP.VERBOSE: HParam(value=False, name=agents_constants.POMCP.VERBOSE,
@@ -115,9 +117,14 @@ if __name__ == '__main__':
                                                             descr="number of evaluation episodes"),
             agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=5, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
+            agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=1, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
+                                                            descr="the prior confidence"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
+            agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
+                value=False, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
+                descr="boolean flag indicating whether rollout policy should be used"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),

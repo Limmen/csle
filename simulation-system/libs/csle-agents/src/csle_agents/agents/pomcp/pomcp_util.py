@@ -1,4 +1,6 @@
 from typing import List, Dict, Any, Callable, Union
+import random
+import math
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
@@ -34,7 +36,7 @@ class POMCPUtil:
         :param candidates: the list to sample from
         :return: the sample
         """
-        return np.random.choice(candidates)
+        return random.choice(candidates)
 
     @staticmethod
     def convert_samples_to_distribution(samples) -> Dict[int, float]:
@@ -57,8 +59,9 @@ class POMCPUtil:
         :param probability_vector: probability vector to determine the frequency of each sample
         :return: sampled particles (states)
         """
-        states = list(belief.keys())
-        return [states[int(POMCPUtil.sample_from_distribution(list(belief.values())))] for _ in range(num_particles)]
+        if isinstance(belief, Dict):
+            states = list(belief.keys())
+            return [states[int(POMCPUtil.sample_from_distribution(list(belief.values())))] for _ in num_particles]
 
     @staticmethod
     def ucb(history_visit_count, action_visit_count):
@@ -79,8 +82,7 @@ class POMCPUtil:
         return np.sqrt(np.log(history_visit_count) / action_visit_count)
 
     @staticmethod
-    def ucb_acquisition_function(action: "Node", c: float, rollout_policy: Union[Policy, None], o: List[Any],
-                                 prior_weight: float) -> float:
+    def ucb_acquisition_function(action: "Node", c: float) -> float:
         """
         The UCB acquisition function
 
@@ -90,18 +92,33 @@ class POMCPUtil:
         :param prior_weight: the weight to put on the prior
         :return: the acquisition value of the action
         """
-        # if action.visit_count == 0:
-        #     return np.inf
-        # else:
-        #     prior = 1.0
-        # if rollout_policy is not None:
-        #     prior = rollout_policy.probability(o=o, a=action.action)
-        # return action.value + (prior_weight * prior) / (action.visit_count)
-        prior = 1.0
-        # if rollout_policy is not None:
-        #     prior = rollout_policy.probability(o=o, a=action.action)
-        return float(action.value + prior * prior_weight
-                     + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+        if action.parent.visit_count == 0:
+            return 0
+        if action.visit_count == 0:
+            return np.inf
+        return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+
+    @staticmethod
+    def alpha_go_acquisition_function(action: "Node", c: float, c2: float,
+                                      rollout_policy: Union[Policy, None], o: List[Any], prior_weight: float) -> float:
+        """
+        The UCB acquisition function
+
+        :param action: the action node
+        :param c: the exploration parameter
+        :param c2: the c2 parameter
+        :param rollout_policy: the rollout policy
+        :param prior_weight: the weight to put on the prior
+        :return: the acquisition value of the action
+        """
+        acquisition_value = action.value
+        # prior = rollout_policy.probability(o=o, a=action.action)
+        prior = rollout_policy
+        visit_term = math.sqrt(action.parent.visit_count)/(action.visit_count+1)
+        base_term = math.log((action.parent.visit_count + c2 + 1)/c2 + c)
+        exploration_term = prior_weight*prior*visit_term*base_term
+        acquisition_value += exploration_term
+        return float(acquisition_value)
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,

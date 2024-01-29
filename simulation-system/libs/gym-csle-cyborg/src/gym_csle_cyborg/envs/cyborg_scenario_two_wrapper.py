@@ -1,8 +1,10 @@
+import copy
 import random
 import time
 from typing import Tuple, Dict, List, Any, Union
 import numpy as np
 import numpy.typing as npt
+import gymnasium as gym
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 import csle_common.constants.constants as constants
@@ -61,8 +63,22 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         self.scan_state = [0 for _ in self.hosts]
-        self.next_target_fixed = False
         self.privilege_escalation_detected: Union[None, int] = None
+
+        self.initial_particles = [
+            (
+                copy.deepcopy(self.s), copy.deepcopy(self.scan_state), self.op_server_restored,
+                copy.deepcopy(self.last_obs), copy.deepcopy(self.red_action_targets),
+                self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
+            )
+        ]
+
+        # Setup gym spaces
+        self.defender_observation_space = gym.spaces.Box(
+            -1, 2, ((6 + len(self.decoy_action_types)) * len(self.hosts),), np.float32)
+        self.defender_action_space = gym.spaces.Discrete(len(list(self.action_id_to_type_and_host.keys())))
+        self.action_space = self.defender_action_space
+        self.observation_space = self.defender_observation_space
 
         # Setup traces
         self.traces: List[SimulationTrace] = []
@@ -166,17 +182,21 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             s=s_prime, scan_state=self.scan_state, decoy_action_types=self.decoy_action_types,
             decoy_actions_per_host=self.decoy_actions_per_host,
             last_obs=self.last_obs, activity=activity, red_agent_target=self.red_agent_target)
-        self.scan_state = scan_state
         r = self.reward_function(defender_action_type=defender_action_type, red_action_type=next_red_action_type,
                                  red_success=(is_red_action_feasible and exploit_successful))
-        self.s = s_prime
-        self.last_obs = obs
         info: Dict[str, Any] = {}
-        info[env_constants.ENV_METRICS.STATE] = \
-            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=False)
-        info[env_constants.ENV_METRICS.OBSERVATION] = \
-            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=True)
+        info[env_constants.ENV_METRICS.STATE] = (
+            copy.deepcopy(self.s), scan_state, self.op_server_restored,
+            obs, copy.deepcopy(self.red_action_targets),
+            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
+        )
+        info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
+            state_vector=obs, observation=True
+        )
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs
+        self.scan_state = copy.deepcopy(scan_state)
+        self.s = s_prime
+        self.last_obs = copy.deepcopy(obs)
         done = False
         self.t += 1
         if self.t >= self.maximum_steps:
@@ -204,17 +224,22 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.privilege_escalation_detected = None
         self.red_agent_state = 0
         self.red_agent_target = 0
+        self.scan_state = [0 for _ in self.hosts]
         self.t = 0
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         obs_vec = self.initial_obs_vector()
         obs_tensor = self.initial_obs_tensor()
-        self.last_obs = obs_vec
+        self.last_obs = copy.deepcopy(obs_vec)
         info: Dict[str, Any] = {}
-        info[env_constants.ENV_METRICS.STATE] = \
-            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=False)
-        info[env_constants.ENV_METRICS.OBSERVATION] = \
-            CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vec, observation=True)
+        info[env_constants.ENV_METRICS.STATE] = (
+            copy.deepcopy(self.s), self.scan_state, self.op_server_restored,
+            obs_vec, copy.deepcopy(self.red_action_targets),
+            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
+        )
+        info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
+            state_vector=obs_vec, observation=True
+        )
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs_vec
         self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
@@ -241,14 +266,22 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             r -= 10
         return r
 
-    def set_state(self, s: int) -> None:
+    def set_state(self, state: Tuple[List[List[int]], List[int], bool, List[List[int]],
+                                     Dict[int, int], bool, int, int]) -> None:
         """
         Sets the state of the environment
 
-        :param s: the id of the new state
+        :param s: the new state
         :return: None
         """
-        self.s = CyborgEnvUtil.state_id_to_state_vector(state_id=s, observation=False)
+        self.s = copy.deepcopy(state[0])
+        self.scan_state = copy.deepcopy(state[1])
+        self.op_server_restored = state[2]
+        self.last_obs = copy.deepcopy(state[3])
+        self.red_action_targets = copy.deepcopy(state[4])
+        self.privilege_escalation_detected = state[5]
+        self.red_agent_state = state[6]
+        self.red_agent_target = state[7]
 
     def get_observation_from_history(self, history: List[List[Any]]) -> List[Any]:
         """
@@ -257,7 +290,15 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param history: the observation history
         :return: the latest observation from the history
         """
-        return history[-1]
+        obs_id = history[-1]
+        obs_vec = CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)
+        obs_tensor = []
+        for host in range(len(obs_vec)):
+            obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(
+                host_obs=obs_vec[host], decoy_actions_per_host=self.decoy_actions_per_host,
+                decoy_action_types=self.decoy_action_types, host_id=host
+            ))
+        return obs_tensor
 
     def is_state_terminal(self, state: int) -> bool:
         """
