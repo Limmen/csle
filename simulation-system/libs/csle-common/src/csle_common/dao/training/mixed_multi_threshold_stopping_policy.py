@@ -89,6 +89,8 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         :return: the selected action (int) and the probability of selecting that action
         """
         s = int(o[2])
+        if s == 2:
+            return 0, 1.0
         l = int(o[0])
         thresholds = self.attacker_Theta[s][l - 1][0]
         counts = self.attacker_Theta[s][l - 1][1]

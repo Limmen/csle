@@ -87,6 +87,8 @@ class MultiThresholdStoppingPolicy(Policy):
         """
         s = o[2]
         l = int(o[0])
+        if s == 2:
+            return 0, 1.0
         if int(s * self.L + l - 1) <= len(self.theta):
             theta_val = self.theta[int(s * self.L + l - 1)]
         else:
@@ -107,8 +109,11 @@ class MultiThresholdStoppingPolicy(Policy):
         elif s == 1:
             a, attacker_action_prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
                 threshold=threshold, b1=defender_stopping_prob, threshold_action=1, alternative_action=0, k=-20)
+        elif s == 2:
+            a = 0
+            attacker_action_prob = 1.0
         else:
-            raise ValueError(f"Invalid state: {s}, valid states are: 0 and 1")
+            raise ValueError(f"Invalid state: {s}, valid states are: 0, 1, and 2")
         return a, attacker_action_prob
 
     def stage_policy(self, o: Union[List[int], List[float]]) -> List[List[float]]:
