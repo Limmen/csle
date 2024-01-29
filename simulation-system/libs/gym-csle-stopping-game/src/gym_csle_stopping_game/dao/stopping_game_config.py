@@ -98,10 +98,10 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :return: the created instance
         """
         compute_beliefs = False
-        if compute_beliefs in d:
+        if "compute_beliefs" in d:
             compute_beliefs = d["compute_beliefs"]
         save_trace = False
-        if save_trace in d:
+        if "save_trace" in d:
             save_trace = d["save_trace"]
         obj = StoppingGameConfig(
             T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),

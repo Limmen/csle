@@ -324,6 +324,7 @@ class CyborgEnvUtil:
         else:
             raise ValueError(f"Scenario: {config.scenario} not recognized")
 
+    @staticmethod
     def state_to_vector(state: List[List[Any]], decoy_state: List[List[BlueAgentActionType]], host_ids: List[int],
                         scan_state: List[int], observation: bool = False) -> List[List[int]]:
         """

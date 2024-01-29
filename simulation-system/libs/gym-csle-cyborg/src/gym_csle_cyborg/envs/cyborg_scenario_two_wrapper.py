@@ -62,7 +62,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         self.scan_state = [0 for _ in self.hosts]
         self.next_target_fixed = False
-        self.privilege_escalation_detected = None
+        self.privilege_escalation_detected: Union[None, int] = None
 
         # Setup traces
         self.traces: List[SimulationTrace] = []
@@ -171,7 +171,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                  red_success=(is_red_action_feasible and exploit_successful))
         self.s = s_prime
         self.last_obs = obs
-        info = {}
+        info: Dict[str, Any] = {}
         info[env_constants.ENV_METRICS.STATE] = \
             CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=False)
         info[env_constants.ENV_METRICS.OBSERVATION] = \
@@ -184,9 +184,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
         # Log trace
         if self.config.save_trace:
-            self.trace = CyborgScenarioTwoWrapper.log_trace(r=float(r),
-                                                            trace=self.trace, o=obs_tensor,
-                                                            done=done, action=action)
+            self.trace = CyborgScenarioTwoWrapper.log_trace(
+                r=float(r), trace=self.trace, o=info[env_constants.ENV_METRICS.OBSERVATION], done=done, action=action)
 
         return np.array(obs_tensor), r, done, done, info
 
@@ -211,13 +210,13 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         obs_vec = self.initial_obs_vector()
         obs_tensor = self.initial_obs_tensor()
         self.last_obs = obs_vec
-        info = {}
-        info[env_constants.ENV_METRICS.STATE] = CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s,
-                                                                                       observation=False)
-        info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vec,
-                                                                                             observation=True)
+        info: Dict[str, Any] = {}
+        info[env_constants.ENV_METRICS.STATE] = \
+            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=False)
+        info[env_constants.ENV_METRICS.OBSERVATION] = \
+            CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vec, observation=True)
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs_vec
-        self.traces: List[SimulationTrace] = []
+        self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
         return np.array(obs_tensor), info
 
@@ -251,7 +250,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         """
         self.s = CyborgEnvUtil.state_id_to_state_vector(state_id=s, observation=False)
 
-    def get_observation_from_history(self, history: List[Any]) -> List[Any]:
+    def get_observation_from_history(self, history: List[List[Any]]) -> List[Any]:
         """
         Gets an observation from the observation history
 
@@ -347,7 +346,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         elif red_agent_state == 1:
             return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.25, 0.25, 0.25, 0.25]
         elif red_agent_state in [2, 3, 5, 6, 9, 10, 12, 13, 14]:
-            prob = [0] * 13
+            prob: List[float] = [0.0] * 13
             prob[last_target] = 1
             return prob
         elif red_agent_state == 4:
@@ -409,6 +408,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             return s[7][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] > 0
         elif red_agent_state == 14:
             return s[7][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == 2
+        else:
+            raise ValueError(f"Invalid red agent state: {red_agent_state}")
 
     @staticmethod
     def apply_defender_action_to_state(s: List[List[int]], defender_action_type: BlueAgentActionType,
@@ -461,7 +462,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         target_dist = CyborgScenarioTwoWrapper.red_agent_state_to_target_distribution(
             red_agent_state=red_agent_state, last_target=red_agent_target)
         next_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
-        return next_target
+        return int(next_target)
 
     @staticmethod
     def apply_red_exploit(s: List[List[int]], exploit_access: CompromisedType, target_host_id: int,

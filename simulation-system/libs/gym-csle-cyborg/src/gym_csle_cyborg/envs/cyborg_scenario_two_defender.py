@@ -705,8 +705,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         :return: true if the action was successful, else false.
         """
-        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].\
-            agent.success
+        return bool(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].
+                    agent.success)
 
     def get_red_base_jump(self) -> bool:
         """
@@ -714,8 +714,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         :return: true if the action was a base jump, else false.
         """
-        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"]. \
-            agent.base_jump
+        return bool(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].
+                    agent.base_jump)
 
     def get_red_action_state(self) -> int:
         """
@@ -723,7 +723,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         :return: the current action state of the red agent
         """
-        return self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"].agent.action
+        return int(self.cyborg_challenge_env.env.env.env.env.env.environment_controller.agent_interfaces["Red"]
+                   .agent.action)
 
     @staticmethod
     def encode_action(action: int, config: CSLECyborgConfig,

@@ -98,6 +98,8 @@ class BeliefTree:
             if current_node is None:
                 return self.add(history=history, parent=parent, observation=observation, value=initial_value,
                                 initial_visit_count=initial_visit_count)
+        if current_node is None:
+            raise ValueError("Could not create a new node")
         return current_node
 
     def prune(self, node, exclude=None):
