@@ -111,14 +111,13 @@ class POMCPUtil:
         :param prior_weight: the weight to put on the prior
         :return: the acquisition value of the action
         """
-        acquisition_value = action.value
         # prior = rollout_policy.probability(o=o, a=action.action)
         prior = rollout_policy
-        visit_term = math.sqrt(action.parent.visit_count)/(action.visit_count+1)
-        base_term = math.log((action.parent.visit_count + c2 + 1)/c2 + c)
-        exploration_term = prior_weight*prior*visit_term*base_term
-        acquisition_value += exploration_term
-        return float(acquisition_value)
+        visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
+        base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
+        prior_term = prior_weight * prior * visit_term * base_term
+        exploration_term = POMCPUtil.ucb(action.parent.visit_count + 1, action.visit_count + 1)
+        return float(action.value + prior_term + exploration_term)
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,

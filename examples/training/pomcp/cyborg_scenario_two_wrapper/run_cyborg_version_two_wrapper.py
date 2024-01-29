@@ -52,9 +52,10 @@ if __name__ == '__main__':
                                                  descr="the discount factor"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=False, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
-            agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles, name=agents_constants.POMCP.INITIAL_PARTICLES,
+            agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles,
+                                                             name=agents_constants.POMCP.INITIAL_PARTICLES,
                                                              descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=20, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=60, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=200, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
@@ -65,14 +66,14 @@ if __name__ == '__main__':
             agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.C2: HParam(value=15000, name=agents_constants.POMCP.C2,
-                                             descr="the weighting factor for AlphaGo exploration"),
+                                              descr="the weighting factor for AlphaGo exploration"),
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
                 value=True, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
             agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=1, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
             agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=2000, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
-                                                        descr="the prior confidence"),
+                                                            descr="the prior confidence"),
             agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
                 value=POMCPAcquisitionFunctionType.ALPHA_GO, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
                 descr="the type of acquisition function"),
@@ -82,9 +83,9 @@ if __name__ == '__main__':
                 value=20, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
-                value=-20, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
-                                                                                   "the search tree"),
-            agents_constants.POMCP.VERBOSE: HParam(value=True, name=agents_constants.POMCP.VERBOSE,
+                value=0, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
+                                                                               "the search tree"),
+            agents_constants.POMCP.VERBOSE: HParam(value=False, name=agents_constants.POMCP.VERBOSE,
                                                    descr="verbose logging flag"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of evaluation episodes"),

@@ -1,7 +1,6 @@
 from typing import Union, List, Dict, Optional
 import math
 import time
-import random
 import gymnasium as gym
 import os
 import numpy as np
@@ -212,6 +211,7 @@ class POMCPAgent(BaseAgent):
         config = self.simulation_env_config.simulation_env_input_config
         eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
+        returns = []
         # Run N episodes
         for i in range(N):
             done = False
@@ -241,8 +241,8 @@ class POMCPAgent(BaseAgent):
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
-                                                            max_negative_samples=max_negative_samples,
-                                                            observation_vector=o)
+                                                   max_negative_samples=max_negative_samples,
+                                                   observation_vector=o)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
@@ -289,6 +289,8 @@ class POMCPAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
+            returns.append(R)
+            Logger.__call__().get_logger().info(f"avg return: {np.mean(returns)}")
 
         if eval_env is not None:
             # Save latest trace

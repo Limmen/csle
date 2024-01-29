@@ -251,12 +251,12 @@ class POMCP:
                 counts = []
                 values = []
                 for i, action_node in enumerate(self.tree.root.children):
-                    action_values[action_node.action] = action_node.value - 10/(1+action_node.visit_count)
+                    action_values[action_node.action] = action_node.value - 10 / (1 + action_node.visit_count)
                     if action_values[action_node.action] > best_value:
                         best_action_idx = i
                         best_value = action_values[action_node.action]
                     counts.append(action_node.visit_count)
-                    values.append(round(action_values[action_node.action],1))
+                    values.append(round(action_values[action_node.action], 1))
                 Logger.__call__().get_logger().info(
                     f"Planning time left {self.planning_time - time.time() + begin}s, "
                     f"best action: {self.tree.root.children[best_action_idx].action}, "
@@ -273,7 +273,7 @@ class POMCP:
         :return: the next action
         """
         root = self.tree.root
-        action_vals = [(action.value - 10/(action.visit_count+1), action.action) for action in root.children]
+        action_vals = [(action.value - 10 / (action.visit_count + 1), action.action) for action in root.children]
         for a in root.children:
             Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
                                                 f"visit count: {a.visit_count}")
@@ -328,6 +328,7 @@ class POMCP:
                                          initial_visit_count=self.prior_confidence)
 
         # Check how many new particles are left to fill
+        new_root.particles = []
         if isinstance(new_root, BeliefNode):
             particle_slots = self.max_particles - len(new_root.particles)
         else:
