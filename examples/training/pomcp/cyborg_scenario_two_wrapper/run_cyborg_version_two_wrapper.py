@@ -28,8 +28,8 @@ if __name__ == '__main__':
     initial_particles = csle_cyborg_env.initial_particles
     rollout_policy = MetastoreFacade.get_ppo_policy(id=58)
     # rollout_policy = None
-    value_function = lambda x: 0
-    # value_function = rollout_policy.value
+    # value_function = lambda x: 0
+    value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
         random_seeds=[399, 98912, 999, 555],
@@ -54,27 +54,27 @@ if __name__ == '__main__':
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles, name=agents_constants.POMCP.INITIAL_PARTICLES,
                                                              descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=10, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=20, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=200, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=100, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
-            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=5, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
+            agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=1, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
             agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
-            agents_constants.POMCP.C2: HParam(value=1200, name=agents_constants.POMCP.C2,
+            agents_constants.POMCP.C2: HParam(value=15000, name=agents_constants.POMCP.C2,
                                              descr="the weighting factor for AlphaGo exploration"),
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
-                value=False, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
+                value=True, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
-            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=80, name=agents_constants.POMCP.PRIOR_WEIGHT,
+            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=1, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
-            agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=0, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
+            agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=2000, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
                                                         descr="the prior confidence"),
             agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
-                value=POMCPAcquisitionFunctionType.UCB, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
+                value=POMCPAcquisitionFunctionType.ALPHA_GO, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
                 descr="the type of acquisition function"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                 value=20, name=agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 descr="maximum number of negative samples when filling belief particles"),
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
-                value=0, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
+                value=-20, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                    "the search tree"),
             agents_constants.POMCP.VERBOSE: HParam(value=True, name=agents_constants.POMCP.VERBOSE,
                                                    descr="verbose logging flag"),

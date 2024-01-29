@@ -156,13 +156,13 @@ class POMCP:
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
             # since the node does not have any children, we first add them to the node
-            obs_vector = self.env.get_observation_from_history(current_node.history)
-            dist = self.rollout_policy.model.policy.get_distribution(
-                obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
-                torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
-            dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:5]))
-            # rollout_actions = self.A
+            # obs_vector = self.env.get_observation_from_history(current_node.history)
+            # dist = self.rollout_policy.model.policy.get_distribution(
+            #     obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+            #     torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+            # dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+            # rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:10]))
+            rollout_actions = self.A
             # for action in self.A:
             for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
@@ -251,12 +251,12 @@ class POMCP:
                 counts = []
                 values = []
                 for i, action_node in enumerate(self.tree.root.children):
-                    action_values[action_node.action] = action_node.value
-                    if action_node.value > best_value:
+                    action_values[action_node.action] = action_node.value - 10/(1+action_node.visit_count)
+                    if action_values[action_node.action] > best_value:
                         best_action_idx = i
-                        best_value = action_node.value
+                        best_value = action_values[action_node.action]
                     counts.append(action_node.visit_count)
-                    values.append(round(action_node.value,1))
+                    values.append(round(action_values[action_node.action],1))
                 Logger.__call__().get_logger().info(
                     f"Planning time left {self.planning_time - time.time() + begin}s, "
                     f"best action: {self.tree.root.children[best_action_idx].action}, "
@@ -273,7 +273,7 @@ class POMCP:
         :return: the next action
         """
         root = self.tree.root
-        action_vals = [(action.value, action.action) for action in root.children]
+        action_vals = [(action.value - 10/(action.visit_count+1), action.action) for action in root.children]
         for a in root.children:
             Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
                                                 f"visit count: {a.visit_count}")
