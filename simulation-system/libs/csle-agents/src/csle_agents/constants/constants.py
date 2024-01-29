@@ -97,6 +97,9 @@ class PPO_CLEAN:
 
 
 class DQN_CLEAN:
+    """
+    String constants related to the DQN-Clean agent
+    """
     STEPS_BETWEEN_UPDATES = "steps_between_updates"
     GAE_LAMBDA = "gae_lambda"
     CLIP_RANGE = "clip_range"

@@ -37,4 +37,4 @@ class AgentType(IntEnum):
     NELDER_MEAD = 29
     PARTICLE_SWARM = 30
     PPO_CLEAN = 31
-    DQN_CLEAN = 32
+    DQN_CLEAN = 33

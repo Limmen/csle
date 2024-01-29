@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Any, Optional
+from typing import List, Dict, Union, Any
 import numpy as np
 from numpy.typing import NDArray
 import torch
@@ -11,6 +11,7 @@ from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
+from csle_common.models.q_network import QNetwork
 from csle_common.logging.log import Logger
 
 
@@ -19,8 +20,9 @@ class DQNPolicy(Policy):
     A neural network policy learned with DQN
     """
 
-    def __init__(self, model: Optional[DQN], simulation_name: str, save_path: str, player_type: PlayerType,
-                 states: List[State], actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
+    def __init__(self, model: Union[None, DQN, QNetwork], simulation_name: str, save_path: str,
+                 player_type: PlayerType, states: List[State], actions: List[Action],
+                 experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
 
@@ -41,9 +43,12 @@ class DQNPolicy(Policy):
             try:
                 self.model = DQN.load(path=self.save_path)
             except Exception as e:
-                Logger.__call__().get_logger().warning(
-                    f"There was an exception loading the model from path: {self.save_path}, "
-                    f"exception: {str(e)}, {repr(e)}")
+                try:
+                    self.model = QNetwork.load(path=self.save_path)
+                except Exception as e2:
+                    Logger.__call__().get_logger().warning(
+                        f"There was an exception loading the model from path: {self.save_path}, "
+                        f"exception: {str(e)}, {repr(e)}, {str(e2)}, {repr(e2)}")
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
@@ -59,7 +64,12 @@ class DQNPolicy(Policy):
         """
         if self.model is None:
             raise ValueError("The model i None")
-        a = self.model.predict(np.array(o), deterministic=False)[0]
+        if isinstance(self.model, DQN):
+            a = self.model.predict(np.array(o), deterministic=False)[0]
+        elif isinstance(self.model, QNetwork):
+            a = self.model.forward(x=torch.Tensor(o)).numpy()
+        else:
+            raise ValueError(f"Invalid model: {self.model}")
         return a
 
     def probability(self, o: List[float], a) -> int:
@@ -71,12 +81,15 @@ class DQNPolicy(Policy):
         """
         if self.model is None:
             raise ValueError("The model is None")
-        actions = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
-        action = actions[0]
-        if action == a:
-            return 1
+        if isinstance(self.model, DQN):
+            actions = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
+            action = actions[0]
+            if action == a:
+                return 1
+            else:
+                return 0
         else:
-            return 0
+            raise ValueError(f"This function is not supported for the current model: {self.model}")
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -86,13 +99,6 @@ class DQNPolicy(Policy):
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["save_path"] = self.save_path
-        # TODO: fix kwargs
-        # if self.model is not None:
-        #     d["policy_kwargs"] = self.model.policy_kwargs
-        #     self.model.save(path=self.save_path)
-        # else:
-        #     d["policy_kwargs"] = {}
-        #     d["policy_kwargs"]["net_arch"] = []
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
@@ -151,7 +157,10 @@ class DQNPolicy(Policy):
         if self.model is None:
             raise ValueError("The model is None")
         obs = np.array([obs])
-        actions = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+        if isinstance(self.model, DQN):
+            actions = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+        else:
+            raise ValueError(f"Stopping dist not supported for model: {self.model}")
         action = actions[0]
         if action == 1:
             stop_prob = 1

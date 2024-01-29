@@ -3,7 +3,7 @@ MIT License
 
 Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple, Any, Callable
 import time
 import torch
 import torch.optim as optim
@@ -19,7 +19,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
-from csle_common.models.dqn_network import QNetwork
+from csle_common.models.q_network import QNetwork
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.util.experiment_util import ExperimentUtil
@@ -37,6 +37,7 @@ class DQNCleanAgent(BaseAgent):
     """
     A DQN agent using the implementation from OpenAI baselines
     """
+
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Optional[EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True) -> None:
@@ -66,9 +67,7 @@ class DQNCleanAgent(BaseAgent):
         self.start_e = 1
         self.end_e = 0.05
         self.num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
-        self.total_timesteps = self.experiment_config.hparams[
-            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
-
+        self.total_timesteps = self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
         self.batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
         self.num_iterations = self.total_timesteps // self.batch_size
         self.gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
@@ -82,15 +81,25 @@ class DQNCleanAgent(BaseAgent):
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
 
-    def linear_schedule(self, duration: int, t: int):
+    def linear_schedule(self, duration: int, t: int) -> float:
+        """
+        Linear exploration rate decay sechdule
+
+        :param duration: the duration of training
+        :param t: the current time
+        :return: the new exploration rate
+        """
         slope = (self.end_e - self.start_e) / duration
         return max(slope * t + self.start_e, self.end_e)
 
-    def make_env(self):
-        """Helper function for creating an environment in training of the agent
+    def make_env(self) -> Callable[[], RecordEpisodeStatistics]:
+        """
+        Helper function for creating an environment in training of the agent
+
         :return: environment creating function
         """
-        def thunk():
+
+        def thunk() -> RecordEpisodeStatistics:
             """
             The environment creating function
             """
@@ -118,7 +127,7 @@ class DQNCleanAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
-        descr = f"Training of policies with DQN using " \
+        descr = f"Training of policies with Clean-DQN using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         # Setup training job
@@ -179,8 +188,7 @@ class DQNCleanAgent(BaseAgent):
                                states=self.simulation_env_config.state_space_config.states,
                                actions=action_space,
                                experiment_config=self.experiment_config,
-                               avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1]
-                               )
+                               avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
 
             if self.save_to_metastore:
                 MetastoreFacade.save_dqn_policy(dqn_policy=policy)
@@ -227,6 +235,7 @@ class DQNCleanAgent(BaseAgent):
         Logger.__call__().get_logger().info(f"[CleanDQN] Start training; seed: {seed}")
         envs = gym.vector.SyncVectorEnv([self.make_env() for _ in range(self.num_envs)])
         assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
+
         # Setup training metrics
         exp_result.all_metrics[seed] = {}
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
@@ -243,10 +252,12 @@ class DQNCleanAgent(BaseAgent):
         # Create neural network
         device = torch.device(agents_constants.DQN_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
-
-        q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+        input_dim = np.array(envs.single_observation_space.shape).prod()
+        q_network = QNetwork(input_dim=input_dim, num_hidden_layers=self.num_hl,
+                             hidden_layer_dim=self.num_hl_neur).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate)
-        target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+        target_network = QNetwork(input_dim=input_dim, num_hidden_layers=self.num_hl,
+                                  hidden_layer_dim=self.num_hl_neur).to(device)
 
         # Seeding
         random.seed(seed)
@@ -263,7 +274,7 @@ class DQNCleanAgent(BaseAgent):
             handle_timeout_termination=False,
         )
         start_time = time.time()
-        # TRY NOT TO MODIFY: start the game
+
         obs, _ = envs.reset(seed=seed)
         R: List[Any] = []
         T = []
@@ -275,17 +286,17 @@ class DQNCleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                
+
                 q_values = q_network(torch.Tensor(obs).to(device))
                 actions = torch.argmax(q_values, dim=1).cpu().numpy()
                 e_name = "csle-stopping-game-pomdp-defender-v1"
                 if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
                     actions[0] = random.randrange(0, 2)
 
-            # TRY NOT TO MODIFY: execute the game and log data.
+            # Take a step in the environment
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
-            # TRY NOT TO MODIFY: record rewards for plotting purposes
+            # Record rewards for logging purposes
             if "final_info" in infos:
                 R_sum = 0
                 T_sum = 0
@@ -294,17 +305,18 @@ class DQNCleanAgent(BaseAgent):
                     T_sum += info["T"]
                 R.append(R_sum)
                 T.append(T_sum)
-            
-            # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
+
+            # Save data to replay buffer
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
                 if trunc:
                     real_next_obs[idx] = infos["final_observation"][idx]
-            rb.add(obs, real_next_obs, actions, rewards, terminations, infos)
+            rb.add(obs, real_next_obs, actions, rewards, terminations, infos)  # type: ignore
 
-            # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
+            # Move to the next observation
             obs = next_obs
-            # ALGO LOGIC: training.
+
+            # Optimizing the neural network based on data from the replay buffer
             if global_step > self.learning_starts:
                 if global_step % self.train_frequency == 0:
                     data = rb.sample(self.batch_size)
@@ -326,37 +338,32 @@ class DQNCleanAgent(BaseAgent):
                         target_network_param.data.copy_(
                             self.tau * q_network_param.data + (1.0 - self.tau) * target_network_param.data
                         )
-        # Logging
-        R = np.array(R)
-        T = np.array(T)
-
-        time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
-        avg_R = round(float(np.mean(R)), 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
-        avg_T = round(float(np.mean(T)), 3)
-        exp_result.all_metrics[seed][
-            agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
-
-        running_avg_J = ExperimentUtil.running_average(
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value
-        )
-
-        running_avg_T = ExperimentUtil.running_average(
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-            round(running_avg_J, 3))
-        Logger.__call__().get_logger().info(
-            f"[CleanDQN] Iteration: {global_step}/{self.num_iterations}, "
-            f"avg R: {avg_R}, "
-            f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-            f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
-            f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
-            f"{round(running_avg_T, 3)}, "
-            f"runtime: {time_elapsed_minutes} min")
+            # Logging
+            if global_step > 10 and global_step % self.experiment_config.log_every == 0:
+                time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
+                avg_R = round(float(np.mean(R)), 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+                avg_T = round(float(np.mean(T)), 3)
+                exp_result.all_metrics[seed][
+                    agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
+                running_avg_J = ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value
+                )
+                running_avg_T = ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                    round(running_avg_J, 3))
+                Logger.__call__().get_logger().info(
+                    f"[CleanDQN] Iteration: {global_step}/{self.total_timesteps}, "
+                    f"avg R: {avg_R}, "
+                    f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
+                    f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
+                    f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
+                    f"{round(running_avg_T, 3)}, "
+                    f"runtime: {time_elapsed_minutes} min")
         envs.close()
 
         base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
