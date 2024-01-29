@@ -31,6 +31,7 @@ Further, binaries of the Python libraries in CSLE are available on PyPi:
 - <a href="https://pypi.org/project/csle-defender">https://pypi.org/project/csle-defender</a>
 - <a href="https://pypi.org/project/gym-csle-stopping-game">https://pypi.org/project/gym-csle-stopping-game</a>
 - <a href="https://pypi.org/project/gym-csle-apt-game">https://pypi.org/project/gym-csle-apt-game</a>
+- <a href="https://pypi.org/project/gym-csle-cyborg">https://pypi.org/project/gym-csle-cyborg</a>
 - <a href="https://pypi.org/project/csle-ryu">https://pypi.org/project/csle-ryu</a>
 - <a href="https://pypi.org/project/csle-rest-api">https://pypi.org/project/csle-rest-api</a>
 - <a href="https://pypi.org/project/csle-agents">https://pypi.org/project/csle-agents</a>

@@ -210,6 +210,20 @@ class AptGameEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: Union[AptGameState, int]) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        if isinstance(state, AptGameState):
+            self.state = state
+        elif type(state) is int or type(state) is np.int64:
+            self.state.s = state
+        else:
+            raise ValueError(f"state: {state} not valid")
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

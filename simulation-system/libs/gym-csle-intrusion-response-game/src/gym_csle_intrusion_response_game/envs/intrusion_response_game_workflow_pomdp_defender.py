@@ -348,6 +348,15 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        raise NotImplementedError("This environment does not support the set_state() method")
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

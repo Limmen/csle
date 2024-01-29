@@ -74,11 +74,12 @@ class FNNWithSoftmaxPolicy(Policy):
                     f"There was an exception loading the model from path: {self.save_path}, "
                     f"exception: {str(e)}, {repr(e)}")
 
-    def action(self, o: NDArray[Any]) -> Any:
+    def action(self, o: NDArray[Any], deterministic: bool = True) -> Any:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         state = torch.from_numpy(o).float()

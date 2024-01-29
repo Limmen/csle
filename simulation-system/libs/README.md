@@ -75,7 +75,12 @@ This folder contains python projects that implement the functionality of the sim
 - **gym-csle-apt-game** ([gym-csle-apt-game](./gym-csle-apt-game)):
   - [![PyPI version](https://badge.fury.io/py/gym-csle-apt-game.svg)](https://badge.fury.io/py/gym-csle-apt-game)
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-apt-game)
-  - A gym environment for an APT Dynking game
+  - A gym environment for an APT Dynkin game
+
+- **gym-csle-cyborg** ([gym-csle-cyborg](./gym-csle-cyborg)):
+  - [![PyPI version](https://badge.fury.io/py/gym-csle-cyborg.svg)](https://badge.fury.io/py/gym-csle-cyborg)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-cyborg)
+  - A gym environment wrapper for CybORG 
 
 ## Commands
 To generate API docs, execute:

@@ -1648,6 +1648,7 @@ class METADATA_STORE:
     SESSION_TOKENS_TABLE = "session_tokens"
     TRACES_DATASETS_TABLE = "traces_datasets"
     STATISTICS_DATASETS_TABLE = "statistics_datasets"
+    NUM_RETRIES_UPDATE_TRAINING_JOB = 5
 
 
 class CONTAINER_POOLS:
@@ -1834,3 +1835,10 @@ class NEURAL_NETWORKS:
     NUM_HIDDEN_LAYERS = "num_hidden_layers"
     ACTIVATION_FUNCTION = "activation_function"
     DEVICE = "device"
+
+
+class CUDA:
+    """
+    String constants related to cuda
+    """
+    CUDA_VISIBLE_DEVICES = "CUDA_VISIBLE_DEVICES"

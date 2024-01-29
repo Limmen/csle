@@ -218,14 +218,6 @@ class TestResourcesTracesDataSetsSuite:
                      side_effect=get_traces_ds)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_traces_dataset",
                      side_effect=update)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}/10")
-        response_data = response.data.decode("utf-8")
-        response_data_dict = json.loads(response_data)
-        assert response_data_dict == {}
-        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)

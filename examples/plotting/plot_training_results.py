@@ -8,7 +8,8 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
     """
     Plots the returns
 
-    :param bo_results: a DTO with the results
+    :param returns_means: the average returns
+    :param returns_stds: the average standard deviations
     :param file_name: the file name to save the resulting plots
     :param fontsize: the font size
     :return: None

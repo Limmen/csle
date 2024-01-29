@@ -59,6 +59,9 @@ if __name__ == '__main__':
             agents_constants.PPO.ENT_COEF: HParam(
                 value=0.0, name=agents_constants.PPO.ENT_COEF,
                 descr="the entropy coefficient for exploration"),
+            agents_constants.PPO.NUM_GRADIENT_STEPS: HParam(value=10,
+                                                            name=agents_constants.PPO.NUM_GRADIENT_STEPS,
+                                                            descr="number of gradient steps"),
             agents_constants.PPO.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
                                                  descr="the coefficient of the value network for the loss"),
             agents_constants.PPO.MAX_GRAD_NORM: HParam(
@@ -87,7 +90,10 @@ if __name__ == '__main__':
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions"),
             agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
-                                                      descr="the number of nodes in the network")
+                                                      descr="the number of nodes in the network"),
+            agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                descr="boolean flag indicating whether the evaluation should be with discount or not")
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )

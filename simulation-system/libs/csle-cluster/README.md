@@ -22,6 +22,11 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_cluster/. --grpc
 - `csle-base`
 - `csle-common`
 - `csle-collector`
+- `gym-csle-stopping-game`
+- `gym-csle-apt-game`
+- `gym-csle-cyborg`
+- `gym-csle-intrusion-response-game`
+- `gym-csle-tolerance`
 - `csle-ryu` 
 - `grpcio` (for the cluster API)
 - `grpcio-tools` (for the cluster API)

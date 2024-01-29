@@ -59,6 +59,9 @@ if __name__ == '__main__':
             agents_constants.PPO.MAX_GRAD_NORM: HParam(
                 value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM,
                 descr="the maximum allows gradient norm"),
+            agents_constants.PPO.NUM_GRADIENT_STEPS: HParam(value=10,
+                                                            name=agents_constants.PPO.NUM_GRADIENT_STEPS,
+                                                            descr="number of gradient steps"),
             agents_constants.PPO.TARGET_KL: HParam(value=None, name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
@@ -80,7 +83,10 @@ if __name__ == '__main__':
                                               descr="the number of stop actions"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg")
+                descr="the number of samples to include when computing the running avg"),
+            agents_constants.COMMON.EVALUATE_WITH_DISCOUNT: HParam(
+                value=False, name=agents_constants.COMMON.EVALUATE_WITH_DISCOUNT,
+                descr="boolean flag indicating whether the evaluation should be with discount or not")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
@@ -91,6 +97,6 @@ if __name__ == '__main__':
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    # MetastoreFacade.save_experiment_execution(experiment_execution)
+    # for policy in experiment_execution.result.policies.values():
+    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)

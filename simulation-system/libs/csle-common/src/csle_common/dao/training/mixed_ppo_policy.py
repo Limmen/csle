@@ -37,11 +37,13 @@ class MixedPPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_PPO_POLICY
 
-    def action(self, o: List[float]) -> Union[int, float, npt.NDArray[Any]]:
+    def action(self, o: List[float], deterministic: bool = True) -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
+
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         policy: PPOPolicy = np.random.choice(self.ppo_policies)

@@ -54,6 +54,9 @@ class COMMON:
     LEARNING_RATE_EXP_DECAY = "learning_rate_exp_decay"
     LEARNING_RATE_DECAY_RATE = "learning_rate_decay_rate"
     RUNTIME = "runtime"
+    EVALUATE_WITH_DISCOUNT = "evaluate_with_discount"
+    STATE = "s"
+    OBSERVATION = "o"
 
 
 class PPO:
@@ -69,6 +72,7 @@ class PPO:
     MAX_GRAD_NORM = "max_grad_norm"
     TARGET_KL = "target_kl"
     MLP_POLICY = "MlpPolicy"
+    NUM_GRADIENT_STEPS = "num_gradient_steps"
 
 
 class PPO_CLEAN:
@@ -423,6 +427,7 @@ class Q_LEARNING:
     S = "S"
     A = "A"
     INITIAL_STATE_VALUES = "initial_state_values"
+    EPSILON_DECAY_RATE = "epsilon_decay_rate"
 
 
 class SARSA:
@@ -568,3 +573,32 @@ class LOCAL_DFSP:
     AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
     RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
     N_2 = "N_2"
+
+
+class POMCP:
+    """
+    String constants related to POMCP
+    """
+    ROLLOUT_POLICY = "rollout_policy"
+    VALUE_FUNCTION = "value_function"
+    OBJECTIVE_TYPE = "objective_type"
+    S = "S"
+    N = "N"
+    A = "A"
+    O = "O"
+    GAMMA = "gamma"
+    INITIAL_BELIEF = "initial_belief"
+    REINVIGORATION = "reinvigoration"
+    PLANNING_TIME = "planning_time"
+    MAX_PARTICLES = "max_particles"
+    MAX_NEGATIVE_SAMPLES = "max_negative_samples"
+    C = "c"
+    PRIOR_WEIGHT = "prior_weight"
+    MAX_PLANNING_DEPTH = "max_planning_depth"
+    MAX_ROLLOUT_DEPTH = "max_rollout_depth"
+    LOG_STEP_FREQUENCY = "log_step_frequency"
+    DEFAULT_NODE_VALUE = "default_node_value"
+    VERBOSE = "verbose"
+    PARALLEL_ROLLOUT = "parallel_rollout"
+    NUM_PARALLEL_PROCESSES = "num_parallel_processes"
+    NUM_EVALS_PER_PROCESS = "num_evals_per_process"

@@ -127,6 +127,15 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        self.stopping_game_env.set_state(state=state)
+
     def calculate_stage_policy(self, o: List[Any], a2: int = 0) -> npt.NDArray[Any]:
         """
         Calculates the stage policy of a given model and observation

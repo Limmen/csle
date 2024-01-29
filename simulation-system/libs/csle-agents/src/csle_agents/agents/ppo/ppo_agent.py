@@ -175,7 +175,9 @@ class PPOAgent(BaseAgent):
                 ent_coef=self.experiment_config.hparams[agents_constants.PPO.ENT_COEF].value,
                 vf_coef=self.experiment_config.hparams[agents_constants.PPO.VF_COEF].value,
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
-                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value)
+                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
+                n_epochs=self.experiment_config.hparams[agents_constants.PPO.NUM_GRADIENT_STEPS].value
+            )
             if self.experiment_config.player_type == PlayerType.ATTACKER \
                     and "stopping" in self.simulation_env_config.gym_env_name:
                 orig_env.set_model(model)
@@ -247,9 +249,10 @@ class PPOAgent(BaseAgent):
                 agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
                 agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
                 agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
+                agents_constants.PPO.NUM_GRADIENT_STEPS,
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, constants.NEURAL_NETWORKS.DEVICE,
-                agents_constants.COMMON.SAVE_EVERY]
+                agents_constants.COMMON.SAVE_EVERY, agents_constants.COMMON.EVALUATE_WITH_DISCOUNT]
 
 
 class PPOTrainingCallback(BaseCallback):
@@ -361,6 +364,14 @@ class PPOTrainingCallback(BaseCallback):
             Logger.__call__().get_logger().info(f"Saving model to path: {save_path}")
             self.model.save(save_path)
             os.chmod(save_path, 0o777)
+            policy = PPOPolicy(
+                model=self.model, simulation_name=self.simulation_name, save_path=save_path,
+                states=[],
+                actions=[], player_type=self.experiment_config.player_type,
+                experiment_config=self.experiment_config,
+                avg_R=self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
+            self.exp_result.policies[self.seed] = policy
+            MetastoreFacade.save_ppo_policy(ppo_policy=policy)
 
         # Eval model
         if self.iter % self.eval_every == 0:
@@ -386,8 +397,11 @@ class PPOTrainingCallback(BaseCallback):
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
                     o, r, done, _, info = self.env.step(a)
-                    cumulative_reward += r * math.pow(
-                        self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
+                    if self.experiment_config.hparams[agents_constants.COMMON.EVALUATE_WITH_DISCOUNT].value:
+                        cumulative_reward += r * math.pow(
+                            self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
+                    else:
+                        cumulative_reward += r
                     t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)
@@ -407,8 +421,10 @@ class PPOTrainingCallback(BaseCallback):
                     avg_heuristic_returns.append(info[agents_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN])
                 else:
                     avg_heuristic_returns.append(-1)
-
-                avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                if agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in info:
+                    avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                else:
+                    avg_upper_bounds.append(-1)
             avg_R = np.mean(avg_rewards)
             avg_T = np.mean(avg_horizons)
             avg_random_return = np.mean(avg_random_returns)

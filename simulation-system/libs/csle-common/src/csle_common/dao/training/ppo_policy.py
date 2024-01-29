@@ -56,17 +56,19 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> Union[int, float, npt.NDArray[Any]]:
+    def action(self, o: Union[List[float], List[int]], deterministic: bool = True) \
+            -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            a = self.model.predict(np.array(o), deterministic=False)[0]
+            a = self.model.predict(np.array(o), deterministic=deterministic)[0]
             try:
                 return int(a)
             except Exception:
@@ -92,13 +94,29 @@ class PPOPolicy(Policy):
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
             log_prob = self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
-                x=torch.tensor(a)).item()
+                torch.tensor(a).to(self.model.device)).item()
         elif isinstance(self.model, PPONetwork):
             _, log_prob, _, _ = self.model.get_action_and_value(x=torch.tensor(o), action=torch.tensor(a))
         else:
             raise ValueError(f"Model: {self.model} not recognized")
         prob = math.exp(log_prob)
         return prob
+
+    def value(self, o: Union[List[float], List[int]]) -> float:
+        """
+        Gets the value of a given observation, computed by the critic network
+
+        :param o: the observation to get the value of
+        :return: V(o)
+        """
+        if self.model is None:
+            raise ValueError("The model is None")
+        if isinstance(self.model, PPO):
+            return self.model.policy.predict_values(obs=torch.tensor(np.array([o])).to(self.model.device)).item()
+        elif isinstance(self.model, PPONetwork):
+            return self.model.get_value(x=torch.tensor(o)).item()
+        else:
+            raise ValueError(f"Model: {self.model} not recognized")
 
     def to_dict(self) -> Dict[str, Any]:
         """

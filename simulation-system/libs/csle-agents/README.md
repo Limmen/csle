@@ -18,6 +18,7 @@ and game-theoretic algorithms for finding defender policies.
 - `csle-system-identification`
 - `gym-csle-stopping-game`
 - `gym-csle-apt-game`
+- `gym-csle-cyborg`
 - `gym-csle-intrusion-response-game`
 - `csle-tolerance`
 - `pulp` (for linear and convex optimization)

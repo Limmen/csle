@@ -43,3 +43,13 @@ class BaseEnv(gym.Env, ABC):  # type: ignore
         :return: None
         """
         pass
+
+    @abstractmethod
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        pass

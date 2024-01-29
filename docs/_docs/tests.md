@@ -22,6 +22,7 @@ The Python unit tests are available at:
 - `csle/simulation-system/libs/csle-cluster/tests`
 - `csle/simulation-system/libs/gym-csle-intrusion-response-game/tests`
 - `csle/simulation-system/libs/gym-csle-apt-game/tests`
+- `csle/simulation-system/libs/gym-csle-cyborg/tests`
 - `csle/simulation-system/libs/csle-tolerance/tests`
 
 To run the Python unit tests, execute the command:
@@ -31,7 +32,7 @@ simulation-system/libs/unit_tests.sh
 ```
 
 <p class="captionFig">
-Listing 128: Command to run the Python unit tests.
+Listing 134: Command to run the Python unit tests.
 </p>
 
 When adding new Python unit tests note that:
@@ -47,7 +48,7 @@ csle/management-system/csle-mgmt-webapp/src/
 ```
 
 <p class="captionFig">
-Listing 129: Directory with the JavaScript unit tests.
+Listing 135: Directory with the JavaScript unit tests.
 </p>
 
 To run the JavaScript unit tests, execute the command:
@@ -57,7 +58,7 @@ cd management-system/csle-mgmt-webapp; npm test
 ```
 
 <p class="captionFig">
-Listing 130: Command to run the JavaScript unit tests.
+Listing 136: Command to run the JavaScript unit tests.
 </p>
 
 To run the CSLE integration tests, execute the command:
@@ -67,5 +68,5 @@ simulation-system/libs/integration_tests.sh
 ```
 
 <p class="captionFig">
-Listing 131: Command to run the CSLE integration tests.
+Listing 137: Command to run the CSLE integration tests.
 </p>

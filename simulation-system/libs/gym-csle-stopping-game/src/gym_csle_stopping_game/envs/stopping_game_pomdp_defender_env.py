@@ -93,11 +93,10 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param options: optional configuration parameters
         :return: initial observation
         """
-        o, _ = self.stopping_game_env.reset()
+        o, info = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-        dict: Dict[str, Any] = {}
-        return defender_obs, dict
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
@@ -184,6 +183,45 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: None
         """
         self.model = model
+
+    def set_state(self, state: Any) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        self.stopping_game_env.set_state(state=state)
+
+    def get_observation_from_history(self, history: List[int]) -> List[Any]:
+        """
+        Utiltiy function to get a defender observatin (belief) from a history
+
+        :param history: the history to get the observation form
+        :return: the observation
+        """
+        l = self.config.stopping_game_config.L
+        return self.stopping_game_env.get_observation_from_history(
+            history=history, pi2=self.static_attacker_strategy.stage_policy(o=0), l=l)
+
+    def is_state_terminal(self, state: Any) -> bool:
+        """
+        Utility funciton to check whether a state is terminal or not
+
+        :param state: the state
+        :return: None
+        """
+        return self.stopping_game_env.is_state_terminal(state=state)
+
+    def add_observation_vector(self, obs_vector: List[Any], obs_id: int) -> None:
+        """
+        Adds an observation vector to the history
+
+        :param obs_vector: the observation vector to add
+        :param obs_id: the id of the observation
+        :return: None
+        """
+        pass
 
     def manual_play(self) -> None:
         """

@@ -201,6 +201,15 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         """
         self.model = model
 
+    def set_state(self, state: int) -> None:
+        """
+        Sets the state. Allows to simulate samples from specific states
+
+        :param state: the state
+        :return: None
+        """
+        self.s = state
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the POMDP manually

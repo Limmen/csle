@@ -26,11 +26,12 @@ class RandomPolicy(Policy):
         self.stage_policy_tensor = stage_policy_tensor
         self.policy_type = PolicyType.RANDOM
 
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> int:
+    def action(self, o: Union[List[Union[int, float]], int, float], deterministic: bool = True) -> int:
         """
         Selects the next action
 
         :param o: the input observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the next action and its probability
         """
         action = random.choice(self.actions)

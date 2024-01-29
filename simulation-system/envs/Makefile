@@ -35,6 +35,9 @@ install_apt_mdp_attacker:
 install_apt_pomdp_defender:
 	cd apt_pomdp_defender/ && $(MAKE) install
 
+install_cyborg:
+	cd cyborg/ && $(MAKE) install
+
 # Installs all simulations
 install:
 	cd stopping_game/ && $(MAKE) install
@@ -49,6 +52,7 @@ install:
 	cd apt_game/ && $(MAKE) install
 	cd apt_mdp_attacker/ && $(MAKE) install
 	cd apt_pomdp_defender/ && $(MAKE) install
+	cd cyborg/ && $(MAKE) install
 
 # Targets for uninstalling each individual env
 uninstall_stopping_game:
@@ -87,6 +91,9 @@ uninstall_apt_mdp_attacker:
 uninstall_apt_pomdp_defender:
 	cd apt_pomdp_defender/ && $(MAKE) uninstall
 
+uninstall_cyborg:
+	cd cyborg/ && $(MAKE) uninstall
+
 # Uninstalls all simulation envs
 uninstall:
 	cd stopping_game/ && $(MAKE) uninstall
@@ -101,6 +108,7 @@ uninstall:
 	cd apt_game/ && $(MAKE) uninstall
 	cd apt_mdp_attacker/ && $(MAKE) uninstall
 	cd apt_pomdp_defender/ && $(MAKE) uninstall
+	cd cyborg/ && $(MAKE) uninstall
 
 # Targets for cleaning the config each individual env
 clean_config_stopping_game:
@@ -139,6 +147,9 @@ clean_config_apt_mdp_attacker:
 clean_config_apt_pomdp_defender:
 	cd apt_pomdp_defender/ && $(MAKE) clean_config
 
+cyborg:
+	cd cyborg/ && $(MAKE) clean_config
+
 # Cleans the materialized configuration of each emulation
 clean_config:
 	cd stopping_game/ && $(MAKE) clean_config
@@ -153,3 +164,4 @@ clean_config:
 	cd apt_game/ && $(MAKE) clean_config
 	cd apt_mdp_attacker/ && $(MAKE) clean_config
 	cd apt_pomdp_defender/ && $(MAKE) clean_config
+	cd cyborg/ && $(MAKE) clean_config
