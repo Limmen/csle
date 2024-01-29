@@ -100,7 +100,7 @@ class POMCPUtil:
         prior = 1.0
         # if rollout_policy is not None:
         #     prior = rollout_policy.probability(o=o, a=action.action)
-        return float(action.value + prior*prior_weight
+        return float(action.value + prior * prior_weight
                      + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
 
     @staticmethod

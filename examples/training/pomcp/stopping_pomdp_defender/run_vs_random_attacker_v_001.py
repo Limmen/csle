@@ -10,7 +10,6 @@ import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_agents.common.objective_type import ObjectiveType
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 

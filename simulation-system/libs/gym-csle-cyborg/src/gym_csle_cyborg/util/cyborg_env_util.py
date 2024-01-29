@@ -535,7 +535,6 @@ class CyborgEnvUtil:
             env_constants.CYBORG.USER4
         ]
 
-
     @staticmethod
     def cyborg_host_to_subnet() -> Dict[int, int]:
         """
@@ -630,4 +629,3 @@ class CyborgEnvUtil:
             ExploitType.SSH_BRUTE_FORCE, ExploitType.SQL_INJECTION, ExploitType.HARAKA_RCE,
             ExploitType.FTP_DIRECTORY_TRAVERSAL
         ]
-

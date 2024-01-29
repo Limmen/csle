@@ -157,15 +157,14 @@ class POMCP:
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
-            import torch
-            import math
             # since the node does not have any children, we first add them to the node
-            obs_vector = self.env.get_observation_from_history(current_node.history)
-            dist = self.rollout_policy.model.policy.get_distribution(obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
-                torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
-            dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
-            # rollout_actions = [27, 28, 29, 30, 31, 32, 33, 34, 35]
+            # obs_vector = self.env.get_observation_from_history(current_node.history)
+            # dist = self.rollout_policy.model.policy.get_distribution(
+            #     obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+            #     torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+            # dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+            # rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
+            rollout_actions = self.A
             # for action in self.A:
             for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
@@ -179,8 +178,8 @@ class POMCP:
                 return float(R), depth
             else:
                 self.env.set_state(state=state)
-                return self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth), \
-                       depth
+                return (self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth),
+                        depth)
 
         # If we have not yet reached a new node, we select the next action according to the
         # UCB strategy
@@ -245,8 +244,9 @@ class POMCP:
         while time.time() - begin < self.planning_time:
             n += 1
             state = self.tree.root.sample_state()
-            _, depth = self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history, c=self.c,
-                          parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
+            _, depth = self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history,
+                                     c=self.c,
+                                     parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
             if self.verbose:
                 action_values = np.zeros((len(self.A),))
                 best_action_idx = 0
@@ -262,7 +262,7 @@ class POMCP:
                     f"value: {self.tree.root.children[best_action_idx].value}, "
                     f"count: {self.tree.root.children[best_action_idx].visit_count}, "
                     f"planning depth: {depth}")
-                #, 31:{action_values[31]}
+                # , 31:{action_values[31]}
 
     def get_action(self) -> int:
         """
@@ -340,7 +340,6 @@ class POMCP:
             Logger.__call__().get_logger().info(f"{observation in self.particle_model}, {observation}")
             if self.particle_model is not None and observation in self.particle_model:
                 particles = self.particle_model[observation]
-                Logger.__call__().get_logger().info(f"Got particles from particle model")
             else:
                 # fill particles by Monte-Carlo using reject sampling
                 while len(particles) < particle_slots:

@@ -56,7 +56,8 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]], deterministic: bool = True) -> Union[int, float, npt.NDArray[Any]]:
+    def action(self, o: Union[List[float], List[int]], deterministic: bool = True) \
+            -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 

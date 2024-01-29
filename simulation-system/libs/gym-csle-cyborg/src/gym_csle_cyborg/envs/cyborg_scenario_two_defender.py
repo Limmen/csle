@@ -122,16 +122,14 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         o, r, done, _, info = self.cyborg_challenge_env.step(action=action)
         if not self.config.decoy_optimization:
-            info, _, scan_state = CyborgScenarioTwoDefender.populate_info(info=dict(info), obs=o, trace=self.trace,
-                                                              env=self.cyborg_challenge_env,
-                                                              cyborg_hostnames=self.cyborg_hostnames,
-                                                              scan_state=self.scan_state,
-                                                              decoy_state=self.decoy_state, config=self.config,
-                                                              cyborg_hostname_to_id=self.cyborg_hostname_to_id,
-                                                              visited_cyborg_states=self.visited_cyborg_states,
-                                                              visited_scanned_states=self.visited_scanned_states,
-                                                              visited_decoy_states=self.visited_decoy_states,
-                                                              reset=False)
+            info, _, scan_state = \
+                CyborgScenarioTwoDefender.populate_info(
+                    info=dict(info), obs=o, trace=self.trace, env=self.cyborg_challenge_env,
+                    cyborg_hostnames=self.cyborg_hostnames, scan_state=self.scan_state, decoy_state=self.decoy_state,
+                    config=self.config, cyborg_hostname_to_id=self.cyborg_hostname_to_id,
+                    visited_cyborg_states=self.visited_cyborg_states,
+                    visited_scanned_states=self.visited_scanned_states, visited_decoy_states=self.visited_decoy_states,
+                    reset=False)
             self.scan_state = scan_state
             o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
                 config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,

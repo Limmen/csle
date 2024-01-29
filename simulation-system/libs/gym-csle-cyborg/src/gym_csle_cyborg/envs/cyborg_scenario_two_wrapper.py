@@ -1,7 +1,11 @@
 import random
+import time
 from typing import Tuple, Dict, List, Any, Union
 import numpy as np
 import numpy.typing as npt
+from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+import csle_common.constants.constants as constants
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.red_agent_action_type import RedAgentActionType
@@ -9,19 +13,29 @@ from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.exploit_type import ExploitType
 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
 
 
-class CyborgModelWrapper():
+class CyborgScenarioTwoWrapper(BaseEnv):
+    """
+    A Wrapper Gym Environment for Cyborg scenario 2
+    """
 
-    def __init__(self, maximum_steps: int) -> None:
+    def __init__(self, config: CSLECyborgWrapperConfig) -> None:
+        """
+        Initializes the environment
+
+        :param config: the environment configuration
+        """
+
+        # Initialize metadata
+        self.config = config
         action_id_to_type_and_host, type_and_host_to_action_id = CyborgEnvUtil.get_action_dicts(
             scenario=2, reduced_action_space=True, decoy_optimization=False, decoy_state=True)
         self.action_id_to_type_and_host = action_id_to_type_and_host
         self.type_and_host_to_action_id = type_and_host_to_action_id
-        self.maximum_steps = maximum_steps
-        self.initial_observation = CyborgModelWrapper.initial_obs_vector()
-        self.s = CyborgModelWrapper.initial_state_vector()
-        self.last_obs = CyborgModelWrapper.initial_obs_vector()
+        self.maximum_steps = self.config.maximum_steps
+        self.initial_observation = CyborgScenarioTwoWrapper.initial_obs_vector()
         self.hosts = CyborgEnvUtil.get_cyborg_hosts()
         self.host_compromised_costs = CyborgEnvUtil.get_host_compromised_costs()
         self.red_agent_action_types = CyborgEnvUtil.get_red_agent_action_types()
@@ -30,6 +44,16 @@ class CyborgModelWrapper():
         self.action_id_to_type_and_host = action_id_to_type_and_host
         self.decoy_action_types = CyborgEnvUtil.get_decoy_action_types(scenario=2)
         self.decoy_actions_per_host = CyborgEnvUtil.get_decoy_actions_per_host(scenario=2)
+        self.host_to_subnet = CyborgEnvUtil.cyborg_host_to_subnet()
+        self.host_ports_map = CyborgEnvUtil.cyborg_host_ports_map()
+        self.decoy_to_port = CyborgEnvUtil.cyborg_decoy_actions_to_port()
+        self.exploit_values = CyborgEnvUtil.exploit_values()
+        self.exploit_ports = CyborgEnvUtil.exploit_ports()
+        self.exploits = CyborgEnvUtil.exploits()
+
+        # Initialize state
+        self.s = CyborgScenarioTwoWrapper.initial_state_vector()
+        self.last_obs = CyborgScenarioTwoWrapper.initial_obs_vector()
         self.op_server_restored = False
         self.red_agent_state = 0
         self.red_agent_target = 0
@@ -38,13 +62,11 @@ class CyborgModelWrapper():
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         self.scan_state = [0 for _ in self.hosts]
         self.next_target_fixed = False
-        self.host_to_subnet = CyborgEnvUtil.cyborg_host_to_subnet()
-        self.host_ports_map = CyborgEnvUtil.cyborg_host_ports_map()
-        self.decoy_to_port = CyborgEnvUtil.cyborg_decoy_actions_to_port()
-        self.exploit_values = CyborgEnvUtil.exploit_values()
-        self.exploit_ports = CyborgEnvUtil.exploit_ports()
-        self.exploits = CyborgEnvUtil.exploits()
         self.privilege_escalation_detected = None
+
+        # Setup traces
+        self.traces: List[SimulationTrace] = []
+        self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
 
     def step(self, action: int) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
@@ -69,16 +91,16 @@ class CyborgModelWrapper():
                                                                 decoy_actions_per_host=self.decoy_actions_per_host,
                                                                 last_obs=self.last_obs)
         self.last_obs = last_obs
-        next_red_action_type = CyborgModelWrapper.get_red_agent_action_type_from_state(
+        next_red_action_type = CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(
             red_agent_state=self.red_agent_state)
-        is_red_action_feasible = CyborgModelWrapper.is_red_action_feasible(red_agent_state=self.red_agent_state,
-                                                                           s=s_prime,
-                                                                           target_host_id=self.red_agent_target)
+        is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_action_feasible(red_agent_state=self.red_agent_state,
+                                                                                 s=s_prime,
+                                                                                 target_host_id=self.red_agent_target)
         exploit_successful = True
         root = False
         decoy_state = s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
         if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
-            exploit_action, root, decoy = CyborgModelWrapper.next_exploit(
+            exploit_action, root, decoy = CyborgScenarioTwoWrapper.next_exploit(
                 target_host=self.red_agent_target, decoy_state=decoy_state, host_ports_map=self.host_ports_map,
                 decoy_actions_per_host=self.decoy_actions_per_host, decoy_to_port=self.decoy_to_port,
                 exploit_values=self.exploit_values, exploit_ports=self.exploit_ports, exploits=self.exploits
@@ -101,7 +123,7 @@ class CyborgModelWrapper():
         else:
             if is_red_action_feasible and exploit_successful:
                 next_red_agent_state = (self.red_agent_state + 1) if self.red_agent_state < 14 else 14
-                next_red_agent_target = CyborgModelWrapper.sample_next_red_agent_target(
+                next_red_agent_target = CyborgScenarioTwoWrapper.sample_next_red_agent_target(
                     red_agent_state=next_red_agent_state, red_agent_target=self.red_agent_target)
             else:
                 next_red_agent_state = self.red_agent_jumps[self.red_agent_state]
@@ -115,31 +137,32 @@ class CyborgModelWrapper():
                     if root:
                         exploit_access = CompromisedType.PRIVILEGED
                     detect = random.uniform(0, 1) < 0.95
-                    s_prime, obs = CyborgModelWrapper.apply_red_exploit(s=s_prime, exploit_access=exploit_access,
-                                                                        target_host_id=self.red_agent_target,
-                                                                        observation=self.last_obs, detect=detect)
+                    s_prime, obs = CyborgScenarioTwoWrapper.apply_red_exploit(s=s_prime, exploit_access=exploit_access,
+                                                                              target_host_id=self.red_agent_target,
+                                                                              observation=self.last_obs, detect=detect)
                     self.last_obs = obs
                     if detect:
                         activity = ActivityType.EXPLOIT
                     else:
                         activity = ActivityType.SCAN
             elif next_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
-                s_prime = CyborgModelWrapper.apply_red_network_scan(s=s_prime, target_subnetwork=self.red_agent_target)
+                s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(s=s_prime,
+                                                                          target_subnetwork=self.red_agent_target)
             elif next_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
-                s_prime = CyborgModelWrapper.apply_red_host_scan(s=s_prime, target_host_id=self.red_agent_target)
+                s_prime = CyborgScenarioTwoWrapper.apply_red_host_scan(s=s_prime, target_host_id=self.red_agent_target)
                 activity = ActivityType.SCAN
             elif next_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
                 if s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
                         != CompromisedType.PRIVILEGED.value:
                     self.privilege_escalation_detected = self.red_agent_target
-                s_prime = CyborgModelWrapper.apply_red_privilege_escalation(
+                s_prime = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
                     s=s_prime, target_host_id=self.red_agent_target, red_agent_state=self.red_agent_state,
                     next_target_host_id=next_red_agent_target)
         self.s = s_prime
         self.red_agent_target = next_red_agent_target
         self.red_agent_state = next_red_agent_state
 
-        obs, obs_tensor, scan_state = CyborgModelWrapper.generate_observation(
+        obs, obs_tensor, scan_state = CyborgScenarioTwoWrapper.generate_observation(
             s=s_prime, scan_state=self.scan_state, decoy_action_types=self.decoy_action_types,
             decoy_actions_per_host=self.decoy_actions_per_host,
             last_obs=self.last_obs, activity=activity, red_agent_target=self.red_agent_target)
@@ -149,15 +172,21 @@ class CyborgModelWrapper():
         self.s = s_prime
         self.last_obs = obs
         info = {}
-        info[env_constants.ENV_METRICS.STATE] = CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s,
-                                                                                       observation=False)
-        info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s,
-                                                                                             observation=True)
+        info[env_constants.ENV_METRICS.STATE] = \
+            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=False)
+        info[env_constants.ENV_METRICS.OBSERVATION] = \
+            CyborgEnvUtil.state_vector_to_state_id(state_vector=self.s, observation=True)
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs
         done = False
         self.t += 1
         if self.t >= self.maximum_steps:
             done = True
+
+        # Log trace
+        if self.config.save_trace:
+            self.trace = CyborgScenarioTwoWrapper.log_trace(r=float(r),
+                                                            trace=self.trace, o=obs_tensor,
+                                                            done=done, action=action)
 
         return np.array(obs_tensor), r, done, done, info
 
@@ -188,6 +217,8 @@ class CyborgModelWrapper():
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vec,
                                                                                              observation=True)
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs_vec
+        self.traces: List[SimulationTrace] = []
+        self.trace = SimulationTrace(simulation_env=self.config.gym_env_name)
         return np.array(obs_tensor), info
 
     def reward_function(self, defender_action_type: BlueAgentActionType,
@@ -369,11 +400,11 @@ class CyborgModelWrapper():
         elif red_agent_state == 10:
             return s[3][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] > 0
         elif red_agent_state == 11:
-            return s[3][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.PRIVILEGED.value and \
-                   s[7][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1
+            return (s[3][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.PRIVILEGED.value
+                    and s[7][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1)
         elif red_agent_state == 12:
-            return s[7][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 1 and \
-                   s[3][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.PRIVILEGED.value
+            return (s[7][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 1 and
+                    s[3][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.PRIVILEGED.value)
         elif red_agent_state == 13:
             return s[7][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] > 0
         elif red_agent_state == 14:
@@ -427,7 +458,7 @@ class CyborgModelWrapper():
         :param red_agent_state: the new state of the red agent
         :return: the next target host id of the red agent
         """
-        target_dist = CyborgModelWrapper.red_agent_state_to_target_distribution(
+        target_dist = CyborgScenarioTwoWrapper.red_agent_state_to_target_distribution(
             red_agent_state=red_agent_state, last_target=red_agent_target)
         next_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
         return next_target
@@ -540,7 +571,7 @@ class CyborgModelWrapper():
                         scan_state[host_id] = 2
                 host_obs = [host_activity, scan_state[host_id], compromised_obs, host_decoy_state]
             obs.append(host_obs)
-            obs_tensor.extend(CyborgModelWrapper.host_obs_one_hot_encoding(
+            obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(
                 host_obs=host_obs, decoy_action_types=decoy_action_types,
                 decoy_actions_per_host=decoy_actions_per_host, host_id=host_id))
         return obs, obs_tensor, scan_state
@@ -647,5 +678,70 @@ class CyborgModelWrapper():
         else:
             alternatives = [x for x in list(range(len(feasible_exploits))) if x != top_choice]
             random_choice = np.random.choice(list(range(len(alternatives))))
-            return feasible_exploits[random_choice], feasible_exploit_access[random_choice], \
-                   decoy_exploits[random_choice]
+            return (feasible_exploits[random_choice], feasible_exploit_access[random_choice],
+                    decoy_exploits[random_choice])
+
+    @staticmethod
+    def log_trace(r: float, trace: SimulationTrace, o: npt.NDArray[Any], done: bool, action: int) -> SimulationTrace:
+        """
+        Logs information in a trace
+
+        :param r: the reward
+        :param trace: the trace
+        :param o: the observation
+        :param done: the done flag
+        :param action: the action
+        :return: the updated trace
+        """
+        trace.defender_rewards.append(float(r))
+        trace.attacker_rewards.append(-float(r))
+        trace.attacker_actions.append(0)
+        trace.defender_actions.append(action)
+        trace.infos.append({})
+        trace.states.append(0.0)
+        trace.beliefs.append(0.0)
+        trace.infrastructure_metrics.append(o)
+        if not done:
+            trace.attacker_observations.append(o)
+            trace.defender_observations.append(o)
+        return trace
+
+    def get_traces(self) -> List[SimulationTrace]:
+        """
+        :return: the list of simulation traces
+        """
+        return self.traces
+
+    def reset_traces(self) -> None:
+        """
+        Resets the list of traces
+
+        :return: None
+        """
+        self.traces = []
+
+    def __checkpoint_traces(self) -> None:
+        """
+        Checkpoints agent traces
+        :return: None
+        """
+        ts = time.time()
+        SimulationTrace.save_traces(traces_save_dir=constants.LOGGING.DEFAULT_LOG_DIR,
+                                    traces=self.traces, traces_file=f"taus{ts}.json")
+
+    def set_model(self, model) -> None:
+        """
+        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract
+
+        :param model: the model
+        :return: None
+        """
+        self.model = model
+
+    def manual_play(self) -> None:
+        """
+        An interactive loop to test the environment manually
+
+        :return: None
+        """
+        return None
