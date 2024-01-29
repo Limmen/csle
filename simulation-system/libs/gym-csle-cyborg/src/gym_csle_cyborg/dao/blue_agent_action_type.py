@@ -11,7 +11,7 @@ class BlueAgentActionType(IntEnum):
     REMOVE = 3
     DECOY_APACHE = 4
     DECOY_FEMITTER = 5
-    DECOY_HARAKA_SMPT = 6
+    DECOY_HARAKA_SMTP = 6
     DECOY_SMSS = 7
     DECOY_SSHD = 8
     DECOY_SVCHOST = 9
@@ -40,7 +40,7 @@ class BlueAgentActionType(IntEnum):
         elif action_str == "DecoyFemitter":
             return BlueAgentActionType.DECOY_FEMITTER
         elif action_str == "DecoyHarakaSMPT":
-            return BlueAgentActionType.DECOY_HARAKA_SMPT
+            return BlueAgentActionType.DECOY_HARAKA_SMTP
         elif action_str == "DecoySmss":
             return BlueAgentActionType.DECOY_SMSS
         elif action_str == "DecoySSHD":

@@ -2,7 +2,7 @@ import numpy as np
 
 if __name__ == '__main__':
     # ids = list(range(1, 66))
-    ids = list(range(1, 41))
+    ids = list(range(1, 66))
     activity_counts_list = []
     compromised_counts_list = []
     for id in ids:
@@ -27,7 +27,9 @@ if __name__ == '__main__':
             for k in range(compromised_counts.shape[1]):
                 for l in range(compromised_counts.shape[2]):
                     for m in range(compromised_counts.shape[3]):
-                        compromised_counts[j][k][l][m] += compromised_counts_list[i][j][k][l][m]
+                        for n in range(compromised_counts.shape[4]):
+                            for o in range(compromised_counts.shape[5]):
+                                compromised_counts[j][k][l][m][n][o] += compromised_counts_list[i][j][k][l][m][n][o]
 
     activity_probabilities = np.zeros(activity_counts.shape)
     for j in range(activity_counts.shape[0]):
@@ -41,10 +43,12 @@ if __name__ == '__main__':
     for j in range(compromised_counts.shape[0]):
         for k in range(compromised_counts.shape[1]):
             for l in range(compromised_counts.shape[2]):
-                norm_constant = sum(compromised_counts[j][k][l])
                 for m in range(compromised_counts.shape[3]):
-                    if norm_constant > 0:
-                        compromise_probabilities[j][k][l][m] += compromised_counts[j][k][l][m]/norm_constant
+                    for n in range(compromised_counts.shape[4]):
+                        norm_constant = sum(compromised_counts[j][k][l][m][n])
+                        for o in range(compromised_counts.shape[5]):
+                            if norm_constant > 0:
+                                compromise_probabilities[j][k][l][m][n][o] += compromised_counts[j][k][l][m][n][o]/norm_constant
 
 
     print(compromise_probabilities[7][0][0])

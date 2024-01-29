@@ -10,6 +10,7 @@ from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
+from gym_csle_cyborg.dao.exploit_type import ExploitType
 
 
 class CyborgEnvUtil:
@@ -107,7 +108,7 @@ class CyborgEnvUtil:
             return [
                 BlueAgentActionType.DECOY_APACHE,
                 BlueAgentActionType.DECOY_FEMITTER,
-                BlueAgentActionType.DECOY_HARAKA_SMPT,
+                BlueAgentActionType.DECOY_HARAKA_SMTP,
                 BlueAgentActionType.DECOY_SMSS,
                 BlueAgentActionType.DECOY_SSHD,
                 BlueAgentActionType.DECOY_SVCHOST,
@@ -127,14 +128,14 @@ class CyborgEnvUtil:
         """
         if scenario == 2:
             return [
-                [BlueAgentActionType.DECOY_HARAKA_SMPT, BlueAgentActionType.DECOY_TOMCAT,
+                [BlueAgentActionType.DECOY_HARAKA_SMTP, BlueAgentActionType.DECOY_TOMCAT,
                  BlueAgentActionType.DECOY_APACHE, BlueAgentActionType.DECOY_VSFTPD],
-                [BlueAgentActionType.DECOY_HARAKA_SMPT, BlueAgentActionType.DECOY_TOMCAT,
+                [BlueAgentActionType.DECOY_HARAKA_SMTP, BlueAgentActionType.DECOY_TOMCAT,
                  BlueAgentActionType.DECOY_VSFTPD, BlueAgentActionType.DECOY_APACHE],
                 [BlueAgentActionType.DECOY_FEMITTER],
                 [BlueAgentActionType.DECOY_FEMITTER],
                 [], [], [],
-                [BlueAgentActionType.DECOY_HARAKA_SMPT, BlueAgentActionType.DECOY_APACHE,
+                [BlueAgentActionType.DECOY_HARAKA_SMTP, BlueAgentActionType.DECOY_APACHE,
                  BlueAgentActionType.DECOY_TOMCAT, BlueAgentActionType.DECOY_VSFTPD],
                 [],
                 [BlueAgentActionType.DECOY_APACHE, BlueAgentActionType.DECOY_TOMCAT, BlueAgentActionType.DECOY_SMSS,
@@ -555,3 +556,78 @@ class CyborgEnvUtil:
             11: 0,
             12: 0
         }
+
+    @staticmethod
+    def cyborg_host_ports_map() -> Dict[int, List[Tuple[int, bool]]]:
+        """
+        :return: a map from host id to ports and whether they run as root or not
+        """
+        return {
+            0: [], 1: [(22, False)],
+            2: [(22, False), (135, True), (3389, True), (445, True), (139, True), (80, False), (443, False)],
+            3: [(22, False), (135, True), (3389, True), (445, True), (139, True), (80, False), (443, False)],
+            4: [], 5: [], 6: [], 7: [(22, False)], 8: [], 9: [(22, False), (21, True)],
+            10: [(445, True), (139, True), (135, True), (3389, False)],
+            11: [(80, False), (3389, True), (443, False), (25, True)],
+            12: [(22, False), (80, False), (3390, True), (443, False), (25, True)]
+        }
+
+    @staticmethod
+    def cyborg_decoy_actions_to_port() -> Dict[int, List[int]]:
+        """
+        :return: a map from decoy type to port
+        """
+        return {
+            BlueAgentActionType.DECOY_SSHD: [22],
+            BlueAgentActionType.DECOY_APACHE: [80],
+            BlueAgentActionType.DECOY_FEMITTER: [21],
+            BlueAgentActionType.DECOY_HARAKA_SMTP: [25],
+            BlueAgentActionType.DECOY_SMSS: [139],
+            BlueAgentActionType.DECOY_SVCHOST: [3389],
+            BlueAgentActionType.DECOY_TOMCAT: [443],
+            BlueAgentActionType.DECOY_VSFTPD: [80]
+        }
+
+    @staticmethod
+    def exploit_values() -> Dict[int, float]:
+        """
+        :return: a map from exploit type to value
+        """
+        return {
+            ExploitType.ETERNAL_BLUE.value: 2.0,
+            ExploitType.BLUE_KEEP.value: 1.0,
+            ExploitType.HTTP_RFI.value: 3.0,
+            ExploitType.HTTP_SRFI.value: 4.0,
+            ExploitType.SSH_BRUTE_FORCE.value: 0.1,
+            ExploitType.SQL_INJECTION.value: 5.0,
+            ExploitType.HARAKA_RCE.value: 6.0,
+            ExploitType.FTP_DIRECTORY_TRAVERSAL.value: 7.0
+        }
+
+    @staticmethod
+    def exploit_ports() -> Dict[int, List[int]]:
+        """
+        :return: a map from exploit type to ports
+        """
+        return {
+            ExploitType.ETERNAL_BLUE.value: [139],
+            ExploitType.BLUE_KEEP.value: [3389],
+            ExploitType.HTTP_RFI.value: [80],
+            ExploitType.HTTP_SRFI.value: [443],
+            ExploitType.SSH_BRUTE_FORCE.value: [22],
+            ExploitType.SQL_INJECTION.value: [3390],
+            ExploitType.HARAKA_RCE.value: [25],
+            ExploitType.FTP_DIRECTORY_TRAVERSAL.value: [21]
+        }
+
+    @staticmethod
+    def exploits() -> List[ExploitType]:
+        """
+        :return: list of exploits
+        """
+        return [
+            ExploitType.ETERNAL_BLUE, ExploitType.BLUE_KEEP, ExploitType.HTTP_RFI, ExploitType.HTTP_SRFI,
+            ExploitType.SSH_BRUTE_FORCE, ExploitType.SQL_INJECTION, ExploitType.HARAKA_RCE,
+            ExploitType.FTP_DIRECTORY_TRAVERSAL
+        ]
+

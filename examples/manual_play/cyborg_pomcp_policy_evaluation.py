@@ -13,34 +13,7 @@ from csle_common.logging.log import Logger
 from csle_agents.agents.pomcp.pomcp import POMCP
 
 
-def my_value(o: int):
-    obs_vector = CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True)
-    hosts = ['Defender', 'Enterprise0', 'Enterprise1', 'Enterprise2', 'Op_Host0', 'Op_Host1', 'Op_Host2',
-             'Op_Server0', 'User0', 'User1', 'User2', 'User3', 'User4']
-    host_values = [2,2,2,3,4,4,4,5,0,1,1,1,1]
-    decoy_values = [0,0.5,0.5,0.4,0,0,0,0.2,0,0.6,0.2,0.6,0.2]
-    value = 0
-    for i in range(len(hosts)):
-        value -= obs_vector[i][2]*2*host_values[i]
-        value += obs_vector[i][3]*0.1*decoy_values[i]
-    return value
-
-
 if __name__ == '__main__':
-    import io
-    with io.open(f"/home/kim/particle_model.json", 'r', encoding='utf-8') as f:
-        json_str = f.read()
-        particle_model = json.loads(json_str)
-    particle_model_1 = {}
-    for k, v in particle_model.items():
-        v_2 = [int(x) for x in v]
-        particle_model_1[int(k)] = v_2
-    particle_model = particle_model_1
-    config = CSLECyborgConfig(
-        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
-        maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
-        scanned_state=True, decoy_optimization=False, cache_visited_states=True)
-    csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
     N = 1000
     gamma = 1
     planning_time = 200

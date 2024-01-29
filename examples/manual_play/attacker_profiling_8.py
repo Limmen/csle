@@ -7,6 +7,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
+from gym_csle_cyborg.dao.exploit_type import ExploitType
 import csle_agents.constants.constants as agents_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
@@ -29,6 +30,49 @@ attacker_action_types = [
     "DiscoverRemoteSystems", "DiscoverNetworkServices", "ExploitRemoteService", "PrivilegeEscalate", "Impact"
 ]
 
+host_to_subnet = {
+    0: 1,
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 2,
+    5: 2,
+    6: 2,
+    7: 2,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0
+}
+
+host_compromised_costs = {
+    0: 0,
+    1: -1,
+    2: -1,
+    3: -1,
+    4: -0.1,
+    5: -0.1,
+    6: -0.1,
+    7: -1,
+    8: 0,
+    9: -0.1,
+    10: -0.1,
+    11: -0.1,
+    12: -0.1
+}
+
+def reward_function(state_vector, defender_action_type: BlueAgentActionType, red_action_type, red_success, op_server_restored):
+    r = 0
+    if defender_action_type == BlueAgentActionType.RESTORE:
+        r -= 1
+    for i in range(len(state_vector)):
+        access_state = state_vector[i][2]
+        if access_state == 2:
+            r += host_compromised_costs[i]
+    if red_action_type == 4 and red_success and not op_server_restored:
+        r -= 10
+    return r
 
 def attacker_state_to_target_distribution(attacker_state: int, last_target: int = -1):
     if attacker_state == 0:
@@ -228,11 +272,60 @@ def action_deterministic_success(attacker_state, state_vector, target):
     elif attacker_state == 11:
         return state_vector[3][2] == 2 and state_vector[7][0] == 1
     elif attacker_state == 12:
-        return state_vector[7][1] == 1
+        return state_vector[7][1] == 1 and state_vector[3][2] == 2
     elif attacker_state == 13:
         return state_vector[7][2] > 0
     elif attacker_state == 14:
         return state_vector[7][2] == 2
+
+def next_exploit(target_host: int, decoy_state: int):
+    host_ports_map = CyborgEnvUtil.cyborg_host_ports_map()
+    decoy_actions_per_host = CyborgEnvUtil.get_decoy_actions_per_host(scenario=2)
+    decoy_actions = decoy_actions_per_host[target_host]
+    decoy_to_port = CyborgEnvUtil.cyborg_decoy_actions_to_port()
+    decoy_ports = []
+    for i in range(decoy_state):
+        decoy_ports.extend(decoy_to_port[decoy_actions[i]])
+    exploit_values = CyborgEnvUtil.exploit_values()
+    exploit_ports = CyborgEnvUtil.exploit_ports()
+    ports = host_ports_map[target_host]
+    exploits = CyborgEnvUtil.exploits()
+    feasible_exploits = []
+    feasible_exploits_values = []
+    feasible_exploit_access = []
+    decoy_exploits = []
+    for exploit in exploits:
+        exploit_access = False
+        exploit_feasible = False
+        exploit_decoy = False
+        for port_access in ports:
+            port, access = port_access
+            if port in exploit_ports[exploit.value]:
+                exploit_feasible = True
+                if not exploit_access:
+                    exploit_access = access
+        if not exploit_feasible:
+            for port in decoy_ports:
+                if port in exploit_ports[exploit.value]:
+                    exploit_decoy = True
+                    exploit_feasible = True
+        if exploit_feasible:
+            feasible_exploits.append(exploit)
+            feasible_exploits_values.append(exploit_values[exploit.value])
+            feasible_exploit_access.append(exploit_access)
+            decoy_exploits.append(exploit_decoy)
+    if len(feasible_exploits) == 0:
+        return -1, False, False
+    top_choice = np.argmax(feasible_exploits_values)
+    if len(feasible_exploits) == 1 or random.uniform(0,1) <= 0.75:
+        return feasible_exploits[top_choice], feasible_exploit_access[top_choice], decoy_exploits[top_choice]
+    else:
+        alternatives = [x for x in list(range(len(feasible_exploits))) if x != top_choice]
+        random_choice = np.random.choice(list(range(len(alternatives))))
+        return feasible_exploits[random_choice], feasible_exploit_access[random_choice], decoy_exploits[random_choice]
+
+
+
 
 
 
@@ -248,27 +341,19 @@ if __name__ == '__main__':
     decoys = CyborgEnvUtil.get_decoy_action_types(scenario=config.scenario)
     # ppo_policy = MetastoreFacade.get_ppo_policy(id=98)
 
-    exploit_success = np.zeros((len(cyborg_hosts), len(decoys)))
-    exploit_counts = np.zeros((len(cyborg_hosts), len(decoys)))
-    exploit_root = np.zeros((len(cyborg_hosts), len(decoys)))
-    exploit_user = np.zeros((len(cyborg_hosts), len(decoys)))
-    exploit_type_counts = np.zeros((len(cyborg_hosts), len(decoys)))
-
+    host_ports_map = CyborgEnvUtil.cyborg_host_ports_map()
+    decoy_to_port = CyborgEnvUtil.cyborg_decoy_actions_to_port()
+    exploit_values = CyborgEnvUtil.exploit_values()
+    exploit_ports = CyborgEnvUtil.exploit_ports()
     jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
     horizon = 100
     episodes = 100000000
     save_every = 100
-    id = 20
-    seed = 20819202
+    id = 40
+    seed = 4022204182
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    user_counts = {
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0
-    }
     for ep in range(episodes):
         print(f"{ep}/{episodes}")
         o, info = csle_cyborg_env.reset()
@@ -289,15 +374,20 @@ if __name__ == '__main__':
         targets = [0]
         defender_actions_history = []
         red_action_types = []
+        op_server_restored = False
         for i in range(horizon):
             ad = np.random.choice(defender_actions)
-            # ad = np.random.choice([27, 28, 29, 30, 31, 32 ,33, 34, 35])
-            # ad = 31
-            # ad = 4
             # ad = 27
+            # ad = np.random.choice([11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ,33, 34, 35])
+            # ad = np.random.choice([0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+            # ad = np.random.choice([0, 1, 2, 3, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 11, 10, 9, 8, 21, 15, 14, 13, 12, 7, 6, 5, 4, 27, 28, 29, 30, 31, 32, 33, 34, 35])
+            # ad = 27
+            # ad = 2
             o, r, done, _, info = csle_cyborg_env.step(action=ad)
             s = info[agents_constants.COMMON.STATE]
+            o = info[agents_constants.COMMON.OBSERVATION]
             true_state_vec = CyborgEnvUtil.state_id_to_state_vector(state_id=s, observation=False)
+            obs_vec = CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True)
             red_action = csle_cyborg_env.get_last_action(agent="Red")
             red_action_type = get_action_type(red_action=red_action)
             red_success = csle_cyborg_env.get_red_action_success()
@@ -305,8 +395,38 @@ if __name__ == '__main__':
             red_action_state = csle_cyborg_env.get_red_action_state()
             red_target = get_target(attacker_action=red_action, ip_to_host_map=ip_to_host, hosts=cyborg_hosts,
                                     subnets=subnets)
+            # if red_action_type == 2 and red_target == 1:
+            #     predicted_exploit, access, decoy = next_exploit(target_host=red_target, decoy_state=true_state_vec[red_target][3])
+            #     print(f"predicted exploit: {ExploitType(predicted_exploit).name}, access: {access}, "
+            #           f"actual access: {true_state_vec[red_target][2]}, target: {red_target}, decoy: {decoy}")
+            # if ad == 3 and red_action_type == 2 and red_target == 7:
+            #     print(f"red fail?, {true_state_vec[7][2]}")
+            #     print("red fail")
+            #     print(red_actions[-1])
+            #     print(ip_to_host[str(red_actions[-1].ip_address)])
             # print(red_target)
             defender_action_type, defender_action_host = csle_cyborg_env.action_id_to_type_and_host[ad]
+
+            sv = state_vectors[-1].copy()
+            dat, dah = csle_cyborg_env.action_id_to_type_and_host[ad]
+            sv = apply_defender_action_to_state(state_vector=sv, defender_action_type=dat,
+                                                defender_action_host=cyborg_hosts.index(dah))
+            das = action_deterministic_success(attacker_state=red_action_state, target=red_target,
+                                               state_vector=sv)
+            # if len(defender_actions_history) > 0 and defender_actions_history[-1] == 3 and red_target == 7 and red_action_type == 2:
+            #     print("ssh op fail?")
+            # if not red_success and i > 0:
+            # print(defender_actions_history[-5:])
+            # print(red_base_jump)
+            # print(true_state_vec[7][2])
+            # print(true_state_vec[3][2])
+            # print(red_action_state)
+            print(das)
+
+            predicted_reward = reward_function(state_vector=true_state_vec,
+                                               defender_action_type=defender_action_type,
+                                               red_action_type=red_action_type,
+                                               red_success=das, op_server_restored=op_server_restored)
             if len(red_actions) > 1 and len(state_vectors) >= 2:
                 sv = state_vectors[-2].copy()
                 ad_old = defender_actions_history[-1]
@@ -315,44 +435,22 @@ if __name__ == '__main__':
                                                     defender_action_host=cyborg_hosts.index(dah))
                 das = action_deterministic_success(attacker_state=red_action_states[-1], target=targets[-1],
                                                    state_vector=sv)
+                op_res = op_server_restored
+                if ad_old == 3:
+                    op_res = True
+                # if targets[-1] == 7 and op_res and red_action_type == 2 and das:
+                #     print(f"opserver restored, exploit success: {red_success}")
+                if das and not red_success:
+                    pass
+                #print(f"das: {das}, ad: {ad}, {red_action_states[-1]}")
 
-                if das and not red_success and get_action_type(red_actions[-1]) != 2:
-                    print(f"red action failed, das: {das}, a_state:{red_action_states[-1]}, "
-                          f"defender_action: {defender_actions_history[-1]},"
-                          f"{red_actions[-1]}, state: {sv}")
+                # if das and not red_success:
+                #     print(f"red action failed, das: {das}, a_state:{red_action_states[-1]}, "
+                #           f"defender_action: {defender_actions_history[-1]},"
+                #           f"{red_actions[-1]}, state: {sv}")
 
-                if das and get_action_type(red_actions[-1]) == 2:
-                    host_idx = cyborg_hosts.index(ip_to_host[str(red_actions[-1].ip_address)])
-                    host = ip_to_host[str(red_actions[-1].ip_address)]
-                    if i == 3:
-                        user_counts[host_idx] += 1
-                    # if host == "User2":
-                    #     print(f"i: {i}, Exploit {ip_to_host[str(red_actions[-1].ip_address)]}, id: {host_idx}, success: {red_success}")
-                    host_decoy_state = sv[host_idx][3]
-                    exploit_success[host_idx][host_decoy_state] += int(red_success)
-                    exploit_counts[host_idx][host_decoy_state] += 1
-                    e_access_type = state_vectors[-1][host_idx][2]
-                    exploit_type_counts[host_idx][host_decoy_state] += 1
-                    if e_access_type == 1:
-                        exploit_user[host_idx][host_decoy_state] += 1
-                    elif e_access_type == 2:
-                        exploit_root[host_idx][host_decoy_state] += 1
-            # if len(red_action_states) > 2 and red_action_states[-1] == 11 and red_action_state == 1:
-            #     print("reset!")
-            #     sv = state_vectors[-2].copy()
-            #     print(state_vectors[-1])
-            #     print(state_vectors[-2])
-            #     print(state_vectors[-3])
-            #     print(state_vectors[-4])
-            #     print(state_vectors[-5])
-            #     print(defender_actions_history[-5:])
-            #     ad_old = defender_actions_history[-1]
-            #     dat, dah = csle_cyborg_env.action_id_to_type_and_host[ad_old]
-            #     sv = apply_defender_action_to_state(state_vector=sv, defender_action_type=dat,
-            #                                         defender_action_host=cyborg_hosts.index(dah))
-            #     das = action_deterministic_success(attacker_state=red_action_states[-1], target=targets[-1],
-            #                                        state_vector=sv)
-            #     print(f"reset das: {das}")
+            if ad == 3:
+                op_server_restored = True
             red_action_states.append(red_action_state)
             red_actions.append(red_action)
             red_action_types.append(red_action_type)
@@ -361,9 +459,7 @@ if __name__ == '__main__':
             defender_actions_history.append(ad)
             decoy_state = copy.deepcopy(csle_cyborg_env.decoy_state)
             access_type = 0
-            if red_action_type == 2:
-                host_idx = cyborg_hosts.index(ip_to_host[str(red_action.ip_address)])
-                access_type = true_state_vec[host_idx][2]
+
             if red_base_jump:
                 b_line_action = 1
                 last_target = last_targets[b_line_action]
@@ -380,27 +476,18 @@ if __name__ == '__main__':
             last_target = np.random.choice(np.arange(0, len(target_dist)), p=target_dist)
             last_targets[b_line_action] = last_target
 
+        # for host in range(compromised_counts.shape[0]):
+        #     for attacker_action in range(compromised_counts.shape[1]):
+        #         for activity_type in range(compromised_counts.shape[2]):
+        #             print(f"host: {cyborg_hosts[host]}, acces: {attacker_action} "
+        #                   f"analyze: {activity_type} "
+        #                   f"counts: {compromised_counts[host][attacker_action][activity_type]}")
+        # print(compromised_counts[1][2][2][2][0])
+        # print(compromised_counts[1][2][0][0][0])
 
-        # for host_idx in range(exploit_counts.shape[0]):
-        #     for decoy_state in range(exploit_counts.shape[1]):
-        #         exploit_prob = 0
-        #         if exploit_counts[host_idx][decoy_state] > 0:
-        #             exploit_prob = exploit_success[host_idx][decoy_state] / exploit_counts[host_idx][decoy_state]
-        #         print(f"host: {cyborg_hosts[host_idx]}, decoy_state: {decoy_state} "
-        #               f"exploit prob: {exploit_prob}"
-        # if exploit_counts[10][0] > 0:
-        # print(exploit_success[10][3]/exploit_counts[10][3])
-        # print(exploit_success[1][0]/exploit_counts[1][0])
-        # print(user_counts)
 
-        if ep % save_every == 0:
-            with open(f'/home/kim/exploit_success_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_success))
-            with open(f'/home/kim/exploit_counts_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_counts))
-            with open(f'/home/kim/exploit_root_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_root))
-            with open(f'/home/kim/exploit_user_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_user))
-            with open(f'/home/kim/exploit_type_counts_{id}.npy', 'wb') as f:
-                np.save(f, np.array(exploit_type_counts))
+        # if ep % save_every == 0:
+        #     with open(f'/home/kim/activity_counts_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(activity_counts))
+        #     with open(f'/home/kim/compromised_counts_{id}.npy', 'wb') as f:
+        #         np.save(f, np.array(compromised_counts))

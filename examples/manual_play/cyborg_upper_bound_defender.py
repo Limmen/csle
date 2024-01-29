@@ -128,7 +128,7 @@ def eval(csle_cyborg_env) -> float:
     decoy_state["User4"] = []
     decoy_actions_order = {
         "Enterprise0": [
-            BlueAgentActionType.DECOY_HARAKA_SMPT,
+            BlueAgentActionType.DECOY_HARAKA_SMTP,
             BlueAgentActionType.DECOY_TOMCAT,
             BlueAgentActionType.DECOY_VSFTPD,
             BlueAgentActionType.DECOY_APACHE
@@ -140,7 +140,7 @@ def eval(csle_cyborg_env) -> float:
             BlueAgentActionType.DECOY_FEMITTER
         ],
         "Op_Server0": [
-            BlueAgentActionType.DECOY_HARAKA_SMPT,
+            BlueAgentActionType.DECOY_HARAKA_SMTP,
             BlueAgentActionType.DECOY_APACHE,
             BlueAgentActionType.DECOY_TOMCAT,
             BlueAgentActionType.DECOY_VSFTPD
