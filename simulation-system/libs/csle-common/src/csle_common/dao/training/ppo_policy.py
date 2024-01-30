@@ -40,16 +40,7 @@ class PPOPolicy(Policy):
         self.id = -1
         self.simulation_name = simulation_name
         self.save_path = save_path
-        if self.model is None and self.save_path != "":
-            try:
-                self.model = PPO.load(path=self.save_path)
-            except Exception as e1:
-                try:
-                    self.model = PPONetwork.load(path=self.save_path)
-                except Exception as e2:
-                    Logger.__call__().get_logger().warning(
-                        f"There was an exception loading the model from path: {self.save_path}, "
-                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")
+        self.load()
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
@@ -228,3 +219,20 @@ class PPOPolicy(Policy):
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
+
+    def load(self) -> None:
+        """
+        Attempts to load the policy from disk
+
+        :return: None
+        """
+        if self.model is None and self.save_path != "":
+            try:
+                self.model = PPO.load(path=self.save_path)
+            except Exception as e1:
+                try:
+                    self.model = PPONetwork.load(path=self.save_path)
+                except Exception as e2:
+                    Logger.__call__().get_logger().warning(
+                        f"There was an exception loading the model from path: {self.save_path}, "
+                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")

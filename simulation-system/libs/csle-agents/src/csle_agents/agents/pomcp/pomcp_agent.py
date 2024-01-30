@@ -217,7 +217,10 @@ class POMCPAgent(BaseAgent):
             done = False
             action_sequence = []
             eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+            import copy
+            train_config = copy.deepcopy(config)
+            train_config.reward_shaping = True
+            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=train_config)
 
             _, info = eval_env.reset()
             s = info[agents_constants.COMMON.STATE]
@@ -234,7 +237,9 @@ class POMCPAgent(BaseAgent):
                 Logger.__call__().get_logger().info(f"[POMCP] t: {t}, s: {s}")
             # Run episode
             while not done and t <= max_env_steps:
-                pomcp.solve(max_rollout_depth=max_rollout_depth, max_planning_depth=max_planning_depth)
+                rollout_depth = max_rollout_depth
+                planning_depth = max_planning_depth
+                pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth)
                 action = pomcp.get_action()
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)

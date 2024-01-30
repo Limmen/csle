@@ -115,6 +115,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         exploit_successful = True
         root = False
         decoy_state = s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
+        decoy_r = 0
         if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             exploit_action, root, decoy = CyborgScenarioTwoWrapper.next_exploit(
                 target_host=self.red_agent_target, decoy_state=decoy_state, host_ports_map=self.host_ports_map,
@@ -123,6 +124,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             )
             if decoy:
                 exploit_successful = False
+                decoy_r += decoy_state*0.1
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE1 \
                     and exploit_action == ExploitType.ETERNAL_BLUE.value:
                 exploit_successful = False
@@ -186,7 +188,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                  red_success=(is_red_action_feasible and exploit_successful))
         info: Dict[str, Any] = {}
         info[env_constants.ENV_METRICS.STATE] = (
-            copy.deepcopy(self.s), scan_state, self.op_server_restored,
+            copy.deepcopy(s_prime), scan_state, self.op_server_restored,
             obs, copy.deepcopy(self.red_action_targets),
             self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
         )
@@ -206,7 +208,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         if self.config.save_trace:
             self.trace = CyborgScenarioTwoWrapper.log_trace(
                 r=float(r), trace=self.trace, o=info[env_constants.ENV_METRICS.OBSERVATION], done=done, action=action)
-
+        if self.config.reward_shaping:
+            r += decoy_r
         return np.array(obs_tensor), r, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
@@ -233,8 +236,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.last_obs = copy.deepcopy(obs_vec)
         info: Dict[str, Any] = {}
         info[env_constants.ENV_METRICS.STATE] = (
-            copy.deepcopy(self.s), self.scan_state, self.op_server_restored,
-            obs_vec, copy.deepcopy(self.red_action_targets),
+            copy.deepcopy(self.s), copy.deepcopy(self.scan_state), self.op_server_restored,
+            copy.deepcopy(obs_vec), copy.deepcopy(self.red_action_targets),
             self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
         )
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(

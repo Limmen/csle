@@ -106,11 +106,14 @@ class POMCP:
                 return self.value_function(o)
             else:
                 return 0
-        if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-            a = POMCPUtil.rand_choice(self.A)
-        else:
-            a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
-                                           deterministic=False)
+        a = 29
+        # a = POMCPUtil.rand_choice([29, 35])
+        # if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
+        #     a = POMCPUtil.rand_choice(self.A)
+        # else:
+        #     a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
+        #                                    deterministic=False)
+        self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]
         o = info[constants.COMMON.OBSERVATION]
@@ -151,7 +154,6 @@ class POMCP:
             value = self.default_node_value
         current_node = self.tree.find_or_create(history=history, parent=parent, observation=observation,
                                                 initial_visit_count=self.prior_confidence, initial_value=value)
-
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
