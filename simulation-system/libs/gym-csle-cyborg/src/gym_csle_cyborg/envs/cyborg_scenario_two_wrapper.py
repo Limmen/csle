@@ -118,7 +118,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         root = False
         d1 = self.attacker_observed_decoy[self.red_agent_target]
         decoy_state = d1
-        decoy_r = 0
+        decoy_r = 0.0
         if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             exploit_action, root, decoy = CyborgScenarioTwoWrapper.next_exploit(
                 target_host=self.red_agent_target, decoy_state=decoy_state, host_ports_map=self.host_ports_map,
@@ -297,7 +297,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_agent_target = state.red_agent_target
         self.attacker_observed_decoy = copy.deepcopy(state.attacker_observed_decoy)
 
-    def get_observation_from_history(self, history: List[List[Any]]) -> List[Any]:
+    def get_observation_from_history(self, history: List[int]) -> List[Any]:
         """
         Gets an observation from the observation history
 

@@ -1,10 +1,9 @@
-from typing import List, Dict, Any, Callable, Union
+from typing import List, Dict, Any, Callable
 import random
 import math
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
-from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.pomcp.node import Node
 import csle_agents.constants.constants as constants
@@ -51,19 +50,6 @@ class POMCPUtil:
         return {k: v / _sum for k, v in cnt.items()}
 
     @staticmethod
-    def generate_particles(num_particles: int, belief: Dict[int, float]) -> List[int]:
-        """
-        Generates a list of particles (sample states) for a given list of states
-        with a frequency determined by a given probability vector
-
-        :param probability_vector: probability vector to determine the frequency of each sample
-        :return: sampled particles (states)
-        """
-        if isinstance(belief, Dict):
-            states = list(belief.keys())
-            return [states[int(POMCPUtil.sample_from_distribution(list(belief.values())))] for _ in num_particles]
-
-    @staticmethod
     def ucb(history_visit_count, action_visit_count):
         """
         Implements the upper-confidence-bound acquisiton function
@@ -99,20 +85,18 @@ class POMCPUtil:
         return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
 
     @staticmethod
-    def alpha_go_acquisition_function(action: "Node", c: float, c2: float,
-                                      rollout_policy: Union[Policy, None], o: List[Any], prior_weight: float) -> float:
+    def alpha_go_acquisition_function(action: "Node", c: float, c2: float, prior: float, prior_weight: float) -> float:
         """
         The UCB acquisition function
 
         :param action: the action node
         :param c: the exploration parameter
         :param c2: the c2 parameter
-        :param rollout_policy: the rollout policy
+        :param prior: the prior weight
         :param prior_weight: the weight to put on the prior
         :return: the acquisition value of the action
         """
         # prior = rollout_policy.probability(o=o, a=action.action)
-        prior = rollout_policy
         visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
         base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
         prior_term = prior_weight * prior * visit_term * base_term

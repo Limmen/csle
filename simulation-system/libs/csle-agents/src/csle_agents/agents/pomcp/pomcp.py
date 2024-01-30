@@ -183,13 +183,15 @@ class POMCP:
                 current_node.children, key=lambda x: POMCPUtil.ucb_acquisition_function(x, c=c), reverse=True)[0]
         elif self.acquisition_function_type == POMCPAcquisitionFunctionType.ALPHA_GO:
             o = self.env.get_observation_from_history(current_node.history)
+            if self.rollout_policy is None:
+                raise ValueError("Cannot use the AlphaGo acquisiton function without a rollout policy")
             dist = self.rollout_policy.model.policy.get_distribution(
                 obs=torch.tensor([o]).to(self.rollout_policy.model.device)).log_prob(
                 torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
             dist = list(map(lambda i: math.exp(dist[i]), list(range(len(dist)))))
             next_action_node_idx = sorted(
                 list(range(len(current_node.children))), key=lambda x: POMCPUtil.alpha_go_acquisition_function(
-                    current_node.children[x], c=c, c2=self.c2, rollout_policy=dist[x], o=o,
+                    current_node.children[x], c=c, c2=self.c2, prior=dist[x],
                     prior_weight=self.prior_weight), reverse=True)[0]
             next_action_node = current_node.children[next_action_node_idx]
         else:
@@ -331,8 +333,8 @@ class POMCP:
                                          initial_visit_count=self.prior_confidence)
 
         # Check how many new particles are left to fill
-        new_root.particles = []
         if isinstance(new_root, BeliefNode):
+            new_root.particles = []
             particle_slots = self.max_particles - len(new_root.particles)
         else:
             raise ValueError("Invalid root node")

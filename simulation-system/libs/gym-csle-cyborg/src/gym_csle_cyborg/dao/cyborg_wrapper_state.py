@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -8,8 +8,8 @@ class CyborgWrapperState(JSONSerializable):
     """
 
     def __init__(self, s: List[List[int]], scan_state: List[int], op_server_restored: bool, obs: List[List[int]],
-                 red_action_targets: Dict[int, int], privilege_escalation_detected: int, red_agent_state: int,
-                 red_agent_target: int, attacker_observed_decoy: List[int]) -> None:
+                 red_action_targets: Dict[int, int], privilege_escalation_detected: Union[int, None],
+                 red_agent_state: int, red_agent_target: int, attacker_observed_decoy: List[int]) -> None:
         """
         Initializes the DAO
 

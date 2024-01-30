@@ -37,8 +37,10 @@ if __name__ == '__main__':
     A = csle_cyborg_env.get_action_space()
     initial_particles = csle_cyborg_env.initial_particles
     rollout_policy = MetastoreFacade.get_ppo_policy(id=1)
-    # rollout_policy.save_path = "/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip"
-    # rollout_policy.save_path = "/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/ppo_test_1706439955.8221297/ppo_model50_1706441287.1284034.zip"
+    # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
+    #                             "ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip")
+    # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
+    #                             "ppo_test_1706439955.8221297/ppo_model50_1706441287.1284034.zip")
     # ppo_model50_1706441287.1284034.zip
     # rollout_policy.load()
     # rollout_policy = None
