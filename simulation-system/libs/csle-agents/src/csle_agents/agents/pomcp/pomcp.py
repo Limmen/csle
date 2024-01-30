@@ -106,13 +106,14 @@ class POMCP:
                 return self.value_function(o)
             else:
                 return 0
-        a = 29
+        # a = 29
         # a = POMCPUtil.rand_choice([29, 35])
-        # if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-        #     a = POMCPUtil.rand_choice(self.A)
-        # else:
-        #     a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
-        #                                    deterministic=False)
+        if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
+            a = 29
+            # a = POMCPUtil.rand_choice(self.A)
+        else:
+            a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
+                                           deterministic=False)
         self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
         s_prime = info[constants.COMMON.STATE]

@@ -36,10 +36,10 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoWrapper(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     initial_particles = csle_cyborg_env.initial_particles
-    # rollout_policy = MetastoreFacade.get_ppo_policy(id=58)
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=58)
     # rollout_policy.save_path = "/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip"
     # rollout_policy.load()
-    rollout_policy = None
+    # rollout_policy = None
     value_function = lambda x: 0
     # value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
@@ -80,14 +80,14 @@ if __name__ == '__main__':
             agents_constants.POMCP.C2: HParam(value=15000, name=agents_constants.POMCP.C2,
                                               descr="the weighting factor for AlphaGo exploration"),
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
-                value=True, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
+                value=False, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
-            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=1, name=agents_constants.POMCP.PRIOR_WEIGHT,
+            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=5, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
             agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=2000, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
                                                             descr="the prior confidence"),
             agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
-                value=POMCPAcquisitionFunctionType.UCB, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
+                value=POMCPAcquisitionFunctionType.ALPHA_GO, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
                 descr="the type of acquisition function"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
