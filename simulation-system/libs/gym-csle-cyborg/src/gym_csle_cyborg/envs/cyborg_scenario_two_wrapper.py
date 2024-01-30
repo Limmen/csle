@@ -63,6 +63,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
         self.scan_state = [0 for _ in self.hosts]
+        self.attacker_observed_decoy = [0 for _ in self.hosts]
         self.privilege_escalation_detected: Union[None, int] = None
 
         self.initial_particles = [
@@ -114,7 +115,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                                                                  target_host_id=self.red_agent_target)
         exploit_successful = True
         root = False
-        decoy_state = s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
+        d1 = self.attacker_observed_decoy[self.red_agent_target]
+        decoy_state = d1
         decoy_r = 0
         if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             exploit_action, root, decoy = CyborgScenarioTwoWrapper.next_exploit(
@@ -124,7 +126,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             )
             if decoy:
                 exploit_successful = False
-                decoy_r += decoy_state*0.1
+                decoy_r += decoy_state * 0.1
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE1 \
                     and exploit_action == ExploitType.ETERNAL_BLUE.value:
                 exploit_successful = False
@@ -163,11 +165,16 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         activity = ActivityType.EXPLOIT
                     else:
                         activity = ActivityType.SCAN
+                else:
+                    activity = ActivityType.SCAN
             elif next_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
                 s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(s=s_prime,
                                                                           target_subnetwork=self.red_agent_target)
             elif next_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
-                s_prime = CyborgScenarioTwoWrapper.apply_red_host_scan(s=s_prime, target_host_id=self.red_agent_target)
+                s_prime, attacker_observed_decoy = CyborgScenarioTwoWrapper.apply_red_host_scan(
+                    s=s_prime, target_host_id=self.red_agent_target,
+                    attacker_observed_decoy=self.attacker_observed_decoy)
+                self.attacker_observed_decoy = attacker_observed_decoy
                 activity = ActivityType.SCAN
             elif next_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
                 if s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
@@ -190,11 +197,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         info[env_constants.ENV_METRICS.STATE] = (
             copy.deepcopy(s_prime), scan_state, self.op_server_restored,
             obs, copy.deepcopy(self.red_action_targets),
-            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
+            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target,
+            copy.deepcopy(self.attacker_observed_decoy)
         )
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
-            state_vector=obs, observation=True
-        )
+            state_vector=obs, observation=True)
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs
         self.scan_state = copy.deepcopy(scan_state)
         self.s = s_prime
@@ -228,6 +235,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_agent_state = 0
         self.red_agent_target = 0
         self.scan_state = [0 for _ in self.hosts]
+        self.attacker_observed_decoy
         self.t = 0
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
@@ -238,7 +246,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         info[env_constants.ENV_METRICS.STATE] = (
             copy.deepcopy(self.s), copy.deepcopy(self.scan_state), self.op_server_restored,
             copy.deepcopy(obs_vec), copy.deepcopy(self.red_action_targets),
-            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
+            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target,
+            copy.deepcopy(self.attacker_observed_decoy)
         )
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
             state_vector=obs_vec, observation=True
@@ -269,12 +278,12 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             r -= 10
         return r
 
-    def set_state(self, state: Tuple[List[List[int]], List[int], bool, List[List[int]],
-                                     Dict[int, int], bool, int, int]) -> None:
+    def set_state(self, state: Tuple[
+        List[List[int]], List[int], bool, List[List[int]], Dict[int, int], bool, int, int, List[int]]) -> None:
         """
         Sets the state of the environment
 
-        :param s: the new state
+        :param state: the new state
         :return: None
         """
         self.s = copy.deepcopy(state[0])
@@ -285,6 +294,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.privilege_escalation_detected = state[5]
         self.red_agent_state = state[6]
         self.red_agent_target = state[7]
+        self.attacker_observed_decoy = copy.deepcopy(state[8])
 
     def get_observation_from_history(self, history: List[List[Any]]) -> List[Any]:
         """
@@ -557,16 +567,20 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         return s
 
     @staticmethod
-    def apply_red_host_scan(s: List[List[int]], target_host_id: int) -> List[List[int]]:
+    def apply_red_host_scan(s: List[List[int]], target_host_id: int, attacker_observed_decoy: List[int]) \
+            -> Tuple[List[List[int]], List[int]]:
         """
         Applies a successful red host scan to the state
 
         :param s: the current state
         :param target_host_id: the targeted host id
+        :param attacker_observed_decoy: the observed decoy services from the attacker's perspective
         :return: the updated state
         """
         s[target_host_id][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] = 1
-        return s
+        attacker_observed_decoy[target_host_id] = max(s[target_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX],
+                                                      attacker_observed_decoy[target_host_id])
+        return s, attacker_observed_decoy
 
     @staticmethod
     def apply_red_privilege_escalation(s: List[List[int]], target_host_id: int, red_agent_state: int,
@@ -604,6 +618,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         """
         obs = []
         obs_tensor = []
+        if activity == ActivityType.SCAN:
+            scan_state = [1 if x == 2 else x for x in scan_state]
+            scan_state[red_agent_target] = 2
         for host_id in range(len(s)):
             if host_id == 8:
                 host_obs = [0, 0, 0, 0]
@@ -611,11 +628,6 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 compromised_obs = last_obs[host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX]
                 host_decoy_state = last_obs[host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
                 host_activity = 0
-                if host_id == red_agent_target:
-                    host_activity = activity.value
-                    if activity == ActivityType.SCAN:
-                        scan_state = [1 if x == 2 else x for x in scan_state]
-                        scan_state[host_id] = 2
                 host_obs = [host_activity, scan_state[host_id], compromised_obs, host_decoy_state]
             obs.append(host_obs)
             obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(
@@ -717,6 +729,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 feasible_exploits_values.append(exploit_values[exploit.value])
                 feasible_exploit_access.append(exploit_access)
                 decoy_exploits.append(exploit_decoy)
+
         if len(feasible_exploits) == 0:
             return -1, False, False
         top_choice = np.argmax(feasible_exploits_values)

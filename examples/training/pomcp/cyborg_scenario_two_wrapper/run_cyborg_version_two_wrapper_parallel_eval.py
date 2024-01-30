@@ -15,13 +15,7 @@ from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWr
 if __name__ == '__main__':
     emulation_name = "csle-level9-040"
     emulation_env_config = None
-    # emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
-    # if emulation_env_config is None:
-    #     raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
     simulation_name = "csle-cyborg-001"
-    # simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
-    # if simulation_env_config is None:
-    #     raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     simulation_env_config = SimulationEnvConfig(name="", version="", gym_env_name="", simulation_env_input_config="",
                                                 players_config="", joint_action_space_config="",
                                                 joint_observation_space_config="", time_step_type=None,
