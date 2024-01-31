@@ -159,13 +159,22 @@ class POMCP:
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
             # since the node does not have any children, we first add them to the node
-            # obs_vector = self.env.get_observation_from_history(current_node.history)
-            # dist = self.rollout_policy.model.policy.get_distribution(
-            #     obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
-            #     torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
-            # dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            # rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:10]))
-            rollout_actions = self.A
+            obs_vector = self.env.get_observation_from_history(current_node.history)
+            dist = self.rollout_policy.model.policy.get_distribution(
+                obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+                torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+            dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
+            if depth > 2:
+                if 8 not in rollout_actions:
+                    rollout_actions.append(8)
+                if 9 not in rollout_actions:
+                    rollout_actions.append(9)
+                if 27 not in rollout_actions:
+                    rollout_actions.append(27)
+                if 28 not in rollout_actions:
+                    rollout_actions.append(28)
+            # rollout_actions = self.A
             # for action in self.A:
             for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
@@ -284,7 +293,7 @@ class POMCP:
                                                 f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, observation_vector: List[int],
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int,
                                      max_negative_samples: int = 20) -> List[Any]:
         """
         Updates the tree after an action has been selected and a new observation been received
@@ -293,7 +302,6 @@ class POMCP:
         :param observation: the observation that was received
         :param max_negative_samples: the maximum number of negative samples that can be collected before
               trajectory simulation is initialized
-        :param observation_vector: the observation vector that was received
         :return: the updated particle state
         """
         root = self.tree.root
@@ -350,10 +358,20 @@ class POMCP:
                 _, r, _, _, info = self.env.step(action)
                 s_prime = info[constants.COMMON.STATE]
                 o = info[constants.COMMON.OBSERVATION]
+                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+                if negative_samples_count > 10000:
+                    print(f"correct particles: {len(particles)}")
+                    import sys
+                    sys.exit()
                 if o == observation:
                     particles.append(s_prime)
                     negative_samples_count = 0
                 else:
+                    print(f"sampled obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True)}")
+                    print(f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
+                    print(f"sampled state:{s_prime.s}, {s_prime.red_agent_state}")
+                    print(f"previous state:{s.s}, {s.red_agent_state}")
+                    print(s_prime)
                     negative_samples_count += 1
             new_root.particles += particles
 

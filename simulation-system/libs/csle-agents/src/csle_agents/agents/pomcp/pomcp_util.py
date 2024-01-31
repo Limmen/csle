@@ -100,8 +100,9 @@ class POMCPUtil:
         visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
         base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
         prior_term = prior_weight * prior * visit_term * base_term
-        exploration_term = POMCPUtil.ucb(action.parent.visit_count + 1, action.visit_count + 1)
-        return float(action.value + prior_term + exploration_term)
+        exploration_term = POMCPUtil.ucb(action.parent.visit_count, action.visit_count)
+        return float(action.value + (c + prior)*exploration_term)
+        # return float(action.value + prior_term + exploration_term)
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,

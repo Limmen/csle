@@ -209,14 +209,22 @@ class POMCPAgent(BaseAgent):
         max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
         max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
         config = self.simulation_env_config.simulation_env_input_config
-        eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        # eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
         returns = []
         # Run N episodes
         for i in range(N):
             done = False
             action_sequence = []
-            eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+            from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+            from gym_csle_cyborg.dao.red_agent_type import RedAgentType
+            from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
+            eval_config = CSLECyborgConfig(
+                gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
+                maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
+                decoy_state=True, decoy_optimization=False, cache_visited_states=True, save_trace=False)
+            eval_env = CyborgScenarioTwoDefender(config=eval_config)
+            # eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             import copy
             train_config = copy.deepcopy(config)
             train_config.reward_shaping = True
@@ -236,18 +244,30 @@ class POMCPAgent(BaseAgent):
             if t % log_steps_frequency == 0:
                 Logger.__call__().get_logger().info(f"[POMCP] t: {t}, s: {s}")
             # Run episode
-            while not done and t <= max_env_steps:
+            actions = [31, 31, 32, 29]
+            while not done and t < max_env_steps:
                 rollout_depth = max_rollout_depth
                 planning_depth = max_planning_depth
                 pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth)
                 action = pomcp.get_action()
+                # action  = 4
+                # if t < len(actions):
+                #     action = actions[t]
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
+                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+                print(f"got obs: {CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)}")
+                print(f"got state: {CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime, observation=False)}")
+                print(f"action: {action}")
+                print(eval_env.get_last_action(agent="Red"))
+                print(eval_env.get_table())
+                print(eval_env.get_true_table())
+                print(eval_env.get_true_table())
+                print(eval_env.get_actions_table())
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
-                                                   max_negative_samples=max_negative_samples,
-                                                   observation_vector=o)
+                                                   max_negative_samples=max_negative_samples)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
@@ -255,7 +275,7 @@ class POMCPAgent(BaseAgent):
                     if rollout_policy is not None:
                         rollout_action = rollout_policy.action(o=o)
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
-                                                        f"s_prime: {s_prime[0]}, rollout action: {rollout_action}"
+                                                        f"s_prime: {s_prime}, rollout action: {rollout_action}"
                                                         f", action sequence: {action_sequence}, R: {R}")
 
             if i % self.experiment_config.log_every == 0:

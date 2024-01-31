@@ -67,12 +67,13 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.attacker_observed_decoy = [0 for _ in self.hosts]
         self.privilege_escalation_detected: Union[None, int] = None
 
-        self.initial_particles = [
-            (
-                copy.deepcopy(self.s), copy.deepcopy(self.scan_state), self.op_server_restored,
-                copy.deepcopy(self.last_obs), copy.deepcopy(self.red_action_targets),
-                self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target
-            )
+        self.initial_particles = [CyborgWrapperState(
+            s=copy.deepcopy(self.s), scan_state=copy.deepcopy(self.scan_state),
+            op_server_restored=self.op_server_restored,
+            obs=copy.deepcopy(self.last_obs), red_action_targets=copy.deepcopy(self.red_action_targets),
+            privilege_escalation_detected=self.privilege_escalation_detected,
+            red_agent_state=self.red_agent_state, red_agent_target=self.red_agent_target,
+            attacker_observed_decoy=copy.deepcopy(self.attacker_observed_decoy))
         ]
 
         # Setup gym spaces
@@ -103,23 +104,25 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             self.last_obs[self.privilege_escalation_detected][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                 CompromisedType.PRIVILEGED.value
             self.privilege_escalation_detected = None
+        current_red_action_type = CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(
+            red_agent_state=self.red_agent_state)
         s_prime, last_obs = self.apply_defender_action_to_state(s=self.s, defender_action_type=defender_action_type,
                                                                 defender_action_host_id=defender_action_host_id,
                                                                 decoy_action_types=self.decoy_action_types,
                                                                 decoy_actions_per_host=self.decoy_actions_per_host,
-                                                                last_obs=self.last_obs)
+                                                                last_obs=self.last_obs,
+                                                                red_action_type=current_red_action_type)
         self.last_obs = last_obs
-        next_red_action_type = CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(
-            red_agent_state=self.red_agent_state)
         is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_action_feasible(red_agent_state=self.red_agent_state,
                                                                                  s=s_prime,
                                                                                  target_host_id=self.red_agent_target)
         exploit_successful = True
+        non_decoy_fail = False
         root = False
         d1 = self.attacker_observed_decoy[self.red_agent_target]
         decoy_state = d1
         decoy_r = 0.0
-        if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
+        if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             exploit_action, root, decoy = CyborgScenarioTwoWrapper.next_exploit(
                 target_host=self.red_agent_target, decoy_state=decoy_state, host_ports_map=self.host_ports_map,
                 decoy_actions_per_host=self.decoy_actions_per_host, decoy_to_port=self.decoy_to_port,
@@ -127,16 +130,24 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             )
             if decoy:
                 exploit_successful = False
-                decoy_r += decoy_state * 0.1
+                decoy_r += 1
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE1 \
                     and exploit_action == ExploitType.ETERNAL_BLUE.value:
+                non_decoy_fail = True
                 exploit_successful = False
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE2 \
                     and exploit_action == ExploitType.ETERNAL_BLUE.value:
+                non_decoy_fail = True
                 exploit_successful = False
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.USER3 \
                     and exploit_action == ExploitType.BLUE_KEEP.value:
                 exploit_successful = False
+                non_decoy_fail = True
+            if (self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE0
+                    and defender_action_type == BlueAgentActionType.RESTORE and
+                    defender_action_host == self.red_agent_target):
+                non_decoy_fail = True
+
         red_base_jump = self.red_agent_state == 12 and not is_red_action_feasible
         if red_base_jump:
             next_red_agent_state = 1
@@ -152,7 +163,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
         activity = ActivityType.NONE
         if is_red_action_feasible:
-            if next_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
+            if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
                 if exploit_successful:
                     exploit_access = CompromisedType.USER
                     if root:
@@ -167,33 +178,45 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     else:
                         activity = ActivityType.SCAN
                 else:
-                    activity = ActivityType.SCAN
-            elif next_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+                    if not non_decoy_fail:
+                        activity = ActivityType.SCAN
+            elif current_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
                 s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(s=s_prime,
                                                                           target_subnetwork=self.red_agent_target)
-            elif next_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
+            elif current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
                 s_prime, attacker_observed_decoy = CyborgScenarioTwoWrapper.apply_red_host_scan(
                     s=s_prime, target_host_id=self.red_agent_target,
                     attacker_observed_decoy=self.attacker_observed_decoy)
                 self.attacker_observed_decoy = attacker_observed_decoy
                 activity = ActivityType.SCAN
-            elif next_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+            elif current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
                 if s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
                         != CompromisedType.PRIVILEGED.value:
                     self.privilege_escalation_detected = self.red_agent_target
                 s_prime = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
                     s=s_prime, target_host_id=self.red_agent_target, red_agent_state=self.red_agent_state,
                     next_target_host_id=next_red_agent_target)
-        self.s = s_prime
-        self.red_agent_target = next_red_agent_target
-        self.red_agent_state = next_red_agent_state
+
+        # False negative scan
+        if (current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES and self.red_agent_target == 1
+                and defender_action_type in self.decoy_action_types and defender_action_host == self.red_agent_target):
+            activity = ActivityType.NONE
+
+        # Exploit false positive
+        if (current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE and self.red_agent_target in [1, 10]
+                and defender_action_type in self.decoy_action_types and not exploit_successful):
+            activity = ActivityType.EXPLOIT
+            self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.USER
 
         obs, obs_tensor, scan_state = CyborgScenarioTwoWrapper.generate_observation(
             s=s_prime, scan_state=self.scan_state, decoy_action_types=self.decoy_action_types,
             decoy_actions_per_host=self.decoy_actions_per_host,
             last_obs=self.last_obs, activity=activity, red_agent_target=self.red_agent_target)
-        r = self.reward_function(defender_action_type=defender_action_type, red_action_type=next_red_action_type,
+        r = self.reward_function(defender_action_type=defender_action_type, red_action_type=current_red_action_type,
                                  red_success=(is_red_action_feasible and exploit_successful))
+        self.s = s_prime
+        self.red_agent_target = next_red_agent_target
+        self.red_agent_state = next_red_agent_state
         info: Dict[str, Any] = {}
         wrapper_state = CyborgWrapperState(
             s=copy.deepcopy(s_prime), scan_state=scan_state, op_server_restored=self.op_server_restored,
@@ -237,7 +260,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.red_agent_state = 0
         self.red_agent_target = 0
         self.scan_state = [0 for _ in self.hosts]
-        self.attacker_observed_decoy
+        self.attacker_observed_decoy = [0 for _ in self.hosts]
         self.t = 0
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
@@ -245,12 +268,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         obs_tensor = self.initial_obs_tensor()
         self.last_obs = copy.deepcopy(obs_vec)
         info: Dict[str, Any] = {}
-        info[env_constants.ENV_METRICS.STATE] = (
-            copy.deepcopy(self.s), copy.deepcopy(self.scan_state), self.op_server_restored,
-            copy.deepcopy(obs_vec), copy.deepcopy(self.red_action_targets),
-            self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target,
-            copy.deepcopy(self.attacker_observed_decoy)
+        wrapper_state = CyborgWrapperState(
+            s=copy.deepcopy(self.s), scan_state=copy.deepcopy(self.scan_state),
+            op_server_restored=self.op_server_restored,
+            obs=copy.deepcopy(obs_vec), red_action_targets=copy.deepcopy(self.red_action_targets),
+            privilege_escalation_detected=self.privilege_escalation_detected, red_agent_state=self.red_agent_state,
+            red_agent_target=self.red_agent_target, attacker_observed_decoy=copy.deepcopy(self.attacker_observed_decoy)
         )
+        info[env_constants.ENV_METRICS.STATE] = wrapper_state
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
             state_vector=obs_vec, observation=True
         )
@@ -470,7 +495,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
     def apply_defender_action_to_state(s: List[List[int]], defender_action_type: BlueAgentActionType,
                                        defender_action_host_id: int, decoy_action_types: List[BlueAgentActionType],
                                        decoy_actions_per_host: List[List[BlueAgentActionType]],
-                                       last_obs: List[List[int]]) -> Tuple[List[List[int]], List[List[int]]]:
+                                       last_obs: List[List[int]], red_action_type: int) \
+            -> Tuple[List[List[int]], List[List[int]]]:
         """
         Applies a given defender action to the state
 
@@ -480,6 +506,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param decoy_action_types: a list of decoy action types
         :param decoy_actions_per_host: a list of decoy action types per host
         :param last_obs: the last observation
+        :param red_action_type: the action type of the red agent
         :return: the updated state and observation
         """
         if (defender_action_type in decoy_action_types
@@ -499,9 +526,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX] = 0
         elif defender_action_type == BlueAgentActionType.REMOVE:
             if s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == CompromisedType.USER.value:
-                s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
-                last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
-                    CompromisedType.UNKNOWN.value
+                if red_action_type != RedAgentActionType.PRIVILEGE_ESCALATE:
+                    s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
+            if s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] != CompromisedType.NO:
+                last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = (
+                    CompromisedType.UNKNOWN.value)
         elif defender_action_type == BlueAgentActionType.ANALYZE:
             last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                 s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX]
@@ -629,6 +658,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 compromised_obs = last_obs[host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX]
                 host_decoy_state = last_obs[host_id][env_constants.CYBORG.HOST_STATE_DECOY_IDX]
                 host_activity = 0
+                if host_id == red_agent_target:
+                    host_activity = activity.value
                 host_obs = [host_activity, scan_state[host_id], compromised_obs, host_decoy_state]
             obs.append(host_obs)
             obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(

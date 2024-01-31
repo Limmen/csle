@@ -36,14 +36,14 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoWrapper(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     initial_particles = csle_cyborg_env.initial_particles
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=1)
-    rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
-                                "ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip")
+    # rollout_policy = MetastoreFacade.get_ppo_policy(id=1)
+    # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
+    #                             "ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip")
     # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
     #                             "ppo_test_1706439955.8221297/ppo_model50_1706441287.1284034.zip")
     # ppo_model50_1706441287.1284034.zip
-    rollout_policy.load()
-    # rollout_policy = None
+    # rollout_policy.load()
+    rollout_policy = None
     value_function = lambda x: 0
     # value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
@@ -71,9 +71,9 @@ if __name__ == '__main__':
             agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles,
                                                              name=agents_constants.POMCP.INITIAL_PARTICLES,
                                                              descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=10, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=80, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=500, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=200, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=4, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=0, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
                                                             descr="the prior confidence"),
             agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
-                value=POMCPAcquisitionFunctionType.ALPHA_GO, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
+                value=POMCPAcquisitionFunctionType.UCB, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
                 descr="the type of acquisition function"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),

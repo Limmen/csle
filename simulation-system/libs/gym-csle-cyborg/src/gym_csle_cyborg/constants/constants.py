@@ -25,6 +25,8 @@ class ENV_METRICS:
     TIME_HORIZON = "T"
     STOP = "stop"
     STATE = "s"
+    STATE_ID = "s_id"
+    STATE_VECTOR = "state_vector"
     DEFENDER_ACTION = "a1"
     ATTACKER_ACTION = "a2"
     OBSERVATION = "o"
