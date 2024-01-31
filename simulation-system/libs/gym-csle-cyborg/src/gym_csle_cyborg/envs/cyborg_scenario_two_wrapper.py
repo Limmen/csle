@@ -137,7 +137,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 exploit_successful = False
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.ENTERPRISE2 \
                     and exploit_action == ExploitType.ETERNAL_BLUE.value:
-                non_decoy_fail = True
+                # non_decoy_fail = True
                 exploit_successful = False
             if self.hosts[self.red_agent_target] == env_constants.CYBORG.USER3 \
                     and exploit_action == ExploitType.BLUE_KEEP.value:
