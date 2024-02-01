@@ -25,10 +25,12 @@ if __name__ == '__main__':
     torch.manual_seed(seed)
     A = csle_cyborg_env.get_action_space()
     print("Starting policy evaluation")
+    decoy_action_types = csle_cyborg_env.decoy_action_types
     user1_count = 0
     user2_count = 0
     user3_count = 0
     user4_count = 0
+    action_sequence = [2, 3, 0, 27, 27, 9, 27, 9, 8, 9, 27, 8, 9, 8 ,9, 9, 8, 27, 8, 8, 9, 8, 9, 8, 0, 8]
     for i in range(num_evaluations):
         done = False
         o, _ = csle_cyborg_env.reset()
@@ -43,8 +45,17 @@ if __name__ == '__main__':
         observations = []
         red_targets = []
         blue_actions = []
+        blue_targets = []
+        blue_types = []
         while t < max_horizon:
-            a = np.random.choice(A)
+            # a = np.random.choice([0, 8, 4, 27])
+            # a = np.random.choice(A)
+            a = 27
+
+            # if t < len(action_sequence):
+            #     a = action_sequence[t]
+            # else:
+            #     a = np.random.choice(A)
             # a = 31
             # if t > 20:
             #     a = 3
@@ -87,31 +98,60 @@ if __name__ == '__main__':
             obs = CyborgEnvUtil.state_id_to_state_vector(state_id=oid, observation=True)
             red_action = csle_cyborg_env.get_last_action(agent='Red')
             red_success = csle_cyborg_env.get_red_action_success()
-            if len(red_actions) > 0:
+            red_target = -1
+            if "Exploit" in str(red_action) or "NetworkServices"in str(red_action):
+                ip = red_action.ip_address
+                host= csle_cyborg_env.get_ip_to_host_mapping()[str(ip)]
+                host_id = csle_cyborg_env.cyborg_hostnames.index(host)
+                red_target = host_id
+            elif "Privileg" in str(red_action):
+                host = red_action.hostname
+                host_id = csle_cyborg_env.cyborg_hostnames.index(host)
+                red_target = host_id
+
+            defender_action_type, defender_action_host = csle_cyborg_env.action_id_to_type_and_host[a]
+            defender_action_host_id = csle_cyborg_env.cyborg_hostnames.index(defender_action_host)
+
+            # if obs[red_target][0] == 2:
+            #     print(blue_types[-1] in decoy_action_types)
+
+            if len(red_actions) > 0 and len(blue_actions) > 2:
                 if not red_success and "Exploit" in str(red_actions[-1]):
-                    red_target = red_targets[-1]
-                    # a = red_actions[-1]
-                    obs = observations[-1]
-                    if obs[red_target][0] == 0:
-                        # print(f"TARGET: {red_target}")
-                        if red_target == 3 and states[-1][red_target][2] > 0:
-                            print(f"Failed RED but no SCAN, blue action: {blue_actions[-1]}, target: {red_target}, {observations[-1]}")
-                            print(states[-1])
-                            print(csle_cyborg_env.get_actions_table())
-                            print(csle_cyborg_env.get_true_table())
-                    else:
-                        if red_target == 3 and states[-1][red_target][2] > 0:
-                            print(f"SCOY, blue action: {blue_actions[-1]}, target: {red_target}, {observations[-1]}")
-                        # print(states[-1][red_target])
-                        # print(observations[-1][red_target])
-                        # print(red_target)
-                        # print(a)
-                        # print(csle_cyborg_env.get_true_table())
+                    if blue_types[-1] in decoy_action_types and blue_targets[-1] == red_targets[-1]:
+                        print(f"activity: {observations[-1][red_targets[-1]][0]}, host: {red_targets[-1]}")
+                    # if observations[-1][red_targets[-1]][0] == 2:
+                    #     print(f"Exploit activity after failed exploit, blue action type: {blue_types[-1] in decoy_action_types}")
+                    # print(f"activit: {observations[-1][red_targets[-1]][0]}, ba: {blue_actions[-1]}")
+                    # red_target = red_targets[-1]
+                    # obs = observations[-1]
+                    # if obs[red_target][0] == 0 and red_target == 1 and blue_actions[-1] != 0:
+                    #     print("Failed exploit, no scan on ent0")
+                    #     print()
+                    #     # print(blue_targets[-1])
+                    #     # print(red_target)
+                    #     print(f"compromised state: {states[-1][red_target][2]}, blue action: {blue_actions[-1]}, "
+                    #           f"previous blue: {blue_actions[-2]}, obs: {obs[red_target]}, previous obs: {observations[-1][red_target]}")
+
+            # if len(red_actions) > 0:
+            #     if not red_success and "Exploit" in str(red_actions[-1]):
+            #         red_target = red_targets[-1]
+            #         obs = observations[-1]
+            #         # if red_target == 1:
+            #         #     print(f"failed red target is ent0, activity: {obs[red_target][0]}")
+            #         if obs[red_target][0] == 0 and red_target == 1 and blue_actions[-1] != 0:
+            #             print("Failed exploit, no scan on ent0")
+            #             print()
+            #             # print(blue_targets[-1])
+            #             # print(red_target)
+            #             print(f"compromised state: {states[-1][red_target][2]}, blue action: {blue_actions[-1]}, "
+            #                   f"previous blue: {blue_actions[-2]}, obs: {obs[red_target]}, previous obs: {observations[-1][red_target]}")
 
             red_actions.append(red_action)
             states.append(s)
             observations.append(obs)
             blue_actions.append(a)
+            blue_targets.append(defender_action_host_id)
+            blue_types.append(defender_action_type)
             if "Exploit" in str(red_action):
                 ip = red_action.ip_address
                 host= csle_cyborg_env.get_ip_to_host_mapping()[str(ip)]

@@ -347,6 +347,10 @@ class POMCP:
         else:
             raise ValueError("Invalid root node")
         negative_samples_count = 0
+        sampled_obs = []
+        sampled_s_prime = []
+        sampled_s_prime = []
+        sampled_s = []
         if particle_slots > 0:
             if self.verbose:
                 Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
@@ -360,6 +364,11 @@ class POMCP:
                 o = info[constants.COMMON.OBSERVATION]
                 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
                 if negative_samples_count > 10000:
+                    for i in range(min(50, len(sampled_obs))):
+                        print(f"sampled obs:{sampled_obs[i]}")
+                        print(f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
+                        print(f"sampled state:{sampled_s_prime[i][0]}, {sampled_s_prime[i][1]}")
+                        print(f"previous state:{sampled_s[i][0]}, {sampled_s[i][1]}")
                     print(f"correct particles: {len(particles)}")
                     import sys
                     sys.exit()
@@ -367,11 +376,9 @@ class POMCP:
                     particles.append(s_prime)
                     negative_samples_count = 0
                 else:
-                    print(f"sampled obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True)}")
-                    print(f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
-                    print(f"sampled state:{s_prime.s}, {s_prime.red_agent_state}")
-                    print(f"previous state:{s.s}, {s.red_agent_state}")
-                    print(s_prime)
+                    sampled_obs.append(CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True))
+                    sampled_s_prime.append((s_prime.s, s_prime.red_agent_state))
+                    sampled_s.append((s.s, s.red_agent_state))
                     negative_samples_count += 1
             new_root.particles += particles
 

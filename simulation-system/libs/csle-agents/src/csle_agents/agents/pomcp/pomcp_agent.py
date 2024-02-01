@@ -260,6 +260,18 @@ class POMCPAgent(BaseAgent):
                 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
                 print(f"got obs: {CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)}")
                 print(f"got state: {CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime, observation=False)}")
+                print(f"prior state pomcp:")
+                print(pomcp.tree.root.particles[0].s)
+                print(pomcp.tree.root.particles[0].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[1].s)
+                print(pomcp.tree.root.particles[1].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[2].s)
+                print(pomcp.tree.root.particles[2].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[3].s)
+                print(pomcp.tree.root.particles[3].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[4].s)
+                print(pomcp.tree.root.particles[4].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[5].s)
                 print(f"action: {action}")
                 print(eval_env.get_last_action(agent="Red"))
                 print(eval_env.get_table())
@@ -268,6 +280,18 @@ class POMCPAgent(BaseAgent):
                 print(eval_env.get_actions_table())
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
                                                    max_negative_samples=max_negative_samples)
+                print(f"next state pomcp:")
+                print(pomcp.tree.root.particles[0].s)
+                print(pomcp.tree.root.particles[0].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[1].s)
+                print(pomcp.tree.root.particles[1].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[2].s)
+                print(pomcp.tree.root.particles[2].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[3].s)
+                print(pomcp.tree.root.particles[3].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[4].s)
+                print(pomcp.tree.root.particles[4].attacker_observed_decoy)
+                print(pomcp.tree.root.particles[5].s)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
