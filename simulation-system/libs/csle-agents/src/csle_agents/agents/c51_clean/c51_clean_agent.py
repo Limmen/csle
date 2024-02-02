@@ -66,6 +66,7 @@ class C51CleanAgent(BaseAgent):
         """the return upper bound"""
         self.exp_name: str = self.simulation_env_config.name
         self.env_id = self.simulation_env_config.gym_env_name
+        print(self.env_id)
         self.torch_deterministic = True
         self.cuda: bool = True
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value

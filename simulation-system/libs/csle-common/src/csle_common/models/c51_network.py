@@ -30,9 +30,6 @@ class QNetwork(nn.Module):
             self.network.add_module(name='activation', module=nn.ReLU())
             input_size = num_hl_neur
 
-    def forward(self, x):
-        return self.network(x)
-
     def get_action(self, x, action=None):
         logits = self.network(x)
         # probability mass function for each action
@@ -56,3 +53,4 @@ class QNetwork(nn.Module):
         state_dict["num_hidden_layers"] = self.num_hl
         state_dict["hidden_layer_dim"] = self.num_hl_neur
         torch.save(state_dict, path)
+
