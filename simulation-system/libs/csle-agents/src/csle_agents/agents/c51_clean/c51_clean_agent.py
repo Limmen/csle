@@ -66,7 +66,6 @@ class C51CleanAgent(BaseAgent):
         """the return upper bound"""
         self.exp_name: str = self.simulation_env_config.name
         self.env_id = self.simulation_env_config.gym_env_name
-        print(self.env_id)
         self.torch_deterministic = True
         self.cuda: bool = True
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
@@ -253,7 +252,7 @@ class C51CleanAgent(BaseAgent):
 
         q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
-        target_network = QNetwork(envs, n_atoms=self.n_atoms, v_min=self.v_min, v_max=self.v_max).to(device)
+        target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur, n_atoms=self.n_atoms).to(device)
 
         # Seeding
         random.seed(seed)
@@ -280,8 +279,10 @@ class C51CleanAgent(BaseAgent):
             # ALGO LOGIC: put action logic here
             epsilon = self.linear_schedule(self.exploration_fraction * self.total_timesteps, global_step)
             if random.random() < epsilon:
+                # print(np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)]))
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
+                print(torch.Tensor(obs).to(device))
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
                 # q_values = q_network(torch.Tensor(obs).to(device))

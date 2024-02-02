@@ -22,15 +22,17 @@ class QNetwork(nn.Module):
         self.num_hl_neur = num_hl_neur
         # self.env = env
         self.n_atoms = n_atoms
-        # self.register_buffer("atoms", torch.linspace(v_min, v_max, steps=n_atoms))
         # self.n = env.single_action_space.n
         self.network = nn.Sequential()
         for layer in range(num_hl):
             self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur*n_atoms))
             self.network.add_module(name='activation', module=nn.ReLU())
             input_size = num_hl_neur
+        print(self.network)
 
     def get_action(self, x, action=None):
+        print("är jag här nu")
+        print(np.shape(x))
         logits = self.network(x)
         # probability mass function for each action
         pmfs = torch.softmax(logits.view(len(x), self.n, self.n_atoms), dim=2)
