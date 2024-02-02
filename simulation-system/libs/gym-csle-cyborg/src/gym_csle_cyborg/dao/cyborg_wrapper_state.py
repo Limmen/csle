@@ -9,7 +9,8 @@ class CyborgWrapperState(JSONSerializable):
 
     def __init__(self, s: List[List[int]], scan_state: List[int], op_server_restored: bool, obs: List[List[int]],
                  red_action_targets: Dict[int, int], privilege_escalation_detected: Union[int, None],
-                 red_agent_state: int, red_agent_target: int, attacker_observed_decoy: List[int]) -> None:
+                 red_agent_state: int, red_agent_target: int, attacker_observed_decoy: List[int],
+                 detected: List[int]) -> None:
         """
         Initializes the DAO
 
@@ -23,6 +24,7 @@ class CyborgWrapperState(JSONSerializable):
         :param red_agent_state: the state of the red agent
         :param red_agent_target: the target of the red agent
         :param attacker_observed_decoy: a list of observed decoys of the attacker
+        :param detected: a list of detected states for the hosts
         """
         self.s = s
         self.scan_state = scan_state
@@ -33,6 +35,7 @@ class CyborgWrapperState(JSONSerializable):
         self.red_agent_state = red_agent_state
         self.red_agent_target = red_agent_target
         self.attacker_observed_decoy = attacker_observed_decoy
+        self.detected = detected
 
     def __str__(self) -> str:
         """
@@ -42,7 +45,7 @@ class CyborgWrapperState(JSONSerializable):
                 f"obs: {self.obs}, red_action_targets: {self.red_action_targets}, "
                 f"privilege_escalation_deteceted: {self.privilege_escalation_detected}, "
                 f"red_agent_state: {self.red_agent_state}, red_agent_target: {self.red_agent_target}, "
-                f"attacker_observed_decoy: {self.attacker_observed_decoy}")
+                f"attacker_observed_decoy: {self.attacker_observed_decoy}, detected: {self.detected}")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "CyborgWrapperState":
@@ -56,7 +59,8 @@ class CyborgWrapperState(JSONSerializable):
             s=d["s"], scan_state=d["scan_state"], op_server_restored=d["op_server_restored"], obs=d["obs"],
             red_action_targets=d["red_action_targets"],
             privilege_escalation_detected=d["privilege_escalation_deteceted"], red_agent_state=d["red_agent_state"],
-            red_agent_target=d["red_agent_target"], attacker_observed_decoy=d["attacker_observed_decoy"]
+            red_agent_target=d["red_agent_target"], attacker_observed_decoy=d["attacker_observed_decoy"],
+            detected=d["detected"]
         )
         return obj
 
@@ -76,6 +80,7 @@ class CyborgWrapperState(JSONSerializable):
         d["red_agent_state"] = self.red_agent_state
         d["red_agent_target"] = self.red_agent_target
         d["attacker_observed_decoy"] = self.attacker_observed_decoy
+        d["detected"] = self.detected
         return d
 
     @staticmethod

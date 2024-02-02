@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
-        random_seeds=[4125, 98912, 999, 555],
+        random_seeds=[78887, 98912, 999, 555],
         agent_type=AgentType.POMCP,
         log_every=1,
         hparams={
@@ -73,7 +73,7 @@ if __name__ == '__main__':
                                                              descr="the initial belief"),
             agents_constants.POMCP.PLANNING_TIME: HParam(value=10, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=500, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=10000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=4, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),

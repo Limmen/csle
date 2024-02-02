@@ -271,7 +271,7 @@ class POMCPAgent(BaseAgent):
                 print(eval_env.get_last_action(agent="Red"))
                 print(eval_env.get_table())
                 print(eval_env.get_true_table())
-                print(eval_env.get_true_table())
+                print(eval_env.get_table())
                 print(eval_env.get_actions_table())
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
                                                    max_negative_samples=max_negative_samples)
