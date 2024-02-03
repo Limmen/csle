@@ -242,6 +242,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                 defender_action_host_id=defender_action_host_id,
                                 decoy_action_types=self.decoy_action_types, previous_state=previous_state):
                             activity = ActivityType.NONE
+                        if defender_action_type == BlueAgentActionType.ANALYZE \
+                                and defender_action_host_id == self.red_agent_target:
+                            if previous_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
+                                    != CompromisedType.UNKNOWN:
+                                self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
+                                    max(previous_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX],
+                                        self.last_obs[self.red_agent_target][
+                                            env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
                 else:
                     if not non_decoy_fail and not fictitious_decoy_fail:
                         # print("SCAN HELLO")
