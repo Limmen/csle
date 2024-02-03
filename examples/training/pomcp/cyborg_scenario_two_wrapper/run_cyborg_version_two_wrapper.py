@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # value_function = rollout_policy.value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
-        random_seeds=[677654, 98912, 999, 555],
+        random_seeds=[78600, 98912, 999, 555],
         agent_type=AgentType.POMCP,
         log_every=1,
         hparams={

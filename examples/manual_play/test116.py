@@ -33,6 +33,7 @@ if __name__ == '__main__':
     for i in range(num_evaluations):
         done = False
         o, _ = csle_cyborg_env.reset()
+        print("RESET")
         R = 0
         t = 0
         ones = []
@@ -105,40 +106,6 @@ if __name__ == '__main__':
             red_action = csle_cyborg_env.get_last_action(agent='Red')
             red_success = csle_cyborg_env.get_red_action_success()
 
-            # if len(red_actions) > 0 and len(blue_actions) > 2:
-            #     if not red_success and "Exploit" in str(red_actions[-1]):
-            #         print(f"activit: {observations[-1][red_targets[-1]][0]}, ba: {blue_actions[-1]}")
-            #     if not red_success and "Exploit" in str(red_actions[-1]) and blue_actions[-2] == 0:
-            #         red_target = red_targets[-1]
-            #         if red_target == 1:
-            #             obs = observations[-1]
-            #             print(f"state: {states[-1][red_target][2]}, obs: {obs[red_target][0]}, "
-            #                   f"blue action: {blue_actions[-1]}")
-
-                    # red_target = red_targets[-1]
-                    # obs = observations[-1]
-                    # if obs[red_target][0] == 0 and red_target == 1 and blue_actions[-1] != 0:
-                    #     print("Failed exploit, no scan on ent0")
-                    #     print()
-                    #     # print(blue_targets[-1])
-                    #     # print(red_target)
-                    #     print(f"compromised state: {states[-1][red_target][2]}, blue action: {blue_actions[-1]}, "
-                    #           f"previous blue: {blue_actions[-2]}, obs: {obs[red_target]}, previous obs: {observations[-1][red_target]}")
-
-            # if len(red_actions) > 0:
-            #     if not red_success and "Exploit" in str(red_actions[-1]):
-            #         red_target = red_targets[-1]
-            #         obs = observations[-1]
-            #         # if red_target == 1:
-            #         #     print(f"failed red target is ent0, activity: {obs[red_target][0]}")
-            #         if obs[red_target][0] == 0 and red_target == 1 and blue_actions[-1] != 0:
-            #             print("Failed exploit, no scan on ent0")
-            #             print()
-            #             # print(blue_targets[-1])
-            #             # print(red_target)
-            #             print(f"compromised state: {states[-1][red_target][2]}, blue action: {blue_actions[-1]}, "
-            #                   f"previous blue: {blue_actions[-2]}, obs: {obs[red_target]}, previous obs: {observations[-1][red_target]}")
-
             red_actions.append(red_action)
             states.append(s)
             observations.append(obs)
@@ -156,6 +123,8 @@ if __name__ == '__main__':
                 red_targets.append(host_id)
             else:
                 red_targets.append(0)
+
+
 
             # print(f"t: {t}, r: {r}, a: {a}, {csle_cyborg_env.get_last_action(agent='Red')}")
 
