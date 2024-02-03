@@ -159,21 +159,24 @@ class POMCP:
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
             # since the node does not have any children, we first add them to the node
-            obs_vector = self.env.get_observation_from_history(current_node.history)
-            dist = self.rollout_policy.model.policy.get_distribution(
-                obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
-                torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
-            dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
-            if depth > 2:
-                if 8 not in rollout_actions:
-                    rollout_actions.append(8)
-                if 9 not in rollout_actions:
-                    rollout_actions.append(9)
-                if 27 not in rollout_actions:
-                    rollout_actions.append(27)
-                if 28 not in rollout_actions:
-                    rollout_actions.append(28)
+            if self.rollout_policy is not None:
+                obs_vector = self.env.get_observation_from_history(current_node.history)
+                dist = self.rollout_policy.model.policy.get_distribution(
+                    obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+                    torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+                dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+                rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
+                if depth > 2:
+                    if 8 not in rollout_actions:
+                        rollout_actions.append(8)
+                    if 9 not in rollout_actions:
+                        rollout_actions.append(9)
+                    if 27 not in rollout_actions:
+                        rollout_actions.append(27)
+                    if 28 not in rollout_actions:
+                        rollout_actions.append(28)
+            else:
+                rollout_actions = self.A
             # rollout_actions = self.A
             # for action in self.A:
             for action in rollout_actions:
@@ -364,9 +367,14 @@ class POMCP:
                 o = info[constants.COMMON.OBSERVATION]
                 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
                 if negative_samples_count > 10000:
+                    # particles = POMCPUtil.trajectory_simulation_particles(
+                    #     o=observation, env=self.env, action_sequence=action_sequence, num_particles=particle_slots,
+                    #     verbose=self.verbose
+                    # )
                     for i in range(min(50, len(sampled_obs))):
                         print(f"sampled obs:{sampled_obs[i]}")
-                        print(f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
+                        print(
+                            f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
                         print(f"sampled state:{sampled_s_prime[i][0]}, {sampled_s_prime[i][1]}")
                         print(f"previous state:{sampled_s[i][0]}, {sampled_s[i][1]}")
                     print(f"correct particles: {len(particles)}")
@@ -394,9 +402,13 @@ class POMCP:
                 Logger.__call__().get_logger().info("Starting reinvigoration")
 
             # Generate some new particles randomly
-            mutations = copy.deepcopy(self.initial_particles)
+            num_reinvigorated_particles = int(len(new_root.particles) * self.reinvigorated_particles_ratio)
+            reinvigorated_particles = POMCPUtil.trajectory_simulation_particles(
+                o=observation, env=self.env, action_sequence=action_sequence, num_particles=num_reinvigorated_particles,
+                verbose=self.verbose
+            )
 
             # Randomly exchange some old particles for the new ones
-            for particle in mutations:
+            for particle in reinvigorated_particles:
                 new_root.particles[np.random.randint(0, len(new_root.particles))] = particle
         return new_root.particles

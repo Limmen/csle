@@ -82,6 +82,9 @@ if __name__ == '__main__':
                                                              descr="the initial belief"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=True, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
+            agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO: HParam(
+                value=0.1, name=agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO,
+                descr="the ratio of reinvigorated particles in the particle filter"),
             agents_constants.POMCP.PLANNING_TIME: HParam(value=30, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,

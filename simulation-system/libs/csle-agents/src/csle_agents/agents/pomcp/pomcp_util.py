@@ -123,10 +123,8 @@ class POMCPUtil:
                                                 f" through trajectory simulations, "
                                                 f"action sequence: {action_sequence}, observation: {o}")
         while len(particles) < num_particles:
-            # print(f"{len(particles)} particles")
             done = False
             _, info = env.reset()
-            s = info[constants.COMMON.STATE]
             t = 0
             while not done and t < len(action_sequence):
                 _, r, done, _, info = env.step(action=action_sequence[t])

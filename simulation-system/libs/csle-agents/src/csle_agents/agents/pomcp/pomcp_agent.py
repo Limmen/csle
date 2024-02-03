@@ -208,6 +208,8 @@ class POMCPAgent(BaseAgent):
         c2 = self.experiment_config.hparams[agents_constants.POMCP.C2].value
         max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
         max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
+        reinvigorated_particles_ratio = \
+            self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO].value
         config = self.simulation_env_config.simulation_env_input_config
         # eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
@@ -238,7 +240,8 @@ class POMCPAgent(BaseAgent):
                           value_function=value_function, reinvigoration=reinvigoration, verbose=verbose,
                           default_node_value=default_node_value, prior_weight=prior_weight,
                           acquisition_function_type=acquisition_function_type, c2=c2,
-                          use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence)
+                          use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence,
+                          reinvigorated_particles_ratio=reinvigorated_particles_ratio)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:

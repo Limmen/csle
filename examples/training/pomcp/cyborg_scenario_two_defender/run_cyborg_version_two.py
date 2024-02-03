@@ -54,6 +54,9 @@ if __name__ == '__main__':
                                                  descr="the discount factor"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=False, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
+            agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO: HParam(
+                value=0.1, name=agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO,
+                descr="the ratio of reinvigorated particles in the particle filter"),
             agents_constants.POMCP.INITIAL_PARTICLES: HParam(
                 value=initial_particles, name=agents_constants.POMCP.INITIAL_PARTICLES, descr="the initial belief"),
             agents_constants.POMCP.PLANNING_TIME: HParam(value=30, name=agents_constants.POMCP.PLANNING_TIME,
