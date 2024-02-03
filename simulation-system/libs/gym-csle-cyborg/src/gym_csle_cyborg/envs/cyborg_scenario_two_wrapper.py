@@ -212,8 +212,6 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 # print(f"non decoy fail: {non_decoy_fail}")
                 # print(f"fictitious: {fictitious_decoy_fail}")
                 # print(decoy)
-                if 22 not in exploited_ports and not decoy:
-                    self.malware_state[self.red_agent_target] = 1
                 exploit_access = CompromisedType.USER
                 if root:
                     exploit_access = CompromisedType.PRIVILEGED
@@ -228,6 +226,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     self.last_obs = obs
                     if 22 in exploited_ports:
                         self.ssh_access[self.red_agent_target] = 1
+                    if 22 not in exploited_ports:
+                        self.malware_state[self.red_agent_target] = 1
                     if detect:
                         activity = ActivityType.EXPLOIT
                         if 22 not in exploited_ports:
@@ -248,9 +248,12 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         activity = ActivityType.SCAN
                         if defender_action_type == BlueAgentActionType.ANALYZE \
                                 and defender_action_host_id == self.red_agent_target:
-                            self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
-                                max(previous_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX],
-                                    self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+                            if previous_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
+                                    != CompromisedType.UNKNOWN:
+                                self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
+                                    max(previous_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX],
+                                        self.last_obs[self.red_agent_target][
+                                            env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
                     if not non_decoy_fail:
                         # print("NON DECOY HELLO")
                         if CyborgScenarioTwoWrapper.is_decoy_same_as_exploit(
@@ -286,9 +289,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 if previous_state[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
                         != CompromisedType.PRIVILEGED.value:
                     self.privilege_escalation_detected = self.red_agent_target
-                s_prime = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
+                s_prime, malware_state = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
                     s=s_prime, target_host_id=self.red_agent_target, red_agent_state=self.red_agent_state,
-                    next_target_host_id=next_red_agent_target)
+                    next_target_host_id=next_red_agent_target, malware_state=malware_state)
+                self.malware_state = malware_state
 
         # False negative scan
         if (current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES and self.red_agent_target == 1
@@ -759,7 +763,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
     @staticmethod
     def apply_red_privilege_escalation(s: List[List[int]], target_host_id: int, red_agent_state: int,
-                                       next_target_host_id: int) -> List[List[int]]:
+                                       next_target_host_id: int, malware_state: List[int]) \
+            -> Tuple[List[List[int]], List[int]]:
         """
         Applies a successful red privilege escalation to the state
 
@@ -767,12 +772,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param target_host_id: the targeted host id
         :param red_agent_state: the state of the red agent
         :param next_target_host_id: the id of the next targeted host
-        :return: the updated state
+        :param malware_state: the malware state
+        :return: the updated state and malware state
         """
         s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.PRIVILEGED.value
+        malware_state[target_host_id] = 1
         if red_agent_state == 3 or red_agent_state == 10:
             s[next_target_host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] = 1
-        return s
+        return s, malware_state
 
     @staticmethod
     def generate_observation(s: List[List[int]], scan_state: List[int], decoy_action_types: List[BlueAgentActionType],
