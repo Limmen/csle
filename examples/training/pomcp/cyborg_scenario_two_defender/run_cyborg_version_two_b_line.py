@@ -8,7 +8,6 @@ from csle_agents.agents.pomcp.pomcp_agent import POMCPAgent
 from csle_agents.agents.pomcp.pomcp_acquisition_function_type import POMCPAcquisitionFunctionType
 import csle_agents.constants.constants as agents_constants
 from csle_agents.common.objective_type import ObjectiveType
-from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
 from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWrapper
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
@@ -16,16 +15,13 @@ from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-040"
-    emulation_env_config = None
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
+    if emulation_env_config is None:
+        raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
     simulation_name = "csle-cyborg-001"
-    simulation_env_config = SimulationEnvConfig(name="", version="", gym_env_name="", simulation_env_input_config="",
-                                                players_config="", joint_action_space_config="",
-                                                joint_observation_space_config="", time_step_type=None,
-                                                reward_function_config=None, transition_operator_config=None,
-                                                observation_function_config=None,
-                                                initial_state_distribution_config=None, env_parameters_config=None,
-                                                plot_transition_probabilities=False, plot_observation_function=False,
-                                                plot_reward_function=False, descr="", state_space_config=None)
+    simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
+    if simulation_env_config is None:
+        raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     eval_env_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
@@ -37,7 +33,7 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoWrapper(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     initial_particles = csle_cyborg_env.initial_particles
-    rollout_policy = MetastoreFacade.get_ppo_policy(id=1)
+    rollout_policy = MetastoreFacade.get_ppo_policy(id=10)
     # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
     #                             "ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip")
     # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
@@ -53,7 +49,7 @@ if __name__ == '__main__':
         agent_type=AgentType.POMCP,
         log_every=1,
         hparams={
-            agents_constants.POMCP.N: HParam(value=5000, name=agents_constants.POMCP.N,
+            agents_constants.POMCP.N: HParam(value=20, name=agents_constants.POMCP.N,
                                              descr="the number of episodes"),
             agents_constants.POMCP.OBJECTIVE_TYPE: HParam(
                 value=ObjectiveType.MAX, name=agents_constants.POMCP.OBJECTIVE_TYPE,
@@ -82,7 +78,7 @@ if __name__ == '__main__':
                 descr="boolean flag indicating whether the action space should be pruned or not"),
             agents_constants.POMCP.PRUNE_SIZE: HParam(
                 value=3, name=agents_constants.POMCP.PRUNE_ACTION_SPACE, descr="size of the pruned action space"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=5000, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
                 value=100, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
@@ -95,7 +91,7 @@ if __name__ == '__main__':
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
                 value=True, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
-            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=1, name=agents_constants.POMCP.PRIOR_WEIGHT,
+            agents_constants.POMCP.PRIOR_WEIGHT: HParam(value=10, name=agents_constants.POMCP.PRIOR_WEIGHT,
                                                         descr="the weight on the prior"),
             agents_constants.POMCP.PRIOR_CONFIDENCE: HParam(value=0, name=agents_constants.POMCP.PRIOR_CONFIDENCE,
                                                             descr="the prior confidence"),
@@ -133,6 +129,6 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = POMCPAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config, save_to_metastore=False)
+                       experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)

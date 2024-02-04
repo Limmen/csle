@@ -74,6 +74,14 @@ class POMCPAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
 
+        eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+        initial_particles = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value
+        rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
+        value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = -1
         # Initialize training job
         if self.training_job is None:
             emulation_name = ""
@@ -108,6 +116,11 @@ class POMCPAgent(BaseAgent):
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
+
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = eval_env_config
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = initial_particles
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = rollout_policy
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = value_function
 
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
@@ -152,8 +165,16 @@ class POMCPAgent(BaseAgent):
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
         if self.save_to_metastore:
+            eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+            initial_particles = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value
+            rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
+            value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
             MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                         id=self.exp_execution.id)
+            self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = eval_env_config
+            self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = initial_particles
+            self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = rollout_policy
+            self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = value_function
         return self.exp_execution
 
     def hparam_names(self) -> List[str]:
@@ -217,6 +238,10 @@ class POMCPAgent(BaseAgent):
         eval_env_name = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_NAME].value
         eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
         eval_env: BaseEnv = gym.make(eval_env_name, config=eval_env_config)
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = -1
 
         # Run N episodes
         returns = []
