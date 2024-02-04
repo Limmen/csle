@@ -100,7 +100,7 @@ class POMCPUtil:
         # base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
         # prior_term = prior_weight * prior * visit_term * base_term
         exploration_term = POMCPUtil.ucb(action.parent.visit_count, action.visit_count)
-        return float(action.value + (c + prior) * exploration_term)
+        return float(action.value + (c + prior_weight * prior) * exploration_term)
         # return float(action.value + prior_term + exploration_term)
 
     @staticmethod

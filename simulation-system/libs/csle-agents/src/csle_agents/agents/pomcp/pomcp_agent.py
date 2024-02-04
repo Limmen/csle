@@ -169,7 +169,9 @@ class POMCPAgent(BaseAgent):
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C,
                 agents_constants.POMCP.MAX_PLANNING_DEPTH, agents_constants.POMCP.PARALLEL_ROLLOUT,
                 agents_constants.POMCP.NUM_PARALLEL_PROCESSES, agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
-                agents_constants.POMCP.PRIOR_WEIGHT,
+                agents_constants.POMCP.PRIOR_WEIGHT, agents_constants.POMCP.PRUNE_ACTION_SPACE,
+                agents_constants.POMCP.PRUNE_SIZE, agents_constants.POMCP.EVAL_ENV_NAME,
+                agents_constants.POMCP.EVAL_ENV_CONFIG,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
 
@@ -207,6 +209,8 @@ class POMCPAgent(BaseAgent):
         c2 = self.experiment_config.hparams[agents_constants.POMCP.C2].value
         max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
         max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
+        prune_action_space = self.experiment_config.hparams[agents_constants.POMCP.PRUNE_ACTION_SPACE].value
+        prune_size = self.experiment_config.hparams[agents_constants.POMCP.PRUNE_SIZE].value
         reinvigorated_particles_ratio = \
             self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO].value
         config = self.simulation_env_config.simulation_env_input_config
@@ -229,7 +233,8 @@ class POMCPAgent(BaseAgent):
                           default_node_value=default_node_value, prior_weight=prior_weight,
                           acquisition_function_type=acquisition_function_type, c2=c2,
                           use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence,
-                          reinvigorated_particles_ratio=reinvigorated_particles_ratio)
+                          reinvigorated_particles_ratio=reinvigorated_particles_ratio,
+                          prune_action_space=prune_action_space, prune_size=prune_size)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
@@ -248,6 +253,8 @@ class POMCPAgent(BaseAgent):
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
                 R += r
                 t += 1
+                print(eval_env.get_true_table())
+                print(eval_env.get_table())
                 if t % log_steps_frequency == 0:
                     rollout_action = -1
                     if rollout_policy is not None:

@@ -28,7 +28,8 @@ class POMCP:
                  value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
                  default_node_value: float = 0, prior_weight: float = 1.0, prior_confidence: int = 0,
                  acquisition_function_type: POMCPAcquisitionFunctionType = POMCPAcquisitionFunctionType.UCB,
-                 c2: float = 1, use_rollout_policy: bool = False) -> None:
+                 c2: float = 1, use_rollout_policy: bool = False, prune_action_space: bool = False,
+                 prune_size: int = 3) -> None:
         """
         Initializes the solver
 
@@ -51,6 +52,8 @@ class POMCP:
         :param acquisition_function_type: the type of acquisition function
         :param c2: the weighting factor for alpha go exploration
         :param use_rollout_policy: boolean flag indicating whether rollout policy should be used
+        :param prune_action_space: boolean flag indicating whether the action space should be pruned
+        :param prune_size: the size of the pruned action space
         """
         self.A = A
         self.env = env
@@ -76,6 +79,8 @@ class POMCP:
         self.prior_confidence = prior_confidence
         self.acquisition_function_type = acquisition_function_type
         self.use_rollout_policy = use_rollout_policy
+        self.prune_action_space = prune_action_space
+        self.prune_size = prune_size
 
     def compute_belief(self) -> Dict[int, float]:
         """
@@ -107,7 +112,8 @@ class POMCP:
             else:
                 return 0
         if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-            a = POMCPUtil.rand_choice(self.A)
+            # a = POMCPUtil.rand_choice(self.A)
+            a = 35
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
                                            deterministic=False)
@@ -155,24 +161,15 @@ class POMCP:
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
-
             # Prune action space
-            if self.rollout_policy is not None:
+            if self.prune_action_space and self.rollout_policy is not None:
                 obs_vector = self.env.get_observation_from_history(current_node.history)
                 dist = self.rollout_policy.model.policy.get_distribution(
                     obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
                     torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
                 dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-                rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
-                if depth > 2:
-                    if 8 not in rollout_actions:
-                        rollout_actions.append(8)
-                    if 9 not in rollout_actions:
-                        rollout_actions.append(9)
-                    if 27 not in rollout_actions:
-                        rollout_actions.append(27)
-                    if 28 not in rollout_actions:
-                        rollout_actions.append(28)
+                rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True,
+                                                                  key=lambda x: x[0])[:self.prune_size]))
             else:
                 rollout_actions = self.A
 
@@ -247,7 +244,10 @@ class POMCP:
             f"Starting POMCP, max rollout depth: {max_rollout_depth}, max planning depth: {max_planning_depth}, "
             f"c: {self.c}, planning time: {self.planning_time}, gamma: {self.gamma}, "
             f"max particles: {self.max_particles}, "
-            f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}")
+            f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}, prior weight: {self.prior_weight}, "
+            f"acquisiton: {self.acquisition_function_type.value}, c2: {self.c2}, prune: {self.prune_action_space}, "
+            f"prune size: {self.prune_size}, use_rollout_policy: {self.use_rollout_policy}, "
+            f"prior confidence: {self.prior_confidence}")
         begin = time.time()
         n = 0
         state = self.tree.root.sample_state()

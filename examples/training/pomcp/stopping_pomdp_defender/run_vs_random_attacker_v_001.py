@@ -99,6 +99,11 @@ if __name__ == '__main__':
             agents_constants.POMCP.PARALLEL_ROLLOUT: HParam(
                 value=False, name=agents_constants.POMCP.PARALLEL_ROLLOUT, descr="boolean flag indicating whether "
                                                                                  "parallel rollout should be used"),
+            agents_constants.POMCP.PRUNE_ACTION_SPACE: HParam(
+                value=False, name=agents_constants.POMCP.PRUNE_ACTION_SPACE,
+                descr="boolean flag indicating whether the action space should be pruned or not"),
+            agents_constants.POMCP.PRUNE_SIZE: HParam(
+                value=3, name=agents_constants.POMCP.PRUNE_ACTION_SPACE, descr="size of the pruned action space"),
             agents_constants.POMCP.NUM_PARALLEL_PROCESSES: HParam(
                 value=50, name=agents_constants.POMCP.NUM_PARALLEL_PROCESSES, descr="number of parallel processes"),
             agents_constants.POMCP.NUM_EVALS_PER_PROCESS: HParam(

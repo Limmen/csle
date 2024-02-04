@@ -609,3 +609,5 @@ class POMCP:
     REINVIGORATED_PARTICLES_RATIO = "reinvigorated_particles_ratio"
     EVAL_ENV_NAME = "eval_env_name"
     EVAL_ENV_CONFIG = "eval_env_config"
+    PRUNE_ACTION_SPACE = "prune_action_space"
+    PRUNE_SIZE = "prune_size"
