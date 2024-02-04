@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -82,6 +83,9 @@ if __name__ == '__main__':
                                                              descr="the initial belief"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=True, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
+            agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO: HParam(
+                value=0.1, name=agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO,
+                descr="the ratio of reinvigorated particles in the particle filter"),
             agents_constants.POMCP.PLANNING_TIME: HParam(value=30, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.MAX_PARTICLES: HParam(value=100, name=agents_constants.POMCP.MAX_PARTICLES,
@@ -109,6 +113,8 @@ if __name__ == '__main__':
             agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE: HParam(
                 value=POMCPAcquisitionFunctionType.UCB, name=agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE,
                 descr="the type of acquisition function"),
+            agents_constants.POMCP.C2: HParam(value=15000, name=agents_constants.POMCP.C2,
+                                              descr="the weighting factor for AlphaGo exploration"),
             agents_constants.POMCP.LOG_STEP_FREQUENCY: HParam(
                 value=1, name=agents_constants.POMCP.LOG_STEP_FREQUENCY, descr="frequency of logging time-steps"),
             agents_constants.POMCP.VERBOSE: HParam(value=False, name=agents_constants.POMCP.VERBOSE,
@@ -125,6 +131,13 @@ if __name__ == '__main__':
             agents_constants.POMCP.USE_ROLLOUT_POLICY: HParam(
                 value=False, name=agents_constants.POMCP.USE_ROLLOUT_POLICY,
                 descr="boolean flag indicating whether rollout policy should be used"),
+            agents_constants.POMCP.EVAL_ENV_NAME: HParam(
+                value=simulation_env_config.gym_env_name,
+                name=agents_constants.POMCP.EVAL_ENV_NAME,
+                descr="the name of the evaluation environment"),
+            agents_constants.POMCP.EVAL_ENV_CONFIG: HParam(
+                value=copy.deepcopy(simulation_env_config.simulation_env_input_config),
+                name=agents_constants.POMCP.EVAL_ENV_CONFIG, descr="the configuration of the evaluation environment"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),

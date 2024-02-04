@@ -1,3 +1,4 @@
+import random
 from typing import Tuple, Dict, List, Any, Union
 import numpy as np
 import numpy.typing as npt
@@ -437,6 +438,19 @@ class StoppingGameEnv(BaseEnv):
         :return: the observation
         """
         return [history[-1]]
+
+    def generate_random_particles(self, o: int, num_particles: int) -> List[int]:
+        """
+        Generates a random list of state particles from a given observation
+
+        :param o: the latest observation
+        :param num_particles: the number of particles to generate
+        :return: the list of random particles
+        """
+        particles = []
+        for i in range(num_particles):
+            particles.append(random.choice([0, 1]))
+        return particles
 
     def manual_play(self) -> None:
         """

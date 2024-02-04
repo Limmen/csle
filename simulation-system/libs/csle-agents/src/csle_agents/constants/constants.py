@@ -606,3 +606,6 @@ class POMCP:
     NUM_PARALLEL_PROCESSES = "num_parallel_processes"
     NUM_EVALS_PER_PROCESS = "num_evals_per_process"
     ACQUISITION_FUNCTION_TYPE = "acquisition_function_type"
+    REINVIGORATED_PARTICLES_RATIO = "reinvigorated_particles_ratio"
+    EVAL_ENV_NAME = "eval_env_name"
+    EVAL_ENV_CONFIG = "eval_env_config"

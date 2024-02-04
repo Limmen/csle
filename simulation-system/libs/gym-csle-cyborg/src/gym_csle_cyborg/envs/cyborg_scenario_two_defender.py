@@ -248,14 +248,15 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                                                              scenario=config.scenario):
                 host_vector_obs.append(enc_value)
             info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
-        state_id = CyborgScenarioTwoDefender.state_id(cyborg_hostname_to_id=cyborg_hostname_to_id,
-                                                      decoy_state=decoy_state, scan_state=scan_state, env=env)
+        state_id, state_vector = CyborgScenarioTwoDefender.state_id(
+            cyborg_hostname_to_id=cyborg_hostname_to_id, decoy_state=decoy_state, scan_state=scan_state, env=env)
         obs_id = CyborgScenarioTwoDefender.observation_id(cyborg_hostname_to_id=cyborg_hostname_to_id,
                                                           decoy_state=decoy_state, scan_state=scan_state, env=env)
         initial_belief = {}
         if reset:
             initial_belief = {state_id: 1.0}
         info[env_constants.ENV_METRICS.STATE] = state_id
+        info[env_constants.ENV_METRICS.STATE_VECTOR] = state_vector
         info[env_constants.ENV_METRICS.OBSERVATION] = obs_id
         if config.cache_visited_states and state_id not in visited_cyborg_states:
             agent_interfaces_copy = {}
@@ -657,11 +658,11 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         return CyborgScenarioTwoDefender.state_id(
             cyborg_hostname_to_id=self.cyborg_hostname_to_id, decoy_state=self.decoy_state, scan_state=self.scan_state,
-            env=self.cyborg_challenge_env)
+            env=self.cyborg_challenge_env)[0]
 
     @staticmethod
     def state_id(cyborg_hostname_to_id: Dict[str, int], decoy_state: List[List[BlueAgentActionType]],
-                 scan_state: List[int], env: ChallengeWrapper) -> int:
+                 scan_state: List[int], env: ChallengeWrapper) -> Tuple[int, List[List[int]]]:
         """
         Gets the current state id
 
@@ -669,7 +670,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param decoy_state: the current decoy state
         :param scan_state: the current scan state
         :param env: the environment
-        :return: the current state id
+        :return: the current state id and state vector
         """
         host_ids = list(cyborg_hostname_to_id.values())
         state_vector = CyborgEnvUtil.state_to_vector(state=CyborgScenarioTwoDefender.true_table(env=env).rows,
@@ -677,7 +678,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                                      host_ids=host_ids,
                                                      scan_state=scan_state)
         state_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=state_vector)
-        return state_id
+        return state_id, state_vector
 
     def is_state_terminal(self, state: int) -> bool:
         """

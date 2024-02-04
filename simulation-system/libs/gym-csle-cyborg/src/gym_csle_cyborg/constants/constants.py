@@ -25,6 +25,8 @@ class ENV_METRICS:
     TIME_HORIZON = "T"
     STOP = "stop"
     STATE = "s"
+    STATE_ID = "s_id"
+    STATE_VECTOR = "state_vector"
     DEFENDER_ACTION = "a1"
     ATTACKER_ACTION = "a2"
     OBSERVATION = "o"
@@ -86,3 +88,5 @@ class CYBORG:
     HOST_STATE_SCANNED_IDX = 1
     HOST_STATE_ACCESS_IDX = 2
     HOST_STATE_DECOY_IDX = 3
+    SSH_PORT = 22
+    B_LINE_AGENT_JUMPS = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]

@@ -7,7 +7,9 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
     DTO representing the input configuration to a gym-csle-cyborg environment
     """
 
-    def __init__(self, maximum_steps: int, gym_env_name: str, save_trace: bool = False, reward_shaping: bool = False):
+    def __init__(self, maximum_steps: int, gym_env_name: str, scenario: int,
+                 save_trace: bool = False, reward_shaping: bool = False,
+                 detect_probability: float = 0.95, exploit_choice_probability: float = 0.75):
         """
         Initializes the DTO
 
@@ -15,11 +17,17 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         :param gym_env_name: the name of the gym environment
         :param save_trace: boolean flag indicating whether traces should be saved
         :param reward_shaping: boolean flag indicating whether reward shaping should be used
+        :param detect_probability: the detection probability of an exploit
+        :param exploit_choice_probability: the probability of choosing the top-choice exploit
+        :param scenario: the Cyborg scenario
         """
         self.maximum_steps = maximum_steps
         self.gym_env_name = gym_env_name
         self.save_trace = save_trace
         self.reward_shaping = reward_shaping
+        self.detect_probability = detect_probability
+        self.exploit_choice_probability = exploit_choice_probability
+        self.scenario = scenario
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -32,6 +40,9 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         d["gym_env_name"] = self.gym_env_name
         d["save_trace"] = self.save_trace
         d["reward_shaping"] = self.reward_shaping
+        d["detect_probability"] = self.detect_probability
+        d["exploit_choice_probability"] = self.exploit_choice_probability
+        d["scenario"] = self.scenario
         return d
 
     @staticmethod
@@ -43,7 +54,10 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         :return: the created instance
         """
         obj = CSLECyborgWrapperConfig(gym_env_name=d["gym_env_name"], maximum_steps=d["maximum_steps"],
-                                      save_trace=d["save_trace"], reward_shaping=d["reward_shaping"])
+                                      save_trace=d["save_trace"], reward_shaping=d["reward_shaping"],
+                                      detect_probability=d["detect_probability"],
+                                      exploit_choice_probability=d["exploit_choice_probability"],
+                                      scenario=d["scenario"])
         return obj
 
     def __str__(self) -> str:
@@ -51,7 +65,9 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         :return: a string representation of the object
         """
         return (f"gym_env_name: {self.gym_env_name}, maximum_steps: {self.maximum_steps}, "
-                f"save_trace: {self.save_trace}, reward_shaping: {self.reward_shaping}")
+                f"save_trace: {self.save_trace}, reward_shaping: {self.reward_shaping}, "
+                f"detect_probability: {self.detect_probability}, "
+                f"exploit_choice_probability: {self.exploit_choice_probability}, scenario: {self.scenario}")
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgWrapperConfig":

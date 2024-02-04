@@ -191,7 +191,6 @@ class POMCPAgent(BaseAgent):
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
-        max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
         prior_weight = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_WEIGHT].value
         prior_confidence = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_CONFIDENCE].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
@@ -208,20 +207,19 @@ class POMCPAgent(BaseAgent):
         c2 = self.experiment_config.hparams[agents_constants.POMCP.C2].value
         max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
         max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
+        reinvigorated_particles_ratio = \
+            self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO].value
         config = self.simulation_env_config.simulation_env_input_config
-        eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        eval_env_name = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_NAME].value
+        eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+        eval_env: BaseEnv = gym.make(eval_env_name, config=eval_env_config)
 
-        returns = []
         # Run N episodes
+        returns = []
         for i in range(N):
             done = False
             action_sequence = []
-            eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-            import copy
-            train_config = copy.deepcopy(config)
-            train_config.reward_shaping = True
-            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=train_config)
-
+            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
             _, info = eval_env.reset()
             s = info[agents_constants.COMMON.STATE]
             train_env.reset()
@@ -230,11 +228,13 @@ class POMCPAgent(BaseAgent):
                           value_function=value_function, reinvigoration=reinvigoration, verbose=verbose,
                           default_node_value=default_node_value, prior_weight=prior_weight,
                           acquisition_function_type=acquisition_function_type, c2=c2,
-                          use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence)
+                          use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence,
+                          reinvigorated_particles_ratio=reinvigorated_particles_ratio)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
                 Logger.__call__().get_logger().info(f"[POMCP] t: {t}, s: {s}")
+
             # Run episode
             while not done and t <= max_env_steps:
                 rollout_depth = max_rollout_depth
@@ -245,9 +245,7 @@ class POMCPAgent(BaseAgent):
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
-                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
-                                                   max_negative_samples=max_negative_samples,
-                                                   observation_vector=o)
+                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
@@ -255,7 +253,7 @@ class POMCPAgent(BaseAgent):
                     if rollout_policy is not None:
                         rollout_action = rollout_policy.action(o=o)
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
-                                                        f"s_prime: {s_prime[0]}, rollout action: {rollout_action}"
+                                                        f"s_prime: {s_prime}, rollout action: {rollout_action}"
                                                         f", action sequence: {action_sequence}, R: {R}")
 
             if i % self.experiment_config.log_every == 0:

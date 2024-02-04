@@ -106,11 +106,8 @@ class POMCP:
                 return self.value_function(o)
             else:
                 return 0
-        # a = 29
-        # a = POMCPUtil.rand_choice([29, 35])
         if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-            a = 29
-            # a = POMCPUtil.rand_choice(self.A)
+            a = POMCPUtil.rand_choice(self.A)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
                                            deterministic=False)
@@ -158,15 +155,28 @@ class POMCP:
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
+
+            # Prune action space
+            if self.rollout_policy is not None:
+                obs_vector = self.env.get_observation_from_history(current_node.history)
+                dist = self.rollout_policy.model.policy.get_distribution(
+                    obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
+                    torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
+                dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
+                rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:3]))
+                if depth > 2:
+                    if 8 not in rollout_actions:
+                        rollout_actions.append(8)
+                    if 9 not in rollout_actions:
+                        rollout_actions.append(9)
+                    if 27 not in rollout_actions:
+                        rollout_actions.append(27)
+                    if 28 not in rollout_actions:
+                        rollout_actions.append(28)
+            else:
+                rollout_actions = self.A
+
             # since the node does not have any children, we first add them to the node
-            # obs_vector = self.env.get_observation_from_history(current_node.history)
-            # dist = self.rollout_policy.model.policy.get_distribution(
-            #     obs=torch.tensor([obs_vector]).to(self.rollout_policy.model.device)).log_prob(
-            #     torch.tensor(self.A).to(self.rollout_policy.model.device)).cpu().detach().numpy()
-            # dist = list(map(lambda i: (math.exp(dist[i]), self.A[i]), list(range(len(dist)))))
-            # rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True, key=lambda x: x[0])[:10]))
-            rollout_actions = self.A
-            # for action in self.A:
             for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
@@ -176,7 +186,6 @@ class POMCP:
                     depth)
 
         # If we have not yet reached a new node, we select the next action according to the acquisiton function
-        # random.shuffle(current_node.children)
         if self.acquisition_function_type == POMCPAcquisitionFunctionType.UCB:
             random.shuffle(current_node.children)
             next_action_node = sorted(
@@ -284,21 +293,17 @@ class POMCP:
                                                 f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, observation_vector: List[int],
-                                     max_negative_samples: int = 20) -> List[Any]:
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int) -> List[Any]:
         """
         Updates the tree after an action has been selected and a new observation been received
 
         :param action_sequence: the action sequence that was executed
         :param observation: the observation that was received
-        :param max_negative_samples: the maximum number of negative samples that can be collected before
-              trajectory simulation is initialized
-        :param observation_vector: the observation vector that was received
         :return: the updated particle state
         """
         root = self.tree.root
         if len(action_sequence) == 0:
-            raise ValueError("Invalid action sequencee")
+            raise ValueError("Invalid action sequence")
         action = action_sequence[-1]
 
         # Since we executed an action we advance the tree and update the root to the the node corresponding to the
@@ -338,7 +343,6 @@ class POMCP:
             particle_slots = self.max_particles - len(new_root.particles)
         else:
             raise ValueError("Invalid root node")
-        negative_samples_count = 0
         if particle_slots > 0:
             if self.verbose:
                 Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
@@ -352,9 +356,6 @@ class POMCP:
                 o = info[constants.COMMON.OBSERVATION]
                 if o == observation:
                     particles.append(s_prime)
-                    negative_samples_count = 0
-                else:
-                    negative_samples_count += 1
             new_root.particles += particles
 
         # We now prune the old root from the tree
@@ -369,9 +370,11 @@ class POMCP:
                 Logger.__call__().get_logger().info("Starting reinvigoration")
 
             # Generate some new particles randomly
-            mutations = copy.deepcopy(self.initial_particles)
+            num_reinvigorated_particles = int(len(new_root.particles) * self.reinvigorated_particles_ratio)
+            reinvigorated_particles = self.env.generate_random_particles(o=observation,
+                                                                         num_particles=num_reinvigorated_particles)
 
             # Randomly exchange some old particles for the new ones
-            for particle in mutations:
+            for particle in reinvigorated_particles:
                 new_root.particles[np.random.randint(0, len(new_root.particles))] = particle
         return new_root.particles
