@@ -348,6 +348,7 @@ class POMCP:
                 Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
             particles = []
             # fill particles by Monte-Carlo using reject sampling
+            count = 0
             while len(particles) < particle_slots:
                 s = root.sample_state()
                 self.env.set_state(state=s)
@@ -356,6 +357,10 @@ class POMCP:
                 o = info[constants.COMMON.OBSERVATION]
                 if o == observation:
                     particles.append(s_prime)
+                else:
+                    count += 1
+                if count >= 20000:
+                    raise ValueError(f"Invalid observation: {o} given state: {root.sample_state()}")
             new_root.particles += particles
 
         # We now prune the old root from the tree
