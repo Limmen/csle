@@ -1,6 +1,5 @@
 from typing import List, Dict, Any, Callable
 import random
-import math
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
@@ -97,11 +96,11 @@ class POMCPUtil:
         :return: the acquisition value of the action
         """
         # prior = rollout_policy.probability(o=o, a=action.action)
-        visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
-        base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
-        prior_term = prior_weight * prior * visit_term * base_term
+        # visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
+        # base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
+        # prior_term = prior_weight * prior * visit_term * base_term
         exploration_term = POMCPUtil.ucb(action.parent.visit_count, action.visit_count)
-        return float(action.value + (c + prior)*exploration_term)
+        return float(action.value + (c + prior) * exploration_term)
         # return float(action.value + prior_term + exploration_term)
 
     @staticmethod

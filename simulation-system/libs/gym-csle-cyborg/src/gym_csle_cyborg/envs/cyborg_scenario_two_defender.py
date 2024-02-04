@@ -248,8 +248,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
                                                                              scenario=config.scenario):
                 host_vector_obs.append(enc_value)
             info[env_constants.CYBORG.VECTOR_OBS_PER_HOST].append(host_vector_obs)
-        state_id, state_vector = CyborgScenarioTwoDefender.state_id(cyborg_hostname_to_id=cyborg_hostname_to_id,
-                                                      decoy_state=decoy_state, scan_state=scan_state, env=env)
+        state_id, state_vector = CyborgScenarioTwoDefender.state_id(
+            cyborg_hostname_to_id=cyborg_hostname_to_id, decoy_state=decoy_state, scan_state=scan_state, env=env)
         obs_id = CyborgScenarioTwoDefender.observation_id(cyborg_hostname_to_id=cyborg_hostname_to_id,
                                                           decoy_state=decoy_state, scan_state=scan_state, env=env)
         initial_belief = {}

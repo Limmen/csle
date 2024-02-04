@@ -191,7 +191,6 @@ class POMCPAgent(BaseAgent):
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
-        max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
         prior_weight = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_WEIGHT].value
         prior_confidence = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_CONFIDENCE].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
@@ -211,27 +210,16 @@ class POMCPAgent(BaseAgent):
         reinvigorated_particles_ratio = \
             self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO].value
         config = self.simulation_env_config.simulation_env_input_config
-        # eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        eval_env_name = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_NAME].value
+        eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+        eval_env: BaseEnv = gym.make(eval_env_name, config=eval_env_config)
 
-        returns = []
         # Run N episodes
+        returns = []
         for i in range(N):
             done = False
             action_sequence = []
-            from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
-            from gym_csle_cyborg.dao.red_agent_type import RedAgentType
-            from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
-            eval_config = CSLECyborgConfig(
-                gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
-                maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
-                decoy_state=True, decoy_optimization=False, cache_visited_states=True, save_trace=False)
-            eval_env = CyborgScenarioTwoDefender(config=eval_config)
-            # eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-            import copy
-            train_config = copy.deepcopy(config)
-            train_config.reward_shaping = True
-            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=train_config)
-
+            train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
             _, info = eval_env.reset()
             s = info[agents_constants.COMMON.STATE]
             train_env.reset()
@@ -246,45 +234,18 @@ class POMCPAgent(BaseAgent):
             t = 1
             if t % log_steps_frequency == 0:
                 Logger.__call__().get_logger().info(f"[POMCP] t: {t}, s: {s}")
+
             # Run episode
-            actions = [31, 31, 32, 29]
-            while not done and t < max_env_steps:
+            while not done and t <= max_env_steps:
                 rollout_depth = max_rollout_depth
                 planning_depth = max_planning_depth
                 pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth)
                 action = pomcp.get_action()
-                # action  = 4
-                # if t < len(actions):
-                #     action = actions[t]
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
-                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
-                print(f"got obs: {CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)}")
-                print(f"got state: {CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime, observation=False)}")
-                print(f"prior state pomcp:")
-                print(pomcp.tree.root.particles[0])
-                print(pomcp.tree.root.particles[1])
-                print(pomcp.tree.root.particles[2])
-                print(pomcp.tree.root.particles[3])
-                print(pomcp.tree.root.particles[4])
-                print(pomcp.tree.root.particles[5])
-                print(f"action: {action}")
-                print(eval_env.get_last_action(agent="Red"))
-                print(eval_env.get_table())
-                print(eval_env.get_true_table())
-                print(eval_env.get_table())
-                print(eval_env.get_actions_table())
-                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
-                                                   max_negative_samples=max_negative_samples)
-                print(f"next state pomcp:")
-                print(pomcp.tree.root.particles[0])
-                print(pomcp.tree.root.particles[1])
-                print(pomcp.tree.root.particles[2])
-                print(pomcp.tree.root.particles[3])
-                print(pomcp.tree.root.particles[4])
-                print(pomcp.tree.root.particles[5])
+                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:

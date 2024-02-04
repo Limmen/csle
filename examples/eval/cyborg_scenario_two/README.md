@@ -1,4 +1,6 @@
-# POMCP for defender plannign in cyborg
+# Policy Evaluation
+
+This directory contains example scripts for policy evaluation for Cyborg version 2
 
 ## Commands
 
@@ -13,7 +15,7 @@ Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-[LICENSE](../../../../LICENSE.md)
+[LICENSE](../../../LICENSE.md)
 
 Creative Commons
 

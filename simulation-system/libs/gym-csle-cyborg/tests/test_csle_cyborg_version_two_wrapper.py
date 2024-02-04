@@ -14,7 +14,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -54,7 +55,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 4], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -94,7 +96,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -134,7 +137,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 2, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -176,7 +180,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[1, 0, 0, 4], [1, 0, 0, 4], [1, 1, 0, 1], [1, 1, 2, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -218,7 +223,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 1], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -258,7 +264,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[1, 0, 0, 0], [1, 1, 2, 1], [1, 0, 0, 1], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -298,7 +305,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 1], [0, 0, 0, 4], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -338,7 +346,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 1], [0, 0, 0, 4], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -380,7 +389,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 1], [0, 0, 0, 4], [1, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -420,7 +430,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 3], [1, 1, 2, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -460,7 +471,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 1, 4], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -500,7 +512,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -540,7 +553,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -580,7 +594,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 3], [0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -620,7 +635,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 4], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -662,7 +678,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 1], [1, 1, 2, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -702,7 +719,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 4], [0, 0, 0, 1], [1, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -742,7 +760,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [1, 1, 0, 3], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -782,7 +801,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -822,7 +842,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -862,7 +883,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 2], [0, 0, 0, 2], [1, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -902,7 +924,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -942,7 +965,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 2], [0, 0, 0, 1], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -982,7 +1006,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
@@ -1022,7 +1047,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
 
         :return: None
         """
-        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True)
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
         env = CyborgScenarioTwoWrapper(config=config)
         state = CyborgWrapperState(
             s=[[0, 0, 0, 4], [0, 0, 0, 4], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],

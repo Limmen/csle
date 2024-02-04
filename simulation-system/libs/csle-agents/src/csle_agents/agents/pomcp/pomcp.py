@@ -106,11 +106,8 @@ class POMCP:
                 return self.value_function(o)
             else:
                 return 0
-        # a = 29
-        # a = POMCPUtil.rand_choice([29, 35])
         if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-            a = 29
-            # a = POMCPUtil.rand_choice(self.A)
+            a = POMCPUtil.rand_choice(self.A)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
                                            deterministic=False)
@@ -158,7 +155,8 @@ class POMCP:
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
         if not current_node.children:
-            # since the node does not have any children, we first add them to the node
+
+            # Prune action space
             if self.rollout_policy is not None:
                 obs_vector = self.env.get_observation_from_history(current_node.history)
                 dist = self.rollout_policy.model.policy.get_distribution(
@@ -177,8 +175,8 @@ class POMCP:
                         rollout_actions.append(28)
             else:
                 rollout_actions = self.A
-            # rollout_actions = self.A
-            # for action in self.A:
+
+            # since the node does not have any children, we first add them to the node
             for action in rollout_actions:
                 self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
@@ -188,7 +186,6 @@ class POMCP:
                     depth)
 
         # If we have not yet reached a new node, we select the next action according to the acquisiton function
-        # random.shuffle(current_node.children)
         if self.acquisition_function_type == POMCPAcquisitionFunctionType.UCB:
             random.shuffle(current_node.children)
             next_action_node = sorted(
@@ -296,20 +293,17 @@ class POMCP:
                                                 f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int,
-                                     max_negative_samples: int = 20) -> List[Any]:
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int) -> List[Any]:
         """
         Updates the tree after an action has been selected and a new observation been received
 
         :param action_sequence: the action sequence that was executed
         :param observation: the observation that was received
-        :param max_negative_samples: the maximum number of negative samples that can be collected before
-              trajectory simulation is initialized
         :return: the updated particle state
         """
         root = self.tree.root
         if len(action_sequence) == 0:
-            raise ValueError("Invalid action sequencee")
+            raise ValueError("Invalid action sequence")
         action = action_sequence[-1]
 
         # Since we executed an action we advance the tree and update the root to the the node corresponding to the
@@ -349,11 +343,6 @@ class POMCP:
             particle_slots = self.max_particles - len(new_root.particles)
         else:
             raise ValueError("Invalid root node")
-        negative_samples_count = 0
-        sampled_obs = []
-        sampled_s_prime = []
-        sampled_s_prime = []
-        sampled_s = []
         if particle_slots > 0:
             if self.verbose:
                 Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
@@ -365,29 +354,8 @@ class POMCP:
                 _, r, _, _, info = self.env.step(action)
                 s_prime = info[constants.COMMON.STATE]
                 o = info[constants.COMMON.OBSERVATION]
-                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
-                if negative_samples_count > 10000:
-                    # particles = POMCPUtil.trajectory_simulation_particles(
-                    #     o=observation, env=self.env, action_sequence=action_sequence, num_particles=particle_slots,
-                    #     verbose=self.verbose
-                    # )
-                    for i in range(min(50, len(sampled_obs))):
-                        print(f"sampled obs:{sampled_obs[i]}")
-                        print(
-                            f"correct obs:{CyborgEnvUtil.state_id_to_state_vector(state_id=observation, observation=True)}")
-                        print(f"sampled state:{sampled_s_prime[i][0]}, {sampled_s_prime[i][1]}")
-                        print(f"previous state:{sampled_s[i][0]}, {sampled_s[i][1]}")
-                    print(f"correct particles: {len(particles)}")
-                    import sys
-                    sys.exit()
                 if o == observation:
                     particles.append(s_prime)
-                    negative_samples_count = 0
-                else:
-                    sampled_obs.append(CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True))
-                    sampled_s_prime.append((s_prime.s, s_prime.red_agent_state))
-                    sampled_s.append((s.s, s.red_agent_state))
-                    negative_samples_count += 1
             new_root.particles += particles
 
         # We now prune the old root from the tree
@@ -403,10 +371,8 @@ class POMCP:
 
             # Generate some new particles randomly
             num_reinvigorated_particles = int(len(new_root.particles) * self.reinvigorated_particles_ratio)
-            reinvigorated_particles = POMCPUtil.trajectory_simulation_particles(
-                o=observation, env=self.env, action_sequence=action_sequence, num_particles=num_reinvigorated_particles,
-                verbose=self.verbose
-            )
+            reinvigorated_particles = self.env.generate_random_particles(o=observation,
+                                                                         num_particles=num_reinvigorated_particles)
 
             # Randomly exchange some old particles for the new ones
             for particle in reinvigorated_particles:

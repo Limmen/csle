@@ -226,6 +226,16 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         """
         return self.stopping_game_env.reset_traces()
 
+    def generate_random_particles(self, o: int, num_particles: int) -> List[int]:
+        """
+        Generates a random list of state particles from a given observation
+
+        :param o: the latest observation
+        :param num_particles: the number of particles to generate
+        :return: the list of random particles
+        """
+        return self.stopping_game_env.generate_random_particles(o=o, num_particles=num_particles)
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually
