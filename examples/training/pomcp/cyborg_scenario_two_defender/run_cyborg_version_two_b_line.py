@@ -129,6 +129,6 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     agent = POMCPAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config, save_to_metastore=True)
+                       experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)

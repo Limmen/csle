@@ -360,8 +360,9 @@ class POMCP:
                     count = 0
                 else:
                     count += 1
-                if count >= 20000:
-                    raise ValueError(f"Invalid observation: {o} given state: {root.sample_state()}")
+                if count >= 80000:
+                    raise ValueError(f"Invalid observation: {o} given state: {root.sample_state()}, "
+                                     f"{root.sample_state()}, {root.sample_state()}")
             new_root.particles += particles
 
         # We now prune the old root from the tree
