@@ -357,6 +357,7 @@ class POMCP:
                 o = info[constants.COMMON.OBSERVATION]
                 if o == observation:
                     particles.append(s_prime)
+                    count = 0
                 else:
                     count += 1
                 if count >= 20000:

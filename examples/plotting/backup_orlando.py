@@ -4,12 +4,12 @@ from csle_common.util.plotting_util import PlottingUtil
 if __name__ == '__main__':
     apple_b_line_256_id = 6
     apple_meander_256_id = 7
-    cardiff_b_line_64_id = 120
-    cardiff_meander_64_id = 121
+    cardiff_b_line_64_id = 222
+    # cardiff_meander_64_id = 121
     # experiment_apple_bline_256 = MetastoreFacade.get_experiment_execution(id=apple_b_line_256_id)
     # experiment_apple_meander_256 = MetastoreFacade.get_experiment_execution(id=apple_meander_256_id)
     experiment_cardiff_b_line_64 = MetastoreFacade.get_experiment_execution(id=cardiff_b_line_64_id)
-    experiment_cardiff_meander_64 = MetastoreFacade.get_experiment_execution(id=cardiff_meander_64_id)
+    # experiment_cardiff_meander_64 = MetastoreFacade.get_experiment_execution(id=cardiff_meander_64_id)
 
     # experiment_apple_bline_256.to_json_file("/home/kim/orlando_results/15_jan/apple_b_line_256.json")
     # experiment_apple_meander_256.to_json_file("/home/kim/orlando_results/15_jan/apple_meander_256.json")
@@ -19,10 +19,10 @@ if __name__ == '__main__':
     metric = "average_return"
     returns = []
     confidence = 0.95
-    running_avg = 30
-    seeds = list(experiment_cardiff_meander_64.result.all_metrics.keys())
+    running_avg = 50
+    seeds = list(experiment_cardiff_b_line_64.result.all_metrics.keys())
     for seed in seeds:
-        r = PlottingUtil.running_average(experiment_cardiff_meander_64.result.all_metrics[seed][metric], running_avg)
+        r = PlottingUtil.running_average(experiment_cardiff_b_line_64.result.all_metrics[seed][metric], running_avg)
         print(r[101])
         returns.append(r)
     avg_returns_means = []
