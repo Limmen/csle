@@ -81,6 +81,7 @@ class POMCP:
         self.use_rollout_policy = use_rollout_policy
         self.prune_action_space = prune_action_space
         self.prune_size = prune_size
+        self.num_simulation_steps = 0
 
     def compute_belief(self) -> Dict[int, float]:
         """
@@ -119,6 +120,7 @@ class POMCP:
                                            deterministic=False)
         self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
+        self.num_simulation_steps += 1
         s_prime = info[constants.COMMON.STATE]
         o = info[constants.COMMON.OBSERVATION]
         return float(r) + self.gamma * self.rollout(state=s_prime, history=history + [a, o], depth=depth + 1,
@@ -207,6 +209,7 @@ class POMCP:
         a = next_action_node.action
         self.env.set_state(state=state)
         _, r, _, _, info = self.env.step(a)
+        self.num_simulation_steps += 1
         o = info[constants.COMMON.OBSERVATION]
         s_prime = info[constants.COMMON.STATE]
 
@@ -222,6 +225,11 @@ class POMCP:
         # We start by updating the belief particles and the visit count of the current belief node
         if isinstance(current_node, BeliefNode):
             current_node.particles += [state]
+            # actions = [ch.action for ch in current_node.children]
+            # rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles, t=len(history))
+            # for ra in rollout_actions:
+            #     if ra not in actions:
+            #         self.tree.add(history + [ra], parent=current_node, action=ra, value=self.default_node_value)
 
         # Next we update the statistics and visit counts of the action node
         if isinstance(next_action_node, ActionNode):
@@ -248,6 +256,7 @@ class POMCP:
             f"acquisiton: {self.acquisition_function_type.value}, c2: {self.c2}, prune: {self.prune_action_space}, "
             f"prune size: {self.prune_size}, use_rollout_policy: {self.use_rollout_policy}, "
             f"prior confidence: {self.prior_confidence}")
+        self.num_simulation_steps = 0
         begin = time.time()
         n = 0
         state = self.tree.root.sample_state()
@@ -278,6 +287,7 @@ class POMCP:
                     f"count: {self.tree.root.children[best_action_idx].visit_count}, "
                     f"planning depth: {depth}, counts: "
                     f"{sorted(counts, reverse=True)[0:5]}, values: {sorted(values, reverse=True)[0:5]}")
+        Logger.__call__().get_logger().info(f"Planning complete, num simulation steps: {self.num_simulation_steps}")
 
     def get_action(self) -> int:
         """
@@ -344,8 +354,7 @@ class POMCP:
         else:
             raise ValueError("Invalid root node")
         if particle_slots > 0:
-            if self.verbose:
-                Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
+            Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
             particles = []
             # fill particles by Monte-Carlo using reject sampling
             count = 0
@@ -361,7 +370,7 @@ class POMCP:
                 else:
                     count += 1
                 if count >= 80000:
-                    raise ValueError(f"Invalid observation: {o} given state: {root.sample_state()}, "
+                    raise ValueError(f"Invalid observation: {observation} given state: {root.sample_state()}, "
                                      f"{root.sample_state()}, {root.sample_state()}")
             new_root.particles += particles
 
@@ -369,6 +378,16 @@ class POMCP:
         self.tree.prune(root, exclude=new_root)
         # and update the root
         self.tree.root = new_root
+
+        # Prune children
+        Logger.__call__().get_logger().info("Pruning children")
+        feasible_actions = (
+            self.env.get_actions_from_particles(particles=self.tree.root.particles, t=len(self.tree.root.history)))
+        children = []
+        for ch in self.tree.root.children:
+            if ch.action in feasible_actions:
+                children.append(ch)
+        self.tree.root.children = children
 
         # To avoid particle deprivation (i.e., that the algorithm gets stuck with the wrong belief)
         # we do particle reinvigoration here
