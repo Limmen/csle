@@ -4487,6 +4487,10 @@ class ClusterController:
         :param pid: the PID to check
         :return: The operation outcome
         """
+        config = MetastoreFacade.get_config(id=1)
+        ips = [node.ip for node in config.cluster_config.cluster_nodes]
+        if ip not in ips:
+            return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)

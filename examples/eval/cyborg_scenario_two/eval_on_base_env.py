@@ -7,7 +7,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
 
 if __name__ == '__main__':
-    ppo_policy = MetastoreFacade.get_ppo_policy(id=58)
+    ppo_policy = MetastoreFacade.get_ppo_policy(id=3)
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,

@@ -275,11 +275,14 @@ class POMCPAgent(BaseAgent):
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
+                print(eval_env.get_true_table())
+                print(eval_env.get_table())
+                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+                print(CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime))
+                print(CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True))
                 pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
                 R += r
                 t += 1
-                print(eval_env.get_true_table())
-                print(eval_env.get_table())
                 if t % log_steps_frequency == 0:
                     rollout_action = -1
                     if rollout_policy is not None:
