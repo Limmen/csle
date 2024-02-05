@@ -120,7 +120,7 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    experiment_config.name = f"workflow_dqn_nodes={1}"
+    experiment_config.name = f"workflow_C51_nodes={1}"
     number_of_zones = 6
     X_max = 100
     eta = 0.5
