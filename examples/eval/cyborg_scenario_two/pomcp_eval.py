@@ -3,8 +3,6 @@ import torch
 import random
 import json
 import io
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.dao.training.ppo_policy import PPOPolicy
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
@@ -14,7 +12,6 @@ from csle_agents.agents.pomcp.pomcp import POMCP
 from csle_agents.agents.pomcp.pomcp_acquisition_function_type import POMCPAcquisitionFunctionType
 import csle_agents.constants.constants as agents_constants
 from csle_common.logging.log import Logger
-
 
 if __name__ == '__main__':
     # ppo_policy = PPOPolicy(model=None, simulation_name="", save_path="")
@@ -44,18 +41,18 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 30
+        planning_time = 60
         value_function = lambda x: 0
         reinvigoration = False
-        rollout_policy= False
+        rollout_policy = False
         verbose = False
         default_node_value = 0
-        prior_weight= 1
+        prior_weight = 1
         acquisition_function_type = POMCPAcquisitionFunctionType.UCB
         use_rollout_policy = False
         reinvigorated_particles_ratio = False
         prune_action_space = False
-        prune_size= 3
+        prune_size = 3
         prior_confidence = 0
         pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_particles=initial_particles,
                       planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy,
@@ -91,7 +88,7 @@ if __name__ == '__main__':
         results["seed"] = seed
         results["training_time"] = 0
         results["returns"] = returns
-        results["planning_time"] = 30
+        results["planning_time"] = planning_time
         json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/Users/kim/pomcp_{0}_30s.json", 'w', encoding='utf-8') as f:
+        with io.open(f"/Users/kim/pomcp_{0}_60s.json", 'w', encoding='utf-8') as f:
             f.write(json_str)
