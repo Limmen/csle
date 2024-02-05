@@ -10,7 +10,6 @@ import torch.optim as optim
 import gymnasium as gym
 import os
 import random
-import torch.nn.functional as F
 import numpy as np
 from stable_baselines3.common.buffers import ReplayBuffer
 import csle_common.constants.constants as constants
@@ -78,13 +77,13 @@ class C51CleanAgent(BaseAgent):
         self.batch_size = self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value
         self.num_iterations = self.total_timesteps // self.batch_size
         self.gamma = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
-        self.tau = self.experiment_config.hparams[agents_constants.DQN_CLEAN.TAU].value
-        self.exploration_fraction = self.experiment_config.hparams[agents_constants.DQN_CLEAN.EXP_FRAC].value
-        self.learning_starts = self.experiment_config.hparams[agents_constants.DQN_CLEAN.LEARNING_STARTS].value
-        self.train_frequency = self.experiment_config.hparams[agents_constants.DQN_CLEAN.TRAIN_FREQ].value
-        self.target_network_frequency = self.experiment_config.hparams[agents_constants.DQN_CLEAN.T_N_FREQ].value
-        self.buffer_size = self.experiment_config.hparams[agents_constants.DQN_CLEAN.BUFFER_SIZE].value
-        self.save_model = self.experiment_config.hparams[agents_constants.DQN_CLEAN.SAVE_MODEL].value
+        self.tau = self.experiment_config.hparams[agents_constants.C51_CLEAN.TAU].value
+        self.exploration_fraction = self.experiment_config.hparams[agents_constants.C51_CLEAN.EXP_FRAC].value
+        self.learning_starts = self.experiment_config.hparams[agents_constants.C51_CLEAN.LEARNING_STARTS].value
+        self.train_frequency = self.experiment_config.hparams[agents_constants.C51_CLEAN.TRAIN_FREQ].value
+        self.target_network_frequency = self.experiment_config.hparams[agents_constants.C51_CLEAN.T_N_FREQ].value
+        self.buffer_size = self.experiment_config.hparams[agents_constants.C51_CLEAN.BUFFER_SIZE].value
+        self.save_model = self.experiment_config.hparams[agents_constants.C51_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
 
@@ -171,6 +170,7 @@ class C51CleanAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
             # Train
+            # TODO: refactorize to C51 (only for show basically)
             exp_result, env, model = self.run_dqn(exp_result=exp_result, seed=seed)
 
             # Save policy
@@ -180,6 +180,7 @@ class C51CleanAgent(BaseAgent):
             action_space = \
                 self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions
+            # TODO: fix policy to C51Policy
             policy = DQNPolicy(model=model, simulation_name=self.simulation_env_config.name,
                                save_path=save_path, player_type=self.experiment_config.player_type,
                                states=self.simulation_env_config.state_space_config.states,
@@ -223,6 +224,7 @@ class C51CleanAgent(BaseAgent):
         return self.exp_execution
 
     def run_dqn(self, exp_result: ExperimentResult, seed: int) -> Tuple[ExperimentResult, BaseEnv, QNetwork]:
+        # TODO: refactorize for C51 (almost only visually)
         """
         Runs DQN with given seed
 
@@ -247,13 +249,15 @@ class C51CleanAgent(BaseAgent):
         cuda = False
 
         # Create neural network
-        device = torch.device(agents_constants.DQN_CLEAN.CUDA if torch.cuda.is_available() and cuda else
+        device = torch.device(agents_constants.C51_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
         output_dim_action = envs.single_action_space.n
         q_network = QNetwork(input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
-        target_network = QNetwork(input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur, n_atoms=self.n_atoms).to(device)
+        target_network = QNetwork(
+            input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur,
+            n_atoms=self.n_atoms).to(device)
 
         # Seeding
         random.seed(seed)
@@ -321,16 +325,17 @@ class C51CleanAgent(BaseAgent):
                         b = (tz - self.v_min) / delta_z
                         l = b.floor().clamp(0, self.n_atoms - 1)
                         u = b.ceil().clamp(0, self.n_atoms - 1)
+
                         # (l == u).float() handles the case where bj is exactly an integer
                         # example bj = 1, then the upper ceiling should be uj= 2, and lj= 1
+
                         d_m_l = (u + (l == u).float() - b) * next_pmfs
                         d_m_u = (b - l) * next_pmfs
                         target_pmfs = torch.zeros_like(next_pmfs)
                         for i in range(target_pmfs.size(0)):
                             target_pmfs[i].index_add_(0, l[i].long(), d_m_l[i])
                             target_pmfs[i].index_add_(0, u[i].long(), d_m_u[i])
-
-                    _, old_pmfs = q_network.get_action(data.observations, data.actions.flatten())
+                    _, old_pmfs = q_network.get_action(data.observ, actions, data.actions.flatten())
                     loss = (-(target_pmfs * old_pmfs.clamp(min=1e-5, max=1 - 1e-5).log()).sum(-1)).mean()
 
                     # optimize the model
@@ -366,7 +371,7 @@ class C51CleanAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
             round(running_avg_J, 3))
         Logger.__call__().get_logger().info(
-            f"[CleanDQN] Iteration: {global_step}/{self.num_iterations}, "
+            f"[CleanC51] Iteration: {global_step}/{self.num_iterations}, "
             f"avg R: {avg_R}, "
             f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
             f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
@@ -384,6 +389,7 @@ class C51CleanAgent(BaseAgent):
 
         :return: a list with the hyperparameter names
         """
+        # TODO: refactorize for C51 (just switch them out)
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
@@ -391,9 +397,9 @@ class C51CleanAgent(BaseAgent):
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 constants.NEURAL_NETWORKS.DEVICE,
-                agents_constants.COMMON.SAVE_EVERY, agents_constants.DQN.EXPLORATION_INITIAL_EPS,
-                agents_constants.DQN.EXPLORATION_FINAL_EPS, agents_constants.DQN.EXPLORATION_FRACTION,
-                agents_constants.DQN.MLP_POLICY, agents_constants.DQN.MAX_GRAD_NORM,
-                agents_constants.DQN.GRADIENT_STEPS, agents_constants.DQN.N_EPISODES_ROLLOUT,
-                agents_constants.DQN.TARGET_UPDATE_INTERVAL, agents_constants.DQN.LEARNING_STARTS,
-                agents_constants.DQN.BUFFER_SIZE, agents_constants.DQN.DQN_BATCH_SIZE]
+                agents_constants.COMMON.SAVE_EVERY, agents_constants.C51_CLEAN.EXPLORATION_INITIAL_EPS,
+                agents_constants.C51_CLEAN.EXPLORATION_FINAL_EPS, agents_constants.C51_CLEAN.EXPLORATION_FRACTION,
+                agents_constants.C51_CLEAN.MLP_POLICY, agents_constants.C51_CLEAN.MAX_GRAD_NORM,
+                agents_constants.C51_CLEAN.GRADIENT_STEPS, agents_constants.C51_CLEAN.N_EPISODES_ROLLOUT,
+                agents_constants.C51_CLEAN.TARGET_UPDATE_INTERVAL, agents_constants.C51_CLEAN.LEARNING_STARTS,
+                agents_constants.C51_CLEAN.BUFFER_SIZE]
