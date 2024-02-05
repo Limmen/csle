@@ -12,19 +12,20 @@ class QNetwork(nn.Module):
     :param output_size_critic: the output size of the critic function/policy in the model
     :param outout_size_actor: the output size of the actor function/policy in the model
     """
-    def __init__(self, envs, num_hl, num_hl_neur, n_atoms=101, output_size_critic=1):
+    def __init__(self, input_dim, output_dim_action, num_hl, num_hl_neur, n_atoms=101, output_size_critic=1):
         super(QNetwork, self).__init__()
-        input_size = np.array(envs.single_observation_space.shape).prod()
+        # input_size = np.array(envs.single_observation_space.shape).prod()
         self.output_size_critic = output_size_critic
-        self.output_size_action = envs.single_action_space.n
+        self.output_dim_action = output_dim_action
         self.num_hl = num_hl
         self.num_hl_neur = num_hl_neur
         self.n_atoms = n_atoms
         self.network = nn.Sequential()
         for layer in range(num_hl):
-            self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur*n_atoms))
+            self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_dim, num_hl_neur*n_atoms))
             self.network.add_module(name='activation', module=nn.ReLU())
-            input_size = num_hl_neur*n_atoms
+            # input_size = num_hl_neur
+            input_dim = num_hl_neur*n_atoms
 
     def get_action(self, x, action=None):
         logits = self.network(x)
@@ -48,7 +49,7 @@ class QNetwork(nn.Module):
         state_dict = self.state_dict()
         state_dict["output_size_critic"] = self.output_size_critic
         # state_dict["input_size"] = self.input_size
-        state_dict["output_size_action"] = self.output_size_action
+        state_dict["output_dim_action"] = self.output_dim_action
         state_dict["num_hidden_layers"] = self.num_hl
         state_dict["hidden_layer_dim"] = self.num_hl_neur
         torch.save(state_dict, path)

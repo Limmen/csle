@@ -249,10 +249,11 @@ class C51CleanAgent(BaseAgent):
         # Create neural network
         device = torch.device(agents_constants.DQN_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
-
-        q_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+        input_dim = np.array(envs.single_observation_space.shape).prod()
+        output_dim_action = envs.single_action_space.n
+        q_network = QNetwork(input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
-        target_network = QNetwork(envs=envs, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur, n_atoms=self.n_atoms).to(device)
+        target_network = QNetwork(input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur, n_atoms=self.n_atoms).to(device)
 
         # Seeding
         random.seed(seed)
