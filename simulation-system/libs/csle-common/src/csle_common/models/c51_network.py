@@ -12,9 +12,12 @@ class QNetwork(nn.Module):
     :param output_size_critic: the output size of the critic function/policy in the model
     :param outout_size_actor: the output size of the actor function/policy in the model
     """
-    def __init__(self, input_dim, output_dim_action, num_hl, num_hl_neur, n_atoms=101, output_size_critic=1):
+    def __init__(self, input_dim, output_dim_action, num_hl, num_hl_neur, n_atoms=101, start=-100, end=100, steps=101, output_size_critic=1):
         super(QNetwork, self).__init__()
         # input_size = np.array(envs.single_observation_space.shape).prod()
+        self.start = start
+        self.end = end
+        self.steps = steps
         self.output_size_critic = output_size_critic
         self.output_dim_action = output_dim_action
         self.num_hl = num_hl
@@ -31,9 +34,7 @@ class QNetwork(nn.Module):
         logits = self.network(x)
         # probability mass function for each action
         pmfs = torch.softmax(logits.view(len(x), self.num_hl_neur, self.n_atoms), dim=2)
-        # TODO: look into this
-        self.atoms = torch.linspace(-100, 100, 101)
-
+        self.atoms = torch.linspace(self.start, self.end, self.steps)
         q_values = (pmfs * self.atoms).sum(2)
         if action is None:
             action = torch.argmax(q_values, 1)
