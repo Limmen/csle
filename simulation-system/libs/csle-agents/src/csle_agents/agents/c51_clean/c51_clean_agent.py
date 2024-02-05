@@ -11,6 +11,7 @@ import gymnasium as gym
 import os
 import random
 import numpy as np
+from numpy.typing import NDArray
 from stable_baselines3.common.buffers import ReplayBuffer
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -335,7 +336,7 @@ class C51CleanAgent(BaseAgent):
                         for i in range(target_pmfs.size(0)):
                             target_pmfs[i].index_add_(0, l[i].long(), d_m_l[i])
                             target_pmfs[i].index_add_(0, u[i].long(), d_m_u[i])
-                    _, old_pmfs = q_network.get_action(data.observ, actions, data.actions.flatten())
+                    _, old_pmfs = q_network.get_action(data.observations, actions, data.actions.flatten())
                     loss = (-(target_pmfs * old_pmfs.clamp(min=1e-5, max=1 - 1e-5).log()).sum(-1)).mean()
 
                     # optimize the model
@@ -348,14 +349,12 @@ class C51CleanAgent(BaseAgent):
                     target_network.load_state_dict(q_network.state_dict())
 
         # Logging
-        R = np.array(R)
-        T = np.array(T)
 
         time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
-        avg_R = round(float(np.mean(R)), 3)
+        avg_R = round(float(sum(R) / len(R)), 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
-        avg_T = round(float(np.mean(T)), 3)
+        avg_T = round(float(sum(T) / len(T)), 3)
         exp_result.all_metrics[seed][
             agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
 
@@ -397,9 +396,7 @@ class C51CleanAgent(BaseAgent):
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 constants.NEURAL_NETWORKS.DEVICE,
-                agents_constants.COMMON.SAVE_EVERY, agents_constants.C51_CLEAN.EXPLORATION_INITIAL_EPS,
-                agents_constants.C51_CLEAN.EXPLORATION_FINAL_EPS, agents_constants.C51_CLEAN.EXPLORATION_FRACTION,
+                agents_constants.COMMON.SAVE_EVERY,
                 agents_constants.C51_CLEAN.MLP_POLICY, agents_constants.C51_CLEAN.MAX_GRAD_NORM,
-                agents_constants.C51_CLEAN.GRADIENT_STEPS, agents_constants.C51_CLEAN.N_EPISODES_ROLLOUT,
-                agents_constants.C51_CLEAN.TARGET_UPDATE_INTERVAL, agents_constants.C51_CLEAN.LEARNING_STARTS,
+                agents_constants.C51_CLEAN.LEARNING_STARTS,
                 agents_constants.C51_CLEAN.BUFFER_SIZE]
