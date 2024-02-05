@@ -279,10 +279,8 @@ class C51CleanAgent(BaseAgent):
             # ALGO LOGIC: put action logic here
             epsilon = self.linear_schedule(self.exploration_fraction * self.total_timesteps, global_step)
             if random.random() < epsilon:
-                # print(np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)]))
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                print(torch.Tensor(obs).to(device))
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
 

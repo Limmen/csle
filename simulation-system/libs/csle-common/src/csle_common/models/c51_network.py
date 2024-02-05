@@ -19,25 +19,20 @@ class QNetwork(nn.Module):
         self.output_size_action = envs.single_action_space.n
         self.num_hl = num_hl
         self.num_hl_neur = num_hl_neur
-        # self.env = env
         self.n_atoms = n_atoms
-        # self.n = env.single_action_space.n
         self.network = nn.Sequential()
-        print("num_hl = ", num_hl)
-        print("n_atoms = ", n_atoms)
-        print("input_size = ", input_size)
         for layer in range(num_hl):
             self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur*n_atoms))
             self.network.add_module(name='activation', module=nn.ReLU())
-            input_size = num_hl_neur
+            input_size = num_hl_neur*n_atoms
 
     def get_action(self, x, action=None):
-        print("är jag här nu")
-        print(np.shape(x))
-        print(np.shape(self.network))
         logits = self.network(x)
         # probability mass function for each action
-        pmfs = torch.softmax(logits.view(len(x), self.n, self.n_atoms), dim=2)
+        pmfs = torch.softmax(logits.view(len(x), self.num_hl_neur, self.n_atoms), dim=2)
+        # TODO: look into this
+        self.atoms = torch.linspace(-100, 100, 101)
+
         q_values = (pmfs * self.atoms).sum(2)
         if action is None:
             action = torch.argmax(q_values, 1)
