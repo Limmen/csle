@@ -11,7 +11,6 @@ import gymnasium as gym
 import os
 import random
 import numpy as np
-from numpy.typing import NDArray
 from stable_baselines3.common.buffers import ReplayBuffer
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
