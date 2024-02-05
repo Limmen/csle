@@ -52,7 +52,7 @@ class C51CleanAgent(BaseAgent):
         super(C51CleanAgent, self).__init__(simulation_env_config=simulation_env_config,
                                             emulation_env_config=emulation_env_config,
                                             experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.DQN_CLEAN
+        assert experiment_config.agent_type == AgentType.C51_CLEAN
         self.training_job = training_job
         self.num_hl = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS].value
         self.num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
@@ -285,11 +285,6 @@ class C51CleanAgent(BaseAgent):
                 print(torch.Tensor(obs).to(device))
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
-                # q_values = q_network(torch.Tensor(obs).to(device))
-                # actions = torch.argmax(q_values, dim=1).cpu().numpy()
-                # e_name = "csle-stopping-game-pomdp-defender-v1"
-                # if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
-                #     actions[0] = random.randrange(0, 2)
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)

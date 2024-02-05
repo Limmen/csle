@@ -13,7 +13,6 @@ class QNetwork(nn.Module):
     :param outout_size_actor: the output size of the actor function/policy in the model
     """
     def __init__(self, envs, num_hl, num_hl_neur, n_atoms=101, output_size_critic=1):
-
         super(QNetwork, self).__init__()
         input_size = np.array(envs.single_observation_space.shape).prod()
         self.output_size_critic = output_size_critic
@@ -24,15 +23,18 @@ class QNetwork(nn.Module):
         self.n_atoms = n_atoms
         # self.n = env.single_action_space.n
         self.network = nn.Sequential()
+        print("num_hl = ", num_hl)
+        print("n_atoms = ", n_atoms)
+        print("input_size = ", input_size)
         for layer in range(num_hl):
             self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_size, num_hl_neur*n_atoms))
             self.network.add_module(name='activation', module=nn.ReLU())
             input_size = num_hl_neur
-        print(self.network)
 
     def get_action(self, x, action=None):
         print("är jag här nu")
         print(np.shape(x))
+        print(np.shape(self.network))
         logits = self.network(x)
         # probability mass function for each action
         pmfs = torch.softmax(logits.view(len(x), self.n, self.n_atoms), dim=2)

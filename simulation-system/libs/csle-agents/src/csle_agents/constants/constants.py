@@ -132,6 +132,35 @@ class DQN_CLEAN:
     CUDA = "cuda"
 
 
+class C51_CLEAN:
+    STEPS_BETWEEN_UPDATES = "steps_between_updates"
+    GAE_LAMBDA = "gae_lambda"
+    CLIP_RANGE = "clip_range"
+    CLIP_RANGE_VF = "clip_range_vf"
+    ENT_COEF = "ent_coef"
+    VF_COEF = "vf_coef"
+    MAX_GRAD_NORM = "max_grad_norm"
+    TARGET_KL = "target_kl"
+    MLP_POLICY = "MlpPolicy"
+    MINIBATCH_SIZE = "minibatch_size"
+    NUM_STEPS = "num_steps"
+    NUM_MINIBATCHES = "num_minibatches"
+    NUM_ENVS = "num_envs"
+    ANNEAL_LR = "anneal_lr"
+    UPDATE_EPOCHS = "update_epochs"
+    CLIP_VLOSS = "clip_vloss"
+    REWARD_SCALER = "reward_scaler"
+    NORM_ADV = "norm_adv"
+    TAU = "tau"
+    EXP_FRAC = "exploration_fraction"
+    LEARNING_STARTS = "learning_starts"
+    TRAIN_FREQ = "train_frequency"
+    T_N_FREQ = "target_network_frequency"
+    BUFFER_SIZE = "buffer_size"
+    SAVE_MODEL = "save_model"
+    CUDA = "cuda"
+
+
 class T_FP:
     """
     String constants related to T-FP
