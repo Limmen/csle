@@ -150,8 +150,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         action_cost = 0.0
         remove_r = 0.0
         if ((defender_action_type == BlueAgentActionType.REMOVE or defender_action_type == BlueAgentActionType.ANALYZE)
-                and previous_state[defender_action_host_id][2] == 0):
-            action_cost += 1
+                and previous_state[defender_action_host_id][2] == 0
+                and self.red_agent_target != defender_action_host_id):
+            action_cost += 0.1
         if ((defender_action_type == BlueAgentActionType.REMOVE) and previous_state[defender_action_host_id][2] == 1):
             remove_r += 0.1
         exploited_ports: List[int] = []
@@ -346,7 +347,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         #     r += decoy_r
         #     # r += remove_r
         #     r -= action_cost
-        # r -= action_cost
+        r -= action_cost
         return np.array(obs_tensor), r, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \

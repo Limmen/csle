@@ -62,7 +62,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 34513
+    seed = 89711
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -128,7 +128,9 @@ if __name__ == '__main__':
             print(pomcp.tree.root.sample_state())
             print(pomcp.tree.root.sample_state())
             print(pomcp.tree.root.sample_state())
-
+            target = 0
+            if action_sequence[-1] == 1 or action_sequence[-1] == 0:
+                target = 6
             pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
             R += r
             t += 1
@@ -152,6 +154,6 @@ if __name__ == '__main__':
         results["rollout_policy"] = "-"
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
-        # json_str = json.dumps(results, indent=4, sort_keys=True)
-        # with io.open(f"/home/kim/pomcp_30s_seed_{seed}.json", 'w', encoding='utf-8') as f:
-        #     f.write(json_str)
+        json_str = json.dumps(results, indent=4, sort_keys=True)
+        with io.open(f"/home/kim/pomcp_30s_v2_seed_{seed}.json", 'w', encoding='utf-8') as f:
+            f.write(json_str)
