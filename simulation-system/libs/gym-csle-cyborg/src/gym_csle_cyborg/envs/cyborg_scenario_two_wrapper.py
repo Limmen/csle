@@ -148,9 +148,12 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         decoy_state = d1
         decoy_r = 0.0
         action_cost = 0.0
+        remove_r = 0.0
         if ((defender_action_type == BlueAgentActionType.REMOVE or defender_action_type == BlueAgentActionType.ANALYZE)
-                and previous_state[defender_action_host_id][1] == 0):
+                and previous_state[defender_action_host_id][2] == 0):
             action_cost += 1
+        if ((defender_action_type == BlueAgentActionType.REMOVE) and previous_state[defender_action_host_id][2] == 1):
+            remove_r += 0.1
         exploited_ports: List[int] = []
         if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             exploit_action, root, decoy, exploited_ports = CyborgScenarioTwoWrapper.next_exploit(
@@ -160,7 +163,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 top_choice_probability=self.config.exploit_choice_probability)
             if decoy:
                 exploit_successful = False
-                decoy_r += 1
+                decoy_r += decoy_state
                 decoy_ports = CyborgScenarioTwoWrapper.get_ports_from_decoy_state(
                     decoy_state=true_decoy_state, decoy_actions=self.decoy_actions_per_host[self.red_agent_target],
                     decoy_to_ports=self.decoy_to_port)
@@ -284,7 +287,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         activity = ActivityType.SCAN
                         if (defender_action_type == BlueAgentActionType.ANALYZE
                                 and defender_action_host_id == self.red_agent_target
-                                and self.malware_state[self.red_agent_target]):
+                                and self.malware_state[self.red_agent_target] == 1
+                                and self.detected[self.red_agent_target] == 1):
                             self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = (
                                 CompromisedType.UNKNOWN.value)
 
@@ -338,9 +342,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         if self.config.save_trace:
             self.trace = CyborgScenarioTwoWrapper.log_trace(
                 r=float(r), trace=self.trace, o=info[env_constants.ENV_METRICS.OBSERVATION], done=done, action=action)
-        if self.config.reward_shaping:
-            r += decoy_r
-            r -= action_cost
+        # if self.config.reward_shaping:
+        #     r += decoy_r
+        #     # r += remove_r
+        #     r -= action_cost
+        r -= action_cost
         return np.array(obs_tensor), r, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
@@ -438,13 +444,13 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         """
         obs_id = history[-1]
         obs_vec = CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True)
-        obs_tensor = []
-        for host in range(len(obs_vec)):
-            obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(
-                host_obs=obs_vec[host], decoy_actions_per_host=self.decoy_actions_per_host,
-                decoy_action_types=self.decoy_action_types, host_id=host
-            ))
-        return obs_tensor
+        # obs_tensor = []
+        # for host in range(len(obs_vec)):
+        #     obs_tensor.extend(CyborgScenarioTwoWrapper.host_obs_one_hot_encoding(
+        #         host_obs=obs_vec[host], decoy_actions_per_host=self.decoy_actions_per_host,
+        #         decoy_action_types=self.decoy_action_types, host_id=host
+        #     ))
+        return obs_vec
 
     def is_state_terminal(self, state: int) -> bool:
         """
@@ -1098,13 +1104,38 @@ class CyborgScenarioTwoWrapper(BaseEnv):
     def get_reachable_hosts(self, particles: List[CyborgWrapperState]):
         reachable_hosts = set()
         for p in particles:
-            reachable_hosts.add(p.red_agent_target)
-            for i in range(30):
-                self.set_state(p)
-                self.step(action=35)
-                reachable_hosts.add(self.red_agent_target)
-                self.step(action=35)
-                reachable_hosts.add(self.red_agent_target)
+            if 1 not in p.red_action_targets:
+                reachable_hosts.add(12)
+                reachable_hosts.add(11)
+                reachable_hosts.add(10)
+                reachable_hosts.add(9)
+            else:
+                reachable_hosts.add(p.red_action_targets[1])
+                if 4 not in reachable_hosts:
+                    next_target_dist = CyborgScenarioTwoWrapper.red_agent_state_to_target_distribution(
+                        red_agent_state=4, last_target=p.red_action_targets[1])
+                    for i in range(len(next_target_dist)):
+                        if next_target_dist[i] > 0:
+                            reachable_hosts.add(i)
+                else:
+                    reachable_hosts.add(p.red_action_targets[4])
+
+                if 7 in p.red_action_targets:
+                    reachable_hosts.add(3)
+
+        #     if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=p.red_agent_state) \
+        #             != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+        #         reachable_hosts.add(p.red_agent_target)
+        #     for i in range(100):
+        #         self.set_state(p)
+        #         self.step(action=35)
+        #         if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=self.red_agent_state) \
+        #                 != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+        #             reachable_hosts.add(self.red_agent_target)
+        #         self.step(action=35)
+        #         if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=self.red_agent_state) \
+        #                 != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+        #             reachable_hosts.add(self.red_agent_target)
         return list(reachable_hosts)
 
     @staticmethod
@@ -1118,10 +1149,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
     @staticmethod
     def get_feasible_hosts(t, particles: List[CyborgWrapperState], hosts: List[int]):
-        if t == 1:
-            return hosts
-        # known_hosts = set([1,2])
-        # scanned_hosts = set([1,2])
+        # if t == 1:
+        #     return hosts
+        # # known_hosts = set([1,2])
+        # # scanned_hosts = set([1,2])
         for p in particles:
             known_hosts = known_hosts.union(set([h for h in hosts
                                                  if p.s[h][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1

@@ -114,6 +114,20 @@ class POMCP:
                 return 0
         if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
             # a = POMCPUtil.rand_choice(self.A)
+            # rollout_actions = self.env.get_actions_from_particles(particles=[state], t=len(history))
+            # obs_vec = self.env.get_observation_from_history(history=history)
+            # if obs_vec[1][2] > 0:
+            #     a = 0
+            # elif obs_vec[2][2] > 0:
+            #     a = 1
+            # else:
+            #     a = POMCPUtil.rand_choice([27, 28, 30 ,31, 32, 33])
+
+                # if 1 in rollout_actions:
+                #     rollout_actions.remove(1)
+                # if 0 in rollout_actions:
+                #     rollout_actions.remove(0)
+                # a = POMCPUtil.rand_choice(rollout_actions)
             a = 35
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
@@ -173,7 +187,10 @@ class POMCP:
                 rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True,
                                                                   key=lambda x: x[0])[:self.prune_size]))
             else:
-                rollout_actions = self.A
+                # rollout_actions = self.A
+                rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles + [state],
+                                                                      t=len(current_node.history))
+                # print(f"rollout actions: {rollout_actions}")
 
             # since the node does not have any children, we first add them to the node
             for action in rollout_actions:

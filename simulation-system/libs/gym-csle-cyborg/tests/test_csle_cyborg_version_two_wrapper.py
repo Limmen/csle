@@ -1502,7 +1502,6 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             i += 1
         assert match
 
-
     def test_set_state_37(self) -> None:
         """
         Tests the set_state method
@@ -1534,19 +1533,55 @@ class TestCSLECyborgVersionTwoWrapperSuite:
         while i < max_tries and not match:
             env.set_state(state)
             o, r, done, _, info = env.step(action)
-            if env.s == [[0, 0, 0, 1], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
-                         [0, 0, 0, 0], [0, 0, 0, 2], [1, 0, 2, 0], [1, 0, 0, 1], [1, 0, 0, 1], [1, 0, 0, 1],
-                         [1, 1, 2, 1]]:
-                import logging
-                logging.info(env.last_obs)
+            if env.last_obs == [[0, 0, 0, 1], [1, 2, 1, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1],
+                                [0, 1, 1, 1]] \
+                    and env.s == [[0, 0, 0, 1], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 2], [1, 0, 2, 0], [1, 0, 0, 1], [1, 0, 0, 1], [1, 0, 0, 1],
+                                  [1, 1, 2, 1]]:
                 match = True
-            # if env.last_obs == [[0, 0, 0, 1], [1, 2, 1, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
-            #                     [0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1],
-            #                     [0, 1, 1, 1]] \
-            #         and env.s == [[0, 0, 0, 1], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
-            #                       [0, 0, 0, 0], [0, 0, 0, 2], [1, 0, 2, 0], [1, 0, 0, 1], [1, 0, 0, 1], [1, 0, 0, 1],
-            #                       [1, 1, 2, 1]]:
-            #     match = True
+            i += 1
+        assert match
+
+
+    def test_set_state_38(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [0, 0, 0, 2], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 0, 2, 0], [1, 1, 2, 4], [1, 0, 0, 1], [1, 0, 0, 0], [1, 0, 0, 0]],
+            scan_state=[0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+            op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 2, 3, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 3, 4], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
+            red_agent_state=4,
+            privilege_escalation_detected=None,
+            red_agent_target=2, red_action_targets={0: 0, 1: 9, 2: 9, 3: 9, 4: 2, 5: 2, 6: 2},
+            attacker_observed_decoy=[0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+            malware_state=[0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        )
+        action = 5
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 2], [1, 2, 2, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 3, 4], [0, 0, 0, 1], [0, 0, 0, 0],
+                                [0, 0, 0, 0]] \
+                    and env.s == [[0, 0, 0, 0], [0, 0, 0, 2], [1, 1, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 2, 0], [1, 1, 2, 4], [1, 0, 0, 1], [1, 0, 0, 0],
+                                  [1, 0, 0, 0]]:
+                match = True
             i += 1
         assert match
 

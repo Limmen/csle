@@ -21,19 +21,30 @@ from gym_csle_cyborg.dao.cyborg_wrapper_state import CyborgWrapperState
 import gym_csle_cyborg.constants.constants as env_constants
 
 def heuristic_value(o: List[int]):
-    host_values = CyborgEnvUtil.get_cyborg_host_values()
-    hosts = CyborgEnvUtil.get_cyborg_hosts()
+    host_costs = CyborgEnvUtil.get_host_compromised_costs()
     val = 0
     for i in range(len(o)):
-        if o[2] == 1:
-            val -= host_values[hosts[i]]*1
-        if o[2] == 2:
-            val -= host_values[hosts[i]]*2
+        if o[i][2] > 0:
+            val += host_costs[i]
+        # if o[i][2] == 1:
+        #     val -= host_costs[i]*1
+        # if o[i][2] == 2 or o[i][2] == 3:
+        #     val -= host_costs[hosts[i]]*2
         # if o[0] == 0:
         #     val += 1
-        if o[1] > 0 or o[2] > 0:
-            val += o[3]
+        # if o[i][1] > 0 and o[i][3] > 0:
+        #     val += host_values[hosts[i]]
     return val
+
+# def base_policy(o: List[int]):
+#     host_values = CyborgEnvUtil.get_cyborg_host_values()
+#     a = 31
+#     known_max_values = -1
+#     for i in range(len(o)):
+#         if i[1] == 2:
+#             last_scanned = i
+#     if last
+
 
 if __name__ == '__main__':
     ppo_policy = PPOPolicy(model=None, simulation_name="",
@@ -45,19 +56,20 @@ if __name__ == '__main__':
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     eval_env = CyborgScenarioTwoDefender(config=config)
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
-                                     save_trace=False, reward_shaping=True, scenario=2)
+                                     save_trace=False, reward_shaping=False, scenario=2)
     train_env = CyborgScenarioTwoWrapper(config=config)
 
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 651623
+    seed = 775329
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     A = train_env.get_action_space()
-    gamma = 0.75
-    c = 0.1
+    # gamma = 0.75
+    gamma = 0.99
+    c = 0.5
     print("Starting policy evaluation")
     for i in range(num_evaluations):
         _, info = eval_env.reset()
@@ -88,7 +100,8 @@ if __name__ == '__main__':
                       use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence,
                       reinvigorated_particles_ratio=reinvigorated_particles_ratio,
                       prune_action_space=prune_action_space, prune_size=prune_size)
-        rollout_depth = 3
+        rollout_depth = 4
+        # rollout_depth = 20
         planning_depth = 50
         R = 0
         t = 0
@@ -129,6 +142,16 @@ if __name__ == '__main__':
         results["training_time"] = 0
         results["returns"] = returns
         results["planning_time"] = planning_time
-        json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/Users/kim/pomcp_{0}_30s.json", 'w', encoding='utf-8') as f:
-            f.write(json_str)
+        results["c"] = c
+        results["gamma"] = gamma
+        results["rollout_depth"] = rollout_depth
+        results["planning_depth"] = planning_depth
+        results["max_particles"] = max_particles
+        results["default_node_value"] = default_node_value
+        results["value_function"] = "heuristic"
+        results["rollout_policy"] = "-"
+        results["use_rollout_policy"] = int(use_rollout_policy)
+        results["acquisition"] = acquisition_function_type.value
+        # json_str = json.dumps(results, indent=4, sort_keys=True)
+        # with io.open(f"/home/kim/pomcp_30s_seed_{seed}.json", 'w', encoding='utf-8') as f:
+        #     f.write(json_str)

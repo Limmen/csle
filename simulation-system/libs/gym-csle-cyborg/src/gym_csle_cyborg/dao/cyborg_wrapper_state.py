@@ -45,12 +45,12 @@ class CyborgWrapperState(JSONSerializable):
         """
         :return: a string representation of the object
         """
-        return (f"s: {self.s}, scan_state: {self.scan_state}, op_server_restored: {self.op_server_restored}, "
-                f"obs: {self.obs}, red_action_targets: {self.red_action_targets}, "
-                f"privilege_escalation_deteceted: {self.privilege_escalation_detected}, "
-                f"red_agent_state: {self.red_agent_state}, red_agent_target: {self.red_agent_target}, "
-                f"attacker_observed_decoy: {self.attacker_observed_decoy}, detected: {self.detected}, "
-                f"malware_state: {self.malware_state}, ssh_access: {self.ssh_access}")
+        return (f"s={self.s}, scan_state={self.scan_state}, op_server_restored={self.op_server_restored}, "
+                f"obs={self.obs}, red_action_targets={self.red_action_targets}, "
+                f"privilege_escalation_detected={self.privilege_escalation_detected}, "
+                f"red_agent_state={self.red_agent_state}, red_agent_target={self.red_agent_target}, "
+                f"attacker_observed_decoy={self.attacker_observed_decoy}, detected={self.detected}, "
+                f"malware_state={self.malware_state}, ssh_access={self.ssh_access}")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "CyborgWrapperState":
