@@ -346,7 +346,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         #     r += decoy_r
         #     # r += remove_r
         #     r -= action_cost
-        r -= action_cost
+        # r -= action_cost
         return np.array(obs_tensor), r, done, done, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
@@ -1143,7 +1143,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     hosts: List[str]):
         actions = []
         for k,v in action_id_to_type_and_host.items():
-            if hosts.index(v[1]) in host_ids:
+            if v[0] != BlueAgentActionType.ANALYZE and hosts.index(v[1]) in host_ids:
                 actions.append(k)
         return actions
 
