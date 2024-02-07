@@ -47,9 +47,9 @@ def heuristic_value(o: List[int]):
 
 
 if __name__ == '__main__':
-    ppo_policy = PPOPolicy(model=None, simulation_name="",
-                           save_path="/tmp/csle/ppo_test_1707078811.4761195/ppo_model1630_1707115775.1994205.zip",
-                           player_type=PlayerType.DEFENDER, actions=[], states=[], experiment_config=None, avg_R=0)
+    # ppo_policy = PPOPolicy(model=None, simulation_name="",
+    #                        save_path="/tmp/csle/ppo_test_1707078811.4761195/ppo_model1630_1707115775.1994205.zip",
+    #                        player_type=PlayerType.DEFENDER, actions=[], states=[], experiment_config=None, avg_R=0)
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 89711
+    seed = 891823
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 30
+        planning_time = 5
         # value_function = lambda x: 0
         value_function = heuristic_value
         reinvigoration = False
@@ -155,5 +155,5 @@ if __name__ == '__main__':
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
         json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/Users/kim/pomcp_15s_seed_{seed}.json", 'w', encoding='utf-8') as f:
+        with io.open(f"/Users/kim/pomcp_5s_seed_{seed}.json", 'w', encoding='utf-8') as f:
             f.write(json_str)

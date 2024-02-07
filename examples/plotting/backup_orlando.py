@@ -1,5 +1,6 @@
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.plotting_util import PlottingUtil
+from csle_common.dao.training.experiment_execution import ExperimentExecution
 
 if __name__ == '__main__':
     apple_b_line_256_id = 6
@@ -8,13 +9,14 @@ if __name__ == '__main__':
     # cardiff_meander_64_id = 121
     # experiment_apple_bline_256 = MetastoreFacade.get_experiment_execution(id=apple_b_line_256_id)
     # experiment_apple_meander_256 = MetastoreFacade.get_experiment_execution(id=apple_meander_256_id)
-    experiment_cardiff_b_line_64 = MetastoreFacade.get_experiment_execution(id=cardiff_b_line_64_id)
+    # experiment_cardiff_b_line_64 = MetastoreFacade.get_experiment_execution(id=cardiff_b_line_64_id)
     # experiment_cardiff_meander_64 = MetastoreFacade.get_experiment_execution(id=cardiff_meander_64_id)
+    experiment_cardiff_b_line_64 = ExperimentExecution.from_json_file("/home/kim/orlando_results/16_jan/cardiff_b_line_64_2.json")
 
     # experiment_apple_bline_256.to_json_file("/home/kim/orlando_results/15_jan/apple_b_line_256.json")
     # experiment_apple_meander_256.to_json_file("/home/kim/orlando_results/15_jan/apple_meander_256.json")
     # experiment_cardiff_b_line_64.to_json_file("/home/kim/orlando_results/16_jan/cardiff_b_line_64.json")
-    experiment_cardiff_b_line_64.to_json_file("/home/kim/orlando_results/16_jan/cardiff_b_line_64_2.json")
+    # experiment_cardiff_b_line_64.to_json_file("/home/kim/orlando_results/16_jan/cardiff_b_line_64_2.json")
     # experiment_cardiff_meander_64.to_json_file("/home/kim/orlando_results/16_jan/cardiff_meander_64.json")
 
     metric = "average_return"
@@ -22,8 +24,11 @@ if __name__ == '__main__':
     confidence = 0.95
     running_avg = 50
     seeds = list(experiment_cardiff_b_line_64.result.all_metrics.keys())
+    running_times = experiment_cardiff_b_line_64.result.all_metrics[seeds[0]]["runtime"]
     for seed in seeds:
         r = PlottingUtil.running_average(experiment_cardiff_b_line_64.result.all_metrics[seed][metric], running_avg)
+        # print(len(experiment_cardiff_b_line_64.result.all_metrics[seed]["runtime"]))
+        # print(experiment_cardiff_b_line_64.result.all_metrics[seed]["runtime"][43])
         print(r[101])
         returns.append(r)
     avg_returns_means = []
@@ -42,7 +47,10 @@ if __name__ == '__main__':
     # print(avg_returns_means.shape)
     # avg_returns_stds = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
     #     data=x, confidence=confidence)[1], returns)))
+    #432
     b_line_opt = -13.73
     for i in range(len(avg_returns_means)):
-        print(f"{i + 1} {avg_returns_means[i]} {avg_returns_means[i] + avg_returns_stds[i]} "
+        # print(f"{(i + 1)*10} {avg_returns_means[i]} {avg_returns_means[i] + avg_returns_stds[i]} "
+        #       f"{avg_returns_means[i] - avg_returns_stds[i]}")
+        print(f"{running_times[i]} {avg_returns_means[i]} {avg_returns_means[i] + avg_returns_stds[i]} "
               f"{avg_returns_means[i] - avg_returns_stds[i]}")
