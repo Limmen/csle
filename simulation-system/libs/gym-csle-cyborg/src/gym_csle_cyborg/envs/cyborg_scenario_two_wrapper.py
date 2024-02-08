@@ -11,6 +11,7 @@ import csle_common.constants.constants as constants
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.red_agent_action_type import RedAgentActionType
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.exploit_type import ExploitType
@@ -70,6 +71,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.detected = [0 for _ in self.hosts]
         self.malware_state = [0 for _ in self.hosts]
         self.ssh_access = [0 for _ in self.hosts]
+        self.escalated = [0 for _ in self.hosts]
+        self.exploited = [0 for _ in self.hosts]
         self.initial_particles = [CyborgWrapperState(
             s=copy.deepcopy(self.s), scan_state=copy.deepcopy(self.scan_state),
             op_server_restored=self.op_server_restored,
@@ -77,7 +80,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             privilege_escalation_detected=self.privilege_escalation_detected,
             red_agent_state=self.red_agent_state, red_agent_target=self.red_agent_target,
             attacker_observed_decoy=copy.deepcopy(self.attacker_observed_decoy), detected=self.detected,
-            malware_state=copy.deepcopy(self.malware_state), ssh_access=copy.deepcopy(self.ssh_access))
+            malware_state=copy.deepcopy(self.malware_state), ssh_access=copy.deepcopy(self.ssh_access),
+            escalated=copy.deepcopy(self.escalated), exploited=copy.deepcopy(self.exploited))
         ]
 
         # Setup gym spaces
@@ -103,14 +107,16 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         previous_malware_state = copy.deepcopy(self.malware_state)
         previous_obs = copy.deepcopy(self.last_obs)
 
-        # Jump
-        if self.red_agent_state == 12:
-            is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_action_feasible(
-                red_agent_state=self.red_agent_state, s=self.s, target_host_id=self.red_agent_target,
-                previous_state=previous_state)
-            if not is_red_action_feasible:
-                self.red_agent_state = 1
-                self.red_agent_target = self.red_action_targets[self.red_agent_state]
+        if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
+            # Jump
+            if self.red_agent_state == 12:
+                is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_bline_action_feasible(
+                    red_agent_state=self.red_agent_state, s=self.s, target_host_id=self.red_agent_target,
+                    previous_state=previous_state)
+                if not is_red_action_feasible:
+                    self.red_agent_state = 1
+                    self.red_agent_target = self.red_action_targets[self.red_agent_state]
+            self.red_action_targets[self.red_agent_state] = self.red_agent_target
 
         # Apply defender action to state
         defender_action_type, defender_action_host = self.action_id_to_type_and_host[action]
@@ -118,13 +124,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         if defender_action_type == BlueAgentActionType.RESTORE and \
                 defender_action_host == env_constants.CYBORG.OP_SERVER0:
             self.op_server_restored = True
-        self.red_action_targets[self.red_agent_state] = self.red_agent_target
         if self.privilege_escalation_detected is not None:
             self.last_obs[self.privilege_escalation_detected][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                 CompromisedType.PRIVILEGED.value
             self.privilege_escalation_detected = None
-        current_red_action_type = CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(
-            red_agent_state=self.red_agent_state)
         s_prime, last_obs, detected, malware_state, ssh_access = self.apply_defender_action_to_state(
             s=self.s, defender_action_type=defender_action_type, defender_action_host_id=defender_action_host_id,
             decoy_action_types=self.decoy_action_types, decoy_actions_per_host=self.decoy_actions_per_host,
@@ -135,10 +138,28 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.malware_state = malware_state
         self.ssh_access = ssh_access
 
+        # Get next red action type and target
+        if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
+            current_red_action_type = CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(
+                red_agent_state=self.red_agent_state)
+        elif self.config.red_agent_type == RedAgentType.MEANDER_AGENT:
+            current_red_action_type, target_distribution = \
+                CyborgScenarioTwoWrapper.get_next_meander_action_type_and_target_distribution(
+                    s=s_prime, escalated=self.escalated, exploited=self.exploited)
+            self.red_agent_target = np.random.choice(np.arange(0, len(target_distribution)), p=target_distribution)
+        else:
+            raise ValueError(f"Red agent: {self.config.red_agent_type} not recognized")
+
         # Apply attacker action to state
-        is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_action_feasible(
-            red_agent_state=self.red_agent_state, s=s_prime, target_host_id=self.red_agent_target,
-            previous_state=previous_state)
+        if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
+            is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_bline_action_feasible(
+                red_agent_state=self.red_agent_state, s=s_prime, target_host_id=self.red_agent_target,
+                previous_state=previous_state)
+        elif self.config.red_agent_type == RedAgentType.MEANDER_AGENT:
+            is_red_action_feasible = CyborgScenarioTwoWrapper.is_red_meander_action_feasible(
+                s=s_prime, target_host_id=self.red_agent_target, action_type=current_red_action_type)
+        else:
+            raise ValueError(f"Red agent: {self.config.red_agent_type} not recognized")
         exploit_successful = True
         non_decoy_fail = False
         fictitious_decoy_fail = False
@@ -198,13 +219,41 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     defender_action_host_id == self.red_agent_target and not decoy):
                 non_decoy_fail = True
 
-        if is_red_action_feasible and exploit_successful:
-            next_red_agent_state = (self.red_agent_state + 1) if self.red_agent_state < 14 else 14
-            next_red_agent_target = CyborgScenarioTwoWrapper.sample_next_red_agent_target(
-                red_agent_state=next_red_agent_state, red_agent_target=self.red_agent_target)
+        if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
+            if is_red_action_feasible and exploit_successful:
+                next_red_agent_state = (self.red_agent_state + 1) if self.red_agent_state < 14 else 14
+                next_red_agent_target = CyborgScenarioTwoWrapper.sample_next_red_agent_target(
+                    red_agent_state=next_red_agent_state, red_agent_target=self.red_agent_target)
+            else:
+                next_red_agent_state = self.red_agent_jumps[self.red_agent_state]
+                next_red_agent_target = self.red_action_targets[next_red_agent_state]
         else:
-            next_red_agent_state = self.red_agent_jumps[self.red_agent_state]
-            next_red_agent_target = self.red_action_targets[next_red_agent_state]
+            next_red_agent_target = 1
+            next_red_agent_state = 1
+            if is_red_action_feasible and exploit_successful:
+                if self.red_agent_target in env_constants.CYBORG.USER_HOST_IDS and self.red_agent_target != 8 \
+                        and current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+                    self.red_agent_state = 3
+                    enterprise_host = CyborgScenarioTwoWrapper.get_enterprise_host_from_user_escalate(
+                        user_host_id=self.red_agent_target)
+                    next_red_agent_target = enterprise_host
+                if self.red_agent_target in env_constants.CYBORG.ENTERPRISE_HOST_IDS \
+                        and current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+                    self.red_agent_state = 10
+                    next_red_agent_target = 7
+            else:
+                if current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES \
+                        or current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
+                    exploited, escalated = CyborgScenarioTwoWrapper.process_failed_meander_ip_action(
+                        exploited=self.exploited, escalated=self.escalated, host_id=self.red_agent_target)
+                    self.exploited = exploited
+                    self.escalated = escalated
+                elif current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE \
+                        or current_red_action_type == RedAgentActionType.IMPACT:
+                    exploited, escalated = CyborgScenarioTwoWrapper.process_failed_meander_host_action(
+                        exploited=self.exploited, escalated=self.escalated, host_id=self.red_agent_target)
+                    self.exploited = exploited
+                    self.escalated = escalated
 
         activity = ActivityType.NONE
         if is_red_action_feasible:
@@ -214,12 +263,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     exploit_access = CompromisedType.PRIVILEGED
                 if exploit_successful:
                     detect = random.uniform(0, 1) < self.config.detect_probability
-                    s_prime, obs = CyborgScenarioTwoWrapper.apply_red_exploit(
+                    s_prime, obs, exploited = CyborgScenarioTwoWrapper.apply_red_exploit(
                         s=s_prime, exploit_access=exploit_access, target_host_id=self.red_agent_target,
                         observation=self.last_obs, detect=detect, defender_action_type=defender_action_type,
-                        defender_target=defender_action_host_id, malware_state=previous_malware_state
+                        defender_target=defender_action_host_id, malware_state=previous_malware_state,
+                        exploited=self.exploited
                     )
                     self.last_obs = obs
+                    self.exploited = exploited
                     if env_constants.CYBORG.SSH_PORT in exploited_ports:
                         self.ssh_access[self.red_agent_target] = 1
                     else:
@@ -297,10 +348,12 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 if previous_state[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
                         != CompromisedType.PRIVILEGED.value:
                     self.privilege_escalation_detected = self.red_agent_target
-                s_prime, malware_state = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
+                s_prime, malware_state, escalated = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
                     s=s_prime, target_host_id=self.red_agent_target, red_agent_state=self.red_agent_state,
-                    next_target_host_id=next_red_agent_target, malware_state=malware_state)
+                    next_target_host_id=next_red_agent_target, malware_state=malware_state,
+                    escalated_state=self.escalated)
                 self.malware_state = malware_state
+                self.escalated = escalated
 
         # False negative scan
         if (current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES and self.red_agent_target == 1
@@ -325,7 +378,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             privilege_escalation_detected=self.privilege_escalation_detected, red_agent_state=self.red_agent_state,
             red_agent_target=self.red_agent_target, attacker_observed_decoy=copy.deepcopy(self.attacker_observed_decoy),
             detected=copy.deepcopy(self.detected), malware_state=copy.deepcopy(self.malware_state),
-            ssh_access=copy.deepcopy(self.ssh_access)
+            ssh_access=copy.deepcopy(self.ssh_access), escalated=copy.deepcopy(self.escalated),
+            exploited=copy.deepcopy(self.exploited)
         )
         info[env_constants.ENV_METRICS.STATE] = wrapper_state
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
@@ -343,10 +397,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         if self.config.save_trace:
             self.trace = CyborgScenarioTwoWrapper.log_trace(
                 r=float(r), trace=self.trace, o=info[env_constants.ENV_METRICS.OBSERVATION], done=done, action=action)
-        # if self.config.reward_shaping:
-        #     r += decoy_r
-        #     # r += remove_r
-        #     r -= action_cost
+        if self.config.reward_shaping:
+            r += decoy_r
         r -= action_cost
         return np.array(obs_tensor), r, done, done, info
 
@@ -370,6 +422,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.detected = [0 for _ in self.hosts]
         self.malware_state = [0 for _ in self.hosts]
         self.ssh_access = [0 for _ in self.hosts]
+        self.escalated = [0 for _ in self.hosts]
+        self.exploited = [0 for _ in self.hosts]
         self.t = 0
         self.red_action_targets = {}
         self.red_action_targets[self.red_agent_state] = self.red_agent_target
@@ -384,7 +438,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             privilege_escalation_detected=self.privilege_escalation_detected, red_agent_state=self.red_agent_state,
             red_agent_target=self.red_agent_target, attacker_observed_decoy=copy.deepcopy(self.attacker_observed_decoy),
             detected=copy.deepcopy(self.detected), malware_state=copy.deepcopy(self.malware_state),
-            ssh_access=copy.deepcopy(self.ssh_access)
+            ssh_access=copy.deepcopy(self.ssh_access), escalated=copy.deepcopy(self.escalated),
+            exploited=copy.deepcopy(self.exploited)
         )
         info[env_constants.ENV_METRICS.STATE] = wrapper_state
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
@@ -435,6 +490,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         self.detected = copy.deepcopy(state.detected)
         self.malware_state = copy.deepcopy(state.malware_state)
         self.ssh_access = copy.deepcopy(state.ssh_access)
+        self.escalated = copy.deepcopy(state.escalated)
+        self.exploited = copy.deepcopy(state.exploited)
 
     def get_observation_from_history(self, history: List[int]) -> List[Any]:
         """
@@ -527,6 +584,150 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             raise ValueError(f"Invalid attacker state: {red_agent_state}")
 
     @staticmethod
+    def get_next_meander_action_type_and_target_distribution(
+            s: List[List[int]], escalated: List[int], exploited: List[int]) -> Tuple[RedAgentActionType, List[float]]:
+        """
+        Gets the next action type and target distribution of the meander agent
+
+        :param s: the current state
+        :param escalated: the escalated state
+        :param exploited: the exploited state
+        :return: the type of red agent action and the target distribution
+        """
+        target_host_distribution = [0.0] * env_constants.CYBORG.NUM_HOSTS
+        target_subnet_distribution = [0.0] * env_constants.CYBORG.NUM_SUBNETS
+
+        # Always impact if able
+        if s[env_constants.CYBORG.OP_SERVER0_IDX][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == \
+                CompromisedType.PRIVILEGED.value:
+            target_host_distribution[env_constants.CYBORG.OP_SERVER0_IDX] = 1
+            return RedAgentActionType.IMPACT, target_host_distribution
+
+        # Start by scanning
+        for subnet_id in range(len(target_subnet_distribution)):
+            if CyborgScenarioTwoWrapper.is_subnet_scan_feasible(subnet_id=subnet_id, s=s):
+                target_subnet_distribution[subnet_id] = 1
+                return RedAgentActionType.DISCOVER_REMOTE_SYSTEMS, target_subnet_distribution
+
+        # Discover network services
+        feasible_scan_hosts = []
+        for host_id in range(len(target_host_distribution)):
+            if CyborgScenarioTwoWrapper.is_service_scan_feasible(host_id=host_id, s=s):
+                feasible_scan_hosts.append(host_id)
+        if len(feasible_scan_hosts) > 0:
+            for host_id in feasible_scan_hosts:
+                target_host_distribution[host_id] = 1 / len(feasible_scan_hosts)
+            return RedAgentActionType.DISCOVER_NETWORK_SERVICES, target_host_distribution
+
+        # Privilege escalation on owned hosts
+        feasible_escalation_hosts = []
+        for host_id in range(len(target_host_distribution)):
+            if CyborgScenarioTwoWrapper.is_privilege_escalation_feasible(host_id=host_id, s=s, escalated=escalated,
+                                                                         exploited=exploited):
+                feasible_escalation_hosts.append(host_id)
+        if len(feasible_escalation_hosts) > 0:
+            for host_id in feasible_escalation_hosts:
+                target_host_distribution[host_id] = 1 / len(feasible_escalation_hosts)
+            return RedAgentActionType.PRIVILEGE_ESCALATE, target_host_distribution
+
+        # Exploit scanned hosts
+        feasible_exploit_hosts = []
+        for host_id in range(len(target_host_distribution)):
+            if CyborgScenarioTwoWrapper.is_exploit_feasible(host_id=host_id, s=s, exploited=exploited):
+                feasible_exploit_hosts.append(host_id)
+        if len(feasible_exploit_hosts) > 0:
+            for host_id in feasible_exploit_hosts:
+                target_host_distribution[host_id] = 1 / len(feasible_exploit_hosts)
+            return RedAgentActionType.EXPLOIT_REMOTE_SERVICE, target_host_distribution
+
+        raise NotImplementedError(f"Red Meander has run out of options!, s: {s}")
+
+    @staticmethod
+    def is_subnet_scan_feasible(subnet_id: int, s: List[List[int]]) -> bool:
+        """
+        Checks whether a subnet scan is feasible for a given subnet id
+
+        :param subnet_id: the id of the subnet
+        :param s: the current state
+        :return: True if feasible, else False
+        """
+        if subnet_id == env_constants.CYBORG.USER_SUBNET_ID:
+            user_accesses = []
+            user_known = []
+            for user_id in env_constants.CYBORG.USER_HOST_IDS:
+                user_accesses.append(s[user_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+                user_known.append(s[user_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX])
+            if 0 in user_known and CompromisedType.PRIVILEGED.value in user_accesses:
+                return True
+        elif subnet_id == env_constants.CYBORG.ENTERPRISE_SUBNET_ID:
+            enterprise_accesses = []
+            enterprise_known = []
+            for enterprise_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS:
+                enterprise_accesses.append(s[enterprise_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+                enterprise_known.append(s[enterprise_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX])
+            if 0 in enterprise_known and CompromisedType.PRIVILEGED.value in enterprise_accesses:
+                return True
+        elif subnet_id == env_constants.CYBORG.OPERATIONAL_SUBNET_ID:
+            operational_accesses = []
+            operatinal_known = []
+            for operational_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS:
+                operational_accesses.append(s[operational_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+                operatinal_known.append(s[operational_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX])
+            if 0 in operatinal_known and CompromisedType.PRIVILEGED.value in operational_accesses:
+                return True
+        else:
+            raise ValueError(f"Subnet id: {subnet_id} not recognized")
+        return False
+
+    @staticmethod
+    def is_service_scan_feasible(host_id: int, s: List[List[int]]) -> bool:
+        """
+        Checks whether a service scan is feasible for a given host id
+
+        :param staticmethod: the id of the host
+        :param s: the current state
+        :return: True if feasible, else False
+        """
+        if s[host_id][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 0 \
+                and s[host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1:
+            return True
+        return False
+
+    @staticmethod
+    def is_privilege_escalation_feasible(host_id: int, s: List[List[int]], escalated: List[int],
+                                         exploited: List[int]) -> bool:
+        """
+        Checks whether a privilege escalation is feasible for a given host id
+
+        :param host_id: the id of the host
+        :param escalated: the escalated state
+        :param exploited: the exploited state
+        :param s: the current state
+        :return: True if feasible, else False
+        """
+        if s[host_id][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 1 \
+                and s[host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1 \
+                and exploited[host_id] == 1 and escalated[host_id] == 0:
+            return True
+        return False
+
+    @staticmethod
+    def is_exploit_feasible(host_id: int, s: List[List[int]], exploited: List[int]) -> bool:
+        """
+        Checks whether an exploit is feasible for a given host id
+
+        :param staticmethod: the id of the host
+        :param s: the current state
+        :param exploited: the exploited state
+        :return: True if feasible, else False
+        """
+        if s[host_id][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 1 \
+                and s[host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1 \
+                and exploited[host_id] == 0:
+            return True
+        return False
+
+    @staticmethod
     def red_agent_state_to_target_distribution(red_agent_state: int, last_target: int = -1) -> List[float]:
         """
         Gets a distribution over the next target of the red agent based on its current state and previous target
@@ -560,10 +761,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             raise ValueError(f"Invalid attacker state: {red_agent_state}")
 
     @staticmethod
-    def is_red_action_feasible(red_agent_state: int, s: List[List[int]], target_host_id: int,
-                               previous_state: List[List[int]]) -> bool:
+    def is_red_bline_action_feasible(red_agent_state: int, s: List[List[int]], target_host_id: int,
+                                     previous_state: List[List[int]]) -> bool:
         """
-        Checks whether a given red agent is feasible or not
+        Checks whether a given action by the bline red agent is feasible or not
 
         :param red_agent_state: the red agent state
         :param s: the current state
@@ -606,6 +807,25 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             return s[7][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] == 2
         else:
             raise ValueError(f"Invalid red agent state: {red_agent_state}")
+
+    @staticmethod
+    def is_red_meander_action_feasible(s: List[List[int]], target_host_id: int, action_type: RedAgentActionType) \
+            -> bool:
+        """
+        Checks whether a given action by the meander red agent is feasible or not
+
+        :param red_agent_state: the red agent state
+        :param s: the current state
+        :param target_host_id: the target host id
+        :return: True if feasible, else False
+        """
+        if action_type == RedAgentActionType.IMPACT:
+            if s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] < 2:
+                return False
+        elif action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+            if s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] < 2:
+                return False
+        return True
 
     @staticmethod
     def apply_defender_action_to_state(s: List[List[int]], defender_action_type: BlueAgentActionType,
@@ -668,7 +888,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 if detected[defender_action_host_id] == 1:
                     detected[defender_action_host_id] = 0
                     if not ssh_access[defender_action_host_id] == 1:
-                        s[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
+                        s[defender_action_host_id][
+                            env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
         elif defender_action_type == BlueAgentActionType.ANALYZE:
             if malware_state[defender_action_host_id] == 1:
                 last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
@@ -701,8 +922,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
     @staticmethod
     def apply_red_exploit(s: List[List[int]], exploit_access: CompromisedType, target_host_id: int,
                           observation: List[List[int]], defender_action_type: BlueAgentActionType,
-                          defender_target: int, malware_state: List[int],
-                          detect: bool = False) -> Tuple[List[List[int]], List[List[int]]]:
+                          defender_target: int, malware_state: List[int], exploited: List[int],
+                          detect: bool = False) -> Tuple[List[List[int]], List[List[int]], List[int]]:
         """
         Applies a successful red exploit to the state
 
@@ -714,7 +935,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param defender_target: the target of the defender
         :param detect: boolean flag indicating whether the exploit was detected or not
         :param malware_state: the malware state
-        :return: the updated state
+        :param exploited: the exploited state
+        :return: the updated state, observation, and exploited state
         """
         detect_access_val = CompromisedType.USER.value
         if defender_target == target_host_id and defender_action_type == BlueAgentActionType.ANALYZE:
@@ -722,9 +944,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 detect_access_val = exploit_access.value
         s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
             max(exploit_access.value, s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+        exploited[target_host_id] = 1
         if detect:
             observation[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = detect_access_val
-        return s, observation
+        return s, observation, exploited
 
     @staticmethod
     def apply_red_network_scan(s: List[List[int]], target_subnetwork: int) -> List[List[int]]:
@@ -766,8 +989,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
     @staticmethod
     def apply_red_privilege_escalation(s: List[List[int]], target_host_id: int, red_agent_state: int,
-                                       next_target_host_id: int, malware_state: List[int]) \
-            -> Tuple[List[List[int]], List[int]]:
+                                       next_target_host_id: int, malware_state: List[int], escalated_state: List[int]) \
+            -> Tuple[List[List[int]], List[int], List[int]]:
         """
         Applies a successful red privilege escalation to the state
 
@@ -776,13 +999,15 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param red_agent_state: the state of the red agent
         :param next_target_host_id: the id of the next targeted host
         :param malware_state: the malware state
-        :return: the updated state and malware state
+        :param escalated_state: the escalated state
+        :return: the updated state, malware state, and escalated state
         """
         s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.PRIVILEGED.value
         malware_state[target_host_id] = 1
+        escalated_state[target_host_id] = 1
         if red_agent_state == 3 or red_agent_state == 10:
             s[next_target_host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] = 1
-        return s, malware_state
+        return s, malware_state, escalated_state
 
     @staticmethod
     def generate_observation(s: List[List[int]], scan_state: List[int], decoy_action_types: List[BlueAgentActionType],
@@ -926,7 +1151,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         if len(feasible_exploits) == 0:
             return -1, False, False, []
         top_choice = np.argmax(feasible_exploits_values)
-        if len(feasible_exploits) == 1 or random.uniform(0, 1) < 0.75:
+        if len(feasible_exploits) == 1 or random.uniform(0, 1) < top_choice_probability:
             return (feasible_exploits[top_choice], feasible_exploit_access[top_choice], decoy_exploits[top_choice],
                     feasible_exploit_ports[top_choice])
         else:
@@ -1042,62 +1267,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             return True
         return False
 
-    def generate_random_particles(self, o: int, num_particles: int) -> List[CyborgWrapperState]:
-        """
-        Generates a random list of state particles from a given observation
-
-        :param o: the latest observation
-        :param num_particles: the number of particles to generate
-        :return: the list of random particles
-        """
-        obs_vector = CyborgEnvUtil.state_id_to_state_vector(state_id=o, observation=True)
-        particles = []
-        for i in range(num_particles):
-            s = []
-            scan_state = []
-            op_server_restored = bool(random.choice([0, 1]))
-            privilege_escalation_detected = bool(random.choice([0, 1]))
-            red_agent_state = random.choice(list(range(15)))
-            red_agent_targets = copy.deepcopy(self.red_action_targets)
-            red_agent_target = self.get_red_agent_action_type_from_state(red_agent_state=red_agent_state)
-            attacker_observed_decoy = []
-            detected = []
-            malware_state = []
-            ssh_access = []
-            for host_id in range(len(self.hosts)):
-                host_state = []
-                scan_state.append(obs_vector[host_id][1])
-                if obs_vector[host_id][1] > 0:
-                    host_state.append(1)
-                    host_state.append(1)
-                else:
-                    host_state.append(random.choice([0, 1]))
-                    host_state.append(random.choice([0, 1]))
-                host_state.append(random.choice([0, 1, 2]))
-                if host_state[-1] > 0:
-                    detected.append(random.choice([0, 1]))
-                    malware_state.append(random.choice([0, 1]))
-                    ssh_access.append(random.choice([0, 1]))
-                else:
-                    detected.append(0)
-                    malware_state.append(0)
-                    ssh_access.append(0)
-                host_state.append(obs_vector[host_id][3])
-                attacker_observed_decoy.append(random.choice(list(range(0, len(self.decoy_actions_per_host[host_id])))))
-                s.append(host_state)
-            particle = CyborgWrapperState(
-                s=s, scan_state=scan_state, op_server_restored=op_server_restored, obs=obs_vector,
-                red_action_targets=red_agent_targets, privilege_escalation_detected=privilege_escalation_detected,
-                red_agent_state=red_agent_state, attacker_observed_decoy=attacker_observed_decoy, detected=detected,
-                malware_state=malware_state, ssh_access=ssh_access, red_agent_target=red_agent_target
-            )
-            particles.append(particle)
-        return particles
-
     def get_actions_from_particles(self, particles: List[CyborgWrapperState], t: int):
-        # feasible_hosts = CyborgScenarioTwoWrapper.get_feasible_hosts(t=t, particles=particles, hosts=self.host_ids)
         feasible_hosts = self.get_reachable_hosts(particles=particles)
-        # print(f"feasible hosts: {feasible_hosts}")
         pruned_actions = CyborgScenarioTwoWrapper.get_actions(
             host_ids=feasible_hosts, action_id_to_type_and_host=self.action_id_to_type_and_host, hosts=self.hosts)
         return pruned_actions
@@ -1120,50 +1291,41 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                             reachable_hosts.add(i)
                 else:
                     reachable_hosts.add(p.red_action_targets[4])
-
                 if 7 in p.red_action_targets:
                     reachable_hosts.add(3)
-
-        #     if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=p.red_agent_state) \
-        #             != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
-        #         reachable_hosts.add(p.red_agent_target)
-        #     for i in range(100):
-        #         self.set_state(p)
-        #         self.step(action=35)
-        #         if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=self.red_agent_state) \
-        #                 != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
-        #             reachable_hosts.add(self.red_agent_target)
-        #         self.step(action=35)
-        #         if CyborgScenarioTwoWrapper.get_red_agent_action_type_from_state(red_agent_state=self.red_agent_state) \
-        #                 != RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
-        #             reachable_hosts.add(self.red_agent_target)
         return list(reachable_hosts)
 
     @staticmethod
     def get_actions(host_ids: List[int], action_id_to_type_and_host: Dict[int, Tuple[BlueAgentActionType, str]],
                     hosts: List[str]):
         actions = []
-        for k,v in action_id_to_type_and_host.items():
+        for k, v in action_id_to_type_and_host.items():
             if v[0] != BlueAgentActionType.ANALYZE and hosts.index(v[1]) in host_ids:
                 actions.append(k)
         return actions
 
     @staticmethod
-    def get_feasible_hosts(t, particles: List[CyborgWrapperState], hosts: List[int]):
-        # if t == 1:
-        #     return hosts
-        # # known_hosts = set([1,2])
-        # # scanned_hosts = set([1,2])
-        for p in particles:
-            known_hosts = known_hosts.union(set([h for h in hosts
-                                                 if p.s[h][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] == 1
-                                                 and h != 8]))
-            scanned_hosts = scanned_hosts.union(set([h for h in hosts
-                                                     if p.s[h][env_constants.CYBORG.HOST_STATE_SCANNED_IDX] == 1
-                                                     and h != 8]))
-        if len(scanned_hosts) > 0:
-            return list(scanned_hosts)
-        elif len(known_hosts) > 0:
-            return list(known_hosts)
+    def get_enterprise_host_from_user_escalate(user_host_id: int) -> int:
+        if user_host_id == env_constants.CYBORG.USER1_IDX or user_host_id == env_constants.CYBORG.USER2_IDX:
+            return env_constants.CYBORG.ENTERPRISE1_IDX
+        elif user_host_id == env_constants.CYBORG.USER3_IDX or user_host_id == env_constants.CYBORG.USER4_IDX:
+            return env_constants.CYBORG.ENTERPRISE0_IDX
         else:
-            return hosts
+            raise ValueError(f"Invalid user host: {user_host_id}")
+
+    @staticmethod
+    def process_failed_meander_ip_action(exploited: List[int], escalated: List[int], host_id) \
+            -> Tuple[List[int], List[int]]:
+        exploited[host_id] = 0
+        for host in range(len(exploited)):
+            if host in env_constants.CYBORG.OPERATIONAL_HOST_IDS or host in env_constants.CYBORG.ENTERPRISE_HOST_IDS:
+                exploited[host_id] = 0
+                escalated[host_id] = 0
+        return exploited, escalated
+
+    @staticmethod
+    def process_failed_meander_host_action(exploited: List[int], escalated: List[int], host_id) \
+            -> Tuple[List[int], List[int]]:
+        exploited[host_id] = 0
+        escalated[host_id] = 0
+        return exploited, escalated

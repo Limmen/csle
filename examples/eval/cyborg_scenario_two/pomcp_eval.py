@@ -56,7 +56,8 @@ if __name__ == '__main__':
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     eval_env = CyborgScenarioTwoDefender(config=config)
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
-                                     save_trace=False, reward_shaping=False, scenario=2)
+                                     save_trace=False, reward_shaping=False, scenario=2,
+                                     red_agent_type=RedAgentType.B_LINE_AGENT)
     train_env = CyborgScenarioTwoWrapper(config=config)
 
     num_evaluations = 100

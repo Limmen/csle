@@ -20,6 +20,7 @@ from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
+from gym_csle_cyborg.dao.red_agent_action_type import RedAgentActionType
 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
 
 
@@ -388,6 +389,38 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: the action of the agent
         """
         return self.cyborg_challenge_env.get_last_action(agent=agent)
+
+    def get_attacker_action_type(self) -> RedAgentActionType:
+        """
+        Gets the action type of the last attacker action
+
+        :return: the type id of the last attacker action
+        """
+        attacker_action = self.cyborg_challenge_env.get_last_action(agent="Red")
+        return RedAgentActionType.from_str(str(attacker_action))
+
+    def get_attacker_action_target(self) -> int:
+        """
+        Gets the target of the last attacker action
+
+        :return: the target of the last attacker action
+        """
+        attacker_action = self.cyborg_challenge_env.get_last_action(agent="Red")
+        ip_to_host_map = self.get_ip_to_host_mapping()
+        subnets = self.get_subnetworks()
+        action_type = self.get_attacker_action_type()
+        if action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
+            return self.cyborg_hostnames.index(ip_to_host_map[str(attacker_action.ip_address)])
+        elif action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+            return self.cyborg_hostnames.index(attacker_action.hostname)
+        elif action_type == RedAgentActionType.IMPACT:
+            return self.cyborg_hostnames.index(attacker_action.hostname)
+        elif action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
+            return self.cyborg_hostnames.index(ip_to_host_map[str(attacker_action.ip_address)])
+        elif action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+            return subnets.index(str(attacker_action.subnet))
+        else:
+            raise ValueError(f"Red action type: {action_type} not recognized")
 
     def get_true_state(self) -> Any:
         """

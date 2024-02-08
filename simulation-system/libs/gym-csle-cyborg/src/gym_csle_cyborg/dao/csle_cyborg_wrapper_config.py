@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
+from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 
 class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
@@ -7,7 +8,7 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
     DTO representing the input configuration to a gym-csle-cyborg environment
     """
 
-    def __init__(self, maximum_steps: int, gym_env_name: str, scenario: int,
+    def __init__(self, maximum_steps: int, gym_env_name: str, scenario: int, red_agent_type: RedAgentType,
                  save_trace: bool = False, reward_shaping: bool = False,
                  detect_probability: float = 0.95, exploit_choice_probability: float = 0.75):
         """
@@ -20,6 +21,7 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         :param detect_probability: the detection probability of an exploit
         :param exploit_choice_probability: the probability of choosing the top-choice exploit
         :param scenario: the Cyborg scenario
+        :param red_agent_type: the type of the red agent
         """
         self.maximum_steps = maximum_steps
         self.gym_env_name = gym_env_name
@@ -28,6 +30,7 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         self.detect_probability = detect_probability
         self.exploit_choice_probability = exploit_choice_probability
         self.scenario = scenario
+        self.red_agent_type = red_agent_type
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -43,6 +46,7 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         d["detect_probability"] = self.detect_probability
         d["exploit_choice_probability"] = self.exploit_choice_probability
         d["scenario"] = self.scenario
+        d["red_agent_type"] = self.red_agent_type
         return d
 
     @staticmethod
@@ -57,7 +61,7 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
                                       save_trace=d["save_trace"], reward_shaping=d["reward_shaping"],
                                       detect_probability=d["detect_probability"],
                                       exploit_choice_probability=d["exploit_choice_probability"],
-                                      scenario=d["scenario"])
+                                      scenario=d["scenario"], red_agent_type=d["red_agent_type"])
         return obj
 
     def __str__(self) -> str:
@@ -67,7 +71,8 @@ class CSLECyborgWrapperConfig(SimulationEnvInputConfig):
         return (f"gym_env_name: {self.gym_env_name}, maximum_steps: {self.maximum_steps}, "
                 f"save_trace: {self.save_trace}, reward_shaping: {self.reward_shaping}, "
                 f"detect_probability: {self.detect_probability}, "
-                f"exploit_choice_probability: {self.exploit_choice_probability}, scenario: {self.scenario}")
+                f"exploit_choice_probability: {self.exploit_choice_probability}, scenario: {self.scenario}, "
+                f"red_agent_type: {self.red_agent_type}")
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgWrapperConfig":

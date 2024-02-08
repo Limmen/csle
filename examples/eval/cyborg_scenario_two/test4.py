@@ -15,7 +15,8 @@ import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
-                                     save_trace=False, reward_shaping=False, scenario=2)
+                                     save_trace=False, reward_shaping=False, scenario=2,
+                                     red_agent_type=RedAgentType.B_LINE_AGENT)
     env = CyborgScenarioTwoWrapper(config=config)
     num_evaluations = 1
     max_horizon = 100
