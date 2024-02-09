@@ -63,7 +63,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 222515
+    seed = 6651220
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 2.5
+        planning_time = 0.1
         # value_function = lambda x: 0
         value_function = heuristic_value
         reinvigoration = False
@@ -156,5 +156,5 @@ if __name__ == '__main__':
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
         json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/home/kim/pomcp_1s_seed_{seed}.json", 'w', encoding='utf-8') as f:
+        with io.open(f"/Users/kim/pomcp_01s_seed_{seed}.json", 'w', encoding='utf-8') as f:
             f.write(json_str)

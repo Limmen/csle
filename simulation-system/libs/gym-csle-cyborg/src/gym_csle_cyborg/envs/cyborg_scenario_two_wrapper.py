@@ -323,6 +323,27 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                             self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                                 access_val
                             self.detected[self.red_agent_target] = 1
+                    # if non_decoy_fail and self.red_agent_target == env_constants.CYBORG.USER3_IDX:
+                    #     if (CyborgScenarioTwoWrapper.is_decoy_same_as_exploit(
+                    #             decoy_actions_per_host=self.decoy_actions_per_host,
+                    #             red_agent_target=self.red_agent_target,
+                    #             defender_action_type=defender_action_type,
+                    #             defender_action_host_id=defender_action_host_id,
+                    #             decoy_action_types=self.decoy_action_types, previous_state=previous_state) or
+                    #             CyborgScenarioTwoWrapper.is_remove_same_as_exploit(
+                    #             decoy_actions_per_host=self.decoy_actions_per_host,
+                    #             red_agent_target=self.red_agent_target,
+                    #             defender_action_type=defender_action_type,
+                    #             defender_action_host_id=defender_action_host_id,
+                    #             decoy_action_types=self.decoy_action_types, previous_state=previous_state)):
+                    #         activity = ActivityType.EXPLOIT
+                    #         access_val = CompromisedType.USER.value
+                    #         if self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
+                    #                 == CompromisedType.PRIVILEGED.value:
+                    #             access_val = CompromisedType.PRIVILEGED.value
+                    #         self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
+                    #             access_val
+                    #         self.detected[self.red_agent_target] = 1
             elif current_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
                 s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(s=s_prime,
                                                                           target_subnetwork=self.red_agent_target)
@@ -1264,6 +1285,33 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 and defender_action_host_id == red_agent_target \
                 and previous_state[red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX] < \
                 max_decoy:
+            return True
+        return False
+
+    @staticmethod
+    def is_remove_same_as_exploit(decoy_actions_per_host: List[List[BlueAgentActionType]], red_agent_target: int,
+                                 defender_action_type: BlueAgentActionType,
+                                 defender_action_host_id: int, previous_state: List[List[int]],
+                                 decoy_action_types: List[BlueAgentActionType]) -> bool:
+        """
+        Checks whether the defender puts a decoy on the same host as the exploit
+
+        :param decoy_actions_per_host: the decoy actions per host
+        :param red_agent_target: the target of the red agent
+        :param defender_action_type: the type of the defender action
+        :param defender_action_host_id: the target host of the defender action
+        :param previous_state: the previous state
+        :param decoy_action_types: the list of decoy types
+        :return: True if the defender put a decoy on the same host as the exploit, else False
+        """
+        if defender_action_type == BlueAgentActionType.REMOVE and defender_action_host_id == red_agent_target:
+            return True
+        max_decoy = len(decoy_actions_per_host[red_agent_target])
+        if red_agent_target == 1:
+            max_decoy = max_decoy - 1
+        if defender_action_type in decoy_action_types \
+                and defender_action_host_id == red_agent_target \
+                and previous_state[red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX] == max_decoy:
             return True
         return False
 
