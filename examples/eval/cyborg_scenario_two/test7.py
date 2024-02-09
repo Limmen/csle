@@ -29,14 +29,21 @@ if __name__ == '__main__':
     # paths = [
     #     "/Users/kim/Dropbox/pomcp/pomcp_15s_seed_678192.json"
     # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_111120.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_2231300.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_3341951.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_454545.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_55561.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_661700.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_789871.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/pomcp_10s_seed_55612.json"
+    # ]
     paths = [
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_111120.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_2231300.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_3341951.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_454545.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_55561.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_661700.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_30s_v2_seed_789871.json"
+        "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_3303919.json",
+        "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_33459871.json"
     ]
     data_dicts = []
     for path in paths:
