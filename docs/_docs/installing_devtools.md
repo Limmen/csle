@@ -31,6 +31,7 @@ csle/simulation-system/libs/csle-tolerance; pip install -r requirements_dev.txt
 <p class="captionFig">
 Listing 123: Command to install the Python build tool.
 </p>
+It is also possible to install all development tools at once by running the script `simulation-system/libs/local_install_dev.sh`
 
 Alternatively, install each development library separately by following the commands below.
 
