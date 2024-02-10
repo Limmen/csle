@@ -253,11 +253,11 @@ class C51CleanAgent(BaseAgent):
         device = torch.device(agents_constants.C51_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
-        q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur, type=self.experiment_config.agent_type).to(device)
+        q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur, agent_type=self.experiment_config.agent_type).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
         target_network = QNetwork(
             input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
-            type=self.experiment_config.agent_type, n_atoms=self.n_atoms).to(device)
+            agent_type=self.experiment_config.agent_type, n_atoms=self.n_atoms).to(device)
 
         # Seeding
         random.seed(seed)
@@ -286,6 +286,8 @@ class C51CleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
+                print("hej")
+                print(np.shape(torch.Tensor(obs).to(device)))
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
 
@@ -301,7 +303,7 @@ class C51CleanAgent(BaseAgent):
                     T_sum += info["T"]
                 R.append(R_sum)
                 T.append(T_sum)
-            
+
             # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
@@ -313,10 +315,16 @@ class C51CleanAgent(BaseAgent):
             obs = next_obs
             # ALGO LOGIC: training.
             if global_step > self.learning_starts:
+                
                 if global_step % self.train_frequency == 0:
+                    print(global_step)
+                    print(self.train_frequency)
                     data = rb.sample(self.batch_size)
+                    print("observations shape")
+                    print(np.shape(data.observations))
                     with torch.no_grad():
-                        _, next_pmfs = target_network.get_action(data.next_observations)
+                        print(np.shape(data.next_observations))
+                        _, next_pmfs = target_network.get_action(data.next_observations, actions, data.actions.flatten())
                         next_atoms = data.rewards + self.gamma * target_network.atoms * (1 - data.dones)
                         # projection
                         delta_z = target_network.atoms[1] - target_network.atoms[0]
@@ -335,6 +343,7 @@ class C51CleanAgent(BaseAgent):
                         for i in range(target_pmfs.size(0)):
                             target_pmfs[i].index_add_(0, l[i].long(), d_m_l[i])
                             target_pmfs[i].index_add_(0, u[i].long(), d_m_u[i])
+                    print(np.shape(data.observations))
                     _, old_pmfs = q_network.get_action(data.observations, actions, data.actions.flatten())
                     loss = (-(target_pmfs * old_pmfs.clamp(min=1e-5, max=1 - 1e-5).log()).sum(-1)).mean()
 
@@ -347,35 +356,32 @@ class C51CleanAgent(BaseAgent):
                 if global_step % self.target_network_frequency == 0:
                     target_network.load_state_dict(q_network.state_dict())
 
-        # Logging
-
-        time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
-        avg_R = round(float(sum(R) / len(R)), 3)
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
-        avg_T = round(float(sum(T) / len(T)), 3)
-        exp_result.all_metrics[seed][
-            agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
-
-        running_avg_J = ExperimentUtil.running_average(
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value
-        )
-
-        running_avg_T = ExperimentUtil.running_average(
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
-            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-            round(running_avg_J, 3))
-        Logger.__call__().get_logger().info(
-            f"[CleanC51] Iteration: {global_step}/{self.num_iterations}, "
-            f"avg R: {avg_R}, "
-            f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-            f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
-            f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
-            f"{round(running_avg_T, 3)}, "
-            f"runtime: {time_elapsed_minutes} min")
+            # Logging
+            if global_step > 10 and global_step % self.experiment_config.log_every == 0:
+                time_elapsed_minutes = round((time.time() - start_time) / 60, 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
+                avg_R = round(float(np.mean(R)), 3)
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
+                avg_T = round(float(np.mean(T)), 3)
+                exp_result.all_metrics[seed][
+                    agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
+                running_avg_J = ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value
+                )
+                running_avg_T = ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                    round(running_avg_J, 3))
+                Logger.__call__().get_logger().info(
+                    f"[C51Clean] Iteration: {global_step}/{self.total_timesteps}, "
+                    f"avg R: {avg_R}, "
+                    f"R_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
+                    f"{running_avg_J}, Avg T:{round(avg_T, 3)}, "
+                    f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
+                    f"{round(running_avg_T, 3)}, "
+                    f"runtime: {time_elapsed_minutes} min")
         envs.close()
 
         base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore

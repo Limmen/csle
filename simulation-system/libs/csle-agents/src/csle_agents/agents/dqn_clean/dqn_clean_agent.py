@@ -254,10 +254,10 @@ class DQNCleanAgent(BaseAgent):
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
         q_network = QNetwork(input_dim=input_dim, num_hidden_layers=self.num_hl,
-                             hidden_layer_dim=self.num_hl_neur).to(device)
+                             hidden_layer_dim=self.num_hl_neur, agent_type=self.experiment_config.agent_type).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate)
         target_network = QNetwork(input_dim=input_dim, num_hidden_layers=self.num_hl,
-                                  hidden_layer_dim=self.num_hl_neur).to(device)
+                                  hidden_layer_dim=self.num_hl_neur, agent_type=self.experiment_config.agent_type).to(device)
 
         # Seeding
         random.seed(seed)
@@ -319,6 +319,8 @@ class DQNCleanAgent(BaseAgent):
             # Optimizing the neural network based on data from the replay buffer
             if global_step > self.learning_starts:
                 if global_step % self.train_frequency == 0:
+                    print(global_step)
+                    print(self.train_frequency)
                     data = rb.sample(self.batch_size)
                     with torch.no_grad():
                         target_max, _ = target_network(data.next_observations.to(dtype=torch.float32)).max(dim=1)

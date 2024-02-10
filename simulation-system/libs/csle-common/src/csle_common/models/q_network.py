@@ -9,30 +9,32 @@ class QNetwork(nn.Module):
     """
 
     def __init__(self, input_dim: int, num_hidden_layers: int, hidden_layer_dim: int,
-                 type: int , n_atoms=101, start=-100, end=100,
+                 agent_type: int , n_atoms=101, start=-100, end=100,
                  steps=101, output_size_critic=1) -> None:
         """
         Initializes the neural network
 
         :param input_dim: the input layer dimension
         :param num_hidden_layers: the number of hidden layers
-        :param hidden_layer_dim: the dimension of each hidden layer
+        :param hidden_layer_dim: the dimension of each hidden layer; in agents referred to as num_hl_neur
+        :param type: the type of agent involved
+
         """
         super(QNetwork, self).__init__()
 
         self.num_hidden_layers = num_hidden_layers
         self.input_dim = input_dim
-        self.type = type
+        self.agent_type = agent_type
         self.hidden_layer_dim = hidden_layer_dim
 
-        if self.type == AgentType.DQN_CLEAN:
+        if self.agent_type == AgentType.DQN_CLEAN:
             self.network = nn.Sequential()
             for layer in range(self.num_hidden_layers):
                 self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_dim, self.hidden_layer_dim))
                 self.network.add_module(name='activation', module=nn.ReLU())
                 input_dim = self.hidden_layer_dim
 
-        elif self.type == AgentType.C51_CLEAN:
+        elif self.agent_type == AgentType.C51_CLEAN:
             self.start = start
             self.end = end
             self.steps = steps
@@ -43,7 +45,7 @@ class QNetwork(nn.Module):
                 self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_dim, self.hidden_layer_dim * n_atoms))
                 self.network.add_module(name='activation', module=nn.ReLU())
                 # input_size = num_hl_neur
-                input_dim = self.hidden_layer_dim * n_atoms
+                input_dim = self.hidden_layer_dim * self.n_atoms
 
     def get_action(self, x, action=None):
         logits = self.network(x)
