@@ -253,7 +253,8 @@ class C51CleanAgent(BaseAgent):
         device = torch.device(agents_constants.C51_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
-        q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur, agent_type=self.experiment_config.agent_type).to(device)
+        q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
+                             agent_type=self.experiment_config.agent_type).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
         target_network = QNetwork(
             input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
@@ -286,8 +287,6 @@ class C51CleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                print("hej")
-                print(np.shape(torch.Tensor(obs).to(device)))
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
 
@@ -317,14 +316,9 @@ class C51CleanAgent(BaseAgent):
             if global_step > self.learning_starts:
                 
                 if global_step % self.train_frequency == 0:
-                    print(global_step)
-                    print(self.train_frequency)
                     data = rb.sample(self.batch_size)
-                    print("observations shape")
-                    print(np.shape(data.observations))
                     with torch.no_grad():
-                        print(np.shape(data.next_observations))
-                        _, next_pmfs = target_network.get_action(data.next_observations, actions, data.actions.flatten())
+                        _, next_pmfs = target_network.get_action(data.next_observations.to(dtype=torch.float32))
                         next_atoms = data.rewards + self.gamma * target_network.atoms * (1 - data.dones)
                         # projection
                         delta_z = target_network.atoms[1] - target_network.atoms[0]
@@ -343,8 +337,7 @@ class C51CleanAgent(BaseAgent):
                         for i in range(target_pmfs.size(0)):
                             target_pmfs[i].index_add_(0, l[i].long(), d_m_l[i])
                             target_pmfs[i].index_add_(0, u[i].long(), d_m_u[i])
-                    print(np.shape(data.observations))
-                    _, old_pmfs = q_network.get_action(data.observations, actions, data.actions.flatten())
+                    _, old_pmfs = q_network.get_action(data.observations.to(dtype=torch.float32))
                     loss = (-(target_pmfs * old_pmfs.clamp(min=1e-5, max=1 - 1e-5).log()).sum(-1)).mean()
 
                     # optimize the model
@@ -355,7 +348,6 @@ class C51CleanAgent(BaseAgent):
                 # update target network
                 if global_step % self.target_network_frequency == 0:
                     target_network.load_state_dict(q_network.state_dict())
-
             # Logging
             if global_step > 10 and global_step % self.experiment_config.log_every == 0:
                 time_elapsed_minutes = round((time.time() - start_time) / 60, 3)

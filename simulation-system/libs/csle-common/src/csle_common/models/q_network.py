@@ -9,7 +9,7 @@ class QNetwork(nn.Module):
     """
 
     def __init__(self, input_dim: int, num_hidden_layers: int, hidden_layer_dim: int,
-                 agent_type: int , n_atoms=101, start=-100, end=100,
+                 agent_type: int, n_atoms=101, start=-100, end=100,
                  steps=101, output_size_critic=1) -> None:
         """
         Initializes the neural network
@@ -42,7 +42,8 @@ class QNetwork(nn.Module):
             self.n_atoms = n_atoms
             self.network = nn.Sequential()
             for layer in range(self.num_hidden_layers):
-                self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_dim, self.hidden_layer_dim * n_atoms))
+                self.network.add_module(name=f'Layer {layer}',
+                                        module=nn.Linear(input_dim, self.hidden_layer_dim * n_atoms))
                 self.network.add_module(name='activation', module=nn.ReLU())
                 # input_size = num_hl_neur
                 input_dim = self.hidden_layer_dim * self.n_atoms
