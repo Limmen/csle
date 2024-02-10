@@ -19,6 +19,7 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import SnortIdsStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImageDTO
 
 ClusterUtil.set_config_parameters_from_config_file()
+ClusterUtil.get_config()
 
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
