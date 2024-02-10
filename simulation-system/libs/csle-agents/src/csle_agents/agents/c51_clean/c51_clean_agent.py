@@ -172,7 +172,7 @@ class C51CleanAgent(BaseAgent):
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
             # Train
             # TODO: refactorize to C51 (only for show basically)
-            exp_result, env, model = self.run_dqn(exp_result=exp_result, seed=seed)
+            exp_result, env, model = self.run_c51(exp_result=exp_result, seed=seed)
 
             # Save policy
             ts = time.time()
@@ -224,8 +224,7 @@ class C51CleanAgent(BaseAgent):
             exp_result.std_metrics[metric] = std_metrics
         return self.exp_execution
 
-    def run_dqn(self, exp_result: ExperimentResult, seed: int) -> Tuple[ExperimentResult, BaseEnv, QNetwork]:
-        # TODO: refactorize for C51 (almost only visually)
+    def run_c51(self, exp_result: ExperimentResult, seed: int) -> Tuple[ExperimentResult, BaseEnv, QNetwork]:
         """
         Runs DQN with given seed
 
