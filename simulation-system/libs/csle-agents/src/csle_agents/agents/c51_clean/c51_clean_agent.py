@@ -288,6 +288,9 @@ class C51CleanAgent(BaseAgent):
             else:
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
+                e_name = "csle-stopping-game-pomdp-defender-v1"
+                if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
+                    actions[0] = random.randrange(0, 2)
 
             # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
