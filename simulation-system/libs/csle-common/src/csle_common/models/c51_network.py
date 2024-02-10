@@ -12,7 +12,7 @@ class QNetwork(nn.Module):
     :param outout_size_actor: the output size of the actor function/policy in the model
     """
     def __init__(self, input_dim, output_dim_action,
-                 num_hl, num_hl_neur, n_atoms=101, start=-100, end=100,
+                 num_hl, num_hl_neur, type = "C51", n_atoms=101, start=-100, end=100,
                  steps=101, output_size_critic=1):
         super(QNetwork, self).__init__()
         self.start = start

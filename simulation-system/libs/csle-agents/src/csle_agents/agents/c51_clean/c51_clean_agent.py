@@ -18,7 +18,8 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
-from csle_common.models.c51_network import QNetwork
+# from csle_common.models.c51_network import QNetwork
+from csle_common.models.q_network import QNetwork
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.util.experiment_util import ExperimentUtil
@@ -252,12 +253,11 @@ class C51CleanAgent(BaseAgent):
         device = torch.device(agents_constants.C51_CLEAN.CUDA if torch.cuda.is_available() and cuda else
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
-        output_dim_action = envs.single_action_space.n
-        q_network = QNetwork(input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur).to(device)
+        q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur, type=self.experiment_config.agent_type).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
         target_network = QNetwork(
-            input_dim, output_dim_action, num_hl=self.num_hl, num_hl_neur=self.num_hl_neur,
-            n_atoms=self.n_atoms).to(device)
+            input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
+            type=self.experiment_config.agent_type, n_atoms=self.n_atoms).to(device)
 
         # Seeding
         random.seed(seed)
