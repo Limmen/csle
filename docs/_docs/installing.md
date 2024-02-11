@@ -658,6 +658,8 @@ sudo usermod -aG docker $USER
 Listing 57: Commands to install Docker.
 </p>
 
+After running the commands above, start a new shell for the changes to take effect.
+
 Next, setup a docker swarm by running the following command on the leader:
 ```bash
 docker swarm init --advertise-addr <ip address of the leader>
