@@ -228,6 +228,11 @@ cd metastore; make tables
 <p class="captionFig">
 Listing 19: Commands to setup the Citus cluster and create tables.
 </p>
+
+Next, update the variable called `HOST` in the class `METADATA\_STORE` in the file `csle/simulation-system/libs/csle-common/src/csle\_common/constants/constants.py`.
+
+Next, define ips of the cluster nodes and thet metastore leader by editing the file: `csle/config.json`.
+
 Lastly, make the PostgreSQL log files readable by your user by running the commands:
 ```bash
 sudo chmod -R u+rw /var/log/postgresql
