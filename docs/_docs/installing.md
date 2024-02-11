@@ -849,8 +849,8 @@ npm run build
 Listing 73: Commands to install the web application of the CSLE management system.
 </p>
 
-| Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. |
-|-------------------------------------------------------------------------------------------------|
+| Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. Further, if you have an old operating system you may need to run the command `export NODE_OPTIONS=--openssl-legacy-provider` before running `npm run build` |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 Next, install and start `pgadmin` **on the leader** by running the following commands:
 ```bash
