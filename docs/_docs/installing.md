@@ -849,6 +849,9 @@ npm run build
 Listing 73: Commands to install the web application of the CSLE management system.
 </p>
 
+| Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. |
+|-------------------------------------------------------------------------------------------------|
+
 Next, install and start `pgadmin` **on the leader** by running the following commands:
 ```bash
 docker pull dpage/pgadmin4
