@@ -187,9 +187,9 @@ class POMCP:
                 rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True,
                                                                   key=lambda x: x[0])[:self.prune_size]))
             else:
-                # rollout_actions = self.A
-                rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles + [state],
-                                                                      t=len(current_node.history))
+                rollout_actions = self.A
+                # rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles + [state],
+                #                                                       t=len(current_node.history))
                 # print(f"rollout actions: {rollout_actions}")
 
             # since the node does not have any children, we first add them to the node
@@ -397,14 +397,14 @@ class POMCP:
         self.tree.root = new_root
 
         # Prune children
-        Logger.__call__().get_logger().info("Pruning children")
-        feasible_actions = (
-            self.env.get_actions_from_particles(particles=self.tree.root.particles, t=len(self.tree.root.history)))
-        children = []
-        for ch in self.tree.root.children:
-            if ch.action in feasible_actions:
-                children.append(ch)
-        self.tree.root.children = children
+        # Logger.__call__().get_logger().info("Pruning children")
+        # feasible_actions = (
+        #     self.env.get_actions_from_particles(particles=self.tree.root.particles, t=len(self.tree.root.history)))
+        # children = []
+        # for ch in self.tree.root.children:
+        #     if ch.action in feasible_actions:
+        #         children.append(ch)
+        # self.tree.root.children = children
 
         # To avoid particle deprivation (i.e., that the algorithm gets stuck with the wrong belief)
         # we do particle reinvigoration here
