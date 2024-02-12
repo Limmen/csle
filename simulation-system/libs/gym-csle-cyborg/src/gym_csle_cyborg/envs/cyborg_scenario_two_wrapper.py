@@ -367,9 +367,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                 CompromisedType.UNKNOWN.value)
 
             elif current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
-                if previous_state[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
-                        != CompromisedType.PRIVILEGED.value:
-                    self.privilege_escalation_detected = self.red_agent_target
+                # if previous_state[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
+                #         != CompromisedType.PRIVILEGED.value:
+                #     self.privilege_escalation_detected = self.red_agent_target
                 s_prime, malware_state, escalated = CyborgScenarioTwoWrapper.apply_red_privilege_escalation(
                     s=s_prime, target_host_id=self.red_agent_target, red_agent_state=self.red_agent_state,
                     next_target_host_id=next_red_agent_target, malware_state=malware_state,
