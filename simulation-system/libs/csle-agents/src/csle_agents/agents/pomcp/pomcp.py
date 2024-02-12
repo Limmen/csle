@@ -357,7 +357,8 @@ class POMCP:
                 # or create the new belief node randomly
                 particles = copy.deepcopy(self.initial_particles)
                 if self.value_function is not None:
-                    initial_value = self.value_function(observation)
+                    # initial_value = self.value_function(observation)
+                    initial_value = self.default_node_value
                 else:
                     initial_value = self.default_node_value
                 new_root = self.tree.add(history=action_node.history + [observation], parent=action_node,
