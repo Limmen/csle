@@ -317,9 +317,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                 decoy_action_types=self.decoy_action_types, previous_state=previous_state):
                             activity = ActivityType.EXPLOIT
                             access_val = CompromisedType.USER.value
-                            if self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
-                                    == CompromisedType.PRIVILEGED.value:
-                                access_val = CompromisedType.PRIVILEGED.value
+                            # if self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
+                            #         == CompromisedType.PRIVILEGED.value:
+                            #     access_val = CompromisedType.PRIVILEGED.value
                             self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                                 access_val
                             self.detected[self.red_agent_target] = 1
