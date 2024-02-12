@@ -388,8 +388,15 @@ class POMCP:
                 else:
                     count += 1
                 if count >= 80000:
-                    raise ValueError(f"Invalid observation: {observation} given state: {root.sample_state()}, "
-                                     f"{root.sample_state()}, {root.sample_state()}")
+                    target = root.sample_state().red_agent_target
+                    target_access_states = set()
+                    for particle in root.particles:
+                        target_access_states.append(particle.s[2])
+                    target_access_states = list(target_access_states)
+                    raise ValueError(f"Invalid observation: {observation}, target: {target}, "
+                                     f"target access states: {target_access_states}, "
+                                     f"given state: 1: \n{root.sample_state()}, \n"
+                                     f"2: \n {root.sample_state()}\n, 3: {root.sample_state()}\n ")
             new_root.particles += particles
 
         # We now prune the old root from the tree
