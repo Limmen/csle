@@ -391,7 +391,7 @@ class POMCP:
                     target = root.sample_state().red_agent_target
                     target_access_states = set()
                     for particle in root.particles:
-                        target_access_states.append(particle.s[2])
+                        target_access_states.add(particle.s[target][2])
                     target_access_states = list(target_access_states)
                     raise ValueError(f"Invalid observation: {observation}, target: {target}, "
                                      f"target access states: {target_access_states}, "
