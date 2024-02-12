@@ -1178,8 +1178,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         else:
             alternatives = [x for x in list(range(len(feasible_exploits))) if x != top_choice]
             random_choice = np.random.choice(list(range(len(alternatives))))
-            return (feasible_exploits[random_choice], feasible_exploit_access[random_choice],
-                    decoy_exploits[random_choice], feasible_exploit_ports[random_choice])
+            return (feasible_exploits[alternatives[random_choice]],
+                    feasible_exploit_access[alternatives[random_choice]],
+                    decoy_exploits[alternatives[random_choice]],
+                    feasible_exploit_ports[alternatives[random_choice]])
 
     @staticmethod
     def log_trace(r: float, trace: SimulationTrace, o: npt.NDArray[Any], done: bool, action: int) -> SimulationTrace:
