@@ -132,6 +132,33 @@ class DQN_CLEAN:
     CUDA = "cuda"
 
 
+class C51_CLEAN:
+    """
+    String constants related to the C51-clean agent
+    """
+    STEPS_BETWEEN_UPDATES = "steps_between_updates"
+    MINIBATCH_SIZE = "minibatch_size"
+    NUM_STEPS = "num_steps"
+    NUM_ENVS = "num_envs"
+    ANNEAL_LR = "anneal_lr"
+    CLIP_VLOSS = "clip_vloss"
+    REWARD_SCALER = "reward_scaler"
+    NORM_ADV = "norm_adv"
+    TAU = "tau"
+    EXP_FRAC = "exploration_fraction"
+    LEARNING_STARTS = "learning_starts"
+    TRAIN_FREQ = "train_frequency"
+    T_N_FREQ = "target_network_frequency"
+    BUFFER_SIZE = "buffer_size"
+    START_EXPLORATION_RATE = "start_exploration_rate"
+    END_EXPLORATION_RATE = "end_exploration_rate"
+    SAVE_MODEL = "save_model"
+    CUDA = "cuda"
+    N_ATOMS = "n_atoms"
+    V_MIN = "v_min"
+    V_MAX = "v_max"
+
+
 class T_FP:
     """
     String constants related to T-FP

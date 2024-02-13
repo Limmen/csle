@@ -16,7 +16,7 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 class StoppingGamePomdpDefenderEnv(BaseEnv):
     """
-    OpenAI Gym Env for the MDP of the defender when facing a static attacker
+    OpenAI Gym Env for the POMDP of the defender when facing a static attacker
     """
 
     def __init__(self, config: StoppingGameDefenderPomdpConfig):
@@ -64,24 +64,6 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         defender_obs = o[0]
 
         return defender_obs, r[0], d, d, info
-
-    def step_test(self, a1: int, sample_Z) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
-        """
-        Takes a step in the environment by executing the given action
-
-        :param a1: defender action
-        :return: (obs, reward, done, info)
-        """
-        # Get attacker action from static strategy
-        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
-
-        # Step the game
-        o, r, d, info = self.stopping_game_env.step_test((a1, (pi2, a2)), sample_Z=sample_Z)
-        self.latest_attacker_obs = o[1]
-        defender_obs = o[0]
-
-        return defender_obs, r[0], d, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
