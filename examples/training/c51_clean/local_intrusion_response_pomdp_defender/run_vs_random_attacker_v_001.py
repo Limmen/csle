@@ -9,12 +9,8 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import (
-    LocalIntrusionResponseGameConfig,
-)
-from gym_csle_intrusion_response_game.util.intrusion_response_game_util import (
-    IntrusionResponseGameUtil,
-)
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
+from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-040"
@@ -38,35 +34,30 @@ if __name__ == '__main__':
                 descr="number of layers of the policy network"),
             agents_constants.C51_CLEAN.EXP_FRAC: HParam(value=0.5, name=agents_constants.C51_CLEAN.EXP_FRAC,
                                                         descr="the fraction of `total-timesteps` "
-                                                        "it takes from start-e to go end-e"),
+                                                              "it takes from start-e to go end-e"),
             agents_constants.C51_CLEAN.TAU: HParam(value=1.0, name=agents_constants.C51_CLEAN.TAU,
                                                    descr="target network update rate"),
             agents_constants.COMMON.BATCH_SIZE: HParam(value=1, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
-            agents_constants.C51_CLEAN.LEARNING_STARTS: HParam(value=10000,
-                                                               name=agents_constants.C51_CLEAN.LEARNING_STARTS,
-                                                               descr="timestep to start learning"),
-            agents_constants.C51_CLEAN.TRAIN_FREQ: HParam(value=10,
-                                                          name=agents_constants.C51_CLEAN.TRAIN_FREQ,
-                                                          descr="the frequency of training"),
-            agents_constants.C51_CLEAN.T_N_FREQ: HParam(value=500,
-                                                        name=agents_constants.C51_CLEAN.T_N_FREQ,
-                                                        descr="the batch size of sample from the reply memory"),
-            agents_constants.C51_CLEAN.BUFFER_SIZE: HParam(value=1000,
-                                                           name=agents_constants.C51_CLEAN.BUFFER_SIZE,
-                                                           descr="the replay memory buffer size"),
-            agents_constants.C51_CLEAN.SAVE_MODEL: HParam(value=False,
-                                                          name=agents_constants.C51_CLEAN.SAVE_MODEL,
-                                                          descr="decision param for model saving"),
-            agents_constants.COMMON.LEARNING_RATE: HParam(value=2.4e-5,
-                                                          name=agents_constants.COMMON.LEARNING_RATE,
-                                                          descr="learning rate for updating the policy"),
-            agents_constants.C51_CLEAN.NUM_STEPS: HParam(value=164,
-                                                         name=agents_constants.C51_CLEAN.NUM_STEPS,
-                                                         descr="number of steps in each time step"),
-            constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
-                                                     name=constants.NEURAL_NETWORKS.DEVICE,
-                                                     descr="the device to train on (cpu or cuda:x)"),
+            agents_constants.C51_CLEAN.LEARNING_STARTS: HParam(
+                value=10000, name=agents_constants.C51_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
+            agents_constants.C51_CLEAN.TRAIN_FREQ: HParam(
+                value=10, name=agents_constants.C51_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
+            agents_constants.C51_CLEAN.T_N_FREQ: HParam(
+                value=500, name=agents_constants.C51_CLEAN.T_N_FREQ,
+                descr="the batch size of sample from the reply memory"),
+            agents_constants.C51_CLEAN.BUFFER_SIZE: HParam(
+                value=1000, name=agents_constants.C51_CLEAN.BUFFER_SIZE, descr="the replay memory buffer size"),
+            agents_constants.C51_CLEAN.SAVE_MODEL: HParam(
+                value=False, name=agents_constants.C51_CLEAN.SAVE_MODEL,
+                descr="decision param for model saving"),
+            agents_constants.COMMON.LEARNING_RATE: HParam(
+                value=2.4e-5, name=agents_constants.COMMON.LEARNING_RATE,
+                descr="learning rate for updating the policy"),
+            agents_constants.C51_CLEAN.NUM_STEPS: HParam(
+                value=164, name=agents_constants.C51_CLEAN.NUM_STEPS, descr="number of steps in each time step"),
+            constants.NEURAL_NETWORKS.DEVICE: HParam(
+                value="cpu", name=constants.NEURAL_NETWORKS.DEVICE, descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
                 value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
                 descr="the nunmber of parallel environments for training"),
@@ -74,49 +65,48 @@ if __name__ == '__main__':
                 value=True, name=agents_constants.C51_CLEAN.CLIP_VLOSS, descr="the clip-vloss"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
-            agents_constants.C51_CLEAN.GAE_LAMBDA: HParam(
-                value=0.95, name=agents_constants.C51_CLEAN.GAE_LAMBDA, descr="the GAE weighting term"),
-            agents_constants.C51_CLEAN.CLIP_RANGE: HParam(
-                value=0.2, name=agents_constants.C51_CLEAN.CLIP_RANGE, descr="the clip range for PPO"),
-            agents_constants.C51_CLEAN.CLIP_RANGE_VF: HParam(
-                value=0.5, name=agents_constants.C51_CLEAN.CLIP_RANGE_VF,
-                descr="the clip range for PPO-update of the value network"),
-            agents_constants.C51_CLEAN.ENT_COEF: HParam(
-                value=0.01, name=agents_constants.C51_CLEAN.ENT_COEF,
-                descr="the entropy coefficient for exploration"),
-            agents_constants.C51_CLEAN.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
-                                                       descr="the coefficient of the value network for the loss"),
-            agents_constants.C51_CLEAN.NUM_MINIBATCHES: HParam(value=4, name=agents_constants.C51_CLEAN.NUM_MINIBATCHES,
-                                                               descr="the number of minibatches"),
+            agents_constants.C51_CLEAN.NUM_MINIBATCHES: HParam(
+                value=4, name=agents_constants.C51_CLEAN.NUM_MINIBATCHES, descr="the number of minibatches"),
             agents_constants.C51_CLEAN.MAX_GRAD_NORM: HParam(
                 value=0.5, name=agents_constants.C51_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
             agents_constants.C51_CLEAN.NORM_ADV: HParam(
                 value=0.5, name=agents_constants.C51_CLEAN.NORM_ADV, descr="norm_av param value"),
             agents_constants.C51_CLEAN.UPDATE_EPOCHS: HParam(
                 value=4, name=agents_constants.C51_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
-            agents_constants.C51_CLEAN.TARGET_KL: HParam(value=None,
-                                                         name=agents_constants.C51_CLEAN.TARGET_KL,
-                                                         descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(100000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
-            agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
-                                                       descr="training iterations between evaluations"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                                                            descr="the batch size for evaluation"),
-            agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                       descr="how frequently to save the model"),
+            agents_constants.COMMON.EVAL_EVERY: HParam(
+                value=1, name=agents_constants.COMMON.EVAL_EVERY, descr="training iterations between evaluations"),
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(
+                value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE, descr="the batch size for evaluation"),
+            agents_constants.COMMON.SAVE_EVERY: HParam(
+                value=10000, name=agents_constants.COMMON.SAVE_EVERY, descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
-                value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval"),
+                value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL, descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
-            agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
-                                              descr="the number of stop actions")
+            agents_constants.COMMON.L: HParam(
+                value=3, name=agents_constants.COMMON.L, descr="the number of stop actions"),
+            agents_constants.C51_CLEAN.N_ATOMS: HParam(
+                value=101, name=agents_constants.C51_CLEAN.N_ATOMS,
+                descr="the number of atoms"),
+            agents_constants.C51_CLEAN.V_MIN: HParam(
+                value=-100, name=agents_constants.C51_CLEAN.V_MIN,
+                descr="the return lower bound"),
+            agents_constants.C51_CLEAN.V_MAX: HParam(
+                value=100, name=agents_constants.C51_CLEAN.V_MAX,
+                descr="the return upper bound"),
+            agents_constants.C51_CLEAN.START_EXPLORATION_RATE: HParam(
+                value=1, name=agents_constants.C51_CLEAN.START_EXPLORATION_RATE,
+                descr="the initial exploration rate"),
+            agents_constants.C51_CLEAN.END_EXPLORATION_RATE: HParam(
+                value=0.05, name=agents_constants.C51_CLEAN.END_EXPLORATION_RATE,
+                descr="the final exploration rate")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
@@ -181,5 +171,5 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
 
     agent = C51CleanAgent(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
-                          experiment_config=experiment_config)
+                          experiment_config=experiment_config, save_to_metastore=False)
     experiment_execution = agent.train()

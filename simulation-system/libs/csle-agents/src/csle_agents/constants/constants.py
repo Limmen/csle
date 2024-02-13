@@ -133,14 +133,11 @@ class DQN_CLEAN:
 
 
 class C51_CLEAN:
+    """
+    String constants related to the C51-clean agent
+    """
     STEPS_BETWEEN_UPDATES = "steps_between_updates"
-    GAE_LAMBDA = "gae_lambda"
-    CLIP_RANGE = "clip_range"
-    CLIP_RANGE_VF = "clip_range_vf"
-    ENT_COEF = "ent_coef"
-    VF_COEF = "vf_coef"
     MAX_GRAD_NORM = "max_grad_norm"
-    TARGET_KL = "target_kl"
     MLP_POLICY = "MlpPolicy"
     MINIBATCH_SIZE = "minibatch_size"
     NUM_STEPS = "num_steps"
@@ -157,8 +154,13 @@ class C51_CLEAN:
     TRAIN_FREQ = "train_frequency"
     T_N_FREQ = "target_network_frequency"
     BUFFER_SIZE = "buffer_size"
+    START_EXPLORATION_RATE = "start_exploration_rate"
+    END_EXPLORATION_RATE = "end_exploration_rate"
     SAVE_MODEL = "save_model"
     CUDA = "cuda"
+    N_ATOMS = "n_atoms"
+    V_MIN = "v_min"
+    V_MAX = "v_max"
 
 
 class T_FP:

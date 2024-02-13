@@ -18,7 +18,6 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
-# from csle_common.models.c51_network import QNetwork
 from csle_common.models.q_network import QNetwork
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
@@ -37,6 +36,7 @@ class C51CleanAgent(BaseAgent):
     """
     A C51 agent using the implementation from CleanRL documentation
     """
+
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Optional[EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True) -> None:
@@ -58,19 +58,11 @@ class C51CleanAgent(BaseAgent):
         self.num_hl_neur = self.experiment_config.hparams[constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER].value
         self.config = self.simulation_env_config.simulation_env_input_config
         self.save_to_metastore = save_to_metastore
-        self.n_atoms: int = 101
-        """the number of atoms"""
-        self.v_min: float = -100
-        """the return lower bound"""
-        self.v_max: float = 100
-        """the return upper bound"""
         self.exp_name: str = self.simulation_env_config.name
         self.env_id = self.simulation_env_config.gym_env_name
         self.torch_deterministic = True
         self.cuda: bool = True
         self.learning_rate = self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value
-        self.start_e = 1
-        self.end_e = 0.05
         self.num_envs = self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value
         self.total_timesteps = self.experiment_config.hparams[
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value
@@ -86,16 +78,30 @@ class C51CleanAgent(BaseAgent):
         self.buffer_size = self.experiment_config.hparams[agents_constants.C51_CLEAN.BUFFER_SIZE].value
         self.save_model = self.experiment_config.hparams[agents_constants.C51_CLEAN.SAVE_MODEL].value
         self.device = self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value
+        self.start_exploration_rate = (
+            self.experiment_config.hparams[agents_constants.C51_CLEAN.START_EXPLORATION_RATE].value)
+        self.end_eploration_rate = (
+            self.experiment_config.hparams[agents_constants.C51_CLEAN.END_EXPLORATION_RATE].value)
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
 
-    def linear_schedule(self, duration: int, t: int):
-        slope = (self.end_e - self.start_e) / duration
-        return max(slope * t + self.start_e, self.end_e)
+    def linear_schedule(self, duration: int, t: int) -> float:
+        """
+        Linear exploration rate schedule
+
+        :param duration: training duration
+        :param t: the time step of the training
+        :return: the updated exploration rate
+        """
+        slope = (self.end_eploration_rate - self.start_exploration_rate) / duration
+        return max(slope * t + self.start_exploration_rate, self.end_eploration_rate)
 
     def make_env(self):
-        """Helper function for creating an environment in training of the agent
+        """
+        Helper function for creating an environment in training of the agent
+
         :return: environment creating function
         """
+
         def thunk():
             """
             The environment creating function
@@ -171,6 +177,7 @@ class C51CleanAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
             # Train
+
             # TODO: refactorize to C51 (only for show basically)
             exp_result, env, model = self.run_c51(exp_result=exp_result, seed=seed)
 
@@ -181,6 +188,7 @@ class C51CleanAgent(BaseAgent):
             action_space = \
                 self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions
+
             # TODO: fix policy to C51Policy
             policy = DQNPolicy(model=model, simulation_name=self.simulation_env_config.name,
                                save_path=save_path, player_type=self.experiment_config.player_type,
@@ -235,6 +243,7 @@ class C51CleanAgent(BaseAgent):
         Logger.__call__().get_logger().info(f"[CleanDQN] Start training; seed: {seed}")
         envs = gym.vector.SyncVectorEnv([self.make_env() for _ in range(self.num_envs)])
         assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
+
         # Setup training metrics
         exp_result.all_metrics[seed] = {}
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
@@ -266,36 +275,28 @@ class C51CleanAgent(BaseAgent):
         torch.backends.cudnn.deterministic = self.torch_deterministic
 
         target_network.load_state_dict(q_network.state_dict())
-        rb = ReplayBuffer(
-            self.buffer_size,
-            envs.single_observation_space,
-            envs.single_action_space,
-            device,
-            handle_timeout_termination=False,
-        )
+        rb = ReplayBuffer(self.buffer_size, envs.single_observation_space, envs.single_action_space, device,
+                          handle_timeout_termination=False)
         start_time = time.time()
-        # TRY NOT TO MODIFY: start the game
         obs, _ = envs.reset(seed=seed)
         R: List[Any] = []
         T = []
         i = 0
         for global_step in range(self.total_timesteps):
             i += 1
-            # ALGO LOGIC: put action logic here
-            epsilon = self.linear_schedule(self.exploration_fraction * self.total_timesteps, global_step)
+
+            epsilon = self.linear_schedule(duration=self.exploration_fraction * self.total_timesteps, t=global_step)
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
-                e_name = "csle-stopping-game-pomdp-defender-v1"
-                if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
-                    actions[0] = random.randrange(0, 2)
+                # e_name = "csle-stopping-game-pomdp-defender-v1"
+                # if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
+                #     actions[0] = random.randrange(0, 2)
 
-            # TRY NOT TO MODIFY: execute the game and log data.
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
-            # TRY NOT TO MODIFY: record rewards for plotting purposes
             if "final_info" in infos:
                 R_sum = 0
                 T_sum = 0
@@ -305,23 +306,21 @@ class C51CleanAgent(BaseAgent):
                 R.append(R_sum)
                 T.append(T_sum)
 
-            # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
                 if trunc:
                     real_next_obs[idx] = infos["final_observation"][idx]
             rb.add(obs, real_next_obs, actions, rewards, terminations, infos)
 
-            # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
             obs = next_obs
-            # ALGO LOGIC: training.
             if global_step > self.learning_starts:
-                
+
                 if global_step % self.train_frequency == 0:
                     data = rb.sample(self.batch_size)
                     with torch.no_grad():
                         _, next_pmfs = target_network.get_action(data.next_observations.to(dtype=torch.float32))
                         next_atoms = data.rewards + self.gamma * target_network.atoms * (1 - data.dones)
+
                         # projection
                         delta_z = target_network.atoms[1] - target_network.atoms[0]
                         tz = next_atoms.clamp(self.v_min, self.v_max)
@@ -329,9 +328,6 @@ class C51CleanAgent(BaseAgent):
                         b = (tz - self.v_min) / delta_z
                         l = b.floor().clamp(0, self.n_atoms - 1)
                         u = b.ceil().clamp(0, self.n_atoms - 1)
-
-                        # (l == u).float() handles the case where bj is exactly an integer
-                        # example bj = 1, then the upper ceiling should be uj= 2, and lj= 1
 
                         d_m_l = (u + (l == u).float() - b) * next_pmfs
                         d_m_u = (b - l) * next_pmfs
@@ -387,7 +383,7 @@ class C51CleanAgent(BaseAgent):
 
         :return: a list with the hyperparameter names
         """
-        # TODO: refactorize for C51 (just switch them out)
+        # TODO: refactorize for C51
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
@@ -398,4 +394,7 @@ class C51CleanAgent(BaseAgent):
                 agents_constants.COMMON.SAVE_EVERY,
                 agents_constants.C51_CLEAN.MLP_POLICY, agents_constants.C51_CLEAN.MAX_GRAD_NORM,
                 agents_constants.C51_CLEAN.LEARNING_STARTS,
-                agents_constants.C51_CLEAN.BUFFER_SIZE]
+                agents_constants.C51_CLEAN.BUFFER_SIZE, agents_constants.C51_CLEAN.N_ATOMS,
+                agents_constants.C51_CLEAN.V_MIN, agents_constants.C51_CLEAN.V_MAX,
+                agents_constants.COMMON.L, agents_constants.C51_CLEAN.NORM_ADV,
+                agents_constants.C51_CLEAN.NUM_MINIBATCHES, agents_constants.C51_CLEAN.UPDATE_EPOCHS]
