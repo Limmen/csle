@@ -324,47 +324,24 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                             self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
                                 access_val
                             self.detected[self.red_agent_target] = 1
-                    # if non_decoy_fail and self.red_agent_target == env_constants.CYBORG.USER3_IDX:
-                    #     if (CyborgScenarioTwoWrapper.is_decoy_same_as_exploit(
-                    #             decoy_actions_per_host=self.decoy_actions_per_host,
-                    #             red_agent_target=self.red_agent_target,
-                    #             defender_action_type=defender_action_type,
-                    #             defender_action_host_id=defender_action_host_id,
-                    #             decoy_action_types=self.decoy_action_types, previous_state=previous_state) or
-                    #             CyborgScenarioTwoWrapper.is_remove_same_as_exploit(
-                    #             decoy_actions_per_host=self.decoy_actions_per_host,
-                    #             red_agent_target=self.red_agent_target,
-                    #             defender_action_type=defender_action_type,
-                    #             defender_action_host_id=defender_action_host_id,
-                    #             decoy_action_types=self.decoy_action_types, previous_state=previous_state)):
-                    #         activity = ActivityType.EXPLOIT
-                    #         access_val = CompromisedType.USER.value
-                    #         if self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
-                    #                 == CompromisedType.PRIVILEGED.value:
-                    #             access_val = CompromisedType.PRIVILEGED.value
-                    #         self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
-                    #             access_val
-                    #         self.detected[self.red_agent_target] = 1
             elif current_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
-                s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(s=s_prime,
-                                                                          target_subnetwork=self.red_agent_target)
+                s_prime = CyborgScenarioTwoWrapper.apply_red_network_scan(
+                    s=s_prime, target_subnetwork=self.red_agent_target)
             elif current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
-                if not (self.red_agent_state == 11 and defender_action_type == BlueAgentActionType.RESTORE
+                if not (self.config.red_agent_type == RedAgentType.B_LINE_AGENT and
+                        self.red_agent_state == 11 and defender_action_type == BlueAgentActionType.RESTORE
                         and defender_action_host_id == self.red_action_targets[self.red_agent_state - 1]):
                     s_prime, attacker_observed_decoy = CyborgScenarioTwoWrapper.apply_red_host_scan(
                         s=s_prime, target_host_id=self.red_agent_target,
                         attacker_observed_decoy=self.attacker_observed_decoy)
                     self.attacker_observed_decoy = attacker_observed_decoy
-                    if not (defender_action_type in self.decoy_action_types and defender_action_host_id ==
-                            self.red_agent_target and
-                            self.hosts[self.red_agent_target] == env_constants.CYBORG.OP_SERVER0):
-                        activity = ActivityType.SCAN
-                        if (defender_action_type == BlueAgentActionType.ANALYZE
-                                and defender_action_host_id == self.red_agent_target
-                                and self.malware_state[self.red_agent_target] == 1
-                                and self.detected[self.red_agent_target] == 1):
-                            self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = (
-                                CompromisedType.UNKNOWN.value)
+                    activity = ActivityType.SCAN
+                    if (defender_action_type == BlueAgentActionType.ANALYZE
+                            and defender_action_host_id == self.red_agent_target
+                            and self.malware_state[self.red_agent_target] == 1
+                            and self.detected[self.red_agent_target] == 1):
+                        self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = (
+                            CompromisedType.UNKNOWN.value)
 
             elif current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
                 # if previous_state[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] \
