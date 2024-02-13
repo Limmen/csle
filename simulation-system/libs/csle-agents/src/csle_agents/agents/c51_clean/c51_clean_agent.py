@@ -96,7 +96,7 @@ class C51CleanAgent(BaseAgent):
         :return: the updated exploration rate
         """
         slope = (self.end_eploration_rate - self.start_exploration_rate) / duration
-        return max(slope * t + self.start_exploration_rate, self.end_eploration_rate)
+        return float(max(slope * t + self.start_exploration_rate, self.end_eploration_rate))
 
     def make_env(self):
         """
@@ -263,11 +263,13 @@ class C51CleanAgent(BaseAgent):
                               self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value)
         input_dim = np.array(envs.single_observation_space.shape).prod()
         q_network = QNetwork(input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
-                             agent_type=self.experiment_config.agent_type).to(device)
+                             agent_type=self.experiment_config.agent_type, n_atoms=self.n_atoms,
+                             action_space_dim=envs.single_action_space.n).to(device)
         optimizer = optim.Adam(q_network.parameters(), lr=self.learning_rate, eps=0.01 / self.batch_size)
         target_network = QNetwork(
             input_dim, num_hidden_layers=self.num_hl, hidden_layer_dim=self.num_hl_neur,
-            agent_type=self.experiment_config.agent_type, n_atoms=self.n_atoms).to(device)
+            agent_type=self.experiment_config.agent_type, n_atoms=self.n_atoms,
+            action_space_dim=envs.single_action_space.n).to(device)
 
         # Seeding
         random.seed(seed)
@@ -290,8 +292,8 @@ class C51CleanAgent(BaseAgent):
             if random.random() < epsilon:
                 actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
             else:
-                actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
-                actions = actions.cpu().numpy()
+                actions_tensor, pmf = q_network.get_action(torch.Tensor(obs).to(device))
+                actions = actions_tensor.cpu().numpy()
 
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
@@ -308,7 +310,7 @@ class C51CleanAgent(BaseAgent):
             for idx, trunc in enumerate(truncations):
                 if trunc:
                     real_next_obs[idx] = infos["final_observation"][idx]
-            rb.add(obs, real_next_obs, actions, rewards, terminations, infos)
+            rb.add(obs, real_next_obs, actions, rewards, terminations, infos)  # type: ignore
 
             obs = next_obs
             if global_step > self.learning_starts:

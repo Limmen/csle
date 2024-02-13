@@ -97,7 +97,7 @@ class SimulationEnvConfig(JSONSerializable):
             import WorkflowIntrusionResponsePOMDPAttackerConfig
         from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
         from csle_tolerance.dao.intrusion_response_cmdp_config import IntrusionResponseCmdpConfig
-        # from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+        from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
         input_config = None
         parse_functions = [StoppingGameConfig.from_dict, StoppingGameAttackerMdpConfig.from_dict,
                            StoppingGameDefenderPomdpConfig.from_dict,
@@ -108,8 +108,7 @@ class SimulationEnvConfig(JSONSerializable):
                            WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict,
                            WorkflowIntrusionResponsePOMDPAttackerConfig.from_dict,
                            IntrusionRecoveryPomdpConfig.from_dict,
-                           IntrusionResponseCmdpConfig.from_dict,]
-                           # CSLECyborgConfig.from_dict]
+                           IntrusionResponseCmdpConfig.from_dict, CSLECyborgConfig.from_dict]
         for parse_fun in parse_functions:
             try:
                 input_config = parse_fun(d["simulation_env_input_config"])
