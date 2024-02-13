@@ -82,6 +82,9 @@ class C51CleanAgent(BaseAgent):
             self.experiment_config.hparams[agents_constants.C51_CLEAN.START_EXPLORATION_RATE].value)
         self.end_eploration_rate = (
             self.experiment_config.hparams[agents_constants.C51_CLEAN.END_EXPLORATION_RATE].value)
+        self.n_atoms = self.experiment_config.hparams[agents_constants.C51_CLEAN.N_ATOMS].value
+        self.v_min = self.experiment_config.hparams[agents_constants.C51_CLEAN.V_MIN].value
+        self.v_max = self.experiment_config.hparams[agents_constants.C51_CLEAN.V_MAX].value
         self.orig_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=self.config)
 
     def linear_schedule(self, duration: int, t: int) -> float:
@@ -114,7 +117,7 @@ class C51CleanAgent(BaseAgent):
 
     def train(self) -> ExperimentExecution:
         """
-        Implements the training logic of the DQN algorithm
+        Implements the training logic of the C51 algorithm
 
         :return: the experiment result
         """
@@ -130,7 +133,7 @@ class C51CleanAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
-        descr = f"Training of policies with DQN using " \
+        descr = f"Training of policies with C51 using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         # Setup training job
@@ -176,20 +179,18 @@ class C51CleanAgent(BaseAgent):
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
             assert self.num_envs == 1, "vectorized envs are not supported at the moment"
-            # Train
 
-            # TODO: refactorize to C51 (only for show basically)
+            # Train
             exp_result, env, model = self.run_c51(exp_result=exp_result, seed=seed)
 
             # Save policy
             ts = time.time()
-            save_path = f"{self.experiment_config.output_dir}/DQN_policy_seed_{seed}_{ts}.zip"
+            save_path = f"{self.experiment_config.output_dir}/C51_policy_seed_{seed}_{ts}.zip"
             model.save(save_path)
             action_space = \
                 self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions
 
-            # TODO: fix policy to C51Policy
             policy = DQNPolicy(model=model, simulation_name=self.simulation_env_config.name,
                                save_path=save_path, player_type=self.experiment_config.player_type,
                                states=self.simulation_env_config.state_space_config.states,
@@ -234,13 +235,13 @@ class C51CleanAgent(BaseAgent):
 
     def run_c51(self, exp_result: ExperimentResult, seed: int) -> Tuple[ExperimentResult, BaseEnv, QNetwork]:
         """
-        Runs DQN with given seed
+        Runs C51 with given seed
 
         :param exp_result: the object to save the experiment results
         :param seed: the random seed
         :retur: the updated experiment results, the environment and the trained model
         """
-        Logger.__call__().get_logger().info(f"[CleanDQN] Start training; seed: {seed}")
+        Logger.__call__().get_logger().info(f"[CleanC51] Start training; seed: {seed}")
         envs = gym.vector.SyncVectorEnv([self.make_env() for _ in range(self.num_envs)])
         assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
@@ -291,9 +292,6 @@ class C51CleanAgent(BaseAgent):
             else:
                 actions, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions.cpu().numpy()
-                # e_name = "csle-stopping-game-pomdp-defender-v1"
-                # if self.simulation_env_config.simulation_env_input_config.env_name == e_name:
-                #     actions[0] = random.randrange(0, 2)
 
             next_obs, rewards, terminations, truncations, infos = envs.step(actions)
 
@@ -383,7 +381,6 @@ class C51CleanAgent(BaseAgent):
 
         :return: a list with the hyperparameter names
         """
-        # TODO: refactorize for C51
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                 agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
@@ -392,9 +389,8 @@ class C51CleanAgent(BaseAgent):
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 constants.NEURAL_NETWORKS.DEVICE,
                 agents_constants.COMMON.SAVE_EVERY,
-                agents_constants.C51_CLEAN.MLP_POLICY, agents_constants.C51_CLEAN.MAX_GRAD_NORM,
                 agents_constants.C51_CLEAN.LEARNING_STARTS,
                 agents_constants.C51_CLEAN.BUFFER_SIZE, agents_constants.C51_CLEAN.N_ATOMS,
                 agents_constants.C51_CLEAN.V_MIN, agents_constants.C51_CLEAN.V_MAX,
                 agents_constants.COMMON.L, agents_constants.C51_CLEAN.NORM_ADV,
-                agents_constants.C51_CLEAN.NUM_MINIBATCHES, agents_constants.C51_CLEAN.UPDATE_EPOCHS]
+                agents_constants.C51_CLEAN.START_EXPLORATION_RATE, agents_constants.C51_CLEAN.END_EXPLORATION_RATE]

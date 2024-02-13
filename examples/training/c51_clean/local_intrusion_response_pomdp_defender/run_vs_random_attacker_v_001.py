@@ -40,7 +40,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.BATCH_SIZE: HParam(value=1, name=agents_constants.COMMON.BATCH_SIZE,
                                                        descr="batch size for updates"),
             agents_constants.C51_CLEAN.LEARNING_STARTS: HParam(
-                value=10000, name=agents_constants.C51_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
+                value=1000, name=agents_constants.C51_CLEAN.LEARNING_STARTS, descr="timestep to start learning"),
             agents_constants.C51_CLEAN.TRAIN_FREQ: HParam(
                 value=10, name=agents_constants.C51_CLEAN.TRAIN_FREQ, descr="the frequency of training"),
             agents_constants.C51_CLEAN.T_N_FREQ: HParam(
@@ -65,16 +65,10 @@ if __name__ == '__main__':
                 value=True, name=agents_constants.C51_CLEAN.CLIP_VLOSS, descr="the clip-vloss"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
-            agents_constants.C51_CLEAN.NUM_MINIBATCHES: HParam(
-                value=4, name=agents_constants.C51_CLEAN.NUM_MINIBATCHES, descr="the number of minibatches"),
-            agents_constants.C51_CLEAN.MAX_GRAD_NORM: HParam(
-                value=0.5, name=agents_constants.C51_CLEAN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
             agents_constants.C51_CLEAN.NORM_ADV: HParam(
                 value=0.5, name=agents_constants.C51_CLEAN.NORM_ADV, descr="norm_av param value"),
-            agents_constants.C51_CLEAN.UPDATE_EPOCHS: HParam(
-                value=4, name=agents_constants.C51_CLEAN.UPDATE_EPOCHS, descr="value of update_epochs"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(100000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(10000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(
                 value=1, name=agents_constants.COMMON.EVAL_EVERY, descr="training iterations between evaluations"),
