@@ -70,7 +70,7 @@ if __name__ == '__main__':
         # Collect measurements
         time_series = ClusterController.get_execution_time_series_data(
             ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
-            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=1,
+            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=duration_minutes,
             ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)
 
         Logger.__call__().get_logger().info("Data collection complete")
@@ -79,6 +79,7 @@ if __name__ == '__main__':
         aggregate_snort_metrics = time_series.agg_snort_ids_metrics[0]
         for i in range(1, len(time_series.agg_snort_ids_metrics)):
             aggregate_snort_metrics.add(time_series.agg_snort_ids_metrics[i])
+
         data["snort_metrics"].append(aggregate_snort_metrics.to_dict())
         data["attacker_ips"].append(ip)
         data["attacker_cmds"].append(cmd)
