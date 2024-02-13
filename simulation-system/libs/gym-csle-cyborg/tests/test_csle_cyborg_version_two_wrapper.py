@@ -1897,7 +1897,6 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             i += 1
         assert match
 
-
     def test_set_state_44(self) -> None:
         """
         Tests the set_state method
@@ -2056,7 +2055,6 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             i += 1
         assert match
 
-
     def test_set_state_48(self) -> None:
         """
         Tests the set_state method
@@ -2088,12 +2086,45 @@ class TestCSLECyborgVersionTwoWrapperSuite:
         while i < max_tries and not match:
             env.set_state(state)
             o, r, done, _, info = env.step(action)
-            # if env.s == [[1, 0, 0, 4], [1, 1, 0, 0], [1, 0, 0, 1], [1, 1, 2, 1], [0, 0, 0, 0], [0, 0, 0, 0],
-            #              [0, 0, 0, 0], [1, 1, 0, 4], [1, 0, 2, 0], [1, 0, 0, 4], [1, 0, 0, 4], [1, 1, 2, 2],
-            #              [1, 0, 0, 1]]:
-            #     import logging
-            #     logging.info("State match")
-            #     logging.info(env.last_obs)
+            if env.last_obs == [[0, 0, 0, 4], [0, 1, 0, 0], [0, 0, 0, 1], [0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [1, 2, 0, 4], [0, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 4], [0, 1, 2, 2],
+                                [0, 0, 0, 1]] \
+                    and env.s == [[1, 0, 0, 4], [1, 1, 0, 0], [1, 0, 0, 1], [1, 1, 2, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [1, 1, 0, 4], [1, 0, 2, 0], [1, 0, 0, 4], [1, 0, 0, 4], [1, 1, 2, 2],
+                                  [1, 0, 0, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_49(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.B_LINE_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[1, 0, 0, 4], [1, 1, 0, 0], [1, 0, 0, 1], [1, 1, 2, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [1, 0, 0, 3], [1, 0, 2, 0], [1, 0, 0, 4], [1, 0, 0, 4], [1, 1, 2, 2], [1, 0, 0, 1]],
+            scan_state=[0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0], op_server_restored=False,
+            obs=[[0, 0, 0, 4], [0, 1, 0, 0], [0, 0, 0, 1], [0, 2, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 3], [0, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 4], [0, 1, 2, 2], [0, 0, 0, 1]],
+            red_action_targets={0: 0, 1: 11, 2: 11, 3: 11, 4: 1, 5: 1, 6: 1, 7: 1, 8: 3, 9: 3},
+            privilege_escalation_detected=None, red_agent_state=11, red_agent_target=7,
+            attacker_observed_decoy=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False
+        )
+        action = 35
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
             if env.last_obs == [[0, 0, 0, 4], [0, 1, 0, 0], [0, 0, 0, 1], [0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
                                 [0, 0, 0, 0], [1, 2, 0, 4], [0, 0, 0, 0], [0, 0, 0, 4], [0, 0, 0, 4], [0, 1, 2, 2],
                                 [0, 0, 0, 1]] \
