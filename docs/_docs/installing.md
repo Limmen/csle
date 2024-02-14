@@ -251,7 +251,7 @@ If you do not have Python >3.9 in your base environment, start with installing P
 
 ```bash
 conda create -n py39 python=3.9
-source activate python39
+conda activate py39 # alternatively, "source activate py39" for old versions of conda
 ```
 
 <p class="captionFig">

@@ -17,7 +17,7 @@ if __name__ == '__main__':
     if len(executions) == 0:
         raise ValueError(f"There is no execution of an emulation with name: {emulation}")
 
-    # There must be an executon of level 9 running first, otherwise the list is empty
+    # There must be an execution of level 9 running first, otherwise the list is empty
     execution = executions[0]
     emulation_env_config = execution.emulation_env_config
 
