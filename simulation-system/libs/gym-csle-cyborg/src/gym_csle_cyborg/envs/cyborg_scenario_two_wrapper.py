@@ -275,7 +275,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     if env_constants.CYBORG.SSH_PORT in exploited_ports:
                         self.ssh_access[self.red_agent_target] = 1
                     else:
-                        self.malware_state[self.red_agent_target] = 1
+                        self.malware_state[self.red_agent_target] = exploit_access.value
                     if detect:
                         activity = ActivityType.EXPLOIT
                         if env_constants.CYBORG.SSH_PORT not in exploited_ports:
@@ -338,7 +338,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     activity = ActivityType.SCAN
                     if (defender_action_type == BlueAgentActionType.ANALYZE
                             and defender_action_host_id == self.red_agent_target
-                            and self.malware_state[self.red_agent_target] == 1
+                            and self.malware_state[self.red_agent_target] > 0
                             and self.detected[self.red_agent_target] == 1):
                         self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = (
                             CompromisedType.UNKNOWN.value)
@@ -353,6 +353,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     escalated_state=self.escalated)
                 self.malware_state = malware_state
                 self.escalated = escalated
+        else:
+            if current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+                self.malware_state[self.red_agent_target] = 2
 
         # False negative scan
         if (current_red_action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES and self.red_agent_target == 1
@@ -360,7 +363,6 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 defender_action_host_id == self.red_agent_target
                 and s_prime[self.red_agent_target][env_constants.CYBORG.HOST_STATE_DECOY_IDX] == 1):
             activity = ActivityType.NONE
-
         obs, obs_tensor, scan_state = CyborgScenarioTwoWrapper.generate_observation(
             s=s_prime, scan_state=self.scan_state, decoy_action_types=self.decoy_action_types,
             decoy_actions_per_host=self.decoy_actions_per_host,
@@ -897,9 +899,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         s[defender_action_host_id][
                             env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.NO.value
         elif defender_action_type == BlueAgentActionType.ANALYZE:
-            if malware_state[defender_action_host_id] == 1:
+            if malware_state[defender_action_host_id] > 0:
                 last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
-                    CompromisedType.PRIVILEGED.value
+                    malware_state[defender_action_host_id]
             else:
                 if detected[defender_action_host_id] == 1 or ssh_access[defender_action_host_id] == 1:
                     if (last_obs[defender_action_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] !=
@@ -946,8 +948,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         """
         detect_access_val = CompromisedType.USER.value
         if defender_target == target_host_id and defender_action_type == BlueAgentActionType.ANALYZE:
-            if malware_state[target_host_id] == 1:
-                detect_access_val = exploit_access.value
+            if malware_state[target_host_id] > 0:
+                detect_access_val = malware_state[target_host_id]
+                # detect_access_val = exploit_access.value
+                # detect_access_val = CompromisedType.PRIVILEGED.value
         s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
             max(exploit_access.value, s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
         exploited[target_host_id] = 1
@@ -1009,7 +1013,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :return: the updated state, malware state, and escalated state
         """
         s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.PRIVILEGED.value
-        malware_state[target_host_id] = 1
+        malware_state[target_host_id] = 2
         escalated_state[target_host_id] = 1
         if red_agent_state == 3 or red_agent_state == 10:
             s[next_target_host_id][env_constants.CYBORG.HOST_STATE_KNOWN_IDX] = 1
