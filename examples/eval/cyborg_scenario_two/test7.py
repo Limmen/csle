@@ -41,9 +41,59 @@ if __name__ == '__main__':
     # paths = [
     #     "/Users/kim/Dropbox/pomcp/pomcp_10s_seed_55612.json"
     # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_3303919.json",
+    #     "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_33459871.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_005s_T_100_seed_110264.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_005s_T_100_seed_2090071.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_005s_T_100_seed_670091.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_01s_T_100_seed_6704813.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_01s_T_100_seed_800192.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_01s_T_100_seed_9980112.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_024s_T_100_seed_2200098.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_024s_T_100_seed_660091.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_024s_T_100_seed_700192.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_047s_T_100_seed_100987.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_047s_T_100_seed_2090071.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_047s_T_100_seed_8009123.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_094s_T_100_seed_100987.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_094s_T_100_seed_5870012.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_0_094s_T_100_seed_900081.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_1_875s_T_100_seed_3009813.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_1_875s_T_100_seed_5870012.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_1_875s_T_100_seed_760091.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_3_75s_T_100_seed_2228719.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_3_75s_T_100_seed_290078.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_3_75s_T_100_seed_5006776.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_7_5s_T_100_seed_110264.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_7_5s_T_100_seed_2200098.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_7_5s_T_100_seed_8001923.json"
+    # ]
+    # paths = [
+    #     "/Users/kim/Dropbox/pomcp/p_orig_15s_T_100_seed_100987.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_15s_T_100_seed_310987.json",
+    #     "/Users/kim/Dropbox/pomcp/p_orig_15s_T_100_seed_549001.json"
+    # ]
     paths = [
-        "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_3303919.json",
-        "/Users/kim/Dropbox/pomcp/pomcp_005s_T_100_seed_33459871.json"
+        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_408913.json",
+        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_500981.json",
+        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_880091.json"
     ]
     data_dicts = []
     for path in paths:
