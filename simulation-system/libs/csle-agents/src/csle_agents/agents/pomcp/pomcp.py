@@ -397,11 +397,18 @@ class POMCP:
                         red_agent_targets.add(particle.red_agent_target)
                         red_agent_states.add(particle.red_agent_state)
                     target_access_states = list(target_access_states)
-                    raise ValueError(f"Invalid observation: {observation}, target: {target}, "
+                    Logger.__call__().get_logger().info(f"Invalid observation: {observation}, target: {target}, "
                                      f"target access states: {target_access_states}, "
                                      f"red agent targets: {red_agent_targets}, red agent states: {red_agent_states}, "
                                      f"given state: 1: \n{root.sample_state()}, \n"
                                      f"2: \n {root.sample_state()}\n, 3: {root.sample_state()}\n ")
+                    for i in range(particle_slots-len(particles)):
+                        s = root.sample_state()
+                        self.env.set_state(state=s)
+                        _, r, _, _, info = self.env.step(action)
+                        s_prime = info[constants.COMMON.STATE]
+                        particles.append(s_prime)
+
             new_root.particles += particles
 
         # We now prune the old root from the tree
@@ -427,8 +434,13 @@ class POMCP:
 
             # Generate some new particles randomly
             num_reinvigorated_particles = int(len(new_root.particles) * self.reinvigorated_particles_ratio)
-            reinvigorated_particles = self.env.generate_random_particles(o=observation,
-                                                                         num_particles=num_reinvigorated_particles)
+            reinvigorated_particles= []
+            for i in range(num_reinvigorated_particles):
+                s = root.sample_state()
+                self.env.set_state(state=s)
+                _, r, _, _, info = self.env.step(action)
+                s_prime = info[constants.COMMON.STATE]
+                reinvigorated_particles.append(s_prime)
 
             # Randomly exchange some old particles for the new ones
             for particle in reinvigorated_particles:

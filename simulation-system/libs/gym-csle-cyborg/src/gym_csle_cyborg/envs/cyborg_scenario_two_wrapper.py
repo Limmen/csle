@@ -354,7 +354,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 self.malware_state = malware_state
                 self.escalated = escalated
         else:
-            if current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+            if (current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE
+                    and not (defender_action_type == BlueAgentActionType.RESTORE
+                             and defender_action_host_id == self.red_agent_target)):
                 self.malware_state[self.red_agent_target] = 2
 
         # False negative scan

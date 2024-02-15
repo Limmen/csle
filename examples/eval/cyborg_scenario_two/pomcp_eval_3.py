@@ -63,7 +63,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 50
     returns = []
-    seed = 5001123
+    seed = 80808081
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -78,10 +78,10 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 0.06
+        planning_time = 0.47
         # value_function = lambda x: 0
         value_function = heuristic_value
-        reinvigoration = False
+        reinvigoration = True
         rollout_policy = None
         # rollout_policy = ppo_policy
         verbose = False
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         prior_weight = 1
         acquisition_function_type = POMCPAcquisitionFunctionType.UCB
         use_rollout_policy = False
-        reinvigorated_particles_ratio = False
+        reinvigorated_particles_ratio = 0.05
         prune_action_space = False
         prune_size = 3
         prior_confidence = 0
@@ -156,5 +156,5 @@ if __name__ == '__main__':
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
         json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/Users/kim/p_orig_0_005s_T_50_seed_{seed}.json", 'w', encoding='utf-8') as f:
+        with io.open(f"/Users/kim/p_orig_0_47s_T_50_seed_{seed}.json", 'w', encoding='utf-8') as f:
             f.write(json_str)
