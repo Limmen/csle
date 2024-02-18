@@ -20,6 +20,7 @@ from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.cyborg_wrapper_state import CyborgWrapperState
 import gym_csle_cyborg.constants.constants as env_constants
 
+
 def heuristic_value(o: List[int]):
     host_costs = CyborgEnvUtil.get_host_compromised_costs()
     val = 0
@@ -35,6 +36,7 @@ def heuristic_value(o: List[int]):
         # if o[i][1] > 0 and o[i][3] > 0:
         #     val += host_values[hosts[i]]
     return val
+
 
 # def base_policy(o: List[int]):
 #     host_values = CyborgEnvUtil.get_cyborg_host_values()
@@ -63,7 +65,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 5691023
+    seed = 3056918
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -78,10 +80,10 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 3
+        planning_time = 1.875
         # value_function = lambda x: 0
         value_function = heuristic_value
-        reinvigoration = False
+        reinvigoration = True
         rollout_policy = None
         # rollout_policy = ppo_policy
         verbose = False
@@ -89,7 +91,7 @@ if __name__ == '__main__':
         prior_weight = 1
         acquisition_function_type = POMCPAcquisitionFunctionType.UCB
         use_rollout_policy = False
-        reinvigorated_particles_ratio = 0.0
+        reinvigorated_particles_ratio = 0.05
         prune_action_space = False
         prune_size = 3
         prior_confidence = 0
@@ -134,7 +136,7 @@ if __name__ == '__main__':
             target = 0
             if action_sequence[-1] == 1 or action_sequence[-1] == 0:
                 target = 6
-            pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id, t=t+1)
+            pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id, t=t + 1)
             R += r
             t += 1
             Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
@@ -157,6 +159,6 @@ if __name__ == '__main__':
         results["rollout_policy"] = "-"
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
-        # json_str = json.dumps(results, indent=4, sort_keys=True)
-        # with io.open(f"/Users/kim/p_orig_0_47s_T_50_seed_{seed}.json", 'w', encoding='utf-8') as f:
-        #     f.write(json_str)
+        json_str = json.dumps(results, indent=4, sort_keys=True)
+        with io.open(f"/Users/kim/pomcp_meander_1_875s_T_100_seed_{seed}.json", 'w', encoding='utf-8') as f:
+            f.write(json_str)
