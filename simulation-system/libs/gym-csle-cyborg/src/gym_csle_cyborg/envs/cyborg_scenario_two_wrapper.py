@@ -1493,13 +1493,13 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                 actions.append(k)
                             if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2:
                                 if h_id == 0:
-                                    actions.append(34)
+                                    actions.append(26)
                                 elif h_id == 1:
-                                    actions.append(27)
+                                    actions.append(8)
                                 elif h_id == 2:
-                                    actions.append(28)
+                                    actions.append(9)
                                 elif h_id == 3:
-                                    actions.append(29)
+                                    actions.append(10)
                         elif v[0] in CyborgEnvUtil.get_decoy_action_types(scenario=2):
                             if (h_id in known_hosts or t<= 4) and h_id in decoy_hosts:
                                 if k not in actions:
@@ -1510,7 +1510,23 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                 if k not in actions:
                                     actions.append(k)
         if len(actions) == 0:
-            actions = [27, 28, 29, 34]
+            actions = []
+            if observation[0][0] == 0:
+                actions.append(34)
+            else:
+                actions.append(26)
+            if observation[1][0] == 0:
+                actions.append(27)
+            else:
+                actions.append(8)
+            if observation[2][0] == 0:
+                actions.append(28)
+            else:
+                actions.append(9)
+            if observation[3][0] == 0:
+                actions.append(29)
+            else:
+                actions.append(10)
         return actions
 
     @staticmethod
