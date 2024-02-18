@@ -148,7 +148,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             current_red_action_type, target_distribution = \
                 CyborgScenarioTwoWrapper.get_next_meander_action_type_and_target_distribution(
                     s=s_prime, escalated=self.escalated, exploited=self.exploited,
-                    scanned_subnets=self.scanned_subnets)
+                    scanned_subnets=self.scanned_subnets, previous_state=previous_state)
             self.red_agent_target = np.random.choice(np.arange(0, len(target_distribution)), p=target_distribution)
             if current_red_action_type == RedAgentActionType.PRIVILEGE_ESCALATE \
                     and self.red_agent_target == env_constants.CYBORG.USER0_IDX:
@@ -629,12 +629,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
     @staticmethod
     def get_next_meander_action_type_and_target_distribution(
-            s: List[List[int]], escalated: List[int], exploited: List[int], scanned_subnets: List[int]) \
+            s: List[List[int]], escalated: List[int], exploited: List[int], scanned_subnets: List[int],
+            previous_state: List[List[int]],) \
             -> Tuple[RedAgentActionType, List[float]]:
         """
         Gets the next action type and target distribution of the meander agent
 
         :param s: the current state
+        :param previous_state: the previous state
         :param escalated: the escalated state
         :param exploited: the exploited state
         :param scanned_subnets: the scanned subnets state
@@ -651,7 +653,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         # Start by scanning
         for subnet_id in range(len(target_subnet_distribution)):
             if CyborgScenarioTwoWrapper.is_subnet_scan_feasible(
-                    subnet_id=subnet_id, s=s, scanned_subnets=scanned_subnets, escalated=escalated):
+                    subnet_id=subnet_id, s=previous_state, scanned_subnets=scanned_subnets, escalated=escalated):
                 target_subnet_distribution[subnet_id] = 1
                 return RedAgentActionType.DISCOVER_REMOTE_SYSTEMS, target_subnet_distribution
 
@@ -1425,9 +1427,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             for p in particles:
                 current_red_action_type, target_distribution = \
                     CyborgScenarioTwoWrapper.get_next_meander_action_type_and_target_distribution(
-                        s=p.s, escalated=p.escalated, exploited=p.exploited, scanned_subnets=p.scanned_subnets)
+                        s=p.s, escalated=p.escalated, exploited=p.exploited, scanned_subnets=p.scanned_subnets,
+                        previous_state=p.s)
                 for i in range(len(target_distribution)):
-                    if i == env_constants.CYBORG.USER0_IDX:
+                    if i == env_constants.CYBORG.USER0_IDX \
+                            or current_red_action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
                         reachable_hosts.add(12)
                         reachable_hosts.add(11)
                         reachable_hosts.add(10)
