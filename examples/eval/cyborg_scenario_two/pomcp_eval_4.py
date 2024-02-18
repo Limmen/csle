@@ -127,12 +127,12 @@ if __name__ == '__main__':
             print(eval_env.get_true_table())
             print(eval_env.get_table())
             print(eval_env.get_actions_table())
-            print(action)
-            print(CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime))
-            print(CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True))
-            print(pomcp.tree.root.sample_state())
-            print(pomcp.tree.root.sample_state())
-            print(pomcp.tree.root.sample_state())
+            # print(action)
+            # print(CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime))
+            # print(CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True))
+            # print(pomcp.tree.root.sample_state())
+            # print(pomcp.tree.root.sample_state())
+            # print(pomcp.tree.root.sample_state())
             target = 0
             if action_sequence[-1] == 1 or action_sequence[-1] == 0:
                 target = 6

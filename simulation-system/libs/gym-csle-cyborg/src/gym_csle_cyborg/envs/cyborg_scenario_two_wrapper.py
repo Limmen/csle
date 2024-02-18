@@ -1411,8 +1411,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     decoy_hosts.add(host_id)
                 # if p.s[host_id][2] == 1:
                 #     user_compromised_hosts.add(host_id)
-                if p.s[host_id][2] > 0 and ((host_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and
-                                             p.exploited[host_id] == 1)
+                if p.s[host_id][2] > 0 and ((host_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS)
                                              or host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS or
                                              (host_id in env_constants.CYBORG.USER_HOST_IDS
                                               and p.escalated[host_id] == 1)):
@@ -1490,9 +1489,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         if v[0] == BlueAgentActionType.REMOVE and h_id in user_compromised_hosts:
                             actions.append(k)
                         elif v[0] == BlueAgentActionType.RESTORE and h_id in root_compromised_hosts:
-                            actions.append(k)
-                            if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2 \
-                                    and observation[h_id][1] == 0:
+                            if observation[h_id][0] != 1:
+                                actions.append(k)
+                            if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2:
                                 if h_id == 0:
                                     actions.append(34)
                                 elif h_id == 1:
