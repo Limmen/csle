@@ -30,7 +30,7 @@ class Args:
     """if toggled, this experiment will be tracked with Weights and Biases"""
     wandb_project_name: str = "cleanRL"
     """the wandb's project name"""
-    wandb_entity: str = None
+    wandb_entity: str = "None"
     """the entity (team) of wandb's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
@@ -66,7 +66,7 @@ class Args:
     """coefficient of the value function"""
     max_grad_norm: float = 0.5
     """the maximum norm for the gradient clipping"""
-    target_kl: float = 1.0
+    target_kl: float = 0.5
     """the target KL divergence threshold"""
 
     # PPG specific arguments
@@ -210,17 +210,6 @@ class Agent(nn.Module):
     def get_pi(self, x):
         return Categorical(logits=self.actor(self.network(x.permute((0, 3, 1, 2)) / 255.0)))
 
-def make_env(env_id, idx, capture_video, run_name):
-    def thunk():
-        # if capture_video and idx == 0:
-        #     env = gym.make(env_id, render_mode="rgb_array")
-        #     env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
-        # else:
-        env = gym.make(env_id)
-        env = gym.wrappers.RecordEpisodeStatistics(env)
-        return env
-
-    return thunk
 
 if __name__ == "__main__":
     args = tyro.cli(Args)
@@ -243,11 +232,11 @@ if __name__ == "__main__":
             monitor_gym=True,
             save_code=True,
         )
-    # writer = SummaryWriter(f"runs/{run_name}")
-    # writer.add_text(
-    #     "hyperparameters",
-    #     "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
-    # )
+    writer = SummaryWriter(f"runs/{run_name}")
+    writer.add_text(
+        "hyperparameters",
+        "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+    )
 
     flatten_unflatten_test()  # Try not to mess with the flatten unflatten logic
 
@@ -258,22 +247,18 @@ if __name__ == "__main__":
     torch.backends.cudnn.deterministic = args.torch_deterministic
 
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
-    # print(device)
-    # env setup
 
+    # env setup
     envs = ProcgenEnv(num_envs=args.num_envs, env_name=args.env_id, num_levels=0, start_level=0, distribution_mode="easy")
     envs = gym.wrappers.TransformObservation(envs, lambda obs: obs["rgb"])
     envs.single_action_space = envs.action_space
-    print(envs)
     envs.single_observation_space = envs.observation_space["rgb"]
     envs.is_vector_env = True
     envs = gym.wrappers.RecordEpisodeStatistics(envs)
-    print(envs)
     if args.capture_video:
         envs = gym.wrappers.RecordVideo(envs, f"videos/{run_name}")
     envs = gym.wrappers.NormalizeReward(envs, gamma=args.gamma)
     envs = gym.wrappers.TransformReward(envs, lambda reward: np.clip(reward, -10, 10))
-    print(envs)
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
     agent = Agent(envs).to(device)
@@ -294,8 +279,7 @@ if __name__ == "__main__":
     # TRY NOT TO MODIFY: start the game
     global_step = 0
     start_time = time.time()
-    print(envs)
-    next_obs = torch.Tensor(envs.reset(seed=args.seed)).to(device)
+    next_obs = torch.Tensor(envs.reset()).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
 
     for phase in range(1, args.num_phases + 1):
