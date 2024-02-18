@@ -322,6 +322,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                         self.last_obs[self.red_agent_target][
                                             env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
                 else:
+                    if self.config.red_agent_type == RedAgentType.MEANDER_AGENT:
+                        exploited, escalated = CyborgScenarioTwoWrapper.process_failed_meander_ip_action(
+                            exploited=self.exploited, escalated=self.escalated, host_id=self.red_agent_target)
+                        self.exploited = exploited
+                        self.escalated = escalated
                     if not non_decoy_fail and not fictitious_decoy_fail:
                         activity = ActivityType.SCAN
                         if defender_action_type == BlueAgentActionType.ANALYZE \
@@ -873,10 +878,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 return False
         elif action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
             if exploit_type == ExploitType.SSH_BRUTE_FORCE \
+                    and target_host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS \
                     and not CyborgScenarioTwoWrapper.does_red_agent_have_access_to_enterprise_network(s=s):
                 return False
         elif action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
-            if target_host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS or target_host_id == 0:
+            if target_host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS:
                 if not CyborgScenarioTwoWrapper.does_red_agent_have_access_to_enterprise_network(s=s):
                     return False
         return True
