@@ -1500,6 +1500,14 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                                     actions.append(9)
                                 elif h_id == 3:
                                     actions.append(10)
+                                elif h_id == 12:
+                                    actions.append(25)
+                                elif h_id == 11:
+                                    actions.append(24)
+                                elif h_id == 10:
+                                    actions.append(23)
+                                elif h_id == 9:
+                                    actions.append(22)
                         elif v[0] in CyborgEnvUtil.get_decoy_action_types(scenario=2):
                             if (h_id in known_hosts or t<= 4) and h_id in decoy_hosts:
                                 if k not in actions:

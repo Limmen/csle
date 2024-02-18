@@ -196,9 +196,10 @@ class POMCP:
                                                                       t=t+depth, observation=observation)
                 # print(f"rollout actions: {rollout_actions}")
 
-            # since the node does not have any children, we first add them to the node
-            for action in rollout_actions:
-                self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
+            if len(current_node.children) == 0:
+                # since the node does not have any children, we first add them to the node
+                for action in rollout_actions:
+                    self.tree.add(history + [action], parent=current_node, action=action, value=self.default_node_value)
 
             # Perform the rollout from the current state and return the value
             self.env.set_state(state=state)
