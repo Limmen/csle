@@ -155,7 +155,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 self.exploited[env_constants.CYBORG.USER0_IDX] = 0
         else:
             raise ValueError(f"Red agent: {self.config.red_agent_type} not recognized")
-        # print(f"red action type: {current_red_action_type}, target: {self.red_agent_target}")
+        print(f"red action type: {current_red_action_type}, target: {self.red_agent_target}")
 
         # Apply attacker action to state
         if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
@@ -876,7 +876,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     and not CyborgScenarioTwoWrapper.does_red_agent_have_access_to_enterprise_network(s=s):
                 return False
         elif action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
-            if target_host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS or target_host_id in [0, 3]:
+            if target_host_id in env_constants.CYBORG.OPERATIONAL_HOST_IDS or target_host_id == 0:
                 if not CyborgScenarioTwoWrapper.does_red_agent_have_access_to_enterprise_network(s=s):
                     return False
         return True
