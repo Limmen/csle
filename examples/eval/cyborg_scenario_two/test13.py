@@ -108,8 +108,11 @@ if __name__ == '__main__':
             #     print("exploit activity")
             # print(f"t: {t}")
 
-            if red_action_type == 2 and red_action_target == 0:
-                print(f"obs: {obs_vec[0]}, s: {s_vec[0]}")
+            # if red_action_type == 2 and red_action_target == 0:
+            #     if obs_vec[0][0] == 1:
+            #         print(f"SCAN obs: {obs_vec[0]}, s: {s_vec[0]}")
+            #     if obs_vec[0][0] == 2:
+            #         print(f"EXPLOIT obs: {obs_vec[0]}, s: {s_vec[0]}")
 
             # if len(red_action_targets) > 2:
             #     if not red_success and red_action_types[-2] == 2 and observations[-2][red_action_targets[-2]][0] == 2:

@@ -63,7 +63,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 80808081
+    seed = 5691023
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         train_env.reset()
         initial_particles = train_env.initial_particles
         max_particles = 1000
-        planning_time = 15
+        planning_time = 3
         # value_function = lambda x: 0
         value_function = heuristic_value
         reinvigoration = False

@@ -280,11 +280,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     self.escalated = escalated
 
         activity = ActivityType.NONE
-        if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE \
-                and self.red_agent_target == env_constants.CYBORG.DEFENDER_IDX:
-            is_red_action_feasible = False
-            activity = ActivityType.EXPLOIT
-            self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.USER
+        # if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE \
+        #         and self.red_agent_target == env_constants.CYBORG.DEFENDER_IDX:
+        #     is_red_action_feasible = False
+        #     activity = ActivityType.EXPLOIT
+        #     self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.USER
         if is_red_action_feasible:
             if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
                 exploit_access = CompromisedType.USER
@@ -1009,9 +1009,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 detect_access_val = malware_state[target_host_id]
                 # detect_access_val = exploit_access.value
                 # detect_access_val = CompromisedType.PRIVILEGED.value
-        s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
-            max(exploit_access.value, s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
-        exploited[target_host_id] = 1
+        if target_host_id != env_constants.CYBORG.DEFENDER_IDX:
+            s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = \
+                max(exploit_access.value, s[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX])
+            exploited[target_host_id] = 1
         if detect:
             observation[target_host_id][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = detect_access_val
         return s, observation, exploited
