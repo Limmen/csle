@@ -34,7 +34,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 1
         max_tries = 1000
@@ -78,7 +79,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 33
         max_tries = 1000
@@ -122,7 +124,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -166,7 +169,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 9
         max_tries = 1000
@@ -212,7 +216,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 2
         max_tries = 1000
@@ -258,7 +263,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -302,7 +308,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -346,7 +353,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 28
         max_tries = 1000
@@ -390,7 +398,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 28
         max_tries = 1000
@@ -436,7 +445,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 1
         max_tries = 1000
@@ -480,7 +490,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -524,7 +535,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 8
         max_tries = 1000
@@ -568,7 +580,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -612,7 +625,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 8
         max_tries = 1000
@@ -656,7 +670,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 21
         max_tries = 1000
@@ -700,7 +715,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 15
         max_tries = 1000
@@ -746,7 +762,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 0
         max_tries = 1000
@@ -790,7 +807,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -834,7 +852,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 4
         max_tries = 1000
@@ -878,7 +897,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 12
         max_tries = 1000
@@ -922,7 +942,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -966,7 +987,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 5
         max_tries = 1000
@@ -1010,7 +1032,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -1054,7 +1077,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 5
         max_tries = 1000
@@ -1098,7 +1122,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -1142,7 +1167,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -1186,7 +1212,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -1230,7 +1257,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 4
         max_tries = 1000
@@ -1274,7 +1302,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 5
         max_tries = 1000
@@ -1318,7 +1347,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -1362,7 +1392,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 5
         max_tries = 1000
@@ -1406,7 +1437,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 8
         max_tries = 1000
@@ -1451,7 +1483,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 29
         max_tries = 1000
@@ -1496,7 +1529,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 35
         max_tries = 1000
@@ -1540,7 +1574,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -1584,7 +1619,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 4
         max_tries = 1000
@@ -1628,7 +1664,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 4
         max_tries = 1000
@@ -1672,7 +1709,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 5
         max_tries = 1000
@@ -1716,7 +1754,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 32
         max_tries = 1000
@@ -1758,7 +1797,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
             exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 27
         max_tries = 1000
@@ -1797,7 +1837,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             exploited=[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 31
         max_tries = 1000
@@ -1839,7 +1880,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             exploited=[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 31
         max_tries = 1000
@@ -1878,7 +1920,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 6
         max_tries = 1000
@@ -1918,7 +1961,8 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             exploited=[0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            bline_base_jump=False
+            bline_base_jump=False,
+            scanned_subnets=[0, 0, 0]
         )
         action = 34
         max_tries = 1000
@@ -1956,7 +2000,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=2, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 26
         max_tries = 1000
@@ -1995,7 +2039,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             attacker_observed_decoy=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False
+            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 35
         max_tries = 1000
@@ -2036,7 +2080,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             attacker_observed_decoy=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            exploited=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False
+            exploited=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 25
         max_tries = 1000
@@ -2077,7 +2121,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             attacker_observed_decoy=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            exploited=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False
+            exploited=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 35
         max_tries = 1000
@@ -2116,7 +2160,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             attacker_observed_decoy=[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False
+            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 35
         max_tries = 1000
@@ -2154,7 +2198,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=10, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 23
         max_tries = 1000
@@ -2192,7 +2236,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=10, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -2230,7 +2274,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=10, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -2268,7 +2312,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=10, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 23
         max_tries = 1000
@@ -2306,7 +2350,7 @@ class TestCSLECyborgVersionTwoWrapperSuite:
             red_agent_target=10, attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
             detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
         )
         action = 13
         max_tries = 1000
@@ -2321,6 +2365,310 @@ class TestCSLECyborgVersionTwoWrapperSuite:
                     and env.s == [[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
                                   [0, 0, 0, 0], [0, 0, 0, 1], [1, 0, 2, 0], [1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0],
                                   [1, 0, 0, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_55(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+             [0, 0, 0, 0], [1, 0, 2, 0], [1, 1, 0, 1], [1, 1, 0, 1], [1, 1, 0, 1], [1, 1, 0, 1]],
+            scan_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 0, 1], [0, 1, 0, 1], [1, 2, 0, 1], [0, 1, 0, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
+        )
+        action = 30
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [1, 2, 0, 0], [0, 1, 0, 2], [0, 1, 0, 1], [0, 1, 0, 1],
+                                [0, 1, 0, 1]] \
+                    and env.s == [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 2], [1, 1, 0, 1], [1, 1, 0, 1],
+                                  [1, 1, 0, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_56(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 1], [1, 1, 0, 0], [1, 1, 0, 2], [1, 1, 0, 1]],
+            scan_state=[0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [1, 2, 0, 0], [0, 1, 0, 1], [0, 1, 0, 0], [0, 1, 0, 2], [0, 1, 0, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], bline_base_jump=False, scanned_subnets=[0, 0, 0]
+        )
+        action = 27
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 2, 0, 0], [0, 1, 0, 1], [0, 1, 0, 0], [0, 1, 0, 2],
+                                [0, 1, 0, 1]] \
+                    and env.s == [[0, 0, 0, 0], [0, 0, 0, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 1], [1, 1, 0, 0], [1, 1, 0, 2],
+                                  [1, 1, 0, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_57(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 1], [1, 1, 0, 1], [1, 1, 0, 2], [1, 1, 2, 1]],
+            scan_state=[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 2, 0, 1], [0, 1, 0, 2], [2, 1, 1, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], bline_base_jump=False, scanned_subnets=[0, 0, 0]
+        )
+        action = 31
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 2, 0, 2], [0, 1, 0, 2],
+                                [0, 1, 1, 1]] \
+                    and env.s == [[0, 0, 0, 0], [1, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 1], [1, 1, 0, 2], [1, 1, 0, 2],
+                                  [1, 1, 2, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_58(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [1, 1, 0, 2], [1, 1, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 2, 3], [1, 1, 2, 3], [1, 1, 2, 2], [1, 1, 2, 1]],
+            scan_state=[0, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 2, 0, 2], [2, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 3, 3], [0, 1, 3, 3], [0, 1, 3, 2], [0, 1, 3, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0],
+            detected=[0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], malware_state=[0, 0, 2, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            exploited=[0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], bline_base_jump=False, scanned_subnets=[1, 0, 0]
+        )
+        action = 8
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 2, 0, 2], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 3, 3], [0, 1, 3, 3],
+                                [0, 1, 3, 2], [0, 1, 3, 1]] \
+                    and env.s == [[0, 0, 0, 0], [1, 1, 0, 2], [1, 1, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 2, 3], [1, 1, 2, 3], [1, 1, 2, 2],
+                                  [1, 1, 2, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_59(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [1, 1, 1, 4], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 2, 4], [1, 1, 2, 1], [1, 1, 2, 2], [1, 1, 2, 1]],
+            scan_state=[0, 1, 2, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [2, 1, 1, 4], [0, 2, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 4], [0, 1, 3, 1], [0, 1, 3, 2], [0, 1, 3, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 2, 1, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2],
+            ssh_access=[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            exploited=[0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], bline_base_jump=False, scanned_subnets=[1, 0, 0]
+        )
+        action = 22
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 1, 1, 4], [0, 2, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 3, 4], [0, 1, 3, 1], [0, 1, 3, 2],
+                                [0, 1, 3, 1]] \
+                    and env.s == [[0, 0, 0, 0], [1, 1, 2, 4], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 2, 4], [1, 1, 2, 1], [1, 1, 2, 2],
+                                  [1, 1, 2, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_60(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 1], [1, 1, 0, 0]],
+            scan_state=[0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [1, 2, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 1], [0, 1, 0, 0]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], bline_base_jump=False, scanned_subnets=[1, 0, 0]
+        )
+        action = 28
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 2, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 1],
+                                [0, 1, 0, 0]] \
+                    and env.s == [[0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 1],
+                                  [1, 1, 0, 0]] and env.escalated[8] == 1:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_61(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 1]],
+            scan_state=[0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 2, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 1]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], bline_base_jump=False, scanned_subnets=[1, 0, 0]
+        )
+        action = 28
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [2, 2, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 1],
+                                [0, 1, 0, 1]] \
+                    and env.s == [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 1],
+                                  [1, 1, 0, 1]]:
+                match = True
+            i += 1
+        assert match
+
+    def test_set_state_62(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[1, 1, 0, 4], [1, 1, 0, 4], [1, 1, 0, 1], [1, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 0], [1, 1, 0, 0]],
+            scan_state=[1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 2, 1, 1], op_server_restored=False,
+            obs=[[0, 1, 0, 4], [0, 1, 0, 4], [0, 1, 0, 1], [0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [1, 2, 0, 1], [0, 1, 0, 0], [0, 1, 0, 0]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[4, 4, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1],
+            exploited=[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1], bline_base_jump=False, scanned_subnets=[1, 1, 0]
+        )
+        action = 27
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[0, 1, 0, 4], [0, 1, 0, 4], [1, 2, 0, 1], [0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 0],
+                                [0, 1, 0, 0]] \
+                    and env.s == [[1, 1, 0, 4], [1, 1, 0, 4], [1, 1, 0, 1], [1, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 0],
+                                  [1, 1, 0, 0]]:
                 match = True
             i += 1
         assert match

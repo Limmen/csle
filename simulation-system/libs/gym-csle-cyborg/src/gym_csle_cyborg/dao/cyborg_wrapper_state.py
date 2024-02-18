@@ -11,7 +11,8 @@ class CyborgWrapperState(JSONSerializable):
                  red_action_targets: Dict[int, int], privilege_escalation_detected: Union[int, None],
                  red_agent_state: int, red_agent_target: int, attacker_observed_decoy: List[int],
                  detected: List[int], malware_state: List[int], ssh_access: List[int],
-                 escalated: List[int], exploited: List[int], bline_base_jump: bool) -> None:
+                 escalated: List[int], exploited: List[int], bline_base_jump: bool,
+                 scanned_subnets: List[int]) -> None:
         """
         Initializes the DAO
 
@@ -30,6 +31,7 @@ class CyborgWrapperState(JSONSerializable):
         :param ssh_access: a list of ssh access states for the hosts
         :param escalated: a list of escalated statuses for the hosts
         :param exploited: a list of exploited statuses for the hosts
+        :param scanned_subnets: a list of scanned subnetworks
         :param bline_base_jump: boolean flag indicating whether the bline agent should jump
         """
         self.s = s
@@ -47,6 +49,7 @@ class CyborgWrapperState(JSONSerializable):
         self.escalated = escalated
         self.exploited = exploited
         self.bline_base_jump = bline_base_jump
+        self.scanned_subnets = scanned_subnets
 
     def __str__(self) -> str:
         """
@@ -58,7 +61,8 @@ class CyborgWrapperState(JSONSerializable):
                 f"red_agent_state={self.red_agent_state}, red_agent_target={self.red_agent_target}, "
                 f"attacker_observed_decoy={self.attacker_observed_decoy}, detected={self.detected}, "
                 f"malware_state={self.malware_state}, ssh_access={self.ssh_access}, escalated={self.escalated}, "
-                f"exploited={self.exploited}, bline_base_jump={self.bline_base_jump}")
+                f"exploited={self.exploited}, bline_base_jump={self.bline_base_jump}, "
+                f"scanned_subnets={self.scanned_subnets}")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "CyborgWrapperState":
@@ -74,7 +78,8 @@ class CyborgWrapperState(JSONSerializable):
             privilege_escalation_detected=d["privilege_escalation_deteceted"], red_agent_state=d["red_agent_state"],
             red_agent_target=d["red_agent_target"], attacker_observed_decoy=d["attacker_observed_decoy"],
             detected=d["detected"], malware_state=d["malware_state"], ssh_access=d["ssh_access"],
-            escalated=d["escalated"], exploited=d["exploited"], bline_base_jump=d["bline_base_jump"]
+            escalated=d["escalated"], exploited=d["exploited"], bline_base_jump=d["bline_base_jump"],
+            scanned_subnets=d["scanned_subnets"]
         )
         return obj
 
@@ -100,6 +105,7 @@ class CyborgWrapperState(JSONSerializable):
         d["escalated"] = self.escalated
         d["exploited"] = self.exploited
         d["bline_base_jump"] = self.bline_base_jump
+        d["scanned_subnets"] = self.scanned_subnets
         return d
 
     @staticmethod

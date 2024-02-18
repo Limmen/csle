@@ -95,7 +95,7 @@ class POMCP:
             belief_state[state] = round(prob, 6)
         return belief_state
 
-    def rollout(self, state: int, history: List[int], depth: int, max_rollout_depth: int) -> float:
+    def rollout(self, state: int, history: List[int], depth: int, max_rollout_depth: int, t: int) -> float:
         """
         Perform randomized recursive rollout search starting from the given history
         until the max depth has been achieved
@@ -104,6 +104,7 @@ class POMCP:
         :param history: the history of the root node
         :param depth: current planning horizon
         :param max_rollout_depth: max rollout depth
+        :param t: the time step
         :return: the estimated value of the root node
         """
         if depth > max_rollout_depth:
@@ -129,6 +130,8 @@ class POMCP:
                 #     rollout_actions.remove(0)
                 # a = POMCPUtil.rand_choice(rollout_actions)
             a = 35
+            # rollout_actions = self.env.get_actions_from_particles(particles=[state], t=t+depth)
+            # a = POMCPUtil.rand_choice(rollout_actions)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
                                            deterministic=False)
@@ -138,9 +141,9 @@ class POMCP:
         s_prime = info[constants.COMMON.STATE]
         o = info[constants.COMMON.OBSERVATION]
         return float(r) + self.gamma * self.rollout(state=s_prime, history=history + [a, o], depth=depth + 1,
-                                                    max_rollout_depth=max_rollout_depth)
+                                                    max_rollout_depth=max_rollout_depth, t=t)
 
-    def simulate(self, state: int, max_rollout_depth: int, c: float, history: List[int],
+    def simulate(self, state: int, max_rollout_depth: int, c: float, history: List[int], t: int,
                  max_planning_depth: int, depth=0, parent: Union[None, BeliefNode, ActionNode] = None) \
             -> Tuple[float, int]:
         """
@@ -153,6 +156,7 @@ class POMCP:
         :param depth: the current depth of the simulation
         :param history: the current history (history of the start node plus the simulation history)
         :param parent: the parent node in the tree
+        :param t: the time-step
         :return: the Monte-Carlo value of the node and the current depth
         """
 
@@ -187,9 +191,9 @@ class POMCP:
                 rollout_actions = list(map(lambda x: x[1], sorted(dist, reverse=True,
                                                                   key=lambda x: x[0])[:self.prune_size]))
             else:
-                rollout_actions = self.A
-                # rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles + [state],
-                #                                                       t=len(current_node.history))
+                # rollout_actions = self.A
+                rollout_actions = self.env.get_actions_from_particles(particles=current_node.particles + [state],
+                                                                      t=t+depth, observation=observation)
                 # print(f"rollout actions: {rollout_actions}")
 
             # since the node does not have any children, we first add them to the node
@@ -198,7 +202,7 @@ class POMCP:
 
             # Perform the rollout from the current state and return the value
             self.env.set_state(state=state)
-            return (self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth),
+            return (self.rollout(state=state, history=history, depth=depth, max_rollout_depth=max_rollout_depth, t=t),
                     depth)
 
         # If we have not yet reached a new node, we select the next action according to the acquisiton function
@@ -235,7 +239,7 @@ class POMCP:
         R, rec_depth = self.simulate(
             state=s_prime, max_rollout_depth=max_rollout_depth, depth=depth + 1,
             history=history + [next_action_node.action, o],
-            parent=next_action_node, c=c, max_planning_depth=max_planning_depth)
+            parent=next_action_node, c=c, max_planning_depth=max_planning_depth, t=t)
         R = float(r) + self.gamma * R
 
         # The simulation has completed, time to backpropagate the values
@@ -257,7 +261,7 @@ class POMCP:
 
         return float(R), rec_depth
 
-    def solve(self, max_rollout_depth: int, max_planning_depth: int) -> None:
+    def solve(self, max_rollout_depth: int, max_planning_depth: int, t: int) -> None:
         """
         Runs the POMCP algorithm with a given max depth for the lookahead
 
@@ -283,7 +287,7 @@ class POMCP:
             state = self.tree.root.sample_state()
             _, depth = self.simulate(state=state, max_rollout_depth=max_rollout_depth, history=self.tree.root.history,
                                      c=self.c,
-                                     parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0)
+                                     parent=self.tree.root, max_planning_depth=max_planning_depth, depth=0, t=t)
             if self.verbose:
                 action_values = np.zeros((len(self.A),))
                 best_action_idx = 0
@@ -320,12 +324,13 @@ class POMCP:
                                                 f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
-    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int) -> List[Any]:
+    def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, t: int) -> List[Any]:
         """
         Updates the tree after an action has been selected and a new observation been received
 
         :param action_sequence: the action sequence that was executed
         :param observation: the observation that was received
+        :param t: the time-step
         :return: the updated particle state
         """
         root = self.tree.root
@@ -417,14 +422,16 @@ class POMCP:
         self.tree.root = new_root
 
         # Prune children
-        # Logger.__call__().get_logger().info("Pruning children")
-        # feasible_actions = (
-        #     self.env.get_actions_from_particles(particles=self.tree.root.particles, t=len(self.tree.root.history)))
-        # children = []
-        # for ch in self.tree.root.children:
-        #     if ch.action in feasible_actions:
-        #         children.append(ch)
-        # self.tree.root.children = children
+        Logger.__call__().get_logger().info("Pruning children")
+        feasible_actions = (
+            self.env.get_actions_from_particles(particles=self.tree.root.particles, t=t, observation=observation,
+                                                verbose=True))
+        Logger.__call__().get_logger().info(f"feasible actions: {feasible_actions}")
+        children = []
+        for ch in self.tree.root.children:
+            if ch.action in feasible_actions:
+                children.append(ch)
+        self.tree.root.children = children
 
         # To avoid particle deprivation (i.e., that the algorithm gets stuck with the wrong belief)
         # we do particle reinvigoration here
