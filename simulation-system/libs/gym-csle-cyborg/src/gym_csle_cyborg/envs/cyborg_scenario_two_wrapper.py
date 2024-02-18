@@ -155,7 +155,7 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 self.exploited[env_constants.CYBORG.USER0_IDX] = 0
         else:
             raise ValueError(f"Red agent: {self.config.red_agent_type} not recognized")
-        # print(f"red action type: {current_red_action_type}, target: {self.red_agent_target}")
+        print(f"red action type: {current_red_action_type}, target: {self.red_agent_target}")
 
         # Apply attacker action to state
         if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
@@ -280,6 +280,11 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                     self.escalated = escalated
 
         activity = ActivityType.NONE
+        if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE \
+                and self.red_agent_target == env_constants.CYBORG.DEFENDER_IDX:
+            is_red_action_feasible = False
+            activity = ActivityType.EXPLOIT
+            self.last_obs[self.red_agent_target][env_constants.CYBORG.HOST_STATE_ACCESS_IDX] = CompromisedType.USER
         if is_red_action_feasible:
             if current_red_action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
                 exploit_access = CompromisedType.USER

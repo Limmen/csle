@@ -27,7 +27,7 @@ def last_action_unsuccessful(state_vec, red_action_type, red_action_target):
 if __name__ == '__main__':
     # ppo_policy = MetastoreFacade.get_ppo_policy(id=3)
     config = CSLECyborgConfig(
-        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
+        gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.MEANDER_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
@@ -69,7 +69,8 @@ if __name__ == '__main__':
         red_actions = []
         while t < max_horizon:
             # actions.remove(3)
-            a = np.random.choice(actions)
+            # a = np.random.choice(actions)
+            a = 35
             # if t < len(actions):
             #     a = actions[t]
             # else:
@@ -92,7 +93,7 @@ if __name__ == '__main__':
 
             red_action_type = csle_cyborg_env.get_attacker_action_type()
             red_action_target = csle_cyborg_env.get_attacker_action_target()
-            red_success = csle_cyborg_env.get_red_action_success()
+            # red_success = csle_cyborg_env.get_red_action_success()
             # red_success = last_action_unsuccessful(state_vec=s_vec, red_action_type=red_action_type,
             #                                        red_action_target=red_action_target)
             states.append(s_vec)
@@ -107,15 +108,18 @@ if __name__ == '__main__':
             #     print("exploit activity")
             # print(f"t: {t}")
 
-            if len(red_action_targets) > 2:
-                if not red_success and red_action_types[-2] == 2 and observations[-2][red_action_targets[-2]][0] == 2:
-                    print(f"defender action type: {defender_action_types[-2]}, "
-                          f"defender target: {defender_action_targets[-2]}, red target: {red_action_targets[-2]}, "
-                          f"red target state: {states[-2][red_action_targets[-2]]}, "
-                          f"obs: {observations[-2][red_action_targets[-2]]}")
-                    # and obs_vec[red_action_targets[-2]][0] == 2
-                    print(csle_cyborg_env.get_actions_table())
-                    print(csle_cyborg_env.get_true_table())
+            if red_action_type == 2 and red_action_target == 0:
+                print(f"obs: {obs_vec[0]}, s: {s_vec[0]}")
+
+            # if len(red_action_targets) > 2:
+            #     if not red_success and red_action_types[-2] == 2 and observations[-2][red_action_targets[-2]][0] == 2:
+            #         print(f"defender action type: {defender_action_types[-2]}, "
+            #               f"defender target: {defender_action_targets[-2]}, red target: {red_action_targets[-2]}, "
+            #               f"red target state: {states[-2][red_action_targets[-2]]}, "
+            #               f"obs: {observations[-2][red_action_targets[-2]]}")
+            #         # and obs_vec[red_action_targets[-2]][0] == 2
+            #         print(csle_cyborg_env.get_actions_table())
+            #         print(csle_cyborg_env.get_true_table())
 
             R += r
             t += 1

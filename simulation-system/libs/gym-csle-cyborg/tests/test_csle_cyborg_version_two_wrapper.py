@@ -2748,3 +2748,41 @@ class TestCSLECyborgVersionTwoWrapperSuite:
                 match = True
             i += 1
         assert match
+
+    def test_set_state_65(self) -> None:
+        """
+        Tests the set_state method
+
+        :return: None
+        """
+        config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="", save_trace=False, reward_shaping=True,
+                                         scenario=2, red_agent_type=RedAgentType.MEANDER_AGENT)
+        env = CyborgScenarioTwoWrapper(config=config)
+        state = CyborgWrapperState(
+            s=[[1, 1, 0, 4], [1, 1, 0, 4], [1, 1, 0, 1], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+               [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0]],
+            scan_state=[1, 2, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1], op_server_restored=False,
+            obs=[[0, 1, 0, 4], [0, 2, 0, 4], [0, 1, 0, 1], [0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                 [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]],
+            red_action_targets={0: 0}, privilege_escalation_detected=None, red_agent_state=1, red_agent_target=1,
+            attacker_observed_decoy=[4, 3, 1, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+            detected=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], malware_state=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            ssh_access=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], escalated=[0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1],
+            exploited=[0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1], bline_base_jump=False, scanned_subnets=[1, 1, 0]
+        )
+        action = 27
+        max_tries = 1000
+        match = False
+        i = 0
+        while i < max_tries and not match:
+            env.set_state(state)
+            o, r, done, _, info = env.step(action)
+            if env.last_obs == [[2, 1, 1, 4], [0, 2, 0, 4], [0, 1, 0, 1], [0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                [0, 0, 0, 0], [0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0],
+                                [0, 1, 0, 0]] \
+                    and env.s == [[1, 1, 0, 4], [1, 1, 0, 4], [1, 1, 0, 1], [1, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0],
+                                  [0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 2, 0], [1, 1, 0, 0], [1, 1, 0, 0], [1, 1, 0, 0],
+                                  [1, 1, 0, 0]]:
+                match = True
+            i += 1
+        assert match
