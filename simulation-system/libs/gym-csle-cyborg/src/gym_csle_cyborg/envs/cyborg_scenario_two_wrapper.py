@@ -1393,7 +1393,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
 
 
     def get_reachable_hosts_meander(self, particles: List[CyborgWrapperState], t: int,
-                                    decoy_actions_per_host: List[List[BlueAgentActionType]], observation: List[int]):
+                                    decoy_actions_per_host: List[List[BlueAgentActionType]],
+                                    observation: List[List[int]]):
         reachable_hosts = set()
         scanned_hosts = set()
         user_compromised_hosts = set()
@@ -1490,15 +1491,15 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                             actions.append(k)
                         elif v[0] == BlueAgentActionType.RESTORE and h_id in root_compromised_hosts:
                             actions.append(k)
-                            if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id] != 2:
-                                if h_id == 0:
-                                    actions.append(34)
-                                elif h_id == 1:
-                                    actions.append(27)
-                                elif h_id == 2:
-                                    actions.append(28)
-                                elif h_id == 3:
-                                    actions.append(29)
+                            # if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id] != 2:
+                            #     if h_id == 0:
+                            #         actions.append(34)
+                            #     elif h_id == 1:
+                            #         actions.append(27)
+                            #     elif h_id == 2:
+                            #         actions.append(28)
+                            #     elif h_id == 3:
+                            #         actions.append(29)
                         elif v[0] in CyborgEnvUtil.get_decoy_action_types(scenario=2):
                             if (h_id in known_hosts or t<= 4) and h_id in decoy_hosts:
                                 if k not in actions:
