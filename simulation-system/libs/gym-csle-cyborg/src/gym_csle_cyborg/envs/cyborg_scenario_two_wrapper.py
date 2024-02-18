@@ -1527,8 +1527,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         exploited[host_id] = 0
         for host in range(len(exploited)):
             if host in env_constants.CYBORG.OPERATIONAL_HOST_IDS or host in env_constants.CYBORG.ENTERPRISE_HOST_IDS:
-                exploited[host_id] = 0
-                escalated[host_id] = 0
+                exploited[host] = 0
+                escalated[host] = 0
         return exploited, escalated
 
     @staticmethod
