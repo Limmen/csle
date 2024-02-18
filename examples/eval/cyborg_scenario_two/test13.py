@@ -103,7 +103,10 @@ if __name__ == '__main__':
             red_action_targets.append(red_action_target)
             red_action_types.append(red_action_type)
             red_actions.append(csle_cyborg_env.get_last_action(agent="Red"))
-
+            if red_action_target in [9,10,11,12] and red_action_type == 2:
+                if obs_vec[red_action_target][0] == 0:
+                    print("NO activity after exploit")
+                # print(obs_vec[red_action_target])
             # if obs_vec[red_action_target][0] == 2:
             #     print("exploit activity")
             # print(f"t: {t}")

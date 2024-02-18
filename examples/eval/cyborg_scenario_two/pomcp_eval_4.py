@@ -65,7 +65,7 @@ if __name__ == '__main__':
     num_evaluations = 100
     max_horizon = 100
     returns = []
-    seed = 341501
+    seed = 668912
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -114,7 +114,10 @@ if __name__ == '__main__':
         hosts = list(range(len(train_env.hosts)))
         while t < max_horizon:
             pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth, t=t)
+            feasible_actions = list(map(lambda x: x.action, pomcp.tree.root.children))
             action = pomcp.get_action()
+            if action not in feasible_actions:
+                action = 35
             # if len(action_sequence) > 1:
             #     if action != 28 and action_sequence[-1] == 1:
             #         action = 28

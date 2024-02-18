@@ -1491,7 +1491,8 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         elif v[0] == BlueAgentActionType.RESTORE and h_id in root_compromised_hosts:
                             if observation[h_id][0] != 1:
                                 actions.append(k)
-                            if h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2:
+                            if (h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2) or \
+                                    (h_id in env_constants.CYBORG.USER_HOST_IDS and observation[h_id][2] == 0):
                                 if h_id == 0:
                                     actions.append(26)
                                 elif h_id == 1:

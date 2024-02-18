@@ -180,7 +180,7 @@ class POMCP:
                                                 initial_visit_count=self.prior_confidence, initial_value=value)
         # If a new node was created, then it has no children, in which case we should stop the search and
         # do a Monte-Carlo rollout with a given base policy to estimate the value of the node
-        if not current_node.children:
+        if len(current_node.children) == 0:
             # Prune action space
             if self.prune_action_space and self.rollout_policy is not None:
                 obs_vector = self.env.get_observation_from_history(current_node.history)
