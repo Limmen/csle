@@ -102,7 +102,7 @@ if __name__ == '__main__':
                       reinvigorated_particles_ratio=reinvigorated_particles_ratio,
                       prune_action_space=prune_action_space, prune_size=prune_size)
         # rollout_depth = 4
-        rollout_depth = 100
+        rollout_depth = 25
         # rollout_depth = 50
         # rollout_depth = 20
         planning_depth = 50

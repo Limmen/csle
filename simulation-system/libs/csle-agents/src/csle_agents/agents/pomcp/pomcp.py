@@ -407,6 +407,7 @@ class POMCP:
                                      f"red agent targets: {red_agent_targets}, red agent states: {red_agent_states}, "
                                      f"given state: 1: \n{root.sample_state()}, \n"
                                      f"2: \n {root.sample_state()}\n, 3: {root.sample_state()}\n ")
+                    raise ValueError("Err")
                     for i in range(particle_slots-len(particles)):
                         s = root.sample_state()
                         self.env.set_state(state=s)

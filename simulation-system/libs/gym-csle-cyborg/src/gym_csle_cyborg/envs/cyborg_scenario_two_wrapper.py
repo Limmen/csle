@@ -1411,10 +1411,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                 if p.s[host_id][0] == 1:
                     known_hosts.add(host_id)
         if t < 2:
-            reachable_hosts.add(12)
-            reachable_hosts.add(11)
+            # reachable_hosts.add(12)
+            # reachable_hosts.add(11)
             reachable_hosts.add(10)
-            reachable_hosts.add(9)
+            # reachable_hosts.add(9)
         else:
             for p in particles:
                 current_red_action_type, target_distribution = \
