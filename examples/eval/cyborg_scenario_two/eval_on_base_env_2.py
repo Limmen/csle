@@ -24,7 +24,7 @@ if __name__ == '__main__':
     num_evaluations = 1
     max_horizon = 100
     returns = []
-    seed = 595012
+    seed = 998103
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

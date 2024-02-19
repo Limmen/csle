@@ -1482,6 +1482,37 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         actions = []
         for k, v in action_id_to_type_and_host.items():
             h_id = hosts.index(v[1])
+
+            if observation[h_id][0] == 1 and t >= 8:
+                # print("analyze")
+                if h_id == 0:
+                    if 21 not in actions:
+                        actions.append(21)
+                if h_id == 1:
+                    if 4 not in actions:
+                        actions.append(4)
+                if h_id == 2:
+                    if 5 not in actions:
+                        actions.append(5)
+                if h_id == 3:
+                    if 6 not in actions:
+                        actions.append(6)
+                if h_id == 7:
+                    if 7 not in actions:
+                        actions.append(7)
+                if h_id == 9:
+                    if 123 not in actions:
+                        actions.append(12)
+                if h_id == 10:
+                    if 10 not in actions:
+                        actions.append(13)
+                if h_id == 11:
+                    if 14 not in actions:
+                        actions.append(14)
+                if h_id == 12:
+                    if 15 not in actions:
+                        actions.append(15)
+
             if v[0] != BlueAgentActionType.ANALYZE and h_id in host_ids:
                 if not (h_id in scanned_hosts and v[0] in CyborgEnvUtil.get_decoy_action_types(scenario=2)):
                     if not (v[0] in CyborgEnvUtil.get_decoy_action_types(scenario=2) and t >= 2
@@ -1491,8 +1522,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
                         elif v[0] == BlueAgentActionType.RESTORE and h_id in root_compromised_hosts:
                             if observation[h_id][0] != 1:
                                 actions.append(k)
-                            if (h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2) or \
-                                    (h_id in env_constants.CYBORG.USER_HOST_IDS and observation[h_id][2] == 0):
+                            #(h_id in env_constants.CYBORG.USER_HOST_IDS and observation[h_id][2] == 0)
+                            if (h_id in env_constants.CYBORG.ENTERPRISE_HOST_IDS and observation[h_id][0] != 2
+                                    and observation[h_id][2] == 0):
                                 if h_id == 0:
                                     actions.append(26)
                                 elif h_id == 1:
