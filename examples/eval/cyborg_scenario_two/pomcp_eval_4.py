@@ -54,16 +54,16 @@ if __name__ == '__main__':
     #                        player_type=PlayerType.DEFENDER, actions=[], states=[], experiment_config=None, avg_R=0)
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.MEANDER_AGENT],
-        maximum_steps=30, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
+        maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     eval_env = CyborgScenarioTwoDefender(config=config)
-    config = CSLECyborgWrapperConfig(maximum_steps=30, gym_env_name="",
+    config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
                                      save_trace=False, reward_shaping=False, scenario=2,
                                      red_agent_type=RedAgentType.MEANDER_AGENT)
     train_env = CyborgScenarioTwoWrapper(config=config)
 
     num_evaluations = 100
-    max_horizon = 30
+    max_horizon = 100
     returns = []
     seed = 9178001
     random.seed(seed)
@@ -114,10 +114,10 @@ if __name__ == '__main__':
         hosts = list(range(len(train_env.hosts)))
         while t < max_horizon:
             pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth, t=t)
-            feasible_actions = list(map(lambda x: x.action, pomcp.tree.root.children))
+            # feasible_actions = list(map(lambda x: x.action, pomcp.tree.root.children))
             action = pomcp.get_action()
-            if action not in feasible_actions:
-                action = 35
+            # if action not in feasible_actions:
+            #     action = 35
             # if len(action_sequence) > 1:
             #     if action != 28 and action_sequence[-1] == 1:
             #         action = 28
@@ -163,5 +163,5 @@ if __name__ == '__main__':
         results["use_rollout_policy"] = int(use_rollout_policy)
         results["acquisition"] = acquisition_function_type.value
         json_str = json.dumps(results, indent=4, sort_keys=True)
-        with io.open(f"/Users/kim/pomcp_meander_3_75s_T_30_seed_{seed}.json", 'w', encoding='utf-8') as f:
+        with io.open(f"/Users/kim/p_orig_meander_0_05s_T_100_seed_{seed}.json", 'w', encoding='utf-8') as f:
              f.write(json_str)
