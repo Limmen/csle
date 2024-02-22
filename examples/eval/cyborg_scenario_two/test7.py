@@ -91,9 +91,9 @@ if __name__ == '__main__':
     #     "/Users/kim/Dropbox/pomcp/p_orig_15s_T_100_seed_549001.json"
     # ]
     paths = [
-        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_408913.json",
-        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_500981.json",
-        "/Users/kim/Dropbox/pomcp/p_orig_30s_T_100_seed_880091.json"
+        "/Users/kim/Dropbox/pomcp/pomcp_meander_30s_T_100_seed_3009182.json",
+        "/Users/kim/Dropbox/pomcp/pomcp_meander_30s_T_100_seed_7891923.json",
+        "/Users/kim/Dropbox/pomcp/pomcp_meander_30s_T_100_seed_98712667.json"
     ]
     data_dicts = []
     for path in paths:
