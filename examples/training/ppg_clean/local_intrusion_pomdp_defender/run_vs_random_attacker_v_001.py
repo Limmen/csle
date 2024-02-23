@@ -10,7 +10,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import tyro
-from procgen import ProcgenEnv
+from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+
+# from procgen import ProcgenEnv
 from torch import distributions as td
 from torch.distributions.categorical import Categorical
 from torch.utils.tensorboard import SummaryWriter
@@ -36,13 +38,13 @@ class Args:
     """whether to capture videos of the agent performances (check out `videos` folder)"""
 
     # Algorithm specific arguments
-    env_id: str = "starpilot"
+    env_id: str = "CartPole-v1"
     """the id of the environment"""
     total_timesteps: int = int(25e6)
     """total timesteps of the experiments"""
     learning_rate: float = 5e-4
     """the learning rate of the optimizer"""
-    num_envs: int = 64
+    num_envs: int = 2304
     """the number of parallel game environments"""
     num_steps: int = 256
     """the number of steps to run in each environment per policy rollout"""
@@ -66,7 +68,7 @@ class Args:
     """coefficient of the value function"""
     max_grad_norm: float = 0.5
     """the maximum norm for the gradient clipping"""
-    target_kl: float = 0.5
+    target_kl: float = 1.0
     """the target KL divergence threshold"""
 
     # PPG specific arguments
@@ -102,6 +104,7 @@ def layer_init_normed(layer, norm_dim, scale=1.0):
     with torch.no_grad():
         layer.weight.data *= scale / layer.weight.norm(dim=norm_dim, p=2, keepdim=True)
         layer.bias *= 0
+    print(layer)
     return layer
 
 
@@ -157,6 +160,9 @@ class ConvSequence(nn.Module):
         x = nn.functional.max_pool2d(x, kernel_size=3, stride=2, padding=1)
         x = self.res_block0(x)
         x = self.res_block1(x)
+        print(x.shape)
+        print(x.shape[1:])
+        print(self.get_output_shape())
         assert x.shape[1:] == self.get_output_shape()
         return x
 
@@ -168,8 +174,9 @@ class ConvSequence(nn.Module):
 class Agent(nn.Module):
     def __init__(self, envs):
         super().__init__()
-        h, w, c = envs.single_observation_space.shape
-        shape = (c, h, w)
+        # h, w, c = envs.single_observation_space.shape
+        # shape = (c, h, w)
+        shape = (64, 64, 64)
         conv_seqs = []
         chans = [16, 32, 32]
         scale = 1 / np.sqrt(len(chans))  # Not fully sure about the logic behind this but its used in PPG code
@@ -187,6 +194,7 @@ class Agent(nn.Module):
             nn.ReLU(),
         ]
         self.network = nn.Sequential(*conv_seqs)
+        
         self.actor = layer_init_normed(nn.Linear(256, envs.single_action_space.n), norm_dim=1, scale=0.1)
         self.critic = layer_init_normed(nn.Linear(256, 1), norm_dim=1, scale=0.1)
         self.aux_critic = layer_init_normed(nn.Linear(256, 1), norm_dim=1, scale=0.1)
@@ -209,6 +217,23 @@ class Agent(nn.Module):
 
     def get_pi(self, x):
         return Categorical(logits=self.actor(self.network(x.permute((0, 3, 1, 2)) / 255.0)))
+
+def make_env(env_id):
+    """
+    Helper function for creating an environment in training of the agent
+
+    :return: environment creating function
+    """
+
+    def thunk():
+        """
+        The environment creating function
+        """
+        orig_env = gym.make(env_id)
+        env = RecordEpisodeStatistics(orig_env)
+        return env
+
+    return thunk
 
 
 if __name__ == "__main__":
@@ -245,20 +270,11 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = args.torch_deterministic
-
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
-    # env setup
-    envs = ProcgenEnv(num_envs=args.num_envs, env_name=args.env_id, num_levels=0, start_level=0, distribution_mode="easy")
-    envs = gym.wrappers.TransformObservation(envs, lambda obs: obs["rgb"])
-    envs.single_action_space = envs.action_space
-    envs.single_observation_space = envs.observation_space["rgb"]
-    envs.is_vector_env = True
-    envs = gym.wrappers.RecordEpisodeStatistics(envs)
-    if args.capture_video:
-        envs = gym.wrappers.RecordVideo(envs, f"videos/{run_name}")
-    envs = gym.wrappers.NormalizeReward(envs, gamma=args.gamma)
-    envs = gym.wrappers.TransformReward(envs, lambda reward: np.clip(reward, -10, 10))
+    envs = gym.vector.SyncVectorEnv(
+            [make_env(args.env_id) for _ in range(args.num_envs)]
+        )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
     agent = Agent(envs).to(device)
@@ -279,7 +295,10 @@ if __name__ == "__main__":
     # TRY NOT TO MODIFY: start the game
     global_step = 0
     start_time = time.time()
-    next_obs = torch.Tensor(envs.reset()).to(device)
+
+    next_obs, _ = envs.reset()
+
+    next_obs = torch.Tensor(next_obs).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
 
     for phase in range(1, args.num_phases + 1):
@@ -299,6 +318,7 @@ if __name__ == "__main__":
 
                 # ALGO LOGIC: action logic
                 with torch.no_grad():
+                    next_obs = next_obs.view(16, 3, 3, 64)
                     action, logprob, _, value = agent.get_action_and_value(next_obs)
                     values[step] = value.flatten()
                 actions[step] = action
