@@ -44,7 +44,8 @@ class Args:
     """total timesteps of the experiments"""
     learning_rate: float = 5e-4
     """the learning rate of the optimizer"""
-    num_envs: int = 2304
+    # 2304
+    num_envs: int = 65536
     """the number of parallel game environments"""
     num_steps: int = 256
     """the number of steps to run in each environment per policy rollout"""
@@ -104,7 +105,7 @@ def layer_init_normed(layer, norm_dim, scale=1.0):
     with torch.no_grad():
         layer.weight.data *= scale / layer.weight.norm(dim=norm_dim, p=2, keepdim=True)
         layer.bias *= 0
-    print(layer)
+    # print(layer)
     return layer
 
 
@@ -156,12 +157,13 @@ class ConvSequence(nn.Module):
         self.res_block1 = ResidualBlock(self._out_channels, scale=scale)
 
     def forward(self, x):
+        # print("här 2")
+        # print(np.shape(x)[1:])
         x = self.conv(x)
         x = nn.functional.max_pool2d(x, kernel_size=3, stride=2, padding=1)
         x = self.res_block0(x)
         x = self.res_block1(x)
-        print(x.shape)
-        print(x.shape[1:])
+        print(np.shape(x)[1:])
         print(self.get_output_shape())
         assert x.shape[1:] == self.get_output_shape()
         return x
@@ -181,6 +183,7 @@ class Agent(nn.Module):
         chans = [16, 32, 32]
         scale = 1 / np.sqrt(len(chans))  # Not fully sure about the logic behind this but its used in PPG code
         for out_channels in chans:
+            print("aaa")
             conv_seq = ConvSequence(shape, out_channels, scale=scale)
             shape = conv_seq.get_output_shape()
             conv_seqs.append(conv_seq)
@@ -193,6 +196,7 @@ class Agent(nn.Module):
             encodertop,
             nn.ReLU(),
         ]
+        print("här 3")
         self.network = nn.Sequential(*conv_seqs)
         
         self.actor = layer_init_normed(nn.Linear(256, envs.single_action_space.n), norm_dim=1, scale=0.1)
@@ -200,9 +204,13 @@ class Agent(nn.Module):
         self.aux_critic = layer_init_normed(nn.Linear(256, 1), norm_dim=1, scale=0.1)
 
     def get_action_and_value(self, x, action=None):
+        print("här 1")
+        print(np.shape(x))
         hidden = self.network(x.permute((0, 3, 1, 2)) / 255.0)  # "bhwc" -> "bchw"
+        
         logits = self.actor(hidden)
         probs = Categorical(logits=logits)
+
         if action is None:
             action = probs.sample()
         return action, probs.log_prob(action), probs.entropy(), self.critic(hidden.detach())
@@ -239,9 +247,13 @@ def make_env(env_id):
 if __name__ == "__main__":
     args = tyro.cli(Args)
     args.batch_size = int(args.num_envs * args.num_steps)
+    print(args.total_timesteps)
+    print(args.batch_size)
     args.minibatch_size = int(args.batch_size // args.num_minibatches)
     args.num_iterations = args.total_timesteps // args.batch_size
-    args.num_phases = int(args.num_iterations // args.n_iteration)
+    print(args.num_iterations)
+    # args.num_phases = int(args.num_iterations // args.n_iteration)
+    args.num_phases = 2
     args.aux_batch_rollouts = int(args.num_envs * args.n_iteration)
     assert args.v_value == 1, "Multiple value epoch (v_value != 1) is not supported yet"
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
@@ -302,7 +314,6 @@ if __name__ == "__main__":
     next_done = torch.zeros(args.num_envs).to(device)
 
     for phase in range(1, args.num_phases + 1):
-
         # POLICY PHASE
         for update in range(1, args.n_iteration + 1):
             # Annealing the rate if instructed to do so.
@@ -318,14 +329,16 @@ if __name__ == "__main__":
 
                 # ALGO LOGIC: action logic
                 with torch.no_grad():
-                    next_obs = next_obs.view(16, 3, 3, 64)
+                    next_obs = next_obs.view(1, 64, 64, 64)
+                    print("blabla")
                     action, logprob, _, value = agent.get_action_and_value(next_obs)
+                    print("kommer vi förbi här?")
                     values[step] = value.flatten()
                 actions[step] = action
                 logprobs[step] = logprob
 
                 # TRY NOT TO MODIFY: execute the game and log data.
-                next_obs, reward, done, info = envs.step(action.cpu().numpy())
+                next_obs, reward, done, info = envs.step(action.cpu().numpy()) # TODO : Här kör vi fast, nästa error säger att det blir fel shape på output array
                 rewards[step] = torch.tensor(reward).to(device).view(-1)
                 next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(done).to(device)
 
