@@ -39,3 +39,4 @@ class AgentType(IntEnum):
     PPO_CLEAN = 31
     POMCP = 32
     DQN_CLEAN = 33
+    C51_CLEAN = 34

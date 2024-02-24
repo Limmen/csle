@@ -36,7 +36,7 @@ Below are a list of dependencies that will be installed with CSLE (unless they a
 - Python 3.9+;
 - Python libraries: `torch`, `numpy`, `gym`, `docker`, `paramiko`, `stable-baselines3`, `psycopg`, `pyglet`, `flask`, `click`, `waitress`, `scp`, `psutil`, `grpcio`, `grpcio-tools`, `scipy`, `confluent-kafka`, `requests`, `pyopenssl`, `sphinx`, `mypy`, `mypy-extensions`, `mypy-protobuf`, `types-PyYAML`, `types-protobuf`, `types-paramiko`, `types-requests`, `types-urllib3`, `flake8`, `pytest`, `gevent`, `eventlet`, `dnspython`, `csle-ryu-fork`, `gpytorch`, `pulp`, `Bayesian optimization`, `emukit`, `cma`, `pycryptodome`.
 - PostgreSQL 12+;
-- `make`, `git`, `bzip2`;
+- `make`, `git`, `bzip2`, `build-essential`;
 - Prometheus 2.23+;
 - Node exporter 1.0.1+;
 - cAdvisor (any version);
@@ -52,6 +52,7 @@ configuration parameters are set, and tools required in later steps of the insta
 Start with installing the necessary build tools and version management tools by running the following commands:
 
 ```bash
+apt install build-essential
 apt install make
 apt install git
 apt install bzip2
@@ -130,6 +131,9 @@ Listing 10: Commands to setup the directory where CSLE log files will be stored
 </p>
 
 Next, add the following line to the `sudoers` file using `visudo` (change `my_user` to your username):
+
+| WARNING: take care when editing the sudoers file. If the sudoers file becomes corrupted it can make the system unusable. |
+| --- |
 ```bash
 my_user ALL = NOPASSWD: /usr/sbin/service docker stop, /usr/sbin/service docker start, /usr/sbin/service docker restart, /usr/sbin/service nginx stop, /usr/sbin/service nginx start, /usr/sbin/service nginx restart, /usr/sbin/service postgresql start, /usr/sbin/service postgresql stop, /usr/sbin/service postgresql restart, /bin/kill, /usr/bin/journalctl -u docker.service -n 100 --no-pager -e
 ```
@@ -140,7 +144,8 @@ Listing 11: Line to add to the sudoers file.
 
 By adding the above line to the `sudoers` file, CSLE will be able to view logs and start and stop management services without requiring a password to be entered. (Note that the exact paths used above may differ on your system, very the paths by running the command `whereis service`, `whereis journalctl`, etc.)
 
-Next, setup SSH keys so that all servers (leader and workers) have SSH access to each other without requiring a password. To do this, generate an SSH key pair with the command `ssh-keygen` on each server and copy the public key (e.g., `id_rsa.pub`) to the file `.ssh/authorized_keys`.
+Next, setup SSH keys so that all servers (leader and workers) have SSH access to each other without requiring a password. 
+To do this, generate an SSH key pair with the command `ssh-keygen` on each server and copy the public key (e.g., `id_rsa.pub`) to the file `.ssh/authorized_keys`.
 
 Lastly, define default username and password to the management system by editing the file: `csle/config.json`.
 
@@ -223,6 +228,11 @@ cd metastore; make tables
 <p class="captionFig">
 Listing 19: Commands to setup the Citus cluster and create tables.
 </p>
+
+Next, update the variable called `HOST` in the class `METADATA\_STORE` in the file `csle/simulation-system/libs/csle-common/src/csle\_common/constants/constants.py`.
+
+Next, define ips of the cluster nodes and thet metastore leader by editing the file: `csle/config.json`.
+
 Lastly, make the PostgreSQL log files readable by your user by running the commands:
 ```bash
 sudo chmod -R u+rw /var/log/postgresql
@@ -237,11 +247,11 @@ The simulation system consists of a set of Python libraries and a set of configu
 To install the simulation system, the Python libraries need to be installed and
 the configuration files need to be inserted into the metastore.
 
-Start with installing Python 3.9 by running the commands:
+If you do not have Python >3.9 in your base environment, start with installing Python 3.9 by running the commands:
 
 ```bash
 conda create -n py39 python=3.9
-source activate python39
+conda activate py39 # alternatively, "source activate py39" for old versions of conda
 ```
 
 <p class="captionFig">
@@ -625,7 +635,8 @@ e.g., specific vulnerabilities. To install the emulation system,
 the configuration files must be inserted into the metastore and 
 the Docker images must be built or downloaded.
 
-Start with adding Docker's official GPG key to Ubuntu's package manager by running the commands:
+Start with adding Docker's official GPG key to Ubuntu's package manager by running the commands (you can also follow 
+the instructions for installing Docker at `https://docs.docker.com/engine/install/ubuntu/`):
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
@@ -647,6 +658,8 @@ sudo usermod -aG docker $USER
 Listing 57: Commands to install Docker.
 </p>
 
+After running the commands above, start a new shell for the changes to take effect.
+
 Next, setup a docker swarm by running the following command on the leader:
 ```bash
 docker swarm init --advertise-addr <ip address of the leader>
@@ -662,6 +675,10 @@ docker swarm join --token <my_roken> leader_ip:2377
 <p class="captionFig">
 Listing 59: Commands to add a worker node to the Docker swarm.
 </p>
+
+| Note: If you forget the swarm token, you can display it by running the following command on the leader: `docker swarm join-token worker`. |
+|-----------------------------------------------------------------------------------------------------------------------|
+
 You can verify the Docker swarm configuration by running `docker node ls`.
 
 After completing the Docker installation, pull the base images of CSLE from DockerHub by running the commands:
@@ -831,6 +848,9 @@ npm run build
 <p class="captionFig">
 Listing 73: Commands to install the web application of the CSLE management system.
 </p>
+
+| Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. Further, if you have an old operating system you may need to run the command `export NODE_OPTIONS=--openssl-legacy-provider` before running `npm run build` |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 Next, install and start `pgadmin` **on the leader** by running the following commands:
 ```bash

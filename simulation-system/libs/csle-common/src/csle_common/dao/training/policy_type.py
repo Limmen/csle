@@ -18,3 +18,4 @@ class PolicyType(IntEnum):
     MIXED_PPO_POLICY = 10
     LINEAR_TABULAR = 11
     MIXED_LINEAR_TABULAR = 12
+    C51 = 13
