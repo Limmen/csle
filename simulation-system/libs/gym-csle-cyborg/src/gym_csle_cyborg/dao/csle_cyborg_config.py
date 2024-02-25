@@ -12,8 +12,9 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
 
     def __init__(self, gym_env_name: str, scenario: int, baseline_red_agents: List[RedAgentType], maximum_steps: int,
                  red_agent_distribution: List[float], reduced_action_space: bool,
-                 scanned_state: bool, decoy_state: bool, decoy_optimization,
-                 cache_visited_states: bool = False, save_trace: bool = False) -> None:
+                 scanned_state: bool, decoy_state: bool, decoy_optimization: bool,
+                 cache_visited_states: bool = False, save_trace: bool = False, randomize_topology: bool = False) \
+            -> None:
         """
         Initializes the DTO
 
@@ -28,6 +29,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         :param decoy_optimization: boolean flag indicating whether the special decoy optimization should be used
         :param cache_visited_states: boolean flag indicating whether visited states should be cached
         :param save_trace: boolean flag indicating whether traces should be saved
+        :param randomize_topology: boolean flag indicating whether the topology should be randomized
         """
         self.gym_env_name = gym_env_name
         self.scenario = scenario
@@ -40,6 +42,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         self.decoy_optimization = decoy_optimization
         self.cache_visited_states = cache_visited_states
         self.save_trace = save_trace
+        self.randomize_topology = randomize_topology
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -59,6 +62,7 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
         d["decoy_optimization"] = self.decoy_optimization
         d["cache_visited_states"] = self.cache_visited_states
         d["save_trace"] = self.save_trace
+        d["randomize_topology"] = self.randomize_topology
         return d
 
     def get_agents_dict(self, agent: Union[RedAgentType, None] = None) -> Tuple[Dict[str, Any], RedAgentType]:
@@ -115,7 +119,8 @@ class CSLECyborgConfig(SimulationEnvInputConfig):
                f"red_agent_distribution: {self.red_agent_distribution}, " \
                f"reduced_action_space: {self.reduced_action_space}, scanned_state: {self.scanned_state}, " \
                f"decoy_state: {self.decoy_state}, decoy_optimization: {self.decoy_optimization}, " \
-               f"cache_visited_states: {self.cache_visited_states}, save_trace: {self.save_trace}"
+               f"cache_visited_states: {self.cache_visited_states}, save_trace: {self.save_trace}, " \
+               f"randomize_topology: {self.randomize_topology}"
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "CSLECyborgConfig":

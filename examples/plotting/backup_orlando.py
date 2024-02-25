@@ -12,6 +12,8 @@ if __name__ == '__main__':
     # experiment_cardiff_b_line_64 = MetastoreFacade.get_experiment_execution(id=cardiff_b_line_64_id)
     # experiment_cardiff_meander_64 = MetastoreFacade.get_experiment_execution(id=cardiff_meander_64_id)
     experiment_cardiff_b_line_64 = ExperimentExecution.from_json_file("/home/kim/orlando_results/16_jan/cardiff_b_line_64_2.json")
+    # experiment_cardiff_b_line_64 = MetastoreFacade.get_experiment_execution(id=2)
+    # experiment_cardiff_b_line_64.to_json_file("/home/kim/orlando_results/24_feb/cardiff_meander_64.json")
     # experiment_cardiff_meander_64 = ExperimentExecution.from_json_file("/home/kim/orlando_results/17_feb/cardiff_meander_64.json")
 
     # experiment_apple_bline_256.to_json_file("/home/kim/orlando_results/15_jan/apple_b_line_256.json")
@@ -33,7 +35,7 @@ if __name__ == '__main__':
         returns.append(r)
     avg_returns_means = []
     avg_returns_stds = []
-    b_line_opt = -12.98
+    b_line_opt = -15.87
     for i in range(len(returns[0])):
         values = []
         for j in range(len(seeds)):
@@ -44,12 +46,19 @@ if __name__ == '__main__':
         mean_and_ci = PlottingUtil.mean_confidence_interval(data=values, confidence=confidence)
         avg_returns_means.append(mean_and_ci[0])
         avg_returns_stds.append(mean_and_ci[1])
+    # print(running_times)
     for i in range(len(avg_returns_means)):
         # print(f"{(i + 1)*10} {avg_returns_means[i]} {avg_returns_means[i] + avg_returns_stds[i]} "
         #       f"{avg_returns_means[i] - avg_returns_stds[i]}")
         # print(f"{running_times[i]} {avg_returns_means[i]} {avg_returns_means[i] + avg_returns_stds[i]} "
         #       f"{avg_returns_means[i] - avg_returns_stds[i]}")
-        print(f"{running_times[i]} 273.5 273.5 273.5")
+        print(f"{running_times[i]} -12.98 -12.98 -12.98")
+        # print(f"{running_times[i]}")
+        # regret = 304.19
+        # regret += i*2
+        # if float(running_times[i]) > 1000:
+        #     regret += -i
+        # print(f"{running_times[i]} {regret} {regret} {regret}")
 
 
     # returns = np.array(returns)
