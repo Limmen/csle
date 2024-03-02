@@ -1,5 +1,5 @@
 # OS
-FROM kimham/csle_cve_2015_3306_base:0.4.0
+FROM kimham/csle_cve_2015_3306_base:0.5.0
 USER root
 
 # Add start script
@@ -13,5 +13,4 @@ ENV TZ=Europe/Stockholm
 ENTRYPOINT ["/usr/bin/env"]
 
 # CMD to run when container starts, starts the services (e.g. Samba)
-#CMD ["bash", "/start.sh"]
 CMD ["/start.sh"]
