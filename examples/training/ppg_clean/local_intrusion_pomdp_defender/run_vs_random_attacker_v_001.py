@@ -7,13 +7,13 @@ from dataclasses import dataclass
 import gym
 import numpy as np
 import torch
-from gym.spaces.box import Box
+
 import torch.nn as nn
 import torch.optim as optim
 import tyro
 from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
 
-# from procgen import ProcgenEnv
+
 from torch import distributions as td
 from torch.distributions.categorical import Categorical
 from torch.utils.tensorboard import SummaryWriter
@@ -31,10 +31,6 @@ class Args:
     """if toggled, cuda will be enabled by default"""
     track: bool = False
     """if toggled, this experiment will be tracked with Weights and Biases"""
-    wandb_project_name: str = "cleanRL"
-    """the wandb's project name"""
-    wandb_entity: str = "None"
-    """the entity (team) of wandb's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
 
@@ -160,8 +156,6 @@ class ConvSequence(nn.Module):
         self.res_block1 = ResidualBlock(self._out_channels, scale=scale)
 
     def forward(self, x):
-        # print("här 2")
-        # print(np.shape(x)[1:])
         x = self.conv(x)
         x = nn.functional.max_pool2d(x, kernel_size=3, stride=2, padding=1)
         x = self.res_block0(x)
@@ -170,6 +164,8 @@ class ConvSequence(nn.Module):
         return x
 
     def get_output_shape(self):
+        # _c, h, w = self._input_shape
+        # return (self._out_channels, (h + 1) // 2, (w + 1) // 2)
         c, _ = self._input_shape
         return (self._out_channels, (c + 1) // 2)
 
@@ -180,8 +176,8 @@ class Agent(nn.Module):
         # h, w, c = envs.single_observation_space.shape
         # shape = (c, h, w)
         # shape = (64, 64, 64)
-        print()
-        (a, b) = envs.single_observation_space.shape
+        # print()
+        # (a, b) = envs.single_observation_space.shape
         shape = (4, 1)
         conv_seqs = []
         chans = [16, 32, 32]
@@ -190,8 +186,7 @@ class Agent(nn.Module):
             conv_seq = ConvSequence(shape, out_channels, scale=scale)
             shape = conv_seq.get_output_shape()
             conv_seqs.append(conv_seq)
-
-        encodertop = nn.Linear(in_features=shape[0] * shape[1] * shape[2], out_features=256)
+        encodertop = nn.Linear(in_features=shape[0] * shape[1], out_features=256)
         encodertop = layer_init_normed(encodertop, norm_dim=1, scale=1.4)
         conv_seqs += [
             nn.Flatten(),
@@ -258,18 +253,7 @@ if __name__ == "__main__":
     args.aux_batch_rollouts = int(args.num_envs * args.n_iteration)
     assert args.v_value == 1, "Multiple value epoch (v_value != 1) is not supported yet"
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
-    if args.track:
-        import wandb
 
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
-            config=vars(args),
-            name=run_name,
-            monitor_gym=True,
-            save_code=True,
-        )
     writer = SummaryWriter(f"runs/{run_name}")
     writer.add_text(
         "hyperparameters",
@@ -288,13 +272,7 @@ if __name__ == "__main__":
     envs = gym.vector.SyncVectorEnv(
             [make_env(args.env_id) for _ in range(args.num_envs)]
         )
-    print(envs.single_observation_space.shape)
-    print(type(envs.observation_space))
-    a = envs.single_observation_space.shape
-    print(envs.single_observation_space.low)
-    envs.single_observation_space = Box.reshape((a[0], 1), args.batch_size)
 
-    print(envs.single_observation_space.shape)
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
     agent = Agent(envs).to(device)
@@ -302,7 +280,7 @@ if __name__ == "__main__":
 
     # ALGO Logic: Storage setup
     obs = torch.zeros((args.num_steps, args.num_envs) + envs.single_observation_space.shape).to(device)
-    print(np.shape(obs))
+
     actions = torch.zeros((args.num_steps, args.num_envs) + envs.single_action_space.shape).to(device)
     logprobs = torch.zeros((args.num_steps, args.num_envs)).to(device)
     rewards = torch.zeros((args.num_steps, args.num_envs)).to(device)
