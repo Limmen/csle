@@ -32,7 +32,7 @@ if __name__ == '__main__':
         decoy_state=True, decoy_optimization=False, cache_visited_states=True, save_trace=False)
     simulation_env_config.simulation_env_input_config = CSLECyborgWrapperConfig(
         gym_env_name="csle-cyborg-scenario-two-wrapper-v1", maximum_steps=100, save_trace=False, scenario=2,
-        reward_shaping=True)
+        reward_shaping=True, red_agent_type=RedAgentType.B_LINE_AGENT)
     simulation_env_config.gym_env_name = "csle-cyborg-scenario-two-wrapper-v1"
     csle_cyborg_env = CyborgScenarioTwoWrapper(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()

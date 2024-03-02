@@ -20,6 +20,7 @@ from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
 from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
+from gym_csle_cyborg.dao.red_agent_action_type import RedAgentActionType
 from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
 
 
@@ -99,6 +100,12 @@ class CyborgScenarioTwoDefender(BaseEnv):
         self.visited_decoy_states: Dict[int, List[List[BlueAgentActionType]]] = {}
         self.observation_id_to_tensor: Dict[int, npt.NDArray[Any]] = {}
 
+        # Randomized ids
+        self.users_ids_randomized = env_constants.CYBORG.USER_HOST_IDS.copy()
+        self.enterprise_ids_randomized = env_constants.CYBORG.ENTERPRISE_HOST_IDS.copy()
+        random.shuffle(self.users_ids_randomized)
+        random.shuffle(self.enterprise_ids_randomized)
+
         # Reset
         self.initial_belief = {1: 1.0}
         self.reset()
@@ -136,7 +143,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
                 decoy_state_space_lookup=self.decoy_state_space_lookup,
                 decoy_state_space_hosts_lookup=self.decoy_state_space_hosts_lookup,
                 observation_id_to_tensor=self.observation_id_to_tensor,
-                o=o)
+                o=o, users_ids_randomized=self.users_ids_randomized,
+                enterprise_ids_randomized=self.enterprise_ids_randomized)
             self.observation_id_to_tensor = observation_id_to_tensor
 
         self.t += 1
@@ -184,7 +192,8 @@ class CyborgScenarioTwoDefender(BaseEnv):
             config=self.config, info=info, decoy_state=self.decoy_state, scan_state=self.scan_state,
             decoy_state_space_lookup=self.decoy_state_space_lookup,
             decoy_state_space_hosts_lookup=self.decoy_state_space_hosts_lookup,
-            observation_id_to_tensor=self.observation_id_to_tensor, o=o)
+            observation_id_to_tensor=self.observation_id_to_tensor, o=o,
+            users_ids_randomized=self.users_ids_randomized, enterprise_ids_randomized=self.enterprise_ids_randomized)
         self.observation_id_to_tensor = observation_id_to_tensor
 
         self.t = 1
@@ -388,6 +397,38 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :return: the action of the agent
         """
         return self.cyborg_challenge_env.get_last_action(agent=agent)
+
+    def get_attacker_action_type(self) -> RedAgentActionType:
+        """
+        Gets the action type of the last attacker action
+
+        :return: the type id of the last attacker action
+        """
+        attacker_action = self.cyborg_challenge_env.get_last_action(agent="Red")
+        return RedAgentActionType.from_str(str(attacker_action))
+
+    def get_attacker_action_target(self) -> int:
+        """
+        Gets the target of the last attacker action
+
+        :return: the target of the last attacker action
+        """
+        attacker_action = self.cyborg_challenge_env.get_last_action(agent="Red")
+        ip_to_host_map = self.get_ip_to_host_mapping()
+        subnets = self.get_subnetworks()
+        action_type = self.get_attacker_action_type()
+        if action_type == RedAgentActionType.EXPLOIT_REMOTE_SERVICE:
+            return self.cyborg_hostnames.index(ip_to_host_map[str(attacker_action.ip_address)])
+        elif action_type == RedAgentActionType.PRIVILEGE_ESCALATE:
+            return self.cyborg_hostnames.index(attacker_action.hostname)
+        elif action_type == RedAgentActionType.IMPACT:
+            return self.cyborg_hostnames.index(attacker_action.hostname)
+        elif action_type == RedAgentActionType.DISCOVER_NETWORK_SERVICES:
+            return self.cyborg_hostnames.index(ip_to_host_map[str(attacker_action.ip_address)])
+        elif action_type == RedAgentActionType.DISCOVER_REMOTE_SYSTEMS:
+            return subnets.index(str(attacker_action.subnet))
+        else:
+            raise ValueError(f"Red action type: {action_type} not recognized")
 
     def get_true_state(self) -> Any:
         """
@@ -779,7 +820,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
                            decoy_state_space_hosts_lookup: Dict[int, Any],
                            decoy_state_space_lookup: Dict[Any, Any],
                            observation_id_to_tensor: Dict[int, npt.NDArray[Any]],
-                           o: npt.NDArray[Any]) \
+                           o: npt.NDArray[Any], users_ids_randomized: List[int], enterprise_ids_randomized: List[int]) \
             -> Tuple[npt.NDArray[Any], Dict[int, npt.NDArray[Any]]]:
         """
         Encodes the observation
@@ -791,11 +832,25 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param decoy_state_space_hosts_lookup: a lookup dict from decoy state id to host
         :param decoy_state_space_lookup: a lookup dict form decoy state to decoy state id
         :param observation_id_to_tensor: a lookup dict from observation id to tensor
+        :param users_ids_randomized: shuffled user ids order
+        :param enterprise_ids_randomized: shuffled enterprise ids order
         :param o: the observation to encode
         :return: the encoded observation and an updated observation_id_to_tensor dict
         """
+        o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST])
+        if config.randomize_topology:
+            users_ids = env_constants.CYBORG.USER_HOST_IDS
+            enterprise_ids = env_constants.CYBORG.ENTERPRISE_HOST_IDS
+            import copy
+            randomized_obs = copy.deepcopy(o.copy())
+            for i in range(len(users_ids)):
+                randomized_obs[users_ids[i]] = o[users_ids_randomized[i]]
+            for i in range(len(enterprise_ids)):
+                randomized_obs[enterprise_ids[i]] = o[enterprise_ids_randomized[i]]
+            o = randomized_obs
+
         if config.scanned_state or config.decoy_state:
-            o = np.array(info[env_constants.CYBORG.VECTOR_OBS_PER_HOST]).flatten()
+            o = o.flatten()
 
         if config.decoy_optimization:
             o = np.array([CyborgScenarioTwoDefender.decoy_state_id(
@@ -806,6 +861,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         if config.cache_visited_states and info[env_constants.ENV_METRICS.OBSERVATION] not in observation_id_to_tensor:
             observation_id_to_tensor[info[env_constants.ENV_METRICS.OBSERVATION]] = np.array(o)
+
         return o, observation_id_to_tensor
 
     @staticmethod
@@ -918,7 +974,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
                 config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
                 decoy_state_space_lookup=decoy_state_space_lookup,
                 decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
-                observation_id_to_tensor=observation_id_to_tensor, o=o)
+                observation_id_to_tensor=observation_id_to_tensor, o=o,
+                users_ids_randomized=env_constants.CYBORG.USER_HOST_IDS,
+                enterprise_ids_randomized=env_constants.CYBORG.ENTERPRISE_HOST_IDS)
             observation_id_to_tensor = observation_id_to_tensor
             trace = SimulationTrace(simulation_env=config.gym_env_name)
 
@@ -947,7 +1005,9 @@ class CyborgScenarioTwoDefender(BaseEnv):
                     config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
                     decoy_state_space_lookup=decoy_state_space_lookup,
                     decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
-                    observation_id_to_tensor=observation_id_to_tensor, o=o)
+                    observation_id_to_tensor=observation_id_to_tensor, o=o,
+                    users_ids_randomized=env_constants.CYBORG.USER_HOST_IDS,
+                    enterprise_ids_randomized=env_constants.CYBORG.ENTERPRISE_HOST_IDS)
                 observation_id_to_tensor = observation_id_to_tensor
 
                 R += r

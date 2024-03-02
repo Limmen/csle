@@ -269,27 +269,19 @@ class POMCPAgent(BaseAgent):
             while not done and t <= max_env_steps:
                 rollout_depth = max_rollout_depth
                 planning_depth = max_planning_depth
-                pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth)
+                pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth, t=t)
                 action = pomcp.get_action()
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
-                print(eval_env.get_true_table())
-                print(eval_env.get_table())
-                from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
-                print(CyborgEnvUtil.state_id_to_state_vector(state_id=s_prime))
-                print(CyborgEnvUtil.state_id_to_state_vector(state_id=obs_id, observation=True))
-                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id)
+                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id, t=t)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
-                    rollout_action = -1
-                    if rollout_policy is not None:
-                        rollout_action = rollout_policy.action(o=o)
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
-                                                        f"s_prime: {s_prime}, rollout action: {rollout_action}"
-                                                        f", action sequence: {action_sequence}, R: {R}")
+                                                        f"s_prime: {s_prime}, action sequence: {action_sequence}, "
+                                                        f"R: {R}")
 
             if i % self.experiment_config.log_every == 0:
                 # Logging

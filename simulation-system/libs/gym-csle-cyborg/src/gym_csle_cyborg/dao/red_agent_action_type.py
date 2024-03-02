@@ -19,15 +19,15 @@ class RedAgentActionType(IntEnum):
         :param action_str: the string to convert
         :return: the enum corresponding to the string
         """
-        if action_str == "DiscoverRemoteSystems":
+        if "DiscoverRemoteSystems" in action_str:
             return RedAgentActionType.DISCOVER_REMOTE_SYSTEMS
-        elif action_str == "DiscoverNetworkServices":
+        elif "DiscoverNetworkServices" in action_str:
             return RedAgentActionType.DISCOVER_NETWORK_SERVICES
-        elif action_str == "ExploitRemoteService":
+        elif "ExploitRemoteService" in action_str:
             return RedAgentActionType.EXPLOIT_REMOTE_SERVICE
-        elif action_str == "PrivilegeEscalate":
+        elif "PrivilegeEscalate" in action_str:
             return RedAgentActionType.PRIVILEGE_ESCALATE
-        elif action_str == "Impact":
+        elif "Impact" in action_str:
             return RedAgentActionType.IMPACT
         else:
             raise ValueError(f"Action name: {action_str} not recognized")

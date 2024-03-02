@@ -558,12 +558,19 @@ class CyborgEnvUtil:
         }
 
     @staticmethod
+    def subnetworks() -> List[int]:
+        """
+        :return: a list of subnetworks
+        """
+        return [0, 1, 2]
+
+    @staticmethod
     def cyborg_host_ports_map() -> Dict[int, List[Tuple[int, bool]]]:
         """
         :return: a map from host id to ports and whether they run as root or not
         """
         return {
-            0: [], 1: [(22, False)],
+            0: [(22, False)], 1: [(22, False)],
             2: [(22, False), (135, True), (3389, True), (445, True), (139, True), (80, False), (443, False)],
             3: [(22, False), (135, True), (3389, True), (445, True), (139, True), (80, False), (443, False)],
             4: [], 5: [], 6: [], 7: [(22, False)], 8: [], 9: [(22, False), (21, True)],
