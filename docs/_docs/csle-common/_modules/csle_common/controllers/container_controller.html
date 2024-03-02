@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.container_controller &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.controllers.container_controller &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.controllers.container_controller</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.controllers.container_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -115,7 +113,7 @@
         <span class="n">containers</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
         <span class="n">containers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">containers</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping container: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping container: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">c</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ContainerController.stop_container"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.stop_container">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -221,22 +219,22 @@
             <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OS</span><span class="o">.</span><span class="n">UBUNTU</span> <span class="ow">in</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">])</span> <span class="ow">or</span> <span class="n">constants</span><span class="o">.</span><span class="n">OS</span><span class="o">.</span><span class="n">KALI</span>
                               <span class="ow">in</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">])),</span> <span class="n">base_images</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">non_base_images</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">img</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">client_1</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">non_os_base_images</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">img</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">client_1</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">os_base_images</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">img</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">client_1</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">REPO_TAGS</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="ContainerController.list_all_images"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.container_controller.ContainerController.list_all_images">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_all_images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">list_all_images</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A utility function for listing all csle images</span>
 
@@ -262,9 +260,11 @@
         <span class="n">stream</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
         <span class="n">networks_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">networks_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
         <span class="n">networks_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">networks</span><span class="p">))</span>
         <span class="n">networks_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">networks_list</span><span class="p">))</span>
         <span class="n">networks_ids_str</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">networks_list</span><span class="p">))</span>
+
         <span class="n">networks_ids_str</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
             <span class="sa">r</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">\d&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">),</span> <span class="n">x</span><span class="p">),</span> <span class="n">networks_ids_str</span><span class="p">))</span>
         <span class="n">network_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
@@ -352,12 +352,15 @@
             <span class="n">running_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stopped_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">full_name_str</span> <span class="ow">in</span> <span class="n">running_containers_names</span><span class="p">:</span>
             <span class="n">running_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stopped_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">full_name_str</span> <span class="ow">in</span> <span class="n">running_containers_names</span><span class="p">:</span>
+
                 <span class="n">running_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">stopped_emulation_containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
@@ -549,7 +552,7 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">is_statsmanager_running</span><span class="p">():</span>
-            <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">start_docker_stats_manager</span><span class="p">(</span>
+            <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">start_docker_statsmanager</span><span class="p">(</span>
                 <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
                 <span class="n">port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="p">,</span>
                 <span class="n">log_dir</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_log_dir</span><span class="p">,</span>
@@ -595,13 +598,7 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">is_statsmanager_running</span><span class="p">():</span>
-            <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">start_docker_stats_manager</span><span class="p">(</span>
-                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                <span class="n">port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_port</span><span class="p">,</span>
-                <span class="n">log_file</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_log_file</span><span class="p">,</span>
-                <span class="n">log_dir</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_log_dir</span><span class="p">,</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">docker_stats_manager_max_workers</span>
-            <span class="p">)</span>
+            <span class="n">ManagementSystemController</span><span class="o">.</span><span class="n">stop_docker_statsmanager</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">ip</span> <span class="o">=</span> <span class="n">physical_server_ip</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -639,6 +636,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC_SERVERS</span><span class="o">.</span><span class="n">GRPC_OPTIONS</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2_grpc</span><span class="o">.</span><span class="n">DockerStatsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+
                 <span class="n">docker_stats_monitor_dto</span> <span class="o">=</span> \
                     <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">query_docker_stats_manager</span><span class="o">.</span><span class="n">get_docker_stats_manager_status</span><span class="p">(</span>
                         <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span>
@@ -762,9 +760,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_1</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
         <span class="n">networks</span> <span class="o">=</span> <span class="n">client_1</span><span class="o">.</span><span class="n">networks</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">networks</span><span class="p">))</span>
+        <span class="n">networks_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">networks</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">net</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="n">net</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span>
+                <span class="n">networks_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+        <span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">networks</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">networks_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">net</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">ContainerController</span><span class="o">.</span><span class="n">remove_network</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>

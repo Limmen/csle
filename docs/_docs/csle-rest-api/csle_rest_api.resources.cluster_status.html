@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.cluster_status package &mdash; csle-rest-api 0.4.0 documentation</title>
+  <title>csle_rest_api.resources.cluster_status package &mdash; csle-rest-api 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,7 +46,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.cadvisor.html">csle_rest_api.resources.cadvisor package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_rest_api.resources.cluster_status package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle-rest-api-resources-cluster-status-routes-module">csle_rest_api.resources.cluster_status.routes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_rest_api.resources.cluster_status.routes">csle_rest_api.resources.cluster_status.routes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_rest_api.resources.cluster_status">Module contents</a></li>
 </ul>
 </li>
@@ -116,9 +114,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
-      <li class="breadcrumb-item active">csle_rest_api.resources.cluster_status package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a> &raquo;</li>
+      <li>csle_rest_api.resources.cluster_status package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_rest_api.resources.cluster_status.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -129,15 +127,27 @@
            <div itemprop="articleBody">
              
   <section id="csle-rest-api-resources-cluster-status-package">
-<h1>csle_rest_api.resources.cluster_status package<a class="headerlink" href="#csle-rest-api-resources-cluster-status-package" title="Permalink to this heading"></a></h1>
+<h1>csle_rest_api.resources.cluster_status package<a class="headerlink" href="#csle-rest-api-resources-cluster-status-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="csle-rest-api-resources-cluster-status-routes-module">
-<h2>csle_rest_api.resources.cluster_status.routes module<a class="headerlink" href="#csle-rest-api-resources-cluster-status-routes-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_rest_api.resources.cluster_status.routes">
+<span id="csle-rest-api-resources-cluster-status-routes-module"></span><h2>csle_rest_api.resources.cluster_status.routes module<a class="headerlink" href="#module-csle_rest_api.resources.cluster_status.routes" title="Permalink to this headline"></a></h2>
+<p>Routes and sub-resources for the /clusterstatus resource</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="csle_rest_api.resources.cluster_status.routes.cluster_status">
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.cluster_status.routes.</span></span><span class="sig-name descname"><span class="pre">cluster_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">flask.wrappers.Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/cluster_status/routes.html#cluster_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.cluster_status.routes.cluster_status" title="Permalink to this definition"></a></dt>
+<dd><p>The /cluster_status resource</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the cluster status in JSON format</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-csle_rest_api.resources.cluster_status">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.cluster_status" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.cluster_status" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

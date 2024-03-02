@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.training.mixed_linear_tabular &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.training.mixed_linear_tabular &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.training.mixed_linear_tabular</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.training.mixed_linear_tabular</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -112,16 +110,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">avg_R</span> <span class="o">=</span> <span class="n">avg_R</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_type</span> <span class="o">=</span> <span class="n">PolicyType</span><span class="o">.</span><span class="n">MIXED_LINEAR_TABULAR</span>
 
-<div class="viewcode-block" id="MixedLinearTabularPolicy.action"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.mixed_linear_tabular.MixedLinearTabularPolicy.action">[docs]</a>    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="MixedLinearTabularPolicy.action"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.mixed_linear_tabular.MixedLinearTabularPolicy.action">[docs]</a>    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Multi-threshold stopping policy</span>
 
 <span class="sd">        :param o: the current observation</span>
+<span class="sd">        :param deterministic: boolean flag indicating whether the action selection should be deterministic</span>
 <span class="sd">        :return: the selected action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">policy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_tabular_policies</span><span class="p">)</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">a</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MixedLinearTabularPolicy.probability"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.mixed_linear_tabular.MixedLinearTabularPolicy.probability">[docs]</a>    <span class="k">def</span> <span class="nf">probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -151,7 +150,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="MixedLinearTabularPolicy.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.mixed_linear_tabular.MixedLinearTabularPolicy.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MixedLinearTabularPolicy&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;MixedLinearTabularPolicy&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converst a dict representation of the object to an instance</span>
 
@@ -214,7 +213,7 @@
                 <span class="n">stage_strategy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">stage_policies</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
                                             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stage_policies</span><span class="p">))])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">stage_policies</span><span class="p">)</span>
             <span class="n">stage_strategy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">iteround</span><span class="o">.</span><span class="n">saferound</span><span class="p">(</span><span class="n">stage_strategy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">stage_strategy</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">stage_strategy</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span></div></div>
 </pre></div>
 
            </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_tolerance.util.intrusion_recovery_pomdp_util &mdash; csle-tolerancexsg 0.3.0 documentation</title>
+  <title>csle_tolerance.util.intrusion_recovery_pomdp_util &mdash; csle-tolerance 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-tolerancexsg
+            <a href="../../../index.html" class="icon icon-home"> csle-tolerance
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -49,16 +47,16 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">csle-tolerancexsg</a>
+          <a href="../../../index.html">csle-tolerance</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_tolerance.util.intrusion_recovery_pomdp_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_tolerance.util.intrusion_recovery_pomdp_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,9 +69,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">betabinom</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">csle_tolerance.dao.intrusion_recovery_pomdp_config</span> <span class="kn">import</span> <span class="n">IntrusionRecoveryPomdpConfig</span>
-<span class="kn">from</span> <span class="nn">csle_tolerance.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
 
 
 <div class="viewcode-block" id="IntrusionRecoveryPomdpUtil"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil">[docs]</a><span class="k">class</span> <span class="nc">IntrusionRecoveryPomdpUtil</span><span class="p">:</span>
@@ -91,7 +87,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="IntrusionRecoveryPomdpUtil.initial_belief"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.initial_belief">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">initial_belief</span><span class="p">(</span><span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">initial_belief</span><span class="p">(</span><span class="n">p_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial belief state of the POMDP</span>
 
@@ -169,10 +165,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">no_intrusion_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">num_observations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">no_intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">no_intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">intrusion_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">num_observations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">intrusion_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="n">num_observations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mf">1.0</span>
@@ -305,14 +301,14 @@
 <span class="sd">        :param transition_tensor: the transition tensor of the POMDP</span>
 <span class="sd">        :return: b[s_prime]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">s_prime_1</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
                 <span class="n">prob_1</span> <span class="o">=</span> <span class="n">observation_tensor</span><span class="p">[</span><span class="n">s_prime_1</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
                 <span class="n">norm</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">prob_1</span> <span class="o">*</span> <span class="n">transition_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime_1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
             <span class="n">temp</span> <span class="o">+=</span> <span class="n">observation_tensor</span><span class="p">[</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">transition_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
@@ -338,7 +334,7 @@
 <span class="sd">        :param observation_tensor: the observation tensor</span>
 <span class="sd">        :return: the probability of observing o when taking action a in belief point b</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
                 <span class="n">prob</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">transition_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">observation_tensor</span><span class="p">[</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
@@ -360,7 +356,7 @@
 <span class="sd">        :param transition_tensor: the transition tensor</span>
 <span class="sd">        :return: the new belief</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">b_prime</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="n">b_prime</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
             <span class="n">b_prime</span><span class="p">[</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpUtil</span><span class="o">.</span><span class="n">bayes_filter</span><span class="p">(</span>
                 <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
@@ -413,78 +409,7 @@
                     <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">observations</span><span class="p">:</span>
                         <span class="n">c</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">cost_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
                         <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;R: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.80f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">file_str</span></div>
-
-<div class="viewcode-block" id="IntrusionRecoveryPomdpUtil.manual_play"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.manual_play">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">IntrusionRecoveryPomdpConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An interactive loop to test the POMDP manually</span>
-
-<span class="sd">        :param config: the POMDP config</span>
-<span class="sd">        :return: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="n">b1</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">b1</span>
-        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">b1</span><span class="p">)</span>
-        <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">o</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">b1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">raw_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="p">)</span>
-            <span class="n">raw_input</span> <span class="o">=</span> <span class="n">raw_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;help&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter an action id to execute the action, &quot;</span>
-                      <span class="s2">&quot;press R to reset,&quot;</span>
-                      <span class="s2">&quot;press S to print the set of states&quot;</span>
-                      <span class="s2">&quot;press A to print the set of actions&quot;</span>
-                      <span class="s2">&quot;press s to print the current state, press A to print the actions, &quot;</span>
-                      <span class="s2">&quot;press D to check if done&quot;</span>
-                      <span class="s2">&quot;press C to check the cumulative costs&quot;</span>
-                      <span class="s2">&quot;press H to print the history of actions&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;s&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">, o: </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, b: </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">cumulative_costs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resetting the state&quot;</span><span class="p">)</span>
-                <span class="n">s</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">b1</span><span class="p">)</span>
-                <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
-                <span class="n">o</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-                <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="n">b</span> <span class="o">=</span> <span class="n">b1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">:</span>
-                    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="n">c</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">cost_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">s</span> <span class="o">=</span> <span class="n">GeneralUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">transition_tensor</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">transition_tensor</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
-                                                  <span class="n">states</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
-                <span class="n">o</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpUtil</span><span class="o">.</span><span class="n">sample_next_observation</span><span class="p">(</span><span class="n">observation_tensor</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">observation_tensor</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>
-                                                                       <span class="n">observations</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">observations</span><span class="p">)</span>
-                <span class="n">b</span> <span class="o">=</span> <span class="n">IntrusionRecoveryPomdpUtil</span><span class="o">.</span><span class="n">next_belief</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">,</span>
-                                                           <span class="n">observations</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">observations</span><span class="p">,</span>
-                                                           <span class="n">observation_tensor</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">observation_tensor</span><span class="p">,</span>
-                                                           <span class="n">transition_tensor</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">transition_tensor</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">:</span>
-                    <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">cumulative_costs</span> <span class="o">+=</span> <span class="n">c</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">, o: </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, b: </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">, t: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">file_str</span></div></div>
 </pre></div>
 
            </div>

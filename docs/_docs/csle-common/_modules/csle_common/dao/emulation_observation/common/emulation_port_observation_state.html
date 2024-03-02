@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_observation.common.emulation_port_observation_state &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.emulation_observation.common.emulation_port_observation_state &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_observation.common.emulation_port_observation_state</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_observation.common.emulation_port_observation_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,7 +70,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_observation.common.emulation_port_observation_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.transport_protocol</span> <span class="kn">import</span> <span class="n">TransportProtocol</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.network_service</span> <span class="kn">import</span> <span class="n">NetworkService</span>
 <span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
@@ -83,7 +81,7 @@
 <span class="sd">    DTO Representation a port observation in the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">http_enum</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">http_enum</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                  <span class="n">http_grep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">vulscan</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
@@ -114,7 +112,7 @@
 
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;open&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span>
@@ -127,15 +125,13 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="EmulationPortObservationState.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.common.html#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationPortObservationState&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationPortObservationState&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of the object to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
 <span class="sd">        :return: the created object instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationPortObservationState</span><span class="p">(</span>
             <span class="n">port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">],</span>
             <span class="nb">open</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;open&quot;</span><span class="p">],</span>
@@ -167,7 +163,8 @@
         <span class="k">return</span> <span class="n">service</span></div>
 
 <div class="viewcode-block" id="EmulationPortObservationState.from_network_service"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.common.html#csle_common.dao.emulation_observation.common.emulation_port_observation_state.EmulationPortObservationState.from_network_service">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_network_service</span><span class="p">(</span><span class="n">network_service</span><span class="p">:</span> <span class="n">NetworkService</span><span class="p">,</span> <span class="n">service_lookup</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationPortObservationState&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_network_service</span><span class="p">(</span><span class="n">network_service</span><span class="p">:</span> <span class="n">NetworkService</span><span class="p">,</span>
+                             <span class="n">service_lookup</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationPortObservationState&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a network service into a port observation state</span>
 
@@ -219,7 +216,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">EmulationPortObservationState</span><span class="p">(</span><span class="n">port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">service</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">EmulationPortObservationState</span><span class="p">(</span><span class="n">port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span>
                                              <span class="n">http_enum</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">http_grep</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">vulscan</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fingerprint</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.constants.constants &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.constants.constants &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,8 +73,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Constants for csle-common</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.config</span> <span class="kn">import</span> <span class="n">Config</span>
 
 
 <div class="viewcode-block" id="GENERAL"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.GENERAL">[docs]</a><span class="k">class</span> <span class="nc">GENERAL</span><span class="p">:</span>
@@ -113,7 +112,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CSLE_HOME_ENV_PARAM</span> <span class="o">=</span> <span class="s2">&quot;CSLE_HOME&quot;</span>
     <span class="n">CONFIG_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;config.json&quot;</span>
-    <span class="n">PARSED_CONFIG</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="n">PARSED_CONFIG</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Config</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="CONTAINER_IMAGES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CONTAINER_IMAGES">[docs]</a><span class="k">class</span> <span class="nc">CONTAINER_IMAGES</span><span class="p">:</span>
@@ -1040,6 +1039,7 @@
     <span class="n">PING</span> <span class="o">=</span> <span class="s2">&quot;ping&quot;</span>
     <span class="n">NGINX_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service nginx status&quot;</span>
     <span class="n">POSTGRESQL_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service postgresql status&quot;</span>
+    <span class="n">POSTGRESQL_STATUS_VERSION</span> <span class="o">=</span> <span class="s2">&quot;service postgresql@15-main status&quot;</span>
     <span class="n">DOCKER_ENGINE_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service docker status&quot;</span>
     <span class="n">POSTGRESQL_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql start&quot;</span>
     <span class="n">POSTGRESQL_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql stop&quot;</span>
@@ -1684,7 +1684,7 @@
     <span class="n">DBNAME</span> <span class="o">=</span> <span class="s2">&quot;csle&quot;</span>
     <span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;csle&quot;</span>
     <span class="n">PASSWORD</span> <span class="o">=</span> <span class="s2">&quot;csle&quot;</span>
-    <span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
+    <span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;172.31.212.92&quot;</span>
     <span class="n">TRACES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;traces&quot;</span>
     <span class="n">DB_NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;dbname&quot;</span>
     <span class="n">PW_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
@@ -1719,7 +1719,8 @@
     <span class="n">MANAGEMENT_USERS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;management_users&quot;</span>
     <span class="n">SESSION_TOKENS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;session_tokens&quot;</span>
     <span class="n">TRACES_DATASETS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;traces_datasets&quot;</span>
-    <span class="n">STATISTICS_DATASETS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;statistics_datasets&quot;</span></div>
+    <span class="n">STATISTICS_DATASETS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;statistics_datasets&quot;</span>
+    <span class="n">NUM_RETRIES_UPDATE_TRAINING_JOB</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="CONTAINER_POOLS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CONTAINER_POOLS">[docs]</a><span class="k">class</span> <span class="nc">CONTAINER_POOLS</span><span class="p">:</span>
@@ -1884,10 +1885,12 @@
     <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
     <span class="n">LAMBDA</span> <span class="o">=</span> <span class="s2">&quot;lambda&quot;</span>
     <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
+    <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span>
     <span class="n">A</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
     <span class="n">EPSILON</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span>
     <span class="n">N</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
     <span class="n">L</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="n">IMPROVE_BREAK</span> <span class="o">=</span> <span class="s2">&quot;improve_break&quot;</span>
     <span class="n">THETA1</span> <span class="o">=</span> <span class="s2">&quot;theta1&quot;</span>
     <span class="n">THETAS</span> <span class="o">=</span> <span class="s2">&quot;thetas&quot;</span>
     <span class="n">THRESHOLDS</span> <span class="o">=</span> <span class="s2">&quot;thresholds&quot;</span>
@@ -1904,6 +1907,13 @@
     <span class="n">NUM_HIDDEN_LAYERS</span> <span class="o">=</span> <span class="s2">&quot;num_hidden_layers&quot;</span>
     <span class="n">ACTIVATION_FUNCTION</span> <span class="o">=</span> <span class="s2">&quot;activation_function&quot;</span>
     <span class="n">DEVICE</span> <span class="o">=</span> <span class="s2">&quot;device&quot;</span></div>
+
+
+<div class="viewcode-block" id="CUDA"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CUDA">[docs]</a><span class="k">class</span> <span class="nc">CUDA</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to cuda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CUDA_VISIBLE_DEVICES</span> <span class="o">=</span> <span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span></div>
 </pre></div>
 
            </div>

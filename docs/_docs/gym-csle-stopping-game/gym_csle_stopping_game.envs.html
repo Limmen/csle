@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.envs package &mdash; gym-csle-stopping-game 0.4.0 documentation</title>
+  <title>gym_csle_stopping_game.envs package &mdash; gym-csle-stopping-game 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,10 +42,10 @@
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.dao.html">gym_csle_stopping_game.dao package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gym_csle_stopping_game.envs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gym-csle-stopping-game-envs-stopping-game-env-module">gym_csle_stopping_game.envs.stopping_game_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_stopping_game.envs.stopping_game_env">gym_csle_stopping_game.envs.stopping_game_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gym_csle_stopping_game.envs">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.util.html">gym_csle_stopping_game.util package</a></li>
@@ -66,8 +64,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">gym_csle_stopping_game.envs package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>gym_csle_stopping_game.envs package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_stopping_game.envs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,21 +76,745 @@
            <div itemprop="articleBody">
              
   <section id="gym-csle-stopping-game-envs-package">
-<h1>gym_csle_stopping_game.envs package<a class="headerlink" href="#gym-csle-stopping-game-envs-package" title="Permalink to this heading"></a></h1>
+<h1>gym_csle_stopping_game.envs package<a class="headerlink" href="#gym-csle-stopping-game-envs-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="gym-csle-stopping-game-envs-stopping-game-env-module">
-<h2>gym_csle_stopping_game.envs.stopping_game_env module<a class="headerlink" href="#gym-csle-stopping-game-envs-stopping-game-env-module" title="Permalink to this heading"></a></h2>
+<section id="module-gym_csle_stopping_game.envs.stopping_game_env">
+<span id="gym-csle-stopping-game-envs-stopping-game-env-module"></span><h2>gym_csle_stopping_game.envs.stopping_game_env module<a class="headerlink" href="#module-gym_csle_stopping_game.envs.stopping_game_env" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_csle_stopping_game.envs.stopping_game_env.</span></span><span class="sig-name descname"><span class="pre">StoppingGameEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig" title="gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig"><span class="pre">gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></code></p>
+<p>OpenAI Gym Env for the csle-stopping-game</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.action_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.emulation_evaluation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">emulation_evaluation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv" title="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv"><span class="pre">gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_episodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intrusion_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.policy.Policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.policy.Policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_config.emulation_simulation_trace.EmulationSimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.emulation_evaluation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.emulation_evaluation" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for evaluating a strategy profile in the emulation environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – the environment to use for evaluation</p></li>
+<li><p><strong>n_episodes</strong> – the number of evaluation episodes</p></li>
+<li><p><strong>intrusion_seq</strong> – the intrusion sequence for the evaluation (sequence of attacker actions)</p></li>
+<li><p><strong>defender_policy</strong> – the defender policy for the evaluation</p></li>
+<li><p><strong>attacker_policy</strong> – the attacker policy for the evaluation</p></li>
+<li><p><strong>emulation_env_config</strong> – configuration of the emulation environment for the evaluation</p></li>
+<li><p><strong>simulation_env_config</strong> – configuration of the simulation environment for the evaluation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>traces with the evaluation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.generate_random_particles">
+<span class="sig-name descname"><span class="pre">generate_random_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.generate_random_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.generate_random_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a random list of state particles from a given observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – the latest observation</p></li>
+<li><p><strong>num_particles</strong> – the number of particles to generate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of random particles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.get_observation_from_history">
+<span class="sig-name descname"><span class="pre">get_observation_from_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.get_observation_from_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.get_observation_from_history" title="Permalink to this definition"></a></dt>
+<dd><p>Utility method to get a hidden observation based on a history</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>history</strong> – the history to get the observation from</p></li>
+<li><p><strong>pi2</strong> – the attacker stage strategy</p></li>
+<li><p><strong>l</strong> – the number of stops remaining</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the observation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.get_traces">
+<span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.simulation_config.simulation_trace.SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.get_traces" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of simulation traces</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_attack_action_legal">
+<span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether an attacker action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_defense_action_legal">
+<span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether a defender action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_state_terminal">
+<span class="sig-name descname"><span class="pre">is_state_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState" title="gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState"><span class="pre">gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.is_state_terminal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.is_state_terminal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether a given state is terminal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – the state</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if terminal, else false</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.manual_play">
+<span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.manual_play" title="Permalink to this definition"></a></dt>
+<dd><p>An interactive loop to test the environment manually</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob_vector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.mean" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for getting the mean of a vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prob_vector</strong> – the vector to take the mean of</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the mean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.observation_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.render" title="Permalink to this definition"></a></dt>
+<dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the random seed</p></li>
+<li><p><strong>soft</strong> – boolean flag indicating whether it is a soft reset or not</p></li>
+<li><p><strong>options</strong> – optional configuration parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>initial observation and info</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset_traces">
+<span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset_traces" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the list of traces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.set_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.set_model" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> – the model</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState" title="gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState"><span class="pre">gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.set_state" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the state. Allows to simulate samples from specific states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – the state</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.step" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a step in the environment by executing the given action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action_profile</strong> – the actions to take (both players actions</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(obs, reward, terminated, truncated, info)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.weighted_intrusion_prediction_distance">
+<span class="sig-name descname"><span class="pre">weighted_intrusion_prediction_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intrusion_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_env.html#StoppingGameEnv.weighted_intrusion_prediction_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.weighted_intrusion_prediction_distance" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the weighted intrusion start time prediction distance (Wang, Hammar, Stadler, 2022)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>intrusion_start</strong> – the intrusion start time</p></li>
+<li><p><strong>first_stop</strong> – the predicted start time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the weighted distance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module">
-<h2>gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module<a class="headerlink" href="#gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module" title="Permalink to this heading"></a></h2>
+<section id="module-gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env">
+<span id="gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module"></span><h2>gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module<a class="headerlink" href="#module-gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.</span></span><span class="sig-name descname"><span class="pre">StoppingGameMdpAttackerEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig" title="gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig"><span class="pre">gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></code></p>
+<p>OpenAI Gym Env for the MDP of the attacker when facing a static defender</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.action_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.calculate_stage_policy">
+<span class="sig-name descname"><span class="pre">calculate_stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.calculate_stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.calculate_stage_policy" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the stage policy of a given model and observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>o</strong> – the observation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the stage policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.generate_random_particles">
+<span class="sig-name descname"><span class="pre">generate_random_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.generate_random_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.generate_random_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a random list of state particles from a given observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – the latest observation</p></li>
+<li><p><strong>num_particles</strong> – the number of particles to generate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of random particles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_actions_from_particles">
+<span class="sig-name descname"><span class="pre">get_actions_from_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.get_actions_from_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_actions_from_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Prunes the set of actiosn based on the current particle set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>particles</strong> – the set of particles</p></li>
+<li><p><strong>t</strong> – the current time step</p></li>
+<li><p><strong>observation</strong> – the latest observation</p></li>
+<li><p><strong>verbose</strong> – boolean flag indicating whether logging should be verbose or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of pruned actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_traces">
+<span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.simulation_config.simulation_trace.SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_traces" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of simulation traces</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_attack_action_legal">
+<span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether an attacker action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_defense_action_legal">
+<span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether a defender action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.manual_play">
+<span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.manual_play" title="Permalink to this definition"></a></dt>
+<dd><p>An interactive loop to test the environment manually</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.observation_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.render" title="Permalink to this definition"></a></dt>
+<dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the random seed</p></li>
+<li><p><strong>soft</strong> – boolean flag indicating whether it is a soft reset or not</p></li>
+<li><p><strong>options</strong> – optional configuration parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>initial observation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset_traces">
+<span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset_traces" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the list of traces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.set_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_model" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> – the model</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_state" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the state. Allows to simulate samples from specific states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – the state</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pi2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.int64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_mdp_attacker_env.html#StoppingGameMdpAttackerEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.step" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a step in the environment by executing the given action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pi2</strong> – attacker stage policy</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(obs, reward, terminated, truncated, info)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module">
-<h2>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module<a class="headerlink" href="#gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module" title="Permalink to this heading"></a></h2>
+<section id="module-gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env">
+<span id="gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module"></span><h2>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module<a class="headerlink" href="#module-gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.</span></span><span class="sig-name descname"><span class="pre">StoppingGamePomdpDefenderEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig" title="gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig"><span class="pre">gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></code></p>
+<p>OpenAI Gym Env for the POMDP of the defender when facing a static attacker</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.action_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.add_observation_vector">
+<span class="sig-name descname"><span class="pre">add_observation_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obs_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.add_observation_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.add_observation_vector" title="Permalink to this definition"></a></dt>
+<dd><p>Adds an observation vector to the history</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obs_vector</strong> – the observation vector to add</p></li>
+<li><p><strong>obs_id</strong> – the id of the observation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.emulation_evaluation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">emulation_evaluation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv" title="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv"><span class="pre">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_episodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intrusion_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.policy.Policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_config.emulation_simulation_trace.EmulationSimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.emulation_evaluation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.emulation_evaluation" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for evaluating policies in the emulation environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – the environment to use for evaluation</p></li>
+<li><p><strong>n_episodes</strong> – the number of episodes to use for evaluation</p></li>
+<li><p><strong>intrusion_seq</strong> – the sequence of intrusion actions to use for evaluation</p></li>
+<li><p><strong>defender_policy</strong> – the defender policy to use for evaluation</p></li>
+<li><p><strong>emulation_env_config</strong> – the configuration of the emulation environment to use for evaluation</p></li>
+<li><p><strong>simulation_env_config</strong> – the configuration of the simulation environment to use for evaluation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>traces with the evaluation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.generate_random_particles">
+<span class="sig-name descname"><span class="pre">generate_random_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.generate_random_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.generate_random_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a random list of state particles from a given observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – the latest observation</p></li>
+<li><p><strong>num_particles</strong> – the number of particles to generate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of random particles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_actions_from_particles">
+<span class="sig-name descname"><span class="pre">get_actions_from_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.get_actions_from_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_actions_from_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Prunes the set of actiosn based on the current particle set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>particles</strong> – the set of particles</p></li>
+<li><p><strong>t</strong> – the current time step</p></li>
+<li><p><strong>observation</strong> – the latest observation</p></li>
+<li><p><strong>verbose</strong> – boolean flag indicating whether logging should be verbose or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of pruned actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_observation_from_history">
+<span class="sig-name descname"><span class="pre">get_observation_from_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.get_observation_from_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_observation_from_history" title="Permalink to this definition"></a></dt>
+<dd><p>Utiltiy function to get a defender observatin (belief) from a history</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – the history to get the observation form</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the observation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_traces">
+<span class="sig-name descname"><span class="pre">get_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.simulation_config.simulation_trace.SimulationTrace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.get_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.get_traces" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of simulation traces</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_attack_action_legal">
+<span class="sig-name descname"><span class="pre">is_attack_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.is_attack_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_attack_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether an attacker action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attack_action_id</strong> – the id of the attacker action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_defense_action_legal">
+<span class="sig-name descname"><span class="pre">is_defense_action_legal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defense_action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.is_defense_action_legal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_defense_action_legal" title="Permalink to this definition"></a></dt>
+<dd><p>Checks whether a defender action in the environment is legal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>defense_action_id</strong> – the id of the action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_state_terminal">
+<span class="sig-name descname"><span class="pre">is_state_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.is_state_terminal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_state_terminal" title="Permalink to this definition"></a></dt>
+<dd><p>Utility funciton to check whether a state is terminal or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – the state</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.manual_play">
+<span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.manual_play" title="Permalink to this definition"></a></dt>
+<dd><p>An interactive loop to test the environment manually</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">spaces.Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.observation_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.render" title="Permalink to this definition"></a></dt>
+<dd><p>Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – the rendering mode</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True (if human mode) otherwise an rgb array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the environment state, this should be called whenever step() returns &lt;done&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the random seed</p></li>
+<li><p><strong>soft</strong> – boolean flag indicating whether it is a soft reset or not</p></li>
+<li><p><strong>options</strong> – optional configuration parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>initial observation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset_traces">
+<span class="sig-name descname"><span class="pre">reset_traces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.reset_traces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset_traces" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the list of traces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.set_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.set_model" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> – the model</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.set_state" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the state. Allows to simulate samples from specific states</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – the state</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a step in the environment by executing the given action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>a1</strong> – defender action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(obs, reward, terminated, truncated, info)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step_trace">
+<span class="sig-name descname"><span class="pre">step_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_trace.EmulationTrace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gym_csle_stopping_game/envs/stopping_game_pomdp_defender_env.html#StoppingGamePomdpDefenderEnv.step_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.step_trace" title="Permalink to this definition"></a></dt>
+<dd><p>Utility method for stopping a pre-recorded trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trace</strong> – the trace to step</p></li>
+<li><p><strong>a1</strong> – the action to step with</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the result of the step according to the trace</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="module-gym_csle_stopping_game.envs">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gym_csle_stopping_game.envs" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

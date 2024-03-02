@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.pomcp.pomcp &mdash; csle-agents 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.pomcp.pomcp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.pomcp.pomcp</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.belief_tree</span> <span class="kn">import</span> <span class="n">BeliefTree</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.belief_node</span> <span class="kn">import</span> <span class="n">BeliefNode</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.action_node</span> <span class="kn">import</span> <span class="n">ActionNode</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.pomcp_acquisition_function_type</span> <span class="kn">import</span> <span class="n">POMCPAcquisitionFunctionType</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.pomcp_util</span> <span class="kn">import</span> <span class="n">POMCPUtil</span>
+<span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="POMCP"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP">[docs]</a><span class="k">class</span> <span class="nc">POMCP</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the POMCP algorithm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnv</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">initial_particles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">planning_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">max_particles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">350</span><span class="p">,</span>
+                 <span class="n">reinvigoration</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">reinvigorated_particles_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">rollout_policy</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Policy</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_function</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">default_node_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prior_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">prior_confidence</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">acquisition_function_type</span><span class="p">:</span> <span class="n">POMCPAcquisitionFunctionType</span> <span class="o">=</span> <span class="n">POMCPAcquisitionFunctionType</span><span class="o">.</span><span class="n">UCB</span><span class="p">,</span>
+                 <span class="n">c2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">use_rollout_policy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">prune_action_space</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">prune_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the solver</span>
+
+<span class="sd">        :param S: the state space</span>
+<span class="sd">        :param A: the action space</span>
+<span class="sd">        :param gamma: the discount factor</span>
+<span class="sd">        :param env: the environment for sampling</span>
+<span class="sd">        :param c: the weighting factor for UCB</span>
+<span class="sd">        :param initial_particles: the initial list of particles</span>
+<span class="sd">        :param planning_time: the planning time</span>
+<span class="sd">        :param max_particles: the maximum number of particles (samples) for the belief state</span>
+<span class="sd">        :param reinvigorated_particles_ratio: probability of new particles added when updating the belief state</span>
+<span class="sd">        :param reinvigoration: boolean flag indicating whether reinvigoration should be done</span>
+<span class="sd">        :param rollout_policy: the rollout policy</span>
+<span class="sd">        :param verbose: boolean flag indicating whether logging should be verbose</span>
+<span class="sd">        :param default_node_value: the default value of nodes in the tree</span>
+<span class="sd">        :param num_evals_per_process: number of evaluations per process</span>
+<span class="sd">        :param prior_weight: the weight to put on the prior</span>
+<span class="sd">        :param prior_confidence: the prior confidence (initial count)</span>
+<span class="sd">        :param acquisition_function_type: the type of acquisition function</span>
+<span class="sd">        :param c2: the weighting factor for alpha go exploration</span>
+<span class="sd">        :param use_rollout_policy: boolean flag indicating whether rollout policy should be used</span>
+<span class="sd">        :param prune_action_space: boolean flag indicating whether the action space should be pruned</span>
+<span class="sd">        :param prune_size: the size of the pruned action space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_observation</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span> <span class="o">=</span> <span class="n">c2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planning_time</span> <span class="o">=</span> <span class="n">planning_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_particles</span> <span class="o">=</span> <span class="n">max_particles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reinvigorated_particles_ratio</span> <span class="o">=</span> <span class="n">reinvigorated_particles_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span> <span class="o">=</span> <span class="n">rollout_policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_visit_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span> <span class="o">=</span> <span class="n">value_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_particles</span> <span class="o">=</span> <span class="n">initial_particles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reinvigoration</span> <span class="o">=</span> <span class="n">reinvigoration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span> <span class="o">=</span> <span class="n">default_node_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_weight</span> <span class="o">=</span> <span class="n">prior_weight</span>
+        <span class="n">root_particles</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_particles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">BeliefTree</span><span class="p">(</span><span class="n">root_particles</span><span class="o">=</span><span class="n">root_particles</span><span class="p">,</span> <span class="n">default_node_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span><span class="p">,</span>
+                               <span class="n">root_observation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_observation</span><span class="p">,</span> <span class="n">initial_visit_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_visit_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior_confidence</span> <span class="o">=</span> <span class="n">prior_confidence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">=</span> <span class="n">acquisition_function_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_rollout_policy</span> <span class="o">=</span> <span class="n">use_rollout_policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prune_action_space</span> <span class="o">=</span> <span class="n">prune_action_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prune_size</span> <span class="o">=</span> <span class="n">prune_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_simulation_steps</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="POMCP.compute_belief"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.compute_belief">[docs]</a>    <span class="k">def</span> <span class="nf">compute_belief</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the belief state based on the particles</span>
+
+<span class="sd">        :return: the belief state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">belief_state</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">particle_distribution</span> <span class="o">=</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">convert_samples_to_distribution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">particles</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">particle_distribution</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">belief_state</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">belief_state</span></div>
+
+<div class="viewcode-block" id="POMCP.rollout"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.rollout">[docs]</a>    <span class="k">def</span> <span class="nf">rollout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform randomized recursive rollout search starting from the given history</span>
+<span class="sd">        until the max depth has been achieved</span>
+
+<span class="sd">        :param state: the initial state of the rollout</span>
+<span class="sd">        :param history: the history of the root node</span>
+<span class="sd">        :param depth: current planning horizon</span>
+<span class="sd">        :param max_rollout_depth: max rollout depth</span>
+<span class="sd">        :param t: the time step</span>
+<span class="sd">        :return: the estimated value of the root node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="n">max_rollout_depth</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_rollout_policy</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">is_state_terminal</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="n">rollout_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_actions_from_particles</span><span class="p">(</span><span class="n">particles</span><span class="o">=</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">t</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">),</span>
+                                                                  <span class="n">observation</span><span class="o">=</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">rand_choice</span><span class="p">(</span><span class="n">rollout_actions</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">),</span>
+                                           <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_simulation_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">history</span><span class="o">=</span><span class="n">history</span> <span class="o">+</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">o</span><span class="p">],</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                                    <span class="n">max_rollout_depth</span><span class="o">=</span><span class="n">max_rollout_depth</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="POMCP.simulate"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">max_planning_depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">,</span> <span class="n">ActionNode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the POMCP simulation starting from a given belief node and a sampled state</span>
+
+<span class="sd">        :param state: the sampled state from the belief state of the node</span>
+<span class="sd">        :param max_rollout_depth: the maximum depth of rollout</span>
+<span class="sd">        :param max_planning_depth: the maximum depth of planning</span>
+<span class="sd">        :param c: the weighting factor for the ucb acquisition function</span>
+<span class="sd">        :param depth: the current depth of the simulation</span>
+<span class="sd">        :param history: the current history (history of the start node plus the simulation history)</span>
+<span class="sd">        :param parent: the parent node in the tree</span>
+<span class="sd">        :param t: the time-step</span>
+<span class="sd">        :return: the Monte-Carlo value of the node and the current depth</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check if we have reached the maximum depth of the tree</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="n">max_planning_depth</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="n">depth</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">depth</span>
+
+        <span class="c1"># Check if the new history has already been visited in the past of should be added as a new node to the tree</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">observation</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">observation</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">history</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span>
+        <span class="n">current_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">find_or_create</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">,</span>
+                                                <span class="n">initial_visit_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_confidence</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="c1"># If a new node was created, then it has no children, in which case we should stop the search and</span>
+        <span class="c1"># do a Monte-Carlo rollout with a given base policy to estimate the value of the node</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Prune action space</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prune_action_space</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">obs_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span>
+                    <span class="n">obs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">obs_vector</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)))))</span>
+                <span class="n">rollout_actions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                                  <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_size</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rollout_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_node</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">):</span>
+                    <span class="n">rollout_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_actions_from_particles</span><span class="p">(</span><span class="n">particles</span><span class="o">=</span><span class="n">current_node</span><span class="o">.</span><span class="n">particles</span> <span class="o">+</span> <span class="p">[</span><span class="n">state</span><span class="p">],</span>
+                                                                          <span class="n">t</span><span class="o">=</span><span class="n">t</span> <span class="o">+</span> <span class="n">depth</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># since the node does not have any children, we first add them to the node</span>
+                <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">rollout_actions</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">history</span> <span class="o">+</span> <span class="p">[</span><span class="n">action</span><span class="p">],</span> <span class="n">parent</span><span class="o">=</span><span class="n">current_node</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span><span class="p">)</span>
+
+            <span class="c1"># Perform the rollout from the current state and return the value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rollout</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="o">=</span><span class="n">max_rollout_depth</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">),</span>
+                    <span class="n">depth</span><span class="p">)</span>
+
+        <span class="c1"># If we have not yet reached a new node, we select the next action according to the acquisiton function</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">POMCPAcquisitionFunctionType</span><span class="o">.</span><span class="n">UCB</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+            <span class="n">next_action_node</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">ucb_acquisition_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span> <span class="o">==</span> <span class="n">POMCPAcquisitionFunctionType</span><span class="o">.</span><span class="n">ALPHA_GO</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_observation_from_history</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot use the AlphaGo acquisiton function without a rollout policy&quot;</span><span class="p">)</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span>
+                <span class="n">obs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">o</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rollout_policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)))))</span>
+            <span class="n">next_action_node_idx</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">))),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">alpha_go_acquisition_function</span><span class="p">(</span>
+                    <span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="n">dist</span><span class="p">[</span><span class="n">x</span><span class="p">],</span>
+                    <span class="n">prior_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_weight</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">next_action_node</span> <span class="o">=</span> <span class="n">current_node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">next_action_node_idx</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquisition function type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span><span class="si">}</span><span class="s2"> not recognized&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Simulate the outcome of the selected action</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">next_action_node</span><span class="o">.</span><span class="n">action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_simulation_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+
+        <span class="c1"># Recursive call, continue the simulation from the new node</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">next_action_node</span><span class="p">,</span> <span class="n">ActionNode</span><span class="p">)</span>
+        <span class="n">R</span><span class="p">,</span> <span class="n">rec_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="o">=</span><span class="n">max_rollout_depth</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">history</span><span class="o">=</span><span class="n">history</span> <span class="o">+</span> <span class="p">[</span><span class="n">next_action_node</span><span class="o">.</span><span class="n">action</span><span class="p">,</span> <span class="n">o</span><span class="p">],</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">next_action_node</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">max_planning_depth</span><span class="o">=</span><span class="n">max_planning_depth</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">R</span>
+
+        <span class="c1"># The simulation has completed, time to backpropagate the values</span>
+        <span class="c1"># We start by updating the belief particles and the visit count of the current belief node</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_node</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">):</span>
+            <span class="n">current_node</span><span class="o">.</span><span class="n">particles</span> <span class="o">+=</span> <span class="p">[</span><span class="n">state</span><span class="p">]</span>
+
+        <span class="c1"># Next we update the statistics and visit counts of the action node</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">next_action_node</span><span class="p">,</span> <span class="n">ActionNode</span><span class="p">):</span>
+            <span class="n">next_action_node</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">immediate_reward</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">current_node</span><span class="o">.</span><span class="n">visit_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">next_action_node</span><span class="o">.</span><span class="n">visit_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">next_action_node</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">next_action_node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="n">next_action_node</span><span class="o">.</span><span class="n">visit_count</span>
+
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">R</span><span class="p">),</span> <span class="n">rec_depth</span></div>
+
+<div class="viewcode-block" id="POMCP.solve"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_planning_depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the POMCP algorithm with a given max depth for the lookahead</span>
+
+<span class="sd">        :param max_rollout_depth: the max depth for rollout</span>
+<span class="sd">        :param max_planning_depth: the max depth for planning</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Starting POMCP, max rollout depth: </span><span class="si">{</span><span class="n">max_rollout_depth</span><span class="si">}</span><span class="s2">, max planning depth: </span><span class="si">{</span><span class="n">max_planning_depth</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;c: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="si">}</span><span class="s2">, planning time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">planning_time</span><span class="si">}</span><span class="s2">, gamma: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;max particles: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_particles</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;reinvigorated_particles_ratio: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reinvigorated_particles_ratio</span><span class="si">}</span><span class="s2">, prior weight: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_weight</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;acquisiton: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, c2: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="si">}</span><span class="s2">, prune: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_action_space</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;prune size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prune_size</span><span class="si">}</span><span class="s2">, use_rollout_policy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">use_rollout_policy</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;prior confidence: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_confidence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_simulation_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">begin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">planning_time</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">max_rollout_depth</span><span class="o">=</span><span class="n">max_rollout_depth</span><span class="p">,</span> <span class="n">history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">history</span><span class="p">,</span>
+                                     <span class="n">c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span>
+                                     <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">max_planning_depth</span><span class="o">=</span><span class="n">max_planning_depth</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="n">action_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">),))</span>
+                <span class="n">best_action_idx</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">best_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action_node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
+                    <span class="n">action_values</span><span class="p">[</span><span class="n">action_node</span><span class="o">.</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">action_node</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">action_node</span><span class="o">.</span><span class="n">visit_count</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">action_values</span><span class="p">[</span><span class="n">action_node</span><span class="o">.</span><span class="n">action</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">best_value</span><span class="p">:</span>
+                        <span class="n">best_action_idx</span> <span class="o">=</span> <span class="n">i</span>
+                        <span class="n">best_value</span> <span class="o">=</span> <span class="n">action_values</span><span class="p">[</span><span class="n">action_node</span><span class="o">.</span><span class="n">action</span><span class="p">]</span>
+                    <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action_node</span><span class="o">.</span><span class="n">visit_count</span><span class="p">)</span>
+                    <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">action_values</span><span class="p">[</span><span class="n">action_node</span><span class="o">.</span><span class="n">action</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Planning time left </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">planning_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">begin</span><span class="si">}</span><span class="s2">s, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;best action: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">best_action_idx</span><span class="p">]</span><span class="o">.</span><span class="n">action</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">best_action_idx</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">best_action_idx</span><span class="p">]</span><span class="o">.</span><span class="n">visit_count</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;planning depth: </span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s2">, counts: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span><span class="w"> </span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">, values: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Planning complete, num simulation steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_simulation_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="POMCP.get_action"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.get_action">[docs]</a>    <span class="k">def</span> <span class="nf">get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the next action to execute based on the state of the tree. Selects the action with the highest value</span>
+<span class="sd">        from the root node.</span>
+
+<span class="sd">        :return: the next action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span>
+        <span class="n">action_vals</span> <span class="o">=</span> <span class="p">[(</span><span class="n">action</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">/</span> <span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">visit_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">action</span><span class="o">.</span><span class="n">action</span><span class="p">)</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;action: </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">action</span><span class="si">}</span><span class="s2">, value: </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;visit count: </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">visit_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">action_vals</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="POMCP.update_tree_with_new_samples"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.update_tree_with_new_samples">[docs]</a>    <span class="k">def</span> <span class="nf">update_tree_with_new_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">observation</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the tree after an action has been selected and a new observation been received</span>
+
+<span class="sd">        :param action_sequence: the action sequence that was executed</span>
+<span class="sd">        :param observation: the observation that was received</span>
+<span class="sd">        :param t: the time-step</span>
+<span class="sd">        :return: the updated particle state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_sequence</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid action sequence&quot;</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">action_sequence</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Since we executed an action we advance the tree and update the root to the the node corresponding to the</span>
+        <span class="c1"># action that was selected</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">get_child</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_root</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get_child</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find child node for action: </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If we did not have a node in the tree corresponding to the observation that was observed, we select a random</span>
+        <span class="c1"># belief node to be the new root (note that the action child node will always exist by definition of the</span>
+        <span class="c1"># algorithm)</span>
+        <span class="k">if</span> <span class="n">new_root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Get the action node</span>
+            <span class="n">action_node</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">get_child</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">action_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Chould not find the action node&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">action_node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="c1"># If the action node has belief state nodes, select a random of them to be the new root</span>
+                <span class="n">new_root</span> <span class="o">=</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">rand_choice</span><span class="p">(</span><span class="n">action_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># or create the new belief node randomly</span>
+                <span class="n">particles</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_particles</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># initial_value = self.value_function(observation)</span>
+                    <span class="n">initial_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">initial_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span>
+                <span class="n">new_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">action_node</span><span class="o">.</span><span class="n">history</span> <span class="o">+</span> <span class="p">[</span><span class="n">observation</span><span class="p">],</span> <span class="n">parent</span><span class="o">=</span><span class="n">action_node</span><span class="p">,</span>
+                                         <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">,</span> <span class="n">particle</span><span class="o">=</span><span class="n">particles</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">initial_value</span><span class="p">,</span>
+                                         <span class="n">initial_visit_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_confidence</span><span class="p">)</span>
+
+        <span class="c1"># Check how many new particles are left to fill</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_root</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">):</span>
+            <span class="n">new_root</span><span class="o">.</span><span class="n">particles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">particle_slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_particles</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_root</span><span class="o">.</span><span class="n">particles</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid root node&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">particle_slots</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filling </span><span class="si">{</span><span class="n">particle_slots</span><span class="si">}</span><span class="s2"> particles&quot;</span><span class="p">)</span>
+            <span class="n">particles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># fill particles by Monte-Carlo using reject sampling</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">particles</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">particle_slots</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">s_prime</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">o</span> <span class="o">==</span> <span class="n">observation</span><span class="p">:</span>
+                    <span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_prime</span><span class="p">)</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="mi">80000</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span><span class="o">.</span><span class="n">red_agent_target</span>
+                    <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Invalid observation: </span><span class="si">{</span><span class="n">observation</span><span class="si">}</span><span class="s2">, target: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;given state: 1: </span><span class="se">\n</span><span class="si">{</span><span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;2: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">, 3: </span><span class="si">{</span><span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">particle_slots</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">particles</span><span class="p">)):</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+                        <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+                        <span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_prime</span><span class="p">)</span>
+
+            <span class="n">new_root</span><span class="o">.</span><span class="n">particles</span> <span class="o">+=</span> <span class="n">particles</span>
+
+        <span class="c1"># We now prune the old root from the tree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">new_root</span><span class="p">)</span>
+        <span class="c1"># and update the root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">new_root</span>
+
+        <span class="c1"># Prune children</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pruning children&quot;</span><span class="p">)</span>
+        <span class="n">feasible_actions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_actions_from_particles</span><span class="p">(</span><span class="n">particles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">particles</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">,</span>
+                                                <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;feasible actions: </span><span class="si">{</span><span class="n">feasible_actions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">action</span> <span class="ow">in</span> <span class="n">feasible_actions</span><span class="p">:</span>
+                <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span>
+
+        <span class="c1"># To avoid particle deprivation (i.e., that the algorithm gets stuck with the wrong belief)</span>
+        <span class="c1"># we do particle reinvigoration here</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reinvigoration</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_particles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting reinvigoration&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Generate some new particles randomly</span>
+            <span class="n">num_reinvigorated_particles</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_root</span><span class="o">.</span><span class="n">particles</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reinvigorated_particles_ratio</span><span class="p">)</span>
+            <span class="n">reinvigorated_particles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_reinvigorated_particles</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">sample_state</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">s_prime</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+                <span class="n">reinvigorated_particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_prime</span><span class="p">)</span>
+
+            <span class="c1"># Randomly exchange some old particles for the new ones</span>
+            <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="n">reinvigorated_particles</span><span class="p">:</span>
+                <span class="n">new_root</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_root</span><span class="o">.</span><span class="n">particles</span><span class="p">))]</span> <span class="o">=</span> <span class="n">particle</span>
+        <span class="k">return</span> <span class="n">new_root</span><span class="o">.</span><span class="n">particles</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

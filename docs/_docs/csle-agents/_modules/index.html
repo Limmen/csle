@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; csle-agents 0.4.0 documentation</title>
+  <title>Overview: module code &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -56,8 +54,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Overview: module code</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,6 +66,8 @@
              
   <h1>All modules for which code is available</h1>
 <ul><li><a href="csle_agents/agents/base/base_agent.html">csle_agents.agents.base.base_agent</a></li>
+<li><a href="csle_agents/agents/bayesian_optimization/bayes_opt_agent.html">csle_agents.agents.bayesian_optimization.bayes_opt_agent</a></li>
+<li><a href="csle_agents/agents/bayesian_optimization_emukit/bayes_opt_emukit_agent.html">csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent</a></li>
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/acquisition/acquisition_function_type.html">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type</a></li>
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/acquisition/acquisition_optimizer_type.html">csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type</a></li>
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/bo_config.html">csle_agents.agents.bayesian_optimization_emukit.bo.bo_config</a></li>
@@ -76,11 +76,50 @@
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/kernel/kernel_config.html">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config</a></li>
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/kernel/kernel_type.html">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_type</a></li>
 <li><a href="csle_agents/agents/bayesian_optimization_emukit/bo/kernel/rbf_kernel_config.html">csle_agents.agents.bayesian_optimization_emukit.bo.kernel.rbf_kernel_config</a></li>
+<li><a href="csle_agents/agents/c51_clean/c51_clean_agent.html">csle_agents.agents.c51_clean.c51_clean_agent</a></li>
+<li><a href="csle_agents/agents/cma_es/cma_es_agent.html">csle_agents.agents.cma_es.cma_es_agent</a></li>
+<li><a href="csle_agents/agents/cross_entropy/cross_entropy_agent.html">csle_agents.agents.cross_entropy.cross_entropy_agent</a></li>
+<li><a href="csle_agents/agents/dfsp_local/dfsp_local_agent.html">csle_agents.agents.dfsp_local.dfsp_local_agent</a></li>
+<li><a href="csle_agents/agents/dfsp_local/dfsp_local_ppo_agent.html">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent</a></li>
+<li><a href="csle_agents/agents/differential_evolution/differential_evolution_agent.html">csle_agents.agents.differential_evolution.differential_evolution_agent</a></li>
+<li><a href="csle_agents/agents/dqn/dqn_agent.html">csle_agents.agents.dqn.dqn_agent</a></li>
+<li><a href="csle_agents/agents/dqn_clean/dqn_clean_agent.html">csle_agents.agents.dqn_clean.dqn_clean_agent</a></li>
+<li><a href="csle_agents/agents/dynasec/dynasec_agent.html">csle_agents.agents.dynasec.dynasec_agent</a></li>
+<li><a href="csle_agents/agents/fp/fictitious_play_agent.html">csle_agents.agents.fp.fictitious_play_agent</a></li>
+<li><a href="csle_agents/agents/hsvi/hsvi_agent.html">csle_agents.agents.hsvi.hsvi_agent</a></li>
+<li><a href="csle_agents/agents/hsvi_os_posg/hsvi_os_posg_agent.html">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent</a></li>
+<li><a href="csle_agents/agents/kiefer_wolfowitz/kiefer_wolfowitz_agent.html">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent</a></li>
+<li><a href="csle_agents/agents/lp_cmdp/linear_programming_cmdp_agent.html">csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent</a></li>
+<li><a href="csle_agents/agents/lp_nf/linear_programming_normal_form_game_agent.html">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent</a></li>
+<li><a href="csle_agents/agents/nelder_mead/nelder_mead_agent.html">csle_agents.agents.nelder_mead.nelder_mead_agent</a></li>
+<li><a href="csle_agents/agents/particle_swarm/particle_swarm_agent.html">csle_agents.agents.particle_swarm.particle_swarm_agent</a></li>
+<li><a href="csle_agents/agents/pi/pi_agent.html">csle_agents.agents.pi.pi_agent</a></li>
+<li><a href="csle_agents/agents/pomcp/action_node.html">csle_agents.agents.pomcp.action_node</a></li>
+<li><a href="csle_agents/agents/pomcp/belief_node.html">csle_agents.agents.pomcp.belief_node</a></li>
+<li><a href="csle_agents/agents/pomcp/belief_tree.html">csle_agents.agents.pomcp.belief_tree</a></li>
+<li><a href="csle_agents/agents/pomcp/node.html">csle_agents.agents.pomcp.node</a></li>
+<li><a href="csle_agents/agents/pomcp/pomcp.html">csle_agents.agents.pomcp.pomcp</a></li>
+<li><a href="csle_agents/agents/pomcp/pomcp_acquisition_function_type.html">csle_agents.agents.pomcp.pomcp_acquisition_function_type</a></li>
+<li><a href="csle_agents/agents/pomcp/pomcp_agent.html">csle_agents.agents.pomcp.pomcp_agent</a></li>
+<li><a href="csle_agents/agents/pomcp/pomcp_util.html">csle_agents.agents.pomcp.pomcp_util</a></li>
+<li><a href="csle_agents/agents/ppo/ppo_agent.html">csle_agents.agents.ppo.ppo_agent</a></li>
+<li><a href="csle_agents/agents/ppo_clean/ppo_clean_agent.html">csle_agents.agents.ppo_clean.ppo_clean_agent</a></li>
+<li><a href="csle_agents/agents/q_learning/q_learning_agent.html">csle_agents.agents.q_learning.q_learning_agent</a></li>
+<li><a href="csle_agents/agents/random_search/random_search_agent.html">csle_agents.agents.random_search.random_search_agent</a></li>
+<li><a href="csle_agents/agents/reinforce/reinforce_agent.html">csle_agents.agents.reinforce.reinforce_agent</a></li>
+<li><a href="csle_agents/agents/sarsa/sarsa_agent.html">csle_agents.agents.sarsa.sarsa_agent</a></li>
+<li><a href="csle_agents/agents/shapley_iteration/shapley_iteration_agent.html">csle_agents.agents.shapley_iteration.shapley_iteration_agent</a></li>
+<li><a href="csle_agents/agents/simulated_annealing/simulated_annealing_agent.html">csle_agents.agents.simulated_annealing.simulated_annealing_agent</a></li>
+<li><a href="csle_agents/agents/sondik_vi/sondik_vi_agent.html">csle_agents.agents.sondik_vi.sondik_vi_agent</a></li>
+<li><a href="csle_agents/agents/t_fp/t_fp_agent.html">csle_agents.agents.t_fp.t_fp_agent</a></li>
+<li><a href="csle_agents/agents/t_spsa/t_spsa_agent.html">csle_agents.agents.t_spsa.t_spsa_agent</a></li>
+<li><a href="csle_agents/agents/vi/vi_agent.html">csle_agents.agents.vi.vi_agent</a></li>
 <li><a href="csle_agents/common/fnn_w_gaussian.html">csle_agents.common.fnn_w_gaussian</a></li>
 <li><a href="csle_agents/common/fnn_w_linear.html">csle_agents.common.fnn_w_linear</a></li>
 <li><a href="csle_agents/common/objective_type.html">csle_agents.common.objective_type</a></li>
 <li><a href="csle_agents/common/pruning.html">csle_agents.common.pruning</a></li>
 <li><a href="csle_agents/constants/constants.html">csle_agents.constants.constants</a></li>
+<li><a href="csle_agents/job_controllers/training_job_manager.html">csle_agents.job_controllers.training_job_manager</a></li>
 </ul>
 
            </div>

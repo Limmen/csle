@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.reinforce.reinforce_agent &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents.reinforce.reinforce_agent &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_agents.agents.reinforce.reinforce_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.reinforce.reinforce_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,8 +66,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_agents.agents.reinforce.reinforce_agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -90,6 +88,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.models.fnn_w_softmax</span> <span class="kn">import</span> <span class="n">FNNwithSoftmax</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
 <span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
 <span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
 
@@ -101,7 +100,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">EmulationEnvConfig</span><span class="p">],</span>
-                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEnv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Reinforce Agent</span>
@@ -162,10 +161,13 @@
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">TrainingJobConfig</span><span class="p">(</span>
                 <span class="n">simulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span>
                 <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span>
-                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
                 <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_CACHED_SIMULATION_TRACES</span><span class="p">,</span>
                 <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span>
                 <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">())</span>
@@ -181,7 +183,7 @@
 
         <span class="c1"># Initialize execution result</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">emulation_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">emulation_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
         <span class="n">simulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span>
@@ -272,6 +274,8 @@
 <span class="sd">        :param random_seeds: list of seeds</span>
 <span class="sd">        :return: the updated experiment result and the trained policy</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need to specify an environment to run Reinforce&quot;</span><span class="p">)</span>
         <span class="c1"># Hyperparameters</span>
         <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">REINFORCE</span><span class="o">.</span><span class="n">N</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
 
@@ -287,6 +291,7 @@
         <span class="c1"># Setup device</span>
         <span class="n">policy_network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
 
+        <span class="n">optimizer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Setup optimizer</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OPTIMIZER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">ADAM</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
@@ -300,16 +305,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimizer: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OPTIMIZER</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
                              <span class="sa">f</span><span class="s2">&quot; not recognized&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Setup LR decay</span>
-        <span class="c1"># if self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_EXP_DECAY].value:</span>
-        <span class="c1">#     lr_decay = torch.optim.lr_scheduler.ExponentialLR(</span>
-        <span class="c1">#         optimizer=optimizer,</span>
-        <span class="c1">#         gamma=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_DECAY_RATE].value)</span>
-
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
             <span class="n">rewards_batch</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">log_probs_batch</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="n">save_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/reinforce_policy_seed_</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">.zip&quot;</span>
             <span class="n">policy</span> <span class="o">=</span> <span class="n">FNNWithSoftmaxPolicy</span><span class="p">(</span>
@@ -353,11 +352,11 @@
             <span class="n">avg_metrics</span> <span class="o">=</span> <span class="n">ReinforceAgent</span><span class="o">.</span><span class="n">compute_avg_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
 
             <span class="c1"># Perform Batch Policy Gradient updates</span>
-            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_step</span><span class="p">(</span><span class="n">saved_rewards</span><span class="o">=</span><span class="n">rewards_batch</span><span class="p">,</span> <span class="n">saved_log_probs</span><span class="o">=</span><span class="n">log_probs_batch</span><span class="p">,</span>
-                                      <span class="n">policy_network</span><span class="o">=</span><span class="n">policy_network</span><span class="p">,</span>
-                                      <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
-                                      <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">loss_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_step</span><span class="p">(</span><span class="n">saved_rewards</span><span class="o">=</span><span class="n">rewards_batch</span><span class="p">,</span> <span class="n">saved_log_probs</span><span class="o">=</span><span class="n">log_probs_batch</span><span class="p">,</span>
+                                             <span class="n">policy_network</span><span class="o">=</span><span class="n">policy_network</span><span class="p">,</span>
+                                             <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+                                             <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">GAMMA</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_tensor</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
             <span class="c1"># Log metrics</span>
             <span class="n">J</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
@@ -426,7 +425,7 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">running_avg_J</span><span class="si">}</span><span class="s2">, &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;opt_J:</span><span class="si">{</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;int_len:</span><span class="si">{</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">INTRUSION_LENGTH</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;progress: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">progress</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s2">&quot;progress: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">progress</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">save_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/ppo_policy_seed_</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">.zip&quot;</span>
@@ -505,8 +504,8 @@
         <span class="n">num_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">saved_rewards</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">):</span>
-            <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">returns</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">returns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="c1"># Create discounted returns. When episode is finished we can go back and compute the observed cumulative</span>
             <span class="c1"># discounted reward by using the observed rewards</span>
@@ -516,16 +515,16 @@
             <span class="n">num_rewards</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
 
             <span class="c1"># convert list to torch tensor</span>
-            <span class="n">returns</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+            <span class="n">returns_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
 
             <span class="c1"># normalize</span>
-            <span class="n">std</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">returns_tensor</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
             <span class="k">if</span> <span class="n">num_rewards</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">std</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">returns</span> <span class="o">=</span> <span class="p">(</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine_eps</span><span class="p">)</span>
+                <span class="n">std</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">returns_tensor</span> <span class="o">=</span> <span class="p">(</span><span class="n">returns_tensor</span> <span class="o">-</span> <span class="n">returns_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">machine_eps</span><span class="p">)</span>
 
             <span class="c1"># Compute PG &quot;loss&quot; which in reality is the expected reward, which we want to maximize with gradient ascent</span>
-            <span class="k">for</span> <span class="n">log_prob</span><span class="p">,</span> <span class="n">R</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">saved_log_probs</span><span class="p">[</span><span class="n">batch</span><span class="p">],</span> <span class="n">returns</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">log_prob</span><span class="p">,</span> <span class="n">R</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">saved_log_probs</span><span class="p">[</span><span class="n">batch</span><span class="p">],</span> <span class="n">returns_tensor</span><span class="p">):</span>
                 <span class="c1"># negative log prob since we are doing gradient descent (not ascent)</span>
                 <span class="n">policy_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">log_prob</span> <span class="o">*</span> <span class="n">R</span><span class="p">)</span>
 
@@ -534,15 +533,12 @@
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
         <span class="c1"># expected loss over the batch</span>
         <span class="n">policy_loss_total</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">policy_loss</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="n">policy_loss</span> <span class="o">=</span> <span class="n">policy_loss_total</span> <span class="o">/</span> <span class="n">num_batches</span>
+        <span class="n">policy_loss_val</span> <span class="o">=</span> <span class="n">policy_loss_total</span> <span class="o">/</span> <span class="n">num_batches</span>
         <span class="c1"># perform backprop</span>
-        <span class="n">policy_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-        <span class="c1"># maybe clip gradient</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">NEURAL_NETWORKS</span><span class="o">.</span><span class="n">DEVICE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">policy_network</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">policy_loss_val</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="c1"># gradient descent step</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">policy_loss</span></div></div>
+        <span class="k">return</span> <span class="n">policy_loss_val</span></div></div>
 </pre></div>
 
            </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.dynasec.dynasec_agent &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents.dynasec.dynasec_agent &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_agents.agents.dynasec.dynasec_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.dynasec.dynasec_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,13 +66,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_agents.agents.dynasec.dynasec_agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">gym_csle_stopping_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
@@ -109,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.static_emulation_attacker_type</span> <span class="kn">import</span> <span class="n">StaticEmulationAttackerType</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_statistics_windowed</span> <span class="kn">import</span> <span class="n">EmulationStatisticsWindowed</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
 <span class="kn">import</span> <span class="nn">csle_system_identification.constants.constants</span> <span class="k">as</span> <span class="nn">system_identification_constants</span>
 <span class="kn">from</span> <span class="nn">csle_system_identification.expectation_maximization.expectation_maximization_algorithm</span> \
     <span class="kn">import</span> <span class="nn">ExpectationMaximizationAlgorithm</span>
@@ -166,7 +166,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_data_collection_job</span><span class="p">(</span>
             <span class="n">data_collection_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_collection_job</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_collection_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">emulation_traces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emulation_traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationTrace</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">statistics_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics_windowed</span><span class="o">.</span><span class="n">statistics_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">completed_episodes</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -266,10 +266,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistics</span> <span class="o">=</span> <span class="n">emulation_statistics</span>
         <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">system_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="n">periodic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sleep_time</span> <span class="o">=</span> <span class="n">sleep_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SystemIdentificationProcess.run"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.SystemIdentificationProcess.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -323,7 +323,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span> <span class="o">=</span> <span class="n">experiment_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span> <span class="o">=</span> <span class="n">simulation_env_config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ExperimentExecution</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="n">periodic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sleep_time</span> <span class="o">=</span> <span class="n">sleep_time</span>
@@ -346,8 +346,6 @@
                                     <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
             <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_experiment_execution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span><span class="p">)</span>
-            <span class="c1"># for policy in self.experiment_execution.result.policies.values():</span>
-            <span class="c1">#     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
@@ -360,8 +358,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">training_job</span>
                 <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_experiment_execution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span><span class="p">)</span>
-                <span class="c1"># for policy in self.experiment_execution.result.policies.values():</span>
-                <span class="c1">#     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sleep_time</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span></div></div>
 
@@ -432,7 +428,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sleep_time</span> <span class="o">=</span> <span class="n">sleep_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">new_traces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationTrace</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_collector_processes</span> <span class="o">=</span> <span class="n">data_collector_processes</span>
 
 <div class="viewcode-block" id="EmulationStatisticsThread.run"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.EmulationStatisticsThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -460,8 +456,7 @@
                  <span class="n">emulation_statistics_thread</span><span class="p">:</span> <span class="n">EmulationStatisticsThread</span><span class="p">,</span>
                  <span class="n">system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span>
                  <span class="n">baseline_system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
-                 <span class="n">env</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the thread</span>
 
@@ -495,7 +490,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span> <span class="o">=</span> <span class="n">simulation_env_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
 
-<div class="viewcode-block" id="PolicyEvaluationThread.record_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.record_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">record_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+<div class="viewcode-block" id="PolicyEvaluationThread.record_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.record_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">record_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
                        <span class="nb">eval</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">baseline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recors metrics from the emulation</span>
@@ -616,7 +611,7 @@
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
 <div class="viewcode-block" id="PolicyEvaluationThread.eval_traces"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread.eval_traces">[docs]</a>    <span class="k">def</span> <span class="nf">eval_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationTrace</span><span class="p">],</span> <span class="n">defender_policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                    <span class="n">system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="n">baseline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+                    <span class="n">system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="n">baseline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for evaluating with given traces</span>
 
@@ -640,7 +635,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">][</span>
                 <span class="n">agents_constants</span><span class="o">.</span><span class="n">DYNASEC</span><span class="o">.</span><span class="n">NO_INTRUSION_ALERTS_MEAN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_int_mean</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exp_result</span><span class="o">.</span><span class="n">all_metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">DYNASEC</span><span class="o">.</span><span class="n">INTRUSION_ALERTS_MEAN</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">int_mean</span><span class="p">)</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">traces</span><span class="p">:</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -649,7 +644,7 @@
             <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">max_steps</span><span class="p">:</span>
                 <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t:</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, b1:</span><span class="si">{</span><span class="n">b1</span><span class="si">}</span><span class="s2">, r:</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">, l:</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">, info:</span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">a</span> <span class="o">=</span> <span class="n">defender_policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
@@ -708,7 +703,7 @@
                  <span class="n">emulation_executions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationExecution</span><span class="p">],</span>
                  <span class="n">attacker_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">],</span> <span class="n">defender_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">],</span>
                  <span class="n">system_identification_config</span><span class="p">:</span> <span class="n">SystemIdentificationConfig</span><span class="p">,</span>
-                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEnv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DynaSec agent</span>
@@ -946,10 +941,13 @@
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">TrainingJobConfig</span><span class="p">(</span>
                 <span class="n">simulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span>
                 <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span>
-                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
                 <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_CACHED_SIMULATION_TRACES</span><span class="p">,</span>
                 <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span>
                 <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">())</span>
@@ -965,7 +963,7 @@
 
         <span class="c1"># Initialize execution result</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">emulation_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">emulation_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
         <span class="n">simulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span>
@@ -1058,10 +1056,12 @@
             <span class="n">simulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sleep_time</span><span class="o">=</span><span class="n">sleep_time</span><span class="p">)</span>
         <span class="n">policy_optimization_process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">policy_optimization_process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">policy_optimization_process</span><span class="o">.</span><span class="n">experiment_execution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Policy optimization process did not start correctly&quot;</span><span class="p">)</span>
         <span class="n">initial_policy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">policy_optimization_process</span><span class="o">.</span><span class="n">experiment_execution</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">policies_page_bp</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">policy</span> <span class="o">=</span> <span class="n">initial_policy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">system_model</span> <span class="o">=</span> <span class="n">initial_system_model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">system_model</span> <span class="o">=</span> <span class="n">initial_system_model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">initial_system_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">attacker_type</span> <span class="o">=</span> <span class="n">StaticEmulationAttackerType</span><span class="o">.</span><span class="n">EXPERT</span>
 
         <span class="n">policies</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1186,8 +1186,6 @@
                     <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">BASELINE_PREFIX</span> <span class="o">+</span> <span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE_RETURN</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;[DynaSec] i: </span><span class="si">{</span><span class="n">training_epoch</span><span class="si">}</span><span class="s2">, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;policy:</span><span class="si">{</span><span class="n">policy_evaluation_thread</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">thresholds</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;baseline policy:</span><span class="si">{</span><span class="n">policy_evaluation_thread</span><span class="o">.</span><span class="n">baseline_policy</span><span class="o">.</span><span class="n">thresholds</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;J_train:</span><span class="si">{</span><span class="n">J_train</span><span class="si">}</span><span class="s2">, &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;J_train_avg_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">RUNNING_AVERAGE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">:&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">J_train_avg</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -1200,7 +1198,7 @@
                     <span class="sa">f</span><span class="s2">&quot;progress: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">progress</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span></div>
 
-<div class="viewcode-block" id="DynaSecAgent.record_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.record_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">record_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
+<div class="viewcode-block" id="DynaSecAgent.record_metrics"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.record_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">record_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_result</span><span class="p">:</span> <span class="n">ExperimentResult</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExperimentResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for recording the metrics of a metrics dict and importing them into the experiment result</span>
 
@@ -1253,8 +1251,8 @@
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
 <div class="viewcode-block" id="DynaSecAgent.get_Z_from_system_model"><a class="viewcode-back" href="../../../../csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_Z_from_system_model">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_Z_from_system_model</span><span class="p">(</span><span class="n">system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="n">sample_space</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                                                                                                       <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_Z_from_system_model</span><span class="p">(</span><span class="n">system_model</span><span class="p">:</span> <span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="n">sample_space</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the observation tensor from a given system model</span>
 
@@ -1262,8 +1260,8 @@
 <span class="sd">        :param sample_space: the sample space</span>
 <span class="sd">        :return: the observation tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">intrusion_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">))</span>
-        <span class="n">no_intrusion_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">))</span>
+        <span class="n">intrusion_dist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">no_intrusion_dist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
         <span class="n">terminal_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_space</span><span class="p">))</span>
         <span class="n">terminal_dist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">for</span> <span class="n">metric_conds</span> <span class="ow">in</span> <span class="n">system_model</span><span class="o">.</span><span class="n">conditional_metric_distributions</span><span class="p">:</span>

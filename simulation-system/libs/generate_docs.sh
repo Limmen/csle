@@ -27,4 +27,4 @@ cd csle-tolerance/docs; sphinx-apidoc -f -o source/ ../src/csle_tolerance/; make
 echo "Generating gym-csle-apt-game API documentation"
 cd gym-csle-apt-game/docs; sphinx-apidoc -f -o source/ ../src/gym_csle_apt_game/; make html; cp -r build/html/* ../../../../docs/_docs/gym-csle-apt-game; cd ../../
 echo "Generating gym-csle-cyborg API documentation"
-cd gym-csle-cyborg/docs; sphinx-apidoc -f -o source/ ../src/gym_csle_apt_game/; make html; cp -r build/html/* ../../../../docs/_docs/gym-csle-cyborg; cd ../../
+cd gym-csle-cyborg/docs; sphinx-apidoc -f -o source/ ../src/gym_csle_cyborg/; make html; cp -r build/html/* ../../../../docs/_docs/gym-csle-cyborg; cd ../../

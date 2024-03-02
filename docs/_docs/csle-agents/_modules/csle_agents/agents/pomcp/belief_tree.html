@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.pomcp.belief_tree &mdash; csle-agents 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.pomcp.belief_tree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.pomcp.belief_tree</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.action_node</span> <span class="kn">import</span> <span class="n">ActionNode</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.belief_node</span> <span class="kn">import</span> <span class="n">BeliefNode</span>
+
+
+<div class="viewcode-block" id="BeliefTree"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_tree.BeliefTree">[docs]</a><span class="k">class</span> <span class="nc">BeliefTree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The belief tree of POMCP. Each node in the tree corresponds to a history of the POMDP, where a history is a sequence</span>
+<span class="sd">    of actions and observations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_particles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">default_node_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">root_observation</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">initial_visit_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the tree with a belief node with a set of particles</span>
+
+<span class="sd">        :param root_particles: the particles to add to the root belief node</span>
+<span class="sd">        :param default_node_value: the default value of nodes in the tree</span>
+<span class="sd">        :param root_observation: the root observation</span>
+<span class="sd">        :param initial_visit_count: the initial visit count</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_observation</span> <span class="o">=</span> <span class="n">root_observation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Node</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_node_value</span> <span class="o">=</span> <span class="n">default_node_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_visit_count</span> <span class="o">=</span> <span class="n">initial_visit_count</span>
+        <span class="n">node</span><span class="p">:</span> <span class="n">Node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="p">[</span><span class="n">root_observation</span><span class="p">],</span> <span class="n">particle</span><span class="o">=</span><span class="n">root_particles</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">value</span><span class="o">=</span><span class="n">default_node_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">:</span> <span class="n">BeliefNode</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid root node&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BeliefTree.add"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_tree.BeliefTree.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Node</span><span class="p">,</span> <span class="n">ActionNode</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+            <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">observation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">particle</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">initial_visit_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and adds a new belief node or action node to the belief search tree</span>
+
+<span class="sd">        :param h: history sequence</span>
+<span class="sd">        :param parent: either ActionNode or BeliefNode</span>
+<span class="sd">        :param action: action</span>
+<span class="sd">        :param observation: observation</span>
+<span class="sd">        :param particle: new node&#39;s particle set</span>
+<span class="sd">        :param cost: action cost of an action node</span>
+<span class="sd">        :param value: the value of the node</span>
+<span class="sd">        :param initial_visit_count: the initial visit count</span>
+<span class="sd">        :return: The newly added node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the node</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_node</span><span class="p">:</span> <span class="n">Node</span> <span class="o">=</span> <span class="n">ActionNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_size</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                                        <span class="n">visit_count</span><span class="o">=</span><span class="n">initial_visit_count</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">observation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">observation</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">BeliefNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_size</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                                  <span class="n">visit_count</span><span class="o">=</span><span class="n">initial_visit_count</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">particle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">):</span>
+            <span class="n">new_node</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="n">particle</span><span class="p">)</span>
+
+        <span class="c1"># add the node to belief tree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">new_node</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_size</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># register node as parent&#39;s child</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">new_node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_node</span></div>
+
+<div class="viewcode-block" id="BeliefTree.find_or_create"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_tree.BeliefTree.find_or_create">[docs]</a>    <span class="k">def</span> <span class="nf">find_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">BeliefNode</span><span class="p">,</span> <span class="n">ActionNode</span><span class="p">],</span> <span class="n">observation</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                       <span class="n">initial_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">initial_visit_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for the node that corresponds to given history, otherwise create one using given params</span>
+
+<span class="sd">        :param history: the current history</span>
+<span class="sd">        :param parent: the parent of the node</span>
+<span class="sd">        :param observation: the latest observation</span>
+<span class="sd">        :param initial_value: the initial value of a created node</span>
+<span class="sd">        :param initial_visit_count: the initial visit count of a created node</span>
+<span class="sd">        :return: the new node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Start the search from the root node</span>
+        <span class="n">root_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+        <span class="n">current_node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Node</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_node</span>
+
+        <span class="c1"># Start from the root node and then traverse down to the depth of the given history to see if the node</span>
+        <span class="c1"># of this history  exists or not, otherwise add it</span>
+        <span class="n">history_length</span><span class="p">,</span> <span class="n">root_history_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">root_history_length</span><span class="p">,</span> <span class="n">history_length</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">current_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">current_node</span> <span class="o">=</span> <span class="n">current_node</span><span class="o">.</span><span class="n">get_child</span><span class="p">(</span><span class="n">history</span><span class="p">[</span><span class="n">step</span><span class="p">])</span>
+
+            <span class="c1"># Node of this history does not exists so we add it</span>
+            <span class="k">if</span> <span class="n">current_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">history</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="n">observation</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">initial_value</span><span class="p">,</span>
+                                <span class="n">initial_visit_count</span><span class="o">=</span><span class="n">initial_visit_count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">current_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not create a new node&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_node</span></div>
+
+<div class="viewcode-block" id="BeliefTree.prune"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_tree.BeliefTree.prune">[docs]</a>    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the entire subtree subscribed to &#39;node&#39; with exceptions.</span>
+<span class="sd">        :param node: root of the subtree to be removed</span>
+<span class="sd">        :param exclude: exception component</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exclude</span> <span class="ow">and</span> <span class="n">exclude</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">child</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">exclude</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

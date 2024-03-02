@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.shapley_iteration.shapley_iteration_agent &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents.shapley_iteration.shapley_iteration_agent &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_agents.agents.shapley_iteration.shapley_iteration_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.shapley_iteration.shapley_iteration_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,11 +66,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_agents.agents.shapley_iteration.shapley_iteration_agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">pulp</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.experiment_config</span> <span class="kn">import</span> <span class="n">ExperimentConfig</span>
@@ -259,8 +258,9 @@
         <span class="n">exp_result</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabular_policy_p2</span>
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
-<div class="viewcode-block" id="ShapleyIterationAgent.auxillary_game"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.auxillary_game">[docs]</a>    <span class="k">def</span> <span class="nf">auxillary_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                       <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="ShapleyIterationAgent.auxillary_game"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.auxillary_game">[docs]</a>    <span class="k">def</span> <span class="nf">auxillary_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                       <span class="n">A1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">A2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+                       <span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an auxillary matrix game based on the value function V</span>
 
@@ -278,14 +278,15 @@
         <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">A2</span><span class="p">:</span>
                 <span class="n">immediate_reward</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
-                <span class="n">expected_future_reward</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">expected_future_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
                 <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
                     <span class="n">expected_future_reward</span> <span class="o">+=</span> <span class="n">T</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">s_prime</span><span class="p">]</span>
                 <span class="n">expected_future_reward</span> <span class="o">=</span> <span class="n">expected_future_reward</span> <span class="o">*</span> <span class="n">gamma</span>
                 <span class="n">A</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="n">immediate_reward</span> <span class="o">+</span> <span class="n">expected_future_reward</span>
         <span class="k">return</span> <span class="n">A</span></div>
 
-<div class="viewcode-block" id="ShapleyIterationAgent.compute_matrix_game_value"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.compute_matrix_game_value">[docs]</a>    <span class="k">def</span> <span class="nf">compute_matrix_game_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">maximizer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ShapleyIterationAgent.compute_matrix_game_value"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.compute_matrix_game_value">[docs]</a>    <span class="k">def</span> <span class="nf">compute_matrix_game_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">A1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">A2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+                                  <span class="n">maximizer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param A: the matrix game</span>
@@ -340,9 +341,9 @@
         <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">varValue</span>
         <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">optimal_strategy</span></div>
 
-<div class="viewcode-block" id="ShapleyIterationAgent.si"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.si">[docs]</a>    <span class="k">def</span> <span class="nf">si</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">R</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-           <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">delta_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<div class="viewcode-block" id="ShapleyIterationAgent.si"><a class="viewcode-back" href="../../../../csle_agents.agents.shapley_iteration.html#csle_agents.agents.shapley_iteration.shapley_iteration_agent.ShapleyIterationAgent.si">[docs]</a>    <span class="k">def</span> <span class="nf">si</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">A1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">A2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+           <span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">delta_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Shapley Iteration (L. Shapley 1953)</span>
 

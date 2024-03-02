@@ -1,5 +1,5 @@
-src
-===
+gym_csle_cyborg
+===============
 
 .. toctree::
    :maxdepth: 4

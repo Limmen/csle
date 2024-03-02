@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_common.models.q_network &mdash; csle-common 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> csle-common
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-common</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.models.q_network</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_common.models.q_network</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.agent_type</span> <span class="kn">import</span> <span class="n">AgentType</span>
+
+
+<div class="viewcode-block" id="QNetwork"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.q_network.QNetwork">[docs]</a><span class="k">class</span> <span class="nc">QNetwork</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for instantiating a neural network for DQN training</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_hidden_layers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_layer_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">agent_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">action_space_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">n_atoms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">101</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the neural network</span>
+
+<span class="sd">        :param input_dim: the input layer dimension</span>
+<span class="sd">        :param num_hidden_layers: the number of hidden layers</span>
+<span class="sd">        :param hidden_layer_dim: the dimension of each hidden layer; in agents referred to as num_hl_neur</span>
+<span class="sd">        :param agent_type: the type of the agent</span>
+<span class="sd">        :param action_space_dim:the action space dimension</span>
+<span class="sd">        :param n_atoms: the number of atoms (for C51)</span>
+<span class="sd">        :param start: the start of the atoms</span>
+<span class="sd">        :param end: the end of the atoms</span>
+<span class="sd">        :param steps: the number of steps for the atoms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QNetwork</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_layers</span> <span class="o">=</span> <span class="n">num_hidden_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">input_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">=</span> <span class="n">agent_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span> <span class="o">=</span> <span class="n">hidden_layer_dim</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">DQN_CLEAN</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_layers</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+                <span class="n">input_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_type</span> <span class="o">==</span> <span class="n">AgentType</span><span class="o">.</span><span class="n">C51_CLEAN</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">steps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_space_dim</span> <span class="o">=</span> <span class="n">action_space_dim</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">=</span> <span class="n">n_atoms</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_layers</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                        <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+                <span class="n">input_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Output layer&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space_dim</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+
+<div class="viewcode-block" id="QNetwork.get_action"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.q_network.QNetwork.get_action">[docs]</a>    <span class="k">def</span> <span class="nf">get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the action and the probability distribution over actions</span>
+
+<span class="sd">        :param x: the input observation(s)</span>
+<span class="sd">        :return: the action(s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">pmfs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_space_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
+        <span class="n">q_values</span> <span class="o">=</span> <span class="p">(</span><span class="n">pmfs</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">q_values</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action</span><span class="p">,</span> <span class="n">pmfs</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">action</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="QNetwork.forward"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.q_network.QNetwork.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes a forward pass of the neural network with a given input vector x</span>
+
+<span class="sd">        :param x: the input vector</span>
+<span class="sd">        :return: the output of the neural network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="QNetwork.save"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.q_network.QNetwork.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the model to disk</span>
+
+<span class="sd">        :param path: the path on disk to save the model</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+        <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;input_dim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span>
+        <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;num_hidden_layers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_layers</span>
+        <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;hidden_layer_dim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span>
+        <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;agent_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_type</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="QNetwork.load"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.q_network.QNetwork.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QNetwork&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the model from a given path</span>
+
+<span class="sd">        :param path: the path to load the model from</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">QNetwork</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;input_dim&quot;</span><span class="p">],</span> <span class="n">num_hidden_layers</span><span class="o">=</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;num_hidden_layers&quot;</span><span class="p">],</span>
+                         <span class="n">hidden_layer_dim</span><span class="o">=</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;hidden_layer_dim&quot;</span><span class="p">],</span> <span class="n">agent_type</span><span class="o">=</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;agent_type&quot;</span><span class="p">])</span>
+        <span class="k">del</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;input_dim&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;num_hidden_layers&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;hidden_layer_dim&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;agent_type&quot;</span><span class="p">]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

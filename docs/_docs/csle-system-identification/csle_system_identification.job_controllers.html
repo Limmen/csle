@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_system_identification.job_controllers package &mdash; csle-system-identification 0.4.0 documentation</title>
+  <title>csle_system_identification.job_controllers package &mdash; csle-system-identification 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,8 +44,8 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_system_identification.gp.html">csle_system_identification.gp package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_system_identification.job_controllers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-system-identification-job-controllers-data-collection-job-manager-module">csle_system_identification.job_controllers.data_collection_job_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-system-identification-job-controllers-system-identification-job-manager-module">csle_system_identification.job_controllers.system_identification_job_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_system_identification.job_controllers.data_collection_job_manager">csle_system_identification.job_controllers.data_collection_job_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_system_identification.job_controllers.system_identification_job_manager">csle_system_identification.job_controllers.system_identification_job_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_system_identification.job_controllers">Module contents</a></li>
 </ul>
 </li>
@@ -66,8 +64,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_system_identification.job_controllers package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_system_identification.job_controllers package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_system_identification.job_controllers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,18 +76,88 @@
            <div itemprop="articleBody">
              
   <section id="csle-system-identification-job-controllers-package">
-<h1>csle_system_identification.job_controllers package<a class="headerlink" href="#csle-system-identification-job-controllers-package" title="Permalink to this heading"></a></h1>
+<h1>csle_system_identification.job_controllers package<a class="headerlink" href="#csle-system-identification-job-controllers-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="csle-system-identification-job-controllers-data-collection-job-manager-module">
-<h2>csle_system_identification.job_controllers.data_collection_job_manager module<a class="headerlink" href="#csle-system-identification-job-controllers-data-collection-job-manager-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_system_identification.job_controllers.data_collection_job_manager">
+<span id="csle-system-identification-job-controllers-data-collection-job-manager-module"></span><h2>csle_system_identification.job_controllers.data_collection_job_manager module<a class="headerlink" href="#module-csle_system_identification.job_controllers.data_collection_job_manager" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_system_identification.job_controllers.data_collection_job_manager.</span></span><span class="sig-name descname"><span class="pre">DataCollectionJobManager</span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/data_collection_job_manager.html#DataCollectionJobManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that manages data collection jobs in CSLE</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.run_data_collection_job">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_data_collection_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/data_collection_job_manager.html#DataCollectionJobManager.run_data_collection_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.run_data_collection_job" title="Permalink to this definition"></a></dt>
+<dd><p>Runs a given data collection job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>job_config</strong> – the configuration of the job</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.start_data_collection_job_in_background">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_data_collection_job_in_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_collection_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.jobs.data_collection_job_config.DataCollectionJobConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/data_collection_job_manager.html#DataCollectionJobManager.start_data_collection_job_in_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager.start_data_collection_job_in_background" title="Permalink to this definition"></a></dt>
+<dd><p>Starts a system identification job with a given configuration in the background</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_collection_job</strong> – the job configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="csle-system-identification-job-controllers-system-identification-job-manager-module">
-<h2>csle_system_identification.job_controllers.system_identification_job_manager module<a class="headerlink" href="#csle-system-identification-job-controllers-system-identification-job-manager-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_system_identification.job_controllers.system_identification_job_manager">
+<span id="csle-system-identification-job-controllers-system-identification-job-manager-module"></span><h2>csle_system_identification.job_controllers.system_identification_job_manager module<a class="headerlink" href="#module-csle_system_identification.job_controllers.system_identification_job_manager" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_system_identification.job_controllers.system_identification_job_manager.</span></span><span class="sig-name descname"><span class="pre">SystemIdentificationJobManager</span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/system_identification_job_manager.html#SystemIdentificationJobManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that manages system identification jobs in CSLE</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.run_system_identification_job">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_system_identification_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/system_identification_job_manager.html#SystemIdentificationJobManager.run_system_identification_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.run_system_identification_job" title="Permalink to this definition"></a></dt>
+<dd><p>Runs a given system identification job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>job_config</strong> – the configuration of the job</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.start_system_identification_job_in_background">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_system_identification_job_in_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_identification_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.jobs.system_identification_job_config.SystemIdentificationJobConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_system_identification/job_controllers/system_identification_job_manager.html#SystemIdentificationJobManager.start_system_identification_job_in_background"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.job_controllers.system_identification_job_manager.SystemIdentificationJobManager.start_system_identification_job_in_background" title="Permalink to this definition"></a></dt>
+<dd><p>Starts a system identification job with a given configuration in the background</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system_identification_job</strong> – the job configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-csle_system_identification.job_controllers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_system_identification.job_controllers" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_system_identification.job_controllers" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

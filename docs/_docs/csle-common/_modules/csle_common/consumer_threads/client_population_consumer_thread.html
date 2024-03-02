@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.consumer_threads.client_population_consumer_thread &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.consumer_threads.client_population_consumer_thread &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.consumer_threads.client_population_consumer_thread</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.consumer_threads.client_population_consumer_thread</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,7 +70,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.consumer_threads.client_population_consumer_thread</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">threading</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Consumer</span><span class="p">,</span> <span class="n">KafkaError</span><span class="p">,</span> <span class="n">KafkaException</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
@@ -100,7 +99,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_server_ip</span> <span class="o">=</span> <span class="n">kafka_server_ip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="n">kafka_port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics</span> <span class="o">=</span> <span class="n">client_population_metrics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ClientPopulationMetrics</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_offset_reset</span> <span class="o">=</span> <span class="n">auto_offset_reset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -138,7 +137,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">avg_client_population_metrics</span> <span class="o">=</span> <span class="n">ClientPopulationMetrics</span><span class="p">()</span>
+        <span class="n">avg_client_population_metrics</span> <span class="o">=</span> <span class="n">ClientPopulationMetrics</span><span class="p">(</span><span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span><span class="p">)):</span>
             <span class="n">avg_client_population_metrics</span><span class="o">.</span><span class="n">num_clients</span> <span class="o">=</span> <span class="p">(</span><span class="n">avg_client_population_metrics</span><span class="o">.</span><span class="n">num_clients</span> <span class="o">+</span>
                                                          <span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">num_clients</span><span class="p">)</span>

@@ -1,8 +1,8 @@
-csle-base==0.4.14
-csle-common==0.4.14
-csle-collector==0.4.14
-csle-attacker==0.4.14
-csle-defender==0.4.14
+csle-base==0.5.0
+csle-common==0.5.0
+csle-collector==0.5.0
+csle-attacker==0.5.0
+csle-defender==0.5.0
 gymnasium==0.27.1
 numpy==1.23.5
 pulp==2.7.0

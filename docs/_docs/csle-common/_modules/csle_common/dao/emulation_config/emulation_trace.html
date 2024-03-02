@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.emulation_trace &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.emulation_config.emulation_trace &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_config.emulation_trace</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_config.emulation_trace</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,13 +73,13 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> <span class="kn">import</span> <span class="n">EmulationAttackerActionId</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.encoding.np_encoder</span> <span class="kn">import</span> <span class="n">NpEncoder</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state</span> \
     <span class="kn">import</span> <span class="nn">EmulationAttackerObservationState</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.defender.emulation_defender_observation_state</span> \
@@ -116,14 +114,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;initial_attacker_observation_state:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_attacker_observation_state</span><span class="si">}</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;initial_defender_observation_state:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_defender_observation_state</span><span class="si">}</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;attacker_observation_states:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_observation_states</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;defender_observation_states:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_observation_states</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;attacker_actions:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_actions</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;defender_actions:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_actions</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;emulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span><span class="si">}</span><span class="s2">,&quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;id:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;initial_attacker_observation_state:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_attacker_observation_state</span><span class="si">}</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;initial_defender_observation_state:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_defender_observation_state</span><span class="si">}</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;attacker_observation_states:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_observation_states</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;defender_observation_states:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_observation_states</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;attacker_actions:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_actions</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;defender_actions:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_actions</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;emulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_name</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;id:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="EmulationTrace.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationTrace&quot;</span><span class="p">:</span>
@@ -152,7 +150,7 @@
 <div class="viewcode-block" id="EmulationTrace.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the object to a dict representation</span>
-<span class="sd">        </span>
+
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -262,7 +260,7 @@
         <span class="k">return</span> <span class="n">dto</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.to_csv_record"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_csv_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_csv_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_time_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_ports</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_vulns</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                      <span class="n">null_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
+                      <span class="n">null_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the trace into a csv row</span>
 
@@ -530,27 +528,27 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">_defender_num_failed_login_attempts&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span><span class="o">.</span><span class="n">num_failed_login_attempts</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">_defender_num_open_connections&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span><span class="o">.</span><span class="n">num_open_connections</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">_defender_num_login_events&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span><span class="o">.</span><span class="n">num_login_events</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">_defender_num_processes&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span><span class="o">.</span><span class="n">num_processes</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
             <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">_defender_num_users&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_observations</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span><span class="o">.</span><span class="n">num_users</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
@@ -825,26 +823,6 @@
                     <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_value</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">labels</span></div></div>
-
-
-<div class="viewcode-block" id="NpEncoder"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.NpEncoder">[docs]</a><span class="k">class</span> <span class="nc">NpEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Encoder for Numpy arrays to JSON</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="NpEncoder.default"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.NpEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Encodes a numpy type for JSON in the default way</span>
-
-<span class="sd">        :param obj: the numpy object to encode</span>
-<span class="sd">        :return: the encoded object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">NpEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

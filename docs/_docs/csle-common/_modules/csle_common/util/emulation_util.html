@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.emulation_util &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.util.emulation_util &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.util.emulation_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.emulation_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -238,7 +236,11 @@
             <span class="n">target_conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
             <span class="n">target_conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
             <span class="n">target_conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">target_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pw</span><span class="p">,</span> <span class="n">sock</span><span class="o">=</span><span class="n">relay_channel</span><span class="p">)</span>
-            <span class="n">target_conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">target_conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection failed, ip: </span><span class="si">{</span><span class="n">target_ip</span><span class="si">}</span><span class="s2">, user: </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">, pw: </span><span class="si">{</span><span class="n">pw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">connection_dto</span> <span class="o">=</span> <span class="n">EmulationConnectionObservationState</span><span class="p">(</span>
                 <span class="n">conn</span><span class="o">=</span><span class="n">target_conn</span><span class="p">,</span> <span class="n">credential</span><span class="o">=</span><span class="n">cr</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">,</span>
                 <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">DEFAULT_PORT</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="n">proxy_conn</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">target_ip</span><span class="p">)</span>
@@ -329,7 +331,7 @@
         <span class="n">output</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LARGE_RECV_SIZE</span><span class="p">)</span>
         <span class="n">output_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">output_str</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">NMAP</span><span class="o">.</span><span class="n">SHELL_ESCAPE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">output_str</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">output_str</span></div>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_str</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationUtil.is_emulation_defense_action_legal"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.emulation_util.EmulationUtil.is_emulation_defense_action_legal">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_emulation_defense_action_legal</span><span class="p">(</span><span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
@@ -504,7 +506,7 @@
 <span class="sd">        :return: True if it is running otherwise false.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span><span class="o">.</span><span class="n">is_running</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
