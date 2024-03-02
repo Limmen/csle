@@ -305,7 +305,7 @@ if __name__ == "__main__":
     global_step = 0
     start_time = time.time()
 
-    next_obs, info = torch.Tensor(envs.reset(seed=args.seed)).to(device)
+    next_obs, info = torch.Tensor(envs.reset()).to(device)
     next_done = torch.zeros(args.num_envs).to(device)
 
     for phase in range(1, args.num_phases + 1):
