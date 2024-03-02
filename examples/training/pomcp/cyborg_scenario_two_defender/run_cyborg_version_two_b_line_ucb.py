@@ -1,3 +1,4 @@
+from typing import List
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -13,6 +14,23 @@ from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConf
 from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWrapper
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
+from gym_csle_cyborg.util.cyborg_env_util import CyborgEnvUtil
+
+
+def heuristic_value(o: List[List[int]]) -> float:
+    """
+    A heuristic value function
+
+    :param o: the observation vector
+    :return: the value
+    """
+    host_costs = CyborgEnvUtil.get_host_compromised_costs()
+    val = 0
+    for i in range(len(o)):
+        if o[i][2] > 0:
+            val += host_costs[i]
+    return val
+
 
 if __name__ == '__main__':
     emulation_name = "csle-level9-040"
@@ -29,7 +47,8 @@ if __name__ == '__main__':
     eval_env_config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, scanned_state=True,
-        decoy_state=True, decoy_optimization=False, cache_visited_states=True, save_trace=False)
+        decoy_state=True, decoy_optimization=False, cache_visited_states=True, save_trace=False,
+        randomize_topology=False)
     simulation_env_config.simulation_env_input_config = CSLECyborgWrapperConfig(
         gym_env_name="csle-cyborg-scenario-two-wrapper-v1", maximum_steps=100, save_trace=False, scenario=2,
         reward_shaping=True, red_agent_type=RedAgentType.B_LINE_AGENT)
@@ -37,16 +56,8 @@ if __name__ == '__main__':
     csle_cyborg_env = CyborgScenarioTwoWrapper(config=simulation_env_config.simulation_env_input_config)
     A = csle_cyborg_env.get_action_space()
     initial_particles = csle_cyborg_env.initial_particles
-    # rollout_policy = MetastoreFacade.get_ppo_policy(id=58)
-    # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
-    #                             "ppo_test_1706439955.8221297/ppo_model2900_1706522984.6982665.zip")
-    # rollout_policy.save_path = ("/Users/kim/workspace/csle/examples/training/pomcp/cyborg_scenario_two_wrapper/"
-    #                             "ppo_test_1706439955.8221297/ppo_model50_1706441287.1284034.zip")
-    # ppo_model50_1706441287.1284034.zip
-    # rollout_policy.load()
-    rollout_policy = None
-    value_function = lambda x: 0
-    # value_function = rollout_policy.value
+    rollout_policy = lambda x, deterministic: 35
+    value_function = heuristic_value
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}pomcp_test", title="POMCP test",
         random_seeds=[555512, 98912, 999, 555],
@@ -65,30 +76,30 @@ if __name__ == '__main__':
                 value=value_function, name=agents_constants.POMCP.VALUE_FUNCTION,
                 descr="the value function to use for truncated rollouts"),
             agents_constants.POMCP.A: HParam(value=A, name=agents_constants.POMCP.A, descr="the action space"),
-            agents_constants.POMCP.GAMMA: HParam(value=1, name=agents_constants.POMCP.GAMMA,
+            agents_constants.POMCP.GAMMA: HParam(value=0.99, name=agents_constants.POMCP.GAMMA,
                                                  descr="the discount factor"),
             agents_constants.POMCP.REINVIGORATION: HParam(value=False, name=agents_constants.POMCP.REINVIGORATION,
                                                           descr="whether reinvigoration should be used"),
             agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO: HParam(
-                value=0.01, name=agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO,
+                value=0.0, name=agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO,
                 descr="the ratio of reinvigorated particles in the particle filter"),
             agents_constants.POMCP.INITIAL_PARTICLES: HParam(value=initial_particles,
                                                              name=agents_constants.POMCP.INITIAL_PARTICLES,
                                                              descr="the initial belief"),
-            agents_constants.POMCP.PLANNING_TIME: HParam(value=60, name=agents_constants.POMCP.PLANNING_TIME,
+            agents_constants.POMCP.PLANNING_TIME: HParam(value=3.75, name=agents_constants.POMCP.PLANNING_TIME,
                                                          descr="the planning time"),
             agents_constants.POMCP.PRUNE_ACTION_SPACE: HParam(
                 value=False, name=agents_constants.POMCP.PRUNE_ACTION_SPACE,
                 descr="boolean flag indicating whether the action space should be pruned or not"),
             agents_constants.POMCP.PRUNE_SIZE: HParam(
                 value=3, name=agents_constants.POMCP.PRUNE_ACTION_SPACE, descr="size of the pruned action space"),
-            agents_constants.POMCP.MAX_PARTICLES: HParam(value=5000, name=agents_constants.POMCP.MAX_PARTICLES,
+            agents_constants.POMCP.MAX_PARTICLES: HParam(value=1000, name=agents_constants.POMCP.MAX_PARTICLES,
                                                          descr="the maximum number of belief particles"),
             agents_constants.POMCP.MAX_PLANNING_DEPTH: HParam(
-                value=100, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
+                value=50, name=agents_constants.POMCP.MAX_PLANNING_DEPTH, descr="the maximum depth for planning"),
             agents_constants.POMCP.MAX_ROLLOUT_DEPTH: HParam(value=4, name=agents_constants.POMCP.MAX_ROLLOUT_DEPTH,
                                                              descr="the maximum depth for rollout"),
-            agents_constants.POMCP.C: HParam(value=1, name=agents_constants.POMCP.C,
+            agents_constants.POMCP.C: HParam(value=0.5, name=agents_constants.POMCP.C,
                                              descr="the weighting factor for UCB exploration"),
             agents_constants.POMCP.C2: HParam(value=15000, name=agents_constants.POMCP.C2,
                                               descr="the weighting factor for AlphaGo exploration"),
@@ -110,7 +121,7 @@ if __name__ == '__main__':
             agents_constants.POMCP.DEFAULT_NODE_VALUE: HParam(
                 value=0, name=agents_constants.POMCP.DEFAULT_NODE_VALUE, descr="the default node value in "
                                                                                "the search tree"),
-            agents_constants.POMCP.VERBOSE: HParam(value=True, name=agents_constants.POMCP.VERBOSE,
+            agents_constants.POMCP.VERBOSE: HParam(value=False, name=agents_constants.POMCP.VERBOSE,
                                                    descr="verbose logging flag"),
             agents_constants.POMCP.EVAL_ENV_NAME: HParam(value="csle-cyborg-scenario-two-v1",
                                                          name=agents_constants.POMCP.EVAL_ENV_NAME,

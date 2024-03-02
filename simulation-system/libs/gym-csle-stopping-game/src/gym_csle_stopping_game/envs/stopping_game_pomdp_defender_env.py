@@ -215,6 +215,19 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         return self.stopping_game_env.generate_random_particles(o=o, num_particles=num_particles)
 
+    def get_actions_from_particles(self, particles: List[int], t: int, observation: int,
+                                   verbose: bool = False) -> List[int]:
+        """
+        Prunes the set of actiosn based on the current particle set
+
+        :param particles: the set of particles
+        :param t: the current time step
+        :param observation: the latest observation
+        :param verbose: boolean flag indicating whether logging should be verbose or not
+        :return: the list of pruned actions
+        """
+        return list(self.config.stopping_game_config.A1)
+
     def manual_play(self) -> None:
         """
         An interactive loop to test the environment manually

@@ -114,24 +114,9 @@ class POMCP:
             else:
                 return 0
         if not self.use_rollout_policy or self.rollout_policy is None or self.env.is_state_terminal(state):
-            # a = POMCPUtil.rand_choice(self.A)
-            # rollout_actions = self.env.get_actions_from_particles(particles=[state], t=len(history))
-            # obs_vec = self.env.get_observation_from_history(history=history)
-            # if obs_vec[1][2] > 0:
-            #     a = 0
-            # elif obs_vec[2][2] > 0:
-            #     a = 1
-            # else:
-            #     a = POMCPUtil.rand_choice([27, 28, 30 ,31, 32, 33])
-
-            # if 1 in rollout_actions:
-            #     rollout_actions.remove(1)
-            # if 0 in rollout_actions:
-            #     rollout_actions.remove(0)
-            # a = POMCPUtil.rand_choice(rollout_actions)
-            a = 35
-            # rollout_actions = self.env.get_actions_from_particles(particles=[state], t=t+depth)
-            # a = POMCPUtil.rand_choice(rollout_actions)
+            rollout_actions = self.env.get_actions_from_particles(particles=[state], t=len(history),
+                                                                  observation=history[-1])
+            a = POMCPUtil.rand_choice(rollout_actions)
         else:
             a = self.rollout_policy.action(o=self.env.get_observation_from_history(history=history),
                                            deterministic=False)
@@ -391,7 +376,7 @@ class POMCP:
                 if count >= 80000:
                     target = root.sample_state().red_agent_target
                     Logger.__call__().get_logger().info(
-                        f"Invalid observation: {observation}, target: {target}, "                        
+                        f"Invalid observation: {observation}, target: {target}, "
                         f"given state: 1: \n{root.sample_state()}, \n"
                         f"2: \n {root.sample_state()}\n, 3: {root.sample_state()}\n ")
                     for i in range(particle_slots - len(particles)):
