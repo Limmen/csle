@@ -32,6 +32,7 @@ class PPONetwork(nn.Module):
         self.std_action = std_action
         self.critic = nn.Sequential()
         self.actor = nn.Sequential()
+        self.aux_critic = nn.Sequential()
         self.num_hidden_layers = num_hidden_layers
         self.hidden_layer_dim = hidden_layer_dim
         input_dim = self.input_dim
@@ -39,6 +40,9 @@ class PPONetwork(nn.Module):
             self.critic.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_dim,
                                                                                            hidden_layer_dim)))
             self.critic.add_module(name='activation', module=nn.Tanh())
+            self.aux_critic.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_dim,
+                                                                                               hidden_layer_dim)))
+            self.aux_critic.add_module(name='activation', module=nn.Tanh())
             self.actor.add_module(name=f'Layer {layer}', module=self.layer_init(nn.Linear(input_dim,
                                                                                           hidden_layer_dim)))
             self.actor.add_module(name='activation', module=nn.Tanh())
@@ -46,6 +50,9 @@ class PPONetwork(nn.Module):
         self.critic.add_module(name='Classifier',
                                module=self.layer_init(nn.Linear(hidden_layer_dim, self.output_dim_critic),
                                                       std=self.std_critic))
+        self.aux_critic.add_module(name='Classifier',
+                                   module=self.layer_init(nn.Linear(hidden_layer_dim, self.output_dim_critic),
+                                                          std=self.std_critic))
         self.actor.add_module(name='Classifier',
                               module=self.layer_init(nn.Linear(hidden_layer_dim, self.output_dim_action),
                                                      std=self.std_action))
@@ -87,6 +94,25 @@ class PPONetwork(nn.Module):
         if action is None:
             action = probs.sample()
         return action, probs.log_prob(action), probs.entropy(), self.critic(x)
+
+    def get_pi(self, x: torch.Tensor) -> torch.distributions.Categorical:
+        """
+        Utility function for PPG
+
+        :param x: the input vector
+        :return: the output action distribution
+        """
+        return Categorical(logits=self.actor(x))
+
+    def get_pi_value_and_aux_value(self, x: torch.Tensor) \
+            -> Tuple[torch.distributions.Categorical, torch.Tensor, torch.Tensor]:
+        """
+        Utility function for PPG
+
+        :param x: the input vector
+        :return: output distribution, critic value, and auxiliary critic value
+        """
+        return Categorical(logits=self.actor(x)), self.critic(x.detach()), self.aux_critic(x)
 
     def save(self, path: str) -> None:
         """

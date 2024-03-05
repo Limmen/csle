@@ -100,6 +100,38 @@ class PPO_CLEAN:
     CUDA = "cuda"
 
 
+class PPG_CLEAN:
+    """
+    String constants related to PPG clean
+    """
+    TOTAL_STEPS = "total_steps"
+    LEARNING_RATE = "learning_rate"
+    NUM_STEPS = "num_steps"
+    ANNEAL_LR = "anneal_lr"
+    GAMMA = "gamma"
+    GAE_LAMBDA = "gae_lambda"
+    NUM_MINIBATCHES = "num_minibatches"
+    ADV_NORM_FULLBATCH = "adv_norm_fullbatch"
+    CLIP_COEF = "clip_coef"
+    ENT_COEF = "ent_coef"
+    CLIP_VLOSS = "clip_vloss"
+    VF_COEF = "vf_coef"
+    MAX_GRAD_NORM = "max_grad_norm"
+    TARGET_KL = "target_kl"
+    N_ITERATION = "n_iteration"
+    E_POLICY = "e_policy"
+    E_AUXILIARY = "e_auxiliary"
+    BETA_CLONE = "beta_clone"
+    NUM_AUX_ROLLOUTS = "num_aux_rollouts"
+    NUM_AUX_GRAD_ACCUM = "num_aux_grad_accum"
+    BATCH_SIZE = "batch_size"
+    MINIBATCH_SIZE = "minibatch_size"
+    NUM_ITERATIONS = "num_iterations"
+    NUM_PHASES = "num_phases"
+    AUX_BATCH_ROLLOUTS = "aux_batch_rollouts"
+    V_VALUE = "v_value"
+
+
 class DQN_CLEAN:
     """
     String constants related to the DQN-Clean agent
