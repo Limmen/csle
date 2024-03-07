@@ -12,19 +12,11 @@ class Tactics(Enum):
     PRIVILEGE_ESCALATION = "privilege-escalation"
     DEFENSE_EVASION = "defense-evasion"
     CREDENTIAL_ACCESS = "credential-access"
-    DISCOVERY = "discover"
+    DISCOVERY = "discovery"
     LATERAL_MOVEMENT = "lateral-movement"
     COLLECTION = "collection"
     COMMAND_AND_CONTROL = "command-and-control"
     EXFILTRATION = "exfiltration"
     IMPACT = "impact"
 
-    @staticmethod
-    def get_tactics(id):
-
-        mapping = {
-            Tactics.RECONNAISSANCE: {"techniques": {"Active Scanning", "Gather Victim Host Information", "Network Service Discovery"}},
-            Tactics.PRIVILEGE_ESCALATION: {"techniques": ["Abuse Elevation Control Mechanism"]}
-        }
-        return mapping.get(id, None)
 

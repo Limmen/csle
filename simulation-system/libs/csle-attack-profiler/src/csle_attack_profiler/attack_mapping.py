@@ -235,7 +235,9 @@ class EmulationAttackerMapping():
             },
 
             EmulationAttackerActionId.NETWORK_SERVICE_LOGIN: {
-                "techniques": {Techniques.VALID_ACCOUNTS}
+                "techniques": {Techniques.VALID_ACCOUNTS,
+                               Techniques.REMOTE_SERVICES,
+                               Techniques.EXTERNAL_REMOTE_SERVICES}
             },
             EmulationAttackerActionId.FIND_FLAG: {
                 "techniques": {Techniques.DATA_FROM_LOCAL_SYSTEM}
@@ -287,40 +289,37 @@ class EmulationAttackerMapping():
                                Techniques.GATHER_VICTIM_HOST_INFORMATION}
             },
             EmulationAttackerActionId.INSTALL_TOOLS: {
-                "techniques": {Techniques.COMMAND_AND_SCRIPTING_INTERPRETER,
-                               Techniques.LATERAL_TOOL_TRANSFER}
+                "techniques": {Techniques.INGRESS_TOOL_TRANSFER}
             },
             EmulationAttackerActionId.SSH_BACKDOOR: {
-                "techniques": {Techniques.COMMAND_AND_SCRIPTING_INTERPRETER,
-                               Techniques.CREATE_ACCOUNT,
-                               Techniques.REMOTE_SERVICES},
-                "subtechniques": {SubTechniques.SSH}
+                "techniques": {Techniques.COMPROMISE_CLIENT_SOFTWARE_BINARY,
+                               Techniques.CREATE_ACCOUNT}
             },
             EmulationAttackerActionId.SAMBACRY_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
-                               Techniques.EXPLOITATION_FOR_PRIVILEGE_ESCALATION,
-                               Techniques.EXPLOITATION_OF_REMOTE_SERVICES}
+                               Techniques.REMOTE_SERVICES,
+                               Techniques.EXPLOITATION_OF_REMOTE_SERVICES,
+                               Techniques.NATIVE_API}
             },
             EmulationAttackerActionId.SHELLSHOCK_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
                                Techniques.EXPLOITATION_OF_REMOTE_SERVICES,
-                               Techniques.EXPLOITATION_FOR_CLIENT_EXECUTION}
+                               Techniques.COMMAND_AND_SCRIPTING_INTERPRETER}
             },
             EmulationAttackerActionId.DVWA_SQL_INJECTION: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
-                               Techniques.DATA_FROM_LOCAL_SYSTEM,
-                               Techniques.EXPLOITATION_FOR_CLIENT_EXECUTION,
+                               Techniques.EXPLOITATION_FOR_CREDENTIAL_ACCESS,
                                Techniques.CREDENTIALS_FROM_PASSWORD_STORES}
             },
             EmulationAttackerActionId.CVE_2015_3306_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
-                               Techniques.EXPLOITATION_FOR_CLIENT_EXECUTION,
                                Techniques.VALID_ACCOUNTS,
-                               Techniques.FALLBACK_CHANNELS},
+                               Techniques.FALLBACK_CHANNELS,
+                               Techniques.REMOTE_SERVICES},
             },
             EmulationAttackerActionId.CVE_2015_1427_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
-                               Techniques.EXPLOITATION_FOR_PRIVILEGE_ESCALATION,
+                               Techniques.EXPLOITATION_OF_REMOTE_SERVICES,
                                Techniques.COMMAND_AND_SCRIPTING_INTERPRETER,
                                Techniques.FALLBACK_CHANNELS,
                                Techniques.VALID_ACCOUNTS}

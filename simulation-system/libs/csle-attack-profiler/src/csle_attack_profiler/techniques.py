@@ -24,6 +24,11 @@ class Techniques(Enum):
     CREDENTIALS_FROM_PASSWORD_STORES = "Credentials from Password Stores"
     FALLBACK_CHANNELS = "Fallback Channels"
     ABUSE_ELEVATION_CONTROL_MECHANISM = "Abuse Elevation Control Mechanism"
+    INGRESS_TOOL_TRANSFER = "Ingress Tool Transfer"
+    EXPLOITATION_FOR_CREDENTIAL_ACCESS = "Exploitation for Credential Access"
+    COMPROMISE_CLIENT_SOFTWARE_BINARY = "Compromise Client Software Binary"
+    EXTERNAL_REMOTE_SERVICES = "External Remote Services"
+    NATIVE_API = "Native API"
 
 class SubTechniques(Enum):
     SOFTWARE = "Software"

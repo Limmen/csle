@@ -1,8 +1,11 @@
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action \
     import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
+    import EmulationAttackerActionId
 from csle_attack_profiler.tactics import Tactics
 from csle_attack_profiler.techniques import Techniques
 from csle_attack_profiler.attack_mapping import EmulationAttackerMapping
+from csle_attack_profiler.attack_graph import AttackGraph
 
 from mitreattack.stix20 import MitreAttackData
 from typing import List, Dict
@@ -12,21 +15,23 @@ class AttackProfiler():
     Class represting the attack profile based on the MITRE ATT&CK framework for Enterprise.
     """
 
-    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, List[str]]):
+    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, List[str]], action_id: EmulationAttackerActionId):
         """
         Class constructor
 
         :params techniques_tactics: the techniques and tactics used by the attacker action. The key is the technique and the value is the tactics
         :params mitigations: the mitigations used by the attacker action. The key is the technique and the value is the mitigations
         :params data_sources: the data sources used by the attacker action. The key is the technqiue and the value is the data sources
-        :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and the value is the sub-techniques 
+        :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and the value is the sub-techniques
+        :params action_id: the id of the attacker action
         """        
 
-
+        
         self.techniques_tactics = techniques_tactics
         self.mitigations = mitigations
         self.data_sources = data_sources
         self.subtechniques = subtechniques
+        self.action_id = action_id
 
     @staticmethod
     def get_attack_profile(attacker_action: EmulationAttackerAction):
@@ -35,7 +40,7 @@ class AttackProfiler():
 
         :params attacker_action: the attacker action
 
-        :return: 
+        :return: the attack profile of the action
         """
         mitre_attack_data = MitreAttackData("./src/csle_attack_profiler/enterprise-attack.json")
 
@@ -44,12 +49,12 @@ class AttackProfiler():
         # Get the defined tactics and techniques for the attack
         attack_mapping = EmulationAttackerMapping.get_attack_info(attacker_id)
         #TODO: Return revelant error message
-        print(attack_mapping)
         if attack_mapping == {None} or attack_mapping is None:
-            return AttackProfiler({}, {}, {}, {})
+            return AttackProfiler({}, {}, {}, {}, None)
 
         attack_techniques_vals = [technique.value for technique in attack_mapping['techniques']]
         
+        attacker_action_id = attacker_action.id
         techniques_tactics = {}
         mitigations = {}
         data_sources = {}
@@ -93,7 +98,101 @@ class AttackProfiler():
                     continue
 
 
-        return AttackProfiler(techniques_tactics, mitigations, data_sources, sub_techniques)
+        return AttackProfiler(techniques_tactics, mitigations, data_sources, sub_techniques, attacker_action_id)
+    
+
+    @staticmethod
+    def get_attack_profile_sequence(attacker_actions: List[EmulationAttackerAction], attack_graph: AttackGraph = None):
+        """
+        Returns the attack profile of the actions in a sequence
+
+        :params attacker_action: a list of attacker actions
+
+        :return: a list of attack profiles of the actions
+        """
+
+        attack_profiles = []
+        temp_dict = {}
+        for action in attacker_actions:
+            attack_profiles.append(AttackProfiler.get_attack_profile(action))
+
+
+        initial_access = False
+        
+        # IF attack graph is provided
+        if attack_graph:
+
+            node = attack_graph.get_root_node()
+            for profile in attack_profiles:
+                # Get the mappings of the techniques and tactics
+                techniques_tactics = profile.techniques_tactics
+                techniques_to_keep = []
+                children = attack_graph.get_children(node[0], node[2])
+                possible_nodes = []
+                # First we check the techniques in node we are currently at
+                for technique in techniques_tactics:
+                    # If the node.name is in the techniques_tactics, add it to the techniques_to_keep
+                    if node[0].value in techniques_tactics[technique]:
+                        techniques_to_keep.append(technique)
+                        if node not in possible_nodes:
+                            #print("Possible node: ", node[0].value)
+                            possible_nodes.append(node)
+
+                for child in children:
+                    # Child is a list of tuples, where the first element is the node name and the second element is the node id
+                    for technique in techniques_tactics:
+                        if child[0].value in techniques_tactics[technique]:
+                            
+                            techniques_to_keep.append(technique)
+                            # If the child is not in the possible_children, add it to the list.
+                            if attack_graph.get_node(child[0], child[1]) not in possible_nodes:
+                                #print("Possible node:  ", child[0].value)
+                                possible_nodes.append(attack_graph.get_node(child[0], child[1]))
+
+                # If the possible node is just one node, move to that node
+                if len(possible_nodes) == 1:
+                    node = possible_nodes[0]
+                if techniques_to_keep == []:
+                    continue
+                # Remove the techniques and associated tactics, data sources, mitigations and sub-techniques that are not in the techniques_to_keep
+                techniques_to_remove = set(profile.techniques_tactics.keys()) - set(techniques_to_keep)
+                #print("Currently in node ", node[0].value)
+                for technique in techniques_to_remove:
+                        try:
+                            del profile.techniques_tactics[technique]
+                            del profile.mitigations[technique]
+                            del profile.data_sources[technique]
+                            del profile.subtechniques[technique]
+                        except:
+                            continue
+                            
+        # ELSE Baseline conditions
+        else:     
+            for profile in attack_profiles:
+                techniques_tactics = profile.techniques_tactics
+                techniques_to_remove = []
+                # Loop over the mappings of the techniques to tactics
+                for technique in techniques_tactics:
+                    if Tactics.DISCOVERY.value in techniques_tactics[technique] and initial_access == False:
+                        techniques_to_remove.append(technique)
+                    elif Tactics.RECONNAISSANCE.value in techniques_tactics[technique] and initial_access == True:
+                        techniques_to_remove.append(technique)
+                    if Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == True:
+                        techniques_to_remove.append(technique)
+                    elif Tactics.LATERAL_MOVEMENT.value in techniques_tactics[technique] and initial_access == False:
+                        techniques_to_remove.append(technique)
+                
+                # Remove the techniques and associated tactics, data sources, mitigations and sub-techniques
+                for technique in techniques_to_remove:
+                    try:
+                        del profile.techniques_tactics[technique]
+                        del profile.mitigations[technique]
+                        del profile.data_sources[technique]
+                        del profile.subtechniques[technique]
+                    except:
+                        continue
+                
+        return attack_profiles
                 
 
 
