@@ -156,8 +156,9 @@ class TestAttackProfilerSuite:
         attack_graph = AttackGraph()
         attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
         attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, node_id = 2)
-        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 2)
         attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 3)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 2)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 3)
         attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 2, Tactics.INITIAL_ACCESS, 3)
 
     
@@ -283,13 +284,10 @@ class TestAttackProfilerSuite:
         assert 'reconnaissance' in action1_tactics
         assert 'discovery' not in action1_tactics
 
-
         action2_tactics = [tactic for sublist in result[1].techniques_tactics.values() for tactic in sublist]
         assert 'initial-access' in action2_tactics
         assert 'lateral-movement' not in action2_tactics
 
-        # Lateral movement will not be pruned from SERVICE_LOGIN action
-        # We can not be sure if the attacker performs lateral movement or initial access 
         action3_tactics = [tactic for sublist in result[2].techniques_tactics.values() for tactic in sublist]
         assert 'initial-access' in action3_tactics
         assert 'lateral-movement' not in action3_tactics
