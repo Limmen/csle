@@ -4,7 +4,13 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome \
     import EmulationAttackerActionOutcome
+
+#from emulation_system.envs.040.level9.config 
+#import default_static_attacker_sequences
 from csle_attack_profiler.attack_profiler import AttackProfiler
+from csle_attack_profiler.tactics import Tactics
+from csle_attack_profiler.attack_graph import AttackGraph
+
 
 
 class TestAttackProfilerSuite:
@@ -109,3 +115,196 @@ class TestAttackProfilerSuite:
                 # Assert that each subtechnique is related to a technique
                 for technique in result.subtechniques:
                     assert result.techniques_tactics[technique]
+
+    # Test the get_attack_profile_sequence method without providing an attack graph
+    def test_attack_profiler_sequence_no_graph(self) -> None:
+
+        attacker_action = EmulationAttackerAction(
+            id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+            name="TCP SYN (Stealth) Scan",
+            cmds=[],
+            type=None,
+            descr="TCP_SYN_STEALTH_SCAN_HOST",
+            ips=[],
+            index=0,
+            action_outcome=EmulationAttackerActionOutcome.CONTINUE,
+            backdoor=False
+        )
+
+        attacker_action = [attacker_action]
+        # Call the method under test
+        result = AttackProfiler.get_attack_profile_sequence(attacker_action)
+
+        assert result[0].techniques_tactics == {'Active Scanning': ['reconnaissance'], 
+                                             'Gather Victim Host Information': ['reconnaissance']} 
+        assert result[0].mitigations == {'Active Scanning': ['Pre-compromise'],
+                                      'Gather Victim Host Information': ['Pre-compromise']}
+        assert result[0].data_sources == {'Active Scanning': ['Network Traffic: Network Traffic Flow', 'Network Traffic: Network Traffic Content'],
+                                       'Gather Victim Host Information': ['Internet Scan: Response Content']}
+        assert result[0].subtechniques == {}
+
+    # Test the get_attack_profile_sequence method providing an attack graph
+    """
+        Reconnaisance
+        /           \ 
+    Credential ->  Initial Access 
+    
+    """
+    def test_attack_profiler_sequence_graph(self) -> None:
+        
+        # Partial sequence attack graph
+        attack_graph = AttackGraph()
+        attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
+        attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, node_id = 2)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 2)
+        attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 3)
+        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 2, Tactics.INITIAL_ACCESS, 3)
+
+    
+        attacker_action1 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+            name="TCP SYN (Stealth) Scan",
+            cmds=[],
+            type=None,
+            descr="TCP_SYN_STEALTH_SCAN_HOST",
+            ips=[],
+            index=0,
+            action_outcome=EmulationAttackerActionOutcome.CONTINUE,
+            backdoor=False
+        )
+        attacker_action2 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
+            name="SSH Dictionary attack",
+            cmds=[],
+            type=None,
+            descr="SSH Dictionary attack",
+            ips=[],
+            index=0,
+            action_outcome=EmulationAttackerActionOutcome.CONTINUE,
+            backdoor=False
+        )
+
+        attacker_action3 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="Login",
+            cmds=[],
+            type=None,
+            descr="Login",
+            ips=[],
+            index=0,
+            action_outcome=EmulationAttackerActionOutcome.CONTINUE,
+            backdoor=False
+        )
+
+        attacker_action = [attacker_action1, attacker_action2, attacker_action3]
+
+        # Call the method under test
+        result = AttackProfiler.get_attack_profile_sequence(attacker_action, attack_graph)
+
+        assert result[0].techniques_tactics == {'Active Scanning': ['reconnaissance'], 
+                                             'Gather Victim Host Information': ['reconnaissance']}
+        assert result[0].mitigations == {'Active Scanning': ['Pre-compromise'], 
+                                         'Gather Victim Host Information': ['Pre-compromise']}
+        assert result[0].data_sources == {'Active Scanning': ['Network Traffic: Network Traffic Flow', 
+                                                              'Network Traffic: Network Traffic Content'], 
+                                                              'Gather Victim Host Information': ['Internet Scan: Response Content']}
+        assert result[0].subtechniques == {}
+
+        assert result[1].techniques_tactics == {'Brute Force': ['credential-access'],
+                                                'Valid Accounts': ['defense-evasion', 'persistence', 'privilege-escalation', 'initial-access']}
+        assert result[1].mitigations == {'Brute Force': ['User Account Management','Account Use Policies','Multi-factor Authentication','Password Policies'],
+                                        'Valid Accounts': ['Password Policies','User Account Management', 'Privileged Account Management','Application Developer Guidance','User Training','Active Directory Configuration','Account Use Policies']}
+        assert result[1].data_sources == {'Brute Force': ['User Account: User Account Authentication','Command: Command Execution','Application Log: Application Log Content'],
+                                        'Valid Accounts': ['Logon Session: Logon Session Creation','User Account: User Account Authentication','Logon Session: Logon Session Metadata']}
+        assert result[1].subtechniques == {'Brute Force': 'Credential Stuffing', 'Valid Accounts': 'Default Accounts'}
+        assert result[2].techniques_tactics == {'External Remote Services': ['persistence','initial-access'],
+                                                'Valid Accounts': ['defense-evasion','persistence','privilege-escalation','initial-access']}
+        assert result[2].mitigations == {'External Remote Services': ['Network Segmentation','Disable or Remove Feature or Program','Limit Access to Resource Over Network','Multi-factor Authentication'],
+                                        'Valid Accounts': ['Password Policies','User Account Management','Privileged Account Management','Application Developer Guidance','User Training','Active Directory Configuration','Account Use Policies']}
+
+        assert result[2].data_sources == {'External Remote Services': ['Network Traffic: Network Connection Creation','Network Traffic: Network Traffic Flow','Logon Session: Logon Session Metadata','Application Log: Application Log Content','Network Traffic: Network Traffic Content'],
+                                          'Valid Accounts': ['Logon Session: Logon Session Creation','User Account: User Account Authentication','Logon Session: Logon Session Metadata']}
+        assert result[2].subtechniques == {}
+
+    # Test the get_attack_profile_sequence method providing an attack graph
+    """
+                                        Recon 
+                                        /    \
+                                   Initial   Execution
+                                    /          
+        {Execution, Command and Control, Defense Evasion, Lateral Movement}    
+    """
+    def test_attack_profiler_sequence_graph2(self) -> None:
+        
+        # Partial sequence attack graph
+        attack_graph = AttackGraph()
+        #Nodes
+        attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
+        attack_graph.add_node(Tactics.EXECUTION, node_id = 2)
+        attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 3)
+        attack_graph.add_node(Tactics.EXECUTION, node_id = 4)
+        attack_graph.add_node(Tactics.COMMAND_AND_CONTROL, node_id = 5)
+        attack_graph.add_node(Tactics.DEFENSE_EVASION, node_id = 6)
+        attack_graph.add_node(Tactics.LATERAL_MOVEMENT, node_id = 7)
+        #Edges
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 3)    
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.EXECUTION, 2)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.EXECUTION, 4)        
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.COMMAND_AND_CONTROL, 5)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.DEFENSE_EVASION, 6)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.LATERAL_MOVEMENT, 7)
+
+
+        attacker_action1 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+            name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="TCP_SYN_STEALTH_SCAN_HOST",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action2 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SAMBACRY_EXPLOIT,
+            name="SSH Dictionary attack",cmds=[],type=None,descr="SSH Dictionary attack",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+
+        attacker_action3 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="Login",cmds=[],type=None,descr="Login",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+
+        attacker_action4 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,
+            name="CVE",cmds=[],type=None,descr="CVE",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+
+        attacker_action = [attacker_action1, attacker_action2, attacker_action3, attacker_action4]
+
+        # Call the method under test
+        result = AttackProfiler.get_attack_profile_sequence(attacker_action, attack_graph)
+        
+        action1_tactics = [tactic for sublist in result[0].techniques_tactics.values() for tactic in sublist]
+        assert 'reconnaissance' in action1_tactics
+        assert 'discovery' not in action1_tactics
+
+
+        action2_tactics = [tactic for sublist in result[1].techniques_tactics.values() for tactic in sublist]
+        assert 'initial-access' in action2_tactics
+        assert 'lateral-movement' not in action2_tactics
+
+        # Lateral movement will not be pruned from SERVICE_LOGIN action
+        # We can not be sure if the attacker performs lateral movement or initial access 
+        action3_tactics = [tactic for sublist in result[2].techniques_tactics.values() for tactic in sublist]
+        assert 'initial-access' in action3_tactics
+        assert 'lateral-movement' not in action3_tactics
+
+        # CVE_2015_1427_EXPLOIT will not prune any techniques
+        assert result[3].techniques_tactics['Exploit Public-Facing Application'] 
+
+    def test_graph(self) -> None:
+        attack_graph = AttackGraph()
+        attack_graph.add_node(Tactics.RECONNAISSANCE, [(Tactics.CREDENTIAL_ACCESS, 2)], 1)
+        attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, [(Tactics.INITIAL_ACCESS, 3)], 2)
+        attack_graph.add_node(Tactics.INITIAL_ACCESS, [], 3)
+
+        assert attack_graph.get_node(Tactics.RECONNAISSANCE, 1) == (Tactics.RECONNAISSANCE, [(Tactics.CREDENTIAL_ACCESS, 2)], 1)
+        assert attack_graph.get_node(Tactics.CREDENTIAL_ACCESS, 2) == (Tactics.CREDENTIAL_ACCESS, [(Tactics.INITIAL_ACCESS, 3)], 2)
+        assert attack_graph.get_node(Tactics.INITIAL_ACCESS, 3) == (Tactics.INITIAL_ACCESS, [], 3)
+
+        assert attack_graph.get_root_node() == (Tactics.RECONNAISSANCE, [(Tactics.CREDENTIAL_ACCESS, 2)], 1)
