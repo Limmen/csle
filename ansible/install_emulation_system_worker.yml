@@ -1,0 +1,10 @@
+---
+
+- hosts: worker
+
+  tasks:
+
+    - name: Join Docker Swarm
+      become: true
+      command: "{{ hostvars[leader_ip]['docker_swarm_join_command'] }}"
+      ignore_errors: yes

@@ -1,6 +1,12 @@
 ---
 - import_playbook: install_setup.yml
 - import_playbook: install_metastore.yml
+- import_playbook: install_metastore_leader.yml
 - import_playbook: install_simulation_system.yml
+- import_playbook: install_simulation_system_leader.yml
 - import_playbook: install_emulation_system.yml
+- import_playbook: install_emulation_system_leader.yml
+- import_playbook: install_emulation_system_worker.yml
 - import_playbook: install_management_system.yml
+- import_playbook: install_management_system_leader.yml
+- import_playbook: start.yml
