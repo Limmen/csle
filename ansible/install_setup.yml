@@ -1,31 +1,35 @@
 ---
 
 - hosts: all
-  become: true
 
   tasks:
 
   - name: Installation of build-essential
+    become: true
     apt:
       name: build-essential
 
   - name: Installation of make
+    become: true
     apt:
       name: make
 
   - name: Installation of git
+    become: true
     apt:
       name: git
 
   - name: Installation of bzip2
+    become: true
     apt:
       name: bzip2
 
   - name: Installation of nginx
+    become: true
     apt:
       name: nginx
 
-  - name: Check if Anaconda is installed
+  - name: Check if Anaconda is installed; if you see error, ignore it!
     shell: "/home/{{ user }}/anaconda3/bin/conda --version"
     register: anaconda_installed
     ignore_errors: true
@@ -42,7 +46,12 @@
     when: anaconda_installed.rc != 0
 
   - name: Add Anaconda bin to path
+    become: true
     shell: "echo export PATH=/home/{{ user }}/anaconda3/bin:$PATH >> /etc/profile"
+    when: anaconda_installed.rc != 0
+
+  - name: Initialize anaconda
+    shell: "/home/{{ user }}/anaconda3/bin/conda init"
     when: anaconda_installed.rc != 0
 
   - name: Set read permission for all on the Anaconda folder
@@ -71,8 +80,13 @@
       single_branch: yes
       version: master 
     when: not git_folder_stat.stat.exists
+
+  - name: Update configuration file
+    copy:
+      dest: "/home/{{ user }}/csle/config.json"
+      content: "{{ csle_config | to_json(indent=4, sort_keys=True) }}"
  
-  - name: Check if csle home environment variable already exists in .bashrc, If you see error, Ignore it!
+  - name: Check if csle home environment variable already exists in .bashrc; if you see error, ignore it!
     shell: grep -qxF 'export CSLE_HOME=/home/{{ user }}/csle' "/home/{{ user }}/.bashrc"
     register: variable_exists
     ignore_errors: true
@@ -84,11 +98,13 @@
     when: variable_exists.rc != 0
 
   - name: Check if CSLE log directory exists
+    become: true
     stat:
       path: /var/log/csle
     register: log_directory_exists
 
   - name: Create the CSLE log directory
+    become: true
     ansible.builtin.file:
       path: /var/log/csle
       state: directory 
@@ -97,11 +113,13 @@
     when: not log_directory_exists.stat.exists
 
   - name: Check if CSLE tmp directory exists
+    become: true
     stat:
       path: /tmp/csle
     register: tmp_directory_exists
 
   - name: Create the CSLE tmp directory
+    become: true
     ansible.builtin.file:
       path: /tmp/csle
       state: directory
@@ -110,6 +128,7 @@
     when: not tmp_directory_exists.stat.exists
 
   - name: Add or modify the sudoers configuration
+    become: true
     lineinfile:
       path: /etc/sudoers
       line: "{{ user }} ALL= NOPASSWD: /usr/sbin/service docker stop, /usr/sbin/service docker start, /usr/sbin/service docker restart, /usr/sbin/service nginx stop, /usr/sbin/service nginx start, /usr/sbin/service nginx restart, /usr/sbin/service postgresql start, /usr/sbin/service postgresql stop, /usr/sbin/service postgresql restart, /bin/kill, /usr/bin/journalctl -u docker.service -n 100 --no-pager -e"

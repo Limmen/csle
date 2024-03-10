@@ -27,14 +27,27 @@ the installation will run in the file [ansible.cfg](ansible.cfg).
 Before starting the CSLE installation, do the following.
 
 1. Specify the leader and the worker hosts in [inventory](inventory)
-2. Configure installation variables (e.g., the user of the installation and the Python version) in [group_vars/all/variables.yml](group_vars/all/variables.yml). 
+2. Configure installation variables (e.g., the user of the installation and the Python version) in [group_vars/all/variables.yml](group_vars/all/variables.yml).
+3. Specify the ports in [nginx_configuration_content.txt](nginx_configuration_content.txt) and [nginx_configuration_content_https.txt](nginx_configuration_content_https.txt)
 
+After completing the configuration you can verify that your host can reach the servers where CSLE will be installed 
+by running the commands:
+
+```bash
+ansible all -m ping
+ansible all --list-hosts
+```
+
+You can list details about the servers by running the command:
+```bash
+ansible all -m gather_facts
+```
 
 ## Installing CSLE
 To install CSLE with ansible, run the following playbook:
 
 ```bash
-ansible-playbook --ask-become-pass installing_the_management_system.yml
+ansible-playbook --ask-become-pass install.yml
 ```
 Alternatively, you can run each playbook manually by executing the commands:
 ```bash

@@ -1,21 +1,6 @@
 ---
-
-- hosts: all
-  become: true
-
-  tasks:
-
-    - name: Installation setup
-      ansible.builtin.import_playbook: install_setup.yaml
-
-    - name: Install metastore
-        ansible.builtin.import_playbook: install_metastore.yaml
-
-    - name: Install simulation system
-        ansible.builtin.import_playbook: install_simulation_system.yaml
-
-    - name: Install emulation system
-        ansible.builtin.import_playbook: install_emulation_system.yaml
-
-    - name: Install management system
-        ansible.builtin.import_playbook: install_management_system.yaml
+- import_playbook: install_setup.yml
+- import_playbook: install_metastore.yml
+- import_playbook: install_simulation_system.yml
+- import_playbook: install_emulation_system.yml
+- import_playbook: install_management_system.yml
