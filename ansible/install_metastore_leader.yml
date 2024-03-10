@@ -54,7 +54,7 @@
       become_user: postgres
       community.postgresql.postgresql_script:
         login_user: postgres
-        login_password: "{{ postgres_password }}"
+#        login_password: "{{ postgres_password }}"
         db: csle
         path: /var/lib/postgresql/create_tables.sql
       ignore_errors: true
@@ -65,6 +65,6 @@
       become_user: postgres
       community.postgresql.postgresql_script:
         login_user: postgres
-        login_password: "{{ postgres_password }}"
+#        login_password: "{{ postgres_password }}"
         db: csle
         path: /var/lib/postgresql/create_cluster.sql

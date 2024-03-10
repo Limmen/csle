@@ -76,12 +76,14 @@
         derived_images_pulled: "{{ spark_derived in docker_images_list.stdout }}"
 
     - name: Pulling base Docker images
+      become: true
       shell: "cd /home/{{ user }}/csle/emulation-system/base_images && make pull"
       args:
         executable: /bin/bash
       when: not base_images_pulled
 
     - name: Pulling derived Docker images
+      become: true
       shell: "cd /home/{{ user }}/csle/emulation-system/derived_images && make pull"
       args:
         executable: /bin/bash

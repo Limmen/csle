@@ -63,37 +63,69 @@
       become: true
       shell: "pg_conftool {{ postgres_version }} main set listen_addresses '*'"
 
-    - name: Update local authentication method in postgres config file
+    - name: Clear postgres configuration file
       become: true
-      lineinfile:
-        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-        regexp: '^local\s+all\s+postgres\s+peer$'
-        line: "local\tall\t\tpostgres\t\t\t\tmd5"
-        state: present
+      shell: "sudo echo '' > /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
 
-    - name: Update 127.0.0.1 authentication method in postgres config file
+    - name: Update the postgres configuration file
       become: true
-      lineinfile:
-        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-        regexp: '^host\s+all\s+all\s+127.0.0.1/32\s+scram-sha-256$'
-        line: "host\tall\t\tall\t\t127.0.0.1/32\t\ttrust"
-        state: present
+      shell: "sudo echo 'local\tall\tpostgres\ttrust' > /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
 
-    - name: Update general authentication method in postgres config file
+    - name: Update the postgres configuration file
       become: true
-      lineinfile:
-        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-        regexp: '^host\s+all\s+all\s+::1/128\s+scram-sha-256$'
-        line: "host\tall\t\tall\t\t::1/128\t\t\ttrust"
-        state: present
+      shell: "sudo echo 'host\tall\tall\t0.0.0.0/0\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
 
-    - name: Add trusted subnetwork to postgres config file
+    - name: Update the postgres configuration file
       become: true
-      lineinfile:
-        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-        line: "host\tall\t\tall\t\t{{ trusted_subnetwork }}\t\ttrust"
-        insertafter: EOF
-        state: present
+      shell: "sudo echo 'host\tall\tall\t::1/128\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+    - name: Update the postgres configuration file
+      become: true
+      shell: "sudo echo 'host\tall\tall\t127.0.0.0/8\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+#    - name: Update the postgres configuration file
+#      become: true
+#      lineinfile:
+#        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+#        line: |
+#          local	all		postgres				trust
+#          local   all             all                                     trust
+#          host	all		all		127.0.0.1/32		trust
+#          host	all		all		::1/128			trust
+#          local   replication     all                                     trust
+#          host	all		all		{{ trusted_subnetwork }}		trust
+
+#    - name: Update local authentication method in postgres config file
+#      become: true
+#      lineinfile:
+#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+#        regexp: '^local\s+all\s+postgres\s+trust$'
+#        line: "local\tall\t\tpostgres\t\t\t\ttrust"
+#        state: present
+#
+#    - name: Update 127.0.0.1 authentication method in postgres config file
+#      become: true
+#      lineinfile:
+#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+#        regexp: '^host\s+all\s+all\s+127.0.0.1/32\s+scram-sha-256$'
+#        line: "host\tall\t\tall\t\t127.0.0.1/32\t\ttrust"
+#        state: present
+#
+#    - name: Update general authentication method in postgres config file
+#      become: true
+#      lineinfile:
+#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+#        regexp: '^host\s+all\s+all\s+::1/128\s+scram-sha-256$'
+#        line: "host\tall\t\tall\t\t::1/128\t\t\ttrust"
+#        state: present
+#
+#    - name: Add trusted subnetwork to postgres config file
+#      become: true
+#      lineinfile:
+#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+#        line: "host\tall\t\tall\t\t{{ trusted_subnetwork }}\t\ttrust"
+#        insertafter: EOF
+#        state: present
 
     - name: Restart postgres
       become: true
@@ -137,30 +169,32 @@
         db: postgres
         autocommit: yes
         login_user: postgres
-        login_password: "{{ postgres_password }}"
+#        login_password: "{{ postgres_password }}"
         query: "CREATE DATABASE csle"
       ignore_errors: true
 
-    - name: Setup database privileges
+    - name: Setup database privileges, if you see error here just ignore it!
       become: yes
       become_method: sudo
       become_user: postgres
       community.postgresql.postgresql_script:
         db: postgres
         login_user: postgres
-        login_password: "{{ postgres_password }}"
+#        login_password: "{{ postgres_password }}"
         path: /var/lib/postgresql/create_db.sql
+      ignore_errors: true
 
-    - name: Add citus  extension
+    - name: Add citus extension, if you see error here just ignore it!
       become: yes
       become_method: sudo
       become_user: postgres
       community.postgresql.postgresql_ext:
         login_user: postgres
-        login_password: "{{ postgres_password }}"
+#        login_password: "{{ postgres_password }}"
         db: csle
         name: citus
         version: latest
+      ignore_errors: true
 
     - name: Change mode and ownership of the /var/log/postgresql
       file:
