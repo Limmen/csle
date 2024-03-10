@@ -8,12 +8,12 @@
   tasks:
 
     - name: List running docker containers
-        become: true
-        shell: "docker ps"
-        args:
-          executable: /bin/bash
-        register: docker_containers_list
-        changed_when: false
+      become: true
+      shell: "docker ps"
+      args:
+        executable: /bin/bash
+      register: docker_containers_list
+      changed_when: false
 
     - name: Check if pg_admin is running
       set_fact:

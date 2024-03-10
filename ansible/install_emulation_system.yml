@@ -72,8 +72,8 @@
         base_images_pulled: "{{ spark_base in docker_images_list.stdout }}"
 
     - name: Check if the derived images are pulled
-        set_fact:
-          derived_images_pulled: "{{ spark_derived in docker_images_list.stdout }}"
+      set_fact:
+        derived_images_pulled: "{{ spark_derived in docker_images_list.stdout }}"
 
     - name: Pulling base Docker images
       shell: "cd /home/{{ user }}/csle/emulation-system/base_images && make pull"

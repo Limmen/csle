@@ -7,13 +7,12 @@
     - name: Clear create_cluster.sql file
       shell: "rm /home/{{ user }}/csle/metastore/create_cluster.sql; touch /home/{{ user }}/csle/metastore/create_cluster.sql"
 
-        - name: Add leader to create_cluster.sql file
-          shell: echo  SELECT "citus_set_coordinator_host('{{ leader_ip }}', {{ citus_port }});" >> "/home/{{ user }}/csle/metastore/create_cluster.sql"
+    - name: Add leader to create_cluster.sql file
+      shell: echo  SELECT "citus_set_coordinator_host('{{ leader_ip }}', {{ citus_port }});" >> "/home/{{ user }}/csle/metastore/create_cluster.sql"
 
-        - name: Add workers to create_cluster.sql file
-          shell: echo  SELECT "citus_add_node('{{ item }}', {{ citus_port }});" >> "/home/{{ user }}/csle/metastore/create_cluster.sql"
-          loop: "{{ groups['worker'] }}"
-
+    - name: Add workers to create_cluster.sql file
+      shell: echo  SELECT "citus_add_node('{{ item }}', {{ citus_port }});" >> "/home/{{ user }}/csle/metastore/create_cluster.sql"
+      loop: "{{ groups['worker'] }}"
 
     - name: Copy create_tables.sql script to postgres home
       become: true
@@ -50,15 +49,15 @@
         line: ''
 
     - name: Create PostgreSQL tables, if you see error here just ignore it!
-        become: yes
-        become_method: sudo
-        become_user: postgres
-        community.postgresql.postgresql_script:
-          login_user: postgres
-          login_password: "{{ postgres_password }}"
-          db: csle
-          path: /var/lib/postgresql/create_tables.sql
-        ignore_errors: true
+      become: yes
+      become_method: sudo
+      become_user: postgres
+      community.postgresql.postgresql_script:
+        login_user: postgres
+        login_password: "{{ postgres_password }}"
+        db: csle
+        path: /var/lib/postgresql/create_tables.sql
+      ignore_errors: true
 
     - name: Create PostgreSQL CITUS cluster
       become: yes
