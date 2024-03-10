@@ -1,0 +1,12 @@
+user: "shahab"
+csle_git_repo_url: "https://github.com/Limmen/csle"
+leader_ip: "172.31.212.83"
+nginx_content_name: "nginx_configuration_content.txt"
+web_port: 7777
+postgres_version: "15"
+postgres_citus_version: "postgresql-15-citus-11.2"
+postgresql_url: "https://install.citusdata.com/community/deb.sh"
+anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh"
+anaconda_install_script: "Anaconda3-2022.10-Linux-x86_64.sh"
+conda_environment_name: "base"
+python_version: "3.9"

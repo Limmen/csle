@@ -3,11 +3,6 @@
 - hosts: all
   become: true
 
-  vars:
-    csle_git_repo_url: "https://github.com/Limmen/csle"
-    anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh"
-    user: "shahab"
-
   tasks:
 
   - name: Installation of build-essential
@@ -35,22 +30,22 @@
     register: anaconda_installed
     ignore_errors: true
 
-  - name: Download anaconda
+  - name: Download Anaconda
     ansible.builtin.get_url:
       url: "{{ anaconda_url }}"
       dest: "/home/{{ user }}"
       mode: '0770'
     when: anaconda_installed.rc != 0
 
-  - name: Install anaconda
-    shell: "/home/{{ user }}/Anaconda3-2022.10-Linux-x86_64.sh -b -u -p /home/{{ user }}/anaconda3"
+  - name: Install Anaconda
+    shell: "/home/{{ user }}/{{ anaconda_install_script }} -b -u -p /home/{{ user }}/anaconda3"
     when: anaconda_installed.rc != 0
 
-  - name: Add anaconda bin to path
+  - name: Add Anaconda bin to path
     shell: "echo export PATH=/home/{{ user }}/anaconda3/bin:$PATH >> /etc/profile"
     when: anaconda_installed.rc != 0
 
-  - name: Conda - read permission for all
+  - name: Set read permission for all on the Anaconda folder
     file:
       path: "/home/{{ user }}/anaconda3"
       mode: +r
@@ -93,7 +88,7 @@
       path: /var/log/csle
     register: log_directory_exists
 
-  - name: Creates CSLE log directory
+  - name: Create the CSLE log directory
     ansible.builtin.file:
       path: /var/log/csle
       state: directory 
@@ -106,7 +101,7 @@
       path: /tmp/csle
     register: tmp_directory_exists
 
-  - name: Creates CSLE tmp directory
+  - name: Create the CSLE tmp directory
     ansible.builtin.file:
       path: /tmp/csle
       state: directory
@@ -114,7 +109,7 @@
       owner: "{{ user }}"
     when: not tmp_directory_exists.stat.exists
 
-  - name: Add or modify sudoers configuration
+  - name: Add or modify the sudoers configuration
     lineinfile:
       path: /etc/sudoers
       line: "{{ user }} ALL= NOPASSWD: /usr/sbin/service docker stop, /usr/sbin/service docker start, /usr/sbin/service docker restart, /usr/sbin/service nginx stop, /usr/sbin/service nginx start, /usr/sbin/service nginx restart, /usr/sbin/service postgresql start, /usr/sbin/service postgresql stop, /usr/sbin/service postgresql restart, /bin/kill, /usr/bin/journalctl -u docker.service -n 100 --no-pager -e"

@@ -158,6 +158,7 @@ Thanks go to these people!
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Arvid Lagerqvist"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nforsg"><img src="https://github.com/nforsg.png" width="100px;" alt="Nils Forsgren"/><br /><sub><b>Nils Forsgren</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/foroughsh"><img src="https://github.com/foroughsh.png" width="100px;" alt="Forough Shahab Samani"/><br /><sub><b>Forough Shahab Samani</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ppplbngth"><img src="https://github.com/ppplbngth.png" width="100px;" alt="Benth Roland Pappila"/><br /><sub><b>Benth Roland Pappila</b></sub></a></td>
     </tr>
   </tbody>
 </table>

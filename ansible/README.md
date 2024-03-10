@@ -13,21 +13,43 @@ Ansible can be installed by running the command:
 pip install ansible
 ```
 
-## Configuring the installation
-Before starting the CSLE installation, open the file XXX and configure the following variables:
+## Setup SSH keys
 
-- user
-- todo
+Before starting the installation, make sure to setup SSH key pairs on all of the servers where CSLE will be installed
+and make sure that you can reach all of those servers from the workstation/laptop where the ansible playbooks will be run.
+To generate an ssh key pair on a server, run the command `ssh-keygen`. Once keys have been created on all hosts, 
+copy the public key (e.g., `~/.ssh/id_rsa.pub`) of each host to the file `.ssh/authorized_keys` of the other hosts.
+After creating the SSH keys and verifying the connections, define the path to the private key of the host from which
+the installation will run in the file [ansible.cfg](ansible.cfg).
+
+## Configuring the installation
+
+Before starting the CSLE installation, do the following.
+
+1. Specify the leader and the worker hosts in [inventory](inventory)
+2. Configure installation variables (e.g., the user of the installation and the Python version) in [group_vars/all/variables.yml](group_vars/all/variables.yml). 
+
 
 ## Installing CSLE
-To install CSLE with ansible, run the following commands:
+To install CSLE with ansible, run the following playbook:
+
 ```bash
 ansible-playbook --ask-become-pass installing_the_management_system.yml
 ```
+Alternatively, you can run each playbook manually by executing the commands:
+```bash
+ansible-playbook --ask-become-pass install_setup.yml
+ansible-playbook --ask-become-pass install_metastore.yml
+ansible-playbook --ask-become-pass install_simulation_system.yml
+ansible-playbook --ask-become-pass install_emulation_system.yml
+ansible-playbook --ask-become-pass install_management_system.yml
+```
 
 ### Debugging
-If the installation fails at some step, you can debug the reason for the failure by adding the following 
-line to the Ansible playbook. First, we register a variable that holds a dictionary of the output for the module in that task. In the given example git_installation is this variable. In the next lines, we use debug to print the variable. 
+
+If the installation fails at some step, you can debug the reason for the failure as follows.  
+Start by registering a variable that holds a dictionary of the output for the module in the task that failed (`git_installation` in the example below). 
+After registering the variable, add it to the debug group. 
 
 ```bash
 - name: Installation of git

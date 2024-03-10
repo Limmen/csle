@@ -1,0 +1,51 @@
+---
+
+- hosts: all
+  become: true
+
+  tasks:
+
+  - name: List all Conda environments
+    shell: "/home/{{ user }}/anaconda3/bin/conda env list"
+    register: conda_env_list
+    changed_when: false
+
+  - name: Check if the conda environment exists
+    set_fact:
+      conda_env_exists: "{{ '{{ conda_environment_name }}' in conda_env_list.stdout }}"
+
+  - name: Create and activate the conda environment if it does not exist
+    shell: |
+      "/home/{{ user }}/anaconda3/bin/conda create -y -n {{ conda_environment_name }} python={{ python_version }}" && \
+      source "/home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }}" && \
+      "/home/{{ user }}/anaconda3/bin/conda" install -y pip
+    args:
+      executable: /bin/bash
+    when: not conda_env_exists
+
+  - name: Add execute permissions on Python install script
+      file:
+        path: "/home/{{ user }}/csle/simulation-system/libs/local_install.sh"
+        mode: +rwx
+        recurse: yes
+
+  - name: Add execute permissions on Python dev-install script
+      file:
+        path: "/home/{{ user }}/csle/simulation-system/libs/local_install_dev.sh"
+        mode: +rwx
+        recurse: yes
+
+  - name: Activate the environment if it exist and install CSLE Python libraries
+    shell: |
+      source "/home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }}" && \
+      cd "/home/{{ user }}/csle/simulation-system/libs" && \
+      ./local_install.sh && \
+      ./local_install_dev.sh
+     
+  - name: Install CSLE simulation environments on the leader node
+    shell: |
+      source "/home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }}" && \
+      cd "/home/{{ user }}/csle/simulation-system/envs" && \
+      make install
+    args:
+      executable: /bin/bash

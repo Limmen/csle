@@ -1,17 +1,9 @@
 ---
 
 - hosts: all
-  #become: true
-
-  vars:
-    user: "shahab"
-    leader_ip: "172.31.212.83"
-    nginx_content_name: "Nginx_configuration_content.txt"
-    web_port: 7777
 
 
   tasks:
-
 
   - name: Check if nvm is installed
     shell: |
@@ -119,7 +111,7 @@
     ignore_errors: true
     register: port_check_result
 
-  - name: install and start pgadmin
+  - name: Install and start pgadmin
     become: true
     shell: |
       docker pull dpage/pgadmin4
@@ -196,7 +188,7 @@
     when: variable_exists.rc != 0
 
   - name: CSLE init
-    shell: "source /home/{{ user }}/anaconda3/bin/activate py39 && echo $CSLE_HOME && csle init"
+    shell: "source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }} && echo $CSLE_HOME && csle init"
     args:
       executable: /bin/bash
     environment: 

@@ -3,13 +3,6 @@
 - hosts: all
   become: true
 
-  vars:
-    csle_git_repo_url: "https://github.com/Limmen/csle"
-    postgresql_url: "https://install.citusdata.com/community/deb.sh"
-    user: "shahab"
-    postgres_version: "15"
-    leader_IP: "172.31.212.90"
-
   tasks:
     
     - name: Check if PostgreSQL is installed, if you see error here just ignore it!
@@ -20,7 +13,7 @@
     - name: Download PostgreSQL
       ansible.builtin.get_url:
         url: "{{ postgresql_url }}"
-        dest: /home/shahab
+        dest: "/home/{{ user }}"
         mode: '0770'
       when: postgresql_installed.rc != 0
 
@@ -30,7 +23,7 @@
 
     - name: Install PostgreSQL Citus extension
       apt:
-        name: postgresql-15-citus-11.2
+        name: "{{ postgres_citus_version }}"
         state: present
         update_cache: yes
       when: postgresql_installed.rc != 0
@@ -58,10 +51,10 @@
         state: present
 
     - name: Set shared_preload_libraries using pg_conftool
-      shell: "pg_conftool 15 main set shared_preload_libraries citus"
+      shell: "pg_conftool {{ postgres_version }} main set shared_preload_libraries citus"
 
     - name: Set listen address using pg_conftool
-      shell: "pg_conftool 15 main set listen_addresses '*'"
+      shell: "pg_conftool {{ postgres_version }} main set listen_addresses '*'"
 
 
     - name: Run psql and set password for postgres user
@@ -123,7 +116,7 @@
       lineinfile:
         path: "/home/{{ user }}/csle/metastore/create_cluster.sql"
         regexp: '^SELECT citus_set_coordinator_host'
-        line: "SELECT citus_set_coordinator_host('{{ leader_IP }}', 5432);"
+        line: "SELECT citus_set_coordinator_host('{{ leader_ip }}', 5432);"
 
     - name: Create PostgreSQL cluster
       expect:
@@ -149,5 +142,5 @@
       file:
         path: /var/log/postgresql
         owner: "{{ user }}"
-        mode: "0775"  # Specify the desired permissions here
+        mode: "0775"
       become: true
