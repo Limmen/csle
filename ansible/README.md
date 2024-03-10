@@ -53,9 +53,15 @@ Alternatively, you can run each playbook manually by executing the commands:
 ```bash
 ansible-playbook --ask-become-pass install_setup.yml
 ansible-playbook --ask-become-pass install_metastore.yml
+ansible-playbook --ask-become-pass install_metastore_leader.yml
 ansible-playbook --ask-become-pass install_simulation_system.yml
+ansible-playbook --ask-become-pass install_simulation_system_leader.yml
 ansible-playbook --ask-become-pass install_emulation_system.yml
+ansible-playbook --ask-become-pass install_emulation_system_leader.yml
+ansible-playbook --ask-become-pass install_emulation_system_worker.yml
 ansible-playbook --ask-become-pass install_management_system.yml
+ansible-playbook --ask-become-pass install_management_system_leader.yml
+ansible-playbook --ask-become-pass start.yml
 ```
 
 ### Debugging
