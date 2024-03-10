@@ -1,0 +1,122 @@
+---
+
+- hosts: all
+  become: true
+
+  vars:
+    csle_git_repo_url: "https://github.com/Limmen/csle"
+    anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh"
+    user: "shahab"
+
+  tasks:
+
+  - name: Installation of build-essential
+    apt:
+      name: build-essential
+
+  - name: Installation of make
+    apt:
+      name: make
+
+  - name: Installation of git
+    apt:
+      name: git
+
+  - name: Installation of bzip2
+    apt:
+      name: bzip2
+
+  - name: Installation of nginx
+    apt:
+      name: nginx
+
+  - name: Check if Anaconda is installed
+    shell: "/home/{{ user }}/anaconda3/bin/conda --version"
+    register: anaconda_installed
+    ignore_errors: true
+
+  - name: Download anaconda
+    ansible.builtin.get_url:
+      url: "{{ anaconda_url }}"
+      dest: "/home/{{ user }}"
+      mode: '0770'
+    when: anaconda_installed.rc != 0
+
+  - name: Install anaconda
+    shell: "/home/{{ user }}/Anaconda3-2022.10-Linux-x86_64.sh -b -u -p /home/{{ user }}/anaconda3"
+    when: anaconda_installed.rc != 0
+
+  - name: Add anaconda bin to path
+    shell: "echo export PATH=/home/{{ user }}/anaconda3/bin:$PATH >> /etc/profile"
+    when: anaconda_installed.rc != 0
+
+  - name: Conda - read permission for all
+    file:
+      path: "/home/{{ user }}/anaconda3"
+      mode: +r
+      recurse: yes
+    when: anaconda_installed.rc != 0
+
+  - name: Conda - execution permission for all
+    file:
+      path: "/home/{{ user }}/anaconda3/bin"
+      mode: +x
+      recurse: yes
+    when: anaconda_installed.rc != 0
+
+  - name: Check if the folder is cloned
+    stat:
+      path: "{{ csle_git_repo_url }}"
+    register: git_folder_stat
+
+  - name: Clone CSLE 
+    ansible.builtin.git:
+      repo: "{{ csle_git_repo_url }}"
+      dest: "/home/{{ user }}/csle"
+      single_branch: yes
+      version: master 
+    when: not git_folder_stat.stat.exists
+ 
+  - name: Check if csle home environment variable already exists in .bashrc, If you see error, Ignore it!
+    shell: grep -qxF 'export CSLE_HOME=/home/{{ user }}/csle' "/home/{{ user }}/.bashrc"
+    register: variable_exists
+    ignore_errors: true
+
+  - name: Add environment variable to .bashrc if not already present
+    lineinfile:
+      path: "/home/{{ user }}/.bashrc"
+      line: "export CSLE_HOME=/home/{{ user }}/csle"
+    when: variable_exists.rc != 0
+
+  - name: Check if CSLE log directory exists
+    stat:
+      path: /var/log/csle
+    register: log_directory_exists
+
+  - name: Creates CSLE log directory
+    ansible.builtin.file:
+      path: /var/log/csle
+      state: directory 
+      mode: "0774"
+      owner: "{{ user }}"
+    when: not log_directory_exists.stat.exists
+
+  - name: Check if CSLE tmp directory exists
+    stat:
+      path: /tmp/csle
+    register: tmp_directory_exists
+
+  - name: Creates CSLE tmp directory
+    ansible.builtin.file:
+      path: /tmp/csle
+      state: directory
+      mode: "0774"
+      owner: "{{ user }}"
+    when: not tmp_directory_exists.stat.exists
+
+  - name: Add or modify sudoers configuration
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ user }} ALL= NOPASSWD: /usr/sbin/service docker stop, /usr/sbin/service docker start, /usr/sbin/service docker restart, /usr/sbin/service nginx stop, /usr/sbin/service nginx start, /usr/sbin/service nginx restart, /usr/sbin/service postgresql start, /usr/sbin/service postgresql stop, /usr/sbin/service postgresql restart, /bin/kill, /usr/bin/journalctl -u docker.service -n 100 --no-pager -e"
+      state: present
+      validate: 'visudo -cf %s'  # Validate the sudoers file syntax

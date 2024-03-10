@@ -1,0 +1,153 @@
+---
+
+- hosts: all
+  become: true
+
+  vars:
+    csle_git_repo_url: "https://github.com/Limmen/csle"
+    postgresql_url: "https://install.citusdata.com/community/deb.sh"
+    user: "shahab"
+    postgres_version: "15"
+    leader_IP: "172.31.212.90"
+
+  tasks:
+    
+    - name: Check if PostgreSQL is installed, if you see error here just ignore it!
+      shell: "psql --version"
+      register: postgresql_installed
+      ignore_errors: true
+
+    - name: Download PostgreSQL
+      ansible.builtin.get_url:
+        url: "{{ postgresql_url }}"
+        dest: /home/shahab
+        mode: '0770'
+      when: postgresql_installed.rc != 0
+
+    - name: Install PostgreSQL
+      shell: "/home/{{ user }}/deb.sh"
+      when: postgresql_installed.rc != 0
+
+    - name: Install PostgreSQL Citus extension
+      apt:
+        name: postgresql-15-citus-11.2
+        state: present
+        update_cache: yes
+      when: postgresql_installed.rc != 0
+
+    - name: Install libpq-dev lib
+      apt:
+        name: libpq-dev
+        state: present
+        update_cache: yes
+
+    - name: Install expect lib
+      apt:
+        name: expect
+        state: present
+        update_cache: yes
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install PostgreSQL python lib
+      pip:
+        name: psycopg2
+        state: present
+
+    - name: Set shared_preload_libraries using pg_conftool
+      shell: "pg_conftool 15 main set shared_preload_libraries citus"
+
+    - name: Set listen address using pg_conftool
+      shell: "pg_conftool 15 main set listen_addresses '*'"
+
+
+    - name: Run psql and set password for postgres user
+      expect:
+        command: sudo -u postgres psql -c "\password postgres"
+        responses:
+          Enter\ new\ password\ for\ user\ "postgres": "postgres"
+          Enter\ it\ again: "postgres"  # Re-enter the password
+      ignore_errors: true
+
+    - name: Replace first line in postgres config file
+      lineinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        regexp: '^local\s+all\s+postgres\s+peer$'
+        line: "local\tall\t\tpostgres\t\t\t\tmd5"
+        state: present
+
+    - name: Replace second line in postgres config file
+      lineinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        regexp: '^host\s+all\s+all\s+127.0.0.1/32\s+scram-sha-256$'
+        line: "host\tall\t\tall\t\t127.0.0.1/32\t\ttrust"
+        state: present
+
+    - name: Replace second line in postgres config file
+      lineinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        regexp: '^host\s+all\s+all\s+::1/128\s+scram-sha-256$'
+        line: "host\tall\t\tall\t\t::1/128\t\t\ttrust"
+        state: present
+    - name: Add the line for our network to the file
+      lineinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        line: "host\tall\t\tall\t\t172.31.212.0/24\t\ttrust"
+        insertafter: EOF
+        state: present
+
+    - name: Restart the postgreSQL
+      service:
+        name: postgresql
+        state: restarted
+
+    - name: Run the update-rc.d command
+      shell: update-rc.d postgresql enable
+
+    - name: Create PostgreSQL database
+      shell: |
+        expect -c '
+          spawn /bin/bash -c "cd /home/{{ user }}/csle/metastore; make db"
+          expect -re ".*Password.*"
+          send "postgres\r"
+          interact
+        '
+      register: make_db
+    - debug:
+        var: make_db
+
+    - name: Modify create_cluster.sql file
+      lineinfile:
+        path: "/home/{{ user }}/csle/metastore/create_cluster.sql"
+        regexp: '^SELECT citus_set_coordinator_host'
+        line: "SELECT citus_set_coordinator_host('{{ leader_IP }}', 5432);"
+
+    - name: Create PostgreSQL cluster
+      expect:
+        command: /bin/bash -c "cd /home/{{ user }}/csle/metastore && make cluster"
+        responses:
+          ".*Password.*": "postgres\r"
+      register: make_cluster_result
+
+    - debug:
+        var: make_cluster_result
+
+    - name: Create PostgreSQL tables
+      expect:
+        command: /bin/bash -c "cd /home/{{ user }}/csle/metastore && make tables"
+        responses:
+          ".*Password.*": "postgres\r"
+      register: make_tables_result
+
+    - debug:
+        var: make_tables_result
+
+    - name: Change mode and ownership of the /var/log/postgresql
+      file:
+        path: /var/log/postgresql
+        owner: "{{ user }}"
+        mode: "0775"  # Specify the desired permissions here
+      become: true

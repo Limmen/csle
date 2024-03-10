@@ -1,0 +1,108 @@
+---
+
+- hosts: all
+  become: true
+
+  vars:
+    user: "shahab"
+    leader_ip: "172.31.212.83"
+
+  tasks:
+
+  - name: Check if keyrings folder exist
+    stat:
+      path: /etc/apt/keyrings
+    register: keyrings_directory_exists
+
+  - name: Creates keyrings directory if it does not exist
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+      mode: "0755"
+    when: not keyrings_directory_exists.stat.exists
+ 
+  - name: Download Docker GPG key and install GPG key
+    shell: |
+      expect -c '
+          spawn /bin/bash -c "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+          expect -re ".*Overwrite?.*"
+          send "y\r"
+          interact
+        '
+        
+  - name: Second command for installing keys
+    shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  - name: Update package cache
+    apt:
+      update_cache: yes
+
+  - name: Install Docker packages
+    apt:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      state: present
+
+  - name: Add Docker group
+    group:
+      name: docker
+      state: present
+
+  - name: Add user to Docker group
+    shell: sudo usermod -aG docker $USER
+
+  - name: Initialize Docker Swarm
+    command: docker swarm init --advertise-addr "{{ leader_ip }}"
+    ignore_errors: yes
+
+  - name: Pulling base image
+    shell: "cd /home/{{ user }}/csle/emulation-system/base_images && make pull"
+
+  - name: Pulling derived image
+    shell: |
+      cd "/home/{{ user }}/csle/emulation-system/derived_images" && \
+      make pull
+    args:
+      executable: /bin/bash
+
+  - name: Installing the envs on the leader node
+    shell: |
+      source "/home/{{ user }}/anaconda3/bin/activate" py39 && \
+      cd "/home/{{ user }}/csle/emulation-system/envs" && \
+      make install
+    args:
+      executable: /bin/bash
+
+  - name: Set max_map_count kernel parameter
+    sysctl:
+      name: vm.max_map_count
+      value: 262144
+      sysctl_set: yes
+      reload: yes
+      state: present
+
+  - name: Add line to limits.conf if not exists
+    ansible.builtin.lineinfile:
+      path: /etc/security/limits.conf
+      line: "{{ user }}\tsoft\tnofile\t102400"
+      regexp: "^{{ user }}\\s+soft\\s+nofile\\s+102400$"
+      state: present
+    register: line_added
+    changed_when: false
+
+  - name: Add second line to limits.conf if not exists
+    ansible.builtin.lineinfile:
+      path: /etc/security/limits.conf
+      line: "{{ user }}\thard\tnofile\t1024000"
+      regexp: "^{{ user }}\\s+hard\\s+nofile\\s+1024000$"
+      state: present
+    register: line_added
+    changed_when: false
+
+  - name: Set fs.inotify.max_user_watches in sysctl.conf
+    ansible.builtin.shell: "echo 'fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf"
+
+  - name: Reload sysctl
+    ansible.builtin.shell: "sudo sysctl -p"
