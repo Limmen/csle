@@ -4,5 +4,20 @@
 
   tasks:
 
-    - name: Start services
-      script: ./start.sh
+    - name: Restart postgres
+      become: true
+      service:
+        name: postgresql
+        state: restarted
+
+    - name: Change permissions on start script
+      become: true
+      command: sudo chmod -R u+rwx "/home/{{ user }}/csle/ansible/start.sh"
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Execute script
+      command: "python /home/{{ user }}/csle/ansible/start_services.py {{ leader_ip }} {{ user }} {{ conda_environment_name }}"
+      register: script_output

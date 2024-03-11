@@ -1,5 +1,6 @@
 #!/bin/bash
-
+source ~/.bashrc
+~/anaconda3/bin/activate $1
 csle stop clustermanager
 sleep 2
 csle start clustermanager

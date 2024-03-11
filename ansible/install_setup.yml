@@ -8,6 +8,7 @@
       become: true
       apt:
         name: build-essential
+        update_cache: yes
 
     - name: Installation of make
       become: true
