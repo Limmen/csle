@@ -2,53 +2,7 @@
 
 - hosts: all
 
-  vars:
-    cadvisor: "cadvisor"
-    grafana: "grafana"
-
   tasks:
 
-  - name: List running docker containers
-    become: true
-    shell: "docker ps"
-    args:
-      executable: /bin/bash
-    register: docker_containers_list
-    changed_when: false
-
-  - name: Restart clustermanager
-    shell: "source /home/{{ user }}/.bashrc; source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }} && csle stop clustermanager && sleep 5; csle start clustermanager && sleep 10"
-    args:
-      executable: /bin/bash
-    environment:
-      CSLE_HOME: "/home/{{ user }}/csle"
-    register: CSLE_init_output
-
-  - name: Check if cadvisor is running
-    set_fact:
-      cadvisor_running: "{{ cadvisor in docker_containers_list.stdout }}"
-
-  - name: Start cadvisor
-    become: true
-    shell: "docker run -dt --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --publish=8080:8080 --name=cadvisor gcr.io/cadvisor/cadvisor"
-    args:
-      executable: /bin/bash
-    when: not cadvisor_running
-
-  - name: Check if grafana is running
-    set_fact:
-      grafana_running: "{{ grafana in docker_containers_list.stdout }}"
-
-  - name: Start grafana
-    become: true
-    shell: "docker run -d -p 3000:3000 --name grafana grafana/grafana"
-    args:
-      executable: /bin/bash
-    when: not grafana_running
-
-  - name: CSLE start
-    shell: "source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }}; csle start nodeexporter; csle start prometheus; csle start flask; csle start nginx"
-    args:
-      executable: /bin/bash
-    environment:
-      CSLE_HOME: "/home/{{ user }}/csle"
+    - name: Start services
+      script: ./start.sh

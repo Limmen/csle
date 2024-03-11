@@ -1,6 +1,7 @@
 user: "kim"
 csle_git_repo_url: "https://github.com/Limmen/csle"
 leader_ip: "34.142.42.219"
+leader_public_ip: "34.142.42.219"
 nginx_content_name: "nginx_configuration_content.txt"
 web_port: 7777
 postgres_version: "15"

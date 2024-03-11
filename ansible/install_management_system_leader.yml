@@ -26,11 +26,3 @@
         executable: /bin/bash
       ignore_errors: true
       when: not pg_admin_running
-
-    - name: CSLE init
-      shell: "source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }} && csle init"
-      args:
-        executable: /bin/bash
-      environment:
-        CSLE_HOME: "/home/{{ user }}/csle"
-      register: CSLE_init_output
