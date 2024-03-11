@@ -8,7 +8,7 @@ Ansible documentation can be found at [https://docs.ansible.com/](https://docs.a
 
 ## Network topology for the installation
 
-The network topology for a typical Ansible installation is shown in the figure below -- a user host runs Ansible and installs CSLE on a cluster of remote hosts.
+The network topology for a typical Ansible installation is shown in the figure below -- the user runs Ansible on its local host and installs CSLE on a cluster of remote hosts.
 
 <p align="center">
 <img src="ansible_topology.png" width="600">
