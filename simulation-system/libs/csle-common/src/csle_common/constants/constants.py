@@ -917,7 +917,8 @@ class COMMANDS:
     POSTGRESQL_LOG_DIR = "/var/log/postgresql/"
     NGINX_LOG_DIR = "/var/log/nginx/"
     PROMETHEUS_PORT = 9090
-    START_PROMETHEUS = f"nohup prometheus --config.file={PROMETHEUS_CONFIG_FILE} " \
+    START_PROMETHEUS = f"nohup $CSLE_HOME/management-system/prometheus/prometheus " \
+                       f"--config.file={PROMETHEUS_CONFIG_FILE} " \
                        "--storage.tsdb.retention.size=10GB " \
                        f"--storage.tsdb.retention.time=5d & > {PROMETHEUS_LOG_FILE} " \
                        f"&& echo $! > {PROMETHEUS_PID_FILE}"
@@ -952,7 +953,8 @@ class COMMANDS:
     CSLE_MGMT_WEBAPP_PID_FILE = "/var/log/csle/csle_mgmt_webapp.pid"
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
     FLASK_LOG_FILE = "/var/log/csle/flask.log"
-    START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
+    START_NODE_EXPORTER = f"nohup $CSLE_HOME/management-system/node_exporter/node_exporter " \
+                          f"& > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
     BUILD_CSLE_MGMT_WEBAPP = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run " \
                              f"build"

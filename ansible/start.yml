@@ -8,6 +8,14 @@
 
   tasks:
 
+  - name: List running docker containers
+    become: true
+    shell: "docker ps"
+    args:
+      executable: /bin/bash
+    register: docker_containers_list
+    changed_when: false
+
   - name: Restart clustermanager
     shell: "source /home/{{ user }}/.bashrc; source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }} && csle stop clustermanager && sleep 5; csle start clustermanager && sleep 10"
     args:

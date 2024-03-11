@@ -2005,7 +2005,7 @@ def list_node_exporter() -> None:
                                                    f"ip:{node.ip}, port:{constants.COMMANDS.NODE_EXPORTER_PORT}",
                         bold=False)
         else:
-            click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
+            click.secho("Node exporter status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}",
                         bold=False)
 
 

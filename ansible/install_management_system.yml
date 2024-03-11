@@ -97,8 +97,6 @@
       args:
         executable: /bin/bash
       when:
-        - nvm_installed.rc == 0
-        - npm_installed.rc == 0
         - not web_app_installed.stat.exists
         - not web_app_built.stat.exists
       ignore_errors: true

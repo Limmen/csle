@@ -83,49 +83,6 @@
       become: true
       shell: "sudo echo 'host\tall\tall\t127.0.0.0/8\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
 
-#    - name: Update the postgres configuration file
-#      become: true
-#      lineinfile:
-#        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-#        line: |
-#          local	all		postgres				trust
-#          local   all             all                                     trust
-#          host	all		all		127.0.0.1/32		trust
-#          host	all		all		::1/128			trust
-#          local   replication     all                                     trust
-#          host	all		all		{{ trusted_subnetwork }}		trust
-
-#    - name: Update local authentication method in postgres config file
-#      become: true
-#      lineinfile:
-#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-#        regexp: '^local\s+all\s+postgres\s+trust$'
-#        line: "local\tall\t\tpostgres\t\t\t\ttrust"
-#        state: present
-#
-#    - name: Update 127.0.0.1 authentication method in postgres config file
-#      become: true
-#      lineinfile:
-#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-#        regexp: '^host\s+all\s+all\s+127.0.0.1/32\s+scram-sha-256$'
-#        line: "host\tall\t\tall\t\t127.0.0.1/32\t\ttrust"
-#        state: present
-#
-#    - name: Update general authentication method in postgres config file
-#      become: true
-#      lineinfile:
-#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-#        regexp: '^host\s+all\s+all\s+::1/128\s+scram-sha-256$'
-#        line: "host\tall\t\tall\t\t::1/128\t\t\ttrust"
-#        state: present
-#
-#    - name: Add trusted subnetwork to postgres config file
-#      become: true
-#      lineinfile:
-#        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
-#        line: "host\tall\t\tall\t\t{{ trusted_subnetwork }}\t\ttrust"
-#        insertafter: EOF
-#        state: present
 
     - name: Restart postgres
       become: true

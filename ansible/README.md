@@ -6,6 +6,14 @@ This folder contains configuration files and ansible playbooks for installing CS
 
 Ansible documentation can be found at [https://docs.ansible.com/](https://docs.ansible.com/).
 
+## Network topology for the installation
+
+The network topology for a typical Ansible installation is shown in the figure below -- a user host runs Ansible and installs CSLE on a cluster of remote hosts.
+
+<p align="center">
+<img src="ansible_topology.png" width="600">
+</p>
+
 ## Installing Ansible
 
 Ansible can be installed by running the command:

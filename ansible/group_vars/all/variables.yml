@@ -1,6 +1,6 @@
 user: "kim"
 csle_git_repo_url: "https://github.com/Limmen/csle"
-leader_ip: "172.31.212.82"
+leader_ip: "164.92.81.86"
 nginx_content_name: "nginx_configuration_content.txt"
 web_port: 7777
 postgres_version: "15"
@@ -10,7 +10,6 @@ anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.
 anaconda_install_script: "Anaconda3-2022.10-Linux-x86_64.sh"
 conda_environment_name: "base"
 python_version: "3.9"
-trusted_subnetwork: "172.31.212.0/24"
 postgres_password: "postgres"
 citus_port: 5432
 csle_config:
@@ -57,15 +56,15 @@ csle_config:
   postgresql_log_dir: "/var/log/postgresql/"
   nginx_log_dir: "/var/log/nginx/"
   default_log_dir: "/tmp/csle/"
-  metastore_ip: "172.31.212.82"
+  metastore_ip: "164.92.81.86"
   metastore_user: "csle"
   metastore_password: "csle"
   metastore_database_name: "csle"
   cluster_config:
     cluster_nodes:
-      - ip: "172.31.212.82"
+      - ip: "164.92.81.86"
         leader: true
-        cpus: 24
+        cpus: 4
         gpus: 0
-        RAM: 64
+        RAM: 8
   allow_registration: true
