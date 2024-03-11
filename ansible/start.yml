@@ -4,11 +4,11 @@
 
   tasks:
 
-    - name: Restart postgres
+    - name: Start postgres
       become: true
       service:
         name: postgresql
-        state: restarted
+        state: started
 
     - name: Change permissions on start script
       become: true
@@ -18,6 +18,10 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: Execute script
+
+    - name: Execute start script on the leader node
       command: "python /home/{{ user }}/csle/ansible/start_services.py {{ leader_ip }} {{ user }} {{ conda_environment_name }}"
-      register: script_output
+
+    - name: Execute start scripts on the worker nodes
+      command: "python /home/{{ user }}/csle/ansible/start_services.py {{ item }} {{ user }} {{ conda_environment_name }}"
+      loop: "{{ groups['worker'] }}"
