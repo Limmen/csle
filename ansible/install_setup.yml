@@ -70,7 +70,7 @@
 
     - name: Check if the folder is cloned
       stat:
-        path: "{{ csle_git_repo_url }}"
+        path: "/home/{{ user }}/csle"
       register: git_folder_stat
 
     - name: Clone CSLE

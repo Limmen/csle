@@ -60,7 +60,6 @@
       args:
         executable: /bin/bash
       when:
-        - nvm_installed.rc == 0
         - nvm_node_installed.rc != 0
       ignore_errors: true
 
@@ -76,7 +75,6 @@
       args:
         executable: /bin/bash
       when:
-        - nvm_installed.rc == 0
         - npm_installed.rc != 0
       ignore_errors: true
 
