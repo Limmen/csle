@@ -41,9 +41,13 @@ class AttackGraph():
         :params node_name: the name of the node
         :params children: the children of the node
         """
-        for i, (node_name, _, node_id) in enumerate(self.graph):
+        for i, (node_name, children, node_id) in enumerate(self.graph):
             if node_name == parent_node_name and node_id == parent_node_id:
-                self.graph[i][1].append((child_node_name, child_node_id))
+
+                if any(child[0] == child_node_name for child in children):    
+                    raise RuntimeError("Child node already exists in the parent node")
+                else:
+                    self.graph[i][1].append((child_node_name, child_node_id))
 
                 break
 
