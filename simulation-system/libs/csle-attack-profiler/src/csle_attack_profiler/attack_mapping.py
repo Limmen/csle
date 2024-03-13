@@ -321,8 +321,7 @@ class EmulationAttackerMapping():
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
                                Techniques.EXPLOITATION_OF_REMOTE_SERVICES,
                                Techniques.COMMAND_AND_SCRIPTING_INTERPRETER,
-                               Techniques.FALLBACK_CHANNELS,
-                               Techniques.VALID_ACCOUNTS}
+                               Techniques.FALLBACK_CHANNELS,}
             },
             EmulationAttackerActionId.CVE_2016_10033_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
@@ -341,7 +340,7 @@ class EmulationAttackerMapping():
                 "techniques": {Techniques.ABUSE_ELEVATION_CONTROL_MECHANISM,
                                Techniques.EXPLOITATION_FOR_PRIVILEGE_ESCALATION},
                 "subtechniques": {SubTechniques.SUDO_AND_SUDO_CACHING}
-            },
+            },  
             EmulationAttackerActionId.CONTINUE: {
                 None
             },
