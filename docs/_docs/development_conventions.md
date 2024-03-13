@@ -68,7 +68,7 @@ csle/.flake8
 ```
 
 <p class="captionFig">
-Listing 119: Configuration file for the `flake8` Python linter.
+Listing 118: Configuration file for the `flake8` Python linter.
 </p>
 
 Configuration file for the `flake8` Python linter.
@@ -78,7 +78,7 @@ csle/management-system/csle-mgmt-webapp/.eslintrc.json
 ```
 
 <p class="captionFig">
-Listing 120: Configuration file for the `eslint` JavaScript linter.
+Listing 119: Configuration file for the `eslint` JavaScript linter.
 </p>
 
 
@@ -119,7 +119,7 @@ def stop_all_executions() -> None:
 ```
 
 <p class="captionFig">
-Listing 121: Example of a Python function with a comment.`
+Listing 120: Example of a Python function with a comment.`
 </p>
 
 Example of a comment to a JavaScript function:
@@ -146,7 +146,7 @@ const convertListToCommaSeparatedString = (listToConvert) => {
 ```
 
 <p class="captionFig">
-Listing 122: Example of a JavaScript function with a comment.
+Listing 121: Example of a JavaScript function with a comment.
 </p>
 
 ### Unit and Integration Testing
@@ -221,7 +221,7 @@ to code servers (i.e., DockerHub and PyPi).
 <p align="center">
 <img src="./../../img/ci_pipeline.png" width="75%">
 <p class="captionFig">
-Figure 29: The continuous integration (CI) pipeline of CSLE.
+Figure 30: The continuous integration (CI) pipeline of CSLE.
 </p>
 </p>
 

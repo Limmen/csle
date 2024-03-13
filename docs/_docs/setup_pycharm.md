@@ -23,7 +23,7 @@ Run the following command on your local machine and on one of the servers where 
 git clone https://github.com/Limmen/csle
 ```
 <p class="captionFig">
-Listing 182: Command for cloning the source code of CSLE.
+Listing 181: Command for cloning the source code of CSLE.
 </p>
 
 #### Step 3: Setup PyCharm for remote development.
