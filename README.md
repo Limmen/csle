@@ -83,8 +83,8 @@ access to components of emulations.
 ## 🎓 Documentation
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
-version of the documentation is available [here](./releases/) 
-A video walkthrough of the installation process is available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc)
+version of the documentation is available [here](./releases/).
+A video walkthrough of the installation process is available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc).
 
 ## 📋 Supported Releases
 
