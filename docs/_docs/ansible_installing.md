@@ -6,7 +6,7 @@ permalink: /docs/ansible-installing/
 ## Installing CSLE
 
 This section contains instructions for installing CSLE. A video that walks through the installation process is
-available at https://www.youtube.com/watch?v=l_g3sRJwwhc.
+available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc).
 
 ### Prerequisites
 

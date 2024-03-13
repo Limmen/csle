@@ -1,5 +1,5 @@
 ---
-title: Installing CSLE
+title: Manual Installation of CSLE
 permalink: /docs/installing/
 ---
 
