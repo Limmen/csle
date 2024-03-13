@@ -374,38 +374,38 @@ class TestAttackProfilerSuite:
             for technique in result.techniques_tactics:
                 techniques_naive.append(technique)
         # Print the number of techniques in the naive approach
-        print("Number of techniques in the naive approach: ", len(set(techniques_naive)))
+        print("Number of techniques in the naive approach: ", len(techniques_naive))
 
         # Now the graph approach
         attack_graph = AttackGraph()
         attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
         attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, node_id = 2)
         attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 3)
-        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 2)
-        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 2, Tactics.INITIAL_ACCESS, 3)
-        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 3)
         attack_graph.add_node(Tactics.COMMAND_AND_CONTROL, node_id = 4)
-        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.COMMAND_AND_CONTROL, 4)
         attack_graph.add_node(Tactics.PERSISTENCE, node_id = 5)
-        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.PERSISTENCE, 5)
         attack_graph.add_node(Tactics.DISCOVERY, node_id = 6)
-        attack_graph.add_edge(Tactics.PERSISTENCE, 5, Tactics.DISCOVERY, 6)
         attack_graph.add_node(Tactics.EXECUTION, node_id = 7)
         attack_graph.add_node(Tactics.LATERAL_MOVEMENT, node_id = 8)
+        attack_graph.add_node(Tactics.PRIVILEGE_ESCALATION, node_id = 9)
+        
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 2)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 3)
+        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 2, Tactics.LATERAL_MOVEMENT, 8)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 3, Tactics.COMMAND_AND_CONTROL, 4)
+        attack_graph.add_edge(Tactics.COMMAND_AND_CONTROL, 4, Tactics.CREDENTIAL_ACCESS, 2)
+        attack_graph.add_edge(Tactics.COMMAND_AND_CONTROL, 4, Tactics.PERSISTENCE, 5)
+        attack_graph.add_edge(Tactics.PERSISTENCE, 5, Tactics.DISCOVERY, 6)
         attack_graph.add_edge(Tactics.DISCOVERY, 6, Tactics.EXECUTION, 7)
         attack_graph.add_edge(Tactics.DISCOVERY, 6, Tactics.LATERAL_MOVEMENT, 8)
         attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 8, Tactics.COMMAND_AND_CONTROL, 4)
-        attack_graph.add_edge(Tactics.COMMAND_AND_CONTROL, 4, Tactics.CREDENTIAL_ACCESS, 2)
-        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 2, Tactics.LATERAL_MOVEMENT, 8)
         attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 8, Tactics.DISCOVERY, 6)
         attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 8, Tactics.EXECUTION, 7)
-        attack_graph.add_node(Tactics.PRIVILEGE_ESCALATION, node_id = 9)
         attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 8, Tactics.PRIVILEGE_ESCALATION, 9)
         
 
 
 
-        result_graph = AttackProfiler.get_attack_profile_sequence(attack_sequence)
+        result_graph = AttackProfiler.get_attack_profile_sequence(attack_sequence, attack_graph)
 
         # Count the number of techniques in the graph approach
         techniques_graph = []
@@ -413,16 +413,281 @@ class TestAttackProfilerSuite:
             for technique in result.techniques_tactics:
                 techniques_graph.append(technique)
         # Print the number of techniques in the graph approach
-        print("Number of techniques in the graph approach: ", len(set(techniques_graph)))
+        
+        print("Number of techniques in the graph approach: ", len(techniques_graph))
 
         # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
-        assert len(set(techniques_graph)) < len(set(techniques_naive))
+        assert len(techniques_graph) < len(techniques_naive)
         
 
 
+    def test_attack_profiler_sequence_experienced(self) -> None:
 
+
+        attacker_action1 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="TCP_SYN_STEALTH_SCAN_HOST",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action2 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SAMBACRY_EXPLOIT,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action3 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action4 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action5 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action6 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action7 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action8 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.CVE_2010_0426_PRIV_ESC,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action9 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action10 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.DVWA_SQL_INJECTION,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action11 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action12 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action13 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action14 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action15 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action16 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action17 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        
+        # Create a list of attacker actions
+        attack_sequence = [attacker_action1, attacker_action2, attacker_action3,
+                            attacker_action4, attacker_action5, attacker_action6,
+                            attacker_action7, attacker_action8, attacker_action9,
+                            attacker_action10, attacker_action11, attacker_action12,
+                            attacker_action13, attacker_action14, attacker_action15,
+                            attacker_action16, attacker_action17]
+        
+        # First the naive approach
+        
+        result_naive = []
+        for action in attack_sequence:
+            result_naive.append(AttackProfiler.get_attack_profile(action))
+
+        # Count the number of techniques in the naive approach
+        techniques_naive = []
+        for result in result_naive:
+            for technique in result.techniques_tactics:
+                techniques_naive.append(technique)
+
+        print("Set of techniques:   ", techniques_naive)
+        # Print the number of techniques in the naive approach
+        print("Number of techniques in the naive approach: ", len(techniques_naive))
+        
+        # Now the graph approach
+        attack_graph = AttackGraph()
+        attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
+        attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 2)
+        attack_graph.add_node(Tactics.COMMAND_AND_CONTROL, node_id = 3)
+        attack_graph.add_node(Tactics.DISCOVERY, node_id = 4)
+        attack_graph.add_node(Tactics.LATERAL_MOVEMENT, node_id = 5)
+        attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, node_id = 6)
+        attack_graph.add_node(Tactics.EXECUTION, node_id = 8)
+        attack_graph.add_node(Tactics.PRIVILEGE_ESCALATION, node_id = 9)
+
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 2)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.EXECUTION, 8)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 2, Tactics.COMMAND_AND_CONTROL, 3)
+        attack_graph.add_edge(Tactics.COMMAND_AND_CONTROL, 3, Tactics.DISCOVERY, 4)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.COMMAND_AND_CONTROL, 3)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.LATERAL_MOVEMENT, 5)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.CREDENTIAL_ACCESS, 6)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.EXECUTION, 8)
+        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 6, Tactics.LATERAL_MOVEMENT, 5)
+        attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 5, Tactics.PRIVILEGE_ESCALATION, 9)
+        attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 5, Tactics.EXECUTION, 8)
+        attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 5, Tactics.COMMAND_AND_CONTROL, 3)
+        attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 5, Tactics.DISCOVERY, 4)
         
        
+        result_graph = AttackProfiler.get_attack_profile_sequence(attack_sequence, attack_graph)
+
+        # Count the number of techniques in the graph approach
+        techniques_graph = []
+        for result in result_graph:
+            
+
+            for technique in result.techniques_tactics:
+                techniques_graph.append(technique)
+                #Print the tactics associated with the technique and the action id of the attack
+                print("Attack id :", result.action_id)
+                # Print the tactics associated with the technique
+                print("Tactics:   ", result.techniques_tactics[technique])
+
+        print("Set of techniques:   ", techniques_graph)
+        # Print the number of techniques in the graph approach
+        
+
+
+        print("Number of techniques in the graph approach: ", len(techniques_graph))
+
+        # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
+        assert len(techniques_graph) < len(techniques_naive)
+
+
+    def test_attack_profiler_sequence_expert(self) -> None:
+        attacker_action1 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="TCP_SYN_STEALTH_SCAN_HOST",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action2 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SAMBACRY_EXPLOIT,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action3 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action4 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action5 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action6 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.DVWA_SQL_INJECTION,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action7 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action8 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action10 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action11 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action12 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action13 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action14 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.SAMBACRY_EXPLOIT,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action15 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action16 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.INSTALL_TOOLS,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+        attacker_action17 = EmulationAttackerAction(
+            id=EmulationAttackerActionId.PING_SCAN_HOST,
+            name="",cmds=[],type=None,descr="",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
+        )
+
+        attack_sequence = [attacker_action1, attacker_action2, attacker_action3,
+                            attacker_action4, attacker_action5, attacker_action6,
+                            attacker_action7, attacker_action8, attacker_action10,
+                            attacker_action11, attacker_action12, attacker_action13,
+                            attacker_action14, attacker_action15, attacker_action16,
+                            attacker_action17]
+        
+        # First with the graph approach
+        attack_graph = AttackGraph()
+        attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
+        attack_graph.add_node(Tactics.INITIAL_ACCESS, node_id = 2)
+        attack_graph.add_node(Tactics.COMMAND_AND_CONTROL, node_id = 3)
+        attack_graph.add_node(Tactics.DISCOVERY, node_id = 4)
+        attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, node_id = 5)
+        attack_graph.add_node(Tactics.LATERAL_MOVEMENT, node_id = 6)
+        attack_graph.add_node(Tactics.EXECUTION, node_id = 7)
+
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.INITIAL_ACCESS, 2)
+        attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.EXECUTION, 7)
+        attack_graph.add_edge(Tactics.INITIAL_ACCESS, 2, Tactics.COMMAND_AND_CONTROL, 3)
+        attack_graph.add_edge(Tactics.COMMAND_AND_CONTROL, 3, Tactics.DISCOVERY, 4)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.CREDENTIAL_ACCESS, 5)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.EXECUTION, 7)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.LATERAL_MOVEMENT, 6)
+        attack_graph.add_edge(Tactics.DISCOVERY, 4, Tactics.COMMAND_AND_CONTROL, 3)
+        attack_graph.add_edge(Tactics.CREDENTIAL_ACCESS, 5, Tactics.LATERAL_MOVEMENT, 6)
+        attack_graph.add_edge(Tactics.LATERAL_MOVEMENT, 6, Tactics.COMMAND_AND_CONTROL, 3)
+
+        result_graph = AttackProfiler.get_attack_profile_sequence(attack_sequence, attack_graph)
+
+        # Count the number of techniques in the graph approach
+        techniques_graph = []
+        for result in result_graph:
+            for technique in result.techniques_tactics:
+                techniques_graph.append(technique)
+
+        print("Number of techniques with the graph approach:  ", len(techniques_graph))
+
+        # Now with the naive approach
+        result_naive = []
+        for action in attack_sequence:
+            result_naive.append(AttackProfiler.get_attack_profile(action))
+
+        # Count the number of techniques in the naive approach
+        techniques_naive = []
+        for result in result_naive:
+            for technique in result.techniques_tactics:
+                techniques_naive.append(technique)
+
+        print("Number of techniques with the naive approach:  ", len(techniques_naive))
+        
+        # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
+        assert len(techniques_graph) < len(techniques_naive)
+
 
 
     def test_graph(self) -> None:

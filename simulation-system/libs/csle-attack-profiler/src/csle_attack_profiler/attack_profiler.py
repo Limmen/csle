@@ -112,12 +112,10 @@ class AttackProfiler():
         """
 
         attack_profiles = []
-        temp_dict = {}
         for action in attacker_actions:
             attack_profiles.append(AttackProfiler.get_attack_profile(action))
 
 
-        initial_access = False
         
         # IF attack graph is provided
         if attack_graph:
@@ -125,6 +123,7 @@ class AttackProfiler():
             node = attack_graph.get_root_node()
             for profile in attack_profiles:
                 # Get the mappings of the techniques and tactics
+                #print("Attack id of profile: ", profile.action_id)
                 techniques_tactics = profile.techniques_tactics
                 techniques_to_keep = []
                 children = attack_graph.get_children(node[0], node[2])
@@ -137,7 +136,7 @@ class AttackProfiler():
                         if node not in possible_nodes:
                             #print("Possible node: ", node[0].value)
                             possible_nodes.append(node)
-
+                
                 for child in children:
                     # Child is a list of tuples, where the first element is the node name and the second element is the node id
                     for technique in techniques_tactics:
@@ -150,9 +149,12 @@ class AttackProfiler():
                                 possible_nodes.append(attack_graph.get_node(child[0], child[1]))
 
                 # If the possible node is just one node, move to that node
+                print(possible_nodes)
                 if len(possible_nodes) == 1:
                     node = possible_nodes[0]
-                if techniques_to_keep == []:
+                    #print("Transitioned to node: ", node[0].value)
+                if not techniques_to_keep:
+                    print(children)
                     continue
                 # Remove the techniques and associated tactics, data sources, mitigations and sub-techniques that are not in the techniques_to_keep
                 techniques_to_remove = set(profile.techniques_tactics.keys()) - set(techniques_to_keep)
@@ -168,6 +170,7 @@ class AttackProfiler():
                             
         # ELSE Baseline conditions
         else:     
+            initial_access = False
             for profile in attack_profiles:
                 techniques_tactics = profile.techniques_tactics
                 techniques_to_remove = []
@@ -177,7 +180,9 @@ class AttackProfiler():
                         techniques_to_remove.append(technique)
                     elif Tactics.RECONNAISSANCE.value in techniques_tactics[technique] and initial_access == True:
                         techniques_to_remove.append(technique)
-                    if Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == True:
+                    if Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == False:
+                        initial_access = True
+                    elif Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == True:
                         techniques_to_remove.append(technique)
                     elif Tactics.LATERAL_MOVEMENT.value in techniques_tactics[technique] and initial_access == False:
                         techniques_to_remove.append(technique)
