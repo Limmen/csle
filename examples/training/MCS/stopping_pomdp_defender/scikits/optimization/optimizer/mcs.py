@@ -1,7 +1,23 @@
 #!/usr/bin/env python
 
 import numpy as np
-from scikits.optimization import *
+from scikits.optimization import defaults
+
+"""from scikits.optimization import (
+    criterion,
+    defaults,
+    helpers,
+    line_search,
+    optimizer,
+    step,
+)"""
+
+# import criterion
+# import defaults
+# import helperss
+# import line_search
+# import optimizer
+# import step
 from scikits.optimization.optimizer import optimizer
 
 
