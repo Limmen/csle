@@ -26,12 +26,70 @@ from mcs_fun.splrnk import splrnk
 from mcs_fun.strtsw import strtsw
 from mcs_fun.updtrec import updtrec
 from mcs_fun.vertex_func import vertex
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 
-# %%
-# ------------------------------------------------------------------------------
-#                               MCS algorithm
-# ------------------------------------------------------------------------------
+def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
+                                                            LinearThresholdStoppingPolicy]:
+    """
+    Gets the policy of a given parameter vector
 
+    :param theta: the parameter vector
+    :param L: the number of parameters
+    :return: the policy
+    """
+    if self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value \
+            == PolicyType.MULTI_THRESHOLD.value:
+        policy = MultiThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=self.experiment_config.player_type, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.SIMULATED_ANNEALING)
+    else:
+        policy = LinearThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=self.experiment_config.player_type, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.SIMULATED_ANNEALING)
+    return policy
+
+def get_theta0():
+    theta0 = []
+    if iinit == 0:
+        print
+        theta0.append(u)  #  lower bound point
+        theta0.append([(i + j) / 2 for i, j in zip(u, v)])  #  mid point
+        theta0.append(v)  # upper bound point
+        theta0 = np.array(theta0).T
+    elif iinit == 1:
+        theta0 = np.zeros((n, 3))
+        for i in range(n):
+            if u[i] >= 0:
+                theta0[i, 0] = u[i]
+                theta0[i, 1], theta0[i, 2] = subint(u[i], v[i])
+                theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+            elif v[i] <= 0:
+                theta0[i, 2] = v[i]
+                theta0[i, 1], theta0[i, 0] = subint(v[i], u[i])
+                theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+            else:
+                theta0[i, 1] = 0
+                _, theta0[i, 0], subint(0, u[i])
+                _, theta0[i, 2], subint(0, v[i])
+    elif iinit == 2:
+        theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
+        theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
+        theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
+        theta0 = np.array(theta0).T
+
+    # check whether there are infinities in the initialization list
+    if np.any(np.isinf(theta0)):
+        sys.exit("Error- MCS main: infinities in ititialization list")
+    return theta0
 
 def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
 
@@ -51,56 +109,25 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
         int
     )  # dimension n  i.e, 0 <= i < <n; for range need to add 1 each time
     # L indicate the end point or (total number of partition of the valie x in the ith dimenstion)
-    # u <= x1 <= xL <= v  in the case of L == 2 (length 3) -> x0 = u (lower bound), x1 = mid point and x2 = v (upper bound)
+    # u <= x1 <= xL <= v  in the case of L == 2 (length 3) -> theta0 = u (lower bound), x1 = mid point and x2 = v (upper bound)
     L = np.multiply(2, np.ones(n)).astype(
         int
     )  # dimension n  i.e, 0 <= i < <n; for range need to add 1 each time
 
     # definition of the initialization list
-    x0 = []
-    if iinit == 0:
-        print
-        x0.append(u)  #  lower bound point
-        x0.append([(i + j) / 2 for i, j in zip(u, v)])  #  mid point
-        x0.append(v)  # upper bound point
-        x0 = np.array(x0).T
-    elif iinit == 1:
-        x0 = np.zeros((n, 3))
-        for i in range(n):
-            if u[i] >= 0:
-                x0[i, 0] = u[i]
-                x0[i, 1], x0[i, 2] = subint(u[i], v[i])
-                x0[i, 1] = 0.5 * (x0[i, 0] + x0[i, 2])
-            elif v[i] <= 0:
-                x0[i, 2] = v[i]
-                x0[i, 1], x0[i, 0] = subint(v[i], u[i])
-                x0[i, 1] = 0.5 * (x0[i, 0] + x0[i, 2])
-            else:
-                x0[i, 1] = 0
-                _, x0[i, 0], subint(0, u[i])
-                _, x0[i, 2], subint(0, v[i])
-    elif iinit == 2:
-        x0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
-        x0.append([0.5 * (i + j) for i, j in zip(u, v)])
-        x0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
-        x0 = np.array(x0).T
-
-    # check whether there are infinities in the initialization list
-    if np.any(np.isinf(x0)):
-        sys.exit("Error- MCS main: infinities in ititialization list")
-
-    # find i*, and f0 that points to x* in the list of intial points in x0
+    theta0 = get_theta0(iinit, u, v)
+    # find i*, and f0 that points to x* in the list of intial points in theta0
     if iinit != 3:
-        f0, istar, ncall1 = init(fcn, x0, l, L, n)
+        f0, istar, ncall1 = init(fcn, theta0, l, L, n)
         ncall = ncall + ncall1  # increasing number of function call count
 
     # Computing B[x,y] in this case y = v
     # 1 base vertex
     # definition of the base vertex of the original box
-    # intial x0 (mid point) is the base of vertex
+    # intial theta0 (mid point) is the base of vertex
     x = np.zeros(n)
     for i in range(n):
-        x[i] = x0[i, l[i]]
+        x[i] = theta0[i, l[i]]
     # 2 oposite vertex -
     # definition of the opposite vertex v1 of the original box
     # selecting one of the corener of the box
@@ -145,7 +172,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
     # Initialize the boxes
     # use of global vaiables global: nboxes nglob xglob
     ipar, level, ichild, f, isplit, p, xbest, fbest, nboxes = initbox(
-        x0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt
+        theta0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt
     )
     # generates the boxes in the initialization procedure
     f0min = fbest
@@ -167,7 +194,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
     # sweep counter
 
     # Check values in MATLAB for these
-    # x0, u, v, l, L, x,v1, f0, istar, f, ipar,level,ichild,f,isplit,p,xbest,fbest,nboxes,nglob,xglob, s,record,nsweep
+    # theta0, u, v, l, L, x,v1, f0, istar, f, ipar,level,ichild,f,isplit,p,xbest,fbest,nboxes,nglob,xglob, s,record,nsweep
     # %%
     xmin = []
     fmi = []
@@ -180,7 +207,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
         # interpolation and the vector n0 indicating that the ith coordinate
         # has been split n0(i) times in the history of the box
         n0, x, y, x1, x2, f1, f2 = vertex(
-            par, n, u, v, v1, x0, f0, ipar, isplit, ichild, z, f, l, L
+            par, n, u, v, v1, theta0, f0, ipar, isplit, ichild, z, f, l, L
         )
 
         # s 'large'
@@ -243,7 +270,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
                     s,
                     smax,
                     par,
-                    x0,
+                    theta0,
                     n0,
                     u,
                     v,

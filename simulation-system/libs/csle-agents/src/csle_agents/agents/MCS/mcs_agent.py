@@ -1,4 +1,24 @@
-from typing import Union, List, Optional, Any, Dict
+import copy
+import sys
+
+import numpy as np
+from mcs_fun.basket_func import basket, basket1
+
+# %
+# MCS algorithm supporting functions =  first layer
+from mcs_fun.chk_bound import check_box_bound
+from mcs_fun.chk_flag import chrelerr, chvtr
+from mcs_fun.chk_locks import addloc, chkloc, fbestloc
+from mcs_fun.exgain import exgain
+# from mcs_fun.initi_func import init, initbox, subint
+from mcs_fun.lsearch import lsearch
+from mcs_fun.split_func import splinit, split
+from mcs_fun.splrnk import splrnk
+from mcs_fun.strtsw import strtsw
+from mcs_fun.updtrec import updtrec
+from mcs_fun.vertex_func import vertex
+
+from typing import Union, List, Optional, Any, Dict, Tuple
 import math
 import time
 import random
@@ -24,13 +44,15 @@ from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
+from csle_agents.common.objective_type import ObjectiveType
 import csle_agents.constants.constants as agents_constants
+#%%----------------------------------------------------------------------------
+import numpy as np
+from functions.defaults import defaults
+from functions.functions import feval
 
-
+from mcs import mcs
 class MCSAgent(BaseAgent):
-    """
-    Simulated Annealing Search Agent
-    """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
@@ -38,7 +60,7 @@ class MCSAgent(BaseAgent):
                  env: Optional[BaseEnv] = None, training_job: Optional[TrainingJobConfig] = None,
                  save_to_metastore: bool = True):
         """
-        Initializes the Simulated Annealing Agent
+        Initializes the Particle Swarm Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -49,323 +71,36 @@ class MCSAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.SIMULATED_ANNEALING
+        assert experiment_config.agent_type == AgentType.MCS
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
+    #%%----------------------------------------------------------------------------
 
-    def train(self) -> ExperimentExecution:
+    def myfun():
         """
-        Performs the policy training for the given random seeds using simulated annealing
-
-        :return: the training metrics and the trained policies
+        TODO: implemment your funciton [functions.py]')
+        TODO: implemment your funciton papramter [defualts.py]')
         """
-        pid = os.getpid()
+        ## For domain [-1, 1] u and v will be
+        u = [-20, -20, -20]
+        v = [20, 20, 20]
 
-        # Initialize metrics
-        exp_result = ExperimentResult()
-        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
-        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
-        exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_LENGTH)
-        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
-        exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_START)
-        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START)
-        exp_result.plot_metrics.append(env_constants.ENV_METRICS.TIME_HORIZON)
-        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
-        exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
-        exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
+        nglob = 1  # number of gloabl optmial to be searhed
+        fglob = 0.0  # known  gloabl optmia value
+        xglob = [0, 0, 0]  # # known  gloabl optmia vector if any
 
-        descr = f"Training of policies with the random search algorithm using " \
-                f"simulation:{self.simulation_env_config.name}"
-        for seed in self.experiment_config.random_seeds:
-            exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THRESHOLDS] = []
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-                    exp_result.all_metrics[seed][
-                        agents_constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
-            else:
-                for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-                        exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_ATTACKER
-                                                     + f"_l={l}_s={s.id}"] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+        return u, v, nglob, fglob, xglob
 
-        # Initialize training job
-        if self.training_job is None:
-            emulation_name = ""
-            if self.emulation_env_config is not None:
-                emulation_name = self.emulation_env_config.name
-            self.training_job = TrainingJobConfig(
-                simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
-                progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=emulation_name, simulation_traces=[],
-                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
-                log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
-                physical_host_ip=GeneralUtil.get_host_ip())
-            if self.save_to_metastore:
-                training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
-                self.training_job.id = training_job_id
-        else:
-            self.training_job.pid = pid
-            self.training_job.progress_percentage = 0
-            self.training_job.experiment_result = exp_result
-            if self.save_to_metastore:
-                MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+    def myfun(x):
+        # print('TODO implemment your funciton [functions.py]')
 
-        # Initialize execution result
-        ts = time.time()
-        emulation_name = ""
-        if self.emulation_env_config is not None:
-            emulation_name = self.emulation_env_config.name
-        simulation_name = self.simulation_env_config.name
-        self.exp_execution = ExperimentExecution(
-            result=exp_result, config=self.experiment_config, timestamp=ts, emulation_name=emulation_name,
-            simulation_name=simulation_name, descr=descr, log_file_path=self.training_job.log_file_path)
-        if self.save_to_metastore:
-            exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
-            self.exp_execution.id = exp_execution_id
+        return (x[0] - 0.2) ** 2 + (x[1] - 0.01) ** 2 + (x[2] - 2.4) ** 2
 
-        config = self.simulation_env_config.simulation_env_input_config
-        if self.env is None:
-            self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-        for seed in self.experiment_config.random_seeds:
-            ExperimentUtil.set_seed(seed)
-            exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed,
-                                                  random_seeds=self.experiment_config.random_seeds,
-                                                  training_job=self.training_job)
-            # Save latest trace
-            if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
-            self.env.reset_traces()
 
-        # Calculate average and std metrics
-        exp_result.avg_metrics = {}
-        exp_result.std_metrics = {}
-        for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
-            value_vectors = []
-            for seed in self.experiment_config.random_seeds:
-                value_vectors.append(exp_result.all_metrics[seed][metric])
-
-            avg_metrics = []
-            std_metrics = []
-            for i in range(len(value_vectors[0])):
-                if type(value_vectors[0][0]) is int or type(value_vectors[0][0]) is float \
-                        or type(value_vectors[0][0]) is np.int64 or type(value_vectors[0][0]) is np.float64:
-                    seed_values = []
-                    for seed_idx in range(len(self.experiment_config.random_seeds)):
-                        seed_values.append(value_vectors[seed_idx][i])
-                    avg = ExperimentUtil.mean_confidence_interval(
-                        data=seed_values,
-                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
-                    if not math.isnan(avg):
-                        avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(
-                        data=seed_values,
-                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
-                    if not math.isnan(ci):
-                        std_metrics.append(ci)
-                    else:
-                        std_metrics.append(-1)
-                else:
-                    avg_metrics.append(-1)
-                    std_metrics.append(-1)
-                exp_result.avg_metrics[metric] = avg_metrics
-                exp_result.std_metrics[metric] = std_metrics
-
-        traces = self.env.get_traces()
-        if len(traces) > 0 and self.save_to_metastore:
-            MetastoreFacade.save_simulation_trace(traces[-1])
-        ts = time.time()
-        self.exp_execution.timestamp = ts
-        self.exp_execution.result = exp_result
-        if self.save_to_metastore:
-            MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                        id=self.exp_execution.id)
-        return self.exp_execution
-
-    def hparam_names(self) -> List[str]:
-        """
-        :return: a list with the hyperparameter names
-        """
-        return [agents_constants.SIMULATED_ANNEALING.N, agents_constants.SIMULATED_ANNEALING.DELTA,
-                agents_constants.SIMULATED_ANNEALING.L, agents_constants.SIMULATED_ANNEALING.THETA1,
-                agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                agents_constants.COMMON.RUNNING_AVERAGE]
-
-    def simulated_annealing(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
-                            training_job: TrainingJobConfig):
-        """
-        Runs the simulated annealing algorithm
-
-        :param exp_result: the experiment result object to store the result
-        :param seed: the seed
-        :param training_job: the training job config
-        :param random_seeds: list of seeds
-        :return: the updated experiment result and the trained policy
-        """
-        cooling_factor = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.COOLING_FACTOR].value
-        T = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.INITIAL_TEMPERATURE].value
-        L = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value
-        if agents_constants.SIMULATED_ANNEALING.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.THETA1].value
-        else:
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = SimulatedAnnealingAgent.initial_theta(L=L)
-            else:
-                theta = SimulatedAnnealingAgent.initial_theta(L=2 * L)
-
-        # Initial eval
-        policy = self.get_policy(theta=list(theta), L=L)
-        avg_metrics = self.eval_theta(
-            policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        policy.avg_R = J
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
-            SimulatedAnnealingAgent.round_vec(theta))
-
-        # Initial eval
-        policy = self.get_policy(theta=list(theta), L=L)
-        avg_metrics = self.eval_theta(
-            policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J_0 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
-        # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.N].value
-        delta = self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.DELTA].value
-
-        for i in range(N):
-
-            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
-            candidate_policy = self.get_policy(theta=list(theta_candidate), L=L)
-            avg_metrics = self.eval_theta(
-                policy=candidate_policy,
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            d_J = J_candidate - J_0
-            if d_J < 0:
-                if np.exp(d_J / T) > random.random():
-                    J_0 = J_candidate
-                    policy = candidate_policy
-                else:
-                    continue
-            else:
-                J_0 = J_candidate
-            J = J_candidate
-            T = T * cooling_factor
-            policy.avg_R = J
-            running_avg_J = ExperimentUtil.running_average(
-                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
-
-            # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THETAS].append(
-                SimulatedAnnealingAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.SIMULATED_ANNEALING.THRESHOLDS].append(
-                SimulatedAnnealingAgent.round_vec(policy.thresholds()))
-
-            # Log stop distribution
-            for k, v in policy.stop_distributions().items():
-                exp_result.all_metrics[seed][k].append(v)
-
-            # Log intrusion lengths
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-
-            # Log stopping times
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
-                round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
-                ExperimentUtil.running_average(
-                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1, self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.L].value + 1):
-                exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    ExperimentUtil.running_average(
-                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
-                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-
-            # Log baseline returns
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
-
-            if i % self.experiment_config.log_every == 0 and i > 0:
-                # Update training job
-                total_iterations = len(random_seeds) * N
-                iterations_done = (random_seeds.index(seed)) * N + i
-                progress = round(iterations_done / total_iterations, 2)
-                training_job.progress_percentage = progress
-                training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.get_traces()[-1])
-                if len(training_job.simulation_traces) > training_job.num_cached_traces:
-                    training_job.simulation_traces = training_job.simulation_traces[1:]
-                if self.save_to_metastore:
-                    MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
-
-                # Update execution
-                ts = time.time()
-                self.exp_execution.timestamp = ts
-                self.exp_execution.result = exp_result
-                if self.save_to_metastore:
-                    MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                                id=self.exp_execution.id)
-
-                Logger.__call__().get_logger().info(
-                    f"[SIMULATED-ANNEALING] i: {i}, J:{J}, "
-                    f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{running_avg_J}, "
-                    f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
-                    f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
-        policy = self.get_policy(theta=list(theta), L=L)
-        exp_result.policies[seed] = policy
-        # Save policy
-        if self.save_to_metastore:
-            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
-        return exp_result
 
     def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
-                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
+                    max_steps: int = 200) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -396,70 +131,86 @@ class MCSAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = SimulatedAnnealingAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = SimulatedAnnealingAgent.compute_avg_metrics(metrics=metrics)
+            metrics = ParticleSwarmAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = ParticleSwarmAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
-    def random_perturbation(self, delta: float, theta: npt.NDArray[Any]) -> npt.NDArray[Any]:
-        """
-        Performs a random perturbation to the theta vector
 
-        :param delta: the step size for the perturbation
-        :param theta: the current theta vector
-        :return: the perturbed theta vector
+    u,v,nglob,fglob,xglob = defaults(fcn)
+    #feval(fcn, [2,5])
+    # function paramters
+    def MCS_starter(self, exp_result, seed: int, random_seeds: List[int], training_job: TrainingJobConfig):
         """
-        perturbed_theta = []
-        for l in range(len(theta)):
-            Delta = np.random.uniform(-delta, delta)
-            perturbed_theta.append(theta[l] + Delta)
-        return np.array(perturbed_theta)
+        Initiating the parameters of performing the MCS algorithm, using external functions
+        """
+        u =  self.experiment_config.hparams[agents_constants.MCS.U].value
+        v = self.experiment_config.hparams[agents_constants.MCS.V].value
+        iinit =self.experiment_config.hparams[agents_constants.MCS.IINIT].value # simple initialization list
+        local = self.experiment_config.hparams[agents_constants.MCS.LOCAL].value 	# local = 0: no local search
+        eps = self.experiment_config.hparams[agents_constants.MCS.EPSILON].value 
+        gamma = self.experiment_config.hparams[agents_constants.MCS.GAMMA].value		         # acceptable relative accuracy for local search
+        prt = self.experiment_config.hparams[agents_constants.MCS.PRT].value # print level
+        m = self.experiment_config.hparams[agents_constants.MCS.M].value
+        stopping_actions = self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value
+        n = len(u) #  problem dimension
+        smax = 5*n+10 # number of levels used
+        nf = 50*pow(n,2) #limit on number of f-calls
+        stop = [3*n]  # m, integer defining stopping test
+        hess = np.ones((n,n)) 	     # sparsity pattern of Hessian
+        stop.append(float("-inf"))  # freach, function value to reach
+        fcn = 'myfun' # gpr, bra, cam, hm3, s10, sh5, sh7, hm6, 'myfun' 
 
-    @staticmethod
-    def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
-            -> Dict[str, List[Union[float, int]]]:
-        """
-        Update a dict with aggregated metrics using new information from the environment
+        if m == 0:
+            stop[0] = 1e-4	 # run until this relative error is achieved
+            stop[1] = fglob	 # known global optimum value
+            stop.append(1e-10) # stopping tolerance for tiny fglob
+        
+        xbest,fbest,xmin,fmi,ncall,ncloc,flag = self.MCS(fcn,u,v,smax,nf,stop,iinit,local,gamma,hess, stopping_actions)
 
-        :param metrics: the dict with the aggregated metrics
-        :param info: the new information
-        :return: the updated dict
-        """
-        for k, v in info.items():
-            if k in metrics:
-                metrics[k].append(round(v, 3))
-            else:
-                metrics[k] = [v]
-        return metrics
+    print('The MCS Algorithms Results:')
+    print('fglob',fglob)
+    print('fbest',fbest)
+    print('xglob',xglob)
+    print('xbest',xbest)
+    print('\n')
 
-    @staticmethod
-    def compute_avg_metrics(metrics: Dict[str, List[Union[float, int]]]) -> Dict[str, Union[float, int]]:
-        """
-        Computes the average metrics of a dict with aggregated metrics
+    def get_theta0(self):
+        theta0 = []
+        if iinit == 0:
+            print
+            theta0.append(u)  #  lower bound point
+            theta0.append([(i + j) / 2 for i, j in zip(u, v)])  #  mid point
+            theta0.append(v)  # upper bound point
+            theta0 = np.array(theta0).T
+        elif iinit == 1:
+            theta0 = np.zeros((n, 3))
+            for i in range(n):
+                if u[i] >= 0:
+                    theta0[i, 0] = u[i]
+                    theta0[i, 1], theta0[i, 2] = subint(u[i], v[i])
+                    theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+                elif v[i] <= 0:
+                    theta0[i, 2] = v[i]
+                    theta0[i, 1], theta0[i, 0] = subint(v[i], u[i])
+                    theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+                else:
+                    theta0[i, 1] = 0
+                    _, theta0[i, 0], subint(0, u[i])
+                    _, theta0[i, 2], subint(0, v[i])
+        elif iinit == 2:
+            theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
+            theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
+            theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
+            theta0 = np.array(theta0).T
 
-        :param metrics: the dict with the aggregated metrics
-        :return: the average metrics
-        """
-        avg_metrics = {}
-        for k, v in metrics.items():
-            avg = round(sum(v) / len(v), 2)
-            avg_metrics[k] = avg
-        return avg_metrics
+        # check whether there are infinities in the initialization list
+        if np.any(np.isinf(theta0)):
+            sys.exit("Error- MCS main: infinities in ititialization list")
+        return theta0
 
-    @staticmethod
-    def initial_theta(L: int) -> npt.NDArray[Any]:
-        """
-        Initializes theta randomly
-
-        :param L: the dimension of theta
-        :return: the initialized theta vector
-        """
-        theta_1 = []
-        for k in range(L):
-            theta_1.append(np.random.uniform(-3, 3))
-        return np.array(theta_1)
 
     def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-                                                              LinearThresholdStoppingPolicy]:
+                                                                LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 
@@ -486,12 +237,525 @@ class MCSAgent(BaseAgent):
                 agent_type=AgentType.SIMULATED_ANNEALING)
         return policy
 
-    @staticmethod
-    def round_vec(vec) -> List[float]:
-        """
-        Rounds a vector to 3 decimals
 
-        :param vec: the vector to round
-        :return: the rounded vector
-        """
-        return list(map(lambda x: round(x, 3), vec))
+    def init(self, theta0, l, L, stopping_actions, n):
+        '''
+        computes the function values corresponding to the initialization list
+        and the pointer istar to the final best point x^* of the init. list
+        '''
+        ncall = 0 #  set number of function call to 0    
+        
+        # fetch intial point theta0  
+        theta = np.zeros(n)
+        for i in range(n):
+            #  feteching int the mid point; 
+            theta[i] = theta0[i,l[i]]# value at l[i] is the indeces of mid point
+        # theta0 (inital point)
+        #x = x.astype(int)
+        policy = self.get_policy(theta, L=stopping_actions)
+        avg_metrics = self.eval_theta(policy=policy,
+                                      max_steps=self.experiment_config.hparams[
+                                          agents_constants.COMMON.MAX_ENV_STEPS].value)
+        J1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        # f1 = feval(fcn,x)
+        ncall = ncall + 1 # increasing the number of function call by 1
+        
+        J0 = np.zeros((L[0]+1,n))
+        J0[l[0],0] = J1 # computing f(x) at intial point theta0
+        
+        # searching for x*  =  theta0 (inital point)
+        # i* the pointer in the list indicating the potision (indecies ) of x*
+        istar = np.zeros(n).astype(int) 
+
+        # for all cordinate k (in this case i) in dim n
+        #for k = 1 to n (in this case 0 to n-1)
+        for i in range(n):
+            istar[i] = l[i] # set i* to mid point
+            for j in range(L[i]+1):# 1 added to make index value also work as an array length
+                if j == l[i]:
+                    if i != 0:
+                        J0[j,i] = J0[istar[i-1], i-1]
+                else:
+                    theta[i] = theta0[i,j]
+                    policy = self.get_policy(theta, L=stopping_actions)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    J0[j, i] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f0[j,i] = feval(fcn,x)
+                    ncall = ncall + 1 # increasing the number of cfunction call by 1 each time
+                    #print(i+1,j+1,x,f0[j,i])
+                    if J0[j,i] < J1:
+                        f1 = f0[j,i]
+                        istar[i] = j
+            # end search in list 
+            # update x*
+            theta[i] = theta0[i,istar[i]]
+        #end for k = 1:n  
+        return J0, istar, ncall
+
+    def MCS(self, fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, stopping_actions, prt=1):
+
+        # %%
+        # check box bounds
+        if check_box_bound(u, v):
+            sys.exit("Error MCS main: out of bound")
+
+        n = len(u)
+        # initial values for the numbers of function calls (total number/local % search)
+        ncall = 0
+        ncloc = 0
+
+        # create indices
+        # l indicate the mid point
+        l = np.multiply(1, np.ones(n)).astype(
+            int
+        )  # dimension n  i.e, 0 <= i < <n; for range need to add 1 each time
+        # L indicate the end point or (total number of partition of the valie x in the ith dimenstion)
+        # u <= x1 <= xL <= v  in the case of L == 2 (length 3) -> theta0 = u (lower bound), x1 = mid point and x2 = v (upper bound)
+        L = np.multiply(2, np.ones(n)).astype(
+            int
+        )  # dimension n  i.e, 0 <= i < <n; for range need to add 1 each time
+
+        # definition of the initialization list
+        theta0 = self.get_theta0(iinit, u, v)
+        # find i*, and f0 that points to x* in the list of intial points in theta0
+        if iinit != 3:
+            f0, istar, ncall1 = self.init(theta0, l, L, stopping_actions, n)
+            ncall = ncall + ncall1  # increasing number of function call count
+
+        # Computing B[x,y] in this case y = v
+        # 1 base vertex
+        # definition of the base vertex of the original box
+        # intial theta0 (mid point) is the base of vertex
+        x = np.zeros(n)
+        for i in range(n):
+            x[i] = theta0[i, l[i]]
+        # 2 oposite vertex -
+        # definition of the opposite vertex v1 of the original box
+        # selecting one of the corener of the box
+        v1 = np.zeros(n)
+        for i in range(n):
+            if abs(theta[i] - u[i]) > abs(theta[i] - v[i]):
+                #  corner at the lower bound side (left of mid point)
+                v1[i] = u[i]  #  go left
+            else:
+                # corener of the upper bound side
+                v1[i] = v[i]  #  go right of mid point
+
+        # some parameters needed for initializing large arrays
+        step = 1000
+        step1 = 10000
+        dim = step1
+
+        # initialization of some large arrays
+        isplit = np.zeros(step1).astype(int)  # number indicating ith coardinate split
+        level = np.zeros(step1).astype(int)  # number indicating level
+        ipar = np.zeros(step1).astype(int)  # number
+        ichild = np.zeros(step1).astype(int)  # number
+        nogain = np.zeros(step1).astype(int)  # number
+
+        f = np.zeros((2, step1))  # function value of the splitinhg float value
+        z = np.zeros((2, step1))  # splitin point float value
+
+        # initialization of the record list, the counters nboxes, nbasket, m
+        # and nloc, xloc and the output flag
+        record = np.zeros(smax)  #  global variable record(1:smax-1)
+        nboxes = 0  #  global variable (we start with 1 box)
+        nbasket = -1  #  global variable
+        nbasket0 = -1
+        nsweepbest = 0
+        nsweep = 0  #  global variable
+        m = n
+        record[0] = 1  #  check 1 of Matlab = 0 of py
+        nloc = 0
+        xloc = []  #  global variable
+        flag = 1
+
+        # Initialize the boxes
+        # use of global vaiables global: nboxes nglob xglob
+        ipar, level, ichild, f, isplit, p, xbest, fbest, nboxes = initbox(
+            theta0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt
+        )
+        # generates the boxes in the initialization procedure
+        f0min = fbest
+
+        # print(stop)
+        if stop[0] > 0 and stop[0] < 1:
+            flag = chrelerr(fbest, stop)
+        elif stop[0] == 0:
+            flag = chvtr(fbest, stop[1])
+        if not flag:
+            print("glabal minumum as been found :", flag)
+            # return  xbest,fbest,xmin,fmi,ncall,ncloc,flag
+            # if the (known) minimum function value fglob has been found with the
+            # required tolerance, flag is set to 0 and the program is terminated
+
+        # the vector record is updated, and the minimal level s containing non-split boxes is computed
+        s, record = strtsw(smax, level, f[0, :], nboxes, record)
+        nsweep = nsweep + 1
+        # sweep counter
+
+        # Check values in MATLAB for these
+        # theta0, u, v, l, L, x,v1, f0, istar, f, ipar,level,ichild,f,isplit,p,xbest,fbest,nboxes,nglob,xglob, s,record,nsweep
+        # %%
+        xmin = []
+        fmi = []
+        while s < smax and ncall + 1 <= nf:
+            # %%
+            # print('s values',s)
+            par = record[s]  # the best box at level s is the current box
+            # compute the base vertex x, the opposite vertex y, the 'neighboring'
+            # vertices and their function values needed for quadratic
+            # interpolation and the vector n0 indicating that the ith coordinate
+            # has been split n0(i) times in the history of the box
+            n0, x, y, x1, x2, f1, f2 = vertex(
+                par, n, u, v, v1, theta0, f0, ipar, isplit, ichild, z, f, l, L
+            )
+
+            # s 'large'
+            if s > 2 * n * (min(n0) + 1):
+                # splitting index and splitting value z(2,par) for splitting by
+                # rank are computed
+                # z(2,par) is set to Inf if we split according to the init. list
+                isplit[par], z[1, par] = splrnk(n, n0, p, x, y)
+                splt = 1  # % indicates that the box is to be split
+            else:
+                # box has already been marked as not eligible for splitting by expected gain
+                if nogain[par]:
+                    splt = 0
+                else:
+                    # splitting by expected gain
+                    # compute the expected gain vector e and the potential splitting
+                    # index and splitting value
+                    e, isplit[par], z[1, par] = exgain(
+                        n, n0, l, L, x, y, x1, x2, f[0, par], f0, f1, f2
+                    )
+                    fexp = f[0, par] + min(e)
+                    if fexp < fbest:
+                        splt = 1
+                    else:
+                        splt = 0  # the box is not split since we expect no improvement
+                        nogain[par] = (
+                            1  # the box is marked as not eligible for splitting by expected gain
+                        )
+                # end if nogain
+            # end if s > 2*n*(min(n0)+1)  else
+            # print(z[1,par]) # print(f[0,par])
+            # %%
+            if splt == 1:  # prepare for splitting
+                i = isplit[par]  #  no deduction beacuse of positive index
+                level[par] = 0
+                # print('check len b:',len(xmin),nbasket,nbasket0)
+                if z[1, par] == np.Inf:  # prepare for splitting by initialization list
+                    m = m + 1
+                    z[1, par] = m
+                    (
+                        xbest,
+                        fbest,
+                        f01,
+                        xmin,
+                        fmi,
+                        ipar,
+                        level,
+                        ichild,
+                        f,
+                        flag,
+                        ncall1,
+                        record,
+                        nboxes,
+                        nbasket,
+                        nsweepbest,
+                        nsweep,
+                    ) = splinit(
+                        fcn,
+                        i,
+                        s,
+                        smax,
+                        par,
+                        theta0,
+                        n0,
+                        u,
+                        v,
+                        x,
+                        y,
+                        x1,
+                        x2,
+                        L,
+                        l,
+                        xmin,
+                        fmi,
+                        ipar,
+                        level,
+                        ichild,
+                        f,
+                        xbest,
+                        fbest,
+                        stop,
+                        prt,
+                        record,
+                        nboxes,
+                        nbasket,
+                        nsweepbest,
+                        nsweep,
+                    )
+                    f01 = f01.reshape(len(f01), 1)
+                    f0 = np.concatenate((f0, f01), axis=1)
+                    ncall = ncall + ncall1  #  print('call spl - 1')
+                else:  # prepare for default splitting
+                    z[0, par] = x[i]
+                    (
+                        xbest,
+                        fbest,
+                        xmin,
+                        fmi,
+                        ipar,
+                        level,
+                        ichild,
+                        f,
+                        flag,
+                        ncall1,
+                        record,
+                        nboxes,
+                        nbasket,
+                        nsweepbest,
+                        nsweep,
+                    ) = split(
+                        fcn,
+                        i,
+                        s,
+                        smax,
+                        par,
+                        n0,
+                        u,
+                        v,
+                        x,
+                        y,
+                        x1,
+                        x2,
+                        z[:, par],
+                        xmin,
+                        fmi,
+                        ipar,
+                        level,
+                        ichild,
+                        f,
+                        xbest,
+                        fbest,
+                        stop,
+                        prt,
+                        record,
+                        nboxes,
+                        nbasket,
+                        nsweepbest,
+                        nsweep,
+                    )
+                    ncall = ncall + ncall1  # print('call spl - 2')
+                # print('check len a:',len(xmin),nbasket,nbasket0)
+                if nboxes > dim:
+                    isplit = np.concatenate((isplit, np.zeros(step)))
+                    level = np.concatenate((level, np.zeros(step)))
+                    ipar = np.concatenate((ipar, np.zeros(step)))
+                    ichild = np.concatenate((ichild, np.zeros(step)))
+                    nogain = np.concatenate((nogain, np.zeros(step)))
+                    f = np.concatenate((f, np.ones((2, step))), axis=1)
+                    z = np.concatenate((z, np.ones((2, step))), axis=1)
+                    dim = nboxes + step
+                if not flag:
+                    break
+            else:  # % splt=0: no splitting, increase the level by 1
+                # %%
+                if s + 1 < smax:
+                    level[par] = s + 1
+                    record = updtrec(par, s + 1, f[0, :], record)  #  update record
+                else:
+                    level[par] = 0
+                    nbasket = nbasket + 1
+                    if len(xmin) == nbasket:
+                        xmin.append(copy.deepcopy(x))  # xmin[:,nbasket] = x
+                        fmi.append(f[0, par])
+                    else:
+                        xmin[nbasket] = copy.deepcopy(x)
+                        fmi[nbasket] = f[0, par]
+            # print('Level:',level)  #print('Record:',record)
+            # %%
+            # update s to split boxes
+            s = s + 1
+            while s < smax:
+                if record[s] == 0:
+                    s = s + 1
+                else:
+                    break
+            # %%
+            # if smax is reached, a new sweep is started
+            if s == smax:
+                # print(s)
+                if local:
+                    # print(fmi, xmin,nbasket0,nbasket)
+                    fmiTemp = fmi[nbasket0 + 1 : nbasket + 1]
+                    xminTemp = xmin[nbasket0 + 1 : nbasket + 1]
+                    j = np.argsort(fmiTemp)
+                    fmiTemp = np.sort(fmiTemp)
+                    xminTemp = [copy.deepcopy(xminTemp[jInd]) for jInd in j]
+                    fmi[nbasket0 + 1 : nbasket + 1] = fmiTemp
+                    xmin[nbasket0 + 1 : nbasket + 1] = xminTemp
+                    # print('j, fmi, xmin:',j, fmi, xmin,nbasket0,nbasket, len(xmin))
+
+                    for j in range(nbasket0 + 1, nbasket + 1):
+                        x = copy.deepcopy(xmin[j])
+                        f1 = copy.deepcopy(fmi[j])
+                        loc = chkloc(nloc, xloc, x)
+                        # print('check lock:',j,x,f1,nloc, xloc,loc)
+                        if loc:
+                            # print('chaking basket ',nbasket0)
+                            nloc, xloc = addloc(nloc, xloc, x)
+                            (
+                                xbest,
+                                fbest,
+                                xmin,
+                                fmi,
+                                x,
+                                f1,
+                                loc,
+                                flag,
+                                ncall1,
+                                nsweep,
+                                nsweepbest,
+                            ) = basket(
+                                fcn,
+                                x,
+                                f1,
+                                xmin,
+                                fmi,
+                                xbest,
+                                fbest,
+                                stop,
+                                nbasket0,
+                                nsweep,
+                                nsweepbest,
+                            )
+                            # print(xbest,fbest,xmin,fmi,loc,flag,ncall1)
+                            ncall = ncall + ncall1
+                            if not flag:
+                                break
+                            if loc:
+                                xmin1, fmi1, nc, flag, nsweep, nsweepbest = lsearch(
+                                    fcn,
+                                    x,
+                                    f1,
+                                    f0min,
+                                    u,
+                                    v,
+                                    nf - ncall,
+                                    stop,
+                                    local,
+                                    gamma,
+                                    hess,
+                                    nsweep,
+                                    nsweepbest,
+                                )
+                                ncall = ncall + nc
+                                ncloc = ncloc + nc
+                                if fmi1 < fbest:
+                                    xbest = copy.deepcopy(xmin1)
+                                    fbest = copy.deepcopy(fmi1)
+                                    nsweepbest = nsweep
+                                    if not flag:
+                                        nbasket0 = nbasket0 + 1
+                                        nbasket = copy.deepcopy(nbasket0)
+                                        if len(xmin) == nbasket:
+                                            xmin.append(copy.deepcopy(xmin1))
+                                            fmi.append(copy.deepcopy(fmi1))
+                                        else:
+                                            xmin[nbasket] = copy.deepcopy(xmin1)
+                                            fmi[nbasket] = copy.deepcopy(fmi1)
+                                        break
+
+                                    if stop[0] > 0 and stop[0] < 1:
+                                        flag = chrelerr(fbest, stop)
+                                    elif stop[0] == 0:
+                                        flag = chvtr(fbest, stop[1])
+                                    if not flag:
+                                        return xbest, fbest, xmin, fmi, ncall, ncloc, flag
+                                    # end if
+                                # end if fmi1
+                                # print('chaking basket 1',nbasket0)
+                                (
+                                    xbest,
+                                    fbest,
+                                    xmin,
+                                    fmi,
+                                    loc,
+                                    flag,
+                                    ncall1,
+                                    nsweep,
+                                    nsweepbest,
+                                ) = basket1(
+                                    fcn,
+                                    np.array(xmin1),
+                                    fmi1,
+                                    xmin,
+                                    fmi,
+                                    xbest,
+                                    fbest,
+                                    stop,
+                                    nbasket0,
+                                    nsweep,
+                                    nsweepbest,
+                                )
+                                ncall = ncall + ncall1
+                                # print(xbest,fbest,xmin,fmi,loc,flag,ncall1)
+                                if not flag:
+                                    break
+                                if loc:
+                                    # print('check1:',nbasket0, nbasket,xmin,fmi)
+                                    nbasket0 = nbasket0 + 1
+                                    if len(xmin) == nbasket0:
+                                        xmin.append(copy.deepcopy(xmin1))
+                                        fmi.append(copy.deepcopy(fmi1))
+                                    else:
+                                        xmin[nbasket0] = copy.deepcopy(xmin1)
+                                        fmi[nbasket0] = copy.deepcopy(fmi1)
+                                    # print('check2:',nbasket0, nbasket,xmin,fmi)
+                                    fbest, xbest = fbestloc(
+                                        fmi, fbest, xmin, xbest, nbasket0, stop
+                                    )
+                                    if not flag:
+                                        nbasket = nbasket0
+                                        break
+                    # end for  basket
+                    nbasket = copy.deepcopy(nbasket0)
+                    if not flag:
+                        break
+                # end local
+                s, record = strtsw(smax, level, f[0, :], nboxes, record)
+                if prt:
+                    # if nsweep == 1:
+                    #    print(', =)
+                    # print('nsw   minl   nf     fbest        xbest\n')
+
+                    minlevel = s
+                    print("nsweep:", nsweep)
+                    print("minlevel:", minlevel)
+                    print("ncall:", ncall)
+                    print("fbest:", fbest)
+                    print("xbest: ", xbest)
+                    print("\n")
+
+                if stop[0] > 1:
+                    if nsweep - nsweepbest >= stop[0]:
+                        flag = 3
+                        return xbest, fbest, xmin, fmi, ncall, ncloc, flag
+                nsweep = nsweep + 1
+            # end if  s ==  max
+        # end while
+        if ncall >= nf:
+            flag = 2
+
+        #    if local:
+        #        print(len(fmi),nbasket)
+        #        if len(fmi) > nbasket:
+        #            for inx in range(nbasket+1,len(fmi)):
+        #                del xmin[inx]
+        #                del fmi[inx]
+        return xbest, fbest, xmin, fmi, ncall, ncloc, flag

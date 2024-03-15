@@ -2,6 +2,8 @@ import numpy as np
 #------------------------------------------------------------------------------        
 from functions.functions import feval
 from mcs_fun.sign import sign
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 #------------------------------------------------------------------------------
 def subint(x1, x2):
     '''
@@ -16,34 +18,97 @@ def subint(x1, x2):
             x2 = 10*sign(x2)*abs(x1)
     x1 = x1 + (x2 -x1) / 10
     return x1, x2
-            
 
+def get_policy(theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
+                                                            LinearThresholdStoppingPolicy]:
+    """
+    Gets the policy of a given parameter vector
+
+    :param theta: the parameter vector
+    :param L: the number of parameters
+    :return: the policy
+    """
+    if self.experiment_config.hparams[agents_constants.SIMULATED_ANNEALING.POLICY_TYPE].value \
+            == PolicyType.MULTI_THRESHOLD.value:
+        policy = MultiThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=self.experiment_config.player_type, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.SIMULATED_ANNEALING)
+    else:
+        policy = LinearThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=self.experiment_config.player_type, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.SIMULATED_ANNEALING)
+    return policy
+
+def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                max_steps: int = 200) -> Dict[str, Union[float, int]]:
+    """
+    Evaluates a given threshold policy by running monte-carlo simulations
+
+    :param policy: the policy to evaluate
+    :return: the average metrics of the evaluation
+    """
+    if self.env is None:
+        raise ValueError("Need to specify an environment to run policy evaluation")
+    eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
+    metrics: Dict[str, Any] = {}
+    for j in range(eval_batch_size):
+        done = False
+        o, _ = self.env.reset()
+        l = int(o[0])
+        b1 = o[1]
+        t = 1
+        r = 0
+        a = 0
+        info: Dict[str, Any] = {}
+        while not done and t <= max_steps:
+            Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
+            if self.experiment_config.player_type == PlayerType.ATTACKER:
+                policy.opponent_strategy = self.env.static_defender_strategy
+                a = policy.action(o=o)
+            else:
+                a = policy.action(o=o)
+            o, r, done, _, info = self.env.step(a)
+            l = int(o[0])
+            b1 = o[1]
+            t += 1
+        metrics = ParticleSwarmAgent.update_metrics(metrics=metrics, info=info)
+    avg_metrics = ParticleSwarmAgent.compute_avg_metrics(metrics=metrics)
+    return avg_metrics
 #------------------------------------------------------------------------------    
-def init(fcn,x0,l,L,n):
+def init(fcn,theta0,l,L,n):
     '''
      computes the function values corresponding to the initialization list
      and the pointer istar to the final best point x^* of the init. list
     '''
     ncall = 0 #  set number of function call to 0    
     
-    # fetch intial point x0  
-    x = np.zeros(n)
+    # fetch intial point theta0  
+    theta = np.zeros(n)
     for i in range(n):
         #  feteching int the mid point; 
-        x[i] = x0[i,l[i]]# value at l[i] is the indeces of mid point
-    # x0 (inital point)
+        theta[i] = theta0[i,l[i]]# value at l[i] is the indeces of mid point
+    # theta0 (inital point)
     #x = x.astype(int)
-    
+    policy = get_policy(thetam, L=2)
+    J1 = 
     f1 = feval(fcn,x)
     ncall = ncall + 1 # increasing the number of function call by 1
     
     f0 = np.zeros((L[0]+1,n))
-    f0[l[0],0] = f1 # computing f(x) at intial point x0
+    f0[l[0],0] = f1 # computing f(x) at intial point theta0
     
-    # searching for x*  =  x0 (inital point)
+    # searching for x*  =  theta0 (inital point)
     # i* the pointer in the list indicating the potision (indecies ) of x*
     istar = np.zeros(n).astype(int) 
-    
+
     # for all cordinate k (in this case i) in dim n
     #for k = 1 to n (in this case 0 to n-1)
     for i in range(n):
@@ -53,7 +118,7 @@ def init(fcn,x0,l,L,n):
                 if i != 0:
                     f0[j,i] = f0[istar[i-1], i-1]
             else:
-                x[i] = x0[i,j]
+                x[i] = theta0[i,j]
                 f0[j,i] = feval(fcn,x)
                 ncall = ncall + 1 # increasing the number of cfunction call by 1 each time
                 #print(i+1,j+1,x,f0[j,i])
@@ -62,7 +127,7 @@ def init(fcn,x0,l,L,n):
                     istar[i] = j
         # end search in list 
         # update x*
-        x[i] = x0[i,istar[i]]
+        x[i] = theta0[i,istar[i]]
     #end for k = 1:n  
     return f0,istar,ncall
 
@@ -74,7 +139,7 @@ from mcs_fun.polint import polint
 from mcs_fun.quadratic_func import quadmin
 from mcs_fun.quadratic_func import quadpol
 #------------------------------------------------------------------------------
-def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
+def initbox(theta0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
     '''
         generates the boxes in the initialization procedure
     
@@ -95,7 +160,7 @@ def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
     level[0] = 1
     # ichild indicate the child of box 0 
     ichild[0] = 1
-    # optimi value of the box is x0
+    # optimi value of the box is theta0
     f[0,0] = f0[l[0],0]
     # intilize partent box  = 0
     par = 0 # index of the parent box (biously 0 in this case as box index start with z)
@@ -109,7 +174,7 @@ def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
         nchild = 0
         # check if x left endpoint is > lower bound (left endpoint)
         # if so - genetrate a box
-        if x0[i,0] >  u[i]:
+        if theta0[i,0] >  u[i]:
             nboxes = nboxes + 1 # one extra box is generated for the parent box
             nchild = nchild + 1 # therefore incerase number of child by 1 of the parent box
             # set parent of this ith box split in the ithe direction (dimension)
@@ -119,18 +184,18 @@ def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
         if L[i] == 2:
             v1 = v[i]
         else:
-            v1 = x0[i,2]
+            v1 = theta0[i,2]
         # end if
         
         # pollynomial interpolation to get three points for
-        d = polint(x0[i,0:3],f0[0:3,i])
-        xl = quadmin(u[i],v1,d,x0[i,0:3])
-        fl = quadpol(xl,d,x0[i,0:3])
-        xu = quadmin(u[i],v1,-d,x0[i,0:3])
-        fu = quadpol(xu,d,x0[i,0:3])
+        d = polint(theta0[i,0:3],f0[0:3,i])
+        xl = quadmin(u[i],v1,d,theta0[i,0:3])
+        fl = quadpol(xl,d,theta0[i,0:3])
+        xu = quadmin(u[i],v1,-d,theta0[i,0:3])
+        fu = quadpol(xu,d,theta0[i,0:3])
         
         if istar[i] == 0:
-            if xl < x0[i,0]:
+            if xl < theta0[i,0]:
                 par1 = nboxes  # label of the current box for the next coordinate 
             else:
                 par1 = nboxes + 1
@@ -144,47 +209,47 @@ def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
             else:
                 s = 2
             ipar[nboxes], level[nboxes], ichild[nboxes], f[0,nboxes] = genbox(par,level[par]+s,-nchild,f0[j,i])
-            #if prt: splval = split1(x0[i,j],x0[i,j+1],f0[j,i],f0[j+1,i])
+            #if prt: splval = split1(theta0[i,j],theta0[i,j+1],f0[j,i],f0[j+1,i])
             
             if j >= 1:
                 if istar[i] == j:
-                    if xl <= x0[i,j]:
+                    if xl <= theta0[i,j]:
                         par1 = nboxes - 1  # label of the current box for the next coordinate 
                     else:
                         par1 = nboxes
                 #end istar
                 if j <= L[i] - 2:
-                    d = polint(x0[i,j:j+1],f0[j:j+1,i])
+                    d = polint(theta0[i,j:j+1],f0[j:j+1,i])
                     if j < L[i] - 2:
-                        u1 = x0[i,j+1]
+                        u1 = theta0[i,j+1]
                     else:
                         u1 = v[i] 
                     # end if
-                    xl = quadmin(x0[i,j],u1,d,x0[i,j:j+1])
-                    fl = min(quadpol(xl,d,x0[i,j:j+1]),fl)
-                    xu = quadmin(x0[i,j],u1,-d,x0[i,j:j+1])
-                    fu = max(quadpol(xu,d,x0[i,j:j+1]),fu)
+                    xl = quadmin(theta0[i,j],u1,d,theta0[i,j:j+1])
+                    fl = min(quadpol(xl,d,theta0[i,j:j+1]),fl)
+                    xu = quadmin(theta0[i,j],u1,-d,theta0[i,j:j+1])
+                    fu = max(quadpol(xu,d,theta0[i,j:j+1]),fu)
                 #end j < Li -2
             # end if j > = 1
             nboxes = nboxes + 1
             nchild = nchild + 1
             ipar[nboxes], level[nboxes], ichild[nboxes], f[0,nboxes] = genbox(par,level[par]+3-s,-nchild,f0[j+1,i])
         #end for j
-        if x0[i,L[i]] < v[i]:
+        if theta0[i,L[i]] < v[i]:
             nboxes = nboxes + 1
             nchild = nchild + 1            
             ipar[nboxes], level[nboxes], ichild[nboxes], f[0,nboxes] = genbox(par,level[par]+1,-nchild,f0[L[i],i])
             
         if istar[i] == L[i]:
-            if x0[i,L[i]] < v[i]:
-                if xl <= x0[i,L[i]]:
+            if theta0[i,L[i]] < v[i]:
+                if xl <= theta0[i,L[i]]:
                     par1 = nboxes - 1  # label of the current box for the next coordinate 
                 else:
                     par1 = nboxes
-                #end if xl < x0
+                #end if xl < theta0
             else:
                 par1 = nboxes
-            #end if x0 < v
+            #end if theta0 < v
         #end if istart
         var[i] = fu - fl
         
@@ -200,6 +265,6 @@ def initbox(x0,f0,l,L,istar,u,v,isplit,level,ipar,ichild,f,nboxes,prt):
         #var0 = max(var) 
         p[i] = np.argmax(var)
         var[p[i]] = -1
-        xbest[i] = x0[i,istar[i]]  # best point after the init. procedured
+        xbest[i] = theta0[i,istar[i]]  # best point after the init. procedured
      
     return  ipar,level,ichild,f,isplit,p,xbest,fbest,nboxes
