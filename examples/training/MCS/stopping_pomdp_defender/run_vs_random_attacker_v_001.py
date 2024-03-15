@@ -20,3 +20,7 @@
 # start a local search from x if improvement is expected
 
 # output x_best, f_best
+
+
+def f(x):
+    return (x[0] - 1) ** 2 + (x[1] - 3) ** 2
