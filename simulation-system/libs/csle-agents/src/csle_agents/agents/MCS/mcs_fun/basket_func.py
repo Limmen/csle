@@ -27,10 +27,8 @@ def basket(fcn, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest
     for k in range(nbasket + 1):
         i = ind[k]
         if fmi[i] <= f:
-            print("här då")
-            print(xmin[i])
-            print(x)
             p = xmin[i] - x
+
             y1 = x + 1 / 3 * p
             f1 = feval(fcn, y1)
             ncall = ncall + 1
@@ -140,10 +138,8 @@ def basket1(fcn, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbes
 
     for k in range(nbasket + 1):
         i = ind[k]
-        print("wah")
-        print(x)
-        print("hej")
-        print(xmin[i])
+        print(len(xmin[i]))
+        print(len(x))
         p = xmin[i] - x
         y1 = x + 1 / 3 * p
         f1 = feval(fcn, y1)

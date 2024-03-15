@@ -359,7 +359,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
         # %%
         # if smax is reached, a new sweep is started
         if s == smax:
-            print(s)
+            # print(s)
             if local:
                 # print(fmi, xmin,nbasket0,nbasket)
                 fmiTemp = fmi[nbasket0 + 1 : nbasket + 1]
@@ -462,7 +462,7 @@ def mcs(fcn, u, v, smax, nf, stop, iinit, local, gamma, hess, prt=1):
                                 nsweepbest,
                             ) = basket1(
                                 fcn,
-                                xmin1,
+                                np.array(xmin1),
                                 fmi1,
                                 xmin,
                                 fmi,
