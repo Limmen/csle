@@ -191,9 +191,12 @@ Made with &#10084; &nbsp;
 at &nbsp; <a href="https://www.kth.se/" target="_blank">
 <img align="absmiddle" src="docs/img/kth_logo.png" width="10%" height="10%">
 </a>
-&nbsp;
-and
+&nbsp;,
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
 <img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%" height="10%">
+</a>
+and
+&nbsp;<a href="https://www.darpa.mil/program/cyber-agents-for-security-testing-and-learning-environments" target="_blank">
+<img align="absmiddle" src="docs/img/darpa.png" width="10%" height="10%">
 </a>
 </p>
