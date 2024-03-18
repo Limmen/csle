@@ -513,7 +513,6 @@ class TestAttackProfilerSuite:
             for technique in result.techniques_tactics:
                 techniques_naive.append(technique)
 
-        print("Set of techniques:   ", techniques_naive)
         # Print the number of techniques in the naive approach
         print("Number of techniques in the naive approach: ", len(techniques_naive))
         
@@ -552,13 +551,7 @@ class TestAttackProfilerSuite:
 
             for technique in result.techniques_tactics:
                 techniques_graph.append(technique)
-                #Print the tactics associated with the technique and the action id of the attack
-                print("Attack id :", result.action_id)
-                # Print the tactics associated with the technique
-                print("Tactics:   ", result.techniques_tactics[technique])
 
-        print("Set of techniques:   ", techniques_graph)
-        # Print the number of techniques in the graph approach
         
 
 

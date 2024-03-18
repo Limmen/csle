@@ -8,7 +8,7 @@ class Tactics(Enum):
     RESOURCE_DEVELOPMENT = "resource-development"
     INITIAL_ACCESS = "initial-access"
     EXECUTION = "execution"
-    PERSISTENCE = "persistance"
+    PERSISTENCE = "persistence"
     PRIVILEGE_ESCALATION = "privilege-escalation"
     DEFENSE_EVASION = "defense-evasion"
     CREDENTIAL_ACCESS = "credential-access"
