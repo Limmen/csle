@@ -41,3 +41,4 @@ class AgentType(IntEnum):
     DQN_CLEAN = 33
     C51_CLEAN = 34
     PPG_CLEAN = 35
+    MCS = 36

@@ -236,6 +236,7 @@ class ParticleSwarmAgent(BaseAgent):
         objective_type_param = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.OBJECTIVE_TYPE].value
         if agents_constants.PARTICLE_SWARM.THETA1 in self.experiment_config.hparams:
             thetas = self.experiment_config.hparams[agents_constants.PARTICLE_SWARM.THETA1].value
+            print("thetas = ", thetas)
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 P, thetas = ParticleSwarmAgent.initial_theta(L=L, S=S, b_lo=b_lo, b_up=b_up)
