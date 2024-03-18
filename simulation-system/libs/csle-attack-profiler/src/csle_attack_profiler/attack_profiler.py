@@ -149,16 +149,14 @@ class AttackProfiler():
                                 possible_nodes.append(attack_graph.get_node(child[0], child[1]))
 
                 # If the possible node is just one node, move to that node
-                print(possible_nodes)
                 if len(possible_nodes) == 1:
                     node = possible_nodes[0]
                     #print("Transitioned to node: ", node[0].value)
                 if not techniques_to_keep:
-                    print(children)
+                    #TODO: Add logging or error message
                     continue
                 # Remove the techniques and associated tactics, data sources, mitigations and sub-techniques that are not in the techniques_to_keep
                 techniques_to_remove = set(profile.techniques_tactics.keys()) - set(techniques_to_keep)
-                #print("Currently in node ", node[0].value)
                 for technique in techniques_to_remove:
                         try:
                             del profile.techniques_tactics[technique]
