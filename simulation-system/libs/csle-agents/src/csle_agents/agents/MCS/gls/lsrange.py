@@ -13,7 +13,7 @@ import numpy as np
 import sys
 from functions.functions import feval
 
-def lsrange(func,xl,xu,x,p,prt,bend):
+def lsrange(xl,xu,x,p,prt,bend):
     '''
         Defining line search range
     '''

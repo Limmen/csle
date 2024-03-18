@@ -28,6 +28,16 @@ if __name__ == "__main__":
         agent_type=AgentType.MCS,
         log_every=1,
         hparams={
+            agents_constants.MCS.STEP: HParam(
+                value=1000,
+                name=agents_constants.MCS.STEP,
+                descr="step",
+            ),
+            agents_constants.MCS.STEP1: HParam(
+                value=10000,
+                name=agents_constants.MCS.STEP1,
+                descr="step1",
+            ),
             agents_constants.MCS.U: HParam(
                 value=[-20, -20, -20],
                 name=agents_constants.MCS.U,
@@ -36,7 +46,7 @@ if __name__ == "__main__":
             agents_constants.MCS.LOCAL: HParam(
                 value=50,
                 name=agents_constants.MCS.LOCAL,
-                descr="loval value stating to which degree to perform local searches",
+                descr="local value stating to which degree to perform local searches",
             ),
             agents_constants.MCS.V: HParam(
                 value=[20, 20, 20],
@@ -52,6 +62,11 @@ if __name__ == "__main__":
                 value=500,
                 name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)",
+            ),
+            agents_constants.MCS.IINIT: HParam(
+                value=0,
+                name=agents_constants.MCS.GAMMA,
+                descr="simple initialization list",
             ),
             agents_constants.MCS.GAMMA: HParam(
                 value=2.220446049250313e-16,

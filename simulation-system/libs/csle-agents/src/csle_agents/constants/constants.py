@@ -407,6 +407,8 @@ class MCS:
     """
     String constants related to Multilevel Coordinate Search
     """
+    STEP = "step"
+    STEP1 = "step1"
     U = "u"
     V = "v"
     L = "L"
