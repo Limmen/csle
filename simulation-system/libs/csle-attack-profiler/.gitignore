@@ -160,3 +160,5 @@ static
 package-lock.json
 
 .pypirc
+
+statistics.json
