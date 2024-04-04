@@ -130,6 +130,7 @@ class MCSAgent(BaseAgent):
                 else:
                     a = policy.action(o=o)
                 o, r, done, _, info = self.env.step(a)
+                print(info)
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
@@ -296,11 +297,11 @@ class MCSAgent(BaseAgent):
         policy = self.get_policy(theta, L=stopping_actions)
         # print("policy theta = ", policy.theta)
 
-        # avg_metrics = self.eval_theta(policy=policy,
-        #                               max_steps=self.experiment_config.hparams[
-        #                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
-        # J1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        J1 = self.simple_func(theta)
+        avg_metrics = self.eval_theta(policy=policy,
+                                      max_steps=self.experiment_config.hparams[
+                                          agents_constants.COMMON.MAX_ENV_STEPS].value)
+        J1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        # J1 = self.simple_func(theta)
         print("J1 = ", J1)
         ncall += 1 # increasing the number of function call by 1
         
@@ -321,12 +322,12 @@ class MCSAgent(BaseAgent):
                         J0[j,i] = J0[istar[i-1], i-1]
                 else:
                     theta[i] = theta0[i,j]
-                    # policy = self.get_policy(theta, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                  # max_steps=self.experiment_config.hparams[
-                                                  #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # J0[j, i] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    J0[j, i] = self.simple_func(theta)
+                    policy = self.get_policy(theta, L=stopping_actions)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    J0[j, i] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # J0[j, i] = self.simple_func(theta)
                     # print(J0)
                     ncall = ncall + 1 # increasing the number of cfunction call by 1 each time
                     #print(i+1,j+1,x,f0[j,i])
@@ -824,11 +825,11 @@ class MCSAgent(BaseAgent):
                 x[i] = x0[i,j]
                 
                 policy = self.get_policy(x, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # f0[j] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                f0[j] = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                f0[j] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # f0[j] = self.simple_func(policy.theta)
                 ncall = ncall + 1
                 if f0[j] < fbest:
                     fbest = f0[j]
@@ -927,11 +928,11 @@ class MCSAgent(BaseAgent):
         x[i] = z[1]
         n = len(x)
         policy = self.get_policy(x, L=stopping_actions)
-        # avg_metrics = self.eval_theta(policy=policy,
-                                    # max_steps=self.experiment_config.hparams[
-                                    #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-        # f[1,par] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        f[1,par] = self.simple_func(policy.theta)
+        avg_metrics = self.eval_theta(policy=policy,
+                                    max_steps=self.experiment_config.hparams[
+                                        agents_constants.COMMON.MAX_ENV_STEPS].value)
+        f[1,par] = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        # f[1,par] = self.simple_func(policy.theta)
         ncall = ncall + 1
         #print('fbest:',fbest)
 
@@ -1197,9 +1198,9 @@ class MCSAgent(BaseAgent):
 
                 y1 = x + 1 / 3 * p
                 policy = self.get_policy(y1, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
                 f1 = self.simple_func(policy.theta)
                 # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
@@ -1207,11 +1208,11 @@ class MCSAgent(BaseAgent):
                 if f1 <= f:
                     y2 = x + 2 / 3 * p
                     policy = self.get_policy(y2, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                # max_steps=self.experiment_config.hparams[
-                                                #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    f2 = self.simple_func(policy.theta) # TODO : if theis eval fails, then just go with y2 or something
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f2 = self.simple_func(policy.theta) # TODO : if theis eval fails, then just go with y2 or something
                     ncall = ncall + 1
                     if f2 > max(f1, fmi[i]):
                         if f1 < f:
@@ -1335,11 +1336,11 @@ class MCSAgent(BaseAgent):
         
         if np.linalg.norm(p):
             policy = self.get_policy(x, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-                                          # max_steps=self.experiment_config.hparams[
-                                          #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            f1 = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # f1 = self.simple_func(policy.theta)
             ncall = ncall + 1
             alist = [0,1] 
             flist = [fmi,f1] 
@@ -1406,11 +1407,11 @@ class MCSAgent(BaseAgent):
                     else:
                         x[i]  = x1[i]
                     policy = self.get_policy(x, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                  # max_steps=self.experiment_config.hparams[
-                                                  #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    f1 = self.simple_func(policy.theta)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f1 = self.simple_func(policy.theta)
                     ncall = ncall + 1
 
                     if f1 < fmi:
@@ -1483,9 +1484,9 @@ class MCSAgent(BaseAgent):
                 fpred = fmi + np.dot(g.T,p) + np.dot(0.5, np.dot(p.T,np.dot(G,p)))
                 x = copy.deepcopy(xmin + p)
                 policy = self.get_policy(x, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                              # max_steps=self.experiment_config.hparams[
-                                              #     agents_constants.COMMON.MAX_ENV_STEPS].value)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
                 # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 f1 = self.simple_func(policy.theta)
                 ncall = ncall + 1
@@ -1550,20 +1551,20 @@ class MCSAgent(BaseAgent):
             p = xmin[i] - x
             y1 = x + 1 / 3 * p
             policy = self.get_policy(y1, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-            #                               max_steps=self.experiment_config.hparams[
-            #                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            f1 = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # f1 = self.simple_func(policy.theta)
             ncall = ncall + 1
             if f1 <= max(fmi[i], f):
                 y2 = x + 2 / 3 * p
                 policy = self.get_policy(y2, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                              # max_steps=self.experiment_config.hparams[
-                                              #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                f2 = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
+                f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # f2 = self.simple_func(policy.theta)
                 ncall = ncall + 1
                 if f2 <= max(f1, fmi[i]):
                     if f < min(min(f1, f2), fmi[i]):
@@ -1681,19 +1682,19 @@ class MCSAgent(BaseAgent):
             linesearch = True  
             if xmin[i] <= u[i]:
                 policy = self.get_policy(xmin+delta*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                f1 = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # f1 = self.simple_func(policy.theta)
                 nfcsearch = nfcsearch + 1
                 if f1 >= fmi:
                     policy = self.get_policy(xmin+2*delta*p, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                # max_steps=self.experiment_config.hparams[
-                                                #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    f2 = self.simple_func(policy.theta)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f2 = self.simple_func(policy.theta)
                     fcsearch = nfcsearch + 1
                     x1[i] = xmin[i] + delta
                     x2[i] = xmin[i] + 2*delta
@@ -1709,19 +1710,19 @@ class MCSAgent(BaseAgent):
                     flist = [fmi, f1]
             elif xmin[i] >= v[i]:
                 policy = self.get_policy(xmin-delta*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                f1 = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # f1 = self.simple_func(policy.theta)
                 nfcsearch = nfcsearch + 1 
                 if f1 >= fmi:
                     policy = self.get_policy(xmin-2*delta*p, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                # max_steps=self.experiment_config.hparams[
-                                                #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    f2 = self.simple_func(policy.theta)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f2 = self.simple_func(policy.theta)
                     nfcsearch = nfcsearch + 1 
                     x1[i] = xmin[i] - delta
                     x2[i] = xmin[i] - 2*delta 
@@ -1820,11 +1821,11 @@ class MCSAgent(BaseAgent):
                     else:
                         x[k] = x2[k]
                     policy = self.get_policy(x, L=stopping_actions)
-                    # avg_metrics = self.eval_theta(policy=policy,
-                                                # max_steps=self.experiment_config.hparams[
-                                                #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    # f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                    f12 = self.simple_func(policy.theta)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    # f12 = self.simple_func(policy.theta)
                     print(f12)
                     nfcsearch = nfcsearch + 1
                     G[i,k] = hessian(i,k,x,xmin,f12,fmi,g,G)#  
@@ -2025,11 +2026,11 @@ class MCSAgent(BaseAgent):
             # new function value
             # falp = feval(func,x+alp*p)
             policy = self.get_policy(x+alp*p, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-                                          # max_steps=self.experiment_config.hparams[
-                                          #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            falp = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # falp = self.simple_func(policy.theta)
             alist.append(alp)
             flist.append(falp)
         elif len(alist) == 1:
@@ -2042,11 +2043,11 @@ class MCSAgent(BaseAgent):
             if alist[0] != alp:
                 # new function value
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                falp = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # falp = self.simple_func(policy.theta)
                 alist.append(alp)
                 flist.append(falp)
                 
@@ -2070,11 +2071,11 @@ class MCSAgent(BaseAgent):
             if alp < aamin  or  alp > aamax:
                 # new function value
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                              # max_steps=self.experiment_config.hparams[
-                                              #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                falp = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # falp = self.simple_func(policy.theta)
                 alist.append(alp)
                 flist.append(falp)
         if len(alist)==1:
@@ -2128,18 +2129,18 @@ class MCSAgent(BaseAgent):
             x[i] = x1[i]
 
             policy = self.get_policy(x, L=stopping_actions)
-            # avg_metrics = # self.eval_theta(policy=policy,
-                                          # max_steps=self.experiment_config.hparams[
-                                          #    agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            f1 = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # f1 = self.simple_func(policy.theta)
             x[i] = x2[i]
             policy = self.get_policy(x, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-                                          # max_steps=self.experiment_config.hparams[
-                                          #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            f2 = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+            f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # f2 = self.simple_func(policy.theta)
             nf = nf + 2
             g[i], G[i,i] = polint1([xtrip[i],x1[i],x2[i]],[f,f1,f2])
             if f1 <= f2:
@@ -2168,11 +2169,11 @@ class MCSAgent(BaseAgent):
                             else:
                                 x[k] = x2[k]
                             policy = self.get_policy(x, L=stopping_actions)
-                            # avg_metrics = self.eval_theta(policy=policy,
-                                                          # max_steps=self.experiment_config.hparams[
-                                                          #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                            # f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                            f12 = self.simple_func(policy.theta)
+                            avg_metrics = self.eval_theta(policy=policy,
+                                                          max_steps=self.experiment_config.hparams[
+                                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
+                            f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                            # f12 = self.simple_func(policy.theta)
                             nf = nf + 1
                             G[i,k] = hessian(i,k,x,xtrip,f12,ftrip,g,G)
                             #print(G[i,k])
@@ -2276,11 +2277,11 @@ class MCSAgent(BaseAgent):
             # add point to the list     # new function value
             # falp = feval(func,x+alp*p)
             policy = self.get_policy(x+alp*p, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-                                        # max_steps=self.experiment_config.hparams[
-                                        #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            falp = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                        max_steps=self.experiment_config.hparams[
+                                            agents_constants.COMMON.MAX_ENV_STEPS].value)
+            falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # falp = self.simple_func(policy.theta)
             alist.append(alp)
             flist.append(falp)
             #if prt>1, abest_anew_xnew=[alist(i),alp,(x+alp*p)']; #     
@@ -2345,11 +2346,11 @@ class MCSAgent(BaseAgent):
         # new function value
         # falp = feval(func,x+alp*p)
         policy = self.get_policy(x+alp*p, L=stopping_actions)
-        # avg_metrics = self.eval_theta(policy=policy,
-                                      # max_steps=self.experiment_config.hparams[
-                                      #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-        # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        falp = self.simple_func(policy.theta)
+        avg_metrics = self.eval_theta(policy=policy,
+                                      max_steps=self.experiment_config.hparams[
+                                          agents_constants.COMMON.MAX_ENV_STEPS].value)
+        falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        # falp = self.simple_func(policy.theta)
         alist.append(alp)
         flist.append(falp)
 
@@ -2395,11 +2396,11 @@ class MCSAgent(BaseAgent):
             # new function value
             # falp = feval(func,x+alp*p)
             policy = self.get_policy(x+alp*p, L=stopping_actions)
-            # avg_metrics = self.eval_theta(policy=policy,
-                                        # max_steps=self.experiment_config.hparams[
-                                        #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-            # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            falp = self.simple_func(policy.theta)
+            avg_metrics = self.eval_theta(policy=policy,
+                                        max_steps=self.experiment_config.hparams[
+                                            agents_constants.COMMON.MAX_ENV_STEPS].value)
+            falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            # falp = self.simple_func(policy.theta)
             alist.append(alp)
             flist.append(falp)
             alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
@@ -2522,11 +2523,11 @@ class MCSAgent(BaseAgent):
                 #print('new function value')
                 # falp = feval(func,x+alp*p)#
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                falp = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # falp = self.simple_func(policy.theta)
                 alist.append(alp)
                 flist.append(falp)
                 alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
@@ -2567,11 +2568,11 @@ class MCSAgent(BaseAgent):
                 #if prt>2, disp(['separate minimizer at ',num2str(alp)]); #
                 # new function value
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                falp = self.simple_func(policy.theta)
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # falp = self.simple_func(policy.theta)
                 alist.append(alp)
                 flist.append(falp)
                 nsep = nsep+1
@@ -2767,11 +2768,11 @@ class MCSAgent(BaseAgent):
                 nadd=nadd+1#
                 # new function value
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
-                # avg_metrics = self.eval_theta(policy=policy,
-                                            # max_steps=self.experiment_config.hparams[
-                                            #     agents_constants.COMMON.MAX_ENV_STEPS].value)
-                # falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                falp = self.simple_func(policy.theta)#
+                avg_metrics = self.eval_theta(policy=policy,
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                # falp = self.simple_func(policy.theta)#
                 alist.append(alp)
                 flist.append(falp)
                 # no sort since this would destroy old index set!!!

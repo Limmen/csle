@@ -89,7 +89,7 @@ if __name__ == "__main__":
                 descr="print level",
             ),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(
-                value=100,
+                value=1,
                 name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                 descr="number of iterations to evaluate theta",
             ),
