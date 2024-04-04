@@ -16,7 +16,7 @@ if __name__ == "__main__":
         raise ValueError(
             f"Could not find an emulation environment with the name: {emulation_name}"
         )
-
+  
     simulation_name = "csle-stopping-pomdp-defender-002"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)
     if simulation_env_config is None:
