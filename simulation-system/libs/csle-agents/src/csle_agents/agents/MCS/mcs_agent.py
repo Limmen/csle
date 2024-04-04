@@ -1,44 +1,12 @@
 import copy
 import sys
-# from mcs_fun.genbox import genbox
-from mcs_fun.hessian import hessian
-from mcs_fun.polint import polint
-from mcs_fun.quadratic_func import quadmin
-from gls.lssat import lssat
-# from mcs_fun.neighbor import neighbor
-from mcs_fun.quadratic_func import quadpol
-from gls.lsconvex import lsconvex
-# from gls.lsrange import lsrange
-from gls.lssplit import lssplit
-# from gls.lsinit import lsinit
-from gls.lssort import lssort
-# from mcs_fun.initi_func import subint
-# from mcs_fun.chk_flag import chreler
-from minq.minq import minq 
-# from mcs_fun.chk_flag import MCSUtils().chvtr
-# from mcs_fun.updtrec import updtrec
-# from mcs_fun.sign import sign
-import numpy as np
-from mcs_fun.polint import polint1
-# from mcs_fun.basket_func import basket, basket1
 
-# %
-# MCS algorithm supporting functions =  first layer
-# from mcs_fun.chk_bound import check_box_bound
+import numpy as np
+
 from mcs_utils.mcs_fun import MCSUtils
 from mcs_utils.gls_utils import GLSUtils
-# from mcs_fun.chk_flag import chrelerr, chvtr
-# from mcs_fun.exgain import exgain
-from gls.lsguard import lsguard
-from gls.quartic import quartic
-# from mcs_fun.initi_func import init, initbox, subint
-# from mcs_fun.lsearch import lsearch
+from mcs_utils.ls_utils import LSUtils
 
-# from mcs_fun.split_func import splinit, split
-# from mcs_fun.splrnk import splrnk
-# from mcs_fun.strtsw import strtsw
-# from mcs_fun.updtrec import updtrec
-# from mcs_fun.vertex_func import vertex
 
 from typing import Union, List, Optional, Any, Dict, Tuple
 import gymnasium as gym
@@ -1164,7 +1132,7 @@ class MCSAgent(BaseAgent):
         small = 0.1# 
         smaxls = 15# 
         
-        xmin,fmi,g,G,nfcsearch = self.csearch(x,f,u,v,hess, stopping_actions)
+        xmin,fmi,g,G,nfcsearch = self.csearch(x,f,u,v,hess, stopping_actions, eps)
         
         xmin = [max(u[i],min(xmin[i],v[i])) for i in range(n)]
         ncall = ncall + nfcsearch
@@ -1172,8 +1140,7 @@ class MCSAgent(BaseAgent):
         fold = copy.deepcopy(fmi)
         #print('csearch ends with:') # print(xmin,fmi,g,G,nfcsearch)
         
-        # eps = 2.220446049250313e-16
-        
+
         if stop[0] > 0  and  stop[0] < 1:
             flag = MCSUtils().chrelerr(fmi,stop)# 
         elif stop[0] == 0:
@@ -1184,7 +1151,7 @@ class MCSAgent(BaseAgent):
         
         d = np.asarray([min(min(xmin[i]-u[i],v[i]-xmin[i]),0.25*(1+abs(x[i]-x0[i]))) for i in range(n)])
         # Calling MINQ function # print(fmi,g,G,-d,d,0)
-        p,_,_ = minq(fmi,g,G,-d,d,0) # print('minq') # print(p) 
+        p,_,_ = LSUtils().minq(fmi,g,G,-d,d,0) # print('minq') # print(p) 
         
         x = [max(u[i],min(xmin[i]+p[i],v[i])) for i in range(n)]
         p = np.subtract(x,xmin)  # project search direction to box
@@ -1327,12 +1294,12 @@ class MCSAgent(BaseAgent):
 
             minusd = np.asarray([max(-d[jnx],u[jnx]-xmin[jnx]) for jnx in range(len(xmin))])
             mind = np.asarray([min(d[jnx],v[jnx]-xmin[jnx]) for jnx in range(len(xmin))])
-            p,_,_ = minq(fmi,g,G,minusd,mind,0)
-            
+            p,_,_ = LSUtils().minq(fmi,g,G,minusd,mind,0)
+
             #print(p, np.linalg.norm(p))
             if not (np.linalg.norm(p))  and  (not diag)  and  (len(ind) == n):
                 break
-            
+
             if np.linalg.norm(p):
                 #print(g, p, G)
                 fpred = fmi + np.dot(g.T,p) + np.dot(0.5, np.dot(p.T,np.dot(G,p)))
@@ -1502,7 +1469,7 @@ class MCSAgent(BaseAgent):
                         break
         return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
 
-    def csearch(self, x, f, u, v, hess, stopping_actions):
+    def csearch(self, x, f, u, v, hess, stopping_actions, eps):
         n = len(x)
         x = [min(v[i],max(x[i],u[i])) for i in range(len(x))]
 
@@ -1521,8 +1488,8 @@ class MCSAgent(BaseAgent):
         x1 =  np.zeros(n)
         x2 =  np.zeros(n)
         G = np.zeros((n,n))
-        eps = 2.220446049250313e-16
-        
+        # eps = 2.220446049250313e-16
+
         for i in range(n):
             p = np.zeros(n)
             p[i] = 1
@@ -1614,14 +1581,14 @@ class MCSAgent(BaseAgent):
                 xminnew[i] = xmin[i] + alist[j] #print('test csearch')  #print(flist,j,fminew, xminnew)
                 if i == 0 or not alist[j]:#
                     if j == 0: 
-                        x1[i] = xmin[i] + alist[1]  
-                        f1 = flist[1]  
-                        x2[i] = xmin[i] + alist[2]  
-                        f2 = flist[2]  
+                        x1[i] = xmin[i] + alist[1]
+                        f1 = flist[1]
+                        x2[i] = xmin[i] + alist[2]
+                        f2 = flist[2]
                     elif j == len(alist)-1:
                         x1[i] = xmin[i] + alist[j-1]
                         f1 = flist[j-1]
-                        x2[i] = xmin[i] + alist[j-2]  
+                        x2[i] = xmin[i] + alist[j-2]
                         f2 = flist[j-2]
                     else:
                         #print(xmin[i],alist[j-1],alist[j+1])
@@ -1629,8 +1596,8 @@ class MCSAgent(BaseAgent):
                         f1 = flist[j-1]
                         x2[i] = xmin[i] + alist[j+1]
                         f2 = flist[j+1]
-                    #end if j == 0 elsif, else    
-                    xmin[i] = xminnew[i]  
+                    #end if j == 0 elsif, else
+                    xmin[i] = xminnew[i]
                     fmi = copy.deepcopy(fminew) 
                 else:
                     x1[i] = xminnew[i]
@@ -1640,7 +1607,7 @@ class MCSAgent(BaseAgent):
                         f2 = flist[j+1]
                     elif j == 0:
                         if alist[j+1]:
-                            x2[i] = xmin[i] + alist[j+1]  
+                            x2[i] = xmin[i] + alist[j+1]
                             f2 = flist[j+1]
                         else:
                             x2[i] = xmin[i] + alist[j+2]
@@ -1652,7 +1619,7 @@ class MCSAgent(BaseAgent):
                         x2[i] = xmin[i] + alist[j-2]
                         f2 = flist[j-2]
             #end if linesearch
-            g[i], G[i,i] = polint1([xmin[i], x1[i], x2[i]],[fmi, f1, f2])                 
+            g[i], G[i,i] = MCSUtils().polint1([xmin[i], x1[i], x2[i]],[fmi, f1, f2])
             x = copy.deepcopy(xmin)
             k1 = -1
             if f1 <= f2:
@@ -1674,7 +1641,7 @@ class MCSAgent(BaseAgent):
                     f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                     print(f12)
                     nfcsearch = nfcsearch + 1
-                    G[i,k] = hessian(i,k,x,xmin,f12,fmi,g,G)#  
+                    G[i,k] = MCSUtils().hessian(i,k,x,xmin,f12,fmi,g,G)#  
                     G[k,i] = G[i,k]
                     if f12 < fminew:
                         fminew = f12 
@@ -1747,7 +1714,7 @@ class MCSAgent(BaseAgent):
         xl,xu,x,p,amin,amax,scale = GLSUtils().lsrange(xl,xu,x,p,prt,bend)	# find range of useful alp 
         #plt.plot(aa,ff)
         alist,flist,alp,alp1,alp2,falp = self.lsinit(x,p,alist,flist,amin,amax,scale, stopping_actions) # 2 points needed for lspar and lsnew
-        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
         nf = s - sinit	# number of function values used
         
         
@@ -1771,7 +1738,7 @@ class MCSAgent(BaseAgent):
                 # extrapolation or split
                 alist,flist,alp,fac = self.lsnew(nloc,small,sinit,short,x,p,s,alist,flist,
                                                  amin,amax,alp,abest,fmed,unitlen, stopping_actions) 
-                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
             #print('while \n:')
             #print(alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s) 
         # end while
@@ -1800,7 +1767,7 @@ class MCSAgent(BaseAgent):
                                                                                                      monotone, minima, nmin, unitlen,
                                                                                                      s, stopping_actions)
             # check convexity	
-            convex = lsconvex(alist,flist,nmin,s)
+            convex = GLSUtils().lsconvex(alist,flist,nmin,s)
             if convex:
                 #print('return since convex')
                 nf = s-sinit # number of function values used
@@ -1816,7 +1783,7 @@ class MCSAgent(BaseAgent):
                                                                                                      fbest, fmed, up, down, monotone,
                                                                                                      minima, nmin, unitlen, s, stopping_actions)
             # check saturation
-            alp,saturated = lssat(small,alist,flist,alp,amin,amax,s,saturated) 
+            alp,saturated = GLSUtils().lssat(small,alist,flist,alp,amin,amax,s,saturated) 
             if saturated or s == sold or s >= smax:
                 if saturated:
                     no_print = 0
@@ -1983,7 +1950,7 @@ class MCSAgent(BaseAgent):
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             nf = nf + 2
-            g[i], G[i,i] = polint1([xtrip[i],x1[i],x2[i]],[f,f1,f2])
+            g[i], G[i,i] = MCSUtils().polint1([xtrip[i],x1[i],x2[i]],[f,f1,f2])
             if f1 <= f2:
                 if f1 < ftrip:
                     ftripnew = copy.deepcopy(f1)
@@ -2015,7 +1982,7 @@ class MCSAgent(BaseAgent):
                                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
                             f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                             nf = nf + 1
-                            G[i,k] = hessian(i,k,x,xtrip,f12,ftrip,g,G)
+                            G[i,k] = MCSUtils().hessian(i,k,x,xtrip,f12,ftrip,g,G)
                             #print(G[i,k])
                             G[k,i] = G[i,k]
                             if f12 < ftripnew:
@@ -2076,7 +2043,7 @@ class MCSAgent(BaseAgent):
             else:
                 ind = [j for j in range(ii-1,i+1)]
                 ii = 2 - 1 # -1 for index
-                
+
             # in natural order
             aa = [alist[j] for j in ind]
             # the local minimum is at ff(ii)
@@ -2092,13 +2059,13 @@ class MCSAgent(BaseAgent):
                 alist,flist,alp,fac = self.lsnew(nloc,small,sinit,short,x,p,s,alist,
                                                  flist,amin,amax,alp,abest,fmed,unitlen,
                                                  stopping_actions)
-                #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+                #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
                 cont = 0
-        
+
         if cont:
             # parabolic minimizer
             alp0 = 0.5*(aa[1]+aa[2] - f23/f123)
-            alp = lsguard(alp0,alist,amax,amin,small)
+            alp = LSUtils().lsguard(alp0,alist,amax,amin,small)
             alptol = small*(aa[2]-aa[0])
             
             
@@ -2124,9 +2091,9 @@ class MCSAgent(BaseAgent):
             alist.append(alp)
             flist.append(falp)
             #if prt>1, abest_anew_xnew=[alist(i),alp,(x+alp*p)']; #     
-            #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+            #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
             
-        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
         return alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,alp,fac
 
     def lsnew(self,nloc,small,sinit,short,x,p,s,alist,flist,amin,amax,alp,abest,fmed,unitlen, stopping_actions):  
@@ -2163,12 +2130,12 @@ class MCSAgent(BaseAgent):
         # do the step
         if leftok and ( flist[0] < flist[s-1] or (not rightok) ):
             #if prt>1, disp('extrapolate at left end point'); #
-            extra = 1 
+            extra = 1
             al = alist[0] - (alist[0+step] - alist[0])/small
             alp = max(amin, al)
         elif rightok:
             #if prt>1, disp('extrapolate at right end point'); #
-            extra=1;
+            extra=1
             au = alist[s-1] + (alist[s-1] - alist[s-1-step])/small
             alp = min(au,amax)
         else:
@@ -2180,7 +2147,7 @@ class MCSAgent(BaseAgent):
             wid = [lenth[i]/dist[i] for i in range(len(lenth))]
             i = np.argmax(wid)
             wid = max(wid)
-            alp, fac = lssplit(i,alist,flist,short)
+            alp, fac = LSUtils().lssplit(i,alist,flist,short)
         
         # new function value
         # falp = feval(func,x+alp*p)
@@ -2240,7 +2207,7 @@ class MCSAgent(BaseAgent):
             falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             alist.append(alp)
             flist.append(falp)
-            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
             #print('descent check: new point at ',alp)  #
         return alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s
     def lsquart(self, nloc, small, sinit, short, x, p, alist,
@@ -2328,10 +2295,10 @@ class MCSAgent(BaseAgent):
                 # two minimizers
                 ev = np.sort(ev)#
                 #print('quartic has two minimizers')# 
-                alp1 = lsguard(alist[2]+ev[0],alist,amax,amin,small)
-                alp2 = lsguard(alist[2]+ev[2],alist,amax,amin,small)
-                f1 = cmax*quartic(c,alp1-alist[2])
-                f2 = cmax*quartic(c,alp2-alist[2])
+                alp1 = LSUtils().lsguard(alist[2]+ev[0],alist,amax,amin,small)
+                alp2 = LSUtils().lsguard(alist[2]+ev[2],alist,amax,amin,small)
+                f1 = cmax*LSUtils().quartic(c,alp1-alist[2])
+                f2 = cmax*LSUtils().quartic(c,alp2-alist[2])
                 #print(ev,alp1,alp2,f1,f2)
                 #    if prt>3,
                 #      alp3=alist[2]+ev[1]#
@@ -2356,7 +2323,7 @@ class MCSAgent(BaseAgent):
                 quart = 0#
         
             if quart:
-                alp = lsguard(alp,alist,amax,amin,small)
+                alp = LSUtils().lsguard(alp,alist,amax,amin,small)
                 #print('new function value')
                 # falp = feval(func,x+alp*p)#
                 policy = self.get_policy(x+alp*p, L=stopping_actions)
@@ -2366,7 +2333,7 @@ class MCSAgent(BaseAgent):
                 falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 alist.append(alp)
                 flist.append(falp)
-                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
         
         return alist,flist,amin,amax,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,good,saturated
     
@@ -2414,7 +2381,7 @@ class MCSAgent(BaseAgent):
                 if nsep >= nmin:
                     break
             #end for
-            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
         #end while
         
         # instead of unnecessary separation, add some global points
@@ -2422,9 +2389,9 @@ class MCSAgent(BaseAgent):
             print(times)
             # extrapolation or split
             #print('extrapolation')
-            alist,flist, alp, fac = lsnew(func, nloc,small,sinit,short,x,p,s,alist,flist,amin,amax,alp,abest,fmed,unitlen)
-            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
-            
+            alist,flist, alp, fac = self.lsnew(nloc,small,sinit,short,x,p,s,alist,flist,amin,amax,alp,abest,fmed,unitlen, stopping_actions)
+            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
+
         return alist,flist,amin,amax,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s
 
     def lslocal(self, nloc, small, sinit, short, x, p, alist, flist,
@@ -2437,12 +2404,12 @@ class MCSAgent(BaseAgent):
         minima = [i and j for i,j in zip(up + [True], [True] + down)]
         imin = [i for i in range(len(minima)) if minima[i]]
         #print(up,down,minima,imin)
-        
+
         # consider nloc best local minima only
         ff = [flist[i] for i in imin]
         perm = np.argsort(ff)
         ff.sort()
-        
+
         imin = [imin[i] for i in perm] 
         nind = min(nloc,len(imin))
         imin = imin[nind-1::-1]# best point last for final improvement
@@ -2501,7 +2468,7 @@ class MCSAgent(BaseAgent):
                     alp = -np.Inf
                     if alist[0]==amin and flist[1]<flist[2]:
                         cas=-1
-                alp = lsguard(alp,alist,amax,amin,small)#
+                alp = LSUtils().lsguard(alp,alist,amax,amin,small)#
             elif ii==4:		# boundary minimum
                 # parabolic minimizer or extrapolation step
                 cas=0#
@@ -2513,7 +2480,7 @@ class MCSAgent(BaseAgent):
                     alp = np.Inf#
                     if alist[s-1] == amax and flist[s-2] < flist[s-3]:
                         cas=-1
-                alp=lsguard(alp,alist,amax,amin,small)
+                alp = LSUtils().lsguard(alp,alist,amax,amin,small)
             elif not (f234>0 and f234 < np.Inf):
                 # parabolic minimizer
                 cas=0#
@@ -2614,7 +2581,7 @@ class MCSAgent(BaseAgent):
             #end if
         #end for
         if nadd:
-            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = lssort(alist,flist)
+            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
         #    if prt>1,
         #        if saturated, disp(['saturated at s = ',num2str(s)])#
         #        else disp(['not saturated at s = ',num2str(s)])#

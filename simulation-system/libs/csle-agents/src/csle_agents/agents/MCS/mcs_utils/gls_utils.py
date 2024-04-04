@@ -86,3 +86,93 @@ class GLSUtils(UtilHelpers):
 
         return xl,xu,x,p,amin,amax,scale#,aa,ff
                 
+    def lssort(self, alist,flist):
+        '''
+        '''
+        perm = np.argsort(alist).tolist()    
+        alist.sort()
+        flist = [flist[i] for i in perm]
+        
+        s = len(alist)
+        
+        # find number of strict local minima, etc.
+        #up = [flist[0:s-1] < flist[1:s]]
+        up = [i<j for i, j in zip(flist[0:s-1], flist[1:s])]
+        #down = [flist[1:s] <= flist[0:s-1]]
+        down = [i<=j for i, j in zip(flist[1:s], flist[0:s-1])]
+        if len(down) == 1:
+            down[0] =  flist[s-1] < flist[s-2]
+        else:
+            down[s-2] = flist[s-1] < flist[s-2]
+        
+        monotone = (sum(up) == 0 or sum(down) == 0 )
+        minima = [i and j for i,j in zip(up + [True], [True] + down)]
+        nmin = sum(minima)
+        
+        fbest = min(flist)
+        i = np.argmin(flist)
+        
+        abest = alist[i]
+        fmed = np.median(flist)
+        
+        # distance from best minimum to next
+        if nmin > 1:
+            al = [alist[i] for i in range(len(minima)) if minima[i] == True]
+            if abest in al:
+                al.remove(abest)
+            unitlen = min(np.abs(np.subtract(al,abest)))
+        else:
+            unitlen = max(abest - alist[0], alist[s-1] - abest)
+        
+        return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s
+
+    def lsconvex(self, alist,flist,nmin,s):
+        if nmin > 1: 
+            convex=0  
+        else:
+            convex=1    
+            for i in range(1,s-1):
+                f12 = (flist[i]-flist[i-1])/(alist[i]-alist[i-1])
+                f13 = (flist[i]-flist[i+1])/(alist[i]-alist[i+1])
+                f123 = (f13-f12)/(alist[i+1]-alist[i-1])
+                if f123<0:
+                    #print('not convex')
+                    convex=0 
+                    break  
+            if convex:
+                nothing_to_do = 'done!'
+                #print('convex')
+        return convex
+
+    def lssat(self, small,alist,flist,alp,amin,amax,s,saturated):
+        cont = saturated #
+        
+        if cont:
+            # check boundary minimizer
+            fmin =  min(flist)
+            i =np.argmin(flist) #
+            if i==0 or  i==s-1:
+                cont = 0
+        
+        if cont:
+            # select three points for parabolic interpolation
+            aa = [alist[j] for j in range(i-1,i+1+1)]
+            ff = [flist[j] for j in range(i-1,i+1+1)]
+            
+            # get divided differences 
+            f12=(ff[1]-ff[0])/(aa[1]-aa[0]) #
+            f23=(ff[2]-ff[1])/(aa[2]-aa[1]) #
+            f123=(f23-f12)/(aa[2]-aa[0]) #
+            
+            if f123>0:
+                # parabolic minimizer
+                alp=0.5*(aa[1]+aa[2]-f23/f123) #
+                alp = max(amin,min(alp,amax)) #
+                alptol = small*(aa[2]-aa[0]) #
+                saturated = (abs(alist[i]-alp)<=alptol)
+            else:
+                saturated = 0
+            if not saturated:
+                no_print = 0
+                #print('saturation check negative')
+        return alp, saturated

@@ -621,3 +621,25 @@ class MCSUtils(UtilHelpers):
         for i in i2:        
             x2[i] = x[i] - 2*delta[i]
         return x1,x2
+
+    def polint1(self, x,f):
+        '''
+            quadratic polynomial interpolation
+        '''
+        f13 = (f[2]-f[0])/(x[2]-x[0])
+        f12 = (f[1]-f[0])/(x[1]-x[0])
+        f23 = (f[2]-f[1])/(x[2]-x[1])
+        
+        g = f13 + f12 - f23
+        G = 2*(f13-f12)/(x[2]-x[1])
+        return g,G
+
+    def hessian(self, i,k,x,x0,f,f0,g,G):
+        '''
+        computes the element G(i,k) of the Hessian of the local quadratic model
+        '''
+        #print(i,x[i],x0[i],f,f,g[i],G[i,i])
+        #print(k,x[k],x0[k],f,f,g[k],G[k,k]) 
+        h = f-f0 -g[i]*(x[i]-x0[i])  -g[k]*(x[k]-x0[k])  -0.5*G[i,i]*(pow((x[i]-x0[i]),2))  -0.5*G[k,k]*pow((x[k]-x0[k]),2)
+        h = h / (x[i]- x0[i])/(x[k]-x0[k])
+        return h
