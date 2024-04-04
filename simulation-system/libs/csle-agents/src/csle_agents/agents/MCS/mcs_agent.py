@@ -2120,7 +2120,7 @@ class MCSAgent(BaseAgent):
         ftrip = copy.deepcopy(f)
         xtripnew = copy.deepcopy(x)
         ftripnew = copy.deepcopy(f)
-        
+         
         for j in range(len(ind)):
             i = ind[j]
             x = copy.deepcopy(xtrip)
