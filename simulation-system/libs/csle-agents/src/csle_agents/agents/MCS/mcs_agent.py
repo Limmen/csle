@@ -1392,27 +1392,27 @@ class MCSAgent(BaseAgent):
                         x2[i] = xmin[i] + alist[j + 1]
                         f2 = flist[j + 1]
                     xmin[i] = xminnew[i]
-                    fmi = copy.deepcopy(fminew) 
+                    fmi = copy.deepcopy(fminew)
                 else:
                     x1[i] = xminnew[i]
                     f1 = copy.deepcopy(fminew)
-                    if xmin[i] < x1[i] and j < len(alist)-1:
-                        x2[i] = xmin[i] + alist[j+1]
-                        f2 = flist[j+1]
+                    if xmin[i] < x1[i] and j < len(alist) - 1:
+                        x2[i] = xmin[i] + alist[j + 1]
+                        f2 = flist[j + 1]
                     elif j == 0:
-                        if alist[j+1]:
-                            x2[i] = xmin[i] + alist[j+1]
-                            f2 = flist[j+1]
+                        if alist[j + 1]:
+                            x2[i] = xmin[i] + alist[j + 1]
+                            f2 = flist[j + 1]
                         else:
-                            x2[i] = xmin[i] + alist[j+2]
-                            f2 = flist[j+2]
-                    elif alist[j-1]:
-                        x2[i] = xmin[i] + alist[j-1]
-                        f2 = flist[j-1]
+                            x2[i] = xmin[i] + alist[j + 2]
+                            f2 = flist[j + 2]
+                    elif alist[j - 1]:
+                        x2[i] = xmin[i] + alist[j - 1]
+                        f2 = flist[j - 1]
                     else:
-                        x2[i] = xmin[i] + alist[j-2]
-                        f2 = flist[j-2]
-            g[i], G[i,i] = MCSUtils().polint1([xmin[i], x1[i], x2[i]],[fmi, f1, f2])
+                        x2[i] = xmin[i] + alist[j - 2]
+                        f2 = flist[j - 2]
+            g[i], G[i, i] = MCSUtils().polint1([xmin[i], x1[i], x2[i]], [fmi, f1, f2])
             x = copy.deepcopy(xmin)
             k1 = -1
             if f1 <= f2:
@@ -1420,8 +1420,8 @@ class MCSAgent(BaseAgent):
             else:
                 x[i] = x2[i]
             for k in range(i):
-                if hess[i,k]:
-                    q1 = fmi + g[k] * (x1[k] - xmin[k]) + 0.5 * G[k,k] * (x1[k] - xmin[k]) ** 2  
+                if hess[i, k]:
+                    q1 = fmi + g[k] * (x1[k] - xmin[k]) + 0.5 * G[k, k] * (x1[k] - xmin[k]) ** 2
                     q2 = fmi + g[k] * (x2[k] - xmin[k]) + 0.5 * G[k, k] * (x2[k] - xmin[k]) ** 2
                     if q1 <= q2:
                         x[k] = x1[k]
@@ -1429,8 +1429,8 @@ class MCSAgent(BaseAgent):
                         x[k] = x2[k]
                     policy = self.get_policy(x, L=stopping_actions)
                     avg_metrics = self.eval_theta(policy=policy,
-                                                max_steps=self.experiment_config.hparams[
-                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                                                  max_steps=self.experiment_config.hparams[
+                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
                     f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                     nfcsearch = nfcsearch + 1
                     G[i, k] = MCSUtils().hessian(i, k, x, xmin, f12, fmi, g, G)
@@ -1453,163 +1453,128 @@ class MCSAgent(BaseAgent):
                         x1[k1] = xmin[k1]
                     elif xminnew[k1] == x2[k1]:
                         x2[k1] = xmin[k1]
-                #print('xmins',k1,xminnew[i],xmin[i])  
-                for k in range(i+1):
-                    g[k] = g[k] + G[i,k]*(xminnew[i] - xmin[i])
-                    if k1 > -1:
-                        g[k] = g[k] + G[k1,k]*(xminnew[k1] - xmin[k1])
-                #end for k in i
-            xmin = copy.deepcopy(xminnew)
-            fmi = copy.deepcopy(fminew) 
-            #print('check',i)  print(g[i], G[i,i])
-        #end for i
-        return xmin,fmi,g,G,nfcsearch
 
-    def gls(self,xl,xu,x,p,alist,flist,nloc, small, smax, stopping_actions, prt=2):
+                for k in range(i + 1):
+                    g[k] = g[k] + G[i, k] * (xminnew[i] - xmin[i])
+                    if k1 > -1:
+                        g[k] = g[k] + G[k1, k] * (xminnew[k1] - xmin[k1])
+            xmin = copy.deepcopy(xminnew)
+            fmi = copy.deepcopy(fminew)
+        return xmin, fmi, g, G, nfcsearch
+
+    def gls(self, xl, xu, x, p, alist, flist, nloc, small, smax, stopping_actions, prt=2):
         '''
         Global line search main function
-        arg:
-            func -  funciton name which is subjected to optimization
-            xl -  lower bound
-            xu -  upper bound
-            x -  starting point
-            p -  search direction [1 or -1 ? need to check]
-            alist -  list of known steps
-            flist -  funciton values of known steps
-            nloc -  best local optimizal
-            small - tollarance values
-            smax -  search list size
-            prt =  print - unsued in this implementation so far
+        :param func: funciton name which is subjected to optimization
+        :param xl: lower bound
+        :param xu: upper bound
+        :param x: starting point
+        :param p: search direction [1 or -1 ? need to check]
+        :param alist: list of known steps
+        :param flist: funciton values of known steps
+        :param nloc: best local optimizal
+        :param small: tollarance values
+        :param smax: search list size
+        :param prt: print - unsued in this implementation so far
+        :return: search list,function values,number of fucntion evaluation
         '''
-        #%%    
         if np.isscalar(alist):
             alist = [alist]
             flist = [flist]
-            #print('alist in gls:',alist)
-            #print('flist in gls:',flist)
-            
-                
         if type(alist) != list:
+        # if isinstance(alist, list): TODO: this should work
             alist = alist.tolist()
+        # if isinstance(flist, list): TODO: this should work
         if type(flist) != list:
             flist = flist.tolist()
-            
-        # golden section fraction is (3-sqrt(5))/2= 0.38196601125011
-        short=0.381966 #fraction for splitting intervals
-        
-        # save information for nf computation and extrapolation decision
-        sinit = len(alist)  #initial list size
-        
-        # get 5 starting points (needed for lslocal)
+
+        short = 0.381966
+        sinit = len(alist)
+
         bend = 0
-        xl,xu,x,p,amin,amax,scale = GLSUtils().lsrange(xl,xu,x,p,prt,bend)	# find range of useful alp 
-        #plt.plot(aa,ff)
-        alist,flist,alp,alp1,alp2,falp = self.lsinit(x,p,alist,flist,amin,amax,scale, stopping_actions) # 2 points needed for lspar and lsnew
-        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-        nf = s - sinit	# number of function values used
-        
-        
-        #print(alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s)
-        while s < min(5,smax):
+        xl, xu, x, p, amin, amax, scale = GLSUtils().lsrange(xl, xu, x, p, prt, bend)
+        alist, flist, alp, alp1, alp2, falp = self.lsinit(x, p, alist, flist, amin, amax, scale, stopping_actions)
+        alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s = GLSUtils().lssort(alist, flist)
+        nf = s - sinit
+
+        while s < min(5, smax):
             if nloc == 1:
-                #print('interpol')
-                # parabolic interpolation step
-                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,alp,fac = self.lspar(nloc,small,sinit,short,x,p,alist,flist,
-                                                                                                         amin,amax,alp,abest,fbest,fmed,up,down,
-                                                                                                         monotone,minima,nmin,unitlen,s, stopping_actions) 
-                # when s==3 we haven't done a true parabolic step 
-                # and may appear monotonic without being so!
-                if s > 3 and monotone and (abest==amin or abest==amax):
-                    #print('return since monotone')  # 
-                    nf = s - sinit 		# number of function values used
-                    #lsdraw  
-                    return alist,flist,nf
+                (alist, flist, abest, fbest, fmed, up, down, monotone,
+                 minima, nmin, unitlen, s, alp, fac) = self.lspar(nloc, small, sinit, short, x, p, alist, flist,
+                                                                  amin, amax, alp, abest, fbest, fmed, up, down,
+                                                                  monotone, minima, nmin, unitlen, s, stopping_actions)
+
+                if s > 3 and monotone and (abest == amin or abest == amax):
+                    nf = s - sinit
+                    return alist, flist, nf
             else:
-                #print('explore')
-                # extrapolation or split
-                alist,flist,alp,fac = self.lsnew(nloc,small,sinit,short,x,p,s,alist,flist,
-                                                 amin,amax,alp,abest,fmed,unitlen, stopping_actions) 
-                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-            #print('while \n:')
-            #print(alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s) 
-        # end while
-        #%%
-        saturated=0	#is reset in lsquart
-        # shape detection phase
+                alist, flist, alp, fac = self.lsnew(nloc, small, sinit, short, x, p, s, alist, flist,
+                                                    amin, amax, alp, abest, fmed, unitlen, stopping_actions)
+                (alist, flist, abest, fbest, fmed, up, down, monotone,
+                 minima, nmin, unitlen, s) = GLSUtils().lssort(alist, flist)
+        saturated = 0
         if nmin == 1:
-            if monotone and (abest==amin or abest==amax):
-                #if prt>1,disp('return since monotone'); end;
-                nf = s-sinit # number of function values used
-                #lsdraw; 
-                #print('return since monotone')
-                return alist,flist,nf
+            if monotone and (abest == amin or abest == amax):
+                nf = s - sinit
+                return alist, flist, nf
             if s == 5:
-                # try quartic interpolation step
-                alist,flist,amin,amax,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,good,saturated = self.lsquart(nloc, small, sinit,
-                                                                                                                                short, x, p, alist,
-                                                                                                                                flist, amin, amax, alp,
-                                                                                                                                abest, fbest, fmed, up,
-                                                                                                                                down, monotone, minima,
-                                                                                                                                nmin, unitlen, s, saturated,
-                                                                                                                                stopping_actions)
-            # check descent condition 		
-            alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = self.lsdescent(x, p, alist, flist, alp,
-                                                                                                     abest, fbest, fmed, up, down,
-                                                                                                     monotone, minima, nmin, unitlen,
-                                                                                                     s, stopping_actions)
-            # check convexity	
-            convex = GLSUtils().lsconvex(alist,flist,nmin,s)
+
+                (alist, flist, amin, amax, alp, abest, fbest, fmed, up, down,
+                 monotone, minima, nmin, unitlen, s, good, saturated) = self.lsquart(nloc, small, sinit,
+                                                                                     short, x, p, alist,
+                                                                                     flist, amin, amax, alp,
+                                                                                     abest, fbest, fmed, up,
+                                                                                     down, monotone, minima,
+                                                                                     nmin, unitlen, s, saturated,
+                                                                                     stopping_actions)
+            (alist, flist, alp, abest, fbest, fmed, up, down, monotone,
+             minima, nmin, unitlen, s) = self.lsdescent(x, p, alist, flist, alp,
+                                                        abest, fbest, fmed, up, down,
+                                                        monotone, minima, nmin, unitlen,
+                                                        s, stopping_actions)
+            convex = GLSUtils().lsconvex(alist, flist, nmin, s)
             if convex:
-                #print('return since convex')
-                nf = s-sinit # number of function values used
-                #lsdraw; 
-                return alist,flist,nf
+                nf = s - sinit
+                return alist, flist, nf
         sold = 0
-        # refinement phase
+
         while 1:
-            #lsdraw
-            #print('***** new refinement iteration *****')
-            # check descent condition 		
-            alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = self.lsdescent(x, p, alist, flist, alp, abest,
-                                                                                                     fbest, fmed, up, down, monotone,
-                                                                                                     minima, nmin, unitlen, s, stopping_actions)
-            # check saturation
-            alp,saturated = GLSUtils().lssat(small,alist,flist,alp,amin,amax,s,saturated) 
+            (alist, flist, alp, abest, fbest, fmed, up, down, monotone,
+             minima, nmin, unitlen, s) = self.lsdescent(x, p, alist, flist, alp, abest,
+                                                        fbest, fmed, up, down, monotone,
+                                                        minima, nmin, unitlen, s, stopping_actions)
+            alp, saturated = GLSUtils().lssat(small, alist, flist, alp, amin, amax, s, saturated)
             if saturated or s == sold or s >= smax:
                 if saturated:
                     no_print = 0
-                    #print('return since saturated')
-                if s==sold:
+                if s == sold:
                     no_print = 0
-                    #print('return since s==sold')
-                if s>=smax:
+                if s >= smax:
                     no_print = 0
-                    #print('return since s>=smax')
                 break
             sold = s
-            nminold = nmin #if prt>1,nmin,end;
+            nminold = nmin
             if not saturated and nloc > 1:
-                # separate close minimizers
-                alist,flist,amin,amax,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = self.lssep(nloc,small,
-                                                                                                               sinit,short,x,
-                                                                                                               p,alist,flist,amin,
-                                                                                                               amax,alp,abest,fbest,
-                                                                                                               fmed,up,down,monotone,
-                                                                                                               minima,nmin,unitlen,s,
-                                                                                                               stopping_actions)
-            # local interpolation step
-            alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,saturated = self.lslocal(nloc, small, sinit, short,
-                                                                                                             x, p, alist, flist, amin, amax,
-                                                                                                             alp, abest, fbest, fmed, up,
-                                                                                                             down, monotone, minima, nmin,
-                                                                                                             unitlen, s, saturated, stopping_actions)
-            if nmin>nminold:
-                saturated=0
-        #end while
-        #get output information
-        nf = s-sinit # number of function values used
-        #print(nf)
-        return alist,flist,nf #  search list,function values,number of fucntion evaluation
+
+                (alist, flist, amin, amax, alp, abest, fbest, fmed, up, down, monotone,
+                 minima, nmin, unitlen, s) = self.lssep(nloc, small,
+                                                        sinit, short, x,
+                                                        p, alist, flist, amin,
+                                                        amax, alp, abest, fbest,
+                                                        fmed, up, down, monotone,
+                                                        minima, nmin, unitlen, s,
+                                                        stopping_actions)
+            (alist, flist, alp, abest, fbest, fmed, up, down, monotone,
+             minima, nmin, unitlen, s, saturated) = self.lslocal(nloc, small, sinit, short,
+                                                                 x, p, alist, flist, amin, amax,
+                                                                 alp, abest, fbest, fmed, up,
+                                                                 down, monotone, minima, nmin,
+                                                                 unitlen, s, saturated, stopping_actions)
+            if nmin > nminold:
+                saturated = 0
+        nf = s - sinit
+
+        return alist, flist, nf
 
     def lsinit(self, x, p, alist, flist, amin, amax, scale, stopping_actions):
         '''
@@ -1627,9 +1592,7 @@ class MCSAgent(BaseAgent):
                 alp = amin
             if amax < 0:
                 alp = amax
-            # new function value
-            # falp = feval(func,x+alp*p)
-            policy = self.get_policy(x+alp*p, L=stopping_actions)
+            policy = self.get_policy(x + alp * p, L=stopping_actions)
             avg_metrics = self.eval_theta(policy=policy,
                                           max_steps=self.experiment_config.hparams[
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -1644,55 +1607,48 @@ class MCSAgent(BaseAgent):
             if amax < 0:
                 alp = amax
             if alist[0] != alp:
-                # new function value
-                policy = self.get_policy(x+alp*p, L=stopping_actions)
-                avg_metrics = self.eval_theta(policy=policy,
-                                            max_steps=self.experiment_config.hparams[
-                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
-                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                alist.append(alp)
-                flist.append(falp)
-                
-        # alist and f lis are set -  now comut min and max
-        aamin = min(alist) # scalr
-        aamax = max(alist) # scalr
-        if amin > aamin  or  amax < aamax:
-            #print(alist, amin, amax)
-            sys.exit('GLS Error: non-admissible step in alist')
-        
-        # establish correct scale
-        if aamax - aamin <= scale:
-            alp1 = max(amin,min(-scale,amax)) # scalr
-            alp2 = max(amin,min(+scale,amax)) # scalr
-            alp = np.Inf # scalr
-            
-            if aamin - alp1 >= alp2 - aamax:
-                alp = alp1
-            if alp2 - aamax >= aamin - alp1:
-                alp = alp2
-            if alp < aamin  or  alp > aamax:
-                # new function value
-                policy = self.get_policy(x+alp*p, L=stopping_actions)
+                policy = self.get_policy(x + alp * p, L=stopping_actions)
                 avg_metrics = self.eval_theta(policy=policy,
                                               max_steps=self.experiment_config.hparams[
                                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
                 falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 alist.append(alp)
                 flist.append(falp)
-        if len(alist)==1:
-            #print(scale,aamin,aamax,alp1,alp2)
-            sys.exit('GLS Error: lsinit bug: no second point found')
-        
-        return alist,flist,alp,alp1,alp2,falp
 
-    def triple(self, x, f, x1, x2, u, v, hess, G, stopping_actions, setG = False):
+        aamin = min(alist)
+        aamax = max(alist)
+        if amin > aamin or amax < aamax:
+            sys.exit('GLS Error: non-admissible step in alist')
+        if aamax - aamin <= scale:
+            alp1 = max(amin, min(- scale, amax))
+            alp2 = max(amin, min(+ scale, amax))
+            alp = np.Inf
+            
+            if aamin - alp1 >= alp2 - aamax:
+                alp = alp1
+            if alp2 - aamax >= aamin - alp1:
+                alp = alp2
+            if alp < aamin or alp > aamax:
+                policy = self.get_policy(x + alp * p, L=stopping_actions)
+                avg_metrics = self.eval_theta(policy=policy,
+                                              max_steps=self.experiment_config.hparams[
+                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
+                falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                alist.append(alp)
+                flist.append(falp)
+        if len(alist) == 1:
+            sys.exit('GLS Error: lsinit bug: no second point found')
+
+        return alist, flist, alp, alp1, alp2, falp
+
+    def triple(self, x, f, x1, x2, u, v, hess, G, stopping_actions, setG=False):
         nf = 0
         n = len(x)
-        g = np.zeros(n)    
+        g = np.zeros(n)
         nargin = 10
         if setG:
             nargin = 9
-            G =  np.zeros((n,n))
+            G = np.zeros((n, n))
         
         ind = [i for i in range(n) if (u[i] < x[i] and x[i] < v[i])]
         ind1 = [i for i in range(n) if (x[i] <= u[i] or x[i] >= v[i])]
@@ -1700,28 +1656,24 @@ class MCSAgent(BaseAgent):
         for j in range(len(ind1)):
             g[ind1[j]] = 0
             for k in range(n):
-                G[ind1[j],k] = 0
-                G[k,ind1[j]] = 0
+                G[ind1[j], k] = 0
+                G[k, ind1[j]] = 0
                 
         if len(ind) <= 1:
             xtrip = copy.deepcopy(x)
             ftrip = copy.deepcopy(f)
-            if len(ind) != 0:  
+            if len(ind) != 0:
                 for i in ind:
                     g[i] = 1
-                    G[i,i] = 1
-            return xtrip,ftrip,g,G,x1,x2,nf    
-        # end if
+                    G[i, i] = 1
+            return xtrip, ftrip, g, G, x1, x2, nf
         
         if setG:
-            #print('reset G')
-            G =  np.zeros((n,n))
-        
+            G =  np.zeros((n, n))
         xtrip = copy.deepcopy(x)
         ftrip = copy.deepcopy(f)
         xtripnew = copy.deepcopy(x)
         ftripnew = copy.deepcopy(f)
-        
         for j in range(len(ind)):
             i = ind[j]
             x = copy.deepcopy(xtrip)
@@ -1741,7 +1693,7 @@ class MCSAgent(BaseAgent):
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             nf = nf + 2
-            g[i], G[i,i] = MCSUtils().polint1([xtrip[i],x1[i],x2[i]],[f,f1,f2])
+            g[i], G[i, i] = MCSUtils().polint1([xtrip[i], x1[i], x2[i]], [f, f1, f2])
             if f1 <= f2:
                 if f1 < ftrip:
                     ftripnew = copy.deepcopy(f1)
@@ -1752,17 +1704,17 @@ class MCSAgent(BaseAgent):
                     xtripnew[i] = x2[i]
             
             if nargin < 10:
-                k1 = -1 
+                k1 = -1
                 if f1 <= f2:
                     x[i] = x1[i]
                 else:
                     x[i] = x2[i]
                 
                 for k in range(i):
-                    if hess[i,k]:
+                    if hess[i, k]:
                         if xtrip[k] > u[k] and xtrip[k] < v[k] and (len([m for m in range(len(ind)) if ind[m] == k]) != 0):
-                            q1 = ftrip + g[k]*(x1[k]-xtrip[k])+0.5*G[k,k]*(x1[k]-xtrip[k])**2
-                            q2 = ftrip + g[k]*(x2[k]-xtrip[k])+0.5*G[k,k]*(x2[k]-xtrip[k])**2
+                            q1 = ftrip + g[k] * (x1[k] - xtrip[k]) + 0.5 * G[k, k] * (x1[k] - xtrip[k]) ** 2
+                            q2 = ftrip + g[k] * (x2[k] - xtrip[k]) + 0.5 * G[k, k] * (x2[k] - xtrip[k]) ** 2
                             if q1 <= q2:
                                 x[k] = x1[k]
                             else:
@@ -1773,176 +1725,131 @@ class MCSAgent(BaseAgent):
                                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
                             f12 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                             nf = nf + 1
-                            G[i,k] = MCSUtils().hessian(i,k,x,xtrip,f12,ftrip,g,G)
-                            #print(G[i,k])
-                            G[k,i] = G[i,k]
+                            G[i, k] = MCSUtils().hessian(i, k, x, xtrip, f12, ftrip, g, G)
+                            G[k, i] = G[i, k]
                             if f12 < ftripnew:
                                 ftripnew = copy.deepcopy(f12)
                                 xtripnew = copy.deepcopy(x)
                                 k1 = k
-                            x[k] = xtrip[k] 
-                        #end if xtrip
+                            x[k] = xtrip[k]
                     else:
-                        G[i,k] = 0
-                        G[k,i] = 0
-                    #end hess[i,k]
-                #end for k in i-1
-            #end narg
+                        G[i, k] = 0
+                        G[k, i] = 0
+
             if ftripnew < ftrip:
                 if x1[i] == xtripnew[i]:
-                    x1[i] = xtrip[i] 
-                else: 
-                    x2[i] = xtrip[i] 
+                    x1[i] = xtrip[i]
+                else:
+                    x2[i] = xtrip[i]
                 if nargin < 10 and k1 > -1:
                     if xtripnew[k1] == x1[k1]:
                         x1[k1] = xtrip[k1]
                     else:
-                        x2[k1] = xtrip[k1] 
-                for k in range(i+1):
+                        x2[k1] = xtrip[k1]
+                for k in range(i + 1):
                     if (len([m for m in range(len(ind)) if ind[m] == k]) != 0):
-                        g[k] = g[k] + G[i,k]*(xtripnew[i] - xtrip[i])
+                        g[k] = g[k] + G[i, k] * (xtripnew[i] - xtrip[i])
                         if nargin < 10 and k1 > -1:
-                            g[k] = g[k] + G(k1,k)*(xtripnew[k1] - xtrip[k1])
-                    #end if empty
+                            g[k] = g[k] + G(k1, k) * (xtripnew[k1] - xtrip[k1])
                 xtrip = copy.deepcopy(xtripnew)
                 ftrip = copy.deepcopy(ftripnew)
-            # end ftripnew
-        #en for j in ind
-        return xtrip,ftrip,g,G,x1,x2,nf
+        return xtrip, ftrip, g, G, x1, x2, nf
 
-    def lspar(self, nloc,small,sinit,short,x,p,alist,flist,amin,amax,alp,abest,fbest,
-              fmed,up,down,monotone,minima,nmin,unitlen,s, stopping_actions):
-        cont = 1	# continue?
+    def lspar(self, nloc, small, sinit, short, x, p, alist, flist, amin, amax, alp, abest, fbest,
+              fmed, up, down, monotone, minima, nmin, unitlen, s, stopping_actions):
+        cont = 1
         fac = short
         if s < 3:
-            alist,flist,alp,fac = self.lsnew(nloc,small,sinit,short,x,p,s,
-                                        alist,flist,amin,amax,alp,
-                                        abest,fmed,unitlen, stopping_actions) 
-            cont=0 #
-        
-        #print('cond:',cont)
+            alist, flist, alp, fac = self.lsnew(nloc, small, sinit, short, x, p, s,
+                                                alist, flist, amin, amax, alp,
+                                                abest, fmed, unitlen, stopping_actions)
+            cont = 0
+
         if cont:
-            # select three points for parabolic interpolation
-            fmin = min(flist) # unused
+            # fmin = min(flist)
             i = np.argmin(flist)
-            if i <= 1: # first two
+            if i <= 1:
                 ind = [j for j in range(3)]
                 ii = copy.deepcopy(i)
-            elif i >= s-2: # last two
-                ind = [j for j in range(s-2-1,s)]
-                ii = i - (s-1) + 2 # corrections for index
+            elif i >= s - 2:
+                ind = [j for j in range(s - 2 - 1, s)]
+                ii = i - (s - 1) + 2
             else:
-                ind = [j for j in range(ii-1,i+1)]
-                ii = 2 - 1 # -1 for index
+                ind = [j for j in range(ii - 1, i + 1)]
+                ii = 2 - 1
 
-            # in natural order
             aa = [alist[j] for j in ind]
-            # the local minimum is at ff(ii)
-            ff = [flist[j] for j in ind]	
-            
-            # get divided differences 
-            f12 = (ff[1]- ff[0])/(aa[1]-aa[0])
-            f23 = (ff[2]- ff[1])/(aa[2]-aa[1])
-            f123 = (f23 - f12)/(aa[2]-aa[0])
-            
-            # handle concave case
-            if not (f123 > 0):
-                alist,flist,alp,fac = self.lsnew(nloc,small,sinit,short,x,p,s,alist,
-                                                 flist,amin,amax,alp,abest,fmed,unitlen,
-                                                 stopping_actions)
-                #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-                cont = 0
+            ff = [flist[j] for j in ind]
 
+            f12 = (ff[1] - ff[0]) / (aa[1] - aa[0])
+            f23 = (ff[2] - ff[1]) / (aa[2] - aa[1])
+            f123 = (f23 - f12) / (aa[2] - aa[0])
+            if not (f123 > 0):
+                alist, flist, alp, fac = self.lsnew(nloc, small, sinit, short, x, p, s, alist,
+                                                    flist, amin, amax, alp, abest, fmed, unitlen,
+                                                    stopping_actions)
+                # alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
+                cont = 0
         if cont:
-            # parabolic minimizer
-            alp0 = 0.5*(aa[1]+aa[2] - f23/f123)
-            alp = LSUtils().lsguard(alp0,alist,amax,amin,small)
-            alptol = small*(aa[2]-aa[0])
-            
-            
-            # handle infinities and close predictor
-            if f123 == np.Inf or min([abs(i-alp) for i in alist]) <= alptol:
-                # split best interval
-                #if prt>1, disp('split best interval'); #
-                if ii == 0 or ( ii == 1 and (aa[1] >= 0.5*(aa[0] + aa[2]))):
-                    alp = 0.5*(aa[0]+aa[1])
+            alp0 = 0.5 * (aa[1] + aa[2] - f23 / f123)
+            alp = LSUtils().lsguard(alp0, alist, amax, amin, small)
+            alptol = small * (aa[2] - aa[0])
+            if f123 == np.Inf or min([abs(i - alp) for i in alist]) <= alptol:
+                if ii == 0 or (ii == 1 and (aa[1] >= 0.5 * (aa[0] + aa[2]))):
+                    alp = 0.5 * (aa[0] + aa[1])
                 else:
-                    alp = 0.5*(aa[1]+aa[2])
+                    alp = 0.5 * (aa[1] + aa[2])
             else:
                 np_print = alp0
-                #print('parabolic predictor: alp0 = ',alp0)
-                
-            # add point to the list     # new function value
-            # falp = feval(func,x+alp*p)
-            policy = self.get_policy(x+alp*p, L=stopping_actions)
+
+            policy = self.get_policy(x + alp * p, L=stopping_actions)
             avg_metrics = self.eval_theta(policy=policy,
-                                        max_steps=self.experiment_config.hparams[
-                                            agents_constants.COMMON.MAX_ENV_STEPS].value)
+                                          max_steps=self.experiment_config.hparams[
+                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
             falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             alist.append(alp)
             flist.append(falp)
-            #if prt>1, abest_anew_xnew=[alist(i),alp,(x+alp*p)']; #     
-            #alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-            
-        alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-        return alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,alp,fac
+        (alist, flist, abest, fbest, fmed, up, down, monotone,
+         minima, nmin, unitlen, s) = GLSUtils().lssort(alist, flist)
+        return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s, alp, fac
 
-    def lsnew(self,nloc,small,sinit,short,x,p,s,alist,flist,amin,amax,alp,abest,fmed,unitlen, stopping_actions):  
-
-        if alist[0] <= amin: 
-            # leftmost point already at boundary
-            leftok = 0		
-        elif flist[0] >= max(fmed,flist[1]):
-            # bad leftmost point
-            # extrapolate only if no scale known or global search	
-            leftok = (sinit == 1 or nloc > 1 )
+    def lsnew(self, nloc, small, sinit, short, x, p, s, alist, flist, amin,
+              amax, alp, abest, fmed, unitlen, stopping_actions):
+        if alist[0] <= amin:
+            leftok = 0
+        elif flist[0] >= max(fmed, flist[1]):
+            leftok = (sinit == 1 or nloc > 1)
         else:
-            # good interior leftmost point
             leftok = 1
-            
-        if alist[s-1] >= amax:
-            # rightmost point already at boundary
+        if alist[s - 1] >= amax:
             rightok = 0
-        elif flist[s-1] >= max(fmed, flist[s-2]):
-            # bad rightmost point
-            # extrapolate only if no scale known or global search	
-            rightok = (sinit ==1 or nloc > 1 )
+        elif flist[s - 1] >= max(fmed, flist[s - 2]):
+            rightok = (sinit == 1 or nloc > 1)
         else:
-            # good interior rightmost point
             rightok = 1
-        
-        # number of intervals used in extrapolation step
         if sinit == 1:
-            step = s-1
+            step = s - 1
         else:
             step = 1
-        
         fac = short
-        # do the step
-        if leftok and ( flist[0] < flist[s-1] or (not rightok) ):
-            #if prt>1, disp('extrapolate at left end point'); #
+        if leftok and (flist[0] < flist[s - 1] or (not rightok)):
             extra = 1
-            al = alist[0] - (alist[0+step] - alist[0])/small
+            al = alist[0] - (alist[0 + step] - alist[0]) / small
             alp = max(amin, al)
         elif rightok:
-            #if prt>1, disp('extrapolate at right end point'); #
-            extra=1
-            au = alist[s-1] + (alist[s-1] - alist[s-1-step])/small
-            alp = min(au,amax)
+            extra = 1
+            au = alist[s - 1] + (alist[s - 1] - alist[s - 1 - step]) / small
+            alp = min(au, amax)
         else:
-            # no extrapolation
-            #if prt>1, disp('split relatively widest interval'); #
             extra = 0
-            lenth = [i-j for i,j in zip(alist[1:s],alist[0:s-1])]
-            dist = [max(i,j,k) for i,j,k in zip([i-abest for i in alist[1:s]], [abest-i for i in alist[0:s-1]], (unitlen*np.ones(s-1)).tolist())]
-            wid = [lenth[i]/dist[i] for i in range(len(lenth))]
+            lenth = [i - j for i, j in zip(alist[1:s], alist[0:s - 1])]
+            dist = [max(i, j, k) for i, j, k in zip([i-abest for i in alist[1:s]], [abest - i for i in alist[0:s - 1]], (unitlen * np.ones(s - 1)).tolist())]
+            wid = [lenth[i] / dist[i] for i in range(len(lenth))]
             i = np.argmax(wid)
             wid = max(wid)
-            alp, fac = LSUtils().lssplit(i,alist,flist,short)
-        
-        # new function value
-        # falp = feval(func,x+alp*p)
-        policy = self.get_policy(x+alp*p, L=stopping_actions)
+            alp, fac = LSUtils().lssplit(i, alist, flist, short)
+
+        policy = self.get_policy(x + alp * p, L=stopping_actions)
         avg_metrics = self.eval_theta(policy=policy,
                                       max_steps=self.experiment_config.hparams[
                                           agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -1950,184 +1857,151 @@ class MCSAgent(BaseAgent):
         alist.append(alp)
         flist.append(falp)
 
-        
-        return alist,flist,alp,fac
+        return alist, flist, alp, fac
 
-    def lsdescent(self, x,p,alist,flist,alp,abest,fbest,
-                  fmed,up,down,monotone,minima,nmin,
-                  unitlen,s, stopping_actions):
-        cont = max([i==0 for i in alist]) # condition for continue
-        
-        if cont: 
+    def lsdescent(self, x, p, alist, flist, alp, abest, fbest,
+                  fmed, up, down, monotone, minima, nmin,
+                  unitlen, s, stopping_actions):
+        cont = max([i == 0 for i in alist])
+
+        if cont:
             fbest = min(flist)
             i = np.argmin(flist)
             if alist[i] < 0:
-                if alist[i] >= 4*alist[i+1]:
-                    cont=0 # 
-            elif alist[i]>0: 
-                if alist[i]<4*alist[i-1]:
-                    cont=0 # 
-            else: 
-                if i==0:# lowest point
-                    fbest = flist[1]
-                elif i==s-1:# last point
-                    fbest = flist[s-2]
-                else:
-                    fbest = min(flist[i-1],flist[i+1])
-                    
-        if cont:
-            # force local descent step
-            if alist[i] !=0:
-                alp = alist[i]/3 
-            elif i==s-1:
-                alp = alist[s-2]/3
-            elif i==0:
-                alp=alist[1]/3 
+                if alist[i] >= 4 * alist[i + 1]:
+                    cont = 0
+            elif alist[i] > 0:
+                if alist[i] < 4 * alist[i - 1]:
+                    cont = 0
             else:
-                # split wider adjacent interval
-                if alist[i+1] - alist[i]>alist[i]-alist[i-1]:
-                    alp = alist[i+1]/3 
+                if i == 0:
+                    fbest = flist[1]
+                elif i == s - 1:
+                    fbest = flist[s - 2]
                 else:
-                    alp=alist[i-1]/3 
-            # new function value
-            # falp = feval(func,x+alp*p)
-            policy = self.get_policy(x+alp*p, L=stopping_actions)
+                    fbest = min(flist[i - 1], flist[i + 1])
+        if cont:
+            if alist[i] != 0:
+                alp = alist[i] / 3
+            elif i == s - 1:
+                alp = alist[s - 2] / 3
+            elif i == 0:
+                alp = alist[1] / 3
+            else:
+                if alist[i + 1] - alist[i] > alist[i] - alist[i - 1]:
+                    alp = alist[i + 1] / 3
+                else:
+                    alp=alist[i - 1] / 3
+            policy = self.get_policy(x + alp * p, L=stopping_actions)
             avg_metrics = self.eval_theta(policy=policy,
                                         max_steps=self.experiment_config.hparams[
                                             agents_constants.COMMON.MAX_ENV_STEPS].value)
             falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             alist.append(alp)
             flist.append(falp)
-            alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
-            #print('descent check: new point at ',alp)  #
-        return alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s
+            (alist, flist, abest, fbest, fmed, up, down, monotone,
+             minima, nmin, unitlen, s) = GLSUtils().lssort(alist, flist)
+        return (alist, flist, alp, abest, fbest, fmed, up, down,
+                monotone, minima, nmin, unitlen, s)
+
     def lsquart(self, nloc, small, sinit, short, x, p, alist,
                 flist, amin, amax, alp, abest, fbest, fmed, up, down,
-                monotone, minima, nmin, unitlen, s, saturated, stopping_actions): 
-        '''
-        ''' 
+                monotone, minima, nmin, unitlen, s, saturated, stopping_actions):
+
         if alist[0] == alist[1]:
             f12 = 0
         else:
-            f12=(flist[1]-flist[0])/(alist[1]-alist[0])
+            f12 = (flist[1] - flist[0]) / (alist[1] - alist[0])
         
         if alist[1] == alist[2]:
             f23 = 0
         else:
-            f23=(flist[2]-flist[1])/(alist[2]-alist[1])# 
-        
-        if alist[2]==alist[3]:
+            f23 = (flist[2] - flist[1]) / (alist[2] - alist[1])
+
+        if alist[2] == alist[3]:
             f34 = 0
         else:
-            f34=(flist[3]-flist[2])/(alist[3]-alist[2])
-        
-        if alist[3]==alist[4]:
+            f34 = (flist[3] - flist[2]) / (alist[3] - alist[2])
+
+        if alist[3] == alist[4]:
             f45 = 0
         else:
-            f45 = (flist[4]-flist[3])/(alist[4]-alist[3])
-        #print(f12,f23,f34,f45)
-        
-        f123=(f23-f12)/(alist[2]-alist[0])
-        f234=(f34-f23)/(alist[3]-alist[1])
-        f345=(f45-f34)/(alist[4]-alist[2])
-        f1234=(f234-f123)/(alist[3]-alist[0])
-        f2345=(f345-f234)/(alist[4]-alist[1])
-        f12345=(f2345-f1234)/(alist[4]-alist[0])
-        #print(f123,f234,f345,f1234,f2345,f12345)
-        
+            f45 = (flist[4] - flist[3]) / (alist[4] - alist[3])
+
+        f123 = (f23 - f12) / (alist[2] - alist[0])
+        f234 = (f34 - f23) / (alist[3] - alist[1])
+        f345 = (f45 - f34) / (alist[4] - alist[2])
+        f1234 = (f234 - f123) / (alist[3] - alist[0])
+        f2345 = (f345 - f234)/(alist[4]-alist[1])
+        f12345 = (f2345 - f1234) / (alist[4] - alist[0])
         good = np.Inf
-        if f12345 <= 0: 
-            # quartic not bounded below
-            #print('local step (quartic not bounded below)')
+        if f12345 <= 0:
+
             good = 0
-            alist,flist,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,saturated = self.lslocal(nloc,small,sinit,
-                                                                                                             short,x,p,alist,
-                                                                                                             flist,amin,amax,alp,
-                                                                                                             abest,fbest,fmed,up,
-                                                                                                             down,monotone,minima,nmin,
-                                                                                                             unitlen,s,saturated, stopping_actions)
+            (alist, flist, alp, abest, fbest, fmed, up, down, monotone,
+             minima, nmin, unitlen, s, saturated) = self.lslocal(nloc,small,sinit,
+                                                               short,x,p,alist,
+                                                               flist,amin,amax,alp,
+                                                               abest,fbest,fmed,up,
+                                                               down,monotone,minima,nmin,
+                                                               unitlen,s,saturated, stopping_actions)
             quart = 0
         else:
-            #print('quartic step')
             quart = 1
-        
+
         if quart:
-            # expand around alist[2]
             c = np.zeros(len(alist))
-            c[0]=f12345
-            c[1]=f1234+c[0]*(alist[2]-alist[0])
-            c[2]=f234+c[1]*(alist[2]-alist[3])
-            c[1]=c[1]+c[0]*(alist[2]-alist[3])
-            c[3]=f23+c[2]*(alist[2]-alist[1])
-            c[2]=c[2]+c[1]*(alist[2]-alist[1])
-            c[1]=c[1]+c[0]*(alist[2]-alist[1])
-            c[4]=flist[2]
-            #print(c)
-            #if prt>3:
-            #  test_quartic_fit=[flist#quartic(c,alist-alist[2])]
-
-            # find critical points of quartic as zeros of gradient
+            c[0] = f12345
+            c[1] = f1234 + c[0] * (alist[2] - alist[0])
+            c[2] = f234 + c[1] * (alist[2] - alist[3])
+            c[1] = c[1] + c[0] * (alist[2] - alist[3])
+            c[3] = f23 + c[2] * (alist[2] - alist[1])
+            c[2] = c[2] + c[1] * (alist[2] - alist[1])
+            c[1] = c[1] + c[0] * (alist[2] - alist[1])
+            c[4] = flist[2]
             cmax = max(c)
-            c = np.divide(c,cmax)
-            hk = 4*c[0]#
-            compmat = [[0,0,-c[3]], [hk, 0, -2*c[2]], [0,hk,-3*c[1]]]
-            ev = np.divide(np.linalg.eig(compmat)[0],hk)
+            c = np.divide(c, cmax)
+            hk = 4 * c[0]
+            compmat = [[0, 0, - c[3]], [hk, 0, - 2 * c[2]], [0, hk, - 3 * c[1]]]
+            ev = np.divide(np.linalg.eig(compmat)[0], hk)
             i = np.where(ev.imag ==0)
-            #print(c,hk,compmat,ev,i)
-        
-            if i[0].shape[0] == 1:
-                # only one minimizer
-                #if prt>1, disp('quartic has only one minimizer')# #
-                alp = alist[2] + ev[i[0][0]]#
-                #if prt>3:
-                # f=quartic(c,ev(i))#
-                #  plot(alp,f,'ro')#
-            else:
-                # two minimizers
-                ev = np.sort(ev)#
-                #print('quartic has two minimizers')# 
-                alp1 = LSUtils().lsguard(alist[2]+ev[0],alist,amax,amin,small)
-                alp2 = LSUtils().lsguard(alist[2]+ev[2],alist,amax,amin,small)
-                f1 = cmax*LSUtils().quartic(c,alp1-alist[2])
-                f2 = cmax*LSUtils().quartic(c,alp2-alist[2])
-                #print(ev,alp1,alp2,f1,f2)
-                #    if prt>3,
-                #      alp3=alist[2]+ev[1]#
-                #      f3=cmax*quartic(c,ev[1])#
-                #      plot(alp1,f1,'ro')#
-                #      plot(alp2,f2,'ro')#
-                #      plot(alp3,f3,'ro')#
 
-                # pick extrapolating minimizer if possible 
-                if alp2>alist[4] and f2<max(flist):
-                    alp=alp2
-                elif alp1<alist[0] and f1<max(flist):
-                    alp=alp1
-                elif f2<=f1:
-                    alp=alp2
+            if i[0].shape[0] == 1:
+                alp = alist[2] + ev[i[0][0]]
+
+            else:
+                ev = np.sort(ev)
+                alp1 = LSUtils().lsguard(alist[2] + ev[0], alist, amax, amin, small)
+                alp2 = LSUtils().lsguard(alist[2] + ev[2], alist, amax, amin, small)
+                f1 = cmax * LSUtils().quartic(c, alp1 - alist[2])
+                f2 = cmax * LSUtils().quartic(c, alp2 - alist[2])
+
+                if alp2 > alist[4] and f2 < max(flist):
+                    alp = alp2
+                elif alp1 < alist[0] and f1 < max(flist):
+                    alp = alp1
+                elif f2 <= f1:
+                    alp = alp2
                 else:
-                    alp=alp1
+                    alp = alp1
         
             if max([i == alp for i in alist]):
-                # predicted point already known
-                #if prt, disp('quartic predictor already known')# #
-                quart = 0#
-        
+                quart = 0
             if quart:
-                alp = LSUtils().lsguard(alp,alist,amax,amin,small)
-                #print('new function value')
-                # falp = feval(func,x+alp*p)#
-                policy = self.get_policy(x+alp*p, L=stopping_actions)
+                alp = LSUtils().lsguard(alp, alist, amax, amin, small)
+                policy = self.get_policy(x + alp * p, L=stopping_actions)
                 avg_metrics = self.eval_theta(policy=policy,
                                             max_steps=self.experiment_config.hparams[
                                                 agents_constants.COMMON.MAX_ENV_STEPS].value)
                 falp = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 alist.append(alp)
                 flist.append(falp)
-                alist,flist,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s = GLSUtils().lssort(alist,flist)
+                (alist, flist, abest, fbest, fmed, up, down, monotone,
+                 minima, nmin, unitlen, s) = GLSUtils().lssort(alist, flist)
         
-        return alist,flist,amin,amax,alp,abest,fbest,fmed,up,down,monotone,minima,nmin,unitlen,s,good,saturated
-    
+        return (alist, flist, amin, amax, alp, abest, fbest, fmed, up, down, monotone,
+                minima, nmin, unitlen, s, good, saturated)
+
     def lssep(self, nloc, small, sinit, short, x, p, alist, flist,
               amin, amax, alp, abest, fbest, fmed, up, down, monotone, minima,
               nmin, unitlen, s, stopping_actions):
