@@ -220,7 +220,7 @@ class MCSAgent(BaseAgent):
             for j in range(L[i] + 1):
                 if j == l[i]:
                     if i != 0:
-                        J0[j, i] = J0[istar[i-1], i-1]
+                        J0[j, i] = J0[istar[i - 1], i - 1]
                 else:
                     theta[i] = theta0[i, j]
                     policy = self.get_policy(theta, L=stopping_actions)
