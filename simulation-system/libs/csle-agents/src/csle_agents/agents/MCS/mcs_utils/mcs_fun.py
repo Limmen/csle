@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 import math
+import sys
 
 class UtilHelpers():
     def __init__(self) -> None:
@@ -643,3 +644,37 @@ class MCSUtils(UtilHelpers):
         h = f-f0 -g[i]*(x[i]-x0[i])  -g[k]*(x[k]-x0[k])  -0.5*G[i,i]*(pow((x[i]-x0[i]),2))  -0.5*G[k,k]*pow((x[k]-x0[k]),2)
         h = h / (x[i]- x0[i])/(x[k]-x0[k])
         return h
+
+    def get_theta0(self, iinit, u, v, n):
+        theta0 = []
+        if iinit == 0:
+            print
+            theta0.append(u)  #  lower bound point
+            theta0.append([(i + j) / 2 for i, j in zip(u, v)])  #  mid point
+            theta0.append(v)  # upper bound point
+            theta0 = np.array(theta0).T
+        elif iinit == 1:
+            theta0 = np.zeros((n, 3))
+            for i in range(n):
+                if u[i] >= 0:
+                    theta0[i, 0] = u[i]
+                    theta0[i, 1], theta0[i, 2] = self.subint(u[i], v[i])
+                    theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+                elif v[i] <= 0:
+                    theta0[i, 2] = v[i]
+                    theta0[i, 1], theta0[i, 0] = self.subint(v[i], u[i])
+                    theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
+                else:
+                    theta0[i, 1] = 0
+                    _, theta0[i, 0], self.subint(0, u[i])
+                    _, theta0[i, 2], self.subint(0, v[i])
+        elif iinit == 2:
+            theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
+            theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
+            theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
+            theta0 = np.array(theta0).T
+
+        # check whether there are infinities in the initialization list
+        if np.any(np.isinf(theta0)):
+            sys.exit("Error- MCS main: infinities in ititialization list")
+        return theta0
