@@ -172,11 +172,11 @@ class UtilHelpers():
             alp = 0
         elif pTGp <= 0:
             if alpu == -np.Inf:
-                lba = False 
+                lba = False
             elif alpo == np.Inf:
                 lba = True
             else:
-                lba = (2 * gTp + (alpu + alpo) * pTGp > 0)  
+                lba = (2 * gTp + (alpu + alpo) * pTGp > 0)
             uba = not lba
         else:
             alp = -gTp / pTGp
@@ -202,12 +202,12 @@ class UtilHelpers():
             L, dd = self.ldldown(L, dd, j)
             K[j] = False
 
-        definite = 1 
+        definite = 1
         freeuK = [i for i in range(len(free)) if (free > K)[i] is True]
         for j in freeuK:
             p = np.zeros(n)
             if n > 1:
-                p = np.asarray([G[i, j] if K[i] == True else p[i] for i in range(len(K))])
+                p = np.asarray([G[i, j] if K[i] is True else p[i] for i in range(len(K))])
             p[j] = G[j, j]
             L, dd, p = self.ldlup(L, dd, j, p)
             definite = (len(p) == 0)
@@ -216,8 +216,8 @@ class UtilHelpers():
             K[j] = True
 
         if definite:
-            p = np.zeros(n) 
-            p = np.asarray([g[i] if K[i] == True else p[i] for i in range(len(K))])
+            p = np.zeros(n)
+            p = np.asarray([g[i] if K[i] is True else p[i] for i in range(len(K))])
             LPsolve = np.linalg.solve(L, p)
             LPsolve = np.divide(LPsolve, dd)
             p = np.multiply(-1, np.linalg.solve(L.T, LPsolve))
@@ -231,20 +231,22 @@ class UtilHelpers():
                     nfree, alp, alpu, alpo, lba, uba, ier, unfix, subdone)
         pp = np.asarray([p[i] for i in ind])
         oo = np.subtract([xo[i] for i in ind], [x[i] for i in ind]) / pp
-        uu = np.subtract([xu[i] for i in ind],[x[i] for i in ind]) / pp
-        alpu = max([oo[i] for i in range(len(ind)) if pp[i] < 0] + [uu[i] for i in range(len(ind)) if pp[i] > 0] + [-np.inf])
-        alpo = min([oo[i] for i in range(len(ind)) if pp[i] > 0] +[uu[i] for i in range(len(ind)) if pp[i] < 0] + [np.inf])
+        uu = np.subtract([xu[i] for i in ind], [x[i] for i in ind]) / pp
+        alpu = max([oo[i] for i in range(len(ind)) if pp[i] < 0] + [uu[i] for i in range(
+            len(ind)) if pp[i] > 0] + [-np.inf])
+        alpo = min([oo[i] for i in range(len(ind)) if pp[i] > 0] + [uu[i] for i in range(
+            len(ind)) if pp[i] < 0] + [np.inf])
         if alpo <= 0 or alpu >= 0:
             sys.exit('programming error: no alp')
- 
+
         gTp = np.dot(g.T, p)
         agTp = np.dot(np.abs(g).T, np.abs(p))
         if abs(gTp) < 100 * eps * agTp:
             gTp = 0
-        pTGp = np.dot(p.T, np.dot(G, p)) 
+        pTGp = np.dot(p.T, np.dot(G, p))
         if convex:
             pTGp = max(0, pTGp)
-        if not definite and pTGp >0:
+        if not definite and pTGp > 0:
             pTGp = 0
 
         alp, lba, uba, ier = self.getalp(alpu, alpo, gTp, pTGp)
@@ -258,25 +260,25 @@ class UtilHelpers():
                     fct, nfree, alp, alpu, alpo, lba, uba, ier, unfix, subdone)
 
         unfix = not (lba or uba)
-        for k in range(0,len(ind)): 
+        for k in range(0, len(ind)):
             ik = ind[k]
             if alp == uu[k]:
-                xx[ik] = xu[ik] 
-                free[ik] = 0 
+                xx[ik] = xu[ik]
+                free[ik] = 0
             elif alp == oo[k]:
-                xx[ik] = xo[ik]  
-                free[ik] = 0 
+                xx[ik] = xo[ik]
+                free[ik] = 0
             else:
-                xx[ik]=xx[ik]+alp*p[ik] 
-            
+                xx[ik] = xx[ik] + alp * p[ik]
             if abs(xx[ik]) == np.Inf:
-                ik,alp,p[ik]
+                ik, alp, p[ik]
                 sys.exit('infinite xx in minq')
 
         nfree = sum(free)
-        subdone = 1 
+        subdone = 1
         return (nsub, free, L, dd, K, G, n, g, x, xo, xu, convex, xx,
                 fct, nfree, alp, alpu, alpo, lba, uba, ier, unfix, subdone)
+
 
 class LSUtils(UtilHelpers):
     def __init__(self) -> None:
@@ -288,7 +290,7 @@ class LSUtils(UtilHelpers):
         s = len(asort)
 
         al = asort[0] - (asort[s - 1] - asort[0]) / small
-        au = asort[s - 1] + (asort[s - 1] - asort[0])/small
+        au = asort[s - 1] + (asort[s - 1] - asort[0]) / small
         alp = max(al, min(alp, au))
         alp = max(amin, min(alp, amax))
 
@@ -328,13 +330,13 @@ class LSUtils(UtilHelpers):
         :param ier:	0  (local minimizer found)
         '''
 
-        convex  =  0  
+        convex = 0
         n = G.shape[0]
-            
-        ier = 0  
-        if G.shape[1] != n: 
-            ier = -1  
-            print('minq: Hessian has wrong dimension')  
+
+        ier = 0
+        if G.shape[1] != n:
+            ier = -1
+            print('minq: Hessian has wrong dimension')
             x = np.NAN + np.zeros(n)
             fct = np.NAN
             nsub = -1
@@ -354,21 +356,20 @@ class LSUtils(UtilHelpers):
         if 'xx' in locals():
             if xx.shape[0] != n:
                 ier = -1
-                print('minq: lower bound has wrong dimension')  
+                print('minq: lower bound has wrong dimension')
         else:
             xx = np.zeros(n)
    
         if ier == -1:
-            x = np.NAN + np.zeros(n)  
+            x = np.NAN + np.zeros(n)
             fct = np.NAN
             nsub = -1
-            return x, fct, ier    
+            return x, fct, ier
 
         maxit = 3 * n
 
         nitrefmax = 3
         xx = np.asarray([max(xu[i], min(xx[i], xo[i])) for i in range(len(xx))])
-
 
         eps = 2.2204e-16
         hpeps = 100 * eps
@@ -378,10 +379,10 @@ class LSUtils(UtilHelpers):
         L = np.eye(n)
         dd = np.ones(n)
 
-        free = np.zeros(n, dtype=bool)   
-        nfree = 0 
-        nfree_old = -1  
-        
+        free = np.zeros(n, dtype=bool)
+        nfree = 0
+        nfree_old = -1
+
         fct = np.Inf
         nsub = 0
         unfix = 1
@@ -389,26 +390,24 @@ class LSUtils(UtilHelpers):
         improvement = 1
  
         while 1:
-            #print('enter main loop')   #
-            if np.linalg.norm(xx,np.inf) == np.inf:
+            if np.linalg.norm(xx, np.inf) == np.inf:
                 sys.exit('infinite xx in minq.m')
 
-            g = np.dot(G,xx)+c 
+            g = np.dot(G, xx) + c
             fctnew = gam + np.dot(0.5 * xx.T, (c + g))
             if not improvement:
-   
-                ier = 0   
-                break   
+                ier = 0
+                break
             elif nitref > nitrefmax:
 
-                ier = 0   
-                break   
-            elif nitref > 0 and nfree_old == nfree and fctnew >=  fct:   
+                ier = 0
+                break
+            elif nitref > 0 and nfree_old == nfree and fctnew >= fct:
                 ier = 0
                 break
             elif nitref == 0:
-                x = xx  
-                fct = min(fct, fctnew)  
+                x = xx
+                fct = min(fct, fctnew)
             else:
                 x = xx
                 fct = fctnew
@@ -419,7 +418,7 @@ class LSUtils(UtilHelpers):
             k = -1
             while 1:
                 while count <= n:
-                    count = count + 1  
+                    count = count + 1
                     if k == n - 1:
                         k = -1
                     k = k + 1
@@ -427,8 +426,7 @@ class LSUtils(UtilHelpers):
                         break
                 if count > n:
 
-                    break           
-                
+                    break
                 q = G[:, k]
                 alpu = xu[k] - x[k]
                 alpo = xo[k] - x[k]
@@ -436,29 +434,29 @@ class LSUtils(UtilHelpers):
                 alp, lba, uba, ier = self.getalp(alpu, alpo, g[k], q[k])
 
                 if ier:
-                    x = np.zeros(n)   
+                    x = np.zeros(n)
                     if lba:
                         x[k] = -1
                     else:
                         x[k] = 1
-                        
+
                     return x, fct, ier
 
                     break
-                
-                xnew = x[k] + alp  
+
+                xnew = x[k] + alp
                 if prt and nitref > 0:
                     xnew, alp
 
                 if lba or xnew <= xu[k]:
                     if alpu != 0:
-                        x[k] = xu[k]  
+                        x[k] = xu[k]
                         g = g + alpu * q
                         count = 0
                     free[k] = 0
                 elif uba or xnew >= xo[k]:
                     if alpo != 0:
-                        x[k] = xo[k]  
+                        x[k] = xo[k]
                         g = g + alpo * q
                         count = 0
                     free[k] = 0
@@ -468,25 +466,25 @@ class LSUtils(UtilHelpers):
                             unfixstep = [x[k], alp]
                         x[k] = xnew
                         g = g + alp * q
-                        free[k] = 1            
-            
+                        free[k] = 1
+
             nfree = sum(free)
             if (unfix and nfree_old == nfree):
                 g = np.dot(G, x) + c
-                nitref = nitref + 1  
+                nitref = nitref + 1
             else:
-                nitref = 0  
-            nfree_old = nfree  
+                nitref = 0
+            nfree_old = nfree
             gain_cs = fct - gam - np.dot(0.5 * x.T, (c + g))
             improvement = (gain_cs > 0 or not unfix)
             xx = x
-            if not improvement or nitref>nitrefmax:
+            if not improvement or nitref > nitrefmax:
 
                 nothing_to_do = 'done!'
             elif nitref > nitrefmax:
                 nothing_to_do = 'done!'
             elif nfree == 0:
-                unfix = 1  
+                unfix = 1
             else:
                 subdone = 0
                 (nsub, free, L, dd, K, G, n, g, x, xo, xu, convex, xx, fct,
@@ -497,7 +495,7 @@ class LSUtils(UtilHelpers):
                 if not subdone:
                     return x, fct, ier
                 if ier:
-                    return x, fct, ier   
+                    return x, fct, ier
         return x, fct, ier
 
     def quartic(self, a, x):
