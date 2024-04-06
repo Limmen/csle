@@ -1481,10 +1481,10 @@ class MCSAgent(BaseAgent):
         if np.isscalar(alist):
             alist = [alist]
             flist = [flist]
-        if type(alist) != list:
         # if isinstance(alist, list): TODO: this should work
-            alist = alist.tolist()
         # if isinstance(flist, list): TODO: this should work
+        if type(alist) != list:
+            alist = alist.tolist()
         if type(flist) != list:
             flist = flist.tolist()
 
@@ -1712,7 +1712,8 @@ class MCSAgent(BaseAgent):
                 
                 for k in range(i):
                     if hess[i, k]:
-                        if xtrip[k] > u[k] and xtrip[k] < v[k] and (len([m for m in range(len(ind)) if ind[m] == k]) != 0):
+                        if xtrip[k] > u[k] and xtrip[k] < v[k] and (
+                            len([m for m in range(len(ind)) if ind[m] == k]) != 0):
                             q1 = ftrip + g[k] * (x1[k] - xtrip[k]) + 0.5 * G[k, k] * (x1[k] - xtrip[k]) ** 2
                             q2 = ftrip + g[k] * (x2[k] - xtrip[k]) + 0.5 * G[k, k] * (x2[k] - xtrip[k]) ** 2
                             if q1 <= q2:
@@ -1799,8 +1800,8 @@ class MCSAgent(BaseAgent):
                     alp = 0.5 * (aa[0] + aa[1])
                 else:
                     alp = 0.5 * (aa[1] + aa[2])
-            else:
-                np_print = alp0
+            # else:
+            #     np_print = alp0
 
             policy = self.get_policy(x + alp * p, L=stopping_actions)
             avg_metrics = self.eval_theta(policy=policy,
@@ -1837,7 +1838,7 @@ class MCSAgent(BaseAgent):
             al = alist[0] - (alist[0 + step] - alist[0]) / small
             alp = max(amin, al)
         elif rightok:
-            extra = 1
+            # extra = 1
             au = alist[s - 1] + (alist[s - 1] - alist[s - 1 - step]) / small
             alp = min(au, amax)
         else:

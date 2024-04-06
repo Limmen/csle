@@ -403,6 +403,7 @@ class PARTICLE_SWARM:
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
 
+
 class MCS:
     """
     String constants related to Multilevel Coordinate Search
@@ -424,6 +425,7 @@ class MCS:
     STOP = "stop"
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
+
 
 class BAYESIAN_OPTIMIZATION_EMUKIT:
     """
