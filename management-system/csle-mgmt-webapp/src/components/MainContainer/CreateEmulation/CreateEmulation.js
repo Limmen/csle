@@ -42,11 +42,50 @@ const CreateEmulation = (props) => {
   const [description, setDescription] = useState({
     description: ''
   });
+  const [nameValue, setNameValue] = useState('');
+  const [networkIdValue, setNetworkIdValue] = useState('');
+  const [levelValue, setLevelValue] = useState('');
+  const [versionValue, setVersionValue] = useState('');
+  const [timeStepLengthValue, setTimeStepLengthValue] = useState('');
+
+
   const handleDescriptionChange = (event) => {
     setDescription({
       description: event.target.value
     });
     // console.log(description.description)
+  };
+  const handleNameChange = (event) => {
+    setNameValue(event.target.value);
+    console.log("Name value:", nameValue);
+  };
+  const handleNetworkIdChange = (event) => {
+    const networkValue = event.target.value;
+    if (/^-?\d*$/.test(networkValue)) {
+      setNetworkIdValue(event.target.value);
+      console.log("Network ID value:", networkIdValue);
+    }
+  };
+
+  const handleLevelChange = (event) => {
+    const leveValue = event.target.value;
+    if (/^-?\d*$/.test(leveValue)) {
+      setLevelValue(event.target.value);
+      console.log("Level value:", levelValue);
+    }
+  };
+
+  const handleVersionChange = (event) => {
+    setVersionValue(event.target.value);
+    console.log("Versioin value:", versionValue);
+  };
+
+  const handleTimeStepLengthChange = (event) => {
+    const timeStepValue = event.target.value;
+    if (/^-?\d*$/.test(timeStepValue)) {
+      setTimeStepLengthValue(event.target.value);
+      console.log("Time step length value:", timeStepLengthValue);
+    }
   };
 
   // contrainers state
@@ -95,7 +134,7 @@ const CreateEmulation = (props) => {
 
   const handleImageChange = (event) => {
     setSelectedImage(event.target.value);
-    console.log(selectedImage)
+    // console.log(selectedImage)
   };
 
   const SpinnerOrTable = (props) => {
@@ -149,9 +188,59 @@ const CreateEmulation = (props) => {
                       </tr>
                       </thead>
                       <tbody>
-                      <tr>
-                        <td>Description</td>
-                        <td>
+                        <tr>
+                          <td>Name</td>
+                          <td>
+                            <input
+                              type="text"
+                              value={nameValue}
+                              onChange={handleNameChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Network ID</td>
+                          <td>
+                            <input
+                              type="text"
+                              value={networkIdValue}
+                              onChange={handleNetworkIdChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Level</td>
+                          <td>
+                            <input
+                              type="text"
+                              value={levelValue}
+                              onChange={handleLevelChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Version</td>
+                          <td>
+                            <input
+                              type="text"
+                              value={versionValue}
+                              onChange={handleVersionChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Time step length in Seconds</td>
+                          <td>
+                            <input
+                              type="text"
+                              value={timeStepLengthValue}
+                              onChange={handleTimeStepLengthChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Description</td>
+                          <td>
                           <textarea
                             id="description"
                             value={description.textareaValue}
@@ -159,8 +248,8 @@ const CreateEmulation = (props) => {
                             rows="4"
                             style={{ width: '100%', boxSizing: 'border-box' }}
                           />
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
                       </tbody>
                     </Table>
                   </div>
