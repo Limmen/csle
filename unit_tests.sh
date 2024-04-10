@@ -42,6 +42,7 @@ cd emulation-system/envs/050/level_10; pytest; cd ../../../../
 cd emulation-system/envs/050/level_11; pytest; cd ../../../../
 cd emulation-system/envs/050/level_12; pytest; cd ../../../../
 cd emulation-system/envs/050/level_13; pytest; cd ../../../../
+cd emulation-system/envs/050/level_14; pytest; cd ../../../../
 echo "Running Python unit tests for CSLE simulation environments"
 cd simulation-system/envs/apt_game; pytest; cd ../../../
 cd simulation-system/envs/apt_mdp_attacker; pytest; cd ../../../

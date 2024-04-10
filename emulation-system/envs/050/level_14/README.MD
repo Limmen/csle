@@ -1,20 +1,28 @@
-# Capture the Flag - Level 13
+# Level 14
 
-The target infrastructure in https://link.springer.com/chapter/10.1007/978-3-031-50670-3_9.
+An emulation environment with a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka,
+etc. Some of the services are vulnerable to different network attacks
+such as the SambaCry exploit, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection.
+Moreover, some nodes are vulnerable to privilege escalation attacks (e.g. CVE-2010-0426 and CVE-2015-5602)
+which can be used by the attacker to extend his privileges after compromising the host.    
+The task of an attacker agent is to identify the vulnerabilities and
+exploit them and discover hidden flags
+on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the
+attacker.
 
-- Number of nodes: 64
-- Number of OVS switches: 24
+- Number of nodes: 17
+- Number of OVS switches: 1
 - Number of SDN controllers: 1
 - IDS: Yes (Snort)
 - Traffic generation: Yes
-- Number of flags: 3
-- Vulnerabilities: SSH, FTP, Telnet servers that can be compromised using dictionary attacks
+- Number of flags: 12
+- Vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine RCE vulnerability, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
 
 ## Architecture
+
 <p align="center">
 <img src="env.png" width="600">
 </p>
-
 
 ## Useful commands
 
