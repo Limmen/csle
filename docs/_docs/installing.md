@@ -626,10 +626,10 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 Listing 59: Commands to add Docker's official GPG key to Ubuntu's package manager.
 </p>
 
-Next, install Docker by running the commands:
+Next, install Docker and `openvswitch` by running the commands:
 ```bash
 sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install docker-ce docker-ce-cli containerd.io openvswitch-switch
 sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
