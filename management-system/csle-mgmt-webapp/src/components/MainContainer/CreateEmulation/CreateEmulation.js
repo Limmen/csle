@@ -91,6 +91,36 @@ const CreateEmulation = (props) => {
   // contrainers state
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
+  const [containers, setContainers] = useState([]);
+
+  const addContainer = () => {
+    const newContainer = {
+      name: '',
+      os: '',
+      version: '',
+      level: '',
+      restartPolicy: '',
+      networkId: '',
+      subnetMask: '',
+      subnetPrefix: '',
+      networkInterface: '',
+      containerAccordionOpen: false
+    };
+    // Update the state by adding the new container to the array
+    setContainers(prevContainers => [...prevContainers, newContainer]);
+  };
+
+  const toggleContainerAccordion = (index) => {
+    setContainers(prevContainers => {
+      // Create a new array with the updated container
+      const updatedContainers = [...prevContainers];
+      updatedContainers[index] = {
+        ...updatedContainers[index],
+        containerAccordionOpen: !updatedContainers[index].containerAccordionOpen // Toggle the value
+      };
+      return updatedContainers;
+    });
+  };
 
   const fetchImages = useCallback(() => {
     /**
@@ -274,31 +304,59 @@ const CreateEmulation = (props) => {
               </Card.Header>
               <Collapse in={containerOpen}>
                 <div id="container" className="cardBodyHidden">
-                  <div className="table-responsive">
-                    <Table striped bordered hover>
-                      <thead>
-                      <tr>
-                        <th>Attribute</th>
-                        <th> Value</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td>Images</td>
-                        <td>
-                          <SpinnerOrTable images={filteredImages} loading={loading}/>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </Table>
+                  <div>
+                    <button onClick={addContainer}>Add Container</button>
+
+                    {containers.map((container, index) => (
+                      <Accordion defaultActiveKey={index}>
+                        <card className="subCard">
+                          <Card.Header>
+                            <Button
+                              onClick={() => toggleContainerAccordion(index)}
+                              aria-controls="container"
+                              aria-expanded={container.containerAccordionOpen}
+                              variant="link"
+                            >
+                              <h5 className="semiTitle">
+                                Container {index}
+                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                              </h5>
+                            </Button>
+                          </Card.Header>
+                          <Collapse in={container.containerAccordionOpen}>
+                            <div id="eachContainer" className="cardBodyHidden">
+                              <div className="table-responsive">
+                                <Table striped bordered hover>
+                                  <thead>
+                                  <tr>
+                                    <th>Attribute</th>
+                                    <th> Value</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr>
+                                    <td>Images</td>
+                                    <td>
+                                      <SpinnerOrTable images={filteredImages} loading={loading} />
+                                    </td>
+                                  </tr>
+                                  </tbody>
+                                </Table>
+                              </div>
+                            </div>
+                          </Collapse>
+                        </card>
+                      </Accordion>
+                    ))}
                   </div>
+
                 </div>
               </Collapse>
             </Card>
           </Accordion>
 
         </div>
-    );
+  );
 }
 
 CreateEmulation.propTypes = {};
