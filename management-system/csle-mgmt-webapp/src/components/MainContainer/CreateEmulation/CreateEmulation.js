@@ -348,16 +348,19 @@ const CreateEmulation = (props) => {
                     <div style={{ margin: '20px' }}>
                       {showPopup && (
                         <div className="popup">
-                          <div className="popup-content">
+                          <div>
                             <h5>Enter Container Name:</h5>
-                            <input type="text" value={newContainerName} onChange={(e) => setNewContainerName(e.target.value)} />
-
+                          </div>
+                          <div className="popup-content" style={{ display: 'flex', justifyContent: 'center',
+                            alignItems: 'center' }}>
+                            <input type="text" value={newContainerName}
+                                   onChange={(e) => setNewContainerName(e.target.value)} />
                             <Button onClick={handleConfirmAdd}
-                                    variant="primary" size="sm">
+                                    variant="primary" size="sm" style={{ marginLeft: '5px' }}>
                               <i className="fa fa-check" aria-hidden="true"/>
                             </Button>
                             <Button onClick={handleClosePopup}
-                                    variant="danger" size="sm">
+                                    variant="danger" size="sm" style={{ marginLeft: '2px' }}>
                               <i className="fa fa-times" aria-hidden="true"/>
                             </Button>
                           </div>
