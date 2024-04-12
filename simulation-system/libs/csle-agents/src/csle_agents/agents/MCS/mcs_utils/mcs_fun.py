@@ -559,8 +559,8 @@ class MCSUtils(UtilHelpers):
         return h
 
     def get_theta0(self, iinit, u, v, n):
-        # theta0 = []
-        theta0 = np.array([])
+        theta0 = []
+        # theta0 = np.array([])
         if iinit == 0:
             # theta0 = np.append(theta0, u)
             theta0.append(u)
