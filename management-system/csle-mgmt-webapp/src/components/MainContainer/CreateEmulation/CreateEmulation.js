@@ -92,23 +92,41 @@ const CreateEmulation = (props) => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
   const [containers, setContainers] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newContainerName, setNewContainerName] = useState('');
 
   const addContainer = () => {
-    const newContainer = {
-      name: '',
-      os: '',
-      version: '',
-      level: '',
-      restartPolicy: '',
-      networkId: '',
-      subnetMask: '',
-      subnetPrefix: '',
-      networkInterface: '',
-      containerAccordionOpen: false
-    };
-    // Update the state by adding the new container to the array
-    setContainers(prevContainers => [...prevContainers, newContainer]);
+    setShowPopup(true);
   };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setNewContainerName('');
+  };
+
+  const handleConfirmAdd = () => {
+    setContainers(prevContainers => [...prevContainers,
+      { name: newContainerName, os: '', version: '', level: '', restartPolicy: '', networkId: '',
+        subnetMask: '', subnetPrefix: '', networkInterface: false }]);
+    handleClosePopup();
+  };
+
+  // const addContainer = () => {
+  //   const newContainer = {
+  //     name: '',
+  //     os: '',
+  //     version: '',
+  //     level: '',
+  //     restartPolicy: '',
+  //     networkId: '',
+  //     subnetMask: '',
+  //     subnetPrefix: '',
+  //     networkInterface: '',
+  //     containerAccordionOpen: false
+  //   };
+  //   // Update the state by adding the new container to the array
+  //   setContainers(prevContainers => [...prevContainers, newContainer]);
+  // };
 
   const deleteContainer = (index) => {
     setContainers(prevContainers => {
@@ -327,6 +345,26 @@ const CreateEmulation = (props) => {
                             variant="success" size="sm">
                       <i className="fa fa-plus" aria-hidden="true"/>
                     </Button>
+                    <div style={{ margin: '20px' }}>
+                      {showPopup && (
+                        <div className="popup">
+                          <div className="popup-content">
+                            <h5>Enter Container Name:</h5>
+                            <input type="text" value={newContainerName} onChange={(e) => setNewContainerName(e.target.value)} />
+
+                            <Button onClick={handleConfirmAdd}
+                                    variant="primary" size="sm">
+                              <i className="fa fa-check" aria-hidden="true"/>
+                            </Button>
+                            <Button onClick={handleClosePopup}
+                                    variant="danger" size="sm">
+                              <i className="fa fa-times" aria-hidden="true"/>
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
 
                     {containers.map((container, index) => (
                       <Accordion defaultActiveKey={index}>
@@ -339,7 +377,7 @@ const CreateEmulation = (props) => {
                               variant="link"
                             >
                               <h5 className="semiTitle">
-                                Container {index}
+                                {containers[index].name}
                                 <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
                               </h5>
                             </Button>
@@ -376,6 +414,7 @@ const CreateEmulation = (props) => {
                       </Accordion>
                     ))}
                   </div>
+
 
                 </div>
               </Collapse>
