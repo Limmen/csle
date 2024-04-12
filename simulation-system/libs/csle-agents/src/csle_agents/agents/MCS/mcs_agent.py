@@ -1163,7 +1163,9 @@ class MCSAgent(BaseAgent):
             b = np.dot(np.abs(g).T, [max(abs(xmin[inx]), abs(xold[inx])) for inx in range(len(xmin))])
         return xmin, fmi, ncall, flag, nsweep, nsweepbest
 
-    def basket1(self, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions): # TODO : type hint
+    def basket1(self, x: NDArray[np.float64], f: NDArray[np.float64], xmin: NDArray[np.int32], fmi: NDArray[np.float64],
+                xbest: NDArray[np.float64], fbest: NDArray[np.float64], stop: List[int], nbasket: int, nsweep: int,
+                nsweepbest: int, stopping_actions: int):
         loc = 1
         flag = 1
         ncall = 0
@@ -1277,7 +1279,8 @@ class MCSAgent(BaseAgent):
                         break
         return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
 
-    def csearch(self, x, f, u, v, hess, stopping_actions, eps): # TODO : type hint
+    def csearch(self, x: NDArray[np.float64], f: NDArray[np.float64], u: List[int], v: List[int], hess: NDArray[np.float64],
+                stopping_actions: int, eps: float):
         n = len(x)
         x = [min(v[i], max(x[i], u[i])) for i in range(len(x))]
 
@@ -1469,7 +1472,8 @@ class MCSAgent(BaseAgent):
             fmi = copy.deepcopy(fminew)
         return xmin, fmi, g, G, nfcsearch
 
-    def gls(self, xl, xu, x, p, alist, flist, nloc, small, smax, stopping_actions, prt=2): # TODO : type hint
+    def gls(self, xl: List[int], xu: List[int], x: List[int], p: NDArray[np.int32], alist: List[int], flist: List[float],
+            nloc: int, small: float, smax: int, stopping_actions: int, prt: int=2):
         '''
         Global line search main function
         :param func: funciton name which is subjected to optimization
@@ -1869,9 +1873,9 @@ class MCSAgent(BaseAgent):
 
         return alist, flist, alp, fac
 
-    def lsdescent(self, x, p, alist, flist, alp, abest, fbest,
-                  fmed, up, down, monotone, minima, nmin,
-                  unitlen, s, stopping_actions): # TODO : type hint
+    def lsdescent(self, x: NDArray[np.float64], p: NDArray[np.int32], alist: List[float], flist: List[int], alp: int,
+                  abest: float, fbest: float, fmed: float, up: List[float], down: List[float], monotone: int, minima: List[int],
+                  nmin: int, unitlen: float, s: int, stopping_actions: int):
         cont = max([i == 0 for i in alist])
 
         if cont:
@@ -1914,9 +1918,11 @@ class MCSAgent(BaseAgent):
         return (alist, flist, alp, abest, fbest, fmed, up, down,
                 monotone, minima, nmin, unitlen, s)
 
-    def lsquart(self, nloc, small, sinit, short, x, p, alist,
-                flist, amin, amax, alp, abest, fbest, fmed, up, down,
-                monotone, minima, nmin, unitlen, s, saturated, stopping_actions): # TODO : type hint
+    def lsquart(self, nloc: int, small: int, sinit: int, short: float, x: NDArray[np.float64], p: NDArray[np.int32],
+                alist: List[float], flist: NDArray[np.float64], amin: float, amax: float, alp: float, abest: float, fbest: float,
+                fmed: float, up: List[float], down: List[float],
+                monotone: int, minima: List[int], nmin: int, unitlen: float, s: int,
+                saturated: int, stopping_actions: int):
 
         if alist[0] == alist[1]:
             f12 = 0
@@ -2012,9 +2018,10 @@ class MCSAgent(BaseAgent):
         return (alist, flist, amin, amax, alp, abest, fbest, fmed, up, down, monotone,
                 minima, nmin, unitlen, s, good, saturated)
 
-    def lssep(self, nloc, small, sinit, short, x, p, alist, flist,
-              amin, amax, alp, abest, fbest, fmed, up, down, monotone, minima,
-              nmin, unitlen, s, stopping_actions): # TODO : type hint
+    def lssep(self, nloc: int, small: float, sinit: int, short: float, x: NDArray[np.float64], p: NDArray[np.int32],
+              alist: List[float], flist: List[float], amin: float, amax: float, alp: float, abest: float, fbest: float,
+              fmed: float, up: List[float], down: List[float], monotone: int, minima: List[int], nmin: int,
+              unitlen: float, s: int, stopping_actions: int):
         nsep = 0
         while nsep < nmin:
             down = [i < j for i, j in zip(flist[1: s], flist[0: s - 1])]
@@ -2059,9 +2066,11 @@ class MCSAgent(BaseAgent):
         return (alist, flist, amin, amax, alp, abest, fbest, fmed,
                 up, down, monotone, minima, nmin, unitlen, s)
 
-    def lslocal(self, nloc, small, sinit, short, x, p, alist, flist,
-                amin, amax, alp, abest, fbest, fmed, up, down, monotone,
-                minima, nmin, unitlen, s, saturated, stopping_actions):
+    def lslocal(self, nloc: int, small: float, sinit: int, short: float, x :NDArray[np.float64], p: NDArray[np.int32],
+                alist: List[float], flist: List[float],
+                amin: float, amax: float, alp: float, abest: float, fbest: float, fmed: float,
+                up: List[float], down: List[float], monotone: int,
+                minima: List[int], nmin: int, unitlen: float, s: int, saturated: int, stopping_actions: int):
         up = [i < j for i, j in zip(flist[0: s - 1], flist[1: s])]
         down = [i <= j for i, j in zip(flist[1: s], flist[0: s - 1])]
         down[s - 2] = (flist[s - 1] < flist[s - 2])
