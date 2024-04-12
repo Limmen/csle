@@ -561,7 +561,6 @@ class MCSUtils(UtilHelpers):
     def get_theta0(self, iinit, u, v, n):
         theta0 = []
         if iinit == 0:
-            print
             theta0.append(u)
             theta0.append([(i + j) / 2 for i, j in zip(u, v)])
             theta0.append(v)

@@ -4,7 +4,7 @@ from mcs_utils.mcs_fun import MCSUtils
 from mcs_utils.gls_utils import GLSUtils
 from mcs_utils.ls_utils import LSUtils
 
-
+from numpy.typing import NDArray
 from typing import Union, List, Optional, Any, Dict
 import gymnasium as gym
 import numpy as np
@@ -37,7 +37,7 @@ class MCSAgent(BaseAgent):
                  env: Optional[BaseEnv] = None, training_job: Optional[TrainingJobConfig] = None,
                  save_to_metastore: bool = True):
         """
-        Initializes the Particle Swarm Agent
+        Initializes the MCS Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -158,7 +158,7 @@ class MCSAgent(BaseAgent):
         
         xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(u, v, smax, nf, stop, iinit,
                                                                local, gamma, hess, stopping_actions, eps, n)
-        print('The MCS Algorithms Results:')
+        print('The MCS Algorithms Results:') # TODO: make log-statements
         print('fbest', fbest)
         print('xbest', xbest)
         print('\n')
@@ -191,7 +191,7 @@ class MCSAgent(BaseAgent):
                 agent_type=AgentType.SIMULATED_ANNEALING)
         return policy
 
-    def init_list(self, theta0, l, L, stopping_actions, n):
+    def init_list(self, theta0: NDArray[int, Any], l: NDArray[int], L: NDArray[int], stopping_actions: int, n: int):
         '''
         computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
@@ -238,7 +238,9 @@ class MCSAgent(BaseAgent):
             theta[i] = theta0[i, istar[i]]
         return J0, istar, ncall
 
-    def MCS(self, u, v, smax, nf, stop, iinit, local, gamma, hess, stopping_actions, eps, n, prt=1):
+    def MCS(self, u: List[int], v: List[int], smax: int, nf: int, stop: List[int], iinit: int,
+            local: int, gamma: float, hess: NDArray[np.float64], stopping_actions: int,
+            eps: float, n: int, prt: int=1):
         if MCSUtils().check_box_bound(u, v):
             sys.exit("Error MCS main: out of bound")
         n = len(u)
@@ -329,7 +331,7 @@ class MCSAgent(BaseAgent):
                 level[par] = 0
                 if z[1, par] == np.Inf:
                     m = m + 1
-                    z[1, par] = m
+                    z[1, par] = m # TODO : make fewer rows
                     (
                         xbest,
                         fbest,
@@ -610,8 +612,10 @@ class MCSAgent(BaseAgent):
             flag = 2
         return xbest, fbest, xmin, fmi, ncall, ncloc, flag
 
-    def splinit(self, i, s, smax, par, x0, n0, u, v, x, y, x1, x2, L, l, xmin, fmi, ipar, level, ichild, f, xbest,
-                fbest, stop, prt, record, nboxes, nbasket, nsweepbest, nsweep, stopping_actions):
+    def splinit(self, i: int, s: int, smax: int, par: int, x0: NDArray[int, Any], n0: int, u: List[int], v: List[int],
+                x: NDArray[float], y: NDArray[float], x1: NDArray[float], x2: NDArray[float], L: NDArray[int], l: NDArray[int],
+                xmin: NDArray[Any], fmi: NDArray[Any], ipar: NDArray[int], level: NDArray[int], ichild: NDArray[int], f: NDArray[float], xbest: NDArray[float],
+                fbest: NDArray[float], stop: List[int], prt: int, record, nboxes, nbasket, nsweepbest, nsweep, stopping_actions): # TODO: type hint
         
         """
         Splitting box at specified level s according to an initialization list
@@ -712,7 +716,7 @@ class MCSAgent(BaseAgent):
 
     def split(self, i, s, smax, par, n0, u, v, x, y, x1, x2, z, xmin,
               fmi, ipar, level, ichild, f, xbest, fbest, stop, prt, record,
-              nboxes, nbasket, nsweepbest, nsweep, stopping_actions):
+              nboxes, nbasket, nsweepbest, nsweep, stopping_actions): # TODO : type hint
         """
         Split Function
         """
@@ -941,7 +945,7 @@ class MCSAgent(BaseAgent):
         return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
 
     def lsearch(self, x, f, f0, u, v, nf, stop, maxstep, gamma,
-                hess, nsweep, nsweepbest, stopping_actions, eps):
+                hess, nsweep, nsweepbest, stopping_actions, eps): # TODO : type hint
         ncall = 0
         n = len(x)
         x0 = np.asarray([min(max(u[i], 0), v[i]) for i in range(len(u))])
@@ -1156,7 +1160,7 @@ class MCSAgent(BaseAgent):
             b = np.dot(np.abs(g).T, [max(abs(xmin[inx]), abs(xold[inx])) for inx in range(len(xmin))])
         return xmin, fmi, ncall, flag, nsweep, nsweepbest
 
-    def basket1(self, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions):
+    def basket1(self, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions): # TODO : type hint
         loc = 1
         flag = 1
         ncall = 0
@@ -1270,7 +1274,7 @@ class MCSAgent(BaseAgent):
                         break
         return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
 
-    def csearch(self, x, f, u, v, hess, stopping_actions, eps):
+    def csearch(self, x, f, u, v, hess, stopping_actions, eps): # TODO : type hint
         n = len(x)
         x = [min(v[i], max(x[i], u[i])) for i in range(len(x))]
 
@@ -1462,7 +1466,7 @@ class MCSAgent(BaseAgent):
             fmi = copy.deepcopy(fminew)
         return xmin, fmi, g, G, nfcsearch
 
-    def gls(self, xl, xu, x, p, alist, flist, nloc, small, smax, stopping_actions, prt=2):
+    def gls(self, xl, xu, x, p, alist, flist, nloc, small, smax, stopping_actions, prt=2): # TODO : type hint
         '''
         Global line search main function
         :param func: funciton name which is subjected to optimization
@@ -1864,7 +1868,7 @@ class MCSAgent(BaseAgent):
 
     def lsdescent(self, x, p, alist, flist, alp, abest, fbest,
                   fmed, up, down, monotone, minima, nmin,
-                  unitlen, s, stopping_actions):
+                  unitlen, s, stopping_actions): # TODO : type hint
         cont = max([i == 0 for i in alist])
 
         if cont:
@@ -1909,7 +1913,7 @@ class MCSAgent(BaseAgent):
 
     def lsquart(self, nloc, small, sinit, short, x, p, alist,
                 flist, amin, amax, alp, abest, fbest, fmed, up, down,
-                monotone, minima, nmin, unitlen, s, saturated, stopping_actions):
+                monotone, minima, nmin, unitlen, s, saturated, stopping_actions): # TODO : type hint
 
         if alist[0] == alist[1]:
             f12 = 0
@@ -2007,7 +2011,7 @@ class MCSAgent(BaseAgent):
 
     def lssep(self, nloc, small, sinit, short, x, p, alist, flist,
               amin, amax, alp, abest, fbest, fmed, up, down, monotone, minima,
-              nmin, unitlen, s, stopping_actions):
+              nmin, unitlen, s, stopping_actions): # TODO : type hint
         nsep = 0
         while nsep < nmin:
             down = [i < j for i, j in zip(flist[1: s], flist[0: s - 1])]
