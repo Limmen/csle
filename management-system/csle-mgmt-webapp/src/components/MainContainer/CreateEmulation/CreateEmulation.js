@@ -110,6 +110,15 @@ const CreateEmulation = (props) => {
     setContainers(prevContainers => [...prevContainers, newContainer]);
   };
 
+  const deleteContainer = (index) => {
+    setContainers(prevContainers => {
+      // Create a new array without the container at the specified index
+      const updatedContainers = [...prevContainers];
+      updatedContainers.splice(index, 1);
+      return updatedContainers;
+    });
+  };
+
   const toggleContainerAccordion = (index) => {
     setContainers(prevContainers => {
       // Create a new array with the updated container
@@ -162,9 +171,18 @@ const CreateEmulation = (props) => {
     fetchImages()
   }, [fetchImages]);
 
-  const handleImageChange = (event) => {
-    setSelectedImage(event.target.value);
-    // console.log(selectedImage)
+  const handleImageChange = (index, selectedOs) => {
+    setContainers(prevContainers => {
+      // Create a new array with the updated container
+      const updatedContainers = [...prevContainers];
+      updatedContainers[index] = {
+        ...updatedContainers[index],
+        os: selectedOs // Toggle the value
+      };
+      return updatedContainers;
+    });
+    // setSelectedImage(event.target.value);
+    console.log(containers[index].os)
   };
 
   const SpinnerOrTable = (props) => {
@@ -176,7 +194,7 @@ const CreateEmulation = (props) => {
     } else {
       return (
         <div className="select-responsive">
-          <select value={selectedImage} onChange={handleImageChange}>
+          <select value={containers[props.index].os} onChange={(e) => handleImageChange(props.index, e.target.value)}>
             <option value="">--Please choose an option--</option>
             {props.images.map((img, index) =>
               <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp;  {formatBytes(img.size, 2)}</option>
@@ -298,14 +316,17 @@ const CreateEmulation = (props) => {
                 >
                   <h5 className="semiTitle">
                     Containers
-                    <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                    <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
                   </h5>
                 </Button>
               </Card.Header>
               <Collapse in={containerOpen}>
                 <div id="container" className="cardBodyHidden">
                   <div>
-                    <button onClick={addContainer}>Add Container</button>
+                    <Button onClick={addContainer}
+                            variant="success" size="sm">
+                      <i className="fa fa-plus" aria-hidden="true"/>
+                    </Button>
 
                     {containers.map((container, index) => (
                       <Accordion defaultActiveKey={index}>
@@ -319,29 +340,35 @@ const CreateEmulation = (props) => {
                             >
                               <h5 className="semiTitle">
                                 Container {index}
-                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                                <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
                               </h5>
                             </Button>
                           </Card.Header>
                           <Collapse in={container.containerAccordionOpen}>
                             <div id="eachContainer" className="cardBodyHidden">
-                              <div className="table-responsive">
-                                <Table striped bordered hover>
-                                  <thead>
-                                  <tr>
-                                    <th>Attribute</th>
-                                    <th> Value</th>
-                                  </tr>
-                                  </thead>
-                                  <tbody>
-                                  <tr>
-                                    <td>Images</td>
-                                    <td>
-                                      <SpinnerOrTable images={filteredImages} loading={loading} />
-                                    </td>
-                                  </tr>
-                                  </tbody>
-                                </Table>
+                              <div>
+                                <Button onClick={() => deleteContainer(index)}
+                                        variant="danger" size="sm">
+                                  <i className="fa fa-trash startStopIcon" aria-hidden="true" />
+                                </Button>
+                                <div className="table-responsive">
+                                  <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                      <th>Attribute</th>
+                                      <th> Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                      <td>Images</td>
+                                      <td>
+                                        <SpinnerOrTable images={filteredImages} loading={loading} index={index} />
+                                      </td>
+                                    </tr>
+                                    </tbody>
+                                  </Table>
+                                </div>
                               </div>
                             </div>
                           </Collapse>
