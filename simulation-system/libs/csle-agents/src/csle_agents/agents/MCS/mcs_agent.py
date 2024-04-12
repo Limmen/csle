@@ -191,7 +191,7 @@ class MCSAgent(BaseAgent):
                 agent_type=AgentType.SIMULATED_ANNEALING)
         return policy
 
-    def init_list(self, theta0: NDArray[int, Any], l: NDArray[int], L: NDArray[int], stopping_actions: int, n: int):
+    def init_list(self, theta0: NDArray[np.int32], l: NDArray[np.int32], L: NDArray[np.int32], stopping_actions: int, n: int):
         '''
         computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
@@ -612,11 +612,11 @@ class MCSAgent(BaseAgent):
             flag = 2
         return xbest, fbest, xmin, fmi, ncall, ncloc, flag
 
-    def splinit(self, i: int, s: int, smax: int, par: int, x0: NDArray[int, Any], n0: int, u: List[int], v: List[int],
-                x: NDArray[float], y: NDArray[float], x1: NDArray[float], x2: NDArray[float], L: NDArray[int], l: NDArray[int],
-                xmin: NDArray[Any], fmi: NDArray[Any], ipar: NDArray[int], level: NDArray[int], ichild: NDArray[int], f: NDArray[float], xbest: NDArray[float],
-                fbest: NDArray[float], stop: List[int], prt: int, record, nboxes, nbasket, nsweepbest, nsweep, stopping_actions): # TODO: type hint
-        
+    def splinit(self, i: int, s: int, smax: int, par: int, x0: NDArray[np.int32], n0: int, u: List[int], v: List[int],
+                x: NDArray[np.float64], y: NDArray[np.float64], x1: NDArray[np.float64], x2: NDArray[np.float64], L: NDArray[np.int32], l: NDArray[np.int32],
+                xmin: NDArray[np.float64], fmi: NDArray[np.float64], ipar: NDArray[np.int32], level: NDArray[np.int32], ichild: NDArray[np.int32],
+                f: NDArray[np.float64], xbest: NDArray[np.float64], fbest: NDArray[np.float64], stop: List[np.int32], prt: int, record: NDArray[np.int32],
+                nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int):
         """
         Splitting box at specified level s according to an initialization list
         """
@@ -624,7 +624,7 @@ class MCSAgent(BaseAgent):
         ncall = 0
         f0 = np.zeros(max(L) + 1)
         flag = 1
-        
+
         for j in range(L[i] + 1):
             if j != l[i]:
                 x[i] = x0[i, j]
@@ -714,9 +714,11 @@ class MCSAgent(BaseAgent):
         return (xbest, fbest, f0, xmin, fmi, ipar, level, ichild, f, flag, ncall,
                 record, nboxes, nbasket, nsweepbest, nsweep)
 
-    def split(self, i, s, smax, par, n0, u, v, x, y, x1, x2, z, xmin,
-              fmi, ipar, level, ichild, f, xbest, fbest, stop, prt, record,
-              nboxes, nbasket, nsweepbest, nsweep, stopping_actions): # TODO : type hint
+    def split(self, i: int, s: int, smax: int, par: int, n0: int, u: List[int], v: List[int], x: NDArray[np.float64], y: NDArray[np.float64],
+              x1: NDArray[np.float64], x2: NDArray[np.float64], z: NDArray[np.float64], xmin: NDArray[np.float64], fmi: NDArray[np.float64],
+              ipar: NDArray[np.int32], level: NDArray[np.int32], ichild: NDArray[np.int32], f: NDArray[np.float64], xbest: NDArray[np.float64],
+              fbest: NDArray[np.float64], stop: List[int], prt: int, record: NDArray[np.int32],
+              nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int):
         """
         Split Function
         """
@@ -944,8 +946,9 @@ class MCSAgent(BaseAgent):
 
         return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
 
-    def lsearch(self, x, f, f0, u, v, nf, stop, maxstep, gamma,
-                hess, nsweep, nsweepbest, stopping_actions, eps): # TODO : type hint
+    def lsearch(self, x: NDArray[np.float64], f: NDArray[np.float64], f0: NDArray[np.float64], u: List[int], v: List[int],
+                nf: int, stop: List[int], maxstep: int, gamma: float, hess: NDArray[np.float64], nsweep: int,
+                nsweepbest: int, stopping_actions: int, eps: float):
         ncall = 0
         n = len(x)
         x0 = np.asarray([min(max(u[i], 0), v[i]) for i in range(len(u))])
