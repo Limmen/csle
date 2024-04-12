@@ -155,7 +155,7 @@ class MCSAgent(BaseAgent):
         config = self.simulation_env_config.simulation_env_input_config
         if self.env is None:
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-        
+
         xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(u, v, smax, nf, stop, iinit,
                                                                local, gamma, hess, stopping_actions, eps, n)
         print('The MCS Algorithms Results:') # TODO: make log-statements
@@ -241,6 +241,7 @@ class MCSAgent(BaseAgent):
     def MCS(self, u: List[int], v: List[int], smax: int, nf: int, stop: List[int], iinit: int,
             local: int, gamma: float, hess: NDArray[np.float64], stopping_actions: int,
             eps: float, n: int, prt: int=1):
+
         if MCSUtils().check_box_bound(u, v):
             sys.exit("Error MCS main: out of bound")
         n = len(u)
@@ -297,7 +298,7 @@ class MCSAgent(BaseAgent):
         elif stop[0] == 0:
             flag = MCSUtils().chvtr(fbest, stop[1])
         if not flag:
-            print("glabal minumum as been found :", flag)
+            print("global minumum as been found :", flag)
 
         s, record = MCSUtils().strtsw(smax, level, f[0, :], nboxes, record)
         nsweep = nsweep + 1
