@@ -193,11 +193,16 @@ class MCSAgent(BaseAgent):
 
     def init_list(self, theta0: NDArray[np.int32], l: NDArray[np.int32], L: NDArray[np.int32], stopping_actions: int, n: int):
         '''
-        computes the function values corresponding to the initialization list
+        Computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
+        :param theta0: theta0
+        :param l: l
+        :param L: L
+        :param stopping actions: stopping actions for the eval_theta function
+        :param n: n
+        :return : initial conditions
         '''
         ncall = 0
-  
         theta = np.zeros(n)
         for i in range(n):
             theta[i] = theta0[i, l[i]]

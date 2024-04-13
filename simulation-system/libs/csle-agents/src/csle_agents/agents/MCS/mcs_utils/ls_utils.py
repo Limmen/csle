@@ -87,7 +87,6 @@ class UtilHelpers():
         return L, d
 
     def ldlup(self, L, d, j, g):
-        p = []
         eps = 2.2204e-16
         n = d.shape[0]
         I = [i for i in range(0, j)]

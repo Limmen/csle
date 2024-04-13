@@ -559,20 +559,22 @@ class MCSUtils(UtilHelpers):
         return h
 
     def get_theta0(self, iinit, u, v, n):
-        theta0 = []
-        # theta0 = np.array([])
+        # theta0 = []
+        
         if iinit == 0:
-            # theta0 = np.append(theta0, u)
-            theta0.append(u)
+            theta0 = np.array([])
+            theta0 = np.append(theta0, u, axis=0)
+            # theta0.append(u)
 
-            theta0.append([(i + j) / 2 for i, j in zip(u, v)])
-            # theta0 = np.append(theta0, [(i + j) / 2 for i, j in zip(u, v)])
+            # theta0.append([(i + j) / 2 for i, j in zip(u, v)])
+            # theta0 = np.append([theta0], [(i + j) / 2 for i, j in zip(u, v)])
+            theta0 = np.vstack([theta0, [(i + j) / 2 for i, j in zip(u, v)]])
 
-            theta0.append(v)
-            # theta0 = np.append(theta0, v)
+            # theta0.append(v)
+            theta0 = np.vstack([theta0, v])
 
-            theta0 = np.array(theta0).T
-            # theta0 = theta0.T
+            # theta0 = np.array(theta0).T
+            theta0 = theta0.T
         elif iinit == 1:
             theta0 = np.zeros((n, 3))
             for i in range(n):
@@ -589,10 +591,19 @@ class MCSUtils(UtilHelpers):
                     _, theta0[i, 0], self.subint(0, u[i])
                     _, theta0[i, 2], self.subint(0, v[i])
         elif iinit == 2:
-            theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
-            theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
-            theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
-            theta0 = np.array(theta0).T
+            theta0 = np.array([])
+            theta0 = np.append(theta0, [(i * 5 + j) / 6 for i, j in zip(u, v)])
+            # theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
+
+            theta0 = np.vstack([theta0, [0.5 * (i + j) for i, j in zip(u, v)]])            
+            # theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
+
+            theta0 = np.vstack([theta0, [(i + j * 5) / 6 for i, j in zip(u, v)]])
+            # theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
+
+            theta0 = theta0.T
+            # theta0 = np.array(theta0).T
+
 
         if np.any(np.isinf(theta0)):
             sys.exit("Error- MCS main: infinities in ititialization list")
