@@ -9,7 +9,7 @@ class Minq():
         pass
 
     def ldlrk1(self, L, d, alp, u):
-        p = []
+        p = np.array([])
         if alp == 0:
             return L, d, p
 
@@ -86,8 +86,9 @@ class UtilHelpers():
         d[j] = 1
         return L, d
 
-    def ldlup(self, L, d, j, g):
-        eps = 2.2204e-16
+    def ldlup(self, L, d, j, g, eps):
+        p = np.array([])
+        # eps = 2.2204e-16
         n = d.shape[0]
         I = [i for i in range(0, j)]
         K = [i for i in range(j + 1, n)]
@@ -98,10 +99,10 @@ class UtilHelpers():
             if delta <= n * eps:
                 p = np.asarray([1] + np.zeros(n - 1).tolist())
                 return L, d, p
-            w = [g[i] / delta for i in K]
+            w = np.asarray([g[i] / delta for i in K])
             L[j, I] = v.T
             d[j] = delta
-            p = np.asarray(p)
+            # p = np.asarray(p)
             return L, d, p
         LII = np.asarray([[L[i, j] for j in I] for i in I])
         gI = [g[i] for i in I]
@@ -192,9 +193,9 @@ class UtilHelpers():
         return alp, lba, uba, ier
 
     def minqsub(self, nsub, free, L, dd, K, G, n, g, x, xo, xu, convex,
-                xx, fct, nfree, unfix, alp, alpu, alpo, lba, uba, ier, subdone):
+                xx, fct, nfree, unfix, alp, alpu, alpo, lba, uba, ier, subdone, eps):
         nsub = nsub + 1
-        eps = 2.2204e-16
+        # eps = 2.2204e-16
 
         freelK = [i for i in range(len(free)) if (free < K)[i] is True]
         for j in freelK:
@@ -208,7 +209,7 @@ class UtilHelpers():
             if n > 1:
                 p = np.asarray([G[i, j] if K[i] is True else p[i] for i in range(len(K))])
             p[j] = G[j, j]
-            L, dd, p = self.ldlup(L, dd, j, p)
+            L, dd, p = self.ldlup(L, dd, j, p, eps)
             definite = (len(p) == 0)
             if not definite:
                 break
@@ -312,7 +313,7 @@ class LSUtils(UtilHelpers):
         alp = alist[i] + fac * (alist[i + 1] - alist[i])
         return alp, fac
 
-    def minq(self, gam, c, G, xu, xo, prt):
+    def minq(self, gam, c, G, xu, xo, prt, eps):
         '''
         Minimizes an affine quadratic form subject to simple bounds.
         Using coordinate searches and reduced subspace minimizations, using LDL^T factorization updates
@@ -370,7 +371,7 @@ class LSUtils(UtilHelpers):
         nitrefmax = 3
         xx = np.asarray([max(xu[i], min(xx[i], xo[i])) for i in range(len(xx))])
 
-        eps = 2.2204e-16
+        # eps = 2.2204e-16
         hpeps = 100 * eps
         G = G + spdiags(hpeps * np.diag(G), 0, n, n).toarray()
 
@@ -441,8 +442,6 @@ class LSUtils(UtilHelpers):
 
                     return x, fct, ier
 
-                    break
-
                 xnew = x[k] + alp
                 if prt and nitref > 0:
                     xnew, alp
@@ -490,7 +489,7 @@ class LSUtils(UtilHelpers):
                  nfree, alp, alpu, alpo, lba, uba, ier, unfix, subdone) = self.minqsub(nsub, free, L, dd, K, G, n, g, x,
                                                                                        xo, xu, convex, xx, fct, nfree,
                                                                                        unfix, alp, alpu, alpo, lba, uba,
-                                                                                       ier, subdone)
+                                                                                       ier, subdone, eps)
                 if not subdone:
                     return x, fct, ier
                 if ier:
