@@ -22,6 +22,9 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
 
+import CONTAINER_IMAGES from './ContainersNameAndOs';
+import containersNameAndOs from './ContainersNameAndOs'
+
 /**
  * Component representing the /create-emulation-page
  */
@@ -93,7 +96,7 @@ const CreateEmulation = (props) => {
   const [selectedImage, setSelectedImage] = useState('');
   const [containers, setContainers] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [newContainerName, setNewContainerName] = useState('');
+  const [newContainer, setNewContainer] = useState({ name: '', os: '' });
 
   const addContainer = () => {
     setShowPopup(true);
@@ -101,32 +104,28 @@ const CreateEmulation = (props) => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    setNewContainerName('');
+    setNewContainer({ name: '', os: '' });
   };
 
   const handleConfirmAdd = () => {
     setContainers(prevContainers => [...prevContainers,
-      { name: newContainerName, os: '', version: '', level: '', restartPolicy: '', networkId: '',
+      { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
         subnetMask: '', subnetPrefix: '', networkInterface: false }]);
     handleClosePopup();
   };
 
-  // const addContainer = () => {
-  //   const newContainer = {
-  //     name: '',
-  //     os: '',
-  //     version: '',
-  //     level: '',
-  //     restartPolicy: '',
-  //     networkId: '',
-  //     subnetMask: '',
-  //     subnetPrefix: '',
-  //     networkInterface: '',
-  //     containerAccordionOpen: false
-  //   };
-  //   // Update the state by adding the new container to the array
-  //   setContainers(prevContainers => [...prevContainers, newContainer]);
-  // };
+  const containerAndOs = Object.keys(containersNameAndOs).map(key => ({
+    name: key,
+    os: containersNameAndOs[key][0].os
+  }));
+
+  const handleContainerSelectChange = (e) => {
+    // Extract the selected option from the event
+    const selectedOption = JSON.parse(e.target.value);
+    console.log('Selected option:', selectedOption.name, "->",selectedOption.os);
+    // Call both functions
+    setNewContainer({ name: selectedOption.name, os: selectedOption.os });
+  };
 
   const deleteContainer = (index) => {
     setContainers(prevContainers => {
@@ -189,13 +188,13 @@ const CreateEmulation = (props) => {
     fetchImages()
   }, [fetchImages]);
 
-  const handleImageChange = (index, selectedOs) => {
+  const handleImageChange = (index, selectedImage) => {
     setContainers(prevContainers => {
       // Create a new array with the updated container
       const updatedContainers = [...prevContainers];
       updatedContainers[index] = {
         ...updatedContainers[index],
-        os: selectedOs // Toggle the value
+        image: selectedImage // Toggle the value
       };
       return updatedContainers;
     });
@@ -212,10 +211,10 @@ const CreateEmulation = (props) => {
     } else {
       return (
         <div className="select-responsive">
-          <select value={containers[props.index].os} onChange={(e) => handleImageChange(props.index, e.target.value)}>
+          <select value={containers[props.index].image} onChange={(e) => handleContainerSelectChange(e)}>
             <option value="">--Please choose an option--</option>
             {props.images.map((img, index) =>
-              <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp;  {formatBytes(img.size, 2)}</option>
+              <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp; {formatBytes(img.size, 2)}</option>
             )}
 
           </select>
@@ -351,17 +350,28 @@ const CreateEmulation = (props) => {
                           <div>
                             <h5>Enter Container Name:</h5>
                           </div>
-                          <div className="popup-content" style={{ display: 'flex', justifyContent: 'center',
-                            alignItems: 'center' }}>
-                            <input type="text" value={newContainerName}
-                                   onChange={(e) => setNewContainerName(e.target.value)} />
+                          <div className="popup-content" style={{
+                            display: 'flex', justifyContent: 'center',
+                            alignItems: 'center'
+                          }}>
+
+                            <select value={JSON.stringify(newContainer)} onChange={(e) => handleContainerSelectChange(e)}>
+                              <option value="">--Please choose an option--</option>
+                              {containerAndOs.map((option, index) => (
+                                <option key={index} value={JSON.stringify(option)}>
+                                  {`${option.name} (${option.os})`}
+                                </option>
+                              ))}
+
+                            </select>
+
                             <Button onClick={handleConfirmAdd}
                                     variant="primary" size="sm" style={{ marginLeft: '5px' }}>
-                              <i className="fa fa-check" aria-hidden="true"/>
+                              <i className="fa fa-check" aria-hidden="true" />
                             </Button>
                             <Button onClick={handleClosePopup}
                                     variant="danger" size="sm" style={{ marginLeft: '2px' }}>
-                              <i className="fa fa-times" aria-hidden="true"/>
+                              <i className="fa fa-times" aria-hidden="true" />
                             </Button>
                           </div>
                         </div>
@@ -379,7 +389,7 @@ const CreateEmulation = (props) => {
                               aria-expanded={container.containerAccordionOpen}
                               variant="link"
                             >
-                              <h5 className="semiTitle">
+                            <h5 className="semiTitle">
                                 {containers[index].name}
                                 <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
                               </h5>
@@ -402,9 +412,16 @@ const CreateEmulation = (props) => {
                                     </thead>
                                     <tbody>
                                     <tr>
-                                      <td>Images</td>
+                                      <td>Name</td>
                                       <td>
-                                        <SpinnerOrTable images={filteredImages} loading={loading} index={index} />
+                                        {containers[index].name}
+                                        {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>OS</td>
+                                      <td>
+                                        {containers[index].os}
                                       </td>
                                     </tr>
                                     </tbody>
