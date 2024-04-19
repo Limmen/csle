@@ -410,10 +410,12 @@ class MCS:
     """
     STEP = "step"
     STEP1 = "step1"
+    THETAS = "thetas"
     U = "u"
     V = "v"
     L = "L"
     STOPPING_ACTIONS = "stopping_actions"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     GAMMA = "gamma"
     EPSILON = "epsilon"
     LOCAL = "local"
@@ -425,6 +427,7 @@ class MCS:
     STOP = "stop"
     POLICY_TYPE = "policy_type"
     OBJECTIVE_TYPE = "objective_type"
+    THRESHOLDS = "thresholds"
 
 
 class BAYESIAN_OPTIMIZATION_EMUKIT:

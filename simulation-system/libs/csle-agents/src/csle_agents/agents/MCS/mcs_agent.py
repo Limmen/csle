@@ -13,7 +13,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 # from csle_common.dao.training.experiment_execution import ExperimentExecution
-# from csle_common.dao.training.experiment_result import ExperimentResult
+from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 # from csle_common.util.experiment_util import ExperimentUtil
@@ -156,7 +156,53 @@ class MCSAgent(BaseAgent):
         if self.env is None:
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
 
-        xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(u, v, smax, nf, stop, iinit,
+        exp_result = ExperimentResult()
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_START)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START)
+        exp_result.plot_metrics.append(env_constants.ENV_METRICS.TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
+        exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
+        exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+
+        for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
+            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
+            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
+
+        descr = f"Training of policies with the random search algorithm using " \
+                f"simulation:{self.simulation_env_config.name}"
+        for seed in self.experiment_config.random_seeds:
+            exp_result.all_metrics[seed] = {}
+            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THRESHOLDS] = []
+            if self.experiment_config.player_type == PlayerType.DEFENDER:
+                for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
+                    exp_result.all_metrics[seed][
+                        agents_constants.NELDER_MEAD.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+            else:
+                for s in self.simulation_env_config.state_space_config.states:
+                    for l in range(1, self.experiment_config.hparams[agents_constants.NELDER_MEAD.L].value + 1):
+                        exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.STOP_DISTRIBUTION_ATTACKER
+                                                     + f"_l={l}_s={s.id}"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START] = []
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+
+        xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(exp_result, u, v, smax, nf, stop, iinit,
                                                                local, gamma, hess, stopping_actions, eps, n)
         print('The MCS Algorithms Results:') # TODO: make log-statements
         print('fbest', fbest)
@@ -243,7 +289,7 @@ class MCSAgent(BaseAgent):
             theta[i] = theta0[i, istar[i]]
         return J0, istar, ncall
 
-    def MCS(self, u: List[int], v: List[int], smax: int, nf: int, stop: List[Union[float, int]], iinit: int,
+    def MCS(self, exp_result, u: List[int], v: List[int], smax: int, nf: int, stop: List[Union[float, int]], iinit: int,
             local: int, gamma: float, hess: NDArray[np.float64], stopping_actions: int,
             eps: float, n: int, prt: int=1):
 
@@ -952,7 +998,7 @@ class MCSAgent(BaseAgent):
 
         return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
 
-    def lsearch(self, x: List[Union[float, int]], f: NDArray[np.float64], f0: NDArray[np.float64], u: List[int], v: List[int],
+    def lsearch(self, x: List[Union[float, int]], f: float, f0: NDArray[np.float64], u: List[int], v: List[int],
                 nf: int, stop: List[Union[int, float]], maxstep: int, gamma: float, hess: NDArray[np.float64], nsweep: int,
                 nsweepbest: int, stopping_actions: int, eps: float):
         ncall = 0
@@ -991,8 +1037,8 @@ class MCSAgent(BaseAgent):
                                               agents_constants.COMMON.MAX_ENV_STEPS].value)
             f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             ncall = ncall + 1
-            alist = [0, 1]
-            flist = [fmi, f1]
+            alist: List[Union[float, int]] = [0, 1]
+            flist: List[Union[float, int]] = [fmi, f1]
             fpred = fmi + np.dot(g.T, p) + np.dot(0.5, np.dot(p.T, np.dot(G, p)))
             alist, flist, nfls = self.gls(u, v, xmin, p, alist,
                                           flist, nloc, small, smaxls, stopping_actions)
@@ -1001,7 +1047,7 @@ class MCSAgent(BaseAgent):
             i = np.argmin(flist)
             fminew = min(flist)
             if fminew == fmi:
-                i = [i for i in range(len(alist)) if not alist[i]][0]
+                i = [k for k in range(len(alist)) if not alist[k]][0]
             else:
                 fmi = copy.deepcopy(fminew)
             
@@ -1018,7 +1064,7 @@ class MCSAgent(BaseAgent):
                 return xmin, fmi, ncall, flag, nsweep, nsweepbest
 
             if fold == fmi:
-                r = 0
+                r: Union[int, float] = 0
             elif fold == fpred:
                 r = 0.5
             else:
@@ -1053,7 +1099,7 @@ class MCSAgent(BaseAgent):
                         x[i] = x2[i]
                     else:
                         x[i] = x1[i]
-                    policy = self.get_policy(x, L=stopping_actions)
+                    policy = self.get_policy(np.asarray(x), L=stopping_actions)
                     avg_metrics = self.eval_theta(policy=policy,
                                                   max_steps=self.experiment_config.hparams[
                                                       agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -1072,7 +1118,10 @@ class MCSAgent(BaseAgent):
                         j = np.argmin(flist)
                         fminew = min(flist)
                         if fminew == fmi:
-                            j = [inx for inx in range(len(alist)) if (not alist[inx])][0]
+                            temp_list = [inx for inx in range(len(alist)) if (not alist[inx])]
+                            # j = [inx for inx in range(len(alist)) if (not alist[inx])][0]
+                            item = temp_list[0]
+                            j = item
                         else:
                             fmi = fminew
                         xmin[i] = xmin[i] + alist[j]
@@ -1125,7 +1174,7 @@ class MCSAgent(BaseAgent):
             if np.linalg.norm(p):
                 fpred = fmi + np.dot(g.T, p) + np.dot(0.5, np.dot(p.T, np.dot(G, p)))
                 x = copy.deepcopy(xmin + p)
-                policy = self.get_policy(x, L=stopping_actions)
+                policy = self.get_policy(np.array(x), L=stopping_actions)
                 avg_metrics = self.eval_theta(policy=policy,
                                               max_steps=self.experiment_config.hparams[
                                                   agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -1285,7 +1334,7 @@ class MCSAgent(BaseAgent):
                         break
         return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
 
-    def csearch(self, x: List[Union[float, int]], f: NDArray[np.float64], u: List[int], v: List[int], hess: NDArray[np.float64],
+    def csearch(self, x: List[Union[float, int]], f: float, u: List[int], v: List[int], hess: NDArray[np.float64],
                 stopping_actions: int, eps: float):
         n = len(x)
         x = [min(v[i], max(x[i], u[i])) for i in range(len(x))]
@@ -1337,8 +1386,8 @@ class MCSAgent(BaseAgent):
                         fminew = copy.deepcopy(f2)
                     linesearch = False
                 else:
-                    alist = [0, delta]
-                    flist = [fmi, f1]
+                    alist: List[Union[float, int]] = [0, delta]
+                    flist: List[Union[float,int]] = [fmi, f1]
             elif xmin[i] >= v[i]:
                 policy = self.get_policy(xmin - delta * p, L=stopping_actions)
                 avg_metrics = self.eval_theta(policy=policy,
@@ -1366,9 +1415,15 @@ class MCSAgent(BaseAgent):
                     alist = [0, -delta]
                     flist = [fmi, f1]
             else:
-                alist = 0
-                flist = fmi
-            
+                alist = [0]
+                flist = [fmi]
+
+            # if np.isscalar(alist):
+            #     alist = [alist]
+
+            # if np.isscalar(flist):
+            #     flist = [flist]
+
             if linesearch:
                 alist, flist, nfls = self.gls(u, v, xmin, p, alist, flist, nloc,
                                               small, smaxls, stopping_actions)
@@ -1443,7 +1498,7 @@ class MCSAgent(BaseAgent):
                         x[k] = x1[k]
                     else:
                         x[k] = x2[k]
-                    policy = self.get_policy(x, L=stopping_actions)
+                    policy = self.get_policy(np.array(x), L=stopping_actions)
                     avg_metrics = self.eval_theta(policy=policy,
                                                   max_steps=self.experiment_config.hparams[
                                                       agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -1478,8 +1533,9 @@ class MCSAgent(BaseAgent):
             fmi = copy.deepcopy(fminew)
         return xmin, fmi, g, G, nfcsearch
 
-    def gls(self, xl: List[int], xu: List[int], x: List[int], p: NDArray[np.int32], alist: List[int], flist: List[float],
-            nloc: int, small: float, smax: int, stopping_actions: int, prt: int=2):
+    def gls(self, xl: List[int], xu: List[int], x: List[Union[float, int]], p: NDArray[Union[np.int32, np.float64]],
+            alist: List[Union[float, int]], flist: List[Union[int, float]],
+            nloc: int, small: Union[float, int], smax: int, stopping_actions: int, prt: int=2):
         '''
         Global line search main function
         :param func: funciton name which is subjected to optimization
@@ -1495,15 +1551,13 @@ class MCSAgent(BaseAgent):
         :param prt: print - unsued in this implementation so far
         :return: search list,function values,number of fucntion evaluation
         '''
-        if np.isscalar(alist):
-            alist = [alist]
-            flist = [flist]
+
         # if isinstance(alist, list): TODO: this should work
         # if isinstance(flist, list): TODO: this should work
-        if type(alist) != list:
-            alist = alist.tolist()
-        if type(flist) != list:
-            flist = flist.tolist()
+        # if type(alist) != list:
+        #     alist = alist.tolist()
+        # if type(flist) != list:
+        #     flist = flist.tolist()
 
         short = 0.381966
         sinit = len(alist)
@@ -1538,7 +1592,7 @@ class MCSAgent(BaseAgent):
 
                 (alist, flist, amin, amax, alp, abest, fbest, fmed, up, down,
                  monotone, minima, nmin, unitlen, s, good, saturated) = self.lsquart(nloc, small, sinit,
-                                                                                     short, x, p, alist,
+                                                                                     short, np.array(x), p, alist,
                                                                                      flist, amin, amax, alp,
                                                                                      abest, fbest, fmed, up,
                                                                                      down, monotone, minima,
@@ -1879,7 +1933,7 @@ class MCSAgent(BaseAgent):
 
         return alist, flist, alp, fac
 
-    def lsdescent(self, x: NDArray[np.float64], p: NDArray[np.int32], alist: List[float], flist: List[int], alp: int,
+    def lsdescent(self, x: NDArray[np.float64], p: NDArray[np.int32], alist: List[Union[float, int]], flist: List[int], alp: int,
                   abest: float, fbest: float, fmed: float, up: List[float], down: List[float], monotone: int, minima: List[int],
                   nmin: int, unitlen: float, s: int, stopping_actions: int):
         cont = max([i == 0 for i in alist])
@@ -1924,8 +1978,8 @@ class MCSAgent(BaseAgent):
         return (alist, flist, alp, abest, fbest, fmed, up, down,
                 monotone, minima, nmin, unitlen, s)
 
-    def lsquart(self, nloc: int, small: int, sinit: int, short: float, x: NDArray[np.float64], p: NDArray[np.int32],
-                alist: List[float], flist: NDArray[np.float64], amin: float, amax: float, alp: float, abest: float, fbest: float,
+    def lsquart(self, nloc: int, small: Union[float, int], sinit: int, short: float, x: NDArray[np.float64], p: NDArray[Union[np.float64, np.int32]],
+                alist: List[Union[float, int]], flist: NDArray[np.float64], amin: float, amax: float, alp: float, abest: float, fbest: float,
                 fmed: float, up: List[float], down: List[float],
                 monotone: int, minima: List[int], nmin: int, unitlen: float, s: int,
                 saturated: int, stopping_actions: int):
@@ -2025,7 +2079,7 @@ class MCSAgent(BaseAgent):
                 minima, nmin, unitlen, s, good, saturated)
 
     def lssep(self, nloc: int, small: float, sinit: int, short: float, x: NDArray[np.float64], p: NDArray[np.int32],
-              alist: List[float], flist: List[float], amin: float, amax: float, alp: float, abest: float, fbest: float,
+              alist: List[Union[float, int]], flist: List[float], amin: float, amax: float, alp: float, abest: float, fbest: float,
               fmed: float, up: List[float], down: List[float], monotone: int, minima: List[int], nmin: int,
               unitlen: float, s: int, stopping_actions: int):
         nsep = 0
@@ -2073,7 +2127,7 @@ class MCSAgent(BaseAgent):
                 up, down, monotone, minima, nmin, unitlen, s)
 
     def lslocal(self, nloc: int, small: float, sinit: int, short: float, x :NDArray[np.float64], p: NDArray[np.int32],
-                alist: List[float], flist: List[float],
+                alist: List[Union[float, int]], flist: List[float],
                 amin: float, amax: float, alp: float, abest: float, fbest: float, fmed: float,
                 up: List[float], down: List[float], monotone: int,
                 minima: List[int], nmin: int, unitlen: float, s: int, saturated: int, stopping_actions: int):
