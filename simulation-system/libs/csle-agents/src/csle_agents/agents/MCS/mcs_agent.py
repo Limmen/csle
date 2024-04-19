@@ -177,17 +177,17 @@ class MCSAgent(BaseAgent):
 
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.MCS.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.MCS.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
                     exp_result.all_metrics[seed][
                         agents_constants.NELDER_MEAD.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1, self.experiment_config.hparams[agents_constants.NELDER_MEAD.L].value + 1):
+                    for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
                         exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
@@ -354,7 +354,7 @@ class MCSAgent(BaseAgent):
                                       max_steps=self.experiment_config.hparams[
                                           agents_constants.COMMON.MAX_ENV_STEPS].value)
         J1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        print("J1 = ", J1)
+        # print("J1 = ", J1)
         ncall += 1
         
         J0 = np.zeros((L[0] + 1, n))
@@ -440,29 +440,25 @@ class MCSAgent(BaseAgent):
             theta0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt
         )
         f0min = fbest
-
         if stop[0] > 0 and stop[0] < 1:
             flag = MCSUtils().chrelerr(fbest, stop)
         elif stop[0] == 0:
             flag = MCSUtils().chvtr(fbest, stop[1])
-        if not flag:
-            print("global minumum as been found :", flag)
+        # if not flag:
+        #     print("global minumum as been found :", flag)
 
         s, record = MCSUtils().strtsw(smax, level, f[0, :], nboxes, record)
         nsweep = nsweep + 1
         xmin: List[Union[float, List[float], NDArray[np.float64]]] = []
         fmi: List[float] = []
 
-
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(f0min)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(f0min)
-        # exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS].append(
-        #     NelderMeadAgent.round_vec(theta))
 
         running_avg_J = ExperimentUtil.running_average(
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
             self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-
+        avg_metrics: Union[bool, Dict[str, Union[float, int]]] = None
         while s < smax and ncall + 1 <= nf:
             if s % self.experiment_config.log_every == 0 and s > 0:
                 # Update training job
@@ -520,7 +516,7 @@ class MCSAgent(BaseAgent):
                 if z[1, par] == np.Inf:
                     m = m + 1
                     z[1, par] = m # TODO : make fewer rows
-                    (xbest, fbest, f01, xmin, fmi, ipar, level,
+                    (xbest, fbest, policy, f01, xmin, fmi, ipar, level,
                      ichild, f, flag, ncall1, record, nboxes,
                      nbasket, nsweepbest, nsweep,
                     ) = self.splinit(
@@ -537,7 +533,7 @@ class MCSAgent(BaseAgent):
                     ncall = ncall + ncall1
                 else:
                     z[0, par] = x[i]
-                    (xbest, fbest, xmin, fmi,
+                    (xbest, fbest, policy, xmin, fmi,
                      ipar, level, ichild, f,
                      flag, ncall1, record,
                      nboxes, nbasket, nsweepbest,
@@ -602,17 +598,30 @@ class MCSAgent(BaseAgent):
                         loc = MCSUtils().chkloc(nloc, xloc, x)
                         if loc:
                             nloc, xloc = MCSUtils().addloc(nloc, xloc, x)
-                            (xbest, fbest, xmin, fmi,
-                             x, f1, loc, flag,
-                             ncall1, nsweep,
-                             nsweepbest,
-                            ) = self.basket(
-                                x, f1, xmin, fmi,
-                                xbest, fbest, stop,
-                                nbasket0, nsweep,
+
+                            if not nbasket0 or nbasket0 == -1:
+                                (xbest, fbest, xmin, fmi,
+                                x, f1, loc, flag,
+                                ncall1, nsweep,
                                 nsweepbest,
-                                stopping_actions
-                            )
+                                ) = self.basket(
+                                    x, f1, xmin, fmi,
+                                    xbest, fbest, stop,
+                                    nbasket0, nsweep,
+                                    nsweepbest,
+                                    stopping_actions
+                                )
+                            else:
+                                (xbest, fbest, policy, avg_metrics,
+                                 xmin, fmi, x, f1, loc, flag,
+                                ncall1, nsweep, nsweepbest,
+                                ) = self.basket(
+                                    x, f1, xmin, fmi,
+                                    xbest, fbest, stop,
+                                    nbasket0, nsweep,
+                                    nsweepbest,
+                                    stopping_actions
+                                )
                             ncall = ncall + ncall1
                             if not flag:
                                 break
@@ -648,20 +657,35 @@ class MCSAgent(BaseAgent):
                                         flag = MCSUtils().chvtr(fbest, stop[1])
                                     if not flag:
                                         return xbest, fbest, xmin, fmi, ncall, ncloc, flag
-                                (
-                                    xbest, fbest,
-                                    xmin, fmi,
-                                    loc, flag,
-                                    ncall1, nsweep,
-                                    nsweepbest,
-                                ) = self.basket1(
-                                    np.array(xmin1),
-                                    fmi1, xmin,
-                                    fmi, xbest,
-                                    fbest, stop,
-                                    nbasket0, nsweep,
-                                    nsweepbest, stopping_actions
-                                )
+                                if not nbasket0 or nbasket0 == -1:
+                                    (
+                                        xbest, fbest,
+                                        xmin, fmi,
+                                        loc, flag,
+                                        ncall1, nsweep,
+                                        nsweepbest,
+                                    ) = self.basket1(
+                                        np.array(xmin1),
+                                        fmi1, xmin,
+                                        fmi, xbest,
+                                        fbest, stop,
+                                        nbasket0, nsweep,
+                                        nsweepbest, stopping_actions
+                                    )
+                                else:
+                                    (
+                                        xbest, fbest, policy,
+                                        avg_metrics, xmin, fmi,
+                                        loc, flag, ncall1, nsweep,
+                                        nsweepbest,
+                                    ) = self.basket1(
+                                        np.array(xmin1),
+                                        fmi1, xmin,
+                                        fmi, xbest,
+                                        fbest, stop,
+                                        nbasket0, nsweep,
+                                        nsweepbest, stopping_actions
+                                    )
                                 ncall = ncall + ncall1
                                 if not flag:
                                     break
@@ -684,24 +708,94 @@ class MCSAgent(BaseAgent):
                         break
 
                 s, record = MCSUtils().strtsw(smax, level, f[0, :], nboxes, record)
-                if prt:
-                    minlevel = s
-                    print("nsweep:", nsweep)
-                    print("minlevel:", minlevel)
-                    print("ncall:", ncall)
-                    print("fbest:", fbest)
-                    print("xbest: ", xbest)
-                    print("\n")
 
-                if stop[0] > 1:
-                    if nsweep - nsweepbest >= stop[0]:
-                        flag = 3
-                        return xbest, fbest, xmin, fmi, ncall, ncloc, flag
-                nsweep = nsweep + 1
+            running_avg_J = ExperimentUtil.running_average(
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(fbest)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
+
+            # Log thresholds
+            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS].append(
+                MCSAgent.round_vec(xbest))
+            exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THRESHOLDS].append(
+                MCSAgent.round_vec(policy.thresholds()))
+
+            # Log stop distribution
+            for k, v in policy.stop_distributions().items():
+                exp_result.all_metrics[seed][k].append(v)
+
+            if avg_metrics is not None:
+                # Log intrusion lengths
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_LENGTH], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+
+                # Log stopping times
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.TIME_HORIZON], 3))
+                exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+                for l in range(1, self.experiment_config.hparams[agents_constants.MCS.STOPPING_ACTIONS].value + 1):
+                    exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                        round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                        ExperimentUtil.running_average(
+                            exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
+                            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+
+                # Log baseline returns
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
+                exp_result.all_metrics[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
+
+        policy = self.get_policy(theta=list(xbest), L=L)
+        exp_result.policies[seed] = policy
+        # Save policy
+        if self.save_to_metastore:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        if prt:
+            minlevel = s
+            Logger.__call__().get_logger().info(
+                f"[MCS-summary-log]: "
+                f"nsweep: {nsweep}, minlevel: {s}, ncall: {ncall}, J:{fbest}, "
+                f"theta_best: {xbest}, "
+                f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%")
+
+            if stop[0] > 1:
+                if nsweep - nsweepbest >= stop[0]:
+                    flag = 3
+                    return xbest, fbest, xmin, fmi, ncall, ncloc, flag
+            nsweep = nsweep + 1
 
         if ncall >= nf:
             flag = 2
         return xbest, fbest, xmin, fmi, ncall, ncloc, flag
+
+    @staticmethod
+    def round_vec(vec) -> List[float]:
+        """
+        Rounds a vector to 3 decimals
+
+        :param vec: the vector to round
+        :return: the rounded vector
+        """
+        return list(map(lambda x: round(x, 3), vec))
+
 
     def splinit(self, i: int, s: int, smax: int, par: int, x0: NDArray[np.int32], n0: int, u: List[int], v: List[int],
                 x: NDArray[np.float64], y: NDArray[np.float64], x1: NDArray[np.float64], x2: NDArray[np.float64], L: NDArray[np.int32], l: NDArray[np.int32],
@@ -802,7 +896,7 @@ class MCSAgent(BaseAgent):
                 else:
                     xmin[nbasket] = copy.deepcopy(x)
                     fmi[nbasket] = f0[j]
-        return (xbest, fbest, f0, xmin, fmi, ipar, level, ichild, f, flag, ncall,
+        return (xbest, fbest, policy, f0, xmin, fmi, ipar, level, ichild, f, flag, ncall,
                 record, nboxes, nbasket, nsweepbest, nsweep)
 
     def split(self, i: int, s: int, smax: int, par: int, n0: int, u: List[int], v: List[int], x: NDArray[np.float64], y: NDArray[np.float64],
@@ -917,7 +1011,7 @@ class MCSAgent(BaseAgent):
             else:
                 xmin[nbasket] = xi2
                 fmi[nbasket] = f[1, par]
-        return (xbest, fbest, xmin, fmi, ipar, level, ichild, f, flag,
+        return (xbest, fbest, policy, xmin, fmi, ipar, level, ichild, f, flag,
                 ncall, record, nboxes, nbasket, nsweepbest, nsweep)
 
     def basket(self, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions):
@@ -932,83 +1026,34 @@ class MCSAgent(BaseAgent):
 
         # dist1 = np.sort(dist)
         ind = np.argsort(dist)
+        if nbasket == -1:
+                return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
+        else:
+            for k in range(nbasket + 1):
+                i = ind[k]
+                if fmi[i] <= f:
+                    p = xmin[i] - x
 
-        for k in range(nbasket + 1):
-            i = ind[k]
-            if fmi[i] <= f:
-                p = xmin[i] - x
-
-                y1 = x + 1 / 3 * p
-                policy = self.get_policy(y1, L=stopping_actions)
-                avg_metrics = self.eval_theta(policy=policy,
-                                              max_steps=self.experiment_config.hparams[
-                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
-                f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
-                ncall = ncall + 1
-                if f1 <= f:
-                    y2 = x + 2 / 3 * p
-                    policy = self.get_policy(y2, L=stopping_actions)
+                    y1 = x + 1 / 3 * p
+                    policy = self.get_policy(y1, L=stopping_actions)
                     avg_metrics = self.eval_theta(policy=policy,
-                                                  max_steps=self.experiment_config.hparams[
-                                                      agents_constants.COMMON.MAX_ENV_STEPS].value)
-                    f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+
                     ncall = ncall + 1
-                    if f2 > max(f1, fmi[i]):
-                        if f1 < f:
-                            x = y1
-                            f = f1
-                            if f < fbest:
-                                fbest = f
-                                xbest = copy.deepcopy(x)
-                                nsweepbest = nsweep
-                                if stop[0] > 0 and stop[0] < 1:
-                                    flag = MCSUtils().chrelerr(fbest, stop)
-                                elif stop[0] == 0:
-                                    flag = MCSUtils().chvtr(fbest, stop[1])
-                                if not flag:
-                                    return (
-                                        xbest,
-                                        fbest,
-                                        xmin,
-                                        fmi,
-                                        x,
-                                        f,
-                                        loc,
-                                        flag,
-                                        ncall,
-                                        nsweep,
-                                        nsweepbest,
-                                    )
-                    else:
-                        if f1 < min(f2, fmi[i]):
-                            f = f1
-                            x = copy.deepcopy(y1)
-                            if f < fbest:
-                                fbest = f
-                                xbest = copy.deepcopy(x)
-                                nsweepbest = nsweep
-                                if stop[0] > 0 and stop[0] < 1:
-                                    flag = MCSUtils().chrelerr(fbest, stop)
-                                elif stop[0] == 0:
-                                    flag = MCSUtils().chvtr(fbest, stop[1])
-                                if not flag:
-                                    return (
-                                        xbest,
-                                        fbest,
-                                        xmin,
-                                        fmi,
-                                        x,
-                                        f,
-                                        loc,
-                                        flag,
-                                        ncall,
-                                        nsweep,
-                                        nsweepbest,
-                                    )
-                            elif f2 < min(f1, fmi[i]):
-                                f = f2
-                                x = copy.deepcopy(y2)
+                    if f1 <= f:
+                        y2 = x + 2 / 3 * p
+                        policy = self.get_policy(y2, L=stopping_actions)
+                        avg_metrics = self.eval_theta(policy=policy,
+                                                    max_steps=self.experiment_config.hparams[
+                                                        agents_constants.COMMON.MAX_ENV_STEPS].value)
+                        f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                        ncall = ncall + 1
+                        if f2 > max(f1, fmi[i]):
+                            if f1 < f:
+                                x = y1
+                                f = f1
                                 if f < fbest:
                                     fbest = f
                                     xbest = copy.deepcopy(x)
@@ -1019,23 +1064,55 @@ class MCSAgent(BaseAgent):
                                         flag = MCSUtils().chvtr(fbest, stop[1])
                                     if not flag:
                                         return (
-                                            xbest,
-                                            fbest,
-                                            xmin,
-                                            fmi,
-                                            x,
-                                            f,
-                                            loc,
-                                            flag,
-                                            ncall,
-                                            nsweep,
+                                            xbest, fbest, policy,
+                                            avg_metrics, xmin, fmi, x,
+                                            f, loc, flag,
+                                            ncall, nsweep,
                                             nsweepbest,
                                         )
-                            else:
-                                loc = 0
-                                break
-
-        return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
+                        else:
+                            if f1 < min(f2, fmi[i]):
+                                f = f1
+                                x = copy.deepcopy(y1)
+                                if f < fbest:
+                                    fbest = f
+                                    xbest = copy.deepcopy(x)
+                                    nsweepbest = nsweep
+                                    if stop[0] > 0 and stop[0] < 1:
+                                        flag = MCSUtils().chrelerr(fbest, stop)
+                                    elif stop[0] == 0:
+                                        flag = MCSUtils().chvtr(fbest, stop[1])
+                                    if not flag:
+                                        return (
+                                            xbest, fbest, policy,
+                                            avg_metrics, xmin, fmi, x,
+                                            f, loc, flag,
+                                            ncall, nsweep,
+                                            nsweepbest,
+                                        )
+                                elif f2 < min(f1, fmi[i]):
+                                    f = f2
+                                    x = copy.deepcopy(y2)
+                                    if f < fbest:
+                                        fbest = f
+                                        xbest = copy.deepcopy(x)
+                                        nsweepbest = nsweep
+                                        if stop[0] > 0 and stop[0] < 1:
+                                            flag = MCSUtils().chrelerr(fbest, stop)
+                                        elif stop[0] == 0:
+                                            flag = MCSUtils().chvtr(fbest, stop[1])
+                                        if not flag:
+                                            return (
+                                                xbest, fbest, policy,
+                                                avg_metrics, xmin, fmi, x, f,
+                                                loc, flag, ncall,
+                                                nsweep, nsweepbest,
+                                            )
+                                else:
+                                    loc = 0
+                                    break
+        
+            return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
 
     def lsearch(self, x: List[Union[float, int]], f: float, f0: NDArray[np.float64], u: List[int], v: List[int],
                 nf: int, stop: List[Union[int, float]], maxstep: int, gamma: float, hess: NDArray[np.float64], nsweep: int,
@@ -1271,107 +1348,96 @@ class MCSAgent(BaseAgent):
         # dist1 = np.sort(dist)
         ind = np.argsort(dist)
 
-        for k in range(nbasket + 1):
-            i = ind[k]
-            p = xmin[i] - x
-            y1 = x + 1 / 3 * p
-            policy = self.get_policy(y1, L=stopping_actions)
-            avg_metrics = self.eval_theta(policy=policy,
-                                          max_steps=self.experiment_config.hparams[
-                                              agents_constants.COMMON.MAX_ENV_STEPS].value)
-            f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            ncall = ncall + 1
-            if f1 <= max(fmi[i], f):
-                y2 = x + 2 / 3 * p
-                policy = self.get_policy(y2, L=stopping_actions)
+        if nbasket == -1:
+            return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
+        else:
+            for k in range(nbasket + 1):
+                i = ind[k]
+                p = xmin[i] - x
+                y1 = x + 1 / 3 * p
+                policy = self.get_policy(y1, L=stopping_actions)
                 avg_metrics = self.eval_theta(policy=policy,
-                                              max_steps=self.experiment_config.hparams[
-                                                  agents_constants.COMMON.MAX_ENV_STEPS].value)
-                f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                                            max_steps=self.experiment_config.hparams[
+                                                agents_constants.COMMON.MAX_ENV_STEPS].value)
+                f1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
                 ncall = ncall + 1
-                if f2 <= max(f1, fmi[i]):
-                    if f < min(min(f1, f2), fmi[i]):
-                        fmi[i] = f
-                        xmin[i] = copy.deepcopy(x)
-                        if fmi[i] < fbest:
-                            fbest = copy.deepcopy(fmi[i])
-                            xbest = copy.deepcopy(xmin[i])
-                            nsweepbest = nsweep
-                            if stop[0] > 0 and stop[0] < 1:
-                                flag = MCSUtils().chrelerr(fbest, stop)
-                            elif stop[0] == 0:
-                                flag = MCSUtils().chvtr(fbest, stop[1])
-                            if not flag:
-                                return (
-                                    xbest,
-                                    fbest,
-                                    xmin,
-                                    fmi,
-                                    loc,
-                                    flag,
-                                    ncall,
-                                    nsweep,
-                                    nsweepbest,
-                                )
-                        # end fmi[i] < fbest:
-                        loc = 0
-                        break
-                    elif f1 < min(min(f, f2), fmi[i]):
-                        fmi[i] = f1
-                        xmin[i] = copy.deepcopy(y1)
-                        if fmi[i] < fbest:
-                            fbest = copy.deepcopy(fmi[i])
-                            xbest = copy.deepcopy(xmin[i])
-                            nsweepbest = copy.deepcopy(nsweep)
+                if f1 <= max(fmi[i], f):
+                    y2 = x + 2 / 3 * p
+                    policy = self.get_policy(y2, L=stopping_actions)
+                    avg_metrics = self.eval_theta(policy=policy,
+                                                max_steps=self.experiment_config.hparams[
+                                                    agents_constants.COMMON.MAX_ENV_STEPS].value)
+                    f2 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+                    ncall = ncall + 1
+                    if f2 <= max(f1, fmi[i]):
+                        if f < min(min(f1, f2), fmi[i]):
+                            fmi[i] = f
+                            xmin[i] = copy.deepcopy(x)
+                            if fmi[i] < fbest:
+                                fbest = copy.deepcopy(fmi[i])
+                                xbest = copy.deepcopy(xmin[i])
+                                nsweepbest = nsweep
+                                if stop[0] > 0 and stop[0] < 1:
+                                    flag = MCSUtils().chrelerr(fbest, stop)
+                                elif stop[0] == 0:
+                                    flag = MCSUtils().chvtr(fbest, stop[1])
+                                if not flag:
+                                    return (
+                                        xbest, fbest,
+                                        policy, avg_metrics, xmin,
+                                        fmi, loc, flag, ncall,
+                                        nsweep, nsweepbest,
+                                    )
+                            # end fmi[i] < fbest:
+                            loc = 0
+                            break
+                        elif f1 < min(min(f, f2), fmi[i]):
+                            fmi[i] = f1
+                            xmin[i] = copy.deepcopy(y1)
+                            if fmi[i] < fbest:
+                                fbest = copy.deepcopy(fmi[i])
+                                xbest = copy.deepcopy(xmin[i])
+                                nsweepbest = copy.deepcopy(nsweep)
 
-                            if stop[0] > 0 and stop[0] < 1:
-                                flag = MCSUtils().chrelerr(fbest, stop)
-                            elif stop[0] == 0:
-                                flag = MCSUtils().chvtr(fbest, stop[1])
-                            if not flag:
-                                return (
-                                    xbest,
-                                    fbest,
-                                    xmin,
-                                    fmi,
-                                    loc,
-                                    flag,
-                                    ncall,
-                                    nsweep,
-                                    nsweepbest,
-                                )
-                        # end fmi[i] < fbest: elif
-                        loc = 0
-                        break
-                    elif f2 < min(min(f, f1), fmi[i]):
-                        fmi[i] = f2
-                        xmin[i] = copy.deepcopy(y2)
-                        if fmi[i] < fbest:
-                            fbest = copy.deepcopy(fmi[i])
-                            xbest = copy.deepcopy(xmin[i])
-                            nsweepbest = nsweep
-                            if stop[0] > 0 and stop[0] < 1:
-                                flag = MCSUtils().chrelerr(fbest, stop)
-                            elif stop[0] == 0:
-                                flag = MCSUtils().chvtr(fbest, stop[1])
-                            if not flag:
-                                return (
-                                    xbest,
-                                    fbest,
-                                    xmin,
-                                    fmi,
-                                    loc,
-                                    flag,
-                                    ncall,
-                                    nsweep,
-                                    nsweepbest,
-                                )
-                        loc = 0
-                        break
-                    else:
-                        loc = 0
-                        break
-        return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
+                                if stop[0] > 0 and stop[0] < 1:
+                                    flag = MCSUtils().chrelerr(fbest, stop)
+                                elif stop[0] == 0:
+                                    flag = MCSUtils().chvtr(fbest, stop[1])
+                                if not flag:
+                                    return (
+                                        xbest, fbest,
+                                        policy, avg_metrics, xmin,
+                                        fmi, loc, flag, ncall,
+                                        nsweep, nsweepbest,
+                                    )
+                            # end fmi[i] < fbest: elif
+                            loc = 0
+                            break
+                        elif f2 < min(min(f, f1), fmi[i]):
+                            fmi[i] = f2
+                            xmin[i] = copy.deepcopy(y2)
+                            if fmi[i] < fbest:
+                                fbest = copy.deepcopy(fmi[i])
+                                xbest = copy.deepcopy(xmin[i])
+                                nsweepbest = nsweep
+                                if stop[0] > 0 and stop[0] < 1:
+                                    flag = MCSUtils().chrelerr(fbest, stop)
+                                elif stop[0] == 0:
+                                    flag = MCSUtils().chvtr(fbest, stop[1])
+                                if not flag:
+                                    return (
+                                        xbest, fbest,
+                                        policy, avg_metrics, xmin,
+                                        fmi, loc,
+                                        flag, ncall,
+                                        nsweep, nsweepbest,
+                                    )
+                            loc = 0
+                            break
+                        else:
+                            loc = 0
+                            break
+                return xbest, fbest, policy, avg_metrics, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
 
     def csearch(self, x: List[Union[float, int]], f: float, u: List[int], v: List[int], hess: NDArray[np.float64],
                 stopping_actions: int, eps: float):
