@@ -54,7 +54,7 @@ if __name__ == "__main__":
                 descr="initial upper corner",
             ),
             agents_constants.MCS.STOPPING_ACTIONS: HParam(
-                value=2,
+                value=3,
                 name=agents_constants.MCS.L,
                 descr="no. of stopping actions",
             ),

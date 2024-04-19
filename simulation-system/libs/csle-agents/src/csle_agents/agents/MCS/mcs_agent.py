@@ -3,7 +3,9 @@ import sys
 from mcs_utils.mcs_fun import MCSUtils
 from mcs_utils.gls_utils import GLSUtils
 from mcs_utils.ls_utils import LSUtils
-
+import os
+import time
+import math
 from numpy.typing import NDArray
 from typing import Union, List, Optional, Any, Dict
 import gymnasium as gym
@@ -12,17 +14,17 @@ import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
-# from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
-# from csle_common.util.experiment_util import ExperimentUtil
+from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
-# from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-# from csle_common.util.general_util import GeneralUtil
+from csle_common.util.general_util import GeneralUtil
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
@@ -136,6 +138,7 @@ class MCSAgent(BaseAgent):
         """
         Initiating the parameters of performing the MCS algorithm, using external functions
         """
+        pid = os.getpid()
         u = self.experiment_config.hparams[agents_constants.MCS.U].value
         v = self.experiment_config.hparams[agents_constants.MCS.V].value
         iinit = self.experiment_config.hparams[agents_constants.MCS.IINIT].value
@@ -152,9 +155,7 @@ class MCSAgent(BaseAgent):
         hess = np.ones((n, n))
         stop.append(float("-inf"))
 
-        config = self.simulation_env_config.simulation_env_input_config
-        if self.env is None:
-            self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+
 
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
@@ -174,6 +175,7 @@ class MCSAgent(BaseAgent):
 
         descr = f"Training of policies with the random search algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
+
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.NELDER_MEAD.THETAS] = []
@@ -202,12 +204,107 @@ class MCSAgent(BaseAgent):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
-        xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(exp_result, u, v, smax, nf, stop, iinit,
-                                                               local, gamma, hess, stopping_actions, eps, n)
-        print('The MCS Algorithms Results:') # TODO: make log-statements
-        print('fbest', fbest)
-        print('xbest', xbest)
-        print('\n')
+        # Initialize training job
+        if self.training_job is None:
+            emulation_name = ""
+            if self.emulation_env_config is not None:
+                emulation_name = self.emulation_env_config.name
+            self.training_job = TrainingJobConfig(
+                simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
+                progress_percentage=0, pid=pid, experiment_result=exp_result,
+                emulation_env_name=emulation_name, simulation_traces=[],
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
+                physical_host_ip=GeneralUtil.get_host_ip())
+            if self.save_to_metastore:
+                training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
+                self.training_job.id = training_job_id
+        else:
+            self.training_job.pid = pid
+            self.training_job.progress_percentage = 0
+            self.training_job.experiment_result = exp_result
+            if self.save_to_metastore:
+                MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+
+        # Initialize execution result
+        ts = time.time()
+        emulation_name = ""
+        if self.emulation_env_config is not None:
+            emulation_name = self.emulation_env_config.name
+        simulation_name = self.simulation_env_config.name
+        self.exp_execution = ExperimentExecution(
+            result=exp_result, config=self.experiment_config, timestamp=ts, emulation_name=emulation_name,
+            simulation_name=simulation_name, descr=descr, log_file_path=self.training_job.log_file_path)
+        if self.save_to_metastore:
+            exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
+            self.exp_execution.id = exp_execution_id
+
+        config = self.simulation_env_config.simulation_env_input_config
+        if self.env is None:
+            self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+
+        for seed in self.experiment_config.random_seeds:
+            # ExperimentUtil.set_seed(seed)
+            # exp_result = self.nelder_mead(exp_result=exp_result, seed=seed,
+            #                               random_seeds=self.experiment_config.random_seeds,
+            #                               training_job=self.training_job)
+            xbest, fbest, xmin, fmi, ncall, ncloc, flag = self.MCS(exp_result, seed, u, v, smax, nf, stop, iinit,
+                                                                   local, gamma, hess, stopping_actions, eps, n)
+            if self.save_to_metastore:
+                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
+            self.env.reset_traces()
+            print('The MCS Algorithms Results:') # TODO: make log-statements
+            print('fbest', fbest)
+            print('xbest', xbest)
+            print('\n')
+
+        # Calculate average and std metrics
+        exp_result.avg_metrics = {}
+        exp_result.std_metrics = {}
+        for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
+            value_vectors = []
+            for seed in self.experiment_config.random_seeds:
+                value_vectors.append(exp_result.all_metrics[seed][metric])
+
+            max_num_measurements = max(list(map(lambda x: len(x), value_vectors)))
+            value_vectors = list(filter(lambda x: len(x) == max_num_measurements, value_vectors))
+
+            avg_metrics = []
+            std_metrics = []
+            for i in range(len(value_vectors[0])):
+                if type(value_vectors[0][0]) is int or type(value_vectors[0][0]) is float \
+                        or type(value_vectors[0][0]) is np.int64 or type(value_vectors[0][0]) is np.float64:
+                    seed_values = []
+                    for seed_idx in range(len(value_vectors)):
+                        seed_values.append(value_vectors[seed_idx][i])
+                    avg = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
+                    if not math.isnan(avg):
+                        avg_metrics.append(avg)
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    if not math.isnan(ci):
+                        std_metrics.append(ci)
+                    else:
+                        std_metrics.append(-1)
+                else:
+                    avg_metrics.append(-1)
+                    std_metrics.append(-1)
+                exp_result.avg_metrics[metric] = avg_metrics
+                exp_result.std_metrics[metric] = std_metrics
+
+        traces = self.env.get_traces()
+        if len(traces) > 0 and self.save_to_metastore:
+            MetastoreFacade.save_simulation_trace(traces[-1])
+        ts = time.time()
+        self.exp_execution.timestamp = ts
+        self.exp_execution.result = exp_result
+        if self.save_to_metastore:
+            MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                        id=self.exp_execution.id)
+        return self.exp_execution
 
     def get_policy(self, theta: NDArray[np.float64], L: int) -> Union[MultiThresholdStoppingPolicy,
                                                               LinearThresholdStoppingPolicy]:
@@ -289,7 +386,7 @@ class MCSAgent(BaseAgent):
             theta[i] = theta0[i, istar[i]]
         return J0, istar, ncall
 
-    def MCS(self, exp_result, u: List[int], v: List[int], smax: int, nf: int, stop: List[Union[float, int]], iinit: int,
+    def MCS(self, exp_result, seed, u: List[int], v: List[int], smax: int, nf: int, stop: List[Union[float, int]], iinit: int,
             local: int, gamma: float, hess: NDArray[np.float64], stopping_actions: int,
             eps: float, n: int, prt: int=1):
 
