@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 import math
-from numpy.typing import NDArray
+# from numpy.typing import NDArray
 import sys
 
 
@@ -596,7 +596,7 @@ class MCSUtils(UtilHelpers):
             theta0 = np.append(theta0, [(i * 5 + j) / 6 for i, j in zip(u, v)])
             # theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
 
-            theta0 = np.vstack([theta0, [0.5 * (i + j) for i, j in zip(u, v)]])            
+            theta0 = np.vstack([theta0, [0.5 * (i + j) for i, j in zip(u, v)]])
             # theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
 
             theta0 = np.vstack([theta0, [(i + j * 5) / 6 for i, j in zip(u, v)]])
@@ -604,7 +604,6 @@ class MCSUtils(UtilHelpers):
 
             theta0 = theta0.T
             # theta0 = np.array(theta0).T
-
 
         if np.any(np.isinf(theta0)):
             sys.exit("Error- MCS main: infinities in ititialization list")
