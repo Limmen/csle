@@ -41,6 +41,9 @@ install_level_13:
 install_level_14:
 	cd 050/level_14/ && $(MAKE) install
 
+install_level_15:
+	cd 050/level_15/ && $(MAKE) install
+
 # Installs all emulations
 install:
 	cd 050/level_1/ && $(MAKE) install
@@ -57,6 +60,7 @@ install:
 	cd 050/level_12/ && $(MAKE) install
 	cd 050/level_13/ && $(MAKE) install
 	cd 050/level_14/ && $(MAKE) install
+	cd 050/level_15/ && $(MAKE) install
 
 # Targets for uninstalling each individual env
 uninstall_level_1:
@@ -101,6 +105,9 @@ uninstall_level_13:
 uninstall_level_14:
 	cd 050/level_14/ && $(MAKE) uninstall
 
+uninstall_level_15:
+	cd 050/level_15/ && $(MAKE) uninstall
+
 # Uninstalls all emulations
 uninstall:
 	cd 050/level_1/ && $(MAKE) uninstall
@@ -117,6 +124,7 @@ uninstall:
 	cd 050/level_12/ && $(MAKE) uninstall
 	cd 050/level_13/ && $(MAKE) uninstall
 	cd 050/level_14/ && $(MAKE) uninstall
+	cd 050/level_15/ && $(MAKE) uninstall
 
 # Targets for cleaning the config each individual env
 clean_config_level_1:
@@ -161,6 +169,9 @@ clean_config_level_13:
 clean_config_level_14:
 	cd 050/level_14/ && $(MAKE) clean_config
 
+clean_config_level_15:
+	cd 050/level_15/ && $(MAKE) clean_config
+
 # Cleans the materialized configuration of each emulation
 clean_config:
 	cd 050/level_1/ && $(MAKE) clean_config
@@ -177,3 +188,4 @@ clean_config:
 	cd 050/level_12/ && $(MAKE) clean_config
 	cd 050/level_13/ && $(MAKE) clean_config
 	cd 050/level_14/ && $(MAKE) clean_config
+	cd 050/level_15/ && $(MAKE) clean_config
