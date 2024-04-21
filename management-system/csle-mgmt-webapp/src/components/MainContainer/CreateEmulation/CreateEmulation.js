@@ -110,7 +110,8 @@ const CreateEmulation = (props) => {
   const handleConfirmAdd = () => {
     setContainers(prevContainers => [...prevContainers,
       { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
-        subnetMask: '', subnetPrefix: '', networkInterface: false }]);
+        subnetMask: '', subnetPrefix: '', networkInterface: false, cpu:'', mem:'', flagId:'', flagScore:'',
+        flagPermission: true}]);
     handleClosePopup();
   };
 
@@ -144,6 +145,83 @@ const CreateEmulation = (props) => {
         ...updatedContainers[index],
         containerAccordionOpen: !updatedContainers[index].containerAccordionOpen // Toggle the value
       };
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerCpuChange = (event, index) => {
+    const cpuValue = event.target.value;
+    if (/^-?\d*$/.test(cpuValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          cpu: cpuValue // Update the value
+        };
+        console.log("container" + index + " cpu is " + cpuValue);
+        return updatedContainers;
+      });
+    }
+  };
+
+  const handleContainerMemoryChange = (event, index) => {
+    const memValue = event.target.value;
+    if (/^-?\d*$/.test(memValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          mem: memValue // Update the value
+        };
+        console.log("container" + index + " memory is " + memValue);
+        return updatedContainers;
+      });
+    }
+  };
+
+  const handleContainerFlagIdChange = (event, index) => {
+    const flagIdValue = event.target.value;
+    if (/^-?\d*$/.test(flagIdValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          flagId: flagIdValue // Update the value
+        };
+        console.log("container" + index + " flag ID is " + flagIdValue);
+        return updatedContainers;
+      });
+    }
+  };
+
+  const handleContainerFlagScoreChange = (event, index) => {
+    const flagScoreValue = event.target.value;
+    if (/^-?\d*$/.test(flagScoreValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          flagScore: flagScoreValue // Update the value
+        };
+        console.log("container" + index + " flag score is " + flagScoreValue);
+        return updatedContainers;
+      });
+    }
+  };
+
+  const handleContainerFlagPermissionChange = (event, index) => {
+    const permissionValue = event.target.value === 'true'; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      updatedContainers[index] = {
+        ...updatedContainers[index],
+        flagPermission: permissionValue
+      };
+      console.log("container" + index + " flag permission is " + permissionValue);
       return updatedContainers;
     });
   };
@@ -340,6 +418,7 @@ const CreateEmulation = (props) => {
               <Collapse in={containerOpen}>
                 <div id="container" className="cardBodyHidden">
                   <div>
+                    Add a new container &nbsp;&nbsp;
                     <Button onClick={addContainer}
                             variant="success" size="sm">
                       <i className="fa fa-plus" aria-hidden="true"/>
@@ -398,6 +477,7 @@ const CreateEmulation = (props) => {
                           <Collapse in={container.containerAccordionOpen}>
                             <div id="eachContainer" className="cardBodyHidden">
                               <div>
+                                Delete the container &nbsp;&nbsp;
                                 <Button onClick={() => deleteContainer(index)}
                                         variant="danger" size="sm">
                                   <i className="fa fa-trash startStopIcon" aria-hidden="true" />
@@ -424,6 +504,57 @@ const CreateEmulation = (props) => {
                                         {containers[index].os}
                                       </td>
                                     </tr>
+                                    <tr>
+                                      <td>Number of allocated CPU cores</td>
+                                      <td>
+                                        <input
+                                          type="text"
+                                          value={containers[index].cpu}
+                                          onChange={(event) => handleContainerCpuChange(event, index)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Available memory in GB</td>
+                                      <td>
+                                        <input
+                                          type="text"
+                                          value={containers[index].mem}
+                                          onChange={(event) => handleContainerMemoryChange(event, index)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Flag ID</td>
+                                      <td>
+                                        <input
+                                          type="text"
+                                          value={containers[index].flagId}
+                                          onChange={(event) => handleContainerFlagIdChange(event, index)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Flag score</td>
+                                      <td>
+                                        <input
+                                          type="text"
+                                          value={containers[index].flagScore}
+                                          onChange={(event) => handleContainerFlagScoreChange(event, index)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Flag requires root permission</td>
+                                      <td>
+                                        <select value={containers[index].flagPermission}
+                                                onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
+                                          <option value="true">True</option>
+                                          <option value="false">False</option>
+
+                                        </select>
+                                      </td>
+                                    </tr>
                                     </tbody>
                                   </Table>
                                 </div>
@@ -445,6 +576,6 @@ const CreateEmulation = (props) => {
   );
 }
 
-CreateEmulation.propTypes = {};
-CreateEmulation.defaultProps = {};
-export default CreateEmulation;
+CreateEmulation.propTypes = {}
+CreateEmulation.defaultProps = {}
+export default CreateEmulation
