@@ -404,6 +404,27 @@ const CreateEmulation = (props) => {
     setContainers(updatedContainers)
   };
 
+  const handleDeleteContainerInterface = (containerIndex, interfaceIndex) => {
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = prevContainers.map((container, index) => {
+        if (index === containerIndex) {
+          // Create a new array of interfaces excluding the one to be removed
+          const updatedInterfaces = container.interfaces.filter(
+            (_, i) => i !== interfaceIndex
+          );
+
+          // Return a new container object with updated interfaces
+          return { ...container, interfaces: updatedInterfaces };
+        }
+        return container;
+      });
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
+  };
+
 
   return (
     <div className="CreateEmulation">
@@ -662,9 +683,9 @@ const CreateEmulation = (props) => {
                                   </Table>
                                 </div>
                                 <div>
-                                  Add a network interface &nbsp;&nbsp;
+                                  Add a network interface to the container &nbsp;&nbsp;
                                   <Button type="button" onClick={() => handleAddContainerInterface(index)}
-                                          variant="primary" size="sm">
+                                          variant="success" size="sm">
                                     <i className="fa fa-plus" aria-hidden="true" />
                                   </Button>
                                 </div>
@@ -680,7 +701,7 @@ const CreateEmulation = (props) => {
                                     {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
                                       <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex}>
                                         <tr>
-                                          <td>Interface {interfaceIndex} name</td>
+                                          <td> Name (interface {interfaceIndex}) </td>
                                           <td>
                                             <input
                                               ref={inputNameRef}
@@ -688,10 +709,15 @@ const CreateEmulation = (props) => {
                                               value={containerInterfaces.name}
                                               onChange={(event) => handleContainerInterfaceNameChange(event, index, interfaceIndex)}
                                             />
+                                            <Button type="button" onClick={() =>
+                                              handleDeleteContainerInterface(index, interfaceIndex)}
+                                                    variant="danger" size="sm" style={{ marginLeft: '5px' }}>
+                                              <i className="fa fa-trash startStopIcon" aria-hidden="true" />
+                                            </Button>
                                           </td>
                                         </tr>
                                         <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
-                                          <td>Interface {interfaceIndex} IP</td>
+                                          <td> IP (interface {interfaceIndex}) </td>
                                           <td>
                                             <input
                                               ref={inputIPRef}
@@ -704,7 +730,7 @@ const CreateEmulation = (props) => {
                                         {/*subnet_mask:'', subnet_prefix: '',*/}
                                         {/*physicalInterface:'', bitmask:''*/}
                                         <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
-                                          <td>Interface {interfaceIndex} subnet mask</td>
+                                          <td> subnet mask (interface {interfaceIndex}) </td>
                                           <td>
                                             <input
                                               ref={inputSubnetMaskRef}
