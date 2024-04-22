@@ -13,3 +13,7 @@
 .traceTypeSelection {
     font-size: 14px;
 }
+
+.custom-td {
+    border-bottom: 2px solid lightgrey; /* Example: Change the color and width as needed */
+}

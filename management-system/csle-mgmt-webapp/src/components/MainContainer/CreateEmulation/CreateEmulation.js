@@ -606,7 +606,7 @@ const CreateEmulation = (props) => {
                           }}>
 
                             <select value={JSON.stringify(newContainer)} onChange={(e) => handleContainerSelectChange(e)}>
-                              <option value="">--Please choose an option--</option>
+                              {/*<option value="">--Please choose an option--</option>*/}
                               {containerAndOs.map((option, index) => (
                                 <option key={index} value={JSON.stringify(option)}>
                                   {`${option.name} (${option.os})`}
@@ -759,7 +759,7 @@ const CreateEmulation = (props) => {
                                     {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
                                       <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex}>
                                         <tr>
-                                          <td> Name (interface {interfaceIndex})</td>
+                                          <td> Name </td>
                                           <td>
                                             <input
                                               ref={inputNameRef}
@@ -775,7 +775,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
-                                          <td> IP (interface {interfaceIndex})</td>
+                                          <td> IP </td>
                                           <td>
                                             <input
                                               ref={inputIPRef}
@@ -788,7 +788,7 @@ const CreateEmulation = (props) => {
                                         {/*subnet_mask:'', subnet_prefix: '',*/}
                                         {/*physicalInterface:'', bitmask:''*/}
                                         <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
-                                          <td> subnet mask (interface {interfaceIndex})</td>
+                                          <td> subnet mask</td>
                                           <td>
                                             <input
                                               ref={inputSubnetMaskRef}
@@ -799,8 +799,8 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr>
-                                          <td>Physical interface (interface {interfaceIndex}) </td>
+                                        <tr className="custom-td">
+                                          <td>Physical interface </td>
                                           <td>
                                             <select
                                               value={containers[index].interfaces[interfaceIndex].physicalInterface}
