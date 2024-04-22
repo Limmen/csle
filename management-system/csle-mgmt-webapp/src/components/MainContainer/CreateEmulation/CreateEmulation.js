@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import './CreateEmulation.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
@@ -24,12 +24,12 @@ import {useDebouncedCallback} from 'use-debounce';
 
 import CONTAINER_IMAGES from './ContainersNameAndOs';
 import containersNameAndOs from './ContainersNameAndOs'
+import getIps from '../../Common/getIps'
 
 /**
  * Component representing the /create-emulation-page
  */
 const CreateEmulation = (props) => {
-
   //main pages states
   const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
   const [containerOpen, setContainerOpen] = useState(false);
@@ -40,6 +40,8 @@ const CreateEmulation = (props) => {
   const setSessionData = props.setSessionData
   const [filteredImages, setFilteredImages] = useState([]);
   const [loading, setLoading] = useState([]);
+
+  const inputRef = useRef(null);
 
   // general info states
   const [description, setDescription] = useState({
@@ -91,12 +93,14 @@ const CreateEmulation = (props) => {
     }
   };
 
-  // contrainers state
+  // containers state
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
   const [containers, setContainers] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [newContainer, setNewContainer] = useState({ name: '', os: '' });
+  const [newInterface, setNewInterface] = useState({ name: '', ip: '' });
+  const [clicks, setClicks] = useState(1);
 
   const addContainer = () => {
     setShowPopup(true);
@@ -110,8 +114,8 @@ const CreateEmulation = (props) => {
   const handleConfirmAdd = () => {
     setContainers(prevContainers => [...prevContainers,
       { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
-        subnetMask: '', subnetPrefix: '', networkInterface: false, cpu:'', mem:'', flagId:'', flagScore:'',
-        flagPermission: true}]);
+        subnetMask: '', subnetPrefix: '', cpu:'', mem:'', flagId:'', flagScore:'',
+        flagPermission: true, interfaces: []}]);
     handleClosePopup();
   };
 
@@ -226,120 +230,187 @@ const CreateEmulation = (props) => {
     });
   };
 
-  const fetchImages = useCallback(() => {
-    /**
-     * Fetches container images from the REST API backend
-     *
-     * @type {(function(): void)|*}
-     */
-    fetch(
-      `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Accept: "application/vnd.github.cloak-preview"
-        })
-      }
-    )
-      .then(res => {
-        if(res.status === 401) {
-          alert.show("Session token expired. Please login again.")
-          setSessionData(null)
-          navigate(`/${LOGIN_PAGE_RESOURCE}`);
-          return null
-        }
-        return res.json()
-      })
-      .then(response => {
-        if(response === null) {
-          return
-        }
-        setImages(response);
-        setFilteredImages(response);
-        setLoading(false)
-      })
-      .catch(error => console.log("error:" + error))
-  }, [alert, ip, navigate, port, props.sessionData, setSessionData]);
+  // const fetchImages = useCallback(() => {
+  //   /**
+  //    * Fetches container images from the REST API backend
+  //    *
+  //    * @type {(function(): void)|*}
+  //    */
+  //   fetch(
+  //     `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+  //     {
+  //       method: "GET",
+  //       headers: new Headers({
+  //         Accept: "application/vnd.github.cloak-preview"
+  //       })
+  //     }
+  //   )
+  //     .then(res => {
+  //       if(res.status === 401) {
+  //         alert.show("Session token expired. Please login again.")
+  //         setSessionData(null)
+  //         navigate(`/${LOGIN_PAGE_RESOURCE}`);
+  //         return null
+  //       }
+  //       return res.json()
+  //     })
+  //     .then(response => {
+  //       if(response === null) {
+  //         return
+  //       }
+  //       setImages(response);
+  //       setFilteredImages(response);
+  //       setLoading(false)
+  //     })
+  //     .catch(error => console.log("error:" + error))
+  // }, [alert, ip, navigate, port, props.sessionData, setSessionData]);
+  //
+  // useEffect(() => {
+  //   setLoading(true)
+  //   fetchImages()
+  // }, [fetchImages]);
+  //
+  // const handleImageChange = (index, selectedImage) => {
+  //   setContainers(prevContainers => {
+  //     // Create a new array with the updated container
+  //     const updatedContainers = [...prevContainers];
+  //     updatedContainers[index] = {
+  //       ...updatedContainers[index],
+  //       image: selectedImage // Toggle the value
+  //     };
+  //     return updatedContainers;
+  //   });
+  //   // setSelectedImage(event.target.value);
+  //   console.log(containers[index].os)
+  // };
+  //
+  // const SpinnerOrTable = (props) => {
+  //   if (props.loading) {
+  //     return (
+  //       <Spinner animation="border" role="status">
+  //         <span className="visually-hidden"></span>
+  //       </Spinner>)
+  //   } else {
+  //     return (
+  //       <div className="select-responsive">
+  //         <select value={containers[props.index].image} onChange={(e) => handleContainerSelectChange(e)}>
+  //           <option value="">--Please choose an option--</option>
+  //           {props.images.map((img, index) =>
+  //             <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp; {formatBytes(img.size, 2)}</option>
+  //           )}
+  //
+  //         </select>
+  //       </div>
+  //     )
+  //   }
+  // }
 
+  const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
+    const newIP = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        ip: newIP
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
+      + containers[containerIndex].interfaces[interfaceIndex].ip)
+  };
+
+  // Use useEffect to focus on the input field when containers state changes
   useEffect(() => {
-    setLoading(true)
-    fetchImages()
-  }, [fetchImages]);
+    // Check if the container state has changed, then focus on the input field
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [containers]);
+/*
+  const handleContainerInterfaceIPChange = (event,containerIndex, interfaceIndex) => {
+    const newIP = event.target.value;
+    const interfaceToAdd = { name: 'New interface', ip: newIP };
 
-  const handleImageChange = (index, selectedImage) => {
+    // Clear input fields by updating the state
+    setNewInterface(interfaceToAdd);
+
     setContainers(prevContainers => {
       // Create a new array with the updated container
       const updatedContainers = [...prevContainers];
-      updatedContainers[index] = {
-        ...updatedContainers[index],
-        image: selectedImage // Toggle the value
+      const updatedInterfaces = [...prevContainers[containerIndex].interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        ip: newIP // Update the value
+      }
+      updatedContainers[containerIndex] = {
+        ...updatedContainers[containerIndex],
+        interfaces: updatedInterfaces // Update the value
       };
+      console.log("containerofff");
       return updatedContainers;
-    });
-    // setSelectedImage(event.target.value);
-    console.log(containers[index].os)
+    })
   };
+*/
+  const handleAddContainerInterface = (containerIndex) => {
+    // Create a new interface object with empty values
+    const interfaceToAdd = { name: 'New interface', ip: '0.0.0.0' };
 
-  const SpinnerOrTable = (props) => {
-    if (props.loading) {
-      return (
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden"></span>
-        </Spinner>)
-    } else {
-      return (
-        <div className="select-responsive">
-          <select value={containers[props.index].image} onChange={(e) => handleContainerSelectChange(e)}>
-            <option value="">--Please choose an option--</option>
-            {props.images.map((img, index) =>
-              <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp; {formatBytes(img.size, 2)}</option>
-            )}
+    // Clear input fields by updating the state
+    setNewInterface(interfaceToAdd);
 
-          </select>
-        </div>
-      )
+    let updatedContainers = []
+    for (let i = 0; i < containers.length; i++) {
+      if(i === containerIndex) {
+        containers[i].interfaces.push(interfaceToAdd)
+      }
+      updatedContainers.push(containers[i])
     }
-  }
+    setContainers(updatedContainers)
+  };
 
 
   return (
-        <div className="CreateEmulation">
-          <h3 className="managementTitle"> Create Emulation </h3>
-          <Accordion defaultActiveKey="0">
-            <Card className="subCard">
-              <Card.Header>
-                <Button
-                  onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
-                  aria-controls="generalInfoBody"
-                  aria-expanded={generalInfoOpen}
-                  variant="link"
-                >
-                  <h5 className="semiTitle">
-                    General information about the emulation
-                    <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
-                  </h5>
-                </Button>
-              </Card.Header>
-              <Collapse in={generalInfoOpen}>
-                <div id="generalInfoBody" className="cardBodyHidden">
-                  <div className="table-responsive">
-                    <Table striped bordered hover>
-                      <thead>
-                      <tr>
-                        <th>Attribute</th>
-                        <th> Value</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Name</td>
-                          <td>
-                            <input
-                              type="text"
-                              value={nameValue}
-                              onChange={handleNameChange}
-                            />
-                          </td>
+    <div className="CreateEmulation">
+      <h3 className="managementTitle"> Create Emulation </h3>
+      <Accordion defaultActiveKey="0">
+        <Card className="subCard">
+          <Card.Header>
+            <Button
+              onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
+              aria-controls="generalInfoBody"
+              aria-expanded={generalInfoOpen}
+              variant="link"
+            >
+              <h5 className="semiTitle">
+                General information about the emulation
+                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+              </h5>
+            </Button>
+          </Card.Header>
+          <Collapse in={generalInfoOpen}>
+            <div id="generalInfoBody" className="cardBodyHidden">
+              <div className="table-responsive">
+                <Table striped bordered hover>
+                  <thead>
+                  <tr>
+                    <th>Attribute</th>
+                    <th> Value</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={nameValue}
+                        onChange={handleNameChange}
+                      />
+                    </td>
                         </tr>
                         <tr>
                           <td>Network ID</td>
@@ -558,6 +629,33 @@ const CreateEmulation = (props) => {
                                     </tbody>
                                   </Table>
                                 </div>
+                                <div>
+                                  Add a network interface &nbsp;&nbsp;
+                                  <Button type="button" onClick={() => handleAddContainerInterface(index)}
+                                          variant="primary" size="sm">
+                                    <i className="fa fa-plus" aria-hidden="true" />
+                                  </Button>
+                                </div>
+                                <div className="table-responsive">
+                                  <Table striped bordered hover>
+                                    <tbody>
+
+                                    {containers[index].interfaces.map((containerInterfaces, interfaceIndex) =>
+                                      <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
+                                        <td>IP</td>
+                                        <td>
+                                          <input
+                                            ref={inputRef}
+                                            type="text"
+                                            value={containerInterfaces.ip}
+                                            onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
+                                          />
+                                        </td>
+                                      </tr>
+                                    )}
+                                    </tbody>
+                                  </Table>
+                                </div>
                               </div>
                             </div>
                           </Collapse>
@@ -572,7 +670,7 @@ const CreateEmulation = (props) => {
             </Card>
           </Accordion>
 
-        </div>
+    </div>
   );
 }
 
