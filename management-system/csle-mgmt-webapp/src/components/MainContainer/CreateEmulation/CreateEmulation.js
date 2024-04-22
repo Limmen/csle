@@ -43,6 +43,7 @@ const CreateEmulation = (props) => {
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
+  const inputSubnetMaskRef = useRef(null);
 
   // general info states
   const [description, setDescription] = useState({
@@ -100,7 +101,7 @@ const CreateEmulation = (props) => {
   const [containers, setContainers] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [newContainer, setNewContainer] = useState({ name: '', os: '' });
-  const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnet_mask:'', subnet_prefix: '',
+  const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
     physicalInterface:'', bitmask:''});
 
   const addContainer = () => {
@@ -308,6 +309,7 @@ const CreateEmulation = (props) => {
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
   const [shouldFocusIP, setShouldFocusIP] = useState(false);
+  const [shouldFocusSubnetMask, setShouldFocusSubnetMask] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -325,6 +327,7 @@ const CreateEmulation = (props) => {
     });
     setShouldFocusName(true); // Set flag to focus on name input
     setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false); // Clear flag for IP input
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
       + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
@@ -345,6 +348,28 @@ const CreateEmulation = (props) => {
     });
     setShouldFocusIP(true); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
+    setShouldFocusSubnetMask(false); // Clear flag for subnet mask input
+    console.log("The container number " + containerIndex + " and interface number " + interfaceIndex + ":"
+      + containers[containerIndex].interfaces[interfaceIndex].ip);
+  };
+
+  const handleContainerInterfaceSubnetMaskChange = (event, containerIndex, interfaceIndex) => {
+    const newSubnetMask = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        subnetMask: newSubnetMask
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusSubnetMask(true)
+    setShouldFocusIP(false); // Set flag to focus on IP input
+    setShouldFocusName(false); // Clear flag for name input
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
       + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
@@ -356,8 +381,10 @@ const CreateEmulation = (props) => {
       inputNameRef.current.focus();
     } else if (inputIPRef.current && shouldFocusIP) {
       inputIPRef.current.focus();
+    } else if (inputSubnetMaskRef.current && shouldFocusSubnetMask) {
+      inputSubnetMaskRef.current.focus();
     }
-  }, [containers, shouldFocusName, shouldFocusIP]);
+  }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask]);
 
   const handleAddContainerInterface = (containerIndex) => {
     // Create a new interface object with empty values
@@ -671,6 +698,20 @@ const CreateEmulation = (props) => {
                                               type="text"
                                               value={containerInterfaces.ip}
                                               onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        {/*subnet_mask:'', subnet_prefix: '',*/}
+                                        {/*physicalInterface:'', bitmask:''*/}
+                                        <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
+                                          <td>Interface {interfaceIndex} subnet mask</td>
+                                          <td>
+                                            <input
+                                              ref={inputSubnetMaskRef}
+                                              type="text"
+                                              value={containerInterfaces.subnetMask}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceSubnetMaskChange(event, index, interfaceIndex)}
                                             />
                                           </td>
                                         </tr>
