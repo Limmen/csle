@@ -41,7 +41,8 @@ const CreateEmulation = (props) => {
   const [filteredImages, setFilteredImages] = useState([]);
   const [loading, setLoading] = useState([]);
 
-  const inputRef = useRef(null);
+  const inputNameRef = useRef(null);
+  const inputIPRef = useRef(null);
 
   // general info states
   const [description, setDescription] = useState({
@@ -99,8 +100,8 @@ const CreateEmulation = (props) => {
   const [containers, setContainers] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [newContainer, setNewContainer] = useState({ name: '', os: '' });
-  const [newInterface, setNewInterface] = useState({ name: '', ip: '' });
-  const [clicks, setClicks] = useState(1);
+  const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnet_mask:'', subnet_prefix: '',
+    physicalInterface:'', bitmask:''});
 
   const addContainer = () => {
     setShowPopup(true);
@@ -305,6 +306,29 @@ const CreateEmulation = (props) => {
   //   }
   // }
 
+  const [shouldFocusName, setShouldFocusName] = useState(false);
+  const [shouldFocusIP, setShouldFocusIP] = useState(false);
+
+  const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
+    const newName = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        name: newName
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusName(true); // Set flag to focus on name input
+    setShouldFocusIP(false); // Clear flag for IP input
+    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
+      + containers[containerIndex].interfaces[interfaceIndex].ip);
+  };
+
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
     const newIP = event.target.value;
     setContainers(prevContainers => {
@@ -319,45 +343,26 @@ const CreateEmulation = (props) => {
       updatedContainers[containerIndex] = containerToUpdate;
       return updatedContainers;
     });
+    setShouldFocusIP(true); // Set flag to focus on IP input
+    setShouldFocusName(false); // Clear flag for name input
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
-      + containers[containerIndex].interfaces[interfaceIndex].ip)
+      + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
 
   // Use useEffect to focus on the input field when containers state changes
   useEffect(() => {
     // Check if the container state has changed, then focus on the input field
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (inputNameRef.current && shouldFocusName) {
+      inputNameRef.current.focus();
+    } else if (inputIPRef.current && shouldFocusIP) {
+      inputIPRef.current.focus();
     }
-  }, [containers]);
-/*
-  const handleContainerInterfaceIPChange = (event,containerIndex, interfaceIndex) => {
-    const newIP = event.target.value;
-    const interfaceToAdd = { name: 'New interface', ip: newIP };
+  }, [containers, shouldFocusName, shouldFocusIP]);
 
-    // Clear input fields by updating the state
-    setNewInterface(interfaceToAdd);
-
-    setContainers(prevContainers => {
-      // Create a new array with the updated container
-      const updatedContainers = [...prevContainers];
-      const updatedInterfaces = [...prevContainers[containerIndex].interfaces];
-      updatedInterfaces[interfaceIndex] = {
-        ...updatedInterfaces[interfaceIndex],
-        ip: newIP // Update the value
-      }
-      updatedContainers[containerIndex] = {
-        ...updatedContainers[containerIndex],
-        interfaces: updatedInterfaces // Update the value
-      };
-      console.log("containerofff");
-      return updatedContainers;
-    })
-  };
-*/
   const handleAddContainerInterface = (containerIndex) => {
     // Create a new interface object with empty values
-    const interfaceToAdd = { name: 'New interface', ip: '0.0.0.0' };
+    const interfaceToAdd = { name: 'New interface', ip: '0.0.0.0', subnet_mask:'', subnet_prefix: '',
+      physicalInterface:'', bitmask:''};
 
     // Clear input fields by updating the state
     setNewInterface(interfaceToAdd);
@@ -638,21 +643,39 @@ const CreateEmulation = (props) => {
                                 </div>
                                 <div className="table-responsive">
                                   <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                      <th>Interface Attribute</th>
+                                      <th>Value</th>
+                                    </tr>
+                                    </thead>
                                     <tbody>
-
-                                    {containers[index].interfaces.map((containerInterfaces, interfaceIndex) =>
-                                      <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
-                                        <td>IP</td>
-                                        <td>
-                                          <input
-                                            ref={inputRef}
-                                            type="text"
-                                            value={containerInterfaces.ip}
-                                            onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
-                                          />
-                                        </td>
-                                      </tr>
-                                    )}
+                                    {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
+                                      <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex}>
+                                        <tr>
+                                          <td>Interface {interfaceIndex} name</td>
+                                          <td>
+                                            <input
+                                              ref={inputNameRef}
+                                              type="text"
+                                              value={containerInterfaces.name}
+                                              onChange={(event) => handleContainerInterfaceNameChange(event, index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
+                                          <td>Interface {interfaceIndex} IP</td>
+                                          <td>
+                                            <input
+                                              ref={inputIPRef}
+                                              type="text"
+                                              value={containerInterfaces.ip}
+                                              onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                      </React.Fragment>
+                                    ))}
                                     </tbody>
                                   </Table>
                                 </div>
@@ -663,8 +686,6 @@ const CreateEmulation = (props) => {
                       </Accordion>
                     ))}
                   </div>
-
-
                 </div>
               </Collapse>
             </Card>
