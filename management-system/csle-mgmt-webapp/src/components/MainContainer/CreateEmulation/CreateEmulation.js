@@ -40,6 +40,7 @@ const CreateEmulation = (props) => {
   const setSessionData = props.setSessionData
   const [filteredImages, setFilteredImages] = useState([]);
   const [loading, setLoading] = useState([]);
+  const [idsEnabled, setIdsEnabled] = useState(true);
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -117,7 +118,7 @@ const CreateEmulation = (props) => {
     setContainers(prevContainers => [...prevContainers,
       { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
         subnetMask: '', subnetPrefix: '', cpu:'', mem:'', flagId:'', flagScore:'',
-        flagPermission: true, interfaces: []}]);
+        flagPermission: true, interfaces: [], reachableByAgent: true}]);
     handleClosePopup();
   };
 
@@ -228,6 +229,25 @@ const CreateEmulation = (props) => {
         flagPermission: permissionValue
       };
       console.log("container" + index + " flag permission is " + permissionValue);
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerIdsEnabledChange = (event) => {
+    const idsValue = event.target.value === 'true'; // Convert string to boolean
+    setIdsEnabled(idsValue);
+    console.log("Emulation IDS enabled is: " + idsValue)
+  };
+
+  const handleContainerReachableByAgentChange = (event, index) => {
+    const reachableValue = event.target.value === 'true'; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      updatedContainers[index] = {
+        ...updatedContainers[index],
+        reachableByAgent: reachableValue
+      };
+      console.log("container" + index + " reachable by agebt is " + reachableValue);
       return updatedContainers;
     });
   };
@@ -370,8 +390,6 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(true)
     setShouldFocusIP(false); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
-    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
-      + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -425,6 +443,24 @@ const CreateEmulation = (props) => {
     });
   };
 
+  const handleContainerNetworkPhysicalInterface = (event, containerIndex, interfaceIndex) => {
+    const physicalInterfaceValue = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        physicalInterface: physicalInterfaceValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      console.log("The network interface is " +
+        updatedContainers[containerIndex].interfaces[interfaceIndex].physicalInterface)
+      return updatedContainers;
+    });
+  };
+
 
   return (
     <div className="CreateEmulation">
@@ -464,50 +500,61 @@ const CreateEmulation = (props) => {
                         onChange={handleNameChange}
                       />
                     </td>
-                        </tr>
-                        <tr>
-                          <td>Network ID</td>
-                          <td>
-                            <input
-                              type="text"
-                              value={networkIdValue}
-                              onChange={handleNetworkIdChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Level</td>
-                          <td>
-                            <input
-                              type="text"
-                              value={levelValue}
-                              onChange={handleLevelChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Version</td>
-                          <td>
-                            <input
-                              type="text"
-                              value={versionValue}
-                              onChange={handleVersionChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Time step length in Seconds</td>
-                          <td>
-                            <input
-                              type="text"
-                              value={timeStepLengthValue}
-                              onChange={handleTimeStepLengthChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Description</td>
-                          <td>
+                  </tr>
+                  <tr>
+                    <td>Network ID</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={networkIdValue}
+                        onChange={handleNetworkIdChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Level</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={levelValue}
+                        onChange={handleLevelChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Version</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={versionValue}
+                        onChange={handleVersionChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Time step length in Seconds</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={timeStepLengthValue}
+                        onChange={handleTimeStepLengthChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>IDS enabled</td>
+                    <td>
+                      <select value={idsEnabled}
+                              onChange={(e) => handleContainerIdsEnabledChange(e)}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Description</td>
+                    <td>
                           <textarea
                             id="description"
                             value={description.textareaValue}
@@ -515,27 +562,27 @@ const CreateEmulation = (props) => {
                             rows="4"
                             style={{ width: '100%', boxSizing: 'border-box' }}
                           />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                </div>
-              </Collapse>
-            </Card>
-          </Accordion>
-          <Accordion defaultActiveKey="1">
-            <Card className="subCard">
-              <Card.Header>
-                <Button
-                  onClick={() => setContainerOpen(!containerOpen)}
-                  aria-controls="container"
-                  aria-expanded={containerOpen}
-                  variant="link"
-                >
-                  <h5 className="semiTitle">
-                    Containers
-                    <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
+                    </td>
+                  </tr>
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </Collapse>
+        </Card>
+      </Accordion>
+      <Accordion defaultActiveKey="1">
+        <Card className="subCard">
+          <Card.Header>
+            <Button
+              onClick={() => setContainerOpen(!containerOpen)}
+              aria-controls="container"
+              aria-expanded={containerOpen}
+              variant="link"
+            >
+              <h5 className="semiTitle">
+                Containers
+                <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
                   </h5>
                 </Button>
               </Card.Header>
@@ -601,7 +648,7 @@ const CreateEmulation = (props) => {
                           <Collapse in={container.containerAccordionOpen}>
                             <div id="eachContainer" className="cardBodyHidden">
                               <div>
-                                Delete the container &nbsp;&nbsp;
+                                Delete the container {containers[index].name} &nbsp;&nbsp;
                                 <Button onClick={() => deleteContainer(index)}
                                         variant="danger" size="sm">
                                   <i className="fa fa-trash startStopIcon" aria-hidden="true" />
@@ -679,11 +726,22 @@ const CreateEmulation = (props) => {
                                         </select>
                                       </td>
                                     </tr>
+                                    <tr>
+                                      <td>Reachable by agent</td>
+                                      <td>
+                                        <select value={containers[index].reachableByAgent}
+                                                onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
+                                          <option value="true">True</option>
+                                          <option value="false">False</option>
+
+                                        </select>
+                                      </td>
+                                    </tr>
                                     </tbody>
                                   </Table>
                                 </div>
                                 <div>
-                                  Add a network interface to the container &nbsp;&nbsp;
+                                  Add a network interface to container {containers[index].name} &nbsp;&nbsp;
                                   <Button type="button" onClick={() => handleAddContainerInterface(index)}
                                           variant="success" size="sm">
                                     <i className="fa fa-plus" aria-hidden="true" />
@@ -701,7 +759,7 @@ const CreateEmulation = (props) => {
                                     {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
                                       <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex}>
                                         <tr>
-                                          <td> Name (interface {interfaceIndex}) </td>
+                                          <td> Name (interface {interfaceIndex})</td>
                                           <td>
                                             <input
                                               ref={inputNameRef}
@@ -717,7 +775,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
-                                          <td> IP (interface {interfaceIndex}) </td>
+                                          <td> IP (interface {interfaceIndex})</td>
                                           <td>
                                             <input
                                               ref={inputIPRef}
@@ -730,7 +788,7 @@ const CreateEmulation = (props) => {
                                         {/*subnet_mask:'', subnet_prefix: '',*/}
                                         {/*physicalInterface:'', bitmask:''*/}
                                         <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
-                                          <td> subnet mask (interface {interfaceIndex}) </td>
+                                          <td> subnet mask (interface {interfaceIndex})</td>
                                           <td>
                                             <input
                                               ref={inputSubnetMaskRef}
@@ -739,6 +797,27 @@ const CreateEmulation = (props) => {
                                               onChange={(event) =>
                                                 handleContainerInterfaceSubnetMaskChange(event, index, interfaceIndex)}
                                             />
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Physical interface (interface {interfaceIndex}) </td>
+                                          <td>
+                                            <select
+                                              value={containers[index].interfaces[interfaceIndex].physicalInterface}
+                                              onChange={(e) => handleContainerNetworkPhysicalInterface(e, index, interfaceIndex)}>
+                                              <option value="eth0">eth0</option>
+                                              <option value="eth1">eth1</option>
+                                              <option value="eth2">eth2</option>
+                                              <option value="eth3">eth3</option>
+                                              <option value="eth4">eth4</option>
+                                              <option value="eth5">eth5</option>
+                                              <option value="eth6">eth6</option>
+                                              <option value="eth7">eth7</option>
+                                              <option value="eth8">eth8</option>
+                                              <option value="eth9">eth9</option>
+                                              <option value="eth10">eth10</option>
+
+                                            </select>
                                           </td>
                                         </tr>
                                       </React.Fragment>
@@ -755,8 +834,8 @@ const CreateEmulation = (props) => {
                   </div>
                 </div>
               </Collapse>
-            </Card>
-          </Accordion>
+        </Card>
+      </Accordion>
 
     </div>
   );
