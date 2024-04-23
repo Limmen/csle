@@ -347,9 +347,9 @@ const CreateEmulation = (props) => {
     });
     setShouldFocusName(true); // Set flag to focus on name input
     setShouldFocusIP(false); // Clear flag for IP input
-    setShouldFocusSubnetMask(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
-      + containers[containerIndex].interfaces[interfaceIndex].ip);
+      + containers[containerIndex].interfaces[interfaceIndex].name);
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -368,10 +368,12 @@ const CreateEmulation = (props) => {
     });
     setShouldFocusIP(true); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
-    setShouldFocusSubnetMask(false); // Clear flag for subnet mask input
-    console.log("The container number " + containerIndex + " and interface number " + interfaceIndex + ":"
+    setShouldFocusSubnetMask(false)
+    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
       + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
+
+
 
   const handleContainerInterfaceSubnetMaskChange = (event, containerIndex, interfaceIndex) => {
     const newSubnetMask = event.target.value;
@@ -405,21 +407,40 @@ const CreateEmulation = (props) => {
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask]);
 
   const handleAddContainerInterface = (containerIndex) => {
-    // Create a new interface object with empty values
-    const interfaceToAdd = { name: 'New interface', ip: '0.0.0.0', subnet_mask:'', subnet_prefix: '',
-      physicalInterface:'', bitmask:''};
+    // Initialize the interface
+    const interfaceToAdd = {
+      name: 'New interface',
+      ip: '0.0.0.0',
+      subnetMask: '255.255.255.0',
+      subnetPrefix: '',
+      physicalInterface: '',
+      bitmask: '255.255.255.0'
+    };
 
-    // Clear input fields by updating the state
-    setNewInterface(interfaceToAdd);
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = [...prevContainers];
 
-    let updatedContainers = []
-    for (let i = 0; i < containers.length; i++) {
-      if(i === containerIndex) {
-        containers[i].interfaces.push(interfaceToAdd)
+      // Ensure the containerIndex is valid
+      if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
+        // Get the container at the specified index
+        const container = updatedContainers[containerIndex];
+
+        // Check if the interface already exists in the container's interfaces array
+        const interfaceExists = container.interfaces.some(existingInterface =>
+            existingInterface.name === interfaceToAdd.name
+          // You may need to adjust the condition based on your interface properties
+        );
+
+        // Add the interface only if it doesn't already exist
+        if (!interfaceExists) {
+          container.interfaces.push(interfaceToAdd);
+        }
       }
-      updatedContainers.push(containers[i])
-    }
-    setContainers(updatedContainers)
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
   };
 
   const handleDeleteContainerInterface = (containerIndex, interfaceIndex) => {
@@ -606,7 +627,7 @@ const CreateEmulation = (props) => {
                           }}>
 
                             <select value={JSON.stringify(newContainer)} onChange={(e) => handleContainerSelectChange(e)}>
-                              {/*<option value="">--Please choose an option--</option>*/}
+                              <option value="">--Please choose an option--</option>
                               {containerAndOs.map((option, index) => (
                                 <option key={index} value={JSON.stringify(option)}>
                                   {`${option.name} (${option.os})`}
@@ -757,7 +778,7 @@ const CreateEmulation = (props) => {
                                     </thead>
                                     <tbody>
                                     {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
-                                      <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex}>
+                                      <React.Fragment key={containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
                                         <tr>
                                           <td> Name </td>
                                           <td>
@@ -785,10 +806,8 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        {/*subnet_mask:'', subnet_prefix: '',*/}
-                                        {/*physicalInterface:'', bitmask:''*/}
                                         <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
-                                          <td> subnet mask</td>
+                                          <td> Subnet mask</td>
                                           <td>
                                             <input
                                               ref={inputSubnetMaskRef}
