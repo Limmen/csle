@@ -322,13 +322,14 @@ const CreateEmulation = (props) => {
   // }
 
   const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
-    physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2});
+    physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
   const inputSubnetMaskRef = useRef(null);
   const inputLimitPacketsQueueRef = useRef(null);
   const inputPacketDelayMsRef = useRef(null);
+  const inputPacketDelayJitterMsRef = useRef(null);
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -336,6 +337,7 @@ const CreateEmulation = (props) => {
   const [shouldFocusSubnetMask, setShouldFocusSubnetMask] = useState(false);
   const [shouldFocusLimitPacketsQueue, setShouldFocusLimitPacketsQueue] = useState(false);
   const [shouldFocusPacketDelayMs, setShouldFocusPacketDelayMs] = useState(false);
+  const [shouldFocusPacketDelayJitterMs, setShouldFocusPacketDelayJitterMs] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -356,6 +358,7 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusLimitPacketsQueue(false)
     setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
       + containers[containerIndex].interfaces[interfaceIndex].name);
   };
@@ -379,6 +382,7 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false)
     setShouldFocusLimitPacketsQueue(false)
     setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
     console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
       + containers[containerIndex].interfaces[interfaceIndex].ip);
   };
@@ -402,6 +406,7 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false); // Clear flag for name input
     setShouldFocusLimitPacketsQueue(false)
     setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
   };
 
   const handleContainerInterfaceLimitPacketsQueueChange = (event, containerIndex, interfaceIndex) => {
@@ -425,6 +430,7 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
     setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
   };
 
   const handleContainerInterfacePacketDelayMs = (event, containerIndex, interfaceIndex) => {
@@ -448,6 +454,31 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
+    setShouldFocusPacketDelayJitterMs(false)
+  };
+
+  const handleContainerInterfacePacketDelayJitterMs = (event, containerIndex, interfaceIndex) => {
+    const newPacketDelayJitterMs = event.target.value;
+    if (/^-?\d*$/.test(newPacketDelayJitterMs)){
+      setContainers(prevContainers => {
+        const updatedContainers = [...prevContainers];
+        const containerToUpdate = { ...updatedContainers[containerIndex] };
+        const updatedInterfaces = [...containerToUpdate.interfaces];
+        updatedInterfaces[interfaceIndex] = {
+          ...updatedInterfaces[interfaceIndex],
+          packetDelayJitterMs: newPacketDelayJitterMs
+        };
+        containerToUpdate.interfaces = updatedInterfaces;
+        updatedContainers[containerIndex] = containerToUpdate;
+        return updatedContainers;
+      });
+    }
+    setShouldFocusPacketDelayJitterMs(true);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false); // Set flag to focus on IP input
+    setShouldFocusName(false); // Clear flag for name input
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -463,9 +494,11 @@ const CreateEmulation = (props) => {
       inputLimitPacketsQueueRef.current.focus();
     } else if (inputPacketDelayMsRef.current && shouldFocusPacketDelayMs) {
       inputPacketDelayMsRef.current.focus();
+    } else if (inputPacketDelayJitterMsRef.current && shouldFocusPacketDelayJitterMs) {
+      inputPacketDelayJitterMsRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
-    shouldFocusPacketDelayMs]);
+    shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs]);
 
   const handleAddContainerInterface = (containerIndex) => {
     // Initialize the interface
@@ -478,6 +511,7 @@ const CreateEmulation = (props) => {
       bitmask: '255.255.255.0',
       limitPacketsQueue: 30000,
       packetDelayMs: 2,
+      packetDelayJitterMs:0.5
     };
 
     setContainers(prevContainers => {
@@ -917,7 +951,7 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
+                                        <tr
                                             key={containerInterfaces.packetDelayMs + '-' + interfaceIndex}>
                                           <td> Packet delay (ms)</td>
                                           <td>
@@ -927,6 +961,20 @@ const CreateEmulation = (props) => {
                                               value={containerInterfaces.packetDelayMs}
                                               onChange={(event) =>
                                                 handleContainerInterfacePacketDelayMs(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex}>
+                                          <td> Packet delay jitter (ms)</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketDelayJitterMsRef}
+                                              type="text"
+                                              value={containerInterfaces.packetDelayJitterMs}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketDelayJitterMs(event, index,
                                                   interfaceIndex)}
                                             />
                                           </td>
