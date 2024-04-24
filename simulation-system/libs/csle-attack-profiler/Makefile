@@ -11,7 +11,7 @@ tests:
 	tox
 
 unit_tests:
-	pytest --cov=csle_base
+	pytest --cov=csle_attack_profiler
 
 types:
 	mypy .
@@ -20,7 +20,7 @@ lint:
 	flake8 .
 
 docs:
-	cd docs; sphinx-apidoc -f -o source/ ../src/ && make html && cp -r build/html ../../../../docs/_docs/csle-base
+	cd docs; sphinx-apidoc -f -o source/ ../src/ && make html && cp -r build/html ../../../../docs/_docs/csle-attack-profiler
 
 install:
 	pip install -e .
