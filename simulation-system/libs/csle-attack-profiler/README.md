@@ -3,14 +3,18 @@
 Scripts and programs to profile attacks, attack sequences, and a probabilistic HMM profiler 
 using data from the csle platform, profiling attacks to MITRE ATT&CK techniques, and tactics.
 
-[![PyPI version]] TODO
-![PyPI - Downloads] TODO
+[![PyPI version]] 0.5.1
+![PyPI - Downloads] (https://pypi.org/project/mitreattack-python/)
 
 ## Requirements
 
 - Python 3.8+
+- `csle-common`
+- `csle-base`
+- `mitreattack-python`
 
-## Development Requirements
+
+## Development Requirement`
 
 - Python 3.8+
 - `flake8` (for linting)
@@ -169,5 +173,5 @@ Bength Pappila <brpa@kth.se>
 
 Creative Commons
 
-(C) 2020-2024, Bength Pappila
+(C) 2024, Bength Pappila
 
