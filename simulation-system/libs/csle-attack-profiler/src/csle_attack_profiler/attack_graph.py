@@ -1,16 +1,17 @@
 from csle_attack_profiler.tactics import Tactics
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 
 ChildNode = Tuple[Tactics, int]
+Node = Tuple[Tactics, List[ChildNode], int]
 
-class AttackGraph():
+class AttackGraph:
     """
     Class representing the attack graph
     """
 
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Class contructor
 
@@ -18,7 +19,7 @@ class AttackGraph():
         """
         self.graph = []
 
-    def add_node(self, node_name: Tactics, children: List[ChildNode] = None, node_id: int = None):
+    def add_node(self, node_name: Tactics, children: List[ChildNode] = None, node_id: int = None) -> None:
         """
         Add a node to the graph
 
@@ -34,7 +35,7 @@ class AttackGraph():
             children = []
         self.graph.append((node_name, children, node_id))
 
-    def add_edge(self, parent_node_name: Tactics, parent_node_id: int, child_node_name: Tactics, child_node_id: int):
+    def add_edge(self, parent_node_name: Tactics, parent_node_id: int, child_node_name: Tactics, child_node_id: int) -> None:
         """
         Add an edge to the graph by defining the parent node and the children
 
@@ -52,7 +53,7 @@ class AttackGraph():
                 break
 
 
-    def get_node(self, node_name: Tactics, node_id: int):
+    def get_node(self, node_name: Tactics, node_id: int) -> Union[None, Node]:
         """
         Get the node from the graph
 
@@ -64,7 +65,7 @@ class AttackGraph():
             if node_name == node[0] and node[2] == node_id:
                 return node
     
-    def get_root_node(self):
+    def get_root_node(self) -> Node:
         """
         Get the root node of the graph
 
@@ -73,7 +74,7 @@ class AttackGraph():
         return self.graph[0]
     
             
-    def get_children(self, node_name: Tactics, node_id: int):
+    def get_children(self, node_name: Tactics, node_id: int) -> Union[None, Node]:
         """
         Get the children of the node
 
