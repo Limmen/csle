@@ -10,12 +10,12 @@ from csle_attack_profiler.attack_graph import AttackGraph
 from mitreattack.stix20 import MitreAttackData
 from typing import List, Dict
 
-class AttackProfiler():
+class AttackProfiler:
     """
     Class represting the attack profile based on the MITRE ATT&CK framework for Enterprise.
     """
 
-    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, List[str]], action_id: EmulationAttackerActionId):
+    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, List[str]], action_id: EmulationAttackerActionId) -> None:
         """
         Class constructor
 
@@ -34,7 +34,7 @@ class AttackProfiler():
         self.action_id = action_id
 
     @staticmethod
-    def get_attack_profile(attacker_action: EmulationAttackerAction):
+    def get_attack_profile(attacker_action: EmulationAttackerAction) -> 'AttackProfiler':
         """
         Returns the attack profile of the actions
 
@@ -102,7 +102,7 @@ class AttackProfiler():
     
 
     @staticmethod
-    def get_attack_profile_sequence(attacker_actions: List[EmulationAttackerAction], attack_graph: AttackGraph = None):
+    def get_attack_profile_sequence(attacker_actions: List[EmulationAttackerAction], attack_graph: AttackGraph = None) -> List['AttackProfiler']:
         """
         Returns the attack profile of the actions in a sequence
 
