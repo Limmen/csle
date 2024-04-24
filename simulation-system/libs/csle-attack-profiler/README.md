@@ -1,6 +1,7 @@
 # `csle-attack-profiler`
 
-TODO
+Scripts and programs to profile attacks, attack sequences, and a probabilistic HMM profiler 
+using data from the csle platform, profiling attacks to MITRE ATT&CK techniques, and tactics.
 
 [![PyPI version]] TODO
 ![PyPI - Downloads] TODO
@@ -123,7 +124,7 @@ pytest -k "ClassName"
 
 To generate a coverage report, execute the following command:
 ```
-pytest --cov=csle_base
+pytest --cov=csle_attack_profiler
 ```
 
 ## Run tests and code analysis in different python environments
