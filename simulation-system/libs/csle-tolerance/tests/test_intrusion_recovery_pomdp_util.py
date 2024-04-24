@@ -1,7 +1,7 @@
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 
 
-class TestIntrusionTolerancePomdpSuite(object):
+class TestIntrusionTolerancePomdpSuite:
     """
     Test suite for stopping_game_util.py
     """
