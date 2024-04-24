@@ -5,8 +5,6 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome \
     import EmulationAttackerActionOutcome
 
-#from emulation_system.envs.040.level9.config 
-#import default_static_attacker_sequences
 from csle_attack_profiler.attack_profiler import AttackProfiler
 from csle_attack_profiler.tactics import Tactics
 from csle_attack_profiler.attack_graph import AttackGraph
