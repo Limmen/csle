@@ -17,9 +17,9 @@ class AttackGraph:
 
         The graph is represented as a list of tuples. Each tuple contains the node name, the children of the node and the node id.
         """
-        self.graph = []
+        self.graph: List[Node] = []
 
-    def add_node(self, node_name: Tactics, children: List[ChildNode] = None, node_id: int = None) -> None:
+    def add_node(self, node_name: Tactics, children: Union[List[ChildNode], None] = None, node_id: Union[int, None] = None) -> None:
         """
         Add a node to the graph
 
@@ -64,6 +64,7 @@ class AttackGraph:
         for node in self.graph:
             if node_name == node[0] and node[2] == node_id:
                 return node
+        return None
     
     def get_root_node(self) -> Node:
         """
@@ -74,16 +75,18 @@ class AttackGraph:
         return self.graph[0]
     
             
-    def get_children(self, node_name: Tactics, node_id: int) -> Union[None, Node]:
+    def get_children(self, node_name: Tactics, node_id: int) -> Union[None, List[ChildNode]]:
         """
         Get the children of the node
 
         :params node_name: the name of the node
+        :params node_id: the id of the node
 
         :return: the children of the node
         """
         for node in self.graph:
             if node_name == node[0] and node[2] == node_id:
                 return node[1]
+        return None
 
 
