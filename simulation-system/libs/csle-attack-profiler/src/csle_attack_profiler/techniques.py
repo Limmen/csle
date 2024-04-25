@@ -1,9 +1,9 @@
-"""
-Types of techniques that can be used by an attacker
-"""
 from enum import Enum
 
 class Techniques(Enum):
+    """
+    Techniques from MITRE ATT&CK, used to profile the attack
+    """
     ACTIVE_SCANNING = "Active Scanning"
     GATHER_VICTIM_HOST_INFORMATION = "Gather Victim Host Information"
     GATHER_VICTIM_NETWORK_INFORMATION = "Gather Victim Network Information"
@@ -31,6 +31,9 @@ class Techniques(Enum):
     NATIVE_API = "Native API"
 
 class SubTechniques(Enum):
+    """
+    Sub-techniques from MITRE ATT&CK, used to profile the attack
+    """
     SOFTWARE = "Software"
     CREDENTIAL_STUFFING = "Credential Stuffing"
     DEFAULT_ACCOUNTS = "Default Accounts"
