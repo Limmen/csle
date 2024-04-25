@@ -328,7 +328,7 @@ const CreateEmulation = (props) => {
     packetCorruptCorrelationPercentage:25, packetDuplicatePercentage:0.00001,
     packetDuplicateCorrelationPercentage:25, packetReorderPercentage:0.0025,
     packetReorderCorrelationPercentage:25, packetReorderGap:5, rateLimitMbit:1000,
-    packetOverheadBytes:0});
+    packetOverheadBytes:0, cellOverheadBytes:0});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -350,6 +350,7 @@ const CreateEmulation = (props) => {
   const inputPacketReorderGapRef = useRef(null)
   const inputRateLimitMbitRef = useRef(null)
   const inputPacketOverheadBytesRef = useRef(null)
+  const inputCellOverheadBytesRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -375,6 +376,7 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketReorderGap, setShouldFocusPacketReorderGap] = useState(false);
   const [shouldFocusRateLimitMbit, setShouldFocusRateLimitMbit] = useState(false);
   const [shouldFocusPacketOverheadBytes, setShouldFocusPacketOverheadBytes] = useState(false);
+  const [shouldFocusCellOverheadBytes, setShouldFocusCellOverheadBytes] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -410,6 +412,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -445,6 +448,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -482,6 +486,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -520,6 +525,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -558,6 +564,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -596,6 +603,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -635,6 +643,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -673,6 +682,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -711,6 +721,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -749,6 +760,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -786,6 +798,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -824,6 +837,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -861,6 +875,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -898,6 +913,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -935,6 +951,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -972,6 +989,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1009,6 +1027,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketReorderGap(false)
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1046,6 +1065,7 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1083,7 +1103,7 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusPacketOverheadBytes(false)
-
+    setShouldFocusCellOverheadBytes(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1121,6 +1141,46 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false);
     setShouldFocusName(false);
+    setShouldFocusCellOverheadBytes(false)
+  };
+
+  const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
+    const newCellOverheadBytes = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        cellOverheadBytes: newCellOverheadBytes
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusCellOverheadBytes(true)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -1166,6 +1226,8 @@ const CreateEmulation = (props) => {
       inputRateLimitMbitRef.current.focus();
     } else if (inputPacketOverheadBytesRef.current && shouldFocusPacketOverheadBytes) {
       inputPacketOverheadBytesRef.current.focus();
+    } else if (inputCellOverheadBytesRef.current && shouldFocusCellOverheadBytes) {
+      inputCellOverheadBytesRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1173,7 +1235,7 @@ const CreateEmulation = (props) => {
     shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
-    shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes);
+    shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -1235,7 +1297,8 @@ const CreateEmulation = (props) => {
       packetReorderCorrelationPercentage: "25",
       packetReorderGap:"5",
       rateLimitMbit:"1000",
-      packetOverheadBytes:"0"
+      packetOverheadBytes:"0",
+      cellOverheadBytes:"0"
     };
 
     setContainers(prevContainers => {
@@ -1925,9 +1988,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.packetOverheadBytes + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.packetOverheadBytes + '-'
+                                            + interfaceIndex}>
                                           <td> Packet overhead bytes</td>
                                           <td>
                                             <input
@@ -1936,6 +1999,21 @@ const CreateEmulation = (props) => {
                                               value={containerInterfaces.packetOverheadBytes}
                                               onChange={(event) =>
                                                 handleContainerInterfacePacketOverheadBytes(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.cellOverheadBytes + '-'
+                                              + interfaceIndex}>
+                                          <td> Cell overhead bytes</td>
+                                          <td>
+                                            <input
+                                              ref={inputCellOverheadBytesRef}
+                                              type="text"
+                                              value={containerInterfaces.cellOverheadBytes}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceCellOverheadBytes(event,
                                                   index, interfaceIndex)}
                                             />
                                           </td>
