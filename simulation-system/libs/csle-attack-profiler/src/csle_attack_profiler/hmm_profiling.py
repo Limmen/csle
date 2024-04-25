@@ -8,7 +8,6 @@ from typing import List, Union
 import numpy as np
 import random as random
 import sys
-import seaborn as seaborn
 
 class HMMProfiler:
     """
