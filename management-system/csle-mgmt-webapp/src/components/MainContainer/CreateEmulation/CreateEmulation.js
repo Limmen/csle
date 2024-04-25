@@ -324,7 +324,8 @@ const CreateEmulation = (props) => {
   const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
     physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5,
     packetDelayCorrelationPercentage:25, packetDelayDistribution:'', packetLossType:'',lossGemodelp: 0.02,
-    lossGemodelr:0.97, lossGemodelk:0.98});
+    lossGemodelr:0.97, lossGemodelk:0.98, lossGemodelh:0.0001, packetCorruptPercentage:0.00001,
+    packetCorruptCorrelationPercentage:25});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -336,6 +337,9 @@ const CreateEmulation = (props) => {
   const inputLossGemodelpRef = useRef(null)
   const inputLossGemodelrRef = useRef(null)
   const inputLossGemodelkRef = useRef(null)
+  const inputLossGemodelhRef = useRef(null)
+  const inputPacketCorruptPercentageRef = useRef(null)
+  const inputPacketCorruptCorrelationPercentageRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -348,6 +352,10 @@ const CreateEmulation = (props) => {
   const [shouldFocusLossGemodelp, setShouldFocusLossGemodelp] = useState(false);
   const [shouldFocusLossGemodelr, setShouldFocusLossGemodelr] = useState(false);
   const [shouldFocusLossGemodelk, setShouldFocusLossGemodelk] = useState(false);
+  const [shouldFocusLossGemodelh, setShouldFocusLossGemodelh] = useState(false);
+  const [shouldFocusPacketCorruptPercentage, setShouldFocusPacketCorruptPercentage] = useState(false);
+  const [shouldFocusPacketCorruptCorrelationPercentage, setShouldFocusPacketCorruptCorrelationPercentage]
+    = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -373,6 +381,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -399,6 +410,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
 
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
@@ -427,6 +441,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -455,6 +472,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -483,6 +503,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -511,6 +534,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -540,6 +566,9 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelp(false)
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -568,6 +597,9 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusLossGemodelr(false)
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -596,6 +628,9 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -624,6 +659,105 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false);
     setShouldFocusName(false);
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+  };
+  const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
+    const newLossGemodelk = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        lossGemodelk: newLossGemodelk
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusLossGemodelh(true)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+  };
+
+  const handleContainerInterfacePacketCorruptPercentage = (event, containerIndex, interfaceIndex) => {
+    const newPacketCorruptPercentage = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetCorruptPercentage: newPacketCorruptPercentage
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusPacketCorruptPercentage(true)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+  };
+
+  const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
+    const newPacketCorruptCorrelationPercentage = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetCorruptCorrelationPercentage: newPacketCorruptCorrelationPercentage
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusPacketCorruptCorrelationPercentage(true)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+
+
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -650,10 +784,17 @@ const CreateEmulation = (props) => {
       inputLossGemodelrRef.current.focus();
     } else if (inputLossGemodelkRef.current && shouldFocusLossGemodelk) {
       inputLossGemodelkRef.current.focus();
+    } else if (inputLossGemodelhRef.current && shouldFocusLossGemodelh) {
+      inputLossGemodelhRef.current.focus();
+    } else if (inputPacketCorruptPercentageRef.current && shouldFocusPacketCorruptPercentage) {
+      inputPacketCorruptPercentageRef.current.focus();
+    } else if (inputPacketCorruptCorrelationPercentageRef.current && shouldFocusPacketCorruptCorrelationPercentage) {
+      inputPacketCorruptCorrelationPercentageRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
-    shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk);
+    shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
+    shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -705,7 +846,10 @@ const CreateEmulation = (props) => {
       packetLossType:'0',
       lossGemodelp:'0.02',
       lossGemodelr:'0.97',
-      lossGemodelk:'0.97'
+      lossGemodelk:'0.98',
+      lossGemodelh:'0.0001',
+      packetCorruptPercentage:"0.00001",
+      packetCorruptCorrelationPercentage:"25"
     };
 
     setContainers(prevContainers => {
@@ -1231,8 +1375,8 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                            key={containerInterfaces.lossGemodelr + '-'
-                                              + interfaceIndex}>
+                                          key={containerInterfaces.lossGemodelr + '-'
+                                            + interfaceIndex}>
                                           <td> Loss Gemodel R</td>
                                           <td>
                                             <input
@@ -1245,9 +1389,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.lossGemodelk + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.lossGemodelk + '-'
+                                            + interfaceIndex}>
                                           <td> Loss Gemodel K</td>
                                           <td>
                                             <input
@@ -1260,6 +1404,52 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
+                                        <tr
+                                          key={containerInterfaces.lossGemodelh + '-'
+                                            + interfaceIndex}>
+                                          <td> Loss Gemodel H</td>
+                                          <td>
+                                            <input
+                                              ref={inputLossGemodelhRef}
+                                              type="text"
+                                              value={containerInterfaces.lossGemodelh}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceLossGemodelh(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr
+                                            key={containerInterfaces.packetCorruptPercentage + '-'
+                                              + interfaceIndex}>
+                                          <td> Packet corruption percentage</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketCorruptPercentageRef}
+                                              type="text"
+                                              value={containerInterfaces.packetCorruptPercentage}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketCorruptPercentage(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.packetCorruptCorrelationPercentage + '-'
+                                              + interfaceIndex}>
+                                          <td> Packet corruption correlation percentage</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketCorruptCorrelationPercentageRef}
+                                              type="text"
+                                              value={containerInterfaces.packetCorruptCorrelationPercentage}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+
                                       </React.Fragment>
                                     ))}
                                     </tbody>
