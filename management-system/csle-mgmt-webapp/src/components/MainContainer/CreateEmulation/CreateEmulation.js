@@ -150,6 +150,9 @@ const CreateEmulation = (props) => {
     });
   };
 
+  const inputCpuRef = useRef(null)
+  const [shouldFocusCpu, setShouldFocusCpu] = useState(false);
+
   const handleContainerCpuChange = (event, index) => {
     const cpuValue = event.target.value;
     if (/^-?\d*$/.test(cpuValue)) {
@@ -164,7 +167,12 @@ const CreateEmulation = (props) => {
         return updatedContainers;
       });
     }
+    setShouldFocusCpu(true);
+    setShouldFocusName(false);
   };
+
+  const inputMemRef = useRef(null)
+  const [shouldFocusMem, setShouldFocusMem] = useState(false);
 
   const handleContainerMemoryChange = (event, index) => {
     const memValue = event.target.value;
@@ -180,7 +188,12 @@ const CreateEmulation = (props) => {
         return updatedContainers;
       });
     }
+    setShouldFocusMem(true);
+    setShouldFocusName(false);
   };
+
+  const inputFlagIdRef = useRef(null)
+  const [shouldFocusFlagId, setShouldFocusFlagId] = useState(false);
 
   const handleContainerFlagIdChange = (event, index) => {
     const flagIdValue = event.target.value;
@@ -196,7 +209,12 @@ const CreateEmulation = (props) => {
         return updatedContainers;
       });
     }
+    setShouldFocusFlagId(true);
+    setShouldFocusName(false);
   };
+
+  const inputFlagScoreRef = useRef(null)
+  const [shouldFocusFlagScore, setShouldFocusFlagScore] = useState(false);
 
   const handleContainerFlagScoreChange = (event, index) => {
     const flagScoreValue = event.target.value;
@@ -212,6 +230,8 @@ const CreateEmulation = (props) => {
         return updatedContainers;
       });
     }
+    setShouldFocusFlagScore(true);
+    setShouldFocusName(false);
   };
 
   const handleContainerFlagPermissionChange = (event, index) => {
@@ -1228,6 +1248,14 @@ const CreateEmulation = (props) => {
       inputPacketOverheadBytesRef.current.focus();
     } else if (inputCellOverheadBytesRef.current && shouldFocusCellOverheadBytes) {
       inputCellOverheadBytesRef.current.focus();
+    } else if (inputCpuRef.current && shouldFocusCpu) {
+      inputCpuRef.current.focus();
+    } else if (inputMemRef.current && shouldFocusMem) {
+      inputMemRef.current.focus();
+    } else if (inputFlagIdRef.current && shouldFocusFlagId) {
+      inputFlagIdRef.current.focus();
+    } else if (inputFlagScoreRef.current && shouldFocusFlagScore) {
+      inputFlagScoreRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1235,7 +1263,8 @@ const CreateEmulation = (props) => {
     shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
-    shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes);
+    shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
+    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
