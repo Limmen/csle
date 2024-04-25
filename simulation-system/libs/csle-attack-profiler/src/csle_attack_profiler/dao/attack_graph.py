@@ -1,4 +1,4 @@
-from csle_attack_profiler.tactics import Tactics
+from csle_attack_profiler.dao.tactics import Tactics
 from typing import List, Tuple, Union
 
 

@@ -2,10 +2,10 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action \
     import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
-from csle_attack_profiler.tactics import Tactics
-from csle_attack_profiler.techniques import Techniques
-from csle_attack_profiler.attack_mapping import EmulationAttackerMapping
-from csle_attack_profiler.attack_graph import AttackGraph
+from csle_attack_profiler.dao.tactics import Tactics
+from csle_attack_profiler.dao.techniques import Techniques
+from csle_attack_profiler.dao.attack_mapping import EmulationAttackerMapping
+from csle_attack_profiler.dao.attack_graph import AttackGraph
 
 from mitreattack.stix20 import MitreAttackData
 from typing import List, Dict
