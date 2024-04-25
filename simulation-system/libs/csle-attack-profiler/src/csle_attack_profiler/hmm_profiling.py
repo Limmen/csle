@@ -9,10 +9,11 @@ import numpy as np
 import random as random
 import sys
 import seaborn as seaborn
-import matplotlib.pyplot as plt
 
 class HMMProfiler:
-    
+    """
+    The HMMProfiler class is used to profile a sequence of observations based on a Hidden Markov Model (HMM).
+    """ 
 
     def __init__(self, statistics: List[EmulationStatistics], model_name: str = None) -> None:
         """
@@ -82,8 +83,6 @@ class HMMProfiler:
         profiled_sequence = []
         for i in range(len(path)):
             profiled_sequence.append(self.hidden_states[int(path[i])])
-
-        #profiled_sequence = HMMProfiler.convert_states_to_profiles(profiled_sequence)
         
         return profiled_sequence
 
