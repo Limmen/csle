@@ -323,7 +323,8 @@ const CreateEmulation = (props) => {
 
   const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
     physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5,
-    packetDelayCorrelationPercentage:25});
+    packetDelayCorrelationPercentage:25, packetDelayDistribution:'', packetLossType:'',lossGemodelp: 0.02,
+    lossGemodelr:0.97, lossGemodelk:0.98});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -332,6 +333,9 @@ const CreateEmulation = (props) => {
   const inputPacketDelayMsRef = useRef(null);
   const inputPacketDelayJitterMsRef = useRef(null);
   const inputPacketDelayCorrelationPercentageRef = useRef(null);
+  const inputLossGemodelpRef = useRef(null)
+  const inputLossGemodelrRef = useRef(null)
+  const inputLossGemodelkRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -341,6 +345,9 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketDelayMs, setShouldFocusPacketDelayMs] = useState(false);
   const [shouldFocusPacketDelayJitterMs, setShouldFocusPacketDelayJitterMs] = useState(false);
   const [shouldFocusPacketDelayCorrelationPercentage, setShouldFocusPacketDelayCorrelationPercentage] = useState(false);
+  const [shouldFocusLossGemodelp, setShouldFocusLossGemodelp] = useState(false);
+  const [shouldFocusLossGemodelr, setShouldFocusLossGemodelr] = useState(false);
+  const [shouldFocusLossGemodelk, setShouldFocusLossGemodelk] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -363,8 +370,9 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketDelayMs(false);
     setShouldFocusPacketDelayJitterMs(false)
     setShouldFocusPacketDelayCorrelationPercentage(false)
-    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
-      + containers[containerIndex].interfaces[interfaceIndex].name);
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -388,8 +396,11 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketDelayMs(false);
     setShouldFocusPacketDelayJitterMs(false)
     setShouldFocusPacketDelayCorrelationPercentage(false)
-    console.log("The container number "+ containerIndex+ " and interface number " + interfaceIndex + ":"
-      + containers[containerIndex].interfaces[interfaceIndex].ip);
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
   const handleContainerInterfaceSubnetMaskChange = (event, containerIndex, interfaceIndex) => {
@@ -413,24 +424,27 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketDelayMs(false);
     setShouldFocusPacketDelayJitterMs(false)
     setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
   const handleContainerInterfaceLimitPacketsQueueChange = (event, containerIndex, interfaceIndex) => {
     const newLimitPacketsQueue = event.target.value;
-    if (/^-?\d*$/.test(newLimitPacketsQueue)){
-      setContainers(prevContainers => {
-        const updatedContainers = [...prevContainers];
-        const containerToUpdate = { ...updatedContainers[containerIndex] };
-        const updatedInterfaces = [...containerToUpdate.interfaces];
-        updatedInterfaces[interfaceIndex] = {
-          ...updatedInterfaces[interfaceIndex],
-          limitPacketsQueue: newLimitPacketsQueue
-        };
-        containerToUpdate.interfaces = updatedInterfaces;
-        updatedContainers[containerIndex] = containerToUpdate;
-        return updatedContainers;
-      });
-    }
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        limitPacketsQueue: newLimitPacketsQueue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+
     setShouldFocusLimitPacketsQueue(true);
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false); // Set flag to focus on IP input
@@ -438,24 +452,27 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketDelayMs(false);
     setShouldFocusPacketDelayJitterMs(false)
     setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
   const handleContainerInterfacePacketDelayMs = (event, containerIndex, interfaceIndex) => {
     const newPacketDelayMs = event.target.value;
-    if (/^-?\d*$/.test(newPacketDelayMs)){
-      setContainers(prevContainers => {
-        const updatedContainers = [...prevContainers];
-        const containerToUpdate = { ...updatedContainers[containerIndex] };
-        const updatedInterfaces = [...containerToUpdate.interfaces];
-        updatedInterfaces[interfaceIndex] = {
-          ...updatedInterfaces[interfaceIndex],
-          packetDelayMs: newPacketDelayMs
-        };
-        containerToUpdate.interfaces = updatedInterfaces;
-        updatedContainers[containerIndex] = containerToUpdate;
-        return updatedContainers;
-      });
-    }
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetDelayMs: newPacketDelayMs
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+
     setShouldFocusPacketDelayMs(true);
     setShouldFocusLimitPacketsQueue(false);
     setShouldFocusSubnetMask(false);
@@ -463,24 +480,27 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false); // Clear flag for name input
     setShouldFocusPacketDelayJitterMs(false)
     setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
   const handleContainerInterfacePacketDelayJitterMs = (event, containerIndex, interfaceIndex) => {
     const newPacketDelayJitterMs = event.target.value;
-    if (/^-?\d*$/.test(newPacketDelayJitterMs)){
-      setContainers(prevContainers => {
-        const updatedContainers = [...prevContainers];
-        const containerToUpdate = { ...updatedContainers[containerIndex] };
-        const updatedInterfaces = [...containerToUpdate.interfaces];
-        updatedInterfaces[interfaceIndex] = {
-          ...updatedInterfaces[interfaceIndex],
-          packetDelayJitterMs: newPacketDelayJitterMs
-        };
-        containerToUpdate.interfaces = updatedInterfaces;
-        updatedContainers[containerIndex] = containerToUpdate;
-        return updatedContainers;
-      });
-    }
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetDelayJitterMs: newPacketDelayJitterMs
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+
     setShouldFocusPacketDelayJitterMs(true);
     setShouldFocusPacketDelayMs(false);
     setShouldFocusLimitPacketsQueue(false);
@@ -488,24 +508,28 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
     setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
   const handleContainerInterfacePacketDelayCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
     const newPacketDelayCorrelationPercentage = event.target.value;
-    if (/^-?\d*$/.test(newPacketDelayCorrelationPercentage)){
-      setContainers(prevContainers => {
-        const updatedContainers = [...prevContainers];
-        const containerToUpdate = { ...updatedContainers[containerIndex] };
-        const updatedInterfaces = [...containerToUpdate.interfaces];
-        updatedInterfaces[interfaceIndex] = {
-          ...updatedInterfaces[interfaceIndex],
-          packetDelayCorrelationPercentage: newPacketDelayCorrelationPercentage
-        };
-        containerToUpdate.interfaces = updatedInterfaces;
-        updatedContainers[containerIndex] = containerToUpdate;
-        return updatedContainers;
-      });
-    }
+
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetDelayCorrelationPercentage: newPacketDelayCorrelationPercentage
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+
     setShouldFocusPacketDelayCorrelationPercentage(true)
     setShouldFocusPacketDelayJitterMs(false);
     setShouldFocusPacketDelayMs(false);
@@ -513,7 +537,94 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false); // Set flag to focus on IP input
     setShouldFocusName(false); // Clear flag for name input
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
+  };
 
+  const handleContainerInterfaceLossGemodelp = (event, containerIndex, interfaceIndex) => {
+    const newLossGemodelp = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        lossGemodelp: newLossGemodelp
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusLossGemodelp(true)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+  };
+
+  const handleContainerInterfaceLossGemodelr = (event, containerIndex, interfaceIndex) => {
+    const newLossGemodelr = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        lossGemodelr: newLossGemodelr
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusLossGemodelr(true)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusLossGemodelk(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+  };
+
+  const handleContainerInterfaceLossGemodelk = (event, containerIndex, interfaceIndex) => {
+    const newLossGemodelk = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        lossGemodelk: newLossGemodelk
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusLossGemodelk(true)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -533,9 +644,49 @@ const CreateEmulation = (props) => {
       inputPacketDelayJitterMsRef.current.focus();
     } else if (inputPacketDelayCorrelationPercentageRef.current && shouldFocusPacketDelayCorrelationPercentage) {
       inputPacketDelayCorrelationPercentageRef.current.focus();
+    } else if (inputLossGemodelpRef.current && shouldFocusLossGemodelp) {
+      inputLossGemodelpRef.current.focus();
+    } else if (inputLossGemodelrRef.current && shouldFocusLossGemodelr) {
+      inputLossGemodelrRef.current.focus();
+    } else if (inputLossGemodelkRef.current && shouldFocusLossGemodelk) {
+      inputLossGemodelkRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
-    shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage]);
+    shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
+    shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk);
+
+  const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
+    const packetDelayDistributionValue = event.target.value; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetDelayDistribution: packetDelayDistributionValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerInterfacePacketLossType = (event, containerIndex, interfaceIndex) => {
+    const packetLossTypeValue = event.target.value; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetLossType: packetLossTypeValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+  };
+
 
   const handleAddContainerInterface = (containerIndex) => {
     // Initialize the interface
@@ -549,7 +700,12 @@ const CreateEmulation = (props) => {
       limitPacketsQueue: 30000,
       packetDelayMs: 2,
       packetDelayJitterMs:0.5,
-      packetDelayCorrelationPercentage:25
+      packetDelayCorrelationPercentage:25,
+      packetDelayDistribution:'0',
+      packetLossType:'0',
+      lossGemodelp:'0.02',
+      lossGemodelr:'0.97',
+      lossGemodelk:'0.97'
     };
 
     setContainers(prevContainers => {
@@ -576,6 +732,7 @@ const CreateEmulation = (props) => {
       // Return the updated containers array
       return updatedContainers;
     });
+    console.log("Length of interface is:" + containers[containerIndex].interfaces.length)
   };
 
   const handleDeleteContainerInterface = (containerIndex, interfaceIndex) => {
@@ -1004,7 +1161,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                            key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex}>
+                                          key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex}>
                                           <td> Packet delay jitter (ms)</td>
                                           <td>
                                             <input
@@ -1017,9 +1174,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.packetDelayCorrelationPercentage + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.packetDelayCorrelationPercentage + '-'
+                                            + interfaceIndex}>
                                           <td> Packet delay correlation percentage</td>
                                           <td>
                                             <input
@@ -1028,6 +1185,77 @@ const CreateEmulation = (props) => {
                                               value={containerInterfaces.packetDelayCorrelationPercentage}
                                               onChange={(event) =>
                                                 handleContainerInterfacePacketDelayCorrelationPercentage(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td> Packet delay distribution</td>
+                                          <td>
+                                            <select value={containerInterfaces.packetDelayDistribution}
+                                                    onChange={(e) => handleContainerInterfacePacketDelayDistribution(e, index,
+                                                      interfaceIndex)}>
+                                              <option value="0">Uniform</option>
+                                              <option value="1">Normal</option>
+                                              <option value="2">Pareto</option>
+                                              <option value="3">Pareto normal</option>
+
+                                            </select>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td> Packet loss type</td>
+                                          <td>
+                                            <select value={containerInterfaces.packetLossType}
+                                                    onChange={(e) => handleContainerInterfacePacketLossType(e, index,
+                                                      interfaceIndex)}>
+                                              <option value="0">Random</option>
+                                              <option value="1">State</option>
+                                              <option value="2">Gemodel</option>
+                                            </select>
+                                          </td>
+                                        </tr>
+                                        <tr
+                                          key={containerInterfaces.lossGemodelp + '-'
+                                            + interfaceIndex}>
+                                          <td> Loss Gemodel P</td>
+                                          <td>
+                                            <input
+                                              ref={inputLossGemodelpRef}
+                                              type="text"
+                                              value={containerInterfaces.lossGemodelp}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceLossGemodelp(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr
+                                            key={containerInterfaces.lossGemodelr + '-'
+                                              + interfaceIndex}>
+                                          <td> Loss Gemodel R</td>
+                                          <td>
+                                            <input
+                                              ref={inputLossGemodelrRef}
+                                              type="text"
+                                              value={containerInterfaces.lossGemodelr}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceLossGemodelr(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.lossGemodelk + '-'
+                                              + interfaceIndex}>
+                                          <td> Loss Gemodel K</td>
+                                          <td>
+                                            <input
+                                              ref={inputLossGemodelkRef}
+                                              type="text"
+                                              value={containerInterfaces.lossGemodelk}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceLossGemodelk(event, index,
                                                   interfaceIndex)}
                                             />
                                           </td>
