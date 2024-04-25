@@ -326,7 +326,7 @@ const CreateEmulation = (props) => {
     packetDelayCorrelationPercentage:25, packetDelayDistribution:'', packetLossType:'',lossGemodelp: 0.02,
     lossGemodelr:0.97, lossGemodelk:0.98, lossGemodelh:0.0001, packetCorruptPercentage:0.00001,
     packetCorruptCorrelationPercentage:25, packetDuplicatePercentage:0.00001,
-    packetDuplicateCorrelationPercentage:25});
+    packetDuplicateCorrelationPercentage:25, packetReorderPercentage:0.0025});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -343,6 +343,7 @@ const CreateEmulation = (props) => {
   const inputPacketCorruptCorrelationPercentageRef = useRef(null)
   const inputPacketDuplicatePercentageRef = useRef(null)
   const inputPacketDuplicateCorrelationPercentageRef = useRef(null)
+  const inputPacketReorderPercentageRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -362,6 +363,7 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketDuplicatePercentage, setShouldFocusPacketDuplicatePercentage] = useState(false);
   const [shouldFocusPacketDuplicateCorrelationPercentage, setShouldFocusPacketDuplicateCorrelationPercentage]
     = useState(false);
+  const [shouldFocusPacketReorderPercentage, setShouldFocusPacketReorderPercentage] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -392,6 +394,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -422,6 +425,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
 
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
@@ -455,6 +459,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -488,6 +493,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -521,6 +527,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -554,6 +561,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -588,6 +596,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -621,6 +630,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -654,6 +664,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -687,6 +698,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -719,7 +731,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
-
+    setShouldFocusPacketReorderPercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -753,7 +765,7 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
-
+    setShouldFocusPacketReorderPercentage(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -786,6 +798,7 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -818,7 +831,7 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusPacketDuplicateCorrelationPercentage(false)
-
+    setShouldFocusPacketReorderPercentage(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -837,6 +850,40 @@ const CreateEmulation = (props) => {
       return updatedContainers;
     });
     setShouldFocusPacketDuplicateCorrelationPercentage(true)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusPacketReorderPercentage(false)
+  };
+
+  const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
+    const newPacketReorderPercentage = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetReorderPercentage: newPacketReorderPercentage
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusPacketReorderPercentage(true)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
     setShouldFocusPacketDuplicatePercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
     setShouldFocusPacketCorruptPercentage(false)
@@ -886,12 +933,15 @@ const CreateEmulation = (props) => {
       inputPacketDuplicatePercentageRef.current.focus();
     } else if (inputPacketDuplicateCorrelationPercentageRef.current && shouldFocusPacketDuplicateCorrelationPercentage) {
       inputPacketDuplicateCorrelationPercentageRef.current.focus();
+    } else if (inputPacketReorderPercentageRef.current && shouldFocusPacketReorderPercentage) {
+      inputPacketReorderPercentageRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
     shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
     shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
-    shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage);
+    shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
+    shouldFocusPacketReorderPercentage);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -948,7 +998,8 @@ const CreateEmulation = (props) => {
       packetCorruptPercentage:"0.00001",
       packetCorruptCorrelationPercentage:"25",
       packetDuplicatePercentage: "0.00001",
-      packetDuplicateCorrelationPercentage:"25"
+      packetDuplicateCorrelationPercentage:"25",
+      packetReorderPercentage: "0.0025"
     };
 
     setContainers(prevContainers => {
@@ -1549,8 +1600,8 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                            key={containerInterfaces.packetDuplicatePercentage + '-'
-                                              + interfaceIndex}>
+                                          key={containerInterfaces.packetDuplicatePercentage + '-'
+                                            + interfaceIndex}>
                                           <td> Packet duplicate percentage</td>
                                           <td>
                                             <input
@@ -1563,9 +1614,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'
+                                            + interfaceIndex}>
                                           <td> Packet duplicate correlation percentage</td>
                                           <td>
                                             <input
@@ -1574,6 +1625,21 @@ const CreateEmulation = (props) => {
                                               value={containerInterfaces.packetDuplicateCorrelationPercentage}
                                               onChange={(event) =>
                                                 handleContainerInterfacePacketDuplicateCorrelationPercentage(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.packetReorderPercentage + '-'
+                                              + interfaceIndex}>
+                                          <td> Packet reorder percentage</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketReorderPercentageRef}
+                                              type="text"
+                                              value={containerInterfaces.packetReorderPercentage}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketReorderPercentage(event,
                                                   index, interfaceIndex)}
                                             />
                                           </td>
