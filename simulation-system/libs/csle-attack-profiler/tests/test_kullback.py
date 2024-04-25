@@ -6,7 +6,9 @@ import os
 class TestKullbackSuite:
 
     def test_kullback_counts(self) -> None:
-
+        """
+        Test the Kullback-Leibler divergence for two lists of counts.
+        """
         p = [1, 4, 1, 4]
         q = [5, 3, 5, 1]
 
@@ -15,7 +17,9 @@ class TestKullbackSuite:
         assert kl_div == 0.6841752275630617, f"Test failed! Expected: 0.03669001465441545, Actual: {kl_div}"
 
     def test_kullback_statistics(self) -> None:
-        
+        """
+        Test the Kullback-Leibler divergence for two lists of statistics.
+        """
         current_dir = os.path.dirname(__file__)
         path = os.path.join(current_dir, "statistics_test.json")
         statistics = EmulationStatistics.from_json_file(path)
