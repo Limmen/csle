@@ -325,7 +325,7 @@ const CreateEmulation = (props) => {
     physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5,
     packetDelayCorrelationPercentage:25, packetDelayDistribution:'', packetLossType:'',lossGemodelp: 0.02,
     lossGemodelr:0.97, lossGemodelk:0.98, lossGemodelh:0.0001, packetCorruptPercentage:0.00001,
-    packetCorruptCorrelationPercentage:25});
+    packetCorruptCorrelationPercentage:25, packetDuplicatePercentage:0.00001});
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -340,6 +340,7 @@ const CreateEmulation = (props) => {
   const inputLossGemodelhRef = useRef(null)
   const inputPacketCorruptPercentageRef = useRef(null)
   const inputPacketCorruptCorrelationPercentageRef = useRef(null)
+  const inputPacketDuplicatePercentageRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -356,6 +357,7 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketCorruptPercentage, setShouldFocusPacketCorruptPercentage] = useState(false);
   const [shouldFocusPacketCorruptCorrelationPercentage, setShouldFocusPacketCorruptCorrelationPercentage]
     = useState(false);
+  const [shouldFocusPacketDuplicatePercentage, setShouldFocusPacketDuplicatePercentage] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -384,6 +386,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -444,6 +447,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -475,6 +479,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -506,6 +511,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -537,6 +543,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -569,6 +576,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -600,6 +608,7 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -631,7 +640,8 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+    setShouldFocusPacketDuplicatePercentage(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
   const handleContainerInterfaceLossGemodelk = (event, containerIndex, interfaceIndex) => {
@@ -662,7 +672,8 @@ const CreateEmulation = (props) => {
     setShouldFocusLossGemodelh(false)
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+    setShouldFocusPacketDuplicatePercentage(false)
+    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
     const newLossGemodelk = event.target.value;
@@ -692,6 +703,7 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusPacketCorruptPercentage(false)
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
 
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
@@ -724,8 +736,8 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
 
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -756,9 +768,39 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false);
     setShouldFocusName(false);
+    setShouldFocusPacketDuplicatePercentage(false)
+  };
 
+  const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
+    const newPacketDuplicatePercentage = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        packetDuplicatePercentage: newPacketDuplicatePercentage
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
 
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
+      return updatedContainers;
+    });
+    setShouldFocusPacketDuplicatePercentage(true)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -790,11 +832,14 @@ const CreateEmulation = (props) => {
       inputPacketCorruptPercentageRef.current.focus();
     } else if (inputPacketCorruptCorrelationPercentageRef.current && shouldFocusPacketCorruptCorrelationPercentage) {
       inputPacketCorruptCorrelationPercentageRef.current.focus();
+    } else if (inputPacketDuplicatePercentageRef.current && shouldFocusPacketDuplicatePercentage) {
+      inputPacketDuplicatePercentageRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
     shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
-    shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage);
+    shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
+    shouldFocusPacketDuplicatePercentage);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -849,7 +894,8 @@ const CreateEmulation = (props) => {
       lossGemodelk:'0.98',
       lossGemodelh:'0.0001',
       packetCorruptPercentage:"0.00001",
-      packetCorruptCorrelationPercentage:"25"
+      packetCorruptCorrelationPercentage:"25",
+      packetDuplicatePercentage: "0.00001"
     };
 
     setContainers(prevContainers => {
@@ -1420,8 +1466,8 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                            key={containerInterfaces.packetCorruptPercentage + '-'
-                                              + interfaceIndex}>
+                                          key={containerInterfaces.packetCorruptPercentage + '-'
+                                            + interfaceIndex}>
                                           <td> Packet corruption percentage</td>
                                           <td>
                                             <input
@@ -1434,9 +1480,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.packetCorruptCorrelationPercentage + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.packetCorruptCorrelationPercentage + '-'
+                                            + interfaceIndex}>
                                           <td> Packet corruption correlation percentage</td>
                                           <td>
                                             <input
@@ -1449,7 +1495,21 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-
+                                        <tr className="custom-td"
+                                            key={containerInterfaces.packetDuplicatePercentage + '-'
+                                              + interfaceIndex}>
+                                          <td> Packet duplicate percentage</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketDuplicatePercentageRef}
+                                              type="text"
+                                              value={containerInterfaces.packetDuplicatePercentage}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketDuplicatePercentage(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
                                       </React.Fragment>
                                     ))}
                                     </tbody>
