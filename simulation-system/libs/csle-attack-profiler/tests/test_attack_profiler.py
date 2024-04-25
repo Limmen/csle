@@ -11,14 +11,16 @@ from csle_attack_profiler.attack_graph import AttackGraph
 
 
 
+
 class TestAttackProfilerSuite:
     """
     Test suite for attack_profiler.py
     """
 
-    # Test case for get_attack_profile returns the attack profile of the actions
     def test_get_attack_profile(self) -> None:
-        
+        """
+        Test case for get_attack_profile returns the attack profile for a given attacker action
+        """    
         # Create an instance of EmulationAttackerAction
         attacker_action = EmulationAttackerAction(
             id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
@@ -49,10 +51,10 @@ class TestAttackProfilerSuite:
                                        'Network Service Discovery': ['Network Traffic: Network Traffic Flow', 'Command: Command Execution', 'Cloud Service: Cloud Service Enumeration']}
         assert result.subtechniques == {}
 
-
-    # Test case for get_attack_profile returns an empty attack profile
     def test_get_attack_profile_error(self) -> None:
-
+        """
+        Test case for get_attack_profile returns an empty attack profile for an invalid attacker action
+        """
         # Create an instance of EmulationAttackerAction (invalid one)
         attacker_action = EmulationAttackerAction(
             id="NONE",
@@ -73,10 +75,10 @@ class TestAttackProfilerSuite:
         assert result.data_sources == {}
         assert result.subtechniques == {}
 
-
-    # Test case for all ActionIds
     def test_attack_profile_all_actionid(self) -> None:
-
+        """
+        Test case for get_attack_profile returns the attack profile for all the EmulationAttackerActionId
+        """
         # Loop over all the EmulationAttackerActionId
         for action_id in EmulationAttackerActionId:
             # Create an instance of EmulationAttackerAction
@@ -93,7 +95,8 @@ class TestAttackProfilerSuite:
             )
 
             result = AttackProfiler.get_attack_profile(attacker_action)
-
+            # Logging for test purposes
+            print("Action ID: ", action_id)
             if action_id == EmulationAttackerActionId.CONTINUE or action_id == EmulationAttackerActionId.STOP:
                 assert result.techniques_tactics == {}
                 assert result.mitigations == {}
@@ -114,9 +117,10 @@ class TestAttackProfilerSuite:
                 for technique in result.subtechniques:
                     assert result.techniques_tactics[technique]
 
-    # Test the get_attack_profile_sequence method without providing an attack graph
     def test_attack_profiler_sequence_no_graph(self) -> None:
-
+        """
+        Test the get_attack_profile_sequence method without providing an attack graph
+        """
         attacker_action = EmulationAttackerAction(
             id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
             name="TCP SYN (Stealth) Scan",
@@ -141,15 +145,15 @@ class TestAttackProfilerSuite:
                                        'Gather Victim Host Information': ['Internet Scan: Response Content']}
         assert result[0].subtechniques == {}
 
-    # Test the get_attack_profile_sequence method providing an attack graph
-    """
-        Reconnaisance
-        /           \ 
-    Credential ->  Initial Access 
-    
-    """
     def test_attack_profiler_sequence_graph(self) -> None:
+        """
+        Test get_attack_profile_sequence method providing an attack graph
+        Graph:
+                Reconnaisance
+                /           \ 
+        Credential ->  Initial Access
         
+        """
         # Partial sequence attack graph
         attack_graph = AttackGraph()
         attack_graph.add_node(Tactics.RECONNAISSANCE, node_id = 1)
@@ -225,16 +229,16 @@ class TestAttackProfilerSuite:
                                           'Valid Accounts': ['Logon Session: Logon Session Creation','User Account: User Account Authentication','Logon Session: Logon Session Metadata']}
         assert result[2].subtechniques == {}
 
-    # Test the get_attack_profile_sequence method providing an attack graph
-    """
+    def test_attack_profiler_sequence_graph2(self) -> None:
+        """
+        Test get_attack_profile_sequence method providing an attack graph
+        Graph:
                                         Recon 
                                         /    \
                                    Initial   Execution
                                     /          
         {Execution, Command and Control, Defense Evasion, Lateral Movement}    
-    """
-    def test_attack_profiler_sequence_graph2(self) -> None:
-        
+        """ 
         # Partial sequence attack graph
         attack_graph = AttackGraph()
         #Nodes
@@ -294,7 +298,11 @@ class TestAttackProfilerSuite:
         assert result[3].techniques_tactics['Exploit Public-Facing Application']
 
     def test_attack_profiler_sequence_novice(self) -> None: 
+        """
+        Test the get_attack_profile_sequence for the novice sequence. Expected pruning of techniques in the graph approach.
+        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
         
+        """
         attacker_action1 = EmulationAttackerAction(
             id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
             name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="TCP_SYN_STEALTH_SCAN_HOST",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
@@ -416,11 +424,12 @@ class TestAttackProfilerSuite:
 
         # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
         assert len(techniques_graph) < len(techniques_naive)
-        
-
 
     def test_attack_profiler_sequence_experienced(self) -> None:
-
+        """
+        Test the get_attack_profile_sequence for the experienced sequence. Expected pruning of techniques in the graph approach.
+        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035     
+        """
 
         attacker_action1 = EmulationAttackerAction(
             id=EmulationAttackerActionId.PING_SCAN_HOST,
@@ -558,8 +567,12 @@ class TestAttackProfilerSuite:
         # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
         assert len(techniques_graph) < len(techniques_naive)
 
-
     def test_attack_profiler_sequence_expert(self) -> None:
+        """
+        Test the get_attack_profile_sequence for the experienced sequence. Expected pruning of techniques in the graph approach.
+        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035     
+        """
+
         attacker_action1 = EmulationAttackerAction(
             id=EmulationAttackerActionId.PING_SCAN_HOST,
             name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="TCP_SYN_STEALTH_SCAN_HOST",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
@@ -679,14 +692,14 @@ class TestAttackProfilerSuite:
         # Assert that the number of techniques in the graph approach is less than the number of techniques in the naive approach
         assert len(techniques_graph) < len(techniques_naive)
 
-
-
     def test_graph(self) -> None:
+        """
+        Test the AttackGraph class
+        """
         attack_graph = AttackGraph()
         attack_graph.add_node(Tactics.RECONNAISSANCE, [(Tactics.CREDENTIAL_ACCESS, 2)], 1)
         attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, [(Tactics.INITIAL_ACCESS, 3)], 2)
         attack_graph.add_node(Tactics.CREDENTIAL_ACCESS, [], 4)
-        #attack_graph.add_edge(Tactics.RECONNAISSANCE, 1, Tactics.CREDENTIAL_ACCESS, 4)
         attack_graph.add_node(Tactics.INITIAL_ACCESS, [], 3)
 
 
