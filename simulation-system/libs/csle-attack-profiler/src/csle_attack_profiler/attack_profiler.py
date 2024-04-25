@@ -9,6 +9,7 @@ from csle_attack_profiler.attack_graph import AttackGraph
 
 from mitreattack.stix20 import MitreAttackData
 from typing import List, Dict
+import os
 
 class AttackProfiler:
     """
@@ -42,7 +43,9 @@ class AttackProfiler:
 
         :return: the attack profile of the action
         """
-        mitre_attack_data = MitreAttackData("./src/csle_attack_profiler/enterprise-attack.json")
+        current_dir = os.path.dirname(__file__)
+        path = os.path.join(current_dir, "./dao/enterprise-attack.json")
+        mitre_attack_data = MitreAttackData(path)
 
         # Retrieve the id from the attacker action
         attacker_id = attacker_action.id
