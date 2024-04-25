@@ -4,7 +4,9 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 import os
 
 class TestKullbackSuite:
-
+    """
+    Test suite for the Kullback-Leibler divergence calculation class.
+    """
     def test_kullback_counts(self) -> None:
         """
         Test the Kullback-Leibler divergence for two lists of counts.
