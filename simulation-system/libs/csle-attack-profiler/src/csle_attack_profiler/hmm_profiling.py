@@ -1,10 +1,10 @@
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
-    import EmulationAttackerActionId
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action \
-    import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_attack_profiler.attack_profiler import AttackProfiler
-from typing import List
+from typing import List, Union
 import numpy as np
 import random as random
 import sys
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 class HMMProfiler:
     
 
-    def __init__(self, statistics: List[EmulationStatistics], model_name: str = None):
+    def __init__(self, statistics: List[EmulationStatistics], model_name: str = None) -> None:
         """
         Class constructor
 
@@ -183,7 +183,7 @@ class HMMProfiler:
         return (emission_matrix, emission_matrix_observations)
 
 
-    def convert_states_to_profiles(self, states: List[str]) -> List[EmulationAttackerActionId]:
+    def convert_states_to_profiles(self, states: List[str]) -> List[Union[AttackProfiler, str]]:
         """
         Converts a list of states to a list of EmulationAttackerActionId.
         TODO: 
@@ -198,39 +198,84 @@ class HMMProfiler:
         new_states = [] 
         for state in states:
             if state == 'A:Continue':
-                new_states.append(EmulationAttackerActionId.CONTINUE)
-                """
-                attacker_action = EmulationAttackerAction(
-                id=EmulationAttackerActionId.CONTINUE,
-                name="TCP SYN (Stealth) Scan",cmds=[],type=None,descr="CONTINUE",ips=[],index=0,action_outcome=EmulationAttackerActionOutcome.CONTINUE,backdoor=False
-                )
-                """
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.CONTINUE,name="Continue",cmds=[],
+                                                 type=None,descr="CONTINUE",ips=[],index=0,action_outcome='')
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:CVE-2015-1427 exploit':
-                new_states.append(EmulationAttackerActionId.CVE_2015_1427_EXPLOIT)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.CVE_2015_1427_EXPLOIT, name="CVE-2015-1427 exploit", cmds=None, type=EmulationAttackerActionType.EXPLOIT,
+                                                descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and then sets up a SSH backdoor to upgrade the channel", index=None, ips=[],
+                                                action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:DVWA SQL Injection Exploit':
-                new_states.append(EmulationAttackerActionId.DVWA_SQL_INJECTION)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.DVWA_SQL_INJECTION, name="DVWA SQL Injection Exploit", cmds=None,type=EmulationAttackerActionType.EXPLOIT,
+                                       descr="Uses the DVWA SQL Injection exploit to extract secret passwords",index=None,ips=[],action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:Install tools':
-                new_states.append(EmulationAttackerActionId.INSTALL_TOOLS)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.INSTALL_TOOLS, name="Install tools", cmds=None,type=EmulationAttackerActionType.POST_EXPLOIT,
+                                       descr="If taken root on remote machine, installs pentest tools, e.g. nmap",index=None,ips=[], 
+                                       action_outcome=EmulationAttackerActionOutcome.PIVOTING) 
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:Network service login':
-                new_states.append(EmulationAttackerActionId.NETWORK_SERVICE_LOGIN)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.NETWORK_SERVICE_LOGIN, name="Network service login", cmds=[],
+                                       type=EmulationAttackerActionType.POST_EXPLOIT,descr="Uses known credentials to login to network services on a server",
+                                       index=None,ips=None, action_outcome=EmulationAttackerActionOutcome.LOGIN)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:Ping Scan':
-                new_states.append(EmulationAttackerActionId.PING_SCAN_HOST)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.PING_SCAN_HOST, name="Ping Scan", cmds=None,type=EmulationAttackerActionType.RECON,
+                                        descr="A host discovery scan, it is quick because it only checks of hosts "
+                                             "are up with Ping, without scanning the ports.",ips=None, index=None,
+                                       action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING,backdoor=False)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:Sambacry Explolit':
-                new_states.append(EmulationAttackerActionId.SAMBACRY_EXPLOIT)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.SAMBACRY_EXPLOIT, name="Sambacry Explolit", cmds=None,
+                                       type=EmulationAttackerActionType.EXPLOIT,descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor to upgrade the channel",
+                                       index=None,ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p) 
             elif state == 'A:ShellShock Explolit':
-                new_states.append(EmulationAttackerActionId.SHELLSHOCK_EXPLOIT)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.SHELLSHOCK_EXPLOIT, name="ShellShock Explolit", cmds=None,type=EmulationAttackerActionType.EXPLOIT,descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",
+                                       index=None,ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS) 
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:SSH dictionary attack for username=pw':
-                new_states.append(EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, name="SSH dictionary attack for username=pw",cmds=None, type=EmulationAttackerActionType.EXPLOIT, index=None,
+                                        descr="A dictionary attack that tries common passwords and usernames for SSH where username=password",ips=None, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:FTP dictionary attack for username=pw':
-                new_states.append(EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, name="FTP dictionary attack for username=pw",cmds=None, type=EmulationAttackerActionType.EXPLOIT, index=None,
+                                        descr="A dictionary attack that tries common passwords and usernames for FTP where username=password",ips=None, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:Telnet dictionary attack for username=pw':
-                new_states.append(EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, name="Telnet dictionary attack for username=pw",cmds=None, type=EmulationAttackerActionType.EXPLOIT, index=None,
+                                        descr="A dictionary attack that tries common passwords and usernames for Telnet where username=password",ips=None, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:CVE-2010-0426 exploit':
-                new_states.append(EmulationAttackerActionId.CVE_2010_0426_PRIV_ESC)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.CVE_2010_0426_PRIV_ESC, name="CVE-2010-0426 exploit", cmds=None,type=EmulationAttackerActionType.PRIVILEGE_ESCALATION,
+                                       descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",index=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'A:TCP SYN (Stealth) Scan':
-                new_states.append(EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST, name="TCP SYN (Stealth) Scan", cmds=None, type=EmulationAttackerActionType.RECON,
+                                       descr="A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet", ips=None, index=None,
+                                       action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING, backdoor=False)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             elif state == 'ssh backdoor':
-                new_states.append(EmulationAttackerActionId.SSH_BACKDOOR)
+                action = EmulationAttackerAction(id=EmulationAttackerActionId.SSH_BACKDOOR, name="Install SSH backdoor", cmds=None,type=EmulationAttackerActionType.POST_EXPLOIT,
+                                       descr="If taken root on remote machine, installs a ssh backdoor useful for upgrading telnetor weaker channels",index=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PIVOTING,alt_cmds=None,backdoor=True)
+                p = AttackProfiler.get_attack_profile(action)
+                new_states.append(p)
             else:
                 new_states.append(state)
 
@@ -340,7 +385,7 @@ class HMMProfiler:
         states = self.hidden_states
         observations = self.emission_matrix_observations
         if seed:
-            np.random.seed(42)
+            np.random.seed(seed)
         obs_len = len(observations)
         states_len = len(states)
 
@@ -374,10 +419,6 @@ class HMMProfiler:
             state_seq.append(states[s_i])
             obs_seq.append(observations[o_i])
 
-        #print(state_seq)
-        #print(obs_seq)
         
         return state_seq, obs_seq
-        
-
     
