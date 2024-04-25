@@ -1,8 +1,8 @@
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 
-from csle_attack_profiler.tactics import Tactics
-from csle_attack_profiler.techniques import Techniques, SubTechniques
+from csle_attack_profiler.dao.tactics import Tactics
+from csle_attack_profiler.dao.techniques import Techniques, SubTechniques
 
 
 class EmulationAttackerMapping():
