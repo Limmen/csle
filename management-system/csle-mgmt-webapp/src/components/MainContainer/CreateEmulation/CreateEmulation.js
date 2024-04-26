@@ -349,7 +349,8 @@ const CreateEmulation = (props) => {
     packetDuplicateCorrelationPercentage:25, packetReorderPercentage:0.0025,
     packetReorderCorrelationPercentage:25, packetReorderGap:5, rateLimitMbit:1000,
     packetOverheadBytes:0, cellOverheadBytes:0, defaultGateway:"0.0.0.0", defaultInput:"accpet", defaultOutput:"accept",
-    defaultForward:"Drop"
+    defaultForward:"Drop", trafficManagerPort:"50043", trafficManagerLogFile:"traffic_manager.log",
+    trafficManagerLogDir:"/", trafficManagerMaxWorkers:"10"
   });
 
   const inputNameRef = useRef(null);
@@ -374,6 +375,10 @@ const CreateEmulation = (props) => {
   const inputPacketOverheadBytesRef = useRef(null)
   const inputCellOverheadBytesRef = useRef(null)
   const inputDefaultGatewayRef = useRef(null)
+  const inputTrafficManagerPortRef = useRef(null)
+  const inputTrafficManagerLogFileRef = useRef(null)
+  const inputTrafficManagerLogDirRef = useRef(null)
+  const inputTrafficManagerMaxWorkersRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -401,6 +406,12 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketOverheadBytes, setShouldFocusPacketOverheadBytes] = useState(false);
   const [shouldFocusCellOverheadBytes, setShouldFocusCellOverheadBytes] = useState(false);
   const [shouldFocusDefaultGateway, setShouldFocusDefaultGateway] = useState(false);
+
+  const [shouldFocusTrafficManagerPort, setShouldFocusTrafficManagerPort] = useState(false);
+  const [shouldFocusTrafficManagerLogFile, setShouldFocusTrafficManagerLogFile] = useState(false);
+  const [shouldFocusTrafficManagerLogDir, setShouldFocusTrafficManagerLogDir] = useState(false);
+  const [shouldFocusTrafficManagerMaxWorkers, setShouldFocusTrafficManagerMaxWorkers] = useState(false);
+
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -438,6 +449,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -475,6 +490,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -514,6 +533,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -554,6 +577,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -594,6 +621,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -634,6 +665,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -675,6 +710,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -715,6 +754,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -755,6 +798,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -795,6 +842,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -834,6 +885,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -874,6 +929,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -913,6 +972,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -952,6 +1015,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -991,6 +1058,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1030,6 +1101,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1069,6 +1144,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1108,6 +1187,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1147,6 +1230,10 @@ const CreateEmulation = (props) => {
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1186,6 +1273,10 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1225,6 +1316,10 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
   };
 
   const handleContainerInterfaceDefaultGateway = (event, containerIndex, interfaceIndex) => {
@@ -1243,6 +1338,182 @@ const CreateEmulation = (props) => {
       return updatedContainers;
     });
     setShouldFocusDefaultGateway(true)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+  };
+
+  const handleContainerInterfaceTrafficManagerPort = (event, containerIndex, interfaceIndex) => {
+    const newTrafficManagerPort = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        trafficManagerPort: newTrafficManagerPort
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusTrafficManagerPort(true)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+  };
+
+  const handleContainerInterfaceTrafficManagerLogFile = (event, containerIndex, interfaceIndex) => {
+    const newTrafficManagerLogFile = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        trafficManagerLogFile: newTrafficManagerLogFile
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusTrafficManagerLogFile(true)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+  };
+
+  const handleContainerInterfaceTrafficManagerLogDir = (event, containerIndex, interfaceIndex) => {
+    const newTrafficManagerLogDir = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        trafficManagerLogDir: newTrafficManagerLogDir
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusTrafficManagerLogDir(true)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusTrafficManagerMaxWorkers(false)
+  };
+
+  const handleContainerInterfaceTrafficManagerMaxWorkers = (event, containerIndex, interfaceIndex) => {
+    const newTrafficManagerMaxWorkers = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        trafficManagerMaxWorkers: newTrafficManagerMaxWorkers
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusTrafficManagerMaxWorkers(true)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
     setShouldFocusCellOverheadBytes(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusRateLimitMbit(false)
@@ -1321,6 +1592,14 @@ const CreateEmulation = (props) => {
       inputFlagScoreRef.current.focus();
     } else if (inputDefaultGatewayRef.current && shouldFocusDefaultGateway) {
       inputDefaultGatewayRef.current.focus();
+    } else if (inputTrafficManagerPortRef.current && shouldFocusTrafficManagerPort) {
+      inputTrafficManagerPortRef.current.focus();
+    } else if (inputTrafficManagerLogDirRef.current && shouldFocusTrafficManagerLogDir) {
+      inputTrafficManagerLogDirRef.current.focus();
+    } else if (inputTrafficManagerLogFileRef.current && shouldFocusTrafficManagerLogFile) {
+      inputTrafficManagerLogFileRef.current.focus();
+    } else if (inputTrafficManagerMaxWorkersRef.current && shouldFocusTrafficManagerMaxWorkers) {
+      inputTrafficManagerMaxWorkersRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1329,7 +1608,9 @@ const CreateEmulation = (props) => {
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
     shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
-    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway);
+    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway,
+    shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
+    shouldFocusTrafficManagerMaxWorkers);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -1444,7 +1725,11 @@ const CreateEmulation = (props) => {
       defaultGateway:"0.0.0.0",
       defaultInput:"accept",
       defaultOutput:"accept",
-      defaultForward:"drop"
+      defaultForward:"drop",
+      trafficManagerPort:"50043",
+      trafficManagerLogFile:"traffic_manager.log",
+      trafficManagerLogDir:"/",
+      trafficManagerMaxWorkers:"10"
     };
 
     setContainers(prevContainers => {
@@ -2201,7 +2486,7 @@ const CreateEmulation = (props) => {
                                             </select>
                                           </td>
                                         </tr>
-                                        <tr className="custom-td">
+                                        <tr>
                                           <td> Firewall rule: default forward</td>
                                           <td>
                                             <select value={containerInterfaces.defaultForward}
@@ -2213,6 +2498,67 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
 
+
+                                        <tr
+                                          key={containerInterfaces.trafficManagerPort + '-'
+                                            + interfaceIndex}>
+                                          <td> Traffic manager port</td>
+                                          <td>
+                                            <input
+                                              ref={inputTrafficManagerPortRef}
+                                              type="text"
+                                              value={containerInterfaces.trafficManagerPort}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceTrafficManagerPort(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr
+                                          key={containerInterfaces.trafficManagerLogFile + '-'
+                                            + interfaceIndex}>
+                                          <td> Traffic manager log file</td>
+                                          <td>
+                                            <input
+                                              ref={inputTrafficManagerLogFileRef}
+                                              type="text"
+                                              value={containerInterfaces.trafficManagerLogFile}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceTrafficManagerLogFile(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr
+                                          key={containerInterfaces.trafficManagerLogDir + '-'
+                                            + interfaceIndex}>
+                                          <td> Traffic manager log directory</td>
+                                          <td>
+                                            <input
+                                              ref={inputTrafficManagerLogDirRef}
+                                              type="text"
+                                              value={containerInterfaces.trafficManagerLogDir}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceTrafficManagerLogDir(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td"
+                                          key={containerInterfaces.trafficManagerMaxWorkers + '-'
+                                            + interfaceIndex}>
+                                          <td> Traffic manager maximum workers</td>
+                                          <td>
+                                            <input
+                                              ref={inputTrafficManagerMaxWorkersRef}
+                                              type="text"
+                                              value={containerInterfaces.trafficManagerMaxWorkers}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceTrafficManagerMaxWorkers(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
                                       </React.Fragment>
                                     ))}
                                     </tbody>
