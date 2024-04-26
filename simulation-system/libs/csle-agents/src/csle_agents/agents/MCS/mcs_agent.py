@@ -297,7 +297,7 @@ class MCSAgent(BaseAgent):
                                                         id=self.exp_execution.id)
         return self.exp_execution
 
-    def get_policy(self, theta: NDArray[np.float64], L: int) -> Union[MultiThresholdStoppingPolicy,
+    def get_policy(self, theta: Union[List[Union[float, int]], NDArray[np.float64]], L: int) -> Union[MultiThresholdStoppingPolicy,
                                                                       LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
@@ -1756,10 +1756,10 @@ class MCSAgent(BaseAgent):
         '''
             Line search intilization
         '''
-        alp = 0
-        alp1 = 0
-        alp2 = 0
-        falp = 0
+        alp: Union[int, float] = 0
+        alp1: Union[int, float] = 0
+        alp2: Union[int, float] = 0
+        falp: Union[float, int] = 0
         
         if len(alist) == 0:
             # evaluate at absolutely smallest point
@@ -1990,7 +1990,7 @@ class MCSAgent(BaseAgent):
         return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s, alp, fac
 
     def lsnew(self, nloc, small, sinit, short, x, p, s, alist, flist, amin,
-              amax, alp, abest, fmed, unitlen, stopping_actions):
+              amax, alp: Union[int, float], abest, fmed, unitlen, stopping_actions):
         if alist[0] <= amin:
             leftok = 0
         elif flist[0] >= max(fmed, flist[1]):
@@ -2037,12 +2037,12 @@ class MCSAgent(BaseAgent):
 
         return alist, flist, alp, fac
 
-    def lsdescent(self, x: NDArray[np.float64], p: NDArray[np.int32], alist: List[Union[float, int]],
-                  flist: List[int], alp: int,
+    def lsdescent(self, x: Union[List[Union[int, float]], NDArray[np.float64]], p: NDArray[np.int32], alist: List[Union[float, int]],
+                  flist: List[Union[float, int]], alp: Union[int, float],
                   abest: float, fbest: float, fmed: float, up: List[float],
                   down: List[float], monotone: int, minima: List[int],
                   nmin: int, unitlen: float, s: int, stopping_actions: int):
-        cont = max([i == 0 for i in alist])
+        cont: Union[bool, int] = max([i == 0 for i in alist])
 
         if cont:
             fbest = min(flist)
@@ -2086,19 +2086,19 @@ class MCSAgent(BaseAgent):
 
     def lsquart(self, nloc: int, small: Union[float, int], sinit: int, short: float,
                 x: NDArray[np.float64], p: NDArray[Union[np.float64, np.int32]],
-                alist: List[Union[float, int]], flist: NDArray[np.float64], amin: float, amax: float,
+                alist: List[Union[float, int]], flist: List[float], amin: float, amax: float,
                 alp: float, abest: float, fbest: float,
                 fmed: float, up: List[float], down: List[float],
                 monotone: int, minima: List[int], nmin: int, unitlen: float, s: int,
                 saturated: int, stopping_actions: int):
 
         if alist[0] == alist[1]:
-            f12 = 0
+            f12: Union[int, float] = 0
         else:
             f12 = (flist[1] - flist[0]) / (alist[1] - alist[0])
         
         if alist[1] == alist[2]:
-            f23 = 0
+            f23: Union[int, float] = 0
         else:
             f23 = (flist[2] - flist[1]) / (alist[2] - alist[1])
 
@@ -2108,7 +2108,7 @@ class MCSAgent(BaseAgent):
             f34 = (flist[3] - flist[2]) / (alist[3] - alist[2])
 
         if alist[3] == alist[4]:
-            f45 = 0
+            f45: Union[int, float] = 0
         else:
             f45 = (flist[4] - flist[3]) / (alist[4] - alist[3])
 
@@ -2119,8 +2119,8 @@ class MCSAgent(BaseAgent):
         f2345 = (f345 - f234) / (alist[4] - alist[1])
         f12345 = (f2345 - f1234) / (alist[4] - alist[0])
         good = np.Inf
-        if f12345 <= 0:
 
+        if f12345 <= 0:
             good = 0
             (alist, flist, alp, abest, fbest, fmed, up, down, monotone,
              minima, nmin, unitlen, s, saturated) = self.lslocal(nloc, small, sinit,
@@ -2187,7 +2187,7 @@ class MCSAgent(BaseAgent):
                 minima, nmin, unitlen, s, good, saturated)
 
     def lssep(self, nloc: int, small: float, sinit: int, short: float,
-              x: NDArray[np.float64], p: NDArray[np.int32],
+              x: Union[List[Union[float, int]], NDArray[np.float64]], p: NDArray[np.int32],
               alist: List[Union[float, int]], flist: List[float],
               amin: float, amax: float, alp: float, abest: float, fbest: float,
               fmed: float, up: List[float], down: List[float], monotone: int,
@@ -2208,7 +2208,7 @@ class MCSAgent(BaseAgent):
             
             aa = [0.5 * (alist[i] + alist[i - 1]) for i in ind]	# interval midpoints
             if len(aa) > nloc:
-                ff = [min(flist[i], flist[j]) for i, j in ind]
+                ff: Union[List[Union[int, float]], NDArray[Any]] = [min(flist[i], flist[j]) for i, j in ind]
                 ind = np.argsort(ff)
                 ff.sort()
                 aa = [aa[ind[i]] for i in range(0, nloc)]
@@ -2238,11 +2238,13 @@ class MCSAgent(BaseAgent):
                 up, down, monotone, minima, nmin, unitlen, s)
 
     def lslocal(self, nloc: int, small: float, sinit: int, short: float,
-                x: NDArray[np.float64], p: NDArray[np.int32],
-                alist: List[Union[float, int]], flist: List[float],
-                amin: float, amax: float, alp: float, abest: float, fbest: float, fmed: float,
+                x: Union[List[Union[int, float]], NDArray[np.float64]],
+                p: NDArray[np.int32], alist: List[Union[float, int]],
+                flist: List[float], amin: float, amax: float, alp: float,
+                abest: float, fbest: float, fmed: float,
                 up: List[float], down: List[float], monotone: int,
-                minima: List[int], nmin: int, unitlen: float, s: int, saturated: int, stopping_actions: int):
+                minima: List[Union[int, float, bool]], nmin: int, unitlen: float, s: int,
+                saturated: int, stopping_actions: int):
         up = [i < j for i, j in zip(flist[0: s - 1], flist[1: s])]
         down = [i <= j for i, j in zip(flist[1: s], flist[0: s - 1])]
         down[s - 2] = (flist[s - 1] < flist[s - 2])
@@ -2347,7 +2349,7 @@ class MCSAgent(BaseAgent):
                     cas = 0
                     alp = 0.5 * (aa[2] + aa[3] - f34 / max(f234, f345))
             if cas < 0 or flist[i] > fmed:
-                alptol = 0
+                alptol: Union[float, int] = 0
             elif cas >= 0:
                 if i == 0:
                     alptol = small * (alist[2] - alist[0])
