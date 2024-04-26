@@ -348,7 +348,9 @@ const CreateEmulation = (props) => {
     packetCorruptCorrelationPercentage:25, packetDuplicatePercentage:0.00001,
     packetDuplicateCorrelationPercentage:25, packetReorderPercentage:0.0025,
     packetReorderCorrelationPercentage:25, packetReorderGap:5, rateLimitMbit:1000,
-    packetOverheadBytes:0, cellOverheadBytes:0});
+    packetOverheadBytes:0, cellOverheadBytes:0, defaultGateway:"0.0.0.0", defaultInput:"accpet", defaultOutput:"accept",
+    defaultForward:"Drop"
+  });
 
   const inputNameRef = useRef(null);
   const inputIPRef = useRef(null);
@@ -371,6 +373,7 @@ const CreateEmulation = (props) => {
   const inputRateLimitMbitRef = useRef(null)
   const inputPacketOverheadBytesRef = useRef(null)
   const inputCellOverheadBytesRef = useRef(null)
+  const inputDefaultGatewayRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -397,6 +400,7 @@ const CreateEmulation = (props) => {
   const [shouldFocusRateLimitMbit, setShouldFocusRateLimitMbit] = useState(false);
   const [shouldFocusPacketOverheadBytes, setShouldFocusPacketOverheadBytes] = useState(false);
   const [shouldFocusCellOverheadBytes, setShouldFocusCellOverheadBytes] = useState(false);
+  const [shouldFocusDefaultGateway, setShouldFocusDefaultGateway] = useState(false);
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -433,6 +437,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -469,6 +474,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -507,6 +513,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -546,6 +553,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -585,6 +593,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -624,6 +633,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -664,6 +674,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -703,6 +714,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -742,6 +754,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -781,6 +794,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -819,6 +833,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -858,6 +873,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -896,6 +912,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -934,6 +951,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -972,6 +990,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1010,6 +1029,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1048,6 +1068,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1086,6 +1107,7 @@ const CreateEmulation = (props) => {
     setShouldFocusRateLimitMbit(false)
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1124,6 +1146,7 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusPacketOverheadBytes(false)
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1162,6 +1185,7 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
   };
 
   const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1200,7 +1224,46 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false);
     setShouldFocusName(false);
+    setShouldFocusDefaultGateway(false)
+  };
 
+  const handleContainerInterfaceDefaultGateway = (event, containerIndex, interfaceIndex) => {
+    const newDefaultGateway = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        defaultGateway: newDefaultGateway
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+
+      return updatedContainers;
+    });
+    setShouldFocusDefaultGateway(true)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -1256,6 +1319,8 @@ const CreateEmulation = (props) => {
       inputFlagIdRef.current.focus();
     } else if (inputFlagScoreRef.current && shouldFocusFlagScore) {
       inputFlagScoreRef.current.focus();
+    } else if (inputDefaultGatewayRef.current && shouldFocusDefaultGateway) {
+      inputDefaultGatewayRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1264,7 +1329,7 @@ const CreateEmulation = (props) => {
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
     shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
-    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore);
+    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -1291,6 +1356,54 @@ const CreateEmulation = (props) => {
       updatedInterfaces[interfaceIndex] = {
         ...updatedInterfaces[interfaceIndex],
         packetLossType: packetLossTypeValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerInterfaceDefaultInput = (event, containerIndex, interfaceIndex) => {
+    const defaultInputValue = event.target.value; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        defaultInput: defaultInputValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerInterfaceDefaultOutput = (event, containerIndex, interfaceIndex) => {
+    const defaultOutputValue = event.target.value; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        defaultOutput: defaultOutputValue
+      };
+      containerToUpdate.interfaces = updatedInterfaces;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+  };
+
+  const handleContainerInterfaceDefaultForward = (event, containerIndex, interfaceIndex) => {
+    const defaultForwardValue = event.target.value; // Convert string to boolean
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedInterfaces = [...containerToUpdate.interfaces];
+      updatedInterfaces[interfaceIndex] = {
+        ...updatedInterfaces[interfaceIndex],
+        defaultForward: defaultForwardValue
       };
       containerToUpdate.interfaces = updatedInterfaces;
       updatedContainers[containerIndex] = containerToUpdate;
@@ -1327,7 +1440,11 @@ const CreateEmulation = (props) => {
       packetReorderGap:"5",
       rateLimitMbit:"1000",
       packetOverheadBytes:"0",
-      cellOverheadBytes:"0"
+      cellOverheadBytes:"0",
+      defaultGateway:"0.0.0.0",
+      defaultInput:"accept",
+      defaultOutput:"accept",
+      defaultForward:"drop"
     };
 
     setContainers(prevContainers => {
@@ -2032,9 +2149,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr className="custom-td"
-                                            key={containerInterfaces.cellOverheadBytes + '-'
-                                              + interfaceIndex}>
+                                        <tr
+                                          key={containerInterfaces.cellOverheadBytes + '-'
+                                            + interfaceIndex}>
                                           <td> Cell overhead bytes</td>
                                           <td>
                                             <input
@@ -2047,6 +2164,55 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
+                                        <tr
+                                          key={containerInterfaces.cellOverheadBytes + '-'
+                                            + interfaceIndex}>
+                                          <td> Default gateway</td>
+                                          <td>
+                                            <input
+                                              ref={inputDefaultGatewayRef}
+                                              type="text"
+                                              value={containerInterfaces.defaultGateway}
+                                              onChange={(event) =>
+                                                handleContainerInterfaceDefaultGateway(event,
+                                                  index, interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td> Firewall rule: default input</td>
+                                          <td>
+                                            <select value={containerInterfaces.defaultInput}
+                                                    onChange={(e) => handleContainerInterfaceDefaultInput(e, index,
+                                                      interfaceIndex)}>
+                                              <option value="accept">Accept</option>
+                                              <option value="drop">Drop</option>
+                                            </select>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td> Firewall rule: default output</td>
+                                          <td>
+                                            <select value={containerInterfaces.defaultOutput}
+                                                    onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,
+                                                      interfaceIndex)}>
+                                              <option value="accept">Accept</option>
+                                              <option value="drop">Drop</option>
+                                            </select>
+                                          </td>
+                                        </tr>
+                                        <tr className="custom-td">
+                                          <td> Firewall rule: default forward</td>
+                                          <td>
+                                            <select value={containerInterfaces.defaultForward}
+                                                    onChange={(e) => handleContainerInterfaceDefaultForward(e, index,
+                                                      interfaceIndex)}>
+                                              <option value="accept">Accept</option>
+                                              <option value="drop">Drop</option>
+                                            </select>
+                                          </td>
+                                        </tr>
+
                                       </React.Fragment>
                                     ))}
                                     </tbody>
