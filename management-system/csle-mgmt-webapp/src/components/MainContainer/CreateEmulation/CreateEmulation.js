@@ -2450,7 +2450,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                          key={containerInterfaces.cellOverheadBytes + '-'
+                                          key={containerInterfaces.defaultGateway + '-'
                                             + interfaceIndex}>
                                           <td> Default gateway</td>
                                           <td>
