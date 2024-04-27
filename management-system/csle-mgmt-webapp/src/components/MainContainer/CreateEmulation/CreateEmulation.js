@@ -1830,75 +1830,75 @@ const CreateEmulation = (props) => {
 
   // Use useEffect to focus on the input field when containers state changes
   useEffect(() => {
-    // Check if the container state has changed, then focus on the input field
-    if (inputNameRef.current && shouldFocusName) {
-      inputNameRef.current.focus();
-    } else if (inputIPRef.current && shouldFocusIP) {
-      inputIPRef.current.focus();
-    } else if (inputSubnetMaskRef.current && shouldFocusSubnetMask) {
-      inputSubnetMaskRef.current.focus();
-    } else if (inputLimitPacketsQueueRef.current && shouldFocusLimitPacketsQueue) {
-      inputLimitPacketsQueueRef.current.focus();
-    } else if (inputPacketDelayMsRef.current && shouldFocusPacketDelayMs) {
-      inputPacketDelayMsRef.current.focus();
-    } else if (inputPacketDelayJitterMsRef.current && shouldFocusPacketDelayJitterMs) {
-      inputPacketDelayJitterMsRef.current.focus();
-    } else if (inputPacketDelayCorrelationPercentageRef.current && shouldFocusPacketDelayCorrelationPercentage) {
-      inputPacketDelayCorrelationPercentageRef.current.focus();
-    } else if (inputLossGemodelpRef.current && shouldFocusLossGemodelp) {
-      inputLossGemodelpRef.current.focus();
-    } else if (inputLossGemodelrRef.current && shouldFocusLossGemodelr) {
-      inputLossGemodelrRef.current.focus();
-    } else if (inputLossGemodelkRef.current && shouldFocusLossGemodelk) {
-      inputLossGemodelkRef.current.focus();
-    } else if (inputLossGemodelhRef.current && shouldFocusLossGemodelh) {
-      inputLossGemodelhRef.current.focus();
-    } else if (inputPacketCorruptPercentageRef.current && shouldFocusPacketCorruptPercentage) {
-      inputPacketCorruptPercentageRef.current.focus();
-    } else if (inputPacketCorruptCorrelationPercentageRef.current && shouldFocusPacketCorruptCorrelationPercentage) {
-      inputPacketCorruptCorrelationPercentageRef.current.focus();
-    } else if (inputPacketDuplicatePercentageRef.current && shouldFocusPacketDuplicatePercentage) {
-      inputPacketDuplicatePercentageRef.current.focus();
-    } else if (inputPacketDuplicateCorrelationPercentageRef.current && shouldFocusPacketDuplicateCorrelationPercentage) {
-      inputPacketDuplicateCorrelationPercentageRef.current.focus();
-    } else if (inputPacketReorderPercentageRef.current && shouldFocusPacketReorderPercentage) {
-      inputPacketReorderPercentageRef.current.focus();
-    } else if (inputPacketReorderCorrelationPercentageRef.current && shouldFocusPacketReorderCorrelationPercentage) {
-      inputPacketReorderCorrelationPercentageRef.current.focus();
-    } else if (inputPacketReorderGapRef.current && shouldFocusPacketReorderGap) {
-      inputPacketReorderGapRef.current.focus();
-    } else if (inputRateLimitMbitRef.current && shouldFocusRateLimitMbit) {
-      inputRateLimitMbitRef.current.focus();
-    } else if (inputPacketOverheadBytesRef.current && shouldFocusPacketOverheadBytes) {
-      inputPacketOverheadBytesRef.current.focus();
-    } else if (inputCellOverheadBytesRef.current && shouldFocusCellOverheadBytes) {
-      inputCellOverheadBytesRef.current.focus();
-    } else if (inputCpuRef.current && shouldFocusCpu) {
-      inputCpuRef.current.focus();
-    } else if (inputMemRef.current && shouldFocusMem) {
-      inputMemRef.current.focus();
-    } else if (inputFlagIdRef.current && shouldFocusFlagId) {
-      inputFlagIdRef.current.focus();
-    } else if (inputFlagScoreRef.current && shouldFocusFlagScore) {
-      inputFlagScoreRef.current.focus();
-    } else if (inputDefaultGatewayRef.current && shouldFocusDefaultGateway) {
-      inputDefaultGatewayRef.current.focus();
-    } else if (inputTrafficManagerPortRef.current && shouldFocusTrafficManagerPort) {
-      inputTrafficManagerPortRef.current.focus();
-    } else if (inputTrafficManagerLogDirRef.current && shouldFocusTrafficManagerLogDir) {
-      inputTrafficManagerLogDirRef.current.focus();
-    } else if (inputTrafficManagerLogFileRef.current && shouldFocusTrafficManagerLogFile) {
-      inputTrafficManagerLogFileRef.current.focus();
-    } else if (inputTrafficManagerMaxWorkersRef.current && shouldFocusTrafficManagerMaxWorkers) {
-      inputTrafficManagerMaxWorkersRef.current.focus();
-    } else if (inputPacketDelayDistributionRef.current && shouldFocusPacketDelayDistribution) {
-      inputPacketDelayDistributionRef.current.focus();
-    } else if (inputPacketLossTypeRef.current && shouldFocusPacketLossType) {
-      inputPacketLossTypeRef.current.focus();
-    }
-  }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
-    shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
-    shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
+      // Check if the container state has changed, then focus on the input field
+      if (inputNameRef.current && shouldFocusName) {
+        inputNameRef.current.focus();
+      } else if (inputIPRef.current && shouldFocusIP) {
+        inputIPRef.current.focus();
+      } else if (inputSubnetMaskRef.current && shouldFocusSubnetMask) {
+        inputSubnetMaskRef.current.focus();
+      } else if (inputLimitPacketsQueueRef.current && shouldFocusLimitPacketsQueue) {
+        inputLimitPacketsQueueRef.current.focus();
+      } else if (inputPacketDelayMsRef.current && shouldFocusPacketDelayMs) {
+        inputPacketDelayMsRef.current.focus();
+      } else if (inputPacketDelayJitterMsRef.current && shouldFocusPacketDelayJitterMs) {
+        inputPacketDelayJitterMsRef.current.focus();
+      } else if (inputPacketDelayCorrelationPercentageRef.current && shouldFocusPacketDelayCorrelationPercentage) {
+        inputPacketDelayCorrelationPercentageRef.current.focus();
+      } else if (inputLossGemodelpRef.current && shouldFocusLossGemodelp) {
+        inputLossGemodelpRef.current.focus();
+      } else if (inputLossGemodelrRef.current && shouldFocusLossGemodelr) {
+        inputLossGemodelrRef.current.focus();
+      } else if (inputLossGemodelkRef.current && shouldFocusLossGemodelk) {
+        inputLossGemodelkRef.current.focus();
+      } else if (inputLossGemodelhRef.current && shouldFocusLossGemodelh) {
+        inputLossGemodelhRef.current.focus();
+      } else if (inputPacketCorruptPercentageRef.current && shouldFocusPacketCorruptPercentage) {
+        inputPacketCorruptPercentageRef.current.focus();
+      } else if (inputPacketCorruptCorrelationPercentageRef.current && shouldFocusPacketCorruptCorrelationPercentage) {
+        inputPacketCorruptCorrelationPercentageRef.current.focus();
+      } else if (inputPacketDuplicatePercentageRef.current && shouldFocusPacketDuplicatePercentage) {
+        inputPacketDuplicatePercentageRef.current.focus();
+      } else if (inputPacketDuplicateCorrelationPercentageRef.current && shouldFocusPacketDuplicateCorrelationPercentage) {
+        inputPacketDuplicateCorrelationPercentageRef.current.focus();
+      } else if (inputPacketReorderPercentageRef.current && shouldFocusPacketReorderPercentage) {
+        inputPacketReorderPercentageRef.current.focus();
+      } else if (inputPacketReorderCorrelationPercentageRef.current && shouldFocusPacketReorderCorrelationPercentage) {
+        inputPacketReorderCorrelationPercentageRef.current.focus();
+      } else if (inputPacketReorderGapRef.current && shouldFocusPacketReorderGap) {
+        inputPacketReorderGapRef.current.focus();
+      } else if (inputRateLimitMbitRef.current && shouldFocusRateLimitMbit) {
+        inputRateLimitMbitRef.current.focus();
+      } else if (inputPacketOverheadBytesRef.current && shouldFocusPacketOverheadBytes) {
+        inputPacketOverheadBytesRef.current.focus();
+      } else if (inputCellOverheadBytesRef.current && shouldFocusCellOverheadBytes) {
+        inputCellOverheadBytesRef.current.focus();
+      } else if (inputCpuRef.current && shouldFocusCpu) {
+        inputCpuRef.current.focus();
+      } else if (inputMemRef.current && shouldFocusMem) {
+        inputMemRef.current.focus();
+      } else if (inputFlagIdRef.current && shouldFocusFlagId) {
+        inputFlagIdRef.current.focus();
+      } else if (inputFlagScoreRef.current && shouldFocusFlagScore) {
+        inputFlagScoreRef.current.focus();
+      } else if (inputDefaultGatewayRef.current && shouldFocusDefaultGateway) {
+        inputDefaultGatewayRef.current.focus();
+      } else if (inputTrafficManagerPortRef.current && shouldFocusTrafficManagerPort) {
+        inputTrafficManagerPortRef.current.focus();
+      } else if (inputTrafficManagerLogDirRef.current && shouldFocusTrafficManagerLogDir) {
+        inputTrafficManagerLogDirRef.current.focus();
+      } else if (inputTrafficManagerLogFileRef.current && shouldFocusTrafficManagerLogFile) {
+        inputTrafficManagerLogFileRef.current.focus();
+      } else if (inputTrafficManagerMaxWorkersRef.current && shouldFocusTrafficManagerMaxWorkers) {
+        inputTrafficManagerMaxWorkersRef.current.focus();
+      } else if (inputPacketDelayDistributionRef.current && shouldFocusPacketDelayDistribution) {
+        inputPacketDelayDistributionRef.current.focus();
+      } else if (inputPacketLossTypeRef.current && shouldFocusPacketLossType) {
+        inputPacketLossTypeRef.current.focus();
+      }
+    }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
+      shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
+      shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
     shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
@@ -2279,661 +2279,660 @@ const CreateEmulation = (props) => {
               <h5 className="semiTitle">
                 Containers
                 <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
-                  </h5>
+              </h5>
+            </Button>
+          </Card.Header>
+          <Collapse in={containerOpen}>
+            <div id="container" className="cardBodyHidden">
+              <div>
+                Add a new container &nbsp;&nbsp;
+                <Button onClick={addContainer}
+                        variant="success" size="sm">
+                  <i className="fa fa-plus" aria-hidden="true"/>
                 </Button>
-              </Card.Header>
-              <Collapse in={containerOpen}>
-                <div id="container" className="cardBodyHidden">
-                  <div>
-                    Add a new container &nbsp;&nbsp;
-                    <Button onClick={addContainer}
-                            variant="success" size="sm">
-                      <i className="fa fa-plus" aria-hidden="true"/>
-                    </Button>
-                    <div style={{ margin: '20px' }}>
-                      {showPopup && (
-                        <div className="popup">
+                <div style={{ margin: '20px' }}>
+                  {showPopup && (
+                    <div className="popup">
+                      <div>
+                        <h5>Enter Container Name:</h5>
+                      </div>
+                      <div className="popup-content" style={{
+                        display: 'flex', justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+
+                        <select value={JSON.stringify(newContainer)} onChange={(e) => handleContainerSelectChange(e)}>
+                          <option value="">--Please choose an option--</option>
+                          {containerAndOs.map((option, index) => (
+                            <option key={index} value={JSON.stringify(option)}>
+                              {`${option.name} (${option.os})`}
+                            </option>
+                          ))}
+
+                        </select>
+
+                        <Button onClick={handleConfirmAdd}
+                                variant="primary" size="sm" style={{ marginLeft: '5px' }}>
+                          <i className="fa fa-check" aria-hidden="true" />
+                        </Button>
+                        <Button onClick={handleClosePopup}
+                                variant="danger" size="sm" style={{ marginLeft: '2px' }}>
+                          <i className="fa fa-times" aria-hidden="true" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+
+                {containers.map((container, index) => (
+                  <Accordion defaultActiveKey={index}>
+                    <card className="subCard">
+                      <Card.Header>
+                        <Button
+                          onClick={() => toggleContainerAccordion(index)}
+                          aria-controls="container"
+                          aria-expanded={container.containerAccordionOpen}
+                          variant="link"
+                        >
+                          <h5 className="semiTitle">
+                            {containers[index].name}
+                            <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
+                          </h5>
+                        </Button>
+                      </Card.Header>
+                      <Collapse in={container.containerAccordionOpen}>
+                        <div id="eachContainer" className="cardBodyHidden">
                           <div>
-                            <h5>Enter Container Name:</h5>
-                          </div>
-                          <div className="popup-content" style={{
-                            display: 'flex', justifyContent: 'center',
-                            alignItems: 'center'
-                          }}>
-
-                            <select value={JSON.stringify(newContainer)} onChange={(e) => handleContainerSelectChange(e)}>
-                              <option value="">--Please choose an option--</option>
-                              {containerAndOs.map((option, index) => (
-                                <option key={index} value={JSON.stringify(option)}>
-                                  {`${option.name} (${option.os})`}
-                                </option>
-                              ))}
-
-                            </select>
-
-                            <Button onClick={handleConfirmAdd}
-                                    variant="primary" size="sm" style={{ marginLeft: '5px' }}>
-                              <i className="fa fa-check" aria-hidden="true" />
+                            Delete the container {containers[index].name} &nbsp;&nbsp;
+                            <Button onClick={() => deleteContainer(index)}
+                                    variant="danger" size="sm">
+                              <i className="fa fa-trash startStopIcon" aria-hidden="true" />
                             </Button>
-                            <Button onClick={handleClosePopup}
-                                    variant="danger" size="sm" style={{ marginLeft: '2px' }}>
-                              <i className="fa fa-times" aria-hidden="true" />
-                            </Button>
+                            <div className="table-responsive">
+                              <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                  <th>Attribute</th>
+                                  <th> Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                  <td>Name</td>
+                                  <td>
+                                    {containers[index].name}
+                                    {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>OS</td>
+                                  <td>
+                                    {containers[index].os}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Number of allocated CPU cores</td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={containers[index].cpu}
+                                      onChange={(event) => handleContainerCpuChange(event, index)}
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Available memory in GB</td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={containers[index].mem}
+                                      onChange={(event) => handleContainerMemoryChange(event, index)}
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Flag ID</td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={containers[index].flagId}
+                                      onChange={(event) => handleContainerFlagIdChange(event, index)}
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Flag score</td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={containers[index].flagScore}
+                                      onChange={(event) => handleContainerFlagScoreChange(event, index)}
+                                    />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Flag requires root permission</td>
+                                  <td>
+                                    <select value={containers[index].flagPermission}
+                                            onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
+                                      <option value="true">True</option>
+                                      <option value="false">False</option>
+
+                                    </select>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>Reachable by agent</td>
+                                  <td>
+                                    <select value={containers[index].reachableByAgent}
+                                            onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
+                                      <option value="true">True</option>
+                                      <option value="false">False</option>
+
+                                    </select>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </Table>
+                            </div>
+                            <div>
+                              Add a network interface to container {containers[index].name} &nbsp;&nbsp;
+                              <Button type="button" onClick={() => handleAddContainerInterface(index)}
+                                      variant="success" size="sm">
+                                <i className="fa fa-plus" aria-hidden="true" />
+                              </Button>
+                            </div>
+                            <div className="table-responsive">
+                              <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                  <th>Interface Attribute</th>
+                                  <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
+                                  <React.Fragment key={'form-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
+                                    <tr key={'interface-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
+                                      <td> Name</td>
+                                      <td>
+                                        <input
+                                          ref={inputNameRef}
+                                          type="text"
+                                          value={containerInterfaces.name}
+                                          onChange={(event) => handleContainerInterfaceNameChange(event, index, interfaceIndex)}
+                                        />
+                                        <Button type="button" onClick={() =>
+                                          handleDeleteContainerInterface(index, interfaceIndex)}
+                                                variant="danger" size="sm" style={{ marginLeft: '5px' }}>
+                                          <i className="fa fa-trash startStopIcon" aria-hidden="true" />
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                    <tr key={'ip-' + containerInterfaces.ip + '-' + interfaceIndex  + '-' + index}>
+                                      <td> IP</td>
+                                      <td>
+                                        <input
+                                          ref={inputIPRef}
+                                          type="text"
+                                          value={containerInterfaces.ip}
+                                          onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr key={'subnet-' + containerInterfaces.subnetMask + '-' + interfaceIndex  + '-' + index}>
+                                      <td> Subnet mask</td>
+                                      <td>
+                                        <input
+                                          ref={inputSubnetMaskRef}
+                                          type="text"
+                                          value={containerInterfaces.subnetMask}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceSubnetMaskChange(event, index, interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'eth-' + containerInterfaces.physicalInterface + '-' +
+                                        interfaceIndex  + '-' + index}>
+                                      <td>Physical interface</td>
+                                      <td>
+                                        <select
+                                          value={containers[index].interfaces[interfaceIndex].physicalInterface}
+                                          onChange={(e) => handleContainerNetworkPhysicalInterface(e, index, interfaceIndex)}>
+                                          <option value="eth0">eth0</option>
+                                          <option value="eth1">eth1</option>
+                                          <option value="eth2">eth2</option>
+                                          <option value="eth3">eth3</option>
+                                          <option value="eth4">eth4</option>
+                                          <option value="eth5">eth5</option>
+                                          <option value="eth6">eth6</option>
+                                          <option value="eth7">eth7</option>
+                                          <option value="eth8">eth8</option>
+                                          <option value="eth9">eth9</option>
+                                          <option value="eth10">eth10</option>
+
+                                        </select>
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'packet-limit-'+containerInterfaces.limitPacketsQueue + '-' +
+                                        interfaceIndex  + '-' + index}>
+                                      <td> Limit packets queue</td>
+                                      <td>
+                                        <input
+                                          ref={inputLimitPacketsQueueRef}
+                                          type="text"
+                                          value={containerInterfaces.limitPacketsQueue}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceLimitPacketsQueueChange(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'packet-delay-' + containerInterfaces.packetDelayMs + '-' + interfaceIndex  + '-' + index}>
+                                      <td> Packet delay (ms)</td>
+                                      <td>
+                                        <input
+                                          ref={inputPacketDelayMsRef}
+                                          type="text"
+                                          value={containerInterfaces.packetDelayMs}
+                                          onChange={(event) =>
+                                            handleContainerInterfacePacketDelayMs(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'packet-jitter-' + containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex  + '-' + index}>
+                                      <td> Packet delay jitter (ms)</td>
+                                      <td>
+                                        <input
+                                          ref={inputPacketDelayJitterMsRef}
+                                          type="text"
+                                          value={containerInterfaces.packetDelayJitterMs}
+                                          onChange={(event) =>
+                                            handleContainerInterfacePacketDelayJitterMs(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'packet-correlation-' + containerInterfaces.packetDelayCorrelationPercentage + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Packet delay correlation percentage</td>
+                                      <td>
+                                        <input
+                                          ref={inputPacketDelayCorrelationPercentageRef}
+                                          type="text"
+                                          value={containerInterfaces.packetDelayCorrelationPercentage}
+                                          onChange={(event) =>
+                                            handleContainerInterfacePacketDelayCorrelationPercentage(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td> Packet delay distribution</td>
+                                      <td>
+                                        <select value={containerInterfaces.packetDelayDistribution}
+                                                onChange={(e) => handleContainerInterfacePacketDelayDistribution(e, index,
+                                                  interfaceIndex)} ref={inputPacketDelayDistributionRef}>
+                                          <option value="0">Uniform</option>
+                                          <option value="1">Normal</option>
+                                          <option value="2">Pareto</option>
+                                          <option value="3">Pareto normal</option>
+                                        </select>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td> Packet loss type</td>
+                                      <td>
+                                        <select value={containerInterfaces.packetLossType}
+                                                onChange={(e) => handleContainerInterfacePacketLossType(e, index,
+                                                  interfaceIndex)} ref={inputPacketLossTypeRef}>
+                                          <option value="0">Random</option>
+                                          <option value="1">State</option>
+                                          <option value="2">Gemodel</option>
+                                        </select>
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'loss-gemodelp-' + containerInterfaces.lossGemodelp + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Loss Gemodel P</td>
+                                      <td>
+                                        <input
+                                          ref={inputLossGemodelpRef}
+                                          type="text"
+                                          value={containerInterfaces.lossGemodelp}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceLossGemodelp(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'loss-gemodelr-' +containerInterfaces.lossGemodelr + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Loss Gemodel R</td>
+                                      <td>
+                                        <input
+                                          ref={inputLossGemodelrRef}
+                                          type="text"
+                                          value={containerInterfaces.lossGemodelr}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceLossGemodelr(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'loss-gemodelk-' + containerInterfaces.lossGemodelk + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Loss Gemodel K</td>
+                                      <td>
+                                        <input
+                                          ref={inputLossGemodelkRef}
+                                          type="text"
+                                          value={containerInterfaces.lossGemodelk}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceLossGemodelk(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'loss-gemodelh-' + containerInterfaces.lossGemodelh + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Loss Gemodel H</td>
+                                      <td>
+                                        <input
+                                          ref={inputLossGemodelhRef}
+                                          type="text"
+                                          value={containerInterfaces.lossGemodelh}
+                                          onChange={(event) =>
+                                            handleContainerInterfaceLossGemodelh(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      key={'packet-corruption-' + containerInterfaces.packetCorruptPercentage + '-'
+                                        + interfaceIndex + '-' + index}>
+                                      <td> Packet corruption percentage</td>
+                                      <td>
+                                        <input
+                                          ref={inputPacketCorruptPercentageRef}
+                                          type="text"
+                                          value={containerInterfaces.packetCorruptPercentage}
+                                          onChange={(event) =>
+                                            handleContainerInterfacePacketCorruptPercentage(event, index,
+                                              interfaceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetCorruptCorrelationPercentage + '-'*/}
+                                    {/*    + interfaceIndex + '-' + index}>*/}
+                                    {/*  <td> Packet corruption correlation percentage</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketCorruptCorrelationPercentageRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetCorruptCorrelationPercentage}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,*/}
+                                    {/*          interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetDuplicatePercentage + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet duplicate percentage</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketDuplicatePercentageRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetDuplicatePercentage}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketDuplicatePercentage(event, index,*/}
+                                    {/*          interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet duplicate correlation percentage</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketDuplicateCorrelationPercentageRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetDuplicateCorrelationPercentage}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketDuplicateCorrelationPercentage(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetReorderPercentage + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet reorder percentage</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketReorderPercentageRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetReorderPercentage}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketReorderPercentage(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetReorderCorrelationPercentage + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet reorder correlation percentage</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketReorderCorrelationPercentageRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetReorderCorrelationPercentage}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketReorderCorrelationPercentage(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetReorderGap + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet reorder gap</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketReorderGapRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetReorderGap}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketReorderGap(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.rateLimitMbitRef + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Rate limit M bit</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputRateLimitMbitRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.rateLimitMbit}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceRateLimitMbit(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.packetOverheadBytes + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Packet overhead bytes</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputPacketOverheadBytesRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.packetOverheadBytes}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfacePacketOverheadBytes(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.cellOverheadBytes + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Cell overhead bytes</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputCellOverheadBytesRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.cellOverheadBytes}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceCellOverheadBytes(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.defaultGateway + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Default gateway</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputDefaultGatewayRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.defaultGateway}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceDefaultGateway(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr>*/}
+                                    {/*  <td> Firewall rule: default input</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <select value={containerInterfaces.defaultInput}*/}
+                                    {/*            onChange={(e) => handleContainerInterfaceDefaultInput(e, index,*/}
+                                    {/*              interfaceIndex)}>*/}
+                                    {/*      <option value="accept">Accept</option>*/}
+                                    {/*      <option value="drop">Drop</option>*/}
+                                    {/*    </select>*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr>*/}
+                                    {/*  <td> Firewall rule: default output</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <select value={containerInterfaces.defaultOutput}*/}
+                                    {/*            onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,*/}
+                                    {/*              interfaceIndex)}>*/}
+                                    {/*      <option value="accept">Accept</option>*/}
+                                    {/*      <option value="drop">Drop</option>*/}
+                                    {/*    </select>*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr>*/}
+                                    {/*  <td> Firewall rule: default forward</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <select value={containerInterfaces.defaultForward}*/}
+                                    {/*            onChange={(e) => handleContainerInterfaceDefaultForward(e, index,*/}
+                                    {/*              interfaceIndex)}>*/}
+                                    {/*      <option value="accept">Accept</option>*/}
+                                    {/*      <option value="drop">Drop</option>*/}
+                                    {/*    </select>*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+
+
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.trafficManagerPort + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Traffic manager port</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputTrafficManagerPortRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.trafficManagerPort}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceTrafficManagerPort(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.trafficManagerLogFile + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Traffic manager log file</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputTrafficManagerLogFileRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.trafficManagerLogFile}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceTrafficManagerLogFile(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr*/}
+                                    {/*  key={containerInterfaces.trafficManagerLogDir + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Traffic manager log directory</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputTrafficManagerLogDirRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.trafficManagerLogDir}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceTrafficManagerLogDir(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                    {/*<tr className="custom-td"*/}
+                                    {/*  key={containerInterfaces.trafficManagerMaxWorkers + '-'*/}
+                                    {/*    + interfaceIndex}>*/}
+                                    {/*  <td> Traffic manager maximum workers</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <input*/}
+                                    {/*      ref={inputTrafficManagerMaxWorkersRef}*/}
+                                    {/*      type="text"*/}
+                                    {/*      value={containerInterfaces.trafficManagerMaxWorkers}*/}
+                                    {/*      onChange={(event) =>*/}
+                                    {/*        handleContainerInterfaceTrafficManagerMaxWorkers(event,*/}
+                                    {/*          index, interfaceIndex)}*/}
+                                    {/*    />*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                  </React.Fragment>
+                                ))}
+                                </tbody>
+                              </Table>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-
-
-                    {containers.map((container, index) => (
-                      <Accordion defaultActiveKey={index}>
-                        <card className="subCard">
-                          <Card.Header>
-                            <Button
-                              onClick={() => toggleContainerAccordion(index)}
-                              aria-controls="container"
-                              aria-expanded={container.containerAccordionOpen}
-                              variant="link"
-                            >
-                            <h5 className="semiTitle">
-                                {containers[index].name}
-                                <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
-                              </h5>
-                            </Button>
-                          </Card.Header>
-                          <Collapse in={container.containerAccordionOpen}>
-                            <div id="eachContainer" className="cardBodyHidden">
-                              <div>
-                                Delete the container {containers[index].name} &nbsp;&nbsp;
-                                <Button onClick={() => deleteContainer(index)}
-                                        variant="danger" size="sm">
-                                  <i className="fa fa-trash startStopIcon" aria-hidden="true" />
-                                </Button>
-                                <div className="table-responsive">
-                                  <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                      <th>Attribute</th>
-                                      <th> Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                      <td>Name</td>
-                                      <td>
-                                        {containers[index].name}
-                                        {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>OS</td>
-                                      <td>
-                                        {containers[index].os}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Number of allocated CPU cores</td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={containers[index].cpu}
-                                          onChange={(event) => handleContainerCpuChange(event, index)}
-                                        />
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Available memory in GB</td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={containers[index].mem}
-                                          onChange={(event) => handleContainerMemoryChange(event, index)}
-                                        />
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Flag ID</td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={containers[index].flagId}
-                                          onChange={(event) => handleContainerFlagIdChange(event, index)}
-                                        />
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Flag score</td>
-                                      <td>
-                                        <input
-                                          type="text"
-                                          value={containers[index].flagScore}
-                                          onChange={(event) => handleContainerFlagScoreChange(event, index)}
-                                        />
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Flag requires root permission</td>
-                                      <td>
-                                        <select value={containers[index].flagPermission}
-                                                onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
-                                          <option value="true">True</option>
-                                          <option value="false">False</option>
-
-                                        </select>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Reachable by agent</td>
-                                      <td>
-                                        <select value={containers[index].reachableByAgent}
-                                                onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
-                                          <option value="true">True</option>
-                                          <option value="false">False</option>
-
-                                        </select>
-                                      </td>
-                                    </tr>
-                                    </tbody>
-                                  </Table>
-                                </div>
-                                <div>
-                                  Add a network interface to container {containers[index].name} &nbsp;&nbsp;
-                                  <Button type="button" onClick={() => handleAddContainerInterface(index)}
-                                          variant="success" size="sm">
-                                    <i className="fa fa-plus" aria-hidden="true" />
-                                  </Button>
-                                </div>
-                                <div className="table-responsive">
-                                  <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                      <th>Interface Attribute</th>
-                                      <th>Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
-                                      <React.Fragment
-                                        key={containerInterfaces.name + '-' + interfaceIndex + '-' + index + '- form'}>
-                                        <tr key={containerInterfaces.name + '-' + interfaceIndex  + '-' + index}>
-                                          <td> Name</td>
-                                          <td>
-                                            <input
-                                              ref={inputNameRef}
-                                              type="text"
-                                              value={containerInterfaces.name}
-                                              onChange={(event) => handleContainerInterfaceNameChange(event, index, interfaceIndex)}
-                                            />
-                                            <Button type="button" onClick={() =>
-                                              handleDeleteContainerInterface(index, interfaceIndex)}
-                                                    variant="danger" size="sm" style={{ marginLeft: '5px' }}>
-                                              <i className="fa fa-trash startStopIcon" aria-hidden="true" />
-                                            </Button>
-                                          </td>
-                                        </tr>
-                                        <tr key={containerInterfaces.ip + '-' + interfaceIndex  + '-' + index}>
-                                          <td> IP</td>
-                                          <td>
-                                            <input
-                                              ref={inputIPRef}
-                                              type="text"
-                                              value={containerInterfaces.ip}
-                                              onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr key={containerInterfaces.subnetMask + '-' + interfaceIndex  + '-' + index}>
-                                          <td> Subnet mask</td>
-                                          <td>
-                                            <input
-                                              ref={inputSubnetMaskRef}
-                                              type="text"
-                                              value={containerInterfaces.subnetMask}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceSubnetMaskChange(event, index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.physicalInterface + '-' +
-                                            interfaceIndex  + '-' + index}>
-                                          <td>Physical interface</td>
-                                          <td>
-                                            <select
-                                              value={containers[index].interfaces[interfaceIndex].physicalInterface}
-                                              onChange={(e) => handleContainerNetworkPhysicalInterface(e, index, interfaceIndex)}>
-                                              <option value="eth0">eth0</option>
-                                              <option value="eth1">eth1</option>
-                                              <option value="eth2">eth2</option>
-                                              <option value="eth3">eth3</option>
-                                              <option value="eth4">eth4</option>
-                                              <option value="eth5">eth5</option>
-                                              <option value="eth6">eth6</option>
-                                              <option value="eth7">eth7</option>
-                                              <option value="eth8">eth8</option>
-                                              <option value="eth9">eth9</option>
-                                              <option value="eth10">eth10</option>
-
-                                            </select>
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.limitPacketsQueue + '-' +
-                                            interfaceIndex  + '-' + index}>
-                                          <td> Limit packets queue</td>
-                                          <td>
-                                            <input
-                                              ref={inputLimitPacketsQueueRef}
-                                              type="text"
-                                              value={containerInterfaces.limitPacketsQueue}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceLimitPacketsQueueChange(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetDelayMs + '-' + interfaceIndex  + '-' + index}>
-                                          <td> Packet delay (ms)</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketDelayMsRef}
-                                              type="text"
-                                              value={containerInterfaces.packetDelayMs}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketDelayMs(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex  + '-' + index}>
-                                          <td> Packet delay jitter (ms)</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketDelayJitterMsRef}
-                                              type="text"
-                                              value={containerInterfaces.packetDelayJitterMs}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketDelayJitterMs(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetDelayCorrelationPercentage + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Packet delay correlation percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketDelayCorrelationPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetDelayCorrelationPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketDelayCorrelationPercentage(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td> Packet delay distribution</td>
-                                          <td>
-                                            <select value={containerInterfaces.packetDelayDistribution}
-                                                    onChange={(e) => handleContainerInterfacePacketDelayDistribution(e, index,
-                                                      interfaceIndex)} ref={inputPacketDelayDistributionRef}>
-                                              <option value="0">Uniform</option>
-                                              <option value="1">Normal</option>
-                                              <option value="2">Pareto</option>
-                                              <option value="3">Pareto normal</option>
-                                            </select>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td> Packet loss type</td>
-                                          <td>
-                                            <select value={containerInterfaces.packetLossType}
-                                                    onChange={(e) => handleContainerInterfacePacketLossType(e, index,
-                                                      interfaceIndex)} ref={inputPacketLossTypeRef}>
-                                              <option value="0">Random</option>
-                                              <option value="1">State</option>
-                                              <option value="2">Gemodel</option>
-                                            </select>
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.lossGemodelp + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Loss Gemodel P</td>
-                                          <td>
-                                            <input
-                                              ref={inputLossGemodelpRef}
-                                              type="text"
-                                              value={containerInterfaces.lossGemodelp}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceLossGemodelp(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.lossGemodelr + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Loss Gemodel R</td>
-                                          <td>
-                                            <input
-                                              ref={inputLossGemodelrRef}
-                                              type="text"
-                                              value={containerInterfaces.lossGemodelr}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceLossGemodelr(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.lossGemodelk + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Loss Gemodel K</td>
-                                          <td>
-                                            <input
-                                              ref={inputLossGemodelkRef}
-                                              type="text"
-                                              value={containerInterfaces.lossGemodelk}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceLossGemodelk(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.lossGemodelh + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Loss Gemodel H</td>
-                                          <td>
-                                            <input
-                                              ref={inputLossGemodelhRef}
-                                              type="text"
-                                              value={containerInterfaces.lossGemodelh}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceLossGemodelh(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetCorruptPercentage + '-'
-                                            + interfaceIndex + '-' + index}>
-                                          <td> Packet corruption percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketCorruptPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetCorruptPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketCorruptPercentage(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetCorruptCorrelationPercentage + '-'*/}
-                                        {/*    + interfaceIndex + '-' + index}>*/}
-                                        {/*  <td> Packet corruption correlation percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketCorruptCorrelationPercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetCorruptCorrelationPercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,*/}
-                                        {/*          interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetDuplicatePercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet duplicate percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketDuplicatePercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetDuplicatePercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketDuplicatePercentage(event, index,*/}
-                                        {/*          interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet duplicate correlation percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketDuplicateCorrelationPercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetDuplicateCorrelationPercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketDuplicateCorrelationPercentage(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetReorderPercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet reorder percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketReorderPercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetReorderPercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketReorderPercentage(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetReorderCorrelationPercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet reorder correlation percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketReorderCorrelationPercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetReorderCorrelationPercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketReorderCorrelationPercentage(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetReorderGap + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet reorder gap</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketReorderGapRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetReorderGap}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketReorderGap(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.rateLimitMbitRef + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Rate limit M bit</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputRateLimitMbitRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.rateLimitMbit}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceRateLimitMbit(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetOverheadBytes + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet overhead bytes</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketOverheadBytesRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetOverheadBytes}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketOverheadBytes(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.cellOverheadBytes + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Cell overhead bytes</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputCellOverheadBytesRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.cellOverheadBytes}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceCellOverheadBytes(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.defaultGateway + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Default gateway</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputDefaultGatewayRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.defaultGateway}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceDefaultGateway(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr>*/}
-                                        {/*  <td> Firewall rule: default input</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <select value={containerInterfaces.defaultInput}*/}
-                                        {/*            onChange={(e) => handleContainerInterfaceDefaultInput(e, index,*/}
-                                        {/*              interfaceIndex)}>*/}
-                                        {/*      <option value="accept">Accept</option>*/}
-                                        {/*      <option value="drop">Drop</option>*/}
-                                        {/*    </select>*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr>*/}
-                                        {/*  <td> Firewall rule: default output</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <select value={containerInterfaces.defaultOutput}*/}
-                                        {/*            onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,*/}
-                                        {/*              interfaceIndex)}>*/}
-                                        {/*      <option value="accept">Accept</option>*/}
-                                        {/*      <option value="drop">Drop</option>*/}
-                                        {/*    </select>*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr>*/}
-                                        {/*  <td> Firewall rule: default forward</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <select value={containerInterfaces.defaultForward}*/}
-                                        {/*            onChange={(e) => handleContainerInterfaceDefaultForward(e, index,*/}
-                                        {/*              interfaceIndex)}>*/}
-                                        {/*      <option value="accept">Accept</option>*/}
-                                        {/*      <option value="drop">Drop</option>*/}
-                                        {/*    </select>*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-
-
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.trafficManagerPort + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Traffic manager port</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputTrafficManagerPortRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.trafficManagerPort}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceTrafficManagerPort(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.trafficManagerLogFile + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Traffic manager log file</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputTrafficManagerLogFileRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.trafficManagerLogFile}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceTrafficManagerLogFile(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.trafficManagerLogDir + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Traffic manager log directory</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputTrafficManagerLogDirRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.trafficManagerLogDir}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceTrafficManagerLogDir(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                        {/*<tr className="custom-td"*/}
-                                        {/*  key={containerInterfaces.trafficManagerMaxWorkers + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Traffic manager maximum workers</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputTrafficManagerMaxWorkersRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.trafficManagerMaxWorkers}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfaceTrafficManagerMaxWorkers(event,*/}
-                                        {/*          index, interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
-                                      </React.Fragment>
-                                    ))}
-                                    </tbody>
-                                  </Table>
-                                </div>
-                              </div>
-                            </div>
-                          </Collapse>
-                        </card>
-                      </Accordion>
-                    ))}
-                  </div>
-                </div>
-              </Collapse>
+                      </Collapse>
+                    </card>
+                  </Accordion>
+                ))}
+              </div>
+            </div>
+          </Collapse>
         </Card>
       </Accordion>
 
