@@ -437,7 +437,7 @@ const CreateEmulation = (props) => {
     console.log("The value access is: " + containers[containerIndex].users[userIndex].root)
   };
 
-  const [newService, setNewService] = useState({name:'', protocol:'',port:'', serviceIp:''});
+  const [newService, setNewService] = useState({name:'', protocol:'tcp',port:'', serviceIp:''});
 
   const inputServiceProtocolRef = useRef(null)
   const inputServicePortRef = useRef(null)
@@ -2716,8 +2716,8 @@ const CreateEmulation = (props) => {
   const handleAddContainerService = (containerIndex) => {
     // Initialize the interface
     const serviceToAdd = {
-      name:'',
-      protocol: '',
+      name:'Service name',
+      protocol: 'tcp',
       port: '',
       serviceIp: ''
     };
@@ -3909,12 +3909,12 @@ const CreateEmulation = (props) => {
                                     <tr key={'service-protocol' + containerService.protocol + '-' + serviceIndex + '-' + index}>
                                       <td> Service protocol</td>
                                       <td>
-                                        <input
-                                          ref={inputServiceProtocolRef}
-                                          type="text"
-                                          value={containerService.protocol}
-                                          onChange={(event) => handleContainerServiceProtocolChange(event, index, serviceIndex)}
-                                        />
+                                        <select value={containerService.protocol}
+                                                onChange={(e) => handleContainerServiceProtocolChange(e, index,
+                                                  serviceIndex)}>
+                                          <option value="tcp">tcp</option>
+                                          <option value="udp">udp</option>
+                                        </select>
                                       </td>
                                     </tr>
                                     <tr key={'service-port' + containerService.port + '-' + serviceIndex + '-' + index}>
@@ -3928,17 +3928,19 @@ const CreateEmulation = (props) => {
                                         />
                                       </td>
                                     </tr>
-                                    {/*<tr className="custom-td">*/}
-                                    {/*  <td> Root Access</td>*/}
-                                    {/*  <td>*/}
-                                    {/*    <select value={containerUsers.root}*/}
-                                    {/*            onChange={(e) => handleContainerUserAccessChange(e, index,*/}
-                                    {/*              userIndex)}>*/}
-                                    {/*      <option value="true">true</option>*/}
-                                    {/*      <option value="false">false</option>*/}
-                                    {/*    </select>*/}
-                                    {/*  </td>*/}
-                                    {/*</tr>*/}
+                                    <tr className="custom-td">
+                                      <td> Service IP </td>
+                                      <td>
+                                        <select value={containerService.serviceIp}
+                                                onChange={(e) => handleContainerServiceIpChange(e, index,
+                                                  serviceIndex)}>
+                                          <option value="">Select IP</option>
+                                          {containers[index].interfaces.map((interfaceToUse, indexToUse) => (
+                                            <option key={ "service-ip" + indexToUse} value={interfaceToUse.ip}>{interfaceToUse.ip}</option>
+                                          ))}
+                                        </select>
+                                      </td>
+                                    </tr>
                                   </React.Fragment>
                                 ))}
                                 </tbody>
