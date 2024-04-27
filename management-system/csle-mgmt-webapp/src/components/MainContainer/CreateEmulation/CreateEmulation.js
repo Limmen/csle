@@ -112,7 +112,7 @@ const CreateEmulation = (props) => {
     setContainers(prevContainers => [...prevContainers,
       { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
         subnetMask: '', subnetPrefix: '', cpu:'', mem:'', flagId:'', flagScore:'',
-        flagPermission: true, interfaces: [], reachableByAgent: true, users:[]}]);
+        flagPermission: true, interfaces: [], reachableByAgent: true, users:[], services:[]}]);
     handleClosePopup();
   };
 
@@ -321,6 +321,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
     console.log("The value username is: " + containers[containerIndex].users[userIndex].userName)
   };
 
@@ -373,6 +376,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
     console.log("The value pw is: " + containers[containerIndex].users[userIndex].pw)
   };
 
@@ -425,7 +431,242 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
     console.log("The value access is: " + containers[containerIndex].users[userIndex].root)
+  };
+
+  const [newService, setNewService] = useState({name:'', protocol:'',port:'', serviceIp:''});
+
+  const inputServiceProtocolRef = useRef(null)
+  const inputServicePortRef = useRef(null)
+  const inputServiceIpRef = useRef(null)
+  const inputServiceNameRef = useRef(null)
+
+  const [shouldFocusServiceProtocol, setShouldFocusServiceProtocol] = useState(false);
+  const [shouldFocusServicePort, setShouldFocusServicePort] = useState(false);
+  const [shouldFocusServiceIp, setShouldFocusServiceIp] = useState(false);
+  const [shouldFocusServiceName, setShouldFocusServiceName] = useState(false);
+
+  const handleContainerServiceProtocolChange = (event, containerIndex, serviceIndex) => {
+    const newProtocol = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedServices = [...containerToUpdate.services];
+      updatedServices[serviceIndex] = {
+        ...updatedServices[serviceIndex],
+        protocol: newProtocol
+      };
+      containerToUpdate.services = updatedServices;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusServiceProtocol(true)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusName(false); // Set flag to focus on name input
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
+    setShouldFocusServiceName(false)
+  };
+
+  const handleContainerServicePortChange = (event, containerIndex, serviceIndex) => {
+    const newPort = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedServices = [...containerToUpdate.services];
+      updatedServices[serviceIndex] = {
+        ...updatedServices[serviceIndex],
+        port: newPort
+      };
+      containerToUpdate.services = updatedServices;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusServicePort(true)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusName(false); // Set flag to focus on name input
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
+    setShouldFocusServiceName(false)
+  };
+
+  const handleContainerServiceIpChange = (event, containerIndex, serviceIndex) => {
+    const newServiceIp = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedServices = [...containerToUpdate.services];
+      updatedServices[serviceIndex] = {
+        ...updatedServices[serviceIndex],
+        serviceIp: newServiceIp
+      };
+      containerToUpdate.services = updatedServices;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusServiceIp(true)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusName(false); // Set flag to focus on name input
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
+    setShouldFocusServiceName(false)
+  };
+
+  const handleContainerServiceNameChange = (event, containerIndex, serviceIndex) => {
+    const newServiceName = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedServices = [...containerToUpdate.services];
+      updatedServices[serviceIndex] = {
+        ...updatedServices[serviceIndex],
+        name: newServiceName
+      };
+      containerToUpdate.services = updatedServices;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusServiceName(true)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusName(false); // Set flag to focus on name input
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
 
@@ -562,9 +803,11 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
-
-
 
 
   const handleContainerMemoryChange = (event, index) => {
@@ -617,9 +860,11 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
-
-
 
 
   const handleContainerFlagIdChange = (event, index) => {
@@ -671,9 +916,11 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
-
-
 
 
   const handleContainerFlagScoreChange = (event, index) => {
@@ -725,6 +972,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
@@ -776,6 +1027,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -826,6 +1081,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -878,6 +1137,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -931,6 +1194,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value limit packet Q is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -984,6 +1251,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value Packet Delay MS is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -1037,6 +1308,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -1091,6 +1366,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -1144,6 +1423,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -1197,6 +1480,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -1250,6 +1537,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -1302,6 +1593,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -1355,6 +1650,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1407,6 +1706,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -1459,6 +1762,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1511,6 +1818,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1563,6 +1874,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1615,6 +1930,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1667,6 +1986,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1719,6 +2042,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1771,6 +2098,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1823,6 +2154,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceDefaultGateway = (event, containerIndex, interfaceIndex) => {
@@ -1875,6 +2210,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceTrafficManagerPort = (event, containerIndex, interfaceIndex) => {
@@ -1927,6 +2266,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogFile = (event, containerIndex, interfaceIndex) => {
@@ -1979,6 +2322,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogDir = (event, containerIndex, interfaceIndex) => {
@@ -2031,6 +2378,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   const handleContainerInterfaceTrafficManagerMaxWorkers = (event, containerIndex, interfaceIndex) => {
@@ -2083,6 +2434,10 @@ const CreateEmulation = (props) => {
     setShouldFocusUserName(false);
     setShouldFocusPw(false);
     setShouldFocusRoot(false)
+    setShouldFocusServiceIp(false)
+    setShouldFocusServicePort(false)
+    setShouldFocusServiceProtocol(false)
+    setShouldFocusServiceName(false)
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -2158,18 +2513,27 @@ const CreateEmulation = (props) => {
         inputPwRef.current.focus()
       }  else if (inputRootRef.current && shouldFocusRoot) {
         inputRootRef.current.focus()
+      } else if (inputServiceIpRef.current && shouldFocusServiceIp){
+        inputServiceIpRef.current.focus()
+      } else if (inputServicePortRef.current && shouldFocusServicePort){
+        inputServicePortRef.current.focus()
+      } else if (inputServiceProtocolRef.current && shouldFocusServiceProtocol){
+        inputServiceProtocolRef.current.focus()
+      } else if (inputServiceNameRef.current && shouldFocusServiceName){
+        inputServiceNameRef.current.focus()
       }
     }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
       shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
       shouldFocusLossGemodelp, shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
-    shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
-    shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
-    shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
-    shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
-    shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway,
-    shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
-    shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
-    shouldFocusUserName, shouldFocusPw, shouldFocusRoot]);
+      shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
+      shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
+      shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
+      shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
+      shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway,
+      shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
+      shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
+      shouldFocusUserName, shouldFocusPw, shouldFocusRoot, shouldFocusServiceIp, shouldFocusServicePort,
+      shouldFocusServiceProtocol, shouldFocusServiceName]);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -2349,6 +2713,73 @@ const CreateEmulation = (props) => {
     console.log("Length of users is:" + containers[containerIndex].users.length)
   };
 
+  const handleAddContainerService = (containerIndex) => {
+    // Initialize the interface
+    const serviceToAdd = {
+      name:'',
+      protocol: '',
+      port: '',
+      serviceIp: ''
+    };
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = [...prevContainers];
+
+      // Ensure the containerIndex is valid
+      if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
+        // Get the container at the specified index
+        const container = updatedContainers[containerIndex];
+
+        // Check if the interface already exists in the container's interfaces array
+        const serviceExists = container.services.some(existingService =>
+            existingService.name === serviceToAdd.name
+          // You may need to adjust the condition based on your interface properties
+        );
+
+        // Add the interface only if it doesn't already exist
+        if (!serviceExists) {
+          container.services.push(serviceToAdd);
+        }
+      }
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
+    console.log("Length of users is:" + containers[containerIndex].users.length)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+  };
+
   const handleDeleteContainerUser = (containerIndex, userIndex) => {
     setContainers(prevContainers => {
       // Create a copy of the containers array
@@ -2368,8 +2799,92 @@ const CreateEmulation = (props) => {
       // Return the updated containers array
       return updatedContainers;
     });
+    setShouldFocusPacketLossType(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
   };
 
+  const handleDeleteContainerService = (containerIndex, serviceIndex) => {
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = prevContainers.map((container, index) => {
+        if (index === containerIndex) {
+          // Create a new array of interfaces excluding the one to be removed
+          const updatedService = container.services.filter(
+            (_, i) => i !== serviceIndex
+          );
+
+          // Return a new container object with updated interfaces
+          return { ...container, services: updatedService };
+        }
+        return container;
+      });
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
+    setShouldFocusPacketLossType(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+  };
 
 
   const handleAddContainerInterface = (containerIndex) => {
@@ -2435,6 +2950,38 @@ const CreateEmulation = (props) => {
       return updatedContainers;
     });
     console.log("Length of interface is:" + containers[containerIndex].interfaces.length)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
   };
 
   const handleDeleteContainerInterface = (containerIndex, interfaceIndex) => {
@@ -2763,7 +3310,6 @@ const CreateEmulation = (props) => {
                                 <i className="fa fa-plus" aria-hidden="true" />
                               </Button>
                             </div>
-
                             <div className="table-responsive-user">
                               <Table striped bordered hover>
                                 <thead>
@@ -2804,7 +3350,7 @@ const CreateEmulation = (props) => {
                                         />
                                       </td>
                                     </tr>
-                                    <tr  className="custom-td">
+                                    <tr className="custom-td">
                                       <td> Root Access</td>
                                       <td>
                                         <select value={containerUsers.root}
@@ -2825,7 +3371,7 @@ const CreateEmulation = (props) => {
                               Add a network interface to the container {containers[index].name} &nbsp;&nbsp;
                               <Button type="button" onClick={() => handleAddContainerInterface(index)}
                                       variant="success" size="sm">
-                              <i className="fa fa-plus" aria-hidden="true" />
+                                <i className="fa fa-plus" aria-hidden="true" />
                               </Button>
                             </div>
                             <div className="table-responsive">
@@ -3322,6 +3868,83 @@ const CreateEmulation = (props) => {
                                 </tbody>
                               </Table>
                             </div>
+
+                            <div>
+                              Add services to the container {containers[index].name} &nbsp;&nbsp;
+                              <Button type="button" onClick={() => handleAddContainerService(index)}
+                                      variant="success" size="sm">
+                                <i className="fa fa-plus" aria-hidden="true" />
+                              </Button>
+                            </div>
+
+                            <div className="table-responsive-service">
+                              <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                  <th>Service Attribute</th>
+                                  <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {containers[index].services.map((containerService, serviceIndex) => (
+                                  <React.Fragment
+                                    key={'form-service-' + containerService.protocol + '-' + serviceIndex + '-' + index}>
+                                    <tr
+                                      key={'service-name-' + containerService.name + '-' + serviceIndex + '-' + index}>
+                                      <td> Service name</td>
+                                      <td>
+                                        <input
+                                          ref={inputServiceNameRef}
+                                          type="text"
+                                          value={containerService.name}
+                                          onChange={(event) => handleContainerServiceNameChange(event, index, serviceIndex)}
+                                        />
+                                        <Button type="button" onClick={() =>
+                                          handleDeleteContainerService(index, serviceIndex)}
+                                                variant="danger" size="sm" style={{ marginLeft: '5px' }}>
+                                          <i className="fa fa-trash startStopIcon" aria-hidden="true" />
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                    <tr key={'service-protocol' + containerService.protocol + '-' + serviceIndex + '-' + index}>
+                                      <td> Service protocol</td>
+                                      <td>
+                                        <input
+                                          ref={inputServiceProtocolRef}
+                                          type="text"
+                                          value={containerService.protocol}
+                                          onChange={(event) => handleContainerServiceProtocolChange(event, index, serviceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr key={'service-port' + containerService.port + '-' + serviceIndex + '-' + index}>
+                                      <td> Service port</td>
+                                      <td>
+                                        <input
+                                          ref={inputServicePortRef}
+                                          type="text"
+                                          value={containerService.port}
+                                          onChange={(event) => handleContainerServicePortChange(event, index, serviceIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    {/*<tr className="custom-td">*/}
+                                    {/*  <td> Root Access</td>*/}
+                                    {/*  <td>*/}
+                                    {/*    <select value={containerUsers.root}*/}
+                                    {/*            onChange={(e) => handleContainerUserAccessChange(e, index,*/}
+                                    {/*              userIndex)}>*/}
+                                    {/*      <option value="true">true</option>*/}
+                                    {/*      <option value="false">false</option>*/}
+                                    {/*    </select>*/}
+                                    {/*  </td>*/}
+                                    {/*</tr>*/}
+                                  </React.Fragment>
+                                ))}
+                                </tbody>
+                              </Table>
+                            </div>
+
                           </div>
                         </div>
                       </Collapse>
