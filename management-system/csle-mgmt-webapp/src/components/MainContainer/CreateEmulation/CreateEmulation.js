@@ -112,7 +112,7 @@ const CreateEmulation = (props) => {
     setContainers(prevContainers => [...prevContainers,
       { name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
         subnetMask: '', subnetPrefix: '', cpu:'', mem:'', flagId:'', flagScore:'',
-        flagPermission: true, interfaces: [], reachableByAgent: true}]);
+        flagPermission: true, interfaces: [], reachableByAgent: true, users:[]}]);
     handleClosePopup();
   };
 
@@ -262,6 +262,173 @@ const CreateEmulation = (props) => {
   //   }
   // }
 
+  const [newUser, setNewUser] = useState({userName:'',pw:'', root:"false"});
+
+  const inputUserNameRef = useRef(null)
+  const inputPwRef = useRef(null)
+  const inputRootRef = useRef(null )
+
+  const [shouldFocusUserName, setShouldFocusUserName] = useState(false);
+  const [shouldFocusPw, setShouldFocusPw] = useState(false);
+  const [shouldFocusRoot, setShouldFocusRoot] = useState(false);
+
+  const handleContainerUserNameChange = (event, containerIndex, userIndex) => {
+    const userNameValue = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedUsers = [...containerToUpdate.users];
+      updatedUsers[userIndex] = {
+        ...updatedUsers[userIndex],
+        userName: userNameValue
+      };
+      containerToUpdate.users = updatedUsers;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusUserName(true); // Set flag to focus on IP input
+    setShouldFocusPw(false); // Clear flag for name input
+    setShouldFocusRoot(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    console.log("The value username is: " + containers[containerIndex].users[userIndex].userName)
+  };
+
+  const handleContainerUserPwChange = (event, containerIndex, userIndex) => {
+    const PwValue = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedUsers = [...containerToUpdate.users];
+      updatedUsers[userIndex] = {
+        ...updatedUsers[userIndex],
+        pw: PwValue
+      };
+      containerToUpdate.users = updatedUsers;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusPw(true); // Clear flag for name input
+    setShouldFocusRoot(false)
+    setShouldFocusUserName(false);
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    console.log("The value pw is: " + containers[containerIndex].users[userIndex].pw)
+  };
+
+  const handleContainerUserAccessChange = (event, containerIndex, userIndex) => {
+    const userAccessValue = event.target.value;
+    setContainers(prevContainers => {
+      const updatedContainers = [...prevContainers];
+      const containerToUpdate = { ...updatedContainers[containerIndex] };
+      const updatedUsers = [...containerToUpdate.users];
+      updatedUsers[userIndex] = {
+        ...updatedUsers[userIndex],
+        root: userAccessValue
+      };
+      containerToUpdate.users = updatedUsers;
+      updatedContainers[containerIndex] = containerToUpdate;
+      return updatedContainers;
+    });
+    setShouldFocusUserName(true);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    console.log("The value access is: " + containers[containerIndex].users[userIndex].root)
+  };
+
+
   const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
     physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5,
     packetDelayCorrelationPercentage:25, packetDelayDistribution:'0', packetLossType:'0',lossGemodelp: 0.02,
@@ -392,6 +559,9 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerMaxWorkers(false)
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
 
@@ -444,6 +614,9 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerMaxWorkers(false)
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
 
@@ -495,6 +668,9 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerMaxWorkers(false)
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
 
@@ -546,6 +722,9 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerMaxWorkers(false)
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
@@ -594,6 +773,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -641,6 +823,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -690,6 +875,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -740,6 +928,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value limit packet Q is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
@@ -790,6 +981,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value Packet Delay MS is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
@@ -840,6 +1034,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -891,6 +1088,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -941,6 +1141,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -991,6 +1194,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -1041,6 +1247,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
@@ -1090,6 +1299,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -1140,6 +1352,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1189,6 +1404,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -1238,6 +1456,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1287,6 +1508,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1336,6 +1560,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1385,6 +1612,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1434,6 +1664,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1483,6 +1716,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1532,6 +1768,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1581,6 +1820,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceDefaultGateway = (event, containerIndex, interfaceIndex) => {
@@ -1630,6 +1872,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceTrafficManagerPort = (event, containerIndex, interfaceIndex) => {
@@ -1679,6 +1924,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogFile = (event, containerIndex, interfaceIndex) => {
@@ -1728,6 +1976,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogDir = (event, containerIndex, interfaceIndex) => {
@@ -1777,6 +2028,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   const handleContainerInterfaceTrafficManagerMaxWorkers = (event, containerIndex, interfaceIndex) => {
@@ -1826,6 +2080,9 @@ const CreateEmulation = (props) => {
     setShouldFocusCpu(false);
     setShouldFocusPacketDelayDistribution(false)
     setShouldFocusPacketLossType(false)
+    setShouldFocusUserName(false);
+    setShouldFocusPw(false);
+    setShouldFocusRoot(false)
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -1895,17 +2152,24 @@ const CreateEmulation = (props) => {
         inputPacketDelayDistributionRef.current.focus();
       } else if (inputPacketLossTypeRef.current && shouldFocusPacketLossType) {
         inputPacketLossTypeRef.current.focus();
+      } else if (inputUserNameRef.current && shouldFocusUserName) {
+        inputUserNameRef.current.focus()
+      } else if (inputPwRef.current && shouldFocusPw) {
+        inputPwRef.current.focus()
+      }  else if (inputRootRef.current && shouldFocusRoot) {
+        inputRootRef.current.focus()
       }
     }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
       shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
-      shouldFocusLossGemodelp], shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
+      shouldFocusLossGemodelp, shouldFocusLossGemodelr, shouldFocusLossGemodelk, shouldFocusLossGemodelh,
     shouldFocusPacketCorruptPercentage, shouldFocusPacketCorruptCorrelationPercentage,
     shouldFocusPacketDuplicatePercentage, shouldFocusPacketDuplicateCorrelationPercentage,
     shouldFocusPacketReorderPercentage, shouldFocusPacketReorderCorrelationPercentage, shouldFocusPacketReorderGap,
     shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
     shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway,
     shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
-    shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType);
+    shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
+    shouldFocusUserName, shouldFocusPw, shouldFocusRoot]);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -2051,6 +2315,62 @@ const CreateEmulation = (props) => {
     });
   };
 
+  const handleAddContainerUser = (containerIndex) => {
+    // Initialize the interface
+    const userToAdd = {
+      userName: '',
+      pw: '',
+      root: "false"
+    };
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = [...prevContainers];
+
+      // Ensure the containerIndex is valid
+      if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
+        // Get the container at the specified index
+        const container = updatedContainers[containerIndex];
+
+        // Check if the interface already exists in the container's interfaces array
+        const userExists = container.users.some(existingUser =>
+            existingUser.userName === userToAdd.userName
+          // You may need to adjust the condition based on your interface properties
+        );
+
+        // Add the interface only if it doesn't already exist
+        if (!userExists) {
+          container.users.push(userToAdd);
+        }
+      }
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
+    console.log("Length of users is:" + containers[containerIndex].users.length)
+  };
+
+  const handleDeleteContainerUser = (containerIndex, userIndex) => {
+    setContainers(prevContainers => {
+      // Create a copy of the containers array
+      const updatedContainers = prevContainers.map((container, index) => {
+        if (index === containerIndex) {
+          // Create a new array of interfaces excluding the one to be removed
+          const updatedUsers = container.users.filter(
+            (_, i) => i !== userIndex
+          );
+
+          // Return a new container object with updated interfaces
+          return { ...container, users: updatedUsers };
+        }
+        return container;
+      });
+
+      // Return the updated containers array
+      return updatedContainers;
+    });
+  };
+
+
 
   const handleAddContainerInterface = (containerIndex) => {
     // Initialize the interface
@@ -2059,7 +2379,7 @@ const CreateEmulation = (props) => {
       ip: '0.0.0.0',
       subnetMask: '255.255.255.0',
       subnetPrefix: '',
-      physicalInterface: '',
+      physicalInterface: 'eth0',
       bitmask: '255.255.255.0',
       limitPacketsQueue: 30000,
       packetDelayMs: 2,
@@ -2088,8 +2408,7 @@ const CreateEmulation = (props) => {
       trafficManagerPort:"50043",
       trafficManagerLogFile:"traffic_manager.log",
       trafficManagerLogDir:"/",
-      trafficManagerMaxWorkers:"10"
-    };
+      trafficManagerMaxWorkers:"10" };
 
     setContainers(prevContainers => {
       // Create a copy of the containers array
@@ -2436,11 +2755,77 @@ const CreateEmulation = (props) => {
                                 </tbody>
                               </Table>
                             </div>
+
                             <div>
-                              Add a network interface to container {containers[index].name} &nbsp;&nbsp;
-                              <Button type="button" onClick={() => handleAddContainerInterface(index)}
+                              Add a user to the container {containers[index].name} &nbsp;&nbsp;
+                              <Button type="button" onClick={() => handleAddContainerUser(index)}
                                       variant="success" size="sm">
                                 <i className="fa fa-plus" aria-hidden="true" />
+                              </Button>
+                            </div>
+
+                            <div className="table-responsive-user">
+                              <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                  <th>User Attribute</th>
+                                  <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {containers[index].users.map((containerUsers, userIndex) => (
+                                  <React.Fragment
+                                    key={'form-user-' + containerUsers.userName + '-' + userIndex + '-' + index}>
+                                    <tr
+                                      key={'user-name-' + containerUsers.userName + '-' + userIndex + '-' + index}>
+                                      <td> Username</td>
+                                      <td>
+                                        <input
+                                          ref={inputUserNameRef}
+                                          type="text"
+                                          value={containerUsers.userName}
+                                          onChange={(event) => handleContainerUserNameChange(event, index, userIndex)}
+                                        />
+                                        <Button type="button" onClick={() =>
+                                          handleDeleteContainerUser(index, userIndex)}
+                                                variant="danger" size="sm" style={{ marginLeft: '5px' }}>
+                                          <i className="fa fa-trash startStopIcon" aria-hidden="true" />
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                    <tr key={'pw-' + containerUsers.pw + '-' + userIndex + '-' + index}>
+                                      <td> Password</td>
+                                      <td>
+                                        <input
+                                          ref={inputPwRef}
+                                          type="text"
+                                          value={containerUsers.pw}
+                                          onChange={(event) => handleContainerUserPwChange(event, index, userIndex)}
+                                        />
+                                      </td>
+                                    </tr>
+                                    <tr  className="custom-td">
+                                      <td> Root Access</td>
+                                      <td>
+                                        <select value={containerUsers.root}
+                                                onChange={(e) => handleContainerUserAccessChange(e, index,
+                                                  userIndex)}>
+                                          <option value="true">true</option>
+                                          <option value="false">false</option>
+                                        </select>
+                                      </td>
+                                    </tr>
+                                  </React.Fragment>
+                                ))}
+                                </tbody>
+                              </Table>
+                            </div>
+
+                            <div>
+                              Add a network interface to the container {containers[index].name} &nbsp;&nbsp;
+                              <Button type="button" onClick={() => handleAddContainerInterface(index)}
+                                      variant="success" size="sm">
+                              <i className="fa fa-plus" aria-hidden="true" />
                               </Button>
                             </div>
                             <div className="table-responsive">
@@ -2453,8 +2838,10 @@ const CreateEmulation = (props) => {
                                 </thead>
                                 <tbody>
                                 {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
-                                  <React.Fragment key={'form-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
-                                    <tr key={'interface-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
+                                  <React.Fragment
+                                    key={'form-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
+                                    <tr
+                                      key={'interface-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
                                       <td> Name</td>
                                       <td>
                                         <input
@@ -2470,7 +2857,7 @@ const CreateEmulation = (props) => {
                                         </Button>
                                       </td>
                                     </tr>
-                                    <tr key={'ip-' + containerInterfaces.ip + '-' + interfaceIndex  + '-' + index}>
+                                    <tr key={'ip-' + containerInterfaces.ip + '-' + interfaceIndex + '-' + index}>
                                       <td> IP</td>
                                       <td>
                                         <input
@@ -2481,7 +2868,8 @@ const CreateEmulation = (props) => {
                                         />
                                       </td>
                                     </tr>
-                                    <tr key={'subnet-' + containerInterfaces.subnetMask + '-' + interfaceIndex  + '-' + index}>
+                                    <tr
+                                      key={'subnet-' + containerInterfaces.subnetMask + '-' + interfaceIndex + '-' + index}>
                                       <td> Subnet mask</td>
                                       <td>
                                         <input
@@ -2495,7 +2883,7 @@ const CreateEmulation = (props) => {
                                     </tr>
                                     <tr
                                       key={'eth-' + containerInterfaces.physicalInterface + '-' +
-                                        interfaceIndex  + '-' + index}>
+                                        interfaceIndex + '-' + index}>
                                       <td>Physical interface</td>
                                       <td>
                                         <select
@@ -2517,8 +2905,8 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'packet-limit-'+containerInterfaces.limitPacketsQueue + '-' +
-                                        interfaceIndex  + '-' + index}>
+                                      key={'packet-limit-' + containerInterfaces.limitPacketsQueue + '-' +
+                                        interfaceIndex + '-' + index}>
                                       <td> Limit packets queue</td>
                                       <td>
                                         <input
@@ -2532,7 +2920,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'packet-delay-' + containerInterfaces.packetDelayMs + '-' + interfaceIndex  + '-' + index}>
+                                      key={'packet-delay-' + containerInterfaces.packetDelayMs + '-' + interfaceIndex + '-' + index}>
                                       <td> Packet delay (ms)</td>
                                       <td>
                                         <input
@@ -2546,7 +2934,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'packet-jitter-' + containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex  + '-' + index}>
+                                      key={'packet-jitter-' + containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex + '-' + index}>
                                       <td> Packet delay jitter (ms)</td>
                                       <td>
                                         <input
@@ -2615,7 +3003,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'loss-gemodelr-' +containerInterfaces.lossGemodelr + '-'
+                                      key={'loss-gemodelr-' + containerInterfaces.lossGemodelr + '-'
                                         + interfaceIndex + '-' + index}>
                                       <td> Loss Gemodel R</td>
                                       <td>
@@ -2691,7 +3079,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'pecket-duplicate-percentage-'+
+                                      key={'pecket-duplicate-percentage-' +
                                         containerInterfaces.packetDuplicatePercentage + '-'
                                         + interfaceIndex}>
                                       <td> Packet duplicate percentage</td>
@@ -2707,7 +3095,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'pecket-duplicate-correlation-percentage-'+
+                                      key={'pecket-duplicate-correlation-percentage-' +
                                         containerInterfaces.packetDuplicateCorrelationPercentage + '-'
                                         + interfaceIndex}>
                                       <td> Packet duplicate correlation percentage</td>
@@ -2723,7 +3111,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'pecket-reorder-percentage-'+
+                                      key={'pecket-reorder-percentage-' +
                                         containerInterfaces.packetReorderPercentage + '-'
                                         + interfaceIndex}>
                                       <td> Packet reorder percentage</td>
@@ -2739,7 +3127,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'pecket-reorder-correlation-percentage-'+
+                                      key={'pecket-reorder-correlation-percentage-' +
                                         containerInterfaces.packetReorderCorrelationPercentage + '-'
                                         + interfaceIndex}>
                                       <td> Packet reorder correlation percentage</td>
@@ -2755,7 +3143,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'pecket-reorder-gap-'+
+                                      key={'pecket-reorder-gap-' +
                                         containerInterfaces.packetReorderGap + '-'
                                         + interfaceIndex}>
                                       <td> Packet reorder gap</td>
@@ -2771,7 +3159,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'rate-limit-'+
+                                      key={'rate-limit-' +
                                         containerInterfaces.rateLimitMbitRef + '-'
                                         + interfaceIndex}>
                                       <td> Rate limit M bit</td>
@@ -2787,7 +3175,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'packet-overhead-bytes-'+
+                                      key={'packet-overhead-bytes-' +
                                         containerInterfaces.packetOverheadBytes + '-'
                                         + interfaceIndex}>
                                       <td> Packet overhead bytes</td>
@@ -2803,7 +3191,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'call-overhead-bytes-'+
+                                      key={'call-overhead-bytes-' +
                                         containerInterfaces.cellOverheadBytes + '-'
                                         + interfaceIndex}>
                                       <td> Cell overhead bytes</td>
@@ -2819,7 +3207,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'default-gateway-'+
+                                      key={'default-gateway-' +
                                         containerInterfaces.defaultGateway + '-'
                                         + interfaceIndex}>
                                       <td> Default gateway</td>
@@ -2883,7 +3271,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'traffic-manager-log-file-'+ containerInterfaces.trafficManagerLogFile + '-'
+                                      key={'traffic-manager-log-file-' + containerInterfaces.trafficManagerLogFile + '-'
                                         + interfaceIndex}>
                                       <td> Traffic manager log file</td>
                                       <td>
@@ -2898,7 +3286,7 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr
-                                      key={'traffic-manager-log-dir-'+
+                                      key={'traffic-manager-log-dir-' +
                                         containerInterfaces.trafficManagerLogDir + '-'
                                         + interfaceIndex}>
                                       <td> Traffic manager log directory</td>
@@ -2914,9 +3302,9 @@ const CreateEmulation = (props) => {
                                       </td>
                                     </tr>
                                     <tr className="custom-td"
-                                      key={'traffic-manager-max-workers-'+
-                                        containerInterfaces.trafficManagerMaxWorkers + '-'
-                                        + interfaceIndex}>
+                                        key={'traffic-manager-max-workers-' +
+                                          containerInterfaces.trafficManagerMaxWorkers + '-'
+                                          + interfaceIndex}>
                                       <td> Traffic manager maximum workers</td>
                                       <td>
                                         <input
