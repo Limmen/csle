@@ -150,89 +150,10 @@ const CreateEmulation = (props) => {
     });
   };
 
-  const inputCpuRef = useRef(null)
-  const [shouldFocusCpu, setShouldFocusCpu] = useState(false);
 
-  const handleContainerCpuChange = (event, index) => {
-    const cpuValue = event.target.value;
-    if (/^-?\d*$/.test(cpuValue)) {
-      setContainers(prevContainers => {
-        // Create a new array with the updated container
-        const updatedContainers = [...prevContainers];
-        updatedContainers[index] = {
-          ...updatedContainers[index],
-          cpu: cpuValue // Update the value
-        };
-        console.log("container" + index + " cpu is " + cpuValue);
-        return updatedContainers;
-      });
-    }
-    setShouldFocusCpu(true);
-    setShouldFocusName(false);
-  };
 
-  const inputMemRef = useRef(null)
-  const [shouldFocusMem, setShouldFocusMem] = useState(false);
 
-  const handleContainerMemoryChange = (event, index) => {
-    const memValue = event.target.value;
-    if (/^-?\d*$/.test(memValue)) {
-      setContainers(prevContainers => {
-        // Create a new array with the updated container
-        const updatedContainers = [...prevContainers];
-        updatedContainers[index] = {
-          ...updatedContainers[index],
-          mem: memValue // Update the value
-        };
-        console.log("container" + index + " memory is " + memValue);
-        return updatedContainers;
-      });
-    }
-    setShouldFocusMem(true);
-    setShouldFocusName(false);
-  };
 
-  const inputFlagIdRef = useRef(null)
-  const [shouldFocusFlagId, setShouldFocusFlagId] = useState(false);
-
-  const handleContainerFlagIdChange = (event, index) => {
-    const flagIdValue = event.target.value;
-    if (/^-?\d*$/.test(flagIdValue)) {
-      setContainers(prevContainers => {
-        // Create a new array with the updated container
-        const updatedContainers = [...prevContainers];
-        updatedContainers[index] = {
-          ...updatedContainers[index],
-          flagId: flagIdValue // Update the value
-        };
-        console.log("container" + index + " flag ID is " + flagIdValue);
-        return updatedContainers;
-      });
-    }
-    setShouldFocusFlagId(true);
-    setShouldFocusName(false);
-  };
-
-  const inputFlagScoreRef = useRef(null)
-  const [shouldFocusFlagScore, setShouldFocusFlagScore] = useState(false);
-
-  const handleContainerFlagScoreChange = (event, index) => {
-    const flagScoreValue = event.target.value;
-    if (/^-?\d*$/.test(flagScoreValue)) {
-      setContainers(prevContainers => {
-        // Create a new array with the updated container
-        const updatedContainers = [...prevContainers];
-        updatedContainers[index] = {
-          ...updatedContainers[index],
-          flagScore: flagScoreValue // Update the value
-        };
-        console.log("container" + index + " flag score is " + flagScoreValue);
-        return updatedContainers;
-      });
-    }
-    setShouldFocusFlagScore(true);
-    setShouldFocusName(false);
-  };
 
   const handleContainerFlagPermissionChange = (event, index) => {
     const permissionValue = event.target.value === 'true'; // Convert string to boolean
@@ -343,7 +264,7 @@ const CreateEmulation = (props) => {
 
   const [newInterface, setNewInterface] = useState({ name: '', ip: '', subnetMask:'', subnetPrefix: '',
     physicalInterface:'', bitmask:'', limitPacketsQueue:30000, packetDelayMs:2, packetDelayJitterMs:0.5,
-    packetDelayCorrelationPercentage:25, packetDelayDistribution:'', packetLossType:'',lossGemodelp: 0.02,
+    packetDelayCorrelationPercentage:25, packetDelayDistribution:'0', packetLossType:'0',lossGemodelp: 0.02,
     lossGemodelr:0.97, lossGemodelk:0.98, lossGemodelh:0.0001, packetCorruptPercentage:0.00001,
     packetCorruptCorrelationPercentage:25, packetDuplicatePercentage:0.00001,
     packetDuplicateCorrelationPercentage:25, packetReorderPercentage:0.0025,
@@ -379,6 +300,12 @@ const CreateEmulation = (props) => {
   const inputTrafficManagerLogFileRef = useRef(null)
   const inputTrafficManagerLogDirRef = useRef(null)
   const inputTrafficManagerMaxWorkersRef = useRef(null)
+  const inputCpuRef = useRef(null)
+  const inputMemRef = useRef(null)
+  const inputFlagIdRef = useRef(null)
+  const inputFlagScoreRef = useRef(null)
+  const inputPacketDelayDistributionRef = useRef(null)
+  const inputPacketLossTypeRef = useRef(null)
 
 
   const [shouldFocusName, setShouldFocusName] = useState(false);
@@ -406,12 +333,220 @@ const CreateEmulation = (props) => {
   const [shouldFocusPacketOverheadBytes, setShouldFocusPacketOverheadBytes] = useState(false);
   const [shouldFocusCellOverheadBytes, setShouldFocusCellOverheadBytes] = useState(false);
   const [shouldFocusDefaultGateway, setShouldFocusDefaultGateway] = useState(false);
-
   const [shouldFocusTrafficManagerPort, setShouldFocusTrafficManagerPort] = useState(false);
   const [shouldFocusTrafficManagerLogFile, setShouldFocusTrafficManagerLogFile] = useState(false);
   const [shouldFocusTrafficManagerLogDir, setShouldFocusTrafficManagerLogDir] = useState(false);
   const [shouldFocusTrafficManagerMaxWorkers, setShouldFocusTrafficManagerMaxWorkers] = useState(false);
 
+  const [shouldFocusCpu, setShouldFocusCpu] = useState(false);
+  const [shouldFocusMem, setShouldFocusMem] = useState(false);
+  const [shouldFocusFlagId, setShouldFocusFlagId] = useState(false);
+  const [shouldFocusFlagScore, setShouldFocusFlagScore] = useState(false);
+  const [shouldFocusPacketDelayDistribution, setShouldFocusPacketDelayDistribution] = useState(false);
+  const [shouldFocusPacketLossType, setShouldFocusPacketLossType] = useState(false);
+
+
+  const handleContainerCpuChange = (event, index) => {
+    const cpuValue = event.target.value;
+    if (/^-?\d*$/.test(cpuValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          cpu: cpuValue // Update the value
+        };
+        console.log("container" + index + " cpu is " + cpuValue);
+        return updatedContainers;
+      });
+    }
+    setShouldFocusCpu(true);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusMem(false);
+    setShouldFocusName(false);
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+  };
+
+
+
+
+  const handleContainerMemoryChange = (event, index) => {
+    const memValue = event.target.value;
+    if (/^-?\d*$/.test(memValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          mem: memValue // Update the value
+        };
+        console.log("container" + index + " memory is " + memValue);
+        return updatedContainers;
+      });
+    }
+
+    setShouldFocusMem(true);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusName(false);
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+  };
+
+
+
+
+  const handleContainerFlagIdChange = (event, index) => {
+    const flagIdValue = event.target.value;
+    if (/^-?\d*$/.test(flagIdValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          flagId: flagIdValue // Update the value
+        };
+        console.log("container" + index + " flag ID is " + flagIdValue);
+        return updatedContainers;
+      });
+    }
+    setShouldFocusFlagId(true);
+    setShouldFocusFlagScore(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusCpu(false);
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+  };
+
+
+
+
+  const handleContainerFlagScoreChange = (event, index) => {
+    const flagScoreValue = event.target.value;
+    if (/^-?\d*$/.test(flagScoreValue)) {
+      setContainers(prevContainers => {
+        // Create a new array with the updated container
+        const updatedContainers = [...prevContainers];
+        updatedContainers[index] = {
+          ...updatedContainers[index],
+          flagScore: flagScoreValue // Update the value
+        };
+        console.log("container" + index + " flag score is " + flagScoreValue);
+        return updatedContainers;
+      });
+    }
+    setShouldFocusFlagScore(true);
+    setShouldFocusName(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusMem(false);
+    setShouldFocusCpu(false);
+    setShouldFocusIP(false); // Clear flag for IP input
+    setShouldFocusSubnetMask(false);
+    setShouldFocusLimitPacketsQueue(false)
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusPacketDelayJitterMs(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+  };
 
   const handleContainerInterfaceNameChange = (event, containerIndex, interfaceIndex) => {
     const newName = event.target.value;
@@ -453,6 +588,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceIPChange = (event, containerIndex, interfaceIndex) => {
@@ -494,6 +635,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
   };
 
@@ -537,6 +684,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
   };
 
@@ -581,7 +734,13 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    console.log("The value limit packet Q is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
   };
 
   const handleContainerInterfacePacketDelayMs = (event, containerIndex, interfaceIndex) => {
@@ -625,7 +784,13 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
-    console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
+    console.log("The value Packet Delay MS is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
   };
 
   const handleContainerInterfacePacketDelayJitterMs = (event, containerIndex, interfaceIndex) => {
@@ -669,6 +834,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
   };
 
@@ -714,6 +885,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
   };
 
@@ -758,6 +935,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -802,6 +985,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
   };
 
@@ -846,17 +1035,23 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
   };
   const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
-    const newLossGemodelk = event.target.value;
+    const newLossGemodelh = event.target.value;
     setContainers(prevContainers => {
       const updatedContainers = [...prevContainers];
       const containerToUpdate = { ...updatedContainers[containerIndex] };
       const updatedInterfaces = [...containerToUpdate.interfaces];
       updatedInterfaces[interfaceIndex] = {
         ...updatedInterfaces[interfaceIndex],
-        lossGemodelk: newLossGemodelk
+        lossGemodelh: newLossGemodelh
       };
       containerToUpdate.interfaces = updatedInterfaces;
       updatedContainers[containerIndex] = containerToUpdate;
@@ -889,6 +1084,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
     console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
   };
 
@@ -933,6 +1134,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketCorruptCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -976,6 +1183,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketDuplicatePercentage = (event, containerIndex, interfaceIndex) => {
@@ -1019,6 +1232,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketDuplicateCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1062,6 +1281,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketReorderPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1105,6 +1330,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketReorderCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1148,6 +1379,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketReorderGap = (event, containerIndex, interfaceIndex) => {
@@ -1191,6 +1428,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceRateLimitMbit = (event, containerIndex, interfaceIndex) => {
@@ -1234,6 +1477,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfacePacketOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1277,6 +1526,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceCellOverheadBytes = (event, containerIndex, interfaceIndex) => {
@@ -1320,6 +1575,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceDefaultGateway = (event, containerIndex, interfaceIndex) => {
@@ -1363,6 +1624,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceTrafficManagerPort = (event, containerIndex, interfaceIndex) => {
@@ -1406,6 +1673,12 @@ const CreateEmulation = (props) => {
     setShouldFocusTrafficManagerLogFile(false)
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogFile = (event, containerIndex, interfaceIndex) => {
@@ -1449,6 +1722,12 @@ const CreateEmulation = (props) => {
     setShouldFocusName(false);
     setShouldFocusTrafficManagerLogDir(false)
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceTrafficManagerLogDir = (event, containerIndex, interfaceIndex) => {
@@ -1492,6 +1771,12 @@ const CreateEmulation = (props) => {
     setShouldFocusIP(false);
     setShouldFocusName(false);
     setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   const handleContainerInterfaceTrafficManagerMaxWorkers = (event, containerIndex, interfaceIndex) => {
@@ -1535,6 +1820,12 @@ const CreateEmulation = (props) => {
     setShouldFocusSubnetMask(false);
     setShouldFocusIP(false);
     setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
+    setShouldFocusPacketLossType(false)
   };
 
   // Use useEffect to focus on the input field when containers state changes
@@ -1600,6 +1891,10 @@ const CreateEmulation = (props) => {
       inputTrafficManagerLogFileRef.current.focus();
     } else if (inputTrafficManagerMaxWorkersRef.current && shouldFocusTrafficManagerMaxWorkers) {
       inputTrafficManagerMaxWorkersRef.current.focus();
+    } else if (inputPacketDelayDistributionRef.current && shouldFocusPacketDelayDistribution) {
+      inputPacketDelayDistributionRef.current.focus();
+    } else if (inputPacketLossTypeRef.current && shouldFocusPacketLossType) {
+      inputPacketLossTypeRef.current.focus();
     }
   }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
     shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1610,7 +1905,7 @@ const CreateEmulation = (props) => {
     shouldFocusRateLimitMbit, shouldFocusPacketOverheadBytes, shouldFocusCellOverheadBytes,
     shouldFocusCpu, shouldFocusFlagId, shouldFocusMem, shouldFocusFlagScore, shouldFocusDefaultGateway,
     shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
-    shouldFocusTrafficManagerMaxWorkers);
+    shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType);
 
   const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
     const packetDelayDistributionValue = event.target.value; // Convert string to boolean
@@ -1626,6 +1921,38 @@ const CreateEmulation = (props) => {
       updatedContainers[containerIndex] = containerToUpdate;
       return updatedContainers;
     });
+    setShouldFocusPacketDelayDistribution(true)
+    setShouldFocusPacketLossType(false)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
   };
 
   const handleContainerInterfacePacketLossType = (event, containerIndex, interfaceIndex) => {
@@ -1642,6 +1969,38 @@ const CreateEmulation = (props) => {
       updatedContainers[containerIndex] = containerToUpdate;
       return updatedContainers;
     });
+    setShouldFocusPacketLossType(true)
+    setShouldFocusTrafficManagerMaxWorkers(false)
+    setShouldFocusTrafficManagerLogDir(false)
+    setShouldFocusTrafficManagerLogFile(false)
+    setShouldFocusTrafficManagerPort(false)
+    setShouldFocusDefaultGateway(false)
+    setShouldFocusCellOverheadBytes(false)
+    setShouldFocusPacketOverheadBytes(false)
+    setShouldFocusRateLimitMbit(false)
+    setShouldFocusPacketReorderGap(false)
+    setShouldFocusPacketReorderCorrelationPercentage(false)
+    setShouldFocusPacketReorderPercentage(false)
+    setShouldFocusPacketDuplicateCorrelationPercentage(false)
+    setShouldFocusPacketDuplicatePercentage(false)
+    setShouldFocusPacketCorruptCorrelationPercentage(false)
+    setShouldFocusPacketCorruptPercentage(false)
+    setShouldFocusLossGemodelh(false)
+    setShouldFocusLossGemodelk(false)
+    setShouldFocusLossGemodelr(false)
+    setShouldFocusLossGemodelp(false)
+    setShouldFocusPacketDelayCorrelationPercentage(false)
+    setShouldFocusPacketDelayJitterMs(false);
+    setShouldFocusPacketDelayMs(false);
+    setShouldFocusLimitPacketsQueue(false);
+    setShouldFocusSubnetMask(false);
+    setShouldFocusIP(false);
+    setShouldFocusName(false);
+    setShouldFocusMem(false);
+    setShouldFocusFlagId(false);
+    setShouldFocusFlagScore(false);
+    setShouldFocusCpu(false);
+    setShouldFocusPacketDelayDistribution(false)
   };
 
   const handleContainerInterfaceDefaultInput = (event, containerIndex, interfaceIndex) => {
@@ -2095,8 +2454,8 @@ const CreateEmulation = (props) => {
                                     <tbody>
                                     {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
                                       <React.Fragment
-                                        key={containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
-                                        <tr>
+                                        key={containerInterfaces.name + '-' + interfaceIndex + '-' + index + '- form'}>
+                                        <tr key={containerInterfaces.name + '-' + interfaceIndex  + '-' + index}>
                                           <td> Name</td>
                                           <td>
                                             <input
@@ -2112,7 +2471,7 @@ const CreateEmulation = (props) => {
                                             </Button>
                                           </td>
                                         </tr>
-                                        <tr key={containerInterfaces.ip + '-' + interfaceIndex}>
+                                        <tr key={containerInterfaces.ip + '-' + interfaceIndex  + '-' + index}>
                                           <td> IP</td>
                                           <td>
                                             <input
@@ -2123,7 +2482,7 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr key={containerInterfaces.subnet_mask + '-' + interfaceIndex}>
+                                        <tr key={containerInterfaces.subnetMask + '-' + interfaceIndex  + '-' + index}>
                                           <td> Subnet mask</td>
                                           <td>
                                             <input
@@ -2135,7 +2494,9 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr>
+                                        <tr
+                                          key={containerInterfaces.physicalInterface + '-' +
+                                            interfaceIndex  + '-' + index}>
                                           <td>Physical interface</td>
                                           <td>
                                             <select
@@ -2157,7 +2518,8 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                          key={containerInterfaces.limitPacketsQueue + '-' + interfaceIndex}>
+                                          key={containerInterfaces.limitPacketsQueue + '-' +
+                                            interfaceIndex  + '-' + index}>
                                           <td> Limit packets queue</td>
                                           <td>
                                             <input
@@ -2171,7 +2533,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                          key={containerInterfaces.packetDelayMs + '-' + interfaceIndex}>
+                                          key={containerInterfaces.packetDelayMs + '-' + interfaceIndex  + '-' + index}>
                                           <td> Packet delay (ms)</td>
                                           <td>
                                             <input
@@ -2185,7 +2547,7 @@ const CreateEmulation = (props) => {
                                           </td>
                                         </tr>
                                         <tr
-                                          key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex}>
+                                          key={containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex  + '-' + index}>
                                           <td> Packet delay jitter (ms)</td>
                                           <td>
                                             <input
@@ -2200,7 +2562,7 @@ const CreateEmulation = (props) => {
                                         </tr>
                                         <tr
                                           key={containerInterfaces.packetDelayCorrelationPercentage + '-'
-                                            + interfaceIndex}>
+                                            + interfaceIndex + '-' + index}>
                                           <td> Packet delay correlation percentage</td>
                                           <td>
                                             <input
@@ -2218,12 +2580,11 @@ const CreateEmulation = (props) => {
                                           <td>
                                             <select value={containerInterfaces.packetDelayDistribution}
                                                     onChange={(e) => handleContainerInterfacePacketDelayDistribution(e, index,
-                                                      interfaceIndex)}>
+                                                      interfaceIndex)} ref={inputPacketDelayDistributionRef}>
                                               <option value="0">Uniform</option>
                                               <option value="1">Normal</option>
                                               <option value="2">Pareto</option>
                                               <option value="3">Pareto normal</option>
-
                                             </select>
                                           </td>
                                         </tr>
@@ -2232,7 +2593,7 @@ const CreateEmulation = (props) => {
                                           <td>
                                             <select value={containerInterfaces.packetLossType}
                                                     onChange={(e) => handleContainerInterfacePacketLossType(e, index,
-                                                      interfaceIndex)}>
+                                                      interfaceIndex)} ref={inputPacketLossTypeRef}>
                                               <option value="0">Random</option>
                                               <option value="1">State</option>
                                               <option value="2">Gemodel</option>
@@ -2241,7 +2602,7 @@ const CreateEmulation = (props) => {
                                         </tr>
                                         <tr
                                           key={containerInterfaces.lossGemodelp + '-'
-                                            + interfaceIndex}>
+                                            + interfaceIndex + '-' + index}>
                                           <td> Loss Gemodel P</td>
                                           <td>
                                             <input
@@ -2256,7 +2617,7 @@ const CreateEmulation = (props) => {
                                         </tr>
                                         <tr
                                           key={containerInterfaces.lossGemodelr + '-'
-                                            + interfaceIndex}>
+                                            + interfaceIndex + '-' + index}>
                                           <td> Loss Gemodel R</td>
                                           <td>
                                             <input
@@ -2271,7 +2632,7 @@ const CreateEmulation = (props) => {
                                         </tr>
                                         <tr
                                           key={containerInterfaces.lossGemodelk + '-'
-                                            + interfaceIndex}>
+                                            + interfaceIndex + '-' + index}>
                                           <td> Loss Gemodel K</td>
                                           <td>
                                             <input
@@ -2286,7 +2647,7 @@ const CreateEmulation = (props) => {
                                         </tr>
                                         <tr
                                           key={containerInterfaces.lossGemodelh + '-'
-                                            + interfaceIndex}>
+                                            + interfaceIndex + '-' + index}>
                                           <td> Loss Gemodel H</td>
                                           <td>
                                             <input
@@ -2299,266 +2660,266 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        <tr
-                                          key={containerInterfaces.packetCorruptPercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet corruption percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketCorruptPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetCorruptPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketCorruptPercentage(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetCorruptCorrelationPercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet corruption correlation percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketCorruptCorrelationPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetCorruptCorrelationPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetDuplicatePercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet duplicate percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketDuplicatePercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetDuplicatePercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketDuplicatePercentage(event, index,
-                                                  interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet duplicate correlation percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketDuplicateCorrelationPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetDuplicateCorrelationPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketDuplicateCorrelationPercentage(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetReorderPercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet reorder percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketReorderPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetReorderPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketReorderPercentage(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetReorderCorrelationPercentage + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet reorder correlation percentage</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketReorderCorrelationPercentageRef}
-                                              type="text"
-                                              value={containerInterfaces.packetReorderCorrelationPercentage}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketReorderCorrelationPercentage(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetReorderGap + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet reorder gap</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketReorderGapRef}
-                                              type="text"
-                                              value={containerInterfaces.packetReorderGap}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketReorderGap(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.rateLimitMbitRef + '-'
-                                            + interfaceIndex}>
-                                          <td> Rate limit M bit</td>
-                                          <td>
-                                            <input
-                                              ref={inputRateLimitMbitRef}
-                                              type="text"
-                                              value={containerInterfaces.rateLimitMbit}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceRateLimitMbit(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.packetOverheadBytes + '-'
-                                            + interfaceIndex}>
-                                          <td> Packet overhead bytes</td>
-                                          <td>
-                                            <input
-                                              ref={inputPacketOverheadBytesRef}
-                                              type="text"
-                                              value={containerInterfaces.packetOverheadBytes}
-                                              onChange={(event) =>
-                                                handleContainerInterfacePacketOverheadBytes(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.cellOverheadBytes + '-'
-                                            + interfaceIndex}>
-                                          <td> Cell overhead bytes</td>
-                                          <td>
-                                            <input
-                                              ref={inputCellOverheadBytesRef}
-                                              type="text"
-                                              value={containerInterfaces.cellOverheadBytes}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceCellOverheadBytes(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.defaultGateway + '-'
-                                            + interfaceIndex}>
-                                          <td> Default gateway</td>
-                                          <td>
-                                            <input
-                                              ref={inputDefaultGatewayRef}
-                                              type="text"
-                                              value={containerInterfaces.defaultGateway}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceDefaultGateway(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td> Firewall rule: default input</td>
-                                          <td>
-                                            <select value={containerInterfaces.defaultInput}
-                                                    onChange={(e) => handleContainerInterfaceDefaultInput(e, index,
-                                                      interfaceIndex)}>
-                                              <option value="accept">Accept</option>
-                                              <option value="drop">Drop</option>
-                                            </select>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td> Firewall rule: default output</td>
-                                          <td>
-                                            <select value={containerInterfaces.defaultOutput}
-                                                    onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,
-                                                      interfaceIndex)}>
-                                              <option value="accept">Accept</option>
-                                              <option value="drop">Drop</option>
-                                            </select>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td> Firewall rule: default forward</td>
-                                          <td>
-                                            <select value={containerInterfaces.defaultForward}
-                                                    onChange={(e) => handleContainerInterfaceDefaultForward(e, index,
-                                                      interfaceIndex)}>
-                                              <option value="accept">Accept</option>
-                                              <option value="drop">Drop</option>
-                                            </select>
-                                          </td>
-                                        </tr>
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetCorruptPercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet corruption percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketCorruptPercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetCorruptPercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketCorruptPercentage(event, index,*/}
+                                        {/*          interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetCorruptCorrelationPercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet corruption correlation percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketCorruptCorrelationPercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetCorruptCorrelationPercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,*/}
+                                        {/*          interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetDuplicatePercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet duplicate percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketDuplicatePercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetDuplicatePercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketDuplicatePercentage(event, index,*/}
+                                        {/*          interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetDuplicateCorrelationPercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet duplicate correlation percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketDuplicateCorrelationPercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetDuplicateCorrelationPercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketDuplicateCorrelationPercentage(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetReorderPercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet reorder percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketReorderPercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetReorderPercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketReorderPercentage(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetReorderCorrelationPercentage + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet reorder correlation percentage</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketReorderCorrelationPercentageRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetReorderCorrelationPercentage}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketReorderCorrelationPercentage(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetReorderGap + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet reorder gap</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketReorderGapRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetReorderGap}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketReorderGap(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.rateLimitMbitRef + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Rate limit M bit</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputRateLimitMbitRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.rateLimitMbit}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceRateLimitMbit(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.packetOverheadBytes + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Packet overhead bytes</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputPacketOverheadBytesRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.packetOverheadBytes}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfacePacketOverheadBytes(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.cellOverheadBytes + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Cell overhead bytes</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputCellOverheadBytesRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.cellOverheadBytes}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceCellOverheadBytes(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.defaultGateway + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Default gateway</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputDefaultGatewayRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.defaultGateway}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceDefaultGateway(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr>*/}
+                                        {/*  <td> Firewall rule: default input</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <select value={containerInterfaces.defaultInput}*/}
+                                        {/*            onChange={(e) => handleContainerInterfaceDefaultInput(e, index,*/}
+                                        {/*              interfaceIndex)}>*/}
+                                        {/*      <option value="accept">Accept</option>*/}
+                                        {/*      <option value="drop">Drop</option>*/}
+                                        {/*    </select>*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr>*/}
+                                        {/*  <td> Firewall rule: default output</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <select value={containerInterfaces.defaultOutput}*/}
+                                        {/*            onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,*/}
+                                        {/*              interfaceIndex)}>*/}
+                                        {/*      <option value="accept">Accept</option>*/}
+                                        {/*      <option value="drop">Drop</option>*/}
+                                        {/*    </select>*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr>*/}
+                                        {/*  <td> Firewall rule: default forward</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <select value={containerInterfaces.defaultForward}*/}
+                                        {/*            onChange={(e) => handleContainerInterfaceDefaultForward(e, index,*/}
+                                        {/*              interfaceIndex)}>*/}
+                                        {/*      <option value="accept">Accept</option>*/}
+                                        {/*      <option value="drop">Drop</option>*/}
+                                        {/*    </select>*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
 
 
-                                        <tr
-                                          key={containerInterfaces.trafficManagerPort + '-'
-                                            + interfaceIndex}>
-                                          <td> Traffic manager port</td>
-                                          <td>
-                                            <input
-                                              ref={inputTrafficManagerPortRef}
-                                              type="text"
-                                              value={containerInterfaces.trafficManagerPort}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceTrafficManagerPort(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.trafficManagerLogFile + '-'
-                                            + interfaceIndex}>
-                                          <td> Traffic manager log file</td>
-                                          <td>
-                                            <input
-                                              ref={inputTrafficManagerLogFileRef}
-                                              type="text"
-                                              value={containerInterfaces.trafficManagerLogFile}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceTrafficManagerLogFile(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr
-                                          key={containerInterfaces.trafficManagerLogDir + '-'
-                                            + interfaceIndex}>
-                                          <td> Traffic manager log directory</td>
-                                          <td>
-                                            <input
-                                              ref={inputTrafficManagerLogDirRef}
-                                              type="text"
-                                              value={containerInterfaces.trafficManagerLogDir}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceTrafficManagerLogDir(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
-                                        <tr className="custom-td"
-                                          key={containerInterfaces.trafficManagerMaxWorkers + '-'
-                                            + interfaceIndex}>
-                                          <td> Traffic manager maximum workers</td>
-                                          <td>
-                                            <input
-                                              ref={inputTrafficManagerMaxWorkersRef}
-                                              type="text"
-                                              value={containerInterfaces.trafficManagerMaxWorkers}
-                                              onChange={(event) =>
-                                                handleContainerInterfaceTrafficManagerMaxWorkers(event,
-                                                  index, interfaceIndex)}
-                                            />
-                                          </td>
-                                        </tr>
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.trafficManagerPort + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Traffic manager port</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputTrafficManagerPortRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.trafficManagerPort}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceTrafficManagerPort(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.trafficManagerLogFile + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Traffic manager log file</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputTrafficManagerLogFileRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.trafficManagerLogFile}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceTrafficManagerLogFile(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr*/}
+                                        {/*  key={containerInterfaces.trafficManagerLogDir + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Traffic manager log directory</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputTrafficManagerLogDirRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.trafficManagerLogDir}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceTrafficManagerLogDir(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
+                                        {/*<tr className="custom-td"*/}
+                                        {/*  key={containerInterfaces.trafficManagerMaxWorkers + '-'*/}
+                                        {/*    + interfaceIndex}>*/}
+                                        {/*  <td> Traffic manager maximum workers</td>*/}
+                                        {/*  <td>*/}
+                                        {/*    <input*/}
+                                        {/*      ref={inputTrafficManagerMaxWorkersRef}*/}
+                                        {/*      type="text"*/}
+                                        {/*      value={containerInterfaces.trafficManagerMaxWorkers}*/}
+                                        {/*      onChange={(event) =>*/}
+                                        {/*        handleContainerInterfaceTrafficManagerMaxWorkers(event,*/}
+                                        {/*          index, interfaceIndex)}*/}
+                                        {/*    />*/}
+                                        {/*  </td>*/}
+                                        {/*</tr>*/}
                                       </React.Fragment>
                                     ))}
                                     </tbody>
