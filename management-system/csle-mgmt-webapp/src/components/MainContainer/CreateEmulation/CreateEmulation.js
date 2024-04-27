@@ -2660,24 +2660,24 @@ const CreateEmulation = (props) => {
                                             />
                                           </td>
                                         </tr>
-                                        {/*<tr*/}
-                                        {/*  key={containerInterfaces.packetCorruptPercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
-                                        {/*  <td> Packet corruption percentage</td>*/}
-                                        {/*  <td>*/}
-                                        {/*    <input*/}
-                                        {/*      ref={inputPacketCorruptPercentageRef}*/}
-                                        {/*      type="text"*/}
-                                        {/*      value={containerInterfaces.packetCorruptPercentage}*/}
-                                        {/*      onChange={(event) =>*/}
-                                        {/*        handleContainerInterfacePacketCorruptPercentage(event, index,*/}
-                                        {/*          interfaceIndex)}*/}
-                                        {/*    />*/}
-                                        {/*  </td>*/}
-                                        {/*</tr>*/}
+                                        <tr
+                                          key={containerInterfaces.packetCorruptPercentage + '-'
+                                            + interfaceIndex + '-' + index}>
+                                          <td> Packet corruption percentage</td>
+                                          <td>
+                                            <input
+                                              ref={inputPacketCorruptPercentageRef}
+                                              type="text"
+                                              value={containerInterfaces.packetCorruptPercentage}
+                                              onChange={(event) =>
+                                                handleContainerInterfacePacketCorruptPercentage(event, index,
+                                                  interfaceIndex)}
+                                            />
+                                          </td>
+                                        </tr>
                                         {/*<tr*/}
                                         {/*  key={containerInterfaces.packetCorruptCorrelationPercentage + '-'*/}
-                                        {/*    + interfaceIndex}>*/}
+                                        {/*    + interfaceIndex + '-' + index}>*/}
                                         {/*  <td> Packet corruption correlation percentage</td>*/}
                                         {/*  <td>*/}
                                         {/*    <input*/}
