@@ -1095,8 +1095,11 @@ class MCSAgent(BaseAgent):
         return (xbest, fbest, policy, xmin, fmi, ipar, level, ichild, f, flag,
                 ncall, record, nboxes, nbasket, nsweepbest, nsweep)
 
-    def basket(self, x, f, policy, avg_metrics, xmin, fmi, xbest, fbest, stop,
-               nbasket, nsweep, nsweepbest, stopping_actions):
+    def basket(self, x: List[float], f: float,
+               policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+               avg_metrics: Optional[Dict[str, Union[float, int]]], xmin: List[Union[float, List[float], NDArray[np.float64]]],
+               fmi: List[float], xbest: List[float], fbest: float, stop: List[Union[int, float]],
+               nbasket: int, nsweep: int, nsweepbest: int, stopping_actions: int):
         """
         Function representing the basket functional
         :param x: evalutaion argument (position)
@@ -1452,9 +1455,9 @@ class MCSAgent(BaseAgent):
             b = np.dot(np.abs(g).T, [max(abs(xmin[inx]), abs(xold[inx])) for inx in range(len(xmin))])
         return xmin, fmi, ncall, flag, nsweep, nsweepbest
 
-    def basket1(self, x: NDArray[np.float64], f: NDArray[np.float64],
+    def basket1(self, x: NDArray[np.float64], f: float,
                 xmin: List[Union[float, List[float], NDArray[np.float64]]], fmi: List[float],
-                xbest: List[float], fbest: List[float], stop: List[Union[float, int]], nbasket: int, nsweep: int,
+                xbest: List[float], fbest: float, stop: List[Union[float, int]], nbasket: int, nsweep: int,
                 nsweepbest: int, stopping_actions: int):
         """
         Basket 1
@@ -1900,6 +1903,15 @@ class MCSAgent(BaseAgent):
     def lsinit(self, x, p, alist, flist, amin, amax, scale, stopping_actions):
         '''
         Line search algorithm
+        :param x: evualuation agrument (position)
+        :param p:
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param scale:
+        :param stopping_actions: number of stopping actions
+        :return: set of parameters obtained from performing the line search
         '''
         alp: Union[int, float] = 0
         alp1: Union[int, float] = 0
@@ -1962,7 +1974,23 @@ class MCSAgent(BaseAgent):
 
         return alist, flist, alp, alp1, alp2, falp
 
-    def triple(self, x, f, x1, x2, u, v, hess, G, stopping_actions, setG=False):
+    def triple(self, x: Union[List[Union[int, float]]], f: float, x1: Union[List[Union[int, float]]],
+                              x2: Union[List[Union[int, float]]], u: List[int], v: List[int],
+                              hess, G, stopping_actions, setG=False):
+        """
+        The triple function
+        :param x: evaluation argument (position)
+        :param f: function value
+        :param x1: evaluation argument (position)
+        :param x2: evaluation argument (position)
+        :param u: lower initial guess ("Lower corner" in 3D)
+        :param v: lower initial guess ("upper corner" in 3D)
+        :param hess: the hessian of the function
+        :param G:
+        :param stopping_actions: number of stopping actions
+        :param setG:
+        :return: the set of parameters and metrics after performing the triple
+        """
         nf = 0
         n = len(x)
         g = np.zeros(n)
@@ -2077,8 +2105,38 @@ class MCSAgent(BaseAgent):
                 ftrip = copy.deepcopy(ftripnew)
         return xtrip, ftrip, g, G, x1, x2, nf
 
-    def lspar(self, nloc, small, sinit, short, x, p, alist, flist, amin, amax, alp, abest, fbest,
-              fmed, up, down, monotone, minima, nmin, unitlen, s, stopping_actions):
+    def lspar(self, nloc: int, small: Union[float, int], sinit: int, short: float,
+              x: Union[List[Union[int, float]], NDArray[np.float64]], p: NDArray[Union[np.float64, np.int32]],
+              alist: List[Union[float, int]], flist: List[Union[float, int]], amin: float, amax: float,
+              alp: Union[int, float], abest: float, fbest: float,
+              fmed: float, up: List[float], down: List[float], monotone: int,
+              minima: List[int], nmin: int, unitlen: float, s: int, stopping_actions: int):
+        """
+        The lspar function
+        :param nloc:
+        :param small:
+        :param sinit:
+        :param short:
+        :param x:
+        :param p:
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param alp:
+        :param abest:
+        :param fbest:
+        :param fmed:
+        :param up:
+        :param down:
+        :param monotone:
+        :param minima:
+        :param nmin:
+        :param unitlen:
+        :param s:
+        :param stopping_actions: number if stopping actions
+        :return: the set of parameters and metrics after performing lspar
+        """
         cont = 1
         fac = short
         if s < 3:
@@ -2135,8 +2193,31 @@ class MCSAgent(BaseAgent):
          minima, nmin, unitlen, s) = GLSUtils().lssort(alist, flist)
         return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s, alp, fac
 
-    def lsnew(self, nloc, small, sinit, short, x, p, s, alist, flist, amin,
-              amax, alp: Union[int, float], abest, fmed, unitlen, stopping_actions):
+    def lsnew(self, nloc: int, small: Union[float, int], sinit: int, short: float,
+              x: Union[List[Union[int, float]], NDArray[np.float64]], p: NDArray[Union[np.float64, np.int32]],
+              s: int, alist: List[Union[float, int]], flist: List[Union[float, int]],
+              amin: float, amax: float, alp: Union[int, float], abest: float, fmed: float,
+              unitlen: float, stopping_actions: int):
+        """
+        The lsnew function
+        :param nloc:
+        :param small:
+        :param sinit:
+        :param short:
+        :param x: function evaluation argument (position)
+        :param p:
+        :param s: current depth level
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param alp:
+        :param abest:
+        :param fmed:
+        :param unitlen:
+        :param stopping_actions
+        :return: set of parameters and metrics obtained after performing lsnew
+        """
         if alist[0] <= amin:
             leftok = 0
         elif flist[0] >= max(fmed, flist[1]):
@@ -2189,6 +2270,26 @@ class MCSAgent(BaseAgent):
                   abest: float, fbest: float, fmed: float, up: List[float],
                   down: List[float], monotone: int, minima: List[int],
                   nmin: int, unitlen: float, s: int, stopping_actions: int):
+        """
+        The lsdescent algorithm
+        :param x: function evaluation argument (position)
+        :param p:
+        :param alist:
+        :param flist:
+        :param alp:
+        :param abest:
+        :param fbest:
+        :param fmed:
+        :param up:
+        :param down:
+        :param monotone:
+        :param minima:
+        :param nmin:
+        :param unitlen:
+        :param s: the current depth level
+        :param stopping_actions: number of stopping actions
+        :return: the set pf parameters and metrics obtained from performing lsdescent
+        """
         cont: Union[bool, int] = max([i == 0 for i in alist])
 
         if cont:
@@ -2238,7 +2339,30 @@ class MCSAgent(BaseAgent):
                 fmed: float, up: List[float], down: List[float],
                 monotone: int, minima: List[Union[int, float, bool]], nmin: int, unitlen: float, s: int,
                 saturated: int, stopping_actions: int):
-
+        """
+        The lsaquart function
+        :param nloc:
+        :param small:
+        :param sinit: initial depth level
+        :param short:
+        :param x: evaluation argument (position)
+        :param p:
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param alp:
+        :param up:
+        :param down:
+        :param monotone:
+        :param minima:
+        :param nmin
+        :param unitlen:
+        :param s: the current depth level
+        :param saturated:
+        :param stopping_actions: the number of stopping actions
+        :return: the parameters and metrics obtained from performing lsquart
+        """
         if alist[0] == alist[1]:
             f12: Union[int, float] = 0
         else:
@@ -2340,6 +2464,32 @@ class MCSAgent(BaseAgent):
               fmed: float, up: List[float], down: List[float], monotone: int,
               minima: List[int], nmin: int, unitlen: float,
               s: int, stopping_actions: int):
+        """
+        The lssep function
+        :param nloc:
+        :param small:
+        :param sinit: initial depth levekl
+        :param short:
+        :param x: evaluation argument (position)
+        :param p:
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param alp:
+        :param abest:
+        :param fbest: best function value so far
+        :param fmed: median function value
+        :param up:
+        :param down:
+        :param monotone:
+        :param minima:
+        :param nmin:
+        :param untilen:
+        :param s: current depth level
+        :param stopping_actions: the number of stopping actions
+        :return: the parameters and metrics obtained from performing lssep
+        """
         nsep = 0
         while nsep < nmin:
             down = [i < j for i, j in zip(flist[1: s], flist[0: s - 1])]
@@ -2394,6 +2544,31 @@ class MCSAgent(BaseAgent):
                 up: List[float], down: List[float], monotone: int,
                 minima: List[Union[int, float, bool]], nmin: int, unitlen: float, s: int,
                 saturated: int, stopping_actions: int):
+        """
+        The lslocal function
+        :param nloc:
+        :param small:
+        :param sinit: the initial depth level:
+        :param short:
+        :param x:
+        :param p:
+        :param alist:
+        :param flist:
+        :param amin:
+        :param amax:
+        :param alp:
+        :param abest:
+        :param fbest:
+        :param fmed:
+        :param up:
+        :param down:
+        :param monotone:
+        :param minima:
+        :param nmin:
+        :param unitlen:
+        :param s: current depth level
+        :return: the parameters and metrics obtained from lslocal
+        """
         up = [i < j for i, j in zip(flist[0: s - 1], flist[1: s])]
         down = [i <= j for i, j in zip(flist[1: s], flist[0: s - 1])]
         down[s - 2] = (flist[s - 1] < flist[s - 2])
