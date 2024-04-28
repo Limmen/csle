@@ -99,7 +99,7 @@ class MCSAgent(BaseAgent):
 
         :param metrics: the dict with the aggregated metrics
         :param info: the new information
-        :return: the updated dict
+        :return: the updated dict of metrics
         """
         for k, v in info.items():
             if k in metrics:
@@ -133,9 +133,10 @@ class MCSAgent(BaseAgent):
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def train(self):
+    def train(self) -> ExperimentExecution:
         """
         Initiating the parameters of performing the MCS algorithm, using external functions
+        :return: The experiment execution
         """
         pid = os.getpid()
         u = self.experiment_config.hparams[agents_constants.MCS.U].value
@@ -378,11 +379,34 @@ class MCSAgent(BaseAgent):
             theta[i] = theta0[i, istar[i]]
         return J0, istar, ncall, policy
 
-    def MCS(self, exp_result, seed, random_seeds, training_job: TrainingJobConfig,
-            u: List[int], v: List[int], smax: int, nf: int,
-            stop: List[Union[float, int]], iinit: int, local: int, gamma: float,
-            hess: NDArray[np.float64], stopping_actions: int, eps: float, n: int, prt: int = 1):
-
+    def MCS(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
+            training_job: TrainingJobConfig, u: List[int], v: List[int],
+            smax: int, nf: int, stop: List[Union[float, int]], iinit: int,
+            local: int, gamma: float, hess: NDArray[np.float64], stopping_actions: int,
+            eps: float, n: int, prt: int = 1) -> ExperimentResult:
+        """
+        The Multilevel Coordinate Search algorithm
+        :param exp_result: the experiment result
+        :param seed: the seed
+        :param random_seeds: the list of random seeds
+        :param training_job: the configuration of the training job
+        :param u: the initial lower bound ("lower corner" in 3D)
+        :param v: the initial upper bound ("upper corner" in 3D)
+        :param smax: maximum level depth och local search
+        :param nf: maximum number of function calls
+        :param stop:
+        :param iinit:
+        :param local:
+        :param gamma:
+        :param hess:
+        :param stopping_actions: number of stopping actions
+        :param gamma:
+        :param hess: the hessian of the multidimensional function
+        :param eps: parameter value for the golden ratio
+        :param n:
+        :param prt: print option
+        :return: the experiment result
+        """
         if MCSUtils().check_box_bound(u, v):
             sys.exit("Error MCS main: out of bound")
         n = len(u)
@@ -797,6 +821,37 @@ class MCSAgent(BaseAgent):
                 nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int):
         """
         Splitting box at specified level s according to an initialization list
+        :param i : specified index
+        :param s: current depth level
+        :param smax: maximum level depth
+        :param par:
+        :param x0: initial position
+        :param n0:
+        :param u: initial lower guess ("lower corner" in 3D)
+        :param v: initial upper guess ("upper corner" in 3D)
+        :param x: evaluation argument
+        :param y:
+        :param x1: evaluation argument (position)
+        :param x2: evaluation argument (position)
+        :param L:
+        :param l:
+        :param xmin: evaluation argument (position)
+        :param fmi: minimal function value
+        :param ipar:
+        :param level:
+        :param ichild:
+        :param f: function value
+        :param xbest: best evaluation argument (position)
+        :param fbest: best function value
+        :param stop:
+        :param prt: print option
+        :param record:
+        :param nboxes: number of boxes
+        :param nbasket: number of baskets
+        :param nsweepbest:
+        :param nsweep: number of sweeps
+        :stopping_actions: number of stopping actions
+        :return: a collection of parameters and metrics from the initial split
         """
 
         ncall = 0
@@ -902,7 +957,36 @@ class MCSAgent(BaseAgent):
               record: NDArray[Union[np.float64, np.int32]], nboxes: int, nbasket: int,
               nsweepbest: int, nsweep: int, stopping_actions: int):
         """
-        Split Function
+        Function that performs a box split
+        :param i:
+        :param s: current depth level
+        :param smax: maximum depth level
+        :param par:
+        :param n0:
+        :param u: initial lower guess ("lower corner" in 3D)
+        :param v: initial upper guess ("upper corner" in 3D)
+        :param x: evaluation argument (position)
+        :param y:
+        :param x1: evaluation argument (position)
+        :param x2: evaluation argument (position)
+        :param param z:
+        :param xmin: minimum position
+        :param fmi:
+        :param ipar:
+        :param level:
+        :param ichild:
+        :param f: function value
+        :param xbest: currently best position
+        :param fbest: current best function value'
+        :param stop:
+        :param prt: print option
+        :param record:
+        :param nboxes: number of boxes
+        :param nbasket: number of baskets
+        :param nsweepbest:
+        :param nsweep:
+        :param stopping_actions: the number of stopping actions
+        :return: a collection of parameters and metrics afdter the arbitrary split
         """
         ncall = 0
         flag = 1
@@ -1013,6 +1097,23 @@ class MCSAgent(BaseAgent):
 
     def basket(self, x, f, policy, avg_metrics, xmin, fmi, xbest, fbest, stop,
                nbasket, nsweep, nsweepbest, stopping_actions):
+        """
+        Function representing the basket functional
+        :param x: evalutaion argument (position)
+        :param f: function value
+        :param policy: current policy
+        :param avg_metrics: current average metrics
+        :param xmin: minum evaluation argumen (position)
+        :param fmi:
+        :param xbest: current best position
+        :param fbest: current best function value
+        :param stop:
+        :param nbasket: number of baskets
+        :param nsweep: numbver of sweeps
+        :param nsweepbest:
+        :param stopping_actions: number of stopping actions
+        :return: a collection of parameters and metrics afdter the basket functional
+        """
         loc = 1
         flag = 1
         ncall = 0
@@ -1116,6 +1217,24 @@ class MCSAgent(BaseAgent):
                 nf: int, stop: List[Union[int, float]], maxstep: int, gamma: float,
                 hess: NDArray[np.float64], nsweep: int,
                 nsweepbest: int, stopping_actions: int, eps: float):
+        """
+        The local searcg algorithm
+        :param x: the evalutaion argument (position)
+        :param f: function value
+        :param f0: function value
+        :param u: lower initial guess ("lower corner" in 3D)
+        :param v: initial upper guess ("upper corner" in 3D)
+        :param nf:
+        :param stop:
+        :param maxstep:
+        :param gamma:
+        :param hess: the function Hessian
+        :param nsweep: number of sweeps
+        :param nsweepbest: best number of sweeps
+        :param stopping_actions: number of stopping actions
+        :param eps: espilon
+        :return: a collection of parameters and metrics afdter the local search
+        """
         ncall = 0
         n = len(x)
         x0 = np.asarray([min(max(u[i], 0), v[i]) for i in range(len(u))])
@@ -1337,6 +1456,20 @@ class MCSAgent(BaseAgent):
                 xmin: List[Union[float, List[float], NDArray[np.float64]]], fmi: List[float],
                 xbest: List[float], fbest: List[float], stop: List[Union[float, int]], nbasket: int, nsweep: int,
                 nsweepbest: int, stopping_actions: int):
+        """
+        Basket 1
+        :param x: evaluation agument (postition)
+        :param f: function value(s)
+        :param xmin: current minimum evaluation argument (position)
+        :param fmi:
+        :param xbest: current best evaluation argument (position)
+        :param fbest: current best function value
+        :param stop:
+        :param nbasket: number of baskets
+        :param nsweep: number of sweeps
+        :param nsweepbest: best number of sweeps
+        :param stopping_actions: number of stopping actions
+        """
         loc = 1
         flag = 1
         ncall = 0
@@ -1441,6 +1574,16 @@ class MCSAgent(BaseAgent):
 
     def csearch(self, x: List[Union[float, int]], f: float, u: List[int], v: List[int], hess: NDArray[np.float64],
                 stopping_actions: int, eps: float):
+        """
+        Performs the csearch algorithm
+        :param x: evaulation argument (position)
+        :param f: function value
+        :param u: lower initial guess ("Lower corner" in 3D)
+        :param v: upper initial guess ("upper corner" in 3D)
+        :param hess: the function Hessian
+        :param stopping_actions: the number of stopping actions
+        :return: a collection of parameters and metrics after doing the csearch
+        """
         n = len(x)
         x = [min(v[i], max(x[i], u[i])) for i in range(len(x))]
 
@@ -1756,7 +1899,7 @@ class MCSAgent(BaseAgent):
 
     def lsinit(self, x, p, alist, flist, amin, amax, scale, stopping_actions):
         '''
-            Line search intilization
+        Line search algorithm
         '''
         alp: Union[int, float] = 0
         alp1: Union[int, float] = 0
