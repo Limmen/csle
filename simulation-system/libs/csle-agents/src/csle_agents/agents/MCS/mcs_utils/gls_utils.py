@@ -79,7 +79,10 @@ class GLSUtils(UtilHelpers):
         perm = np.argsort(alist).tolist()
         alist.sort()
         flist = [flist[i] for i in perm if i < len(flist)]
-        s = len(alist)
+        if len(flist) >= len(alist):
+            s = len(alist)
+        else:
+            s = len(flist)
 
         up = [i < j for i, j in zip(flist[0: s - 1], flist[1: s])]
         down = [i <= j for i, j in zip(flist[1: s], flist[0: s - 1])]

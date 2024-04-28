@@ -606,8 +606,8 @@ class MCSAgent(BaseAgent):
                                  xmin, fmi, x, f1, loc, flag,
                                  ncall1, nsweep, nsweepbest) =\
                                     self.basket(
-                                        x, f1, policy, xmin, fmi,
-                                        xbest, fbest, stop,
+                                        x, f1, policy, avg_metrics,
+                                        xmin, fmi, xbest, fbest, stop,
                                         nbasket0, nsweep,
                                         nsweepbest,
                                         stopping_actions)
