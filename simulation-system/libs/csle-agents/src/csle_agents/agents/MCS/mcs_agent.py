@@ -591,12 +591,12 @@ class MCSAgent(BaseAgent):
                             nloc, xloc = MCSUtils().addloc(nloc, xloc, x)
 
                             if not nbasket0 or nbasket0 == -1:
-                                (xbest, fbest, xmin, fmi,
-                                 x, f1, loc, flag,
+                                (xbest, fbest, policy, avg_metrics, xmin,
+                                 fmi, x, f1, loc, flag,
                                  ncall1, nsweep,
                                  nsweepbest) =\
                                     self.basket(
-                                        x, f1, xmin, fmi,
+                                        x, f1, policy, avg_metrics, xmin, fmi,
                                         xbest, fbest, stop,
                                         nbasket0, nsweep,
                                         nsweepbest,
@@ -606,7 +606,7 @@ class MCSAgent(BaseAgent):
                                  xmin, fmi, x, f1, loc, flag,
                                  ncall1, nsweep, nsweepbest) =\
                                     self.basket(
-                                        x, f1, xmin, fmi,
+                                        x, f1, policy, xmin, fmi,
                                         xbest, fbest, stop,
                                         nbasket0, nsweep,
                                         nsweepbest,
@@ -1011,12 +1011,12 @@ class MCSAgent(BaseAgent):
         return (xbest, fbest, policy, xmin, fmi, ipar, level, ichild, f, flag,
                 ncall, record, nboxes, nbasket, nsweepbest, nsweep)
 
-    def basket(self, x, f, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions):
+    def basket(self, x, f, policy, avg_metrics, xmin, fmi, xbest, fbest, stop, nbasket, nsweep, nsweepbest, stopping_actions):
         loc = 1
         flag = 1
         ncall = 0
         if not nbasket:
-            return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
+            return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
         dist = np.zeros(nbasket + 1)
         for k in range(len(dist)):
             dist[k] = np.linalg.norm(np.subtract(x, xmin[k]))
@@ -1024,11 +1024,13 @@ class MCSAgent(BaseAgent):
         # dist1 = np.sort(dist)
         ind = np.argsort(dist)
         if nbasket == -1:
-            return xbest, fbest, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
+            return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
         else:
             for k in range(nbasket + 1):
                 i = ind[k]
-                if fmi[i] <= f:
+                print("här 1")
+                if fmi[i] <= f: # TODO : initiate a policiy with the right argument even though the inner if-statement is not reached.
+                    print("här 2")
                     p = xmin[i] - x
 
                     y1 = x + 1 / 3 * p
@@ -1663,12 +1665,13 @@ class MCSAgent(BaseAgent):
         # if type(flist) != list:
         #     flist = flist.tolist()
 
-        short = 0.381966
+        short = 0.381966 # TODO: this should be parametrized
         sinit = len(alist)
 
         bend = 0
         xl, xu, x, p, amin, amax, scale = GLSUtils().lsrange(xl, xu, x, p, prt, bend)
         alist, flist, alp, alp1, alp2, falp = self.lsinit(x, p, alist, flist, amin, amax, scale, stopping_actions)
+        # TODO: Seems like lsinit gives a wierd return statement for flist
         alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s = GLSUtils().lssort(alist, flist)
         nf = s - sinit
 
@@ -1794,7 +1797,7 @@ class MCSAgent(BaseAgent):
         aamin = min(alist)
         aamax = max(alist)
         if amin > aamin or amax < aamax:
-            sys.exit('GLS Error: non-admissible step in alist')
+            sys.exit('GLS Error: non-admissible step in alist') # TODO: investigate this
         if aamax - aamin <= scale:
             alp1 = max(amin, min(- scale, amax))
             alp2 = max(amin, min(+ scale, amax))

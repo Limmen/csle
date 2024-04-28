@@ -78,8 +78,7 @@ class GLSUtils(UtilHelpers):
     def lssort(self, alist, flist):
         perm = np.argsort(alist).tolist()
         alist.sort()
-        flist = [flist[i] for i in perm]
-        
+        flist = [flist[i] for i in perm if i < len(flist)]
         s = len(alist)
 
         up = [i < j for i, j in zip(flist[0: s - 1], flist[1: s])]
