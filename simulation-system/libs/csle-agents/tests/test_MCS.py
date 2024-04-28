@@ -17,7 +17,7 @@ import gym_csle_stopping_game.constants.constants as env_constants
 from csle_agents.common.objective_type import ObjectiveType
 
 
-class TestMCSMeadSuite:
+class TestMCSSuite:
     """
     Test suite for the MCSAgent
     """
@@ -37,12 +37,12 @@ class TestMCSMeadSuite:
             log_every=1,
             hparams={
                 agents_constants.MCS.STEP: HParam(
-                    value=1000,
+                    value=10,
                     name=agents_constants.MCS.STEP,
                     descr="step",
                 ),
                 agents_constants.MCS.STEP1: HParam(
-                    value=10000,
+                    value=100,
                     name=agents_constants.MCS.STEP1,
                     descr="step1",
                 ),
@@ -67,7 +67,7 @@ class TestMCSMeadSuite:
                     descr="no. of stopping actions",
                 ),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=500,
+                    value=50,
                     name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)",
                 ),
@@ -185,7 +185,7 @@ class TestMCSMeadSuite:
 
     def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the NelderMeadAgent
+        Tests creation of the MCSAgent
 
         :return: None
         """
@@ -226,9 +226,9 @@ class TestMCSMeadSuite:
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace', return_value=True)
         mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
                      return_value=True)
-        agent = NelderMeadAgent(emulation_env_config=emulation_env_config,
-                                simulation_env_config=simulation_env_config,
-                                experiment_config=experiment_config)
+        agent = MCSAgent(emulation_env_config=emulation_env_config,
+                         simulation_env_config=simulation_env_config,
+                         experiment_config=experiment_config)
         experiment_execution = agent.train()
         assert experiment_execution is not None
         assert experiment_execution.descr != ""
@@ -248,10 +248,10 @@ class TestMCSMeadSuite:
                experiment_execution.result.plot_metrics
         for seed in experiment_config.random_seeds:
             assert seed in experiment_execution.result.all_metrics
-            assert agents_constants.NELDER_MEAD.THETAS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.MCS.THETAS in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
-            assert agents_constants.NELDER_MEAD.THRESHOLDS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.MCS.THRESHOLDS in experiment_execution.result.all_metrics[seed]
             assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in
                     experiment_execution.result.all_metrics[seed])
             assert (agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in
