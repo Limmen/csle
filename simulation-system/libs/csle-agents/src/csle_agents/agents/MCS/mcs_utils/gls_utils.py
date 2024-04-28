@@ -21,13 +21,13 @@ class GLSUtils(UtilHelpers):
         
         # find sensible step size scale
         # TODO :isinstance without errors
-        if type(p) != np.ndarray:
-            if type(p) != list:
+        if type(p) is not np.ndarray:
+            if type(p) is not list:
                 p = [p]
             p = np.asarray(p)
 
-        if type(x) != np.ndarray:
-            if type(x) != list:
+        if type(x) is not np.ndarray:
+            if type(x) is not list:
                 x = [x]
                 xl = [xl]
                 xu = [xu]
@@ -106,6 +106,7 @@ class GLSUtils(UtilHelpers):
             if abest in al:
                 al.remove(abest)
             unitlen = min(np.abs(np.subtract(al, abest)))
+            # TODO: investigate edge case error
         else:
             unitlen = max(abest - alist[0], alist[s - 1] - abest)
 

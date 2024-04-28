@@ -589,8 +589,8 @@ class MCSUtils(UtilHelpers):
                     theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
                 else:
                     theta0[i, 1] = 0
-                    _, theta0[i, 0], self.subint(0, u[i])
-                    _, theta0[i, 2], self.subint(0, v[i])
+                    _, theta0[i, 0] = self.subint(0, u[i]) # type: ignore[name-defined]
+                    _, theta0[i, 2] = self.subint(0, v[i]) # type: ignore[name-defined]
         elif iinit == 2:
             theta0 = np.array([])
             theta0 = np.append(theta0, [(i * 5 + j) / 6 for i, j in zip(u, v)])

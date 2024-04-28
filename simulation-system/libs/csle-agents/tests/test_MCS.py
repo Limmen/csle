@@ -138,8 +138,7 @@ class TestMCSSuite:
                 ),
             },
             player_type=PlayerType.DEFENDER,
-            player_idx=0,
-            )
+            player_idx=0)
         return experiment_config
 
     @pytest.fixture

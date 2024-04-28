@@ -1,4 +1,6 @@
 import numpy as np
+from numpy.typing import NDArray
+from typing import Any
 import sys
 from scipy.sparse import spdiags
 from scipy import sparse
@@ -354,6 +356,7 @@ class LSUtils(UtilHelpers):
             print('minq: lower bound has wrong dimension')
 
         if 'xx' in locals():
+            xx: NDArray[Any] = locals()["xx"]
             if xx.shape[0] != n:
                 ier = -1
                 print('minq: lower bound has wrong dimension')
