@@ -2,9 +2,9 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 from csle_attack_profiler.hmm_profiling import HMMProfiler 
-from typing import List
 import numpy as np
 import os
+
 
 class TestHMMProfilerSuite:
     """
@@ -17,21 +17,20 @@ class TestHMMProfilerSuite:
         Source: https://www.cis.upenn.edu/~cis2620/notes/Example-Viterbi-DNA.pdf
         """
 
-        hidden_states = [0, 1] # States H=0 and L=1
+        hidden_states = [0, 1]  # States H=0 and L=1
         init_probs = [0.5, 0.5]
         trans_matrix = [
-            [0.5, 0.5],  
-            [0.4, 0.6]   
+            [0.5, 0.5],
+            [0.4, 0.6]
         ]
         
-        emissions_list = [0, 1, 2, 3] # A,C,G,T
+        emissions_list = [0, 1, 2, 3]  # A,C,G,T
         emission_matrix = [
             [0.2, 0.3, 0.3, 0.2],  
             [0.3, 0.2, 0.2, 0.3]   
         ]
         # Consider the sequence GGCACTGAA
         seq = [2, 2, 1, 0, 1, 3, 2, 0, 0]
-
 
         # Run the Viterbi algorithm
         path = HMMProfiler.viterbi(hidden_states, init_probs, trans_matrix, emission_matrix, seq, emissions_list)
@@ -46,7 +45,7 @@ class TestHMMProfilerSuite:
         """
         STATES = ['no_intrusion', 'A:CVE-2015-1427 exploit']
     
-        TRANSITION_MATRIX = [[1/3,2/3],[1/2,1/2]]
+        TRANSITION_MATRIX = [[1 / 3, 2 / 3], [1 / 2, 1 / 2]]
 
         METRIC = 'alerts_weighted_by_priority'
 
@@ -56,7 +55,6 @@ class TestHMMProfilerSuite:
 
         model = HMMProfiler([statistics])
 
-
         model.create_model(TRANSITION_MATRIX, STATES, METRIC)
         state_seq, observation_seq = model.generate_sequence(2, 0, 42)
         path = model.profile_sequence(observation_seq)
@@ -64,4 +62,4 @@ class TestHMMProfilerSuite:
 
         assert path[0] == 'A:CVE-2015-1427 exploit', "Test failed! The first profiled action in path is incorrect."
         assert state_seq[0] == 'no_intrusion', "Test failed! The first profiled action in simulated state sequence is incorrect."
-        assert converted_path[0].action_id == EmulationAttackerActionId.CVE_2015_1427_EXPLOIT, "Test failed! The converted path fails."
+        assert converted_path[0].action_id == EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,"Test failed! The converted path fails."
