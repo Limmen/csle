@@ -41,6 +41,7 @@ Further, binaries of the Python libraries in CSLE are available on PyPi:
 - <a href="https://pypi.org/project/csle-cluster">https://pypi.org/project/csle-cluster</a>
 - <a href="https://pypi.org/project/gym-csle-intrusion-response-game">https://pypi.org/project/gym-csle-intrusion-response-game</a>
 - <a href="https://pypi.org/project/csle-tolerance">https://pypi.org/project/csle-tolerance</a>
+- <a href="https://pypi.org/project/csle-attack-profiler">https://pypi.org/project/csle-attack-profiler</a>
 
 
 #### Lines of code
