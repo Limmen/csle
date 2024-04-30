@@ -71,7 +71,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-base](https://limmen.dev/csle/docs/csle-base)
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-attack-profiler](https://limmen.dev/csle/docs/csle-attack-profiler)
 
 ### Generate API Documentation
 
