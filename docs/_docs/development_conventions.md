@@ -56,6 +56,7 @@ should help you with that.
 - `simulation-system/libs/csle-tolerance`. An intrusion-tolerant system: Tolerance: (T)w(o)-(l)ev(e)l (r)ecovery (a)nd respo(n)se (c)ontrol with f(e)edback.
 - `simulation-system/libs/gym-csle-apt-game`. A gym environment for an APT game.
 - `simulation-system/libs/gym-csle-cyborg`. A gym environment wrapper for CybORG.
+- `simulation-system/libs/csle-attack-profiler`. An attack profiler based on MITRE ATT&CK
 
 #### Code Readability
 
@@ -68,7 +69,7 @@ csle/.flake8
 ```
 
 <p class="captionFig">
-Listing 118: Configuration file for the `flake8` Python linter.
+Listing 120: Configuration file for the `flake8` Python linter.
 </p>
 
 Configuration file for the `flake8` Python linter.
@@ -78,7 +79,7 @@ csle/management-system/csle-mgmt-webapp/.eslintrc.json
 ```
 
 <p class="captionFig">
-Listing 119: Configuration file for the `eslint` JavaScript linter.
+Listing 121: Configuration file for the `eslint` JavaScript linter.
 </p>
 
 
@@ -119,7 +120,7 @@ def stop_all_executions() -> None:
 ```
 
 <p class="captionFig">
-Listing 120: Example of a Python function with a comment.`
+Listing 122: Example of a Python function with a comment.`
 </p>
 
 Example of a comment to a JavaScript function:
@@ -146,7 +147,7 @@ const convertListToCommaSeparatedString = (listToConvert) => {
 ```
 
 <p class="captionFig">
-Listing 121: Example of a JavaScript function with a comment.
+Listing 123: Example of a JavaScript function with a comment.
 </p>
 
 ### Unit and Integration Testing
