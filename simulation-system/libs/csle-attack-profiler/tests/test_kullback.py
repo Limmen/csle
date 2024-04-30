@@ -3,6 +3,7 @@ from csle_attack_profiler.dao.kullback_for_all import KullbackLeibler
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 import os
 
+
 class TestKullbackSuite:
     """
     Test suite for the Kullback-Leibler divergence calculation class.
@@ -26,6 +27,7 @@ class TestKullbackSuite:
         path = os.path.join(current_dir, "statistics_test.json")
         statistics = EmulationStatistics.from_json_file(path)
 
-        kl_div, kl_div2 = KullbackLeibler.kullback_leibler_for_metric("alerts_weighted_by_priority", "A:MyTest", statistics)
+        kl_div, kl_div2 = KullbackLeibler.kullback_leibler_for_metric("alerts_weighted_by_priority",
+                                                                      "A:MyTest", statistics)
 
         assert kl_div and kl_div2, f"Test failed! Expect values, Actual: {kl_div}, {kl_div2}"

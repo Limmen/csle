@@ -1,7 +1,7 @@
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
-from csle_attack_profiler.hmm_profiling import HMMProfiler 
+from csle_attack_profiler.hmm_profiling import HMMProfiler
 import numpy as np
 import os
 
@@ -26,8 +26,8 @@ class TestHMMProfilerSuite:
         
         emissions_list = [0, 1, 2, 3]  # A,C,G,T
         emission_matrix = [
-            [0.2, 0.3, 0.3, 0.2],  
-            [0.3, 0.2, 0.2, 0.3]   
+            [0.2, 0.3, 0.3, 0.2],
+            [0.3, 0.2, 0.2, 0.3]
         ]
         # Consider the sequence GGCACTGAA
         seq = [2, 2, 1, 0, 1, 3, 2, 0, 0]
@@ -61,5 +61,7 @@ class TestHMMProfilerSuite:
         converted_path = model.convert_states_to_profiles(path[:1])
 
         assert path[0] == 'A:CVE-2015-1427 exploit', "Test failed! The first profiled action in path is incorrect."
-        assert state_seq[0] == 'no_intrusion', "Test failed! The first profiled action in simulated state sequence is incorrect."
-        assert converted_path[0].action_id == EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,"Test failed! The converted path fails."
+        assert state_seq[0] == 'no_intrusion', "Test failed!"
+        "The first profiled action in simulated state sequence is incorrect."
+        assert converted_path[0].action_id == EmulationAttackerActionId.CVE_2015_1427_EXPLOIT, "Test failed!"
+        "The converted path fails."

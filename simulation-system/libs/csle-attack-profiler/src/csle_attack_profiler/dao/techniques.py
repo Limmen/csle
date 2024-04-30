@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Techniques(Enum):
     """
     Techniques from MITRE ATT&CK, used to profile the attack
@@ -29,6 +30,7 @@ class Techniques(Enum):
     COMPROMISE_CLIENT_SOFTWARE_BINARY = "Compromise Client Software Binary"
     EXTERNAL_REMOTE_SERVICES = "External Remote Services"
     NATIVE_API = "Native API"
+
 
 class SubTechniques(Enum):
     """

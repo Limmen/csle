@@ -59,7 +59,7 @@ class KullbackLeibler:
             CQ = len(Q)
             SU = list(set(X + X_no_intrusion))
             epsilon = 0.0000001
-            SU_disjoint_P = len(list(set(SU) - set(P))) 
+            SU_disjoint_P = len(list(set(SU) - set(P)))
             SU_disjoint_Q = len(list(set(SU) - set(Q)))
 
             pc = (sum(Y) + epsilon * (SU_disjoint_P) - 1) / CP
@@ -75,7 +75,7 @@ class KullbackLeibler:
                 if val in X_no_intrusion:
                     q_prime.append((Y_no_intrusion[X_no_intrusion.index(val)] - qc))
                 else:
-                    q_prime.append(epsilon) 
+                    q_prime.append(epsilon)
 
             p_prime_np = np.array(p_prime) / np.sum(p_prime)
             q_prime_np = np.array(q_prime) / np.sum(q_prime)
