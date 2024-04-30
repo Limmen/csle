@@ -4,7 +4,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type im
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_attack_profiler.attack_profiler import AttackProfiler
-from typing import List, Union
+from typing import List, Union, Tuple, Any
 import numpy as np
 import random as random
 import sys
@@ -14,7 +14,7 @@ class HMMProfiler:
     The HMMProfiler class is used to profile a sequence of observations based on a Hidden Markov Model (HMM).
     """ 
 
-    def __init__(self, statistics: List[EmulationStatistics], model_name: str = None) -> None:
+    def __init__(self, statistics: List[EmulationStatistics], model_name: Union[str, None] = None) -> None:
         """
         Class constructor
 
@@ -22,11 +22,11 @@ class HMMProfiler:
         :param model_name: The name of the model
         """
         self.statistics = statistics
-        self.transition_matrix = None
-        self.emission_matrix = []
-        self.hidden_states = None
-        self.emission_matrix_observations = []
-        self.start_state_probs = []
+        self.transition_matrix: List[List[float]] = []
+        self.emission_matrix: List[List[float]] = []
+        self.hidden_states: List[str] = []
+        self.emission_matrix_observations: List[int] = []
+        self.start_state_probs: List[float] = []
         self.model_name = None
         
 
@@ -86,7 +86,7 @@ class HMMProfiler:
         return profiled_sequence
 
 
-    def get_matrices_of_observation(self, statistics: List[EmulationStatistics], metric: str, states: List[str]) -> (List[List[float]], List[int]):
+    def get_matrices_of_observation(self, statistics: List[EmulationStatistics], metric: str, states: List[str]) -> Tuple[List[List[float]], List[int]]:
         """
         Creates the emission matrix for a given metric based on the statistics from the EmulationStatistics objects.
 
@@ -183,17 +183,14 @@ class HMMProfiler:
 
     def convert_states_to_profiles(self, states: List[str]) -> List[Union[AttackProfiler, str]]:
         """
-        Converts a list of states to a list of EmulationAttackerActionId.
-        TODO: 
-        Converts a list of states to a list of attacker actions, in other words make the profiling.
-        So we need to create an EmulationAttackerAction and then make the call. 
+        Converts a list of states to a list of AttackProfiles.
 
         :param states: The list of states to convert
 
         :return: The list of EmulationAttackerActionId
         """
 
-        new_states = [] 
+        new_states: List[Union[AttackProfiler, str]] = [] 
         for state in states:
             if state == 'A:Continue':
                 action = EmulationAttackerAction(id=EmulationAttackerActionId.CONTINUE,name="Continue",cmds=[],
@@ -311,8 +308,8 @@ class HMMProfiler:
         :return: The most likely sequence of hidden states
         """
         # Convert the emissions list to a numpy array, to use the where function
-        if type(emissions_list) != np.ndarray: 
-            emissions_list = np.array(emissions_list)
+        emissions_list_typed: np.ndarray[int, Any] = np.array(emissions_list)
+
         # Check that the sum equals 1
         for i in range(len(emission_matrix)):
             if round(sum(emission_matrix[i]), 10) != 1:
@@ -331,7 +328,7 @@ class HMMProfiler:
         # Initialization
         for i in range(S):
             # Fetch the index of the observation in the emission_matrix
-            index, = np.where(emissions_list == obs[0])
+            index, = np.where(emissions_list_typed == obs[0])
             if index[0].size > 0: 
                 prob[0][i] = init_probs[i] * emission_matrix[i][index[0]]
             else:
@@ -341,7 +338,7 @@ class HMMProfiler:
 
         # Recursion
         for t in range(1, T):
-            index, = np.where(emissions_list == obs[t])
+            index, = np.where(emissions_list_typed == obs[t])
             for i in range(S):
                 max_prob = -1
                 max_state = -1
@@ -358,11 +355,14 @@ class HMMProfiler:
         path[T-1] = np.argmax(prob[T-1])
         for t in range(T-2, -1, -1):
             path[t] = prev[t+1][int(path[t+1])]
+        # Convert the path to a list
+        typed_path: List[float] = path.tolist()
 
-        return path
+
+        return typed_path
 
 
-    def generate_sequence(self, intrusion_length: int, initial_state_index: int, seed: int = None) -> (List[str], List[int]):
+    def generate_sequence(self, intrusion_length: int, initial_state_index: int, seed: Union[int,None] = None) -> Tuple[List[str], List[int]]:
         """
         Generates a sequence of states and corresponding observations based on the given emission matrix, and transition matrix.
         First, a sequence of observation from 'no intrusion' is generated based on the geometric distribution of the initial state.
