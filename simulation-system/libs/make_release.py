@@ -50,6 +50,9 @@ RELEASE_CONFIG = {
     },
     "gym-csle-cyborg": {
         "new_version": "'0.5.1'"
+    },
+    "csle-attack-profiler": {
+        "new_version": "'0.5.1'"
     }
 }
 

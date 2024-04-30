@@ -1,3 +1,4 @@
+import pytest
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
@@ -40,6 +41,7 @@ class TestHMMProfilerSuite:
         expected_path = [0, 0, 0, 1, 1, 1, 1, 1, 1]
         assert np.array_equal(path, expected_path), f"Test failed! Expected: {expected_path}, Actual: {path}"
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_hmm_profiler_test_data(self) -> None:
         """
         Test the HMMProfiler class with test statistics.

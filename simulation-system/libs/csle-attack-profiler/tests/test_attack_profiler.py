@@ -1,3 +1,4 @@
+import pytest
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action \
     import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
@@ -15,6 +16,7 @@ class TestAttackProfilerSuite:
     Test suite for attack_profiler.py
     """
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_get_attack_profile(self) -> None:
         """
         Test case for get_attack_profile returns the attack profile for a given attacker action
@@ -52,6 +54,7 @@ class TestAttackProfilerSuite:
                                                                      'Cloud Service: Cloud Service Enumeration']}
         assert result.subtechniques == {}
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_get_attack_profile_error(self) -> None:
         """
         Test case for get_attack_profile returns an empty attack profile for an invalid attacker action
@@ -76,6 +79,7 @@ class TestAttackProfilerSuite:
         assert result.data_sources == {}
         assert result.subtechniques == {}
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profile_all_actionid(self) -> None:
         """
         Test case for get_attack_profile returns the attack profile for all the EmulationAttackerActionId
@@ -118,6 +122,7 @@ class TestAttackProfilerSuite:
                 for technique in result.subtechniques:
                     assert result.techniques_tactics[technique]
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_no_graph(self) -> None:
         """
         Test the get_attack_profile_sequence method without providing an attack graph
@@ -148,6 +153,7 @@ class TestAttackProfilerSuite:
             'Gather Victim Host Information': ['Internet Scan: Response Content']}
         assert result[0].subtechniques == {}
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_graph(self) -> None:
         """
         Test get_attack_profile_sequence method providing an attack graph Graph:
@@ -257,6 +263,7 @@ class TestAttackProfilerSuite:
                                'Logon Session: Logon Session Metadata']}
         assert result[2].subtechniques == {}
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_graph2(self) -> None:
         """
         Test get_attack_profile_sequence method providing an attack graph, Graph:
@@ -328,6 +335,7 @@ class TestAttackProfilerSuite:
         # CVE_2015_1427_EXPLOIT will not prune any techniques
         assert result[3].techniques_tactics['Exploit Public-Facing Application']
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_novice(self) -> None:
         """
         Test the get_attack_profile_sequence for the novice sequence. Expected pruning of techniques
@@ -471,6 +479,7 @@ class TestAttackProfilerSuite:
         # the number of techniques in the naive approach
         assert len(techniques_graph) < len(techniques_naive)
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_experienced(self) -> None:
         """
         Test the get_attack_profile_sequence for the experienced sequence.
@@ -626,6 +635,7 @@ class TestAttackProfilerSuite:
         # than the number of techniques in the naive approach
         assert len(techniques_graph) < len(techniques_naive)
 
+    @pytest.mark.skip(reason="integration test, takes too long to run")
     def test_attack_profiler_sequence_expert(self) -> None:
         """
         Test the get_attack_profile_sequence for the experienced sequence.

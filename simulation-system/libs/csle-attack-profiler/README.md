@@ -4,7 +4,7 @@ Scripts and programs to profile attacks, attack sequences, and a probabilistic H
 using data from the csle platform, profiling attacks to MITRE ATT&CK techniques, and tactics.
 
 [![PyPI version]] 0.5.1
-![PyPI - Downloads] (https://pypi.org/project/mitreattack-python/)
+![PyPI - Downloads] (https://pypi.org/project/csle-attack-profiler/)
 
 ## Requirements
 
