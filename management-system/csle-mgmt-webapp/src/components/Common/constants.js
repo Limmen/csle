@@ -181,3 +181,157 @@ export const GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE_INT = 0
 export const EMPIRICAL_SYSTEM_MODEL_TYPE_INT = 1
 export const MCMC_SYSTEM_MODEL_TYPE_INT = 3
 export const GP_SYSTEM_MODEL_TYPE_INT = 2
+export const CONTAINERS_OS = {
+    csle_ssh_1: [{
+        name: 'csle_ssh_1',
+        os: 'ubuntu'
+    }],
+    csle_router_2: [{
+        name: 'csle_router_2',
+        os: 'ubuntu'
+    }],
+    csle_samba_2: [{
+        name: 'csle_samba_2',
+        os: 'debian'
+    }],
+    csle_honeypot_1: [{
+        name: 'csle_honeypot_1',
+        os: 'ubuntu'
+    }],
+    csle_ftp_1: [{
+        name: 'csle_ftp_1',
+        os: 'ubuntu'
+    }],
+    csle_hacker_kali_1: [{
+        name: 'csle_hacker_kali_1',
+        os: 'kali'
+    }],
+    csle_shellshock_1: [{
+        name: 'csle_shellshock_1',
+        os: 'debian'
+    }],
+    csle_sql_injection_1: [{
+        name: 'csle_sql_injection_1',
+        os: 'debian'
+    }],
+    csle_cve_2010_0426_1: [{
+        name: 'csle_cve_2010_0426_1',
+        os: 'debian'
+    }],
+    csle_cve_2015_1427_1: [{
+        name: 'csle_cve_2015_1427_1',
+        os: 'debian'
+    }],
+    csle_honeypot_2: [{
+        name: 'csle_honeypot_2',
+        os: 'ubuntu'
+    }],
+    csle_cve_2015_3306_1: [{
+        name: 'csle_cve_2015_3306_1',
+        os: 'debian'
+    }],
+    csle_cve_2015_5602_1: [{
+        name: 'csle_cve_2015_5602_1',
+        os: 'debian'
+    }],
+    csle_cve_2016_10033_1: [{
+        name: 'csle_cve_2016_10033_1',
+        os: 'debian'
+    }],
+    csle_client_1: [{
+        name: 'csle_client_1',
+        os: 'ubuntu'
+    }],
+    csle_kafka_1: [{
+        name: 'csle_kafka_1',
+        os: 'ubuntu'
+    }],
+    csle_elk_1: [{
+        name: 'csle_elk_1',
+        os: 'ubuntu'
+    }],
+    csle_router_1: [{
+        name: 'csle_router_1',
+        os: 'ubuntu'
+    }],
+    csle_telnet_1: [{
+        name: 'csle_telnet_1',
+        os: 'ubuntu'
+    }],
+    csle_ssh_2: [{
+        name: 'csle_ssh_2',
+        os: 'ubuntu'
+    }],
+    csle_ssh_3: [{
+        name: 'csle_ssh_3',
+        os: 'ubuntu'
+    }],
+    csle_telnet_2: [{
+        name: 'csle_telnet_2',
+        os: 'ubuntu'
+    }],
+    csle_telnet_3: [{
+        name: 'csle_telnet_3',
+        os: 'ubuntu'
+    }],
+    csle_ftp_2: [{
+        name: 'csle_ftp_2',
+        os: 'ubuntu'
+    }],
+    csle_ovs_1: [{
+        name: 'csle_ovs_1',
+        os: 'ubuntu'
+    }],
+    csle_ryu_1: [{
+        name: 'csle_ryu_1',
+        os: 'ubuntu'
+    }],
+    csle_pengine_exploit_1: [{
+        name: 'csle_pengine_exploit_1',
+        os: 'ubuntu'
+    }],
+    csle_cve_2014_0160_1: [{
+        name: 'csle_cve_2014_0160_1',
+        os: 'debian'
+    }],
+    csle_spark_1: [{
+        name: 'csle_spark_1',
+        os: 'spark'
+    }]
+}
+export const DEFAULT_INTERFACE_CONFIG = {
+    name: '',
+    ip: '',
+    subnetMask: '',
+    subnetPrefix: '',
+    physicalInterface: '',
+    bitmask: '',
+    limitPacketsQueue: 30000,
+    packetDelayMs: 2,
+    packetDelayJitterMs: 0.5,
+    packetDelayCorrelationPercentage: 25,
+    packetDelayDistribution: '0',
+    packetLossType: '0',
+    lossGemodelp: 0.02,
+    lossGemodelr: 0.97,
+    lossGemodelk: 0.98,
+    lossGemodelh: 0.0001,
+    packetCorruptPercentage: 0.00001,
+    packetCorruptCorrelationPercentage: 25,
+    packetDuplicatePercentage: 0.00001,
+    packetDuplicateCorrelationPercentage: 25,
+    packetReorderPercentage: 0.0025,
+    packetReorderCorrelationPercentage: 25,
+    packetReorderGap: 5,
+    rateLimitMbit: 1000,
+    packetOverheadBytes: 0,
+    cellOverheadBytes: 0,
+    defaultGateway: "0.0.0.0",
+    defaultInput: "accept",
+    defaultOutput: "accept",
+    defaultForward: "Drop",
+    trafficManagerPort: "50043",
+    trafficManagerLogFile: "traffic_manager.log",
+    trafficManagerLogDir: "/",
+    trafficManagerMaxWorkers: "10"
+}
