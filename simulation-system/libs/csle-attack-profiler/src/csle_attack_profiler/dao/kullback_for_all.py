@@ -1,5 +1,5 @@
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
-from typing import List, Tuple, Union, Dict
+from typing import List, Tuple, Union
 import numpy as np
 
 
@@ -21,7 +21,9 @@ class KullbackLeibler:
         return kl_div
 
     @staticmethod
-    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str, statistics_object: EmulationStatistics) -> Tuple[Union[float, None], Union[float, None]]:
+    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str,
+                                    statistics_object: EmulationStatistics) -> Tuple[Union[float, None],
+                                                                                     Union[float, None]]:
         """
         Compute the Kullback-Leibler divergence for a metric.
 
@@ -47,7 +49,7 @@ class KullbackLeibler:
         Y = list(map(lambda x: float(x), list(attacker_actions.values())))
         # Out p(x)
         no_intrusion = statistics.conditionals_probs["no_intrusion"][metric_kl]
-        #no_intrusion = statistics.conditionals_counts["no_intrusion"][metric]
+        # no_intrusion = statistics.conditionals_counts["no_intrusion"][metric]
         X_no_intrusion = list(map(lambda x: float(x), list(no_intrusion.keys())))
         Y_no_intrusion = list(map(lambda x: float(x), list(no_intrusion.values())))
         if len(X) >= 10:
@@ -60,11 +62,10 @@ class KullbackLeibler:
             SU_disjoint_P = len(list(set(SU) - set(P))) 
             SU_disjoint_Q = len(list(set(SU) - set(Q)))
 
-            pc = (sum(Y) + epsilon*(SU_disjoint_P) - 1) / CP
-            qc = (sum(Y_no_intrusion) + epsilon*(SU_disjoint_Q) - 1) / CQ
+            pc = (sum(Y) + epsilon * (SU_disjoint_P) - 1) / CP
+            qc = (sum(Y_no_intrusion) + epsilon * (SU_disjoint_Q) - 1) / CQ
             p_prime = []
             q_prime = []
-
 
             for val in SU:
                 if val in P:
@@ -83,8 +84,6 @@ class KullbackLeibler:
             KLD_QP = np.around(np.sum(q_prime_np * np.log(q_prime_np / p_prime_np)), 4)
 
         return KLD_PQ, KLD_QP
-
-
 
 
 if __name__ == '__main__':
