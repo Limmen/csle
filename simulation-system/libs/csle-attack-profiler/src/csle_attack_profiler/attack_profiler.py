@@ -201,4 +201,3 @@ class AttackProfiler:
                         continue
                 
         return attack_profiles
-# 
