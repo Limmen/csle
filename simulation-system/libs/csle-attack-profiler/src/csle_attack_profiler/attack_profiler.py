@@ -54,7 +54,7 @@ class AttackProfiler:
         attacker_id = attacker_action.id
         # Get the defined tactics and techniques for the attack
         attack_mapping = EmulationAttackerMapping.get_attack_info(attacker_id)
-        if attack_mapping == {None} or attack_mapping is None:
+        if attack_mapping is None:
             return AttackProfiler({}, {}, {}, {}, EmulationAttackerActionId.CONTINUE)
 
         attack_techniques_vals = [technique.value for technique in attack_mapping['techniques']]
@@ -149,7 +149,9 @@ class AttackProfiler:
                             techniques_to_keep.append(technique)
                             # If the child is not in the possible_children, add it to the list.
                             if attack_graph.get_node(child[0], child[1]) not in possible_nodes:
-                                possible_nodes.append(attack_graph.get_node(child[0], child[1]))
+                                p_node = attack_graph.get_node(child[0], child[1])
+                                if p_node is not None:
+                                    possible_nodes.append(p_node)
 
                 # If the possible node is just one node, move to that node
                 if len(possible_nodes) == 1:

@@ -1,4 +1,4 @@
-from typing import Dict, Set
+from typing import Dict, Set, Union
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 from csle_attack_profiler.dao.techniques import Techniques, SubTechniques
@@ -8,8 +8,10 @@ class EmulationAttackerMapping:
     """
     Maps EmulationAttackerActionId's to tactics and techniques
     """
+
     @staticmethod
-    def get_attack_info(id: EmulationAttackerActionId) -> Dict[str, Set[str]]:
+    def get_attack_info(id: EmulationAttackerActionId) \
+            -> Union[Dict[str, Union[Set[Techniques], Set[SubTechniques]]], None]:
         """
         Maps id's to tactics and techniques
 
@@ -17,7 +19,7 @@ class EmulationAttackerMapping:
         :return: the attack info for the id
         """
 
-        mapping = {
+        mapping: Dict[EmulationAttackerActionId, Union[Dict[str, Union[Set[Techniques], Set[SubTechniques]]], None]] = {
             EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST: {
                 "techniques": {Techniques.ACTIVE_SCANNING,
                                Techniques.GATHER_VICTIM_HOST_INFORMATION,
@@ -119,7 +121,6 @@ class EmulationAttackerMapping:
                                Techniques.SOFTWARE_DISCOVERY},
                 "subtechniques": {SubTechniques.SOFTWARE}
             },
-
 
             EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST: {
                 "techniques": {Techniques.BRUTE_FORCE,
@@ -337,17 +338,10 @@ class EmulationAttackerMapping:
                                Techniques.EXPLOITATION_FOR_PRIVILEGE_ESCALATION},
                 "subtechniques": {SubTechniques.SUDO_AND_SUDO_CACHING}
             },
-            EmulationAttackerActionId.CONTINUE: {
-                None
-            },
-            EmulationAttackerActionId.STOP: {
-                None
-            },
+            EmulationAttackerActionId.CONTINUE: None,
+            EmulationAttackerActionId.STOP: None
 
         }
-        
-        return mapping.get(id, None)
-
-
-
-    
+        if id in mapping:
+            return mapping[id]
+        return None
