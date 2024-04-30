@@ -1,7 +1,5 @@
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
-
-from csle_attack_profiler.dao.tactics import Tactics
 from csle_attack_profiler.dao.techniques import Techniques, SubTechniques
 
 
@@ -9,8 +7,8 @@ class EmulationAttackerMapping():
     """
     Maps EmulationAttackerActionId's to tactics and techniques
     """
-    @staticmethod 
-    def get_attack_info(id: EmulationAttackerActionId): 
+    @staticmethod
+    def get_attack_info(id: EmulationAttackerActionId):
         """
         Maps id's to tactics and techniques
 
@@ -21,90 +19,89 @@ class EmulationAttackerMapping():
 
         mapping = {
             EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.PING_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.PING_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.UDP_PORT_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.UDP_PORT_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_FIN_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_FIN_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_NULL_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_NULL_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.OS_DETECTION_SCAN_HOST: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
             EmulationAttackerActionId.OS_DETECTION_SCAN_ALL: {
-                "techniques": {Techniques.ACTIVE_SCANNING, 
-                               Techniques.GATHER_VICTIM_HOST_INFORMATION, 
-                               Techniques.NETWORK_SERVICE_DISCOVERY }
+                "techniques": {Techniques.ACTIVE_SCANNING,
+                               Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.NETWORK_SERVICE_DISCOVERY}
             },
 
-
             EmulationAttackerActionId.VULSCAN_HOST: {
-                "techniques": { Techniques.GATHER_VICTIM_HOST_INFORMATION,
-                                Techniques.SOFTWARE_DISCOVERY },
+                "techniques": {Techniques.GATHER_VICTIM_HOST_INFORMATION,
+                               Techniques.SOFTWARE_DISCOVERY},
                 "subtechniques": {SubTechniques.SOFTWARE}
             },
             EmulationAttackerActionId.VULSCAN_ALL: {
@@ -172,7 +169,6 @@ class EmulationAttackerMapping():
                 "subtechniques": {SubTechniques.CREDENTIAL_STUFFING,
                                   SubTechniques.DEFAULT_ACCOUNTS}
             },
-            #TODO: For database attacks, maybe not Initial Access: Valid Accounts: Default Accounts?
             EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST: {
                 "techniques": {Techniques.BRUTE_FORCE,
                                Techniques.VALID_ACCOUNTS},
@@ -189,13 +185,13 @@ class EmulationAttackerMapping():
                 "techniques": {Techniques.BRUTE_FORCE,
                                Techniques.VALID_ACCOUNTS},
                 "subtechniques": {SubTechniques.CREDENTIAL_STUFFING,
-                                  SubTechniques.DEFAULT_ACCOUNTS},         
+                                  SubTechniques.DEFAULT_ACCOUNTS},
             },
             EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL: {
                 "techniques": {Techniques.BRUTE_FORCE,
                                Techniques.VALID_ACCOUNTS},
                 "subtechniques": {SubTechniques.CREDENTIAL_STUFFING,
-                                  SubTechniques.DEFAULT_ACCOUNTS},         
+                                  SubTechniques.DEFAULT_ACCOUNTS},
             },
             EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST: {
                 "techniques": {Techniques.BRUTE_FORCE,
@@ -321,7 +317,7 @@ class EmulationAttackerMapping():
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
                                Techniques.EXPLOITATION_OF_REMOTE_SERVICES,
                                Techniques.COMMAND_AND_SCRIPTING_INTERPRETER,
-                               Techniques.FALLBACK_CHANNELS,}
+                               Techniques.FALLBACK_CHANNELS}
             },
             EmulationAttackerActionId.CVE_2016_10033_EXPLOIT: {
                 "techniques": {Techniques.EXPLOIT_PUBLIC_FACING_APPLICATION,
@@ -340,7 +336,7 @@ class EmulationAttackerMapping():
                 "techniques": {Techniques.ABUSE_ELEVATION_CONTROL_MECHANISM,
                                Techniques.EXPLOITATION_FOR_PRIVILEGE_ESCALATION},
                 "subtechniques": {SubTechniques.SUDO_AND_SUDO_CACHING}
-            },  
+            },
             EmulationAttackerActionId.CONTINUE: {
                 None
             },
