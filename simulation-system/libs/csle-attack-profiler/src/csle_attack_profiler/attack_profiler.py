@@ -8,7 +8,7 @@ from csle_attack_profiler.dao.attack_mapping import EmulationAttackerMapping
 from csle_attack_profiler.dao.attack_graph import AttackGraph
 
 from mitreattack.stix20 import MitreAttackData
-from typing import List, Dict
+from typing import List, Dict, Union
 import os
 
 class AttackProfiler:
@@ -16,7 +16,7 @@ class AttackProfiler:
     Class represting the attack profile based on the MITRE ATT&CK framework for Enterprise.
     """
 
-    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, List[str]], action_id: EmulationAttackerActionId) -> None:
+    def __init__(self, techniques_tactics: Dict[str,List[str]], mitigations: Dict[str, List[str]], data_sources: Dict[str, List[str]], subtechniques: Dict[str, str], action_id: EmulationAttackerActionId) -> None:
         """
         Class constructor
 
@@ -105,7 +105,7 @@ class AttackProfiler:
     
 
     @staticmethod
-    def get_attack_profile_sequence(attacker_actions: List[EmulationAttackerAction], attack_graph: AttackGraph = None) -> List['AttackProfiler']:
+    def get_attack_profile_sequence(attacker_actions: List[EmulationAttackerAction], attack_graph: Union[AttackGraph,None] = None) -> List['AttackProfiler']:
         """
         Returns the attack profile of the actions in a sequence
 
@@ -139,7 +139,8 @@ class AttackProfiler:
                         if node not in possible_nodes:
                             #print("Possible node: ", node[0].value)
                             possible_nodes.append(node)
-                
+                if children is None:
+                    continue 
                 for child in children:
                     # Child is a list of tuples, where the first element is the node name and the second element is the node id
                     for technique in techniques_tactics:
@@ -148,7 +149,6 @@ class AttackProfiler:
                             techniques_to_keep.append(technique)
                             # If the child is not in the possible_children, add it to the list.
                             if attack_graph.get_node(child[0], child[1]) not in possible_nodes:
-                                #print("Possible node:  ", child[0].value)
                                 possible_nodes.append(attack_graph.get_node(child[0], child[1]))
 
                 # If the possible node is just one node, move to that node
@@ -174,19 +174,19 @@ class AttackProfiler:
             initial_access = False
             for profile in attack_profiles:
                 techniques_tactics = profile.techniques_tactics
-                techniques_to_remove = []
+                techniques_to_remove = set()
                 # Loop over the mappings of the techniques to tactics
                 for technique in techniques_tactics:
                     if Tactics.DISCOVERY.value in techniques_tactics[technique] and initial_access == False:
-                        techniques_to_remove.append(technique)
+                        techniques_to_remove.add(technique)
                     elif Tactics.RECONNAISSANCE.value in techniques_tactics[technique] and initial_access == True:
-                        techniques_to_remove.append(technique)
+                        techniques_to_remove.add(technique)
                     if Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == False:
                         initial_access = True
                     elif Tactics.INITIAL_ACCESS.value in techniques_tactics[technique] and initial_access == True:
-                        techniques_to_remove.append(technique)
+                        techniques_to_remove.add(technique)
                     elif Tactics.LATERAL_MOVEMENT.value in techniques_tactics[technique] and initial_access == False:
-                        techniques_to_remove.append(technique)
+                        techniques_to_remove.add(technique)
                 
                 # Remove the techniques and associated tactics, data sources, mitigations and sub-techniques
                 for technique in techniques_to_remove:

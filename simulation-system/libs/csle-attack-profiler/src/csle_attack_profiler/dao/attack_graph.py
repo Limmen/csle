@@ -1,5 +1,5 @@
 from csle_attack_profiler.dao.tactics import Tactics
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
 
 
 ChildNode = Tuple[Tactics, int]

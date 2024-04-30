@@ -2,6 +2,7 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 from csle_attack_profiler.hmm_profiling import HMMProfiler 
+from typing import List
 import numpy as np
 import os
 
@@ -50,8 +51,8 @@ class TestHMMProfilerSuite:
         METRIC = 'alerts_weighted_by_priority'
 
         current_dir = os.path.dirname(__file__)
-        path = os.path.join(current_dir, "statistics_test.json")
-        statistics = EmulationStatistics.from_json_file(path)
+        file_path = os.path.join(current_dir, "statistics_test.json")
+        statistics = EmulationStatistics.from_json_file(file_path)
 
         model = HMMProfiler([statistics])
 

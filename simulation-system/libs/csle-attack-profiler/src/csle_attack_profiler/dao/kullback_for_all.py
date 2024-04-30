@@ -1,11 +1,12 @@
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
-import matplotlib.pyplot as plt
+from typing import List, Tuple, Union, Dict
 import numpy as np
-import seaborn as seaborn
 
 
 class KullbackLeibler:
-    def kullback_leibler_divergence_for_counts(p, q) -> float:
+
+    @staticmethod
+    def kullback_leibler_divergence_for_counts(p: List[int], q: List[int]) -> float:
         """
         Compute the Kullback-Leibler divergence for a counts distribution.
 
@@ -14,13 +15,13 @@ class KullbackLeibler:
 
         :return: the Kullback-Leibler divergence
         """
-        probs_p = p / np.sum(p)
-        probs_q = q / np.sum(q)
-        kl_div = np.sum(probs_p * np.log(probs_p / probs_q))
+        probs_p = p / np.sum(p, dtype=float)
+        probs_q = q / np.sum(q, dtype=float)
+        kl_div: float = np.sum(probs_p * np.log(probs_p / probs_q), dtype=float)
         return kl_div
 
-
-    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str, statistics_object: EmulationStatistics) -> (float, float):
+    @staticmethod
+    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str, statistics_object: EmulationStatistics) -> Tuple[Union[float, None], Union[float, None]]:
         """
         Compute the Kullback-Leibler divergence for a metric.
 
@@ -39,11 +40,11 @@ class KullbackLeibler:
             else:
                 cond = condition
                 break
-        if cond is None:
+        if cond == '':
             return None, None
-        attacker_action = statistics.conditionals_probs[cond][metric_kl]
-        X = list(map(lambda x: float(x), list(attacker_action.keys())))
-        Y = list(map(lambda x: float(x), list(attacker_action.values())))
+        attacker_actions = statistics.conditionals_probs[cond][metric_kl]
+        X = list(map(lambda x: float(x), list(attacker_actions.keys())))
+        Y = list(map(lambda x: float(x), list(attacker_actions.values())))
         # Out p(x)
         no_intrusion = statistics.conditionals_probs["no_intrusion"][metric_kl]
         #no_intrusion = statistics.conditionals_counts["no_intrusion"][metric]
@@ -81,7 +82,7 @@ class KullbackLeibler:
             KLD_PQ = np.around(np.sum(p_prime_np * np.log(p_prime_np / q_prime_np)), 4)
             KLD_QP = np.around(np.sum(q_prime_np * np.log(q_prime_np / p_prime_np)), 4)
 
-            return KLD_PQ, KLD_QP
+        return KLD_PQ, KLD_QP
 
 
 
