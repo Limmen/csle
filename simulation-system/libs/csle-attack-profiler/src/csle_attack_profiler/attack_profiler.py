@@ -15,7 +15,7 @@ class AttackProfiler:
     Class represting the attack profile based on the MITRE ATT&CK framework for Enterprise.
     """
 
-    def __init__(self, techniques_tactics: Dict[str, List[str]], mitigations: Dict[str, List[str]], 
+    def __init__(self, techniques_tactics: Dict[str, List[str]], mitigations: Dict[str, List[str]],
                  data_sources: Dict[str, List[str]], subtechniques: Dict[str, str],
                  action_id: EmulationAttackerActionId) -> None:
         """
@@ -27,7 +27,7 @@ class AttackProfiler:
         value is the mitigations
         :params data_sources: the data sources used by the attacker action. The key is the technqiue and the value is
         the data sources
-        :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and 
+        :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and
         the value is the sub-techniques
         :params action_id: the id of the attacker action
         """
@@ -171,7 +171,7 @@ class AttackProfiler:
                         continue
                             
         # ELSE Baseline conditions
-        else:     
+        else:
             initial_access = False
             for profile in attack_profiles:
                 techniques_tactics = profile.techniques_tactics
