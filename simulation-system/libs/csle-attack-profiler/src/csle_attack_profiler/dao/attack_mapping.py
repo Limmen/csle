@@ -1,19 +1,19 @@
+from typing import Dict, Set
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id \
     import EmulationAttackerActionId
 from csle_attack_profiler.dao.techniques import Techniques, SubTechniques
 
 
-class EmulationAttackerMapping():
+class EmulationAttackerMapping:
     """
     Maps EmulationAttackerActionId's to tactics and techniques
     """
     @staticmethod
-    def get_attack_info(id: EmulationAttackerActionId):
+    def get_attack_info(id: EmulationAttackerActionId) -> Dict[str, Set[str]]:
         """
         Maps id's to tactics and techniques
 
         :param id: the id of the attack
-
         :return: the attack info for the id
         """
 

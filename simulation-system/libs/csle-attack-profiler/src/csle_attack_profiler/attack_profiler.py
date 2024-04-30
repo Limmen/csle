@@ -55,7 +55,7 @@ class AttackProfiler:
         # Get the defined tactics and techniques for the attack
         attack_mapping = EmulationAttackerMapping.get_attack_info(attacker_id)
         if attack_mapping == {None} or attack_mapping is None:
-            return AttackProfiler({}, {}, {}, {}, None)
+            return AttackProfiler({}, {}, {}, {}, EmulationAttackerActionId.CONTINUE)
 
         attack_techniques_vals = [technique.value for technique in attack_mapping['techniques']]
         

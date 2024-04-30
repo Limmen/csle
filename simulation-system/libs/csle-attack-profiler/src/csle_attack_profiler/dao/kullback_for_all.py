@@ -4,6 +4,9 @@ import numpy as np
 
 
 class KullbackLeibler:
+    """
+    Utility class for computing KL values
+    """
 
     @staticmethod
     def kullback_leibler_divergence_for_counts(p: List[int], q: List[int]) -> float:
@@ -12,7 +15,6 @@ class KullbackLeibler:
 
         :param p: the counts distribution p
         :param q: the counts distribution q
-
         :return: the Kullback-Leibler divergence
         """
         probs_p = p / np.sum(p, dtype=float)
@@ -21,16 +23,16 @@ class KullbackLeibler:
         return kl_div
 
     @staticmethod
-    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str,
-                                    statistics_object: EmulationStatistics) -> Tuple[Union[float, None],
-                                                                                     Union[float, None]]:
+    def kullback_leibler_for_metric(metric_kl: str, attacker_action: str, statistics_object: EmulationStatistics) \
+            -> Tuple[Union[float, None], Union[float, None]]:
         """
         Compute the Kullback-Leibler divergence for a metric.
 
         :param metric: the metric
-
         :return: the Kullback-Leibler divergence
         """
+        KLD_PQ = 0.0
+        KLD_QP = 0.0
         statistics = statistics_object
 
         cond = ''
@@ -83,7 +85,7 @@ class KullbackLeibler:
             KLD_PQ = np.around(np.sum(p_prime_np * np.log(p_prime_np / q_prime_np)), 4)
             KLD_QP = np.around(np.sum(q_prime_np * np.log(q_prime_np / p_prime_np)), 4)
 
-        return KLD_PQ, KLD_QP
+        return float(KLD_PQ), float(KLD_QP)
 
 
 if __name__ == '__main__':

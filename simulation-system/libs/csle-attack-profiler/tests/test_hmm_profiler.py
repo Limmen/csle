@@ -17,7 +17,8 @@ class TestHMMProfilerSuite:
         Source: https://www.cis.upenn.edu/~cis2620/notes/Example-Viterbi-DNA.pdf
         """
 
-        hidden_states = [0, 1]  # States H=0 and L=1
+        hidden_states = [EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+                         EmulationAttackerActionId.PING_SCAN_HOST]  # States H=0 and L=1
         init_probs = [0.5, 0.5]
         trans_matrix = [
             [0.5, 0.5],

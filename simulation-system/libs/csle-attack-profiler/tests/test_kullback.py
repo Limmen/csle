@@ -1,4 +1,3 @@
-
 from csle_attack_profiler.dao.kullback_for_all import KullbackLeibler
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 import os
@@ -8,6 +7,7 @@ class TestKullbackSuite:
     """
     Test suite for the Kullback-Leibler divergence calculation class.
     """
+
     def test_kullback_counts(self) -> None:
         """
         Test the Kullback-Leibler divergence for two lists of counts.

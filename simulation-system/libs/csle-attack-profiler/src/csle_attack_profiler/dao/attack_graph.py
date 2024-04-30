@@ -12,7 +12,7 @@ class AttackGraph:
 
     def __init__(self) -> None:
         """
-        Class contructor
+        Class constructor
 
         The graph is represented as a list of tuples. Each tuple contains the node name,
         the children of the node and the node id.
@@ -27,6 +27,7 @@ class AttackGraph:
         :params node_name: the name of the node
         :params children: the children of the node
         :params node_id: the id of the node
+        :return: None
         """
         # We need to distinguish between nodes with an id
         # Every time we add a node, we increment the id by 1 if node_id is None
@@ -43,6 +44,7 @@ class AttackGraph:
 
         :params node_name: the name of the node
         :params children: the children of the node
+        :return: None
         """
         for i, (node_name, children, node_id) in enumerate(self.graph):
             if node_name == parent_node_name and node_id == parent_node_id:
