@@ -51,6 +51,8 @@ class QNetwork(nn.Module):
                 self.network.add_module(name='activation', module=nn.ReLU())
                 input_dim = self.hidden_layer_dim * self.n_atoms
             self.network.add_module(name='Output layer', module=nn.Linear(input_dim, self.action_space_dim * n_atoms))
+        else:
+            raise ValueError(f"Agent type: {agent_type} not recognized")
 
     def get_action(self, x) -> Tuple[torch.Tensor, torch.Tensor]:
         """
