@@ -33,6 +33,7 @@ import AddServices from "./AddServices/AddServices";
 import AddInterfaces from "./AddInterfaces/AddInterfaces"
 import AddUsers from './AddUsers/AddUsers'
 import AddContainerGeneral from './AddContainerGeneral/AddContainerGeneral'
+import AddEmulationGeneral from './AddEmulationGeneral/AddEmulationGeneral'
 
 /**
  * Component representing the /create-emulation-page
@@ -1439,91 +1440,21 @@ const CreateEmulation = (props) => {
                   </Card.Header>
                   <Collapse in={generalInfoOpen}>
                       <div id="generalInfoBody" className="cardBodyHidden">
-                          <div className="table-responsive">
-                              <Table striped bordered hover>
-                                  <thead>
-                                  <tr>
-                                      <th>Attribute</th>
-                                      <th> Value</th>
-                                  </tr>
-                                  </thead>
-                                  <tbody>
-                                  <tr>
-                                      <td>Name</td>
-                                      <td>
-                                          <input
-                                            type="text"
-                                            value={nameValue}
-                                            onChange={handleNameChange}
-                                          />
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Network ID</td>
-                                      <td>
-                                          <input
-                                            type="text"
-                                            value={networkIdValue}
-                                            onChange={handleNetworkIdChange}
-                                          />
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Level</td>
-                                      <td>
-                                          <input
-                                            type="text"
-                                            value={levelValue}
-                                            onChange={handleLevelChange}
-                                          />
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Version</td>
-                                      <td>
-                                          <input
-                                            type="text"
-                                            value={versionValue}
-                                            onChange={handleVersionChange}
-                                          />
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Time step length in Seconds</td>
-                                      <td>
-                                          <input
-                                            type="text"
-                                            value={timeStepLengthValue}
-                                            onChange={handleTimeStepLengthChange}
-                                          />
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>IDS enabled</td>
-                                      <td>
-                                          <select value={idsEnabled}
-                                                  onChange={(e) => handleContainerIdsEnabledChange(e)}>
-                                              <option value="true">True</option>
-                                              <option value="false">False</option>
-
-                                          </select>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td>Description</td>
-                                      <td>
-                          <textarea
-                            id="description"
-                            value={description.textareaValue}
-                            onChange={handleDescriptionChange}
-                            rows="4"
-                            style={{width: '100%', boxSizing: 'border-box'}}
+                          <AddEmulationGeneral nameValue={nameValue}
+                                               handleNameChange={handleNameChange}
+                                               networkIdValue={networkIdValue}
+                                               handleNetworkIdChange={handleNetworkIdChange}
+                                               levelValue={levelValue}
+                                               handleLevelChange={handleLevelChange}
+                                               versionValue={versionValue}
+                                               handleVersionChange={handleVersionChange}
+                                               timeStepLengthValue={timeStepLengthValue}
+                                               handleTimeStepLengthChange={handleTimeStepLengthChange}
+                                               idsEnabled={idsEnabled}
+                                               handleContainerIdsEnabledChange={handleContainerIdsEnabledChange}
+                                               description={description}
+                                               handleDescriptionChange={handleDescriptionChange}
                           />
-                                      </td>
-                                  </tr>
-                                  </tbody>
-                              </Table>
-                          </div>
                       </div>
                   </Collapse>
               </Card>
