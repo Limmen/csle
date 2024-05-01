@@ -32,6 +32,7 @@ import getIps from '../../Common/getIps'
 import AddServices from "./AddServices/AddServices";
 import AddInterfaces from "./AddInterfaces/AddInterfaces"
 import AddUsers from './AddUsers/AddUsers'
+import AddContainerGeneral from './AddContainerGeneral/AddContainerGeneral'
 
 /**
  * Component representing the /create-emulation-page
@@ -1611,94 +1612,15 @@ const CreateEmulation = (props) => {
                                                         <i className="fa fa-trash startStopIcon"
                                                            aria-hidden="true"/>
                                                     </Button>
-                                                    <div className="table-responsive">
-                                                        <Table striped bordered hover>
-                                                            <thead>
-                                                            <tr>
-                                                                <th>Attribute</th>
-                                                                <th> Value</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <tr>
-                                                                <td>Name</td>
-                                                                <td>
-                                                                    {containers[index].name}
-                                                                    {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>OS</td>
-                                                                <td>
-                                                                    {containers[index].os}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Number of allocated CPU cores</td>
-                                                                <td>
-                                                                    <input
-                                                                      type="text"
-                                                                      value={containers[index].cpu}
-                                                                      onChange={(event) => handleContainerCpuChange(event, index)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Available memory in GB</td>
-                                                                <td>
-                                                                    <input
-                                                                      type="text"
-                                                                      value={containers[index].mem}
-                                                                      onChange={(event) => handleContainerMemoryChange(event, index)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Flag ID</td>
-                                                                <td>
-                                                                    <input
-                                                                      type="text"
-                                                                      value={containers[index].flagId}
-                                                                      onChange={(event) => handleContainerFlagIdChange(event, index)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Flag score</td>
-                                                                <td>
-                                                                    <input
-                                                                      type="text"
-                                                                      value={containers[index].flagScore}
-                                                                      onChange={(event) => handleContainerFlagScoreChange(event, index)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Flag requires root permission</td>
-                                                                <td>
-                                                                    <select value={containers[index].flagPermission}
-                                                                            onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
-                                                                        <option value="true">True</option>
-                                                                        <option value="false">False</option>
-
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Reachable by agent</td>
-                                                                <td>
-                                                                    <select
-                                                                      value={containers[index].reachableByAgent}
-                                                                      onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
-                                                                        <option value="true">True</option>
-                                                                        <option value="false">False</option>
-
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </Table>
-                                                    </div>
+                                                    <AddContainerGeneral container={containers[index]}
+                                                                         handleCpuChange={handleContainerCpuChange}
+                                                                         containerIndex={index}
+                                                                         handleMemoryChange={handleContainerMemoryChange}
+                                                                         handleFlagIdChange={handleContainerFlagIdChange}
+                                                                         handleFlagScoreChange={handleContainerFlagScoreChange}
+                                                                         handleFlagPermissionChange={handleContainerFlagPermissionChange}
+                                                                         handleReachableByAgentChange={handleContainerReachableByAgentChange}
+                                                    />
 
                                                     <AddUsers container={containers[index]}
                                                               handleAddUser={handleAddContainerUser}
