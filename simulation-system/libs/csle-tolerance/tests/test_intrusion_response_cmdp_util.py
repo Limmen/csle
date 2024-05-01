@@ -35,6 +35,7 @@ class TestInstrusionToleranceCmdpSuite:
         assert IntrusionResponseCmdpUtil.cost_function(s,True) == -1.0
         assert IntrusionResponseCmdpUtil.cost_function(s,False) == 1.0
         assert isinstance(IntrusionResponseCmdpUtil.cost_function(s,False),float)
+        assert isinstance(IntrusionResponseCmdpUtil.cost_function(s,True),float)
 
     
 
