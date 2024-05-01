@@ -30,6 +30,7 @@ import Form from 'react-bootstrap/Form'
 import {useDebouncedCallback} from 'use-debounce'
 import getIps from '../../Common/getIps'
 import AddServices from "./AddServices/AddServices";
+import AddInterfaces from "./AddInterfaces/AddInterfaces"
 
 /**
  * Component representing the /create-emulation-page
@@ -120,13 +121,13 @@ const CreateEmulation = (props) => {
     const [shouldFocusLossGemodelh, setShouldFocusLossGemodelh] = useState(false)
     const [shouldFocusPacketCorruptPercentage, setShouldFocusPacketCorruptPercentage] = useState(false)
     const [shouldFocusPacketCorruptCorrelationPercentage, setShouldFocusPacketCorruptCorrelationPercentage]
-        = useState(false)
+      = useState(false)
     const [shouldFocusPacketDuplicatePercentage, setShouldFocusPacketDuplicatePercentage] = useState(false)
     const [shouldFocusPacketDuplicateCorrelationPercentage, setShouldFocusPacketDuplicateCorrelationPercentage]
-        = useState(false)
+      = useState(false)
     const [shouldFocusPacketReorderPercentage, setShouldFocusPacketReorderPercentage] = useState(false)
     const [shouldFocusPacketReorderCorrelationPercentage, setShouldFocusPacketReorderCorrelationPercentage]
-        = useState(false)
+      = useState(false)
     const [shouldFocusPacketReorderGap, setShouldFocusPacketReorderGap] = useState(false)
     const [shouldFocusRateLimitMbit, setShouldFocusRateLimitMbit] = useState(false)
     const [shouldFocusPacketOverheadBytes, setShouldFocusPacketOverheadBytes] = useState(false)
@@ -1263,7 +1264,7 @@ const CreateEmulation = (props) => {
             if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
                 const container = updatedContainers[containerIndex]
                 const userExists = container.users.some(existingUser =>
-                    existingUser.userName === userToAdd.userName
+                  existingUser.userName === userToAdd.userName
                 )
                 if (!userExists) {
                     container.users.push(userToAdd)
@@ -1286,7 +1287,7 @@ const CreateEmulation = (props) => {
             if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
                 const container = updatedContainers[containerIndex]
                 const serviceExists = container.services.some(existingService =>
-                    existingService.name === serviceToAdd.name
+                  existingService.name === serviceToAdd.name
                 )
                 if (!serviceExists) {
                     container.services.push(serviceToAdd)
@@ -1302,7 +1303,7 @@ const CreateEmulation = (props) => {
             return prevContainers.map((container, index) => {
                 if (index === containerIndex) {
                     const updatedUsers = container.users.filter(
-                        (_, i) => i !== userIndex
+                      (_, i) => i !== userIndex
                     )
                     return {...container, users: updatedUsers}
                 }
@@ -1317,7 +1318,7 @@ const CreateEmulation = (props) => {
             return prevContainers.map((container, index) => {
                 if (index === containerIndex) {
                     const updatedService = container.services.filter(
-                        (_, i) => i !== serviceIndex
+                      (_, i) => i !== serviceIndex
                     )
                     return {...container, services: updatedService}
                 }
@@ -1371,7 +1372,7 @@ const CreateEmulation = (props) => {
             if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
                 const container = updatedContainers[containerIndex]
                 const interfaceExists = container.interfaces.some(existingInterface =>
-                    existingInterface.name === interfaceToAdd.name
+                  existingInterface.name === interfaceToAdd.name
                 )
                 if (!interfaceExists) {
                     container.interfaces.push(interfaceToAdd)
@@ -1388,7 +1389,7 @@ const CreateEmulation = (props) => {
             return prevContainers.map((container, index) => {
                 if (index === containerIndex) {
                     const updatedInterfaces = container.interfaces.filter(
-                        (_, i) => i !== interfaceIndex
+                      (_, i) => i !== interfaceIndex
                     )
                     return {...container, interfaces: updatedInterfaces}
                 }
@@ -1410,908 +1411,453 @@ const CreateEmulation = (props) => {
             containerToUpdate.interfaces = updatedInterfaces
             updatedContainers[containerIndex] = containerToUpdate
             console.log("The network interface is " +
-                updatedContainers[containerIndex].interfaces[interfaceIndex].physicalInterface)
+              updatedContainers[containerIndex].interfaces[interfaceIndex].physicalInterface)
             return updatedContainers
         })
     }
 
 
     return (
-        <div className="CreateEmulation">
-            <h3 className="managementTitle"> Create Emulation </h3>
-            <Accordion defaultActiveKey="0">
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
-                            aria-controls="generalInfoBody"
-                            aria-expanded={generalInfoOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle">
-                                General information about the emulation
-                                <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
-                            </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={generalInfoOpen}>
-                        <div id="generalInfoBody" className="cardBodyHidden">
-                            <div className="table-responsive">
-                                <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                        <th>Attribute</th>
-                                        <th> Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Name</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={nameValue}
-                                                onChange={handleNameChange}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Network ID</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={networkIdValue}
-                                                onChange={handleNetworkIdChange}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Level</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={levelValue}
-                                                onChange={handleLevelChange}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Version</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={versionValue}
-                                                onChange={handleVersionChange}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Time step length in Seconds</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={timeStepLengthValue}
-                                                onChange={handleTimeStepLengthChange}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>IDS enabled</td>
-                                        <td>
-                                            <select value={idsEnabled}
-                                                    onChange={(e) => handleContainerIdsEnabledChange(e)}>
-                                                <option value="true">True</option>
-                                                <option value="false">False</option>
+      <div className="CreateEmulation">
+          <h3 className="managementTitle"> Create Emulation </h3>
+          <Accordion defaultActiveKey="0">
+              <Card className="subCard">
+                  <Card.Header>
+                      <Button
+                        onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
+                        aria-controls="generalInfoBody"
+                        aria-expanded={generalInfoOpen}
+                        variant="link"
+                      >
+                          <h5 className="semiTitle">
+                              General information about the emulation
+                              <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                          </h5>
+                      </Button>
+                  </Card.Header>
+                  <Collapse in={generalInfoOpen}>
+                      <div id="generalInfoBody" className="cardBodyHidden">
+                          <div className="table-responsive">
+                              <Table striped bordered hover>
+                                  <thead>
+                                  <tr>
+                                      <th>Attribute</th>
+                                      <th> Value</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr>
+                                      <td>Name</td>
+                                      <td>
+                                          <input
+                                            type="text"
+                                            value={nameValue}
+                                            onChange={handleNameChange}
+                                          />
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>Network ID</td>
+                                      <td>
+                                          <input
+                                            type="text"
+                                            value={networkIdValue}
+                                            onChange={handleNetworkIdChange}
+                                          />
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>Level</td>
+                                      <td>
+                                          <input
+                                            type="text"
+                                            value={levelValue}
+                                            onChange={handleLevelChange}
+                                          />
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>Version</td>
+                                      <td>
+                                          <input
+                                            type="text"
+                                            value={versionValue}
+                                            onChange={handleVersionChange}
+                                          />
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>Time step length in Seconds</td>
+                                      <td>
+                                          <input
+                                            type="text"
+                                            value={timeStepLengthValue}
+                                            onChange={handleTimeStepLengthChange}
+                                          />
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>IDS enabled</td>
+                                      <td>
+                                          <select value={idsEnabled}
+                                                  onChange={(e) => handleContainerIdsEnabledChange(e)}>
+                                              <option value="true">True</option>
+                                              <option value="false">False</option>
+
+                                          </select>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>Description</td>
+                                      <td>
+                          <textarea
+                            id="description"
+                            value={description.textareaValue}
+                            onChange={handleDescriptionChange}
+                            rows="4"
+                            style={{width: '100%', boxSizing: 'border-box'}}
+                          />
+                                      </td>
+                                  </tr>
+                                  </tbody>
+                              </Table>
+                          </div>
+                      </div>
+                  </Collapse>
+              </Card>
+          </Accordion>
+          <Accordion defaultActiveKey="1">
+              <Card className="subCard">
+                  <Card.Header>
+                      <Button
+                        onClick={() => setContainerOpen(!containerOpen)}
+                        aria-controls="container"
+                        aria-expanded={containerOpen}
+                        variant="link"
+                      >
+                          <h5 className="semiTitle">
+                              Containers
+                              <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
+                          </h5>
+                      </Button>
+                  </Card.Header>
+                  <Collapse in={containerOpen}>
+                      <div id="container" className="cardBodyHidden">
+                          <div>
+                              Add a new container &nbsp;&nbsp;
+                              <Button onClick={addContainer}
+                                      variant="success" size="sm">
+                                  <i className="fa fa-plus" aria-hidden="true"/>
+                              </Button>
+                              <div style={{margin: '20px'}}>
+                                  {showPopup && (
+                                    <div className="popup">
+                                        <div>
+                                            <h5>Enter Container Name:</h5>
+                                        </div>
+                                        <div className="popup-content" style={{
+                                            display: 'flex', justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+
+                                            <select value={JSON.stringify(newContainer)}
+                                                    onChange={(e) => handleContainerSelectChange(e)}>
+                                                <option value="">--Please choose an option--</option>
+                                                {containerAndOs.map((option, index) => (
+                                                  <option key={index} value={JSON.stringify(option)}>
+                                                      {`${option.name} (${option.os})`}
+                                                  </option>
+                                                ))}
 
                                             </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Description</td>
-                                        <td>
-                          <textarea
-                              id="description"
-                              value={description.textareaValue}
-                              onChange={handleDescriptionChange}
-                              rows="4"
-                              style={{width: '100%', boxSizing: 'border-box'}}
-                          />
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
-            </Accordion>
-            <Accordion defaultActiveKey="1">
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={() => setContainerOpen(!containerOpen)}
-                            aria-controls="container"
-                            aria-expanded={containerOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle">
-                                Containers
-                                <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
-                            </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={containerOpen}>
-                        <div id="container" className="cardBodyHidden">
-                            <div>
-                                Add a new container &nbsp;&nbsp;
-                                <Button onClick={addContainer}
-                                        variant="success" size="sm">
-                                    <i className="fa fa-plus" aria-hidden="true"/>
-                                </Button>
-                                <div style={{margin: '20px'}}>
-                                    {showPopup && (
-                                        <div className="popup">
-                                            <div>
-                                                <h5>Enter Container Name:</h5>
-                                            </div>
-                                            <div className="popup-content" style={{
-                                                display: 'flex', justifyContent: 'center',
-                                                alignItems: 'center'
-                                            }}>
 
-                                                <select value={JSON.stringify(newContainer)}
-                                                        onChange={(e) => handleContainerSelectChange(e)}>
-                                                    <option value="">--Please choose an option--</option>
-                                                    {containerAndOs.map((option, index) => (
-                                                        <option key={index} value={JSON.stringify(option)}>
-                                                            {`${option.name} (${option.os})`}
-                                                        </option>
-                                                    ))}
-
-                                                </select>
-
-                                                <Button onClick={handleConfirmAdd}
-                                                        variant="primary" size="sm" style={{marginLeft: '5px'}}>
-                                                    <i className="fa fa-check" aria-hidden="true"/>
-                                                </Button>
-                                                <Button onClick={handleClosePopup}
-                                                        variant="danger" size="sm" style={{marginLeft: '2px'}}>
-                                                    <i className="fa fa-times" aria-hidden="true"/>
-                                                </Button>
-                                            </div>
+                                            <Button onClick={handleConfirmAdd}
+                                                    variant="primary" size="sm" style={{marginLeft: '5px'}}>
+                                                <i className="fa fa-check" aria-hidden="true"/>
+                                            </Button>
+                                            <Button onClick={handleClosePopup}
+                                                    variant="danger" size="sm" style={{marginLeft: '2px'}}>
+                                                <i className="fa fa-times" aria-hidden="true"/>
+                                            </Button>
                                         </div>
-                                    )}
-                                </div>
+                                    </div>
+                                  )}
+                              </div>
 
 
-                                {containers.map((container, index) => (
-                                    <Accordion defaultActiveKey={index}>
-                                        <card className="subCard">
-                                            <Card.Header>
-                                                <Button
-                                                    onClick={() => toggleContainerAccordion(index)}
-                                                    aria-controls="container"
-                                                    aria-expanded={container.containerAccordionOpen}
-                                                    variant="link"
-                                                >
-                                                    <h5 className="semiTitle">
-                                                        {containers[index].name}
-                                                        <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
-                                                    </h5>
-                                                </Button>
-                                            </Card.Header>
-                                            <Collapse in={container.containerAccordionOpen}>
-                                                <div id="eachContainer" className="cardBodyHidden">
-                                                    <div>
-                                                        Delete the container {containers[index].name} &nbsp;&nbsp;
-                                                        <Button onClick={() => deleteContainer(index)}
-                                                                variant="danger" size="sm">
-                                                            <i className="fa fa-trash startStopIcon"
-                                                               aria-hidden="true"/>
-                                                        </Button>
-                                                        <div className="table-responsive">
-                                                            <Table striped bordered hover>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Attribute</th>
-                                                                    <th> Value</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>Name</td>
-                                                                    <td>
-                                                                        {containers[index].name}
-                                                                        {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>OS</td>
-                                                                    <td>
-                                                                        {containers[index].os}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Number of allocated CPU cores</td>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={containers[index].cpu}
-                                                                            onChange={(event) => handleContainerCpuChange(event, index)}
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Available memory in GB</td>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={containers[index].mem}
-                                                                            onChange={(event) => handleContainerMemoryChange(event, index)}
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Flag ID</td>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={containers[index].flagId}
-                                                                            onChange={(event) => handleContainerFlagIdChange(event, index)}
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Flag score</td>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={containers[index].flagScore}
-                                                                            onChange={(event) => handleContainerFlagScoreChange(event, index)}
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Flag requires root permission</td>
-                                                                    <td>
-                                                                        <select value={containers[index].flagPermission}
-                                                                                onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
-                                                                            <option value="true">True</option>
-                                                                            <option value="false">False</option>
+                              {containers.map((container, index) => (
+                                <Accordion defaultActiveKey={index}>
+                                    <card className="subCard">
+                                        <Card.Header>
+                                            <Button
+                                              onClick={() => toggleContainerAccordion(index)}
+                                              aria-controls="container"
+                                              aria-expanded={container.containerAccordionOpen}
+                                              variant="link"
+                                            >
+                                                <h5 className="semiTitle">
+                                                    {containers[index].name}
+                                                    <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
+                                                </h5>
+                                            </Button>
+                                        </Card.Header>
+                                        <Collapse in={container.containerAccordionOpen}>
+                                            <div id="eachContainer" className="cardBodyHidden">
+                                                <div>
+                                                    Delete the container {containers[index].name} &nbsp;&nbsp;
+                                                    <Button onClick={() => deleteContainer(index)}
+                                                            variant="danger" size="sm">
+                                                        <i className="fa fa-trash startStopIcon"
+                                                           aria-hidden="true"/>
+                                                    </Button>
+                                                    <div className="table-responsive">
+                                                        <Table striped bordered hover>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Attribute</th>
+                                                                <th> Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>Name</td>
+                                                                <td>
+                                                                    {containers[index].name}
+                                                                    {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>OS</td>
+                                                                <td>
+                                                                    {containers[index].os}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Number of allocated CPU cores</td>
+                                                                <td>
+                                                                    <input
+                                                                      type="text"
+                                                                      value={containers[index].cpu}
+                                                                      onChange={(event) => handleContainerCpuChange(event, index)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Available memory in GB</td>
+                                                                <td>
+                                                                    <input
+                                                                      type="text"
+                                                                      value={containers[index].mem}
+                                                                      onChange={(event) => handleContainerMemoryChange(event, index)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Flag ID</td>
+                                                                <td>
+                                                                    <input
+                                                                      type="text"
+                                                                      value={containers[index].flagId}
+                                                                      onChange={(event) => handleContainerFlagIdChange(event, index)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Flag score</td>
+                                                                <td>
+                                                                    <input
+                                                                      type="text"
+                                                                      value={containers[index].flagScore}
+                                                                      onChange={(event) => handleContainerFlagScoreChange(event, index)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Flag requires root permission</td>
+                                                                <td>
+                                                                    <select value={containers[index].flagPermission}
+                                                                            onChange={(e) => handleContainerFlagPermissionChange(e, index)}>
+                                                                        <option value="true">True</option>
+                                                                        <option value="false">False</option>
 
-                                                                        </select>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Reachable by agent</td>
-                                                                    <td>
-                                                                        <select
-                                                                            value={containers[index].reachableByAgent}
-                                                                            onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
-                                                                            <option value="true">True</option>
-                                                                            <option value="false">False</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Reachable by agent</td>
+                                                                <td>
+                                                                    <select
+                                                                      value={containers[index].reachableByAgent}
+                                                                      onChange={(e) => handleContainerReachableByAgentChange(e, index)}>
+                                                                        <option value="true">True</option>
+                                                                        <option value="false">False</option>
 
-                                                                        </select>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </Table>
-                                                        </div>
-
-                                                        <div>
-                                                            Add a user to the
-                                                            container {containers[index].name} &nbsp;&nbsp;
-                                                            <Button type="button"
-                                                                    onClick={() => handleAddContainerUser(index)}
-                                                                    variant="success" size="sm">
-                                                                <i className="fa fa-plus" aria-hidden="true"/>
-                                                            </Button>
-                                                        </div>
-                                                        <div className="table-responsive-user">
-                                                            <Table striped bordered hover>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>User Attribute</th>
-                                                                    <th>Value</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                {containers[index].users.map((containerUsers, userIndex) => (
-                                                                    <React.Fragment
-                                                                        key={'form-user-' + containerUsers.userName + '-' + userIndex + '-' + index}>
-                                                                        <tr
-                                                                            key={'user-name-' + containerUsers.userName + '-' + userIndex + '-' + index}>
-                                                                            <td> Username</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputUserNameRef}
-                                                                                    type="text"
-                                                                                    value={containerUsers.userName}
-                                                                                    onChange={(event) => handleContainerUserNameChange(event, index, userIndex)}
-                                                                                />
-                                                                                <Button type="button" onClick={() =>
-                                                                                    handleDeleteContainerUser(index, userIndex)}
-                                                                                        variant="danger" size="sm"
-                                                                                        style={{marginLeft: '5px'}}>
-                                                                                    <i className="fa fa-trash startStopIcon"
-                                                                                       aria-hidden="true"/>
-                                                                                </Button>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr key={'pw-' + containerUsers.pw + '-' + userIndex + '-' + index}>
-                                                                            <td> Password</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPwRef}
-                                                                                    type="text"
-                                                                                    value={containerUsers.pw}
-                                                                                    onChange={(event) => handleContainerUserPwChange(event, index, userIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr className="custom-td">
-                                                                            <td> Root Access</td>
-                                                                            <td>
-                                                                                <select value={containerUsers.root}
-                                                                                        onChange={(e) => handleContainerUserAccessChange(e, index,
-                                                                                            userIndex)}>
-                                                                                    <option value="true">true</option>
-                                                                                    <option value="false">false</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </React.Fragment>
-                                                                ))}
-                                                                </tbody>
-                                                            </Table>
-                                                        </div>
-
-                                                        <div>
-                                                            Add a network interface to the
-                                                            container {containers[index].name} &nbsp;&nbsp;
-                                                            <Button type="button"
-                                                                    onClick={() => handleAddContainerInterface(index)}
-                                                                    variant="success" size="sm">
-                                                                <i className="fa fa-plus" aria-hidden="true"/>
-                                                            </Button>
-                                                        </div>
-                                                        <div className="table-responsive">
-                                                            <Table striped bordered hover>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Interface Attribute</th>
-                                                                    <th>Value</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                {containers[index].interfaces.map((containerInterfaces, interfaceIndex) => (
-                                                                    <React.Fragment
-                                                                        key={'form-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
-                                                                        <tr
-                                                                            key={'interface-' + containerInterfaces.name + '-' + interfaceIndex + '-' + index}>
-                                                                            <td> Name</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputNameRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.name}
-                                                                                    onChange={(event) => handleContainerInterfaceNameChange(event, index, interfaceIndex)}
-                                                                                />
-                                                                                <Button type="button" onClick={() =>
-                                                                                    handleDeleteContainerInterface(index, interfaceIndex)}
-                                                                                        variant="danger" size="sm"
-                                                                                        style={{marginLeft: '5px'}}>
-                                                                                    <i className="fa fa-trash startStopIcon"
-                                                                                       aria-hidden="true"/>
-                                                                                </Button>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr key={'ip-' + containerInterfaces.ip + '-' + interfaceIndex + '-' + index}>
-                                                                            <td> IP</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputIPRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.ip}
-                                                                                    onChange={(event) => handleContainerInterfaceIPChange(event, index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'subnet-' + containerInterfaces.subnetMask + '-' + interfaceIndex + '-' + index}>
-                                                                            <td> Subnet mask</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputSubnetMaskRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.subnetMask}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceSubnetMaskChange(event, index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'eth-' + containerInterfaces.physicalInterface + '-' +
-                                                                                interfaceIndex + '-' + index}>
-                                                                            <td>Physical interface</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containers[index].interfaces[interfaceIndex].physicalInterface}
-                                                                                    onChange={(e) => handleContainerNetworkPhysicalInterface(e, index, interfaceIndex)}>
-                                                                                    <option value="eth0">eth0</option>
-                                                                                    <option value="eth1">eth1</option>
-                                                                                    <option value="eth2">eth2</option>
-                                                                                    <option value="eth3">eth3</option>
-                                                                                    <option value="eth4">eth4</option>
-                                                                                    <option value="eth5">eth5</option>
-                                                                                    <option value="eth6">eth6</option>
-                                                                                    <option value="eth7">eth7</option>
-                                                                                    <option value="eth8">eth8</option>
-                                                                                    <option value="eth9">eth9</option>
-                                                                                    <option value="eth10">eth10</option>
-
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-limit-' + containerInterfaces.limitPacketsQueue + '-' +
-                                                                                interfaceIndex + '-' + index}>
-                                                                            <td> Limit packets queue</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputLimitPacketsQueueRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.limitPacketsQueue}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceLimitPacketsQueueChange(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-delay-' + containerInterfaces.packetDelayMs + '-' + interfaceIndex + '-' + index}>
-                                                                            <td> Packet delay (ms)</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketDelayMsRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetDelayMs}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketDelayMs(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-jitter-' + containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex + '-' + index}>
-                                                                            <td> Packet delay jitter (ms)</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketDelayJitterMsRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetDelayJitterMs}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketDelayJitterMs(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-correlation-' + containerInterfaces.packetDelayCorrelationPercentage + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Packet delay correlation percentage
-                                                                            </td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketDelayCorrelationPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetDelayCorrelationPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketDelayCorrelationPercentage(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td> Packet delay distribution</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containerInterfaces.packetDelayDistribution}
-                                                                                    onChange={(e) => handleContainerInterfacePacketDelayDistribution(e, index,
-                                                                                        interfaceIndex)}
-                                                                                    ref={inputPacketDelayDistributionRef}>
-                                                                                    <option value="0">Uniform</option>
-                                                                                    <option value="1">Normal</option>
-                                                                                    <option value="2">Pareto</option>
-                                                                                    <option value="3">Pareto normal
-                                                                                    </option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td> Packet loss type</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containerInterfaces.packetLossType}
-                                                                                    onChange={(e) => handleContainerInterfacePacketLossType(e, index,
-                                                                                        interfaceIndex)}
-                                                                                    ref={inputPacketLossTypeRef}>
-                                                                                    <option value="0">Random</option>
-                                                                                    <option value="1">State</option>
-                                                                                    <option value="2">Gemodel</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'loss-gemodelp-' + containerInterfaces.lossGemodelp + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Loss Gemodel P</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputLossGemodelpRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.lossGemodelp}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceLossGemodelp(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'loss-gemodelr-' + containerInterfaces.lossGemodelr + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Loss Gemodel R</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputLossGemodelrRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.lossGemodelr}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceLossGemodelr(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'loss-gemodelk-' + containerInterfaces.lossGemodelk + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Loss Gemodel K</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputLossGemodelkRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.lossGemodelk}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceLossGemodelk(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'loss-gemodelh-' + containerInterfaces.lossGemodelh + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Loss Gemodel H</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputLossGemodelhRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.lossGemodelh}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceLossGemodelh(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-corruption-' + containerInterfaces.packetCorruptPercentage + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Packet corruption percentage</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketCorruptPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetCorruptPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketCorruptPercentage(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-corruption-correlation' +
-                                                                                containerInterfaces.packetCorruptCorrelationPercentage + '-'
-                                                                                + interfaceIndex + '-' + index}>
-                                                                            <td> Packet corruption correlation
-                                                                                percentage
-                                                                            </td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketCorruptCorrelationPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetCorruptCorrelationPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketCorruptCorrelationPercentage(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'pecket-duplicate-percentage-' +
-                                                                                containerInterfaces.packetDuplicatePercentage + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet duplicate percentage</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketDuplicatePercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetDuplicatePercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketDuplicatePercentage(event, index,
-                                                                                            interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'pecket-duplicate-correlation-percentage-' +
-                                                                                containerInterfaces.packetDuplicateCorrelationPercentage + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet duplicate correlation
-                                                                                percentage
-                                                                            </td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketDuplicateCorrelationPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetDuplicateCorrelationPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketDuplicateCorrelationPercentage(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'pecket-reorder-percentage-' +
-                                                                                containerInterfaces.packetReorderPercentage + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet reorder percentage</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketReorderPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetReorderPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketReorderPercentage(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'pecket-reorder-correlation-percentage-' +
-                                                                                containerInterfaces.packetReorderCorrelationPercentage + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet reorder correlation percentage
-                                                                            </td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketReorderCorrelationPercentageRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetReorderCorrelationPercentage}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketReorderCorrelationPercentage(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'pecket-reorder-gap-' +
-                                                                                containerInterfaces.packetReorderGap + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet reorder gap</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketReorderGapRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetReorderGap}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketReorderGap(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'rate-limit-' +
-                                                                                containerInterfaces.rateLimitMbitRef + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Rate limit M bit</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputRateLimitMbitRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.rateLimitMbit}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceRateLimitMbit(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'packet-overhead-bytes-' +
-                                                                                containerInterfaces.packetOverheadBytes + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Packet overhead bytes</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputPacketOverheadBytesRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.packetOverheadBytes}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfacePacketOverheadBytes(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'call-overhead-bytes-' +
-                                                                                containerInterfaces.cellOverheadBytes + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Cell overhead bytes</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputCellOverheadBytesRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.cellOverheadBytes}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceCellOverheadBytes(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'default-gateway-' +
-                                                                                containerInterfaces.defaultGateway + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Default gateway</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputDefaultGatewayRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.defaultGateway}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceDefaultGateway(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td> Firewall rule: default input</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containerInterfaces.defaultInput}
-                                                                                    onChange={(e) => handleContainerInterfaceDefaultInput(e, index,
-                                                                                        interfaceIndex)}>
-                                                                                    <option value="accept">Accept
-                                                                                    </option>
-                                                                                    <option value="drop">Drop</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td> Firewall rule: default output</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containerInterfaces.defaultOutput}
-                                                                                    onChange={(e) => handleContainerInterfaceDefaultOutput(e, index,
-                                                                                        interfaceIndex)}>
-                                                                                    <option value="accept">Accept
-                                                                                    </option>
-                                                                                    <option value="drop">Drop</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td> Firewall rule: default forward</td>
-                                                                            <td>
-                                                                                <select
-                                                                                    value={containerInterfaces.defaultForward}
-                                                                                    onChange={(e) => handleContainerInterfaceDefaultForward(e, index,
-                                                                                        interfaceIndex)}>
-                                                                                    <option value="accept">Accept
-                                                                                    </option>
-                                                                                    <option value="drop">Drop</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'traffic-manager-port-' + containerInterfaces.trafficManagerPort + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Traffic manager port</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputTrafficManagerPortRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.trafficManagerPort}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceTrafficManagerPort(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'traffic-manager-log-file-' + containerInterfaces.trafficManagerLogFile + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Traffic manager log file</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputTrafficManagerLogFileRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.trafficManagerLogFile}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceTrafficManagerLogFile(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr
-                                                                            key={'traffic-manager-log-dir-' +
-                                                                                containerInterfaces.trafficManagerLogDir + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Traffic manager log directory</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputTrafficManagerLogDirRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.trafficManagerLogDir}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceTrafficManagerLogDir(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr className="custom-td"
-                                                                            key={'traffic-manager-max-workers-' +
-                                                                                containerInterfaces.trafficManagerMaxWorkers + '-'
-                                                                                + interfaceIndex}>
-                                                                            <td> Traffic manager maximum workers</td>
-                                                                            <td>
-                                                                                <input
-                                                                                    ref={inputTrafficManagerMaxWorkersRef}
-                                                                                    type="text"
-                                                                                    value={containerInterfaces.trafficManagerMaxWorkers}
-                                                                                    onChange={(event) =>
-                                                                                        handleContainerInterfaceTrafficManagerMaxWorkers(event,
-                                                                                            index, interfaceIndex)}
-                                                                                />
-                                                                            </td>
-                                                                        </tr>
-                                                                    </React.Fragment>
-                                                                ))}
-                                                                </tbody>
-                                                            </Table>
-                                                        </div>
-                                                        <AddServices container={containers[index]}
-                                                                     addServiceHandler={handleAddContainerService}
-                                                                     containerIndex={index}
-                                                                     handleServiceNameChange={handleContainerServiceNameChange}
-                                                                     handleDeleteService={handleDeleteContainerService}
-                                                                     handleProtocolChange={handleContainerServiceProtocolChange}
-                                                                     handleServicePortChange={handleContainerServicePortChange}
-                                                                     handleServiceIpChange={handleContainerServiceIpChange}
-                                                                     inputServiceNameRef={inputServiceNameRef}
-                                                                     inputServicePortRef={inputServicePortRef}
-                                                        />
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </Table>
                                                     </div>
-                                                </div>
-                                            </Collapse>
-                                        </card>
-                                    </Accordion>
-                                ))}
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
-            </Accordion>
 
-        </div>
+                                                    <div>
+                                                        Add a user to the
+                                                        container {containers[index].name} &nbsp;&nbsp;
+                                                        <Button type="button"
+                                                                onClick={() => handleAddContainerUser(index)}
+                                                                variant="success" size="sm">
+                                                            <i className="fa fa-plus" aria-hidden="true"/>
+                                                        </Button>
+                                                    </div>
+                                                    <div className="table-responsive-user">
+                                                        <Table striped bordered hover>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>User Attribute</th>
+                                                                <th>Value</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {containers[index].users.map((containerUsers, userIndex) => (
+                                                              <React.Fragment
+                                                                key={'form-user-' + containerUsers.userName + '-' + userIndex + '-' + index}>
+                                                                  <tr
+                                                                    key={'user-name-' + containerUsers.userName + '-' + userIndex + '-' + index}>
+                                                                      <td> Username</td>
+                                                                      <td>
+                                                                          <input
+                                                                            ref={inputUserNameRef}
+                                                                            type="text"
+                                                                            value={containerUsers.userName}
+                                                                            onChange={(event) => handleContainerUserNameChange(event, index, userIndex)}
+                                                                          />
+                                                                          <Button type="button" onClick={() =>
+                                                                            handleDeleteContainerUser(index, userIndex)}
+                                                                                  variant="danger" size="sm"
+                                                                                  style={{marginLeft: '5px'}}>
+                                                                              <i className="fa fa-trash startStopIcon"
+                                                                                 aria-hidden="true"/>
+                                                                          </Button>
+                                                                      </td>
+                                                                  </tr>
+                                                                  <tr key={'pw-' + containerUsers.pw + '-' + userIndex + '-' + index}>
+                                                                      <td> Password</td>
+                                                                      <td>
+                                                                          <input
+                                                                            ref={inputPwRef}
+                                                                            type="text"
+                                                                            value={containerUsers.pw}
+                                                                            onChange={(event) => handleContainerUserPwChange(event, index, userIndex)}
+                                                                          />
+                                                                      </td>
+                                                                  </tr>
+                                                                  <tr className="custom-td">
+                                                                      <td> Root Access</td>
+                                                                      <td>
+                                                                          <select value={containerUsers.root}
+                                                                                  onChange={(e) => handleContainerUserAccessChange(e, index,
+                                                                                    userIndex)}>
+                                                                              <option value="true">true</option>
+                                                                              <option value="false">false</option>
+                                                                          </select>
+                                                                      </td>
+                                                                  </tr>
+                                                              </React.Fragment>
+                                                            ))}
+                                                            </tbody>
+                                                        </Table>
+                                                    </div>
+
+                                                    <AddInterfaces container={containers[index]}
+                                                                   addInterfaceHandler={handleAddContainerInterface}
+                                                                   containerIndex={index}
+                                                                   handleInterfaceNameChange={handleContainerInterfaceNameChange}
+                                                                   deleteInterfaceHandler={handleDeleteContainerInterface}
+                                                                   handleIPChange={handleContainerInterfaceIPChange}
+                                                                   handleSubnetMaskChange={handleContainerInterfaceSubnetMaskChange}
+                                                                   handleNetworkPhysicalInterface={handleContainerNetworkPhysicalInterface}
+                                                                   handleLimitPacketsQueueChange={handleContainerInterfaceLimitPacketsQueueChange}
+                                                                   handlePacketDelayMs={handleContainerInterfacePacketDelayMs}
+                                                                   handlePacketDelayJitterMs={handleContainerInterfacePacketDelayJitterMs}
+                                                                   handlePacketDelayCorrelationPercentage={handleContainerInterfacePacketDelayCorrelationPercentage}
+                                                                   handlePacketDelayDistribution={handleContainerInterfacePacketDelayDistribution}
+                                                                   handlePacketLossType={handleContainerInterfacePacketLossType}
+                                                                   handleLossGemodelp={handleContainerInterfaceLossGemodelp}
+                                                                   handleLossGemodelr={handleContainerInterfaceLossGemodelr}
+                                                                   handleLossGemodelk={handleContainerInterfaceLossGemodelk}
+                                                                   handleLossGemodelh={handleContainerInterfaceLossGemodelh}
+                                                                   handlePacketCorruptPercentage={handleContainerInterfacePacketCorruptPercentage}
+                                                                   handlePacketCorruptCorrelationPercentage={handleContainerInterfacePacketCorruptCorrelationPercentage}
+                                                                   handlePacketDuplicatePercentage={handleContainerInterfacePacketDuplicatePercentage}
+                                                                   handlePacketDuplicateCorrelationPercentage={handleContainerInterfacePacketDuplicateCorrelationPercentage}
+                                                                   handlePacketReorderPercentage={handleContainerInterfacePacketReorderPercentage}
+                                                                   handlePacketReorderCorrelationPercentage={handleContainerInterfacePacketReorderCorrelationPercentage}
+                                                                   handlePacketReorderGap={handleContainerInterfacePacketReorderGap}
+                                                                   handleRateLimitMbit={handleContainerInterfaceRateLimitMbit}
+                                                                   handlePacketOverheadBytes={handleContainerInterfacePacketOverheadBytes}
+                                                                   handleCellOverheadBytes={handleContainerInterfaceCellOverheadBytes}
+                                                                   handleDefaultGateway={handleContainerInterfaceDefaultGateway}
+                                                                   handleDefaultInput={handleContainerInterfaceDefaultInput}
+                                                                   handleDefaultOutput={handleContainerInterfaceDefaultOutput}
+                                                                   handleDefaultForward={handleContainerInterfaceDefaultForward}
+                                                                   handleTrafficManagerPort={handleContainerInterfaceTrafficManagerPort}
+                                                                   handleTrafficManagerLogFile={handleContainerInterfaceTrafficManagerLogFile}
+                                                                   handleTrafficManagerLogDir={handleContainerInterfaceTrafficManagerLogDir}
+                                                                   handleTrafficManagerMaxWorkers={handleContainerInterfaceTrafficManagerMaxWorkers}
+
+                                                                   inputNameRef={inputNameRef}
+                                                                   inputIPRef={inputIPRef}
+                                                                   inputSubnetMaskRef={inputSubnetMaskRef}
+                                                                   inputPacketDelayMsRef={inputPacketDelayMsRef}
+                                                                   inputPacketDelayJitterMsRef={inputPacketDelayJitterMsRef}
+                                                                   inputPacketDelayCorrelationPercentageRef={inputPacketDelayCorrelationPercentageRef}
+                                                                   inputLossGemodelpRef={inputLossGemodelpRef}
+                                                                   inputLossGemodelrRef={inputLossGemodelrRef}
+                                                                   inputLossGemodelkRef={inputLossGemodelkRef}
+                                                                   inputLossGemodelhRef={inputLossGemodelhRef}
+                                                                   inputPacketCorruptPercentageRef={inputPacketCorruptPercentageRef}
+                                                                   inputPacketCorruptCorrelationPercentageRef={inputPacketCorruptCorrelationPercentageRef}
+                                                                   inputPacketDuplicatePercentageRef={inputPacketDuplicatePercentageRef}
+                                                                   inputPacketDuplicateCorrelationPercentageRef={inputPacketDuplicateCorrelationPercentageRef}
+                                                                   inputPacketReorderPercentageRef={inputPacketReorderPercentageRef}
+                                                                   inputPacketReorderCorrelationPercentageRef={inputPacketReorderCorrelationPercentageRef}
+                                                                   inputPacketReorderGapRef={inputPacketReorderGapRef}
+                                                                   inputRateLimitMbitRef={inputRateLimitMbitRef}
+                                                                   inputPacketOverheadBytesRef={inputPacketOverheadBytesRef}
+                                                                   inputCellOverheadBytesRef={inputCellOverheadBytesRef}
+                                                                   inputDefaultGatewayRef={inputDefaultGatewayRef}
+                                                                   inputTrafficManagerPortRef={inputTrafficManagerPortRef}
+                                                                   inputTrafficManagerLogFileRef={inputTrafficManagerLogFileRef}
+                                                                   inputTrafficManagerLogDirRef={inputTrafficManagerLogDirRef}
+                                                                   inputTrafficManagerMaxWorkersRef={inputTrafficManagerMaxWorkersRef}
+                                                                   inputPacketDelayDistributionRef={inputPacketDelayDistributionRef}
+                                                                   inputPacketLossTypeRef={inputPacketLossTypeRef}
+                                                    />
+
+
+                                                    <AddServices container={containers[index]}
+                                                                 addServiceHandler={handleAddContainerService}
+                                                                 containerIndex={index}
+                                                                 handleServiceNameChange={handleContainerServiceNameChange}
+                                                                 handleDeleteService={handleDeleteContainerService}
+                                                                 handleProtocolChange={handleContainerServiceProtocolChange}
+                                                                 handleServicePortChange={handleContainerServicePortChange}
+                                                                 handleServiceIpChange={handleContainerServiceIpChange}
+                                                                 inputServiceNameRef={inputServiceNameRef}
+                                                                 inputServicePortRef={inputServicePortRef}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </Collapse>
+                                    </card>
+                                </Accordion>
+                              ))}
+                          </div>
+                      </div>
+                  </Collapse>
+              </Card>
+          </Accordion>
+
+      </div>
     )
 }
 
