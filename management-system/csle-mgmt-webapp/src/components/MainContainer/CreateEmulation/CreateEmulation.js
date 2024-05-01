@@ -31,6 +31,7 @@ import {useDebouncedCallback} from 'use-debounce'
 import getIps from '../../Common/getIps'
 import AddServices from "./AddServices/AddServices";
 import AddInterfaces from "./AddInterfaces/AddInterfaces"
+import AddUsers from './AddUsers/AddUsers'
 
 /**
  * Component representing the /create-emulation-page
@@ -1699,73 +1700,16 @@ const CreateEmulation = (props) => {
                                                         </Table>
                                                     </div>
 
-                                                    <div>
-                                                        Add a user to the
-                                                        container {containers[index].name} &nbsp;&nbsp;
-                                                        <Button type="button"
-                                                                onClick={() => handleAddContainerUser(index)}
-                                                                variant="success" size="sm">
-                                                            <i className="fa fa-plus" aria-hidden="true"/>
-                                                        </Button>
-                                                    </div>
-                                                    <div className="table-responsive-user">
-                                                        <Table striped bordered hover>
-                                                            <thead>
-                                                            <tr>
-                                                                <th>User Attribute</th>
-                                                                <th>Value</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {containers[index].users.map((containerUsers, userIndex) => (
-                                                              <React.Fragment
-                                                                key={'form-user-' + containerUsers.userName + '-' + userIndex + '-' + index}>
-                                                                  <tr
-                                                                    key={'user-name-' + containerUsers.userName + '-' + userIndex + '-' + index}>
-                                                                      <td> Username</td>
-                                                                      <td>
-                                                                          <input
-                                                                            ref={inputUserNameRef}
-                                                                            type="text"
-                                                                            value={containerUsers.userName}
-                                                                            onChange={(event) => handleContainerUserNameChange(event, index, userIndex)}
-                                                                          />
-                                                                          <Button type="button" onClick={() =>
-                                                                            handleDeleteContainerUser(index, userIndex)}
-                                                                                  variant="danger" size="sm"
-                                                                                  style={{marginLeft: '5px'}}>
-                                                                              <i className="fa fa-trash startStopIcon"
-                                                                                 aria-hidden="true"/>
-                                                                          </Button>
-                                                                      </td>
-                                                                  </tr>
-                                                                  <tr key={'pw-' + containerUsers.pw + '-' + userIndex + '-' + index}>
-                                                                      <td> Password</td>
-                                                                      <td>
-                                                                          <input
-                                                                            ref={inputPwRef}
-                                                                            type="text"
-                                                                            value={containerUsers.pw}
-                                                                            onChange={(event) => handleContainerUserPwChange(event, index, userIndex)}
-                                                                          />
-                                                                      </td>
-                                                                  </tr>
-                                                                  <tr className="custom-td">
-                                                                      <td> Root Access</td>
-                                                                      <td>
-                                                                          <select value={containerUsers.root}
-                                                                                  onChange={(e) => handleContainerUserAccessChange(e, index,
-                                                                                    userIndex)}>
-                                                                              <option value="true">true</option>
-                                                                              <option value="false">false</option>
-                                                                          </select>
-                                                                      </td>
-                                                                  </tr>
-                                                              </React.Fragment>
-                                                            ))}
-                                                            </tbody>
-                                                        </Table>
-                                                    </div>
+                                                    <AddUsers container={containers[index]}
+                                                              handleAddUser={handleAddContainerUser}
+                                                              containerIndex={index}
+                                                              inputUserNameRef={inputUserNameRef}
+                                                              handleContainerUserNameChange={handleContainerUserNameChange}
+                                                              handleDeleteContainerUser={handleDeleteContainerUser}
+                                                              inputPwRef={inputPwRef}
+                                                              handleContainerUserPwChange={handleContainerUserPwChange}
+                                                              handleContainerUserAccessChange={handleContainerUserAccessChange}
+                                                    />
 
                                                     <AddInterfaces container={containers[index]}
                                                                    addInterfaceHandler={handleAddContainerInterface}
