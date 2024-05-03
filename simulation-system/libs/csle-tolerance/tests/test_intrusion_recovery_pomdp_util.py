@@ -3,7 +3,7 @@ from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryP
 
 class TestIntrusionTolerancePomdpSuite:
     """
-    Test suite for stopping_game_util.py
+    Test suite for intrusion_recovery_pomdp_util.py
     """
 
     def test_initial_belief(self) -> None:
