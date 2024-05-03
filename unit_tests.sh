@@ -28,6 +28,8 @@ echo "Running Python unit tests for gym-csle-apt-game"
 cd simulation-system/libs/gym-csle-apt-game; pytest; cd ../../../
 echo "Running Python unit tests for gym-csle-cyborg"
 cd simulation-system/libs/gym-csle-cyborg; pytest; cd ../../../
+echo "Running Python unit tests for csle-attack-profiler"
+cd simulation-system/libs/csle-attack-profiler; pytest; cd ../../../
 echo "Running Python unit tests for CSLE emulation environments"
 cd emulation-system/envs/050/level_1; pytest; cd ../../../../
 cd emulation-system/envs/050/level_2; pytest; cd ../../../../

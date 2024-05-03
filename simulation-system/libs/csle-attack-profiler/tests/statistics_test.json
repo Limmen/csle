@@ -1,0 +1,82 @@
+{
+    "conditionals_counts": {
+        "A:MyTest_D:C_M:['15.9.2.3', '15.9.4.74']": {
+            "alerts_weighted_by_priority": {
+                "1338": 1,
+                "1340": 1,
+                "1350": 1,
+                "1351": 1,
+                "1352": 1,
+                "1353": 1,
+                "1354": 1,
+                "1355": 1,
+                "1356": 1,
+                "1357": 1   
+            }
+        },
+        "A:MyTest2_D:H_M:['15.9.2.3', '15.9.4.74']": {
+            "alerts_weighted_by_priority": {
+                "1337": 1
+            }
+        },
+        "A:CVE-2015-1427 exploit_D:Continue_M:['15.9.2.3', '15.9.4.74']": {
+            "alerts_weighted_by_priority": {
+                "53": 1,
+                "917": 1,
+                "975": 1,
+                "987": 1,
+                "1004": 1,
+                "1014": 1,
+                "1017": 1,
+                "1024": 1,
+                "1026": 1,
+                "1029": 1,
+                "1050": 1,
+                "1062": 1,
+                "1075": 1,
+                "1094": 1,
+                "1100": 1,
+                "1105": 1,
+                "1111": 1,
+                "1118": 1,
+                "1123": 1
+            }
+        }
+    },
+    "conditionals_probs": {
+        "A:MyTest_D:C_M:['15.9.2.3', '15.9.4.74']": {
+            "alerts_weighted_by_priority": {
+                "1338": 0.1,
+                "1340": 0.1,
+                "1350": 0.1,
+                "1351": 0.1,
+                "1352": 0.1,
+                "1353": 0.1,
+                "1354": 0.1,
+                "1355": 0.1,
+                "1356": 0.1,
+                "1357": 0.1   
+            }
+        },
+        "A:MyTest2_D:H_M:['15.9.2.3', '15.9.4.74']": {
+            "alerts_weighted_by_priority": {
+                "1337": 1
+            }
+        },
+        "no_intrusion": {
+            "alerts_weighted_by_priority": {
+                "1337": 0.5,
+                "1338": 0.5
+            }
+        }
+    },
+    "emulation_name": "test",
+    "descr": "test",
+    "initial_distributions_counts": {
+        "adduser_alerts": {
+            "0": 6335
+        }
+    },
+    "conditionals_kl_divergences": {}
+
+}
