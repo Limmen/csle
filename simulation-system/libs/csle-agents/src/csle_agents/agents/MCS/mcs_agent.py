@@ -1097,7 +1097,8 @@ class MCSAgent(BaseAgent):
 
     def basket(self, x: List[float], f: float,
                policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
-               avg_metrics: Optional[Dict[str, Union[float, int]]], xmin: List[Union[float, List[float], NDArray[np.float64]]],
+               avg_metrics: Optional[Dict[str, Union[float, int]]],
+               xmin: List[Union[float, List[float], NDArray[np.float64]]],
                fmi: List[float], xbest: List[float], fbest: float, stop: List[Union[int, float]],
                nbasket: int, nsweep: int, nsweepbest: int, stopping_actions: int):
         """
@@ -1975,8 +1976,8 @@ class MCSAgent(BaseAgent):
         return alist, flist, alp, alp1, alp2, falp
 
     def triple(self, x: Union[List[Union[int, float]]], f: float, x1: Union[List[Union[int, float]]],
-                              x2: Union[List[Union[int, float]]], u: List[int], v: List[int],
-                              hess, G, stopping_actions, setG=False):
+               x2: Union[List[Union[int, float]]], u: List[int], v: List[int],
+               hess, G, stopping_actions, setG=False):
         """
         The triple function
         :param x: evaluation argument (position)

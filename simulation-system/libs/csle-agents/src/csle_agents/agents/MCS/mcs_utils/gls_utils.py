@@ -102,7 +102,7 @@ class GLSUtils(UtilHelpers):
         fmed = np.median(flist)
         
         if nmin > 1:
-            al = [alist[i] for i in range(len(minima)) if minima[i] == True]
+            al = [alist[i] for i in range(len(minima)) if minima[i]]
             if abest in al:
                 al.remove(abest)
             unitlen = min(np.abs(np.subtract(al, abest)))
