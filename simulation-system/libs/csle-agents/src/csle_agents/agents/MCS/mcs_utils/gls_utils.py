@@ -14,13 +14,18 @@ class GLSUtils(UtilHelpers):
 
     def lsrange(self, xl, xu, x, p, prt, bend):
         '''
-            Defining line search range
+        Defining line search range
+        :param xl:
+        :param xu:
+        :param x:
+        :param p:
+        :param prt:
+        :apram bend:
         '''
         if np.max(np.abs(p)) == 0:
             sys.exit('GLS Error: zero search direction in line search')
         
-        # find sensible step size scale
-        # TODO :isinstance without errors
+        # Find sensible step size scale
         if type(p) is not np.ndarray:
             if type(p) is not list:
                 p = [p]
@@ -76,6 +81,12 @@ class GLSUtils(UtilHelpers):
         return xl, xu, x, p, amin, amax, scale
  
     def lssort(self, alist, flist):
+        """
+        Performing the lssort
+        :param alist:
+        :param flist:
+        :return: metrics and parameters obtained from doing the lssort
+        """
         perm = np.argsort(alist).tolist()
         alist.sort()
         flist = [flist[i] for i in perm if i < len(flist)]
@@ -113,6 +124,14 @@ class GLSUtils(UtilHelpers):
         return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s
 
     def lsconvex(self, alist, flist, nmin, s):
+        """
+        Performing the lsconvex
+        :param alist:
+        :param flist:
+        :param nmin:
+        :param s:
+        :return: convex
+        """
         if nmin > 1:
             convex = 0
         else:
@@ -129,6 +148,19 @@ class GLSUtils(UtilHelpers):
         return convex
 
     def lssat(self, small, alist, flist, alp, amin, amax, s, saturated):
+        """
+        Performing the lssat
+        :param small:
+        :param alist:
+        :param flist:
+        :param alp:
+        :param amin:
+        :param amin:
+        :param amax:
+        :param s:
+        :param saturated:
+        :return: alp, saturated
+        """
         cont = saturated
         if cont:
             i = np.argmin(flist)

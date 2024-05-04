@@ -327,7 +327,7 @@ class MCSAgent(BaseAgent):
         return policy
 
     def init_list(self, theta0: NDArray[np.int32], l: NDArray[np.int32], L: NDArray[np.int32],
-                  stopping_actions: int, n: int):
+                  stopping_actions: int, n: int, ncall: int = 0):
         '''
         Computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
@@ -338,7 +338,7 @@ class MCSAgent(BaseAgent):
         :param n: n
         :return : initial conditions
         '''
-        ncall = 0
+        # ncall = 0
         theta = np.zeros(n)
         for i in range(n):
             theta[i] = theta0[i, l[i]]
@@ -410,8 +410,8 @@ class MCSAgent(BaseAgent):
         if MCSUtils().check_box_bound(u, v):
             sys.exit("Error MCS main: out of bound")
         n = len(u)
-        ncall = 0
-        ncloc = 0
+        ncall: int = 0
+        ncloc: int = 0
 
         l = np.multiply(1, np.ones(n)).astype(int)
         L = np.multiply(2, np.ones(n)).astype(int)
@@ -443,7 +443,7 @@ class MCSAgent(BaseAgent):
         z = np.zeros((2, step1))
 
         record: NDArray[Union[np.int32, np.float64]] = np.zeros(smax)
-        nboxes = 0
+        nboxes: int = 0
         nbasket: int = -1
         nbasket0: int = -1
         nsweepbest = 0
@@ -818,7 +818,7 @@ class MCSAgent(BaseAgent):
                 level: NDArray[np.int32], ichild: NDArray[np.int32],
                 f: NDArray[np.float64], xbest: NDArray[np.float64], fbest: NDArray[np.float64],
                 stop: List[Union[float, int]], prt: int, record: NDArray[Union[np.int32, np.float64]],
-                nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int):
+                nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int, ncall: int = 0):
         """
         Splitting box at specified level s according to an initialization list
         :param i : specified index
@@ -854,7 +854,7 @@ class MCSAgent(BaseAgent):
         :return: a collection of parameters and metrics from the initial split
         """
 
-        ncall = 0
+        # ncall = 0
         f0 = np.zeros(max(L) + 1)
         flag = 1
 
@@ -955,7 +955,7 @@ class MCSAgent(BaseAgent):
               f: NDArray[np.float64], xbest: NDArray[np.float64],
               fbest: NDArray[np.float64], stop: List[Union[float, int]], prt: int,
               record: NDArray[Union[np.float64, np.int32]], nboxes: int, nbasket: int,
-              nsweepbest: int, nsweep: int, stopping_actions: int):
+              nsweepbest: int, nsweep: int, stopping_actions: int, ncall: int = 0, flag: int = 1):
         """
         Function that performs a box split
         :param i:
@@ -988,8 +988,8 @@ class MCSAgent(BaseAgent):
         :param stopping_actions: the number of stopping actions
         :return: a collection of parameters and metrics afdter the arbitrary split
         """
-        ncall = 0
-        flag = 1
+        # ncall = 0
+        # flag = 1
         x[i] = z[1]
         policy = self.get_policy(x, L=stopping_actions)
         avg_metrics = self.eval_theta(policy=policy,
@@ -1100,7 +1100,8 @@ class MCSAgent(BaseAgent):
                avg_metrics: Optional[Dict[str, Union[float, int]]],
                xmin: List[Union[float, List[float], NDArray[np.float64]]],
                fmi: List[float], xbest: List[float], fbest: float, stop: List[Union[int, float]],
-               nbasket: int, nsweep: int, nsweepbest: int, stopping_actions: int):
+               nbasket: int, nsweep: int, nsweepbest: int, stopping_actions: int, loc: int = 1,
+               flag: int = 1, ncall: Union[float, int] = 0):
         """
         Function representing the basket functional
         :param x: evalutaion argument (position)
@@ -1118,16 +1119,12 @@ class MCSAgent(BaseAgent):
         :param stopping_actions: number of stopping actions
         :return: a collection of parameters and metrics afdter the basket functional
         """
-        loc = 1
-        flag = 1
-        ncall = 0
         if not nbasket:
             return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
         dist = np.zeros(nbasket + 1)
         for k in range(len(dist)):
             dist[k] = np.linalg.norm(np.subtract(x, xmin[k]))
 
-        # dist1 = np.sort(dist)
         ind = np.argsort(dist)
         if nbasket == -1:
             return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
@@ -1220,7 +1217,9 @@ class MCSAgent(BaseAgent):
     def lsearch(self, x: List[Union[float, int]], f: float, f0: NDArray[np.float64], u: List[int], v: List[int],
                 nf: int, stop: List[Union[int, float]], maxstep: int, gamma: float,
                 hess: NDArray[np.float64], nsweep: int,
-                nsweepbest: int, stopping_actions: int, eps: float):
+                nsweepbest: int, stopping_actions: int, eps: float, ncall: Union[float, int] = 0,
+                flag: int = 1, eps0: float = 0.001, nloc: int = 1, small: float = 0.1,
+                smaxls: int = 15, diag: int = 0, nstep: int = 0):
         """
         The local searcg algorithm
         :param x: the evalutaion argument (position)
@@ -1239,14 +1238,8 @@ class MCSAgent(BaseAgent):
         :param eps: espilon
         :return: a collection of parameters and metrics afdter the local search
         """
-        ncall = 0
         n = len(x)
         x0 = np.asarray([min(max(u[i], 0), v[i]) for i in range(len(u))])
-        flag = 1
-        eps0 = 0.001
-        nloc = 1
-        small = 0.1
-        smaxls = 15
         
         xmin, fmi, g, G, nfcsearch = self.csearch(x, f, u, v, hess,
                                                   stopping_actions, eps)
@@ -1311,10 +1304,10 @@ class MCSAgent(BaseAgent):
             gain = f - fmi
             r = 0
 
-        diag = 0
+        # diag = 0
         ind = [i for i in range(n) if (u[i] < xmin[i] and xmin[i] < v[i])]
         b = np.dot(np.abs(g).T, [max(abs(xmin[i]), abs(xold[i])) for i in range(len(xmin))])
-        nstep = 0
+        # nstep = 0
         while (ncall < nf) and (nstep < maxstep) and ((diag or len(ind) < n) or
                                                       (stop[0] == 0 and fmi - gain <= stop[1]) or
                                                       (b >= gamma * (f0 - f) and gain > 0)):
@@ -1482,7 +1475,6 @@ class MCSAgent(BaseAgent):
         dist = np.zeros(nbasket + 1)
         for k in range(len(dist)):
             dist[k] = np.linalg.norm(np.subtract(x, xmin[k]))
-        # dist1 = np.sort(dist)
         ind = np.argsort(dist)
 
         if nbasket == -1:
@@ -1870,12 +1862,6 @@ class MCSAgent(BaseAgent):
             alp, saturated = GLSUtils().lssat(small, alist, flist, alp, amin, amax, s, saturated)
             if saturated or s == sold or s >= smax:
                 break
-            #     if saturated:
-            #         no_print = 0
-            #     if s == sold:
-            #         no_print = 0
-            #     if s >= smax:
-            #         no_print = 0
 
             sold = s
             nminold = nmin
@@ -2002,7 +1988,7 @@ class MCSAgent(BaseAgent):
         
         ind = [i for i in range(n) if (u[i] < x[i] and x[i] < v[i])]
         ind1 = [i for i in range(n) if (x[i] <= u[i] or x[i] >= v[i])]
-        
+
         for j in range(len(ind1)):
             g[ind1[j]] = 0
             for k in range(n):
@@ -2017,7 +2003,7 @@ class MCSAgent(BaseAgent):
                     g[i] = 1
                     G[i, i] = 1
             return xtrip, ftrip, g, G, x1, x2, nf
-        
+
         if setG:
             G = np.zeros((n, n))
         xtrip = copy.deepcopy(x)
@@ -2028,7 +2014,7 @@ class MCSAgent(BaseAgent):
             i = ind[j]
             x = copy.deepcopy(xtrip)
             f = copy.deepcopy(ftrip)
-            
+
             x[i] = x1[i]
 
             policy = self.get_policy(x, L=stopping_actions)
@@ -2052,7 +2038,7 @@ class MCSAgent(BaseAgent):
                 if f2 < ftrip:
                     ftripnew = copy.deepcopy(f2)
                     xtripnew[i] = x2[i]
-            
+
             if nargin < 10:
                 k1 = -1
                 if f1 <= f2:

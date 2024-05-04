@@ -152,6 +152,12 @@ class MCSUtils(UtilHelpers):
         super(MCSUtils, self).__init__()
 
     def check_box_bound(self, u, v):
+        """
+        Function that checks the bounds of the box
+        :param u:
+        :param v:
+        :return: boolean indicating the bound
+        """
         if v < u:
             print('incompatible box bounds')
             return True
@@ -162,7 +168,14 @@ class MCSUtils(UtilHelpers):
             return False
 
     def strtsw(self, smax, level, f, nboxes, record):
-
+        """
+        Function that does the strtsw
+        :param smax:
+        :param level:
+        :param f:
+        :param nboxes:
+        :param record:
+        """
         record = np.zeros(smax).astype(int)
         s = smax
         for j in range(nboxes + 1):
@@ -196,7 +209,6 @@ class MCSUtils(UtilHelpers):
         :return isplit: splitting index
         :return splval: Inf  if n0(isplit) = 0, splitting value  otherwise
         '''
-        
         e = np.zeros(n)
         emin = np.Inf
         for i in range(n):
@@ -223,10 +235,10 @@ class MCSUtils(UtilHelpers):
 
     def updtrec(self, j, s, f, record):
         '''
+            Updates the pointer record(s) to the best non-split box at level s
             :param j: label of a box
             :param s: its level
             :param f: vector containing the base vertex function values of the already defined boxes.
-            Updates the pointer record(s) to the best non-split box at level s
             :param record: record list
         '''
         if len(record) < s:
@@ -239,6 +251,13 @@ class MCSUtils(UtilHelpers):
         return record
 
     def chkloc(self, nloc, xloc, x):
+        """
+        Checking the location
+        :param nloc:
+        :param xloc:
+        :param x:
+        :return: the location
+        """
         loc = 1
         for k in range(nloc):
             if np.array_equal(x, xloc[k]):
@@ -247,11 +266,24 @@ class MCSUtils(UtilHelpers):
         return loc
 
     def addloc(self, nloc, xloc, x):
+        """
+        adding a location
+        :param nloc:
+        :param xloc:
+        :param x:
+        :return: locations including the added one
+        """
         nloc = nloc + 1
         xloc.append(copy.deepcopy(x))
         return nloc, xloc
 
     def chrelerr(self, fbest, stop):
+        """
+        Performing the chrelerr
+        :param fbest:
+        :param stop:
+        :return: flags
+        """
         fglob = stop[1]
         if fbest - fglob <= max(stop[0] * abs(fglob), stop[2]):
             flag = 0
@@ -261,6 +293,11 @@ class MCSUtils(UtilHelpers):
         return flag
 
     def chvtr(self, f, vtr):
+        """
+        Performing te chvtr function
+        :param f:
+        :param vtr
+        """
         if f <= vtr:
             flag = 0
         else:
