@@ -15,12 +15,12 @@ class GLSUtils(UtilHelpers):
     def lsrange(self, xl, xu, x, p, prt, bend):
         '''
         Defining line search range
-        :param xl:
-        :param xu:
-        :param x:
-        :param p:
-        :param prt:
-        :apram bend:
+        :param xl: lower bound
+        :param xu: upper bound
+        :param x: starting point
+        :param p: Search direction
+        :param prt: print command - unused in this implementation sofar
+        :param bend:
         '''
         if np.max(np.abs(p)) == 0:
             sys.exit('GLS Error: zero search direction in line search')
@@ -83,8 +83,8 @@ class GLSUtils(UtilHelpers):
     def lssort(self, alist, flist):
         """
         Performing the lssort
-        :param alist:
-        :param flist:
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :return: metrics and parameters obtained from doing the lssort
         """
         perm = np.argsort(alist).tolist()
@@ -126,8 +126,8 @@ class GLSUtils(UtilHelpers):
     def lsconvex(self, alist, flist, nmin, s):
         """
         Performing the lsconvex
-        :param alist:
-        :param flist:
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param nmin:
         :param s:
         :return: convex

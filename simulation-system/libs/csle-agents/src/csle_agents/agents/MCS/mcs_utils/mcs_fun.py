@@ -15,7 +15,7 @@ class UtilHelpers():
         
         :param x:  3 pairwise distinct support points
         :param f: corresponding function values
-        return d: the interpolating polynomial is given by
+        :return d: the value of the interpolating polynomial
         '''
         d = np.zeros(3)
         d[0] = f[0]
@@ -26,7 +26,9 @@ class UtilHelpers():
 
     def subint(self, x1, x2):
         '''
-        computes [min(x,y),max(x,y)] that are neither too close nor too far away from x
+        Computes [min(x,y),max(x,y)] that are neither too close nor too far away from x
+        :param x1:
+        :param x2:
         '''
         f = 1000
         if f * abs(x1) < 1:
@@ -40,7 +42,10 @@ class UtilHelpers():
 
     def quadpol(self, x, d, x0):
         '''
-            Evaluates the quadratic polynomial
+        Evaluates the quadratic polynomial
+        :param x: starting point
+        :param d: the value of the interpolating polynomial
+        :parm x0
         '''
         return d[0] + d[1] * (x - x0[0]) + d[2] * (x - x0[0]) * (x - x0[1])
 
@@ -173,7 +178,7 @@ class MCSUtils(UtilHelpers):
         :param smax:
         :param level:
         :param f:
-        :param nboxes:
+        :param nboxes: counter for boxes not in the 'shopping bas
         :param record:
         """
         record = np.zeros(smax).astype(int)
@@ -195,7 +200,7 @@ class MCSUtils(UtilHelpers):
         gain vector e for (potentially) splitting a box by expected gain
         :param n: dimension of the problem
         :param n0: the ith coordinate has been split n0(i) times in the history of the box
-        :param l: pointer to the initial point of the initialization list
+        :param l: Pointer to the initial point of the initialization list
         :param L: lengths of the initialization list
         :param x: base vertex of the box
         :param y: opposite vertex of the box
@@ -345,6 +350,23 @@ class MCSUtils(UtilHelpers):
 
     def vertex(self, j, n, u, v, v1, x0,
                f0, ipar, isplit, ichild, z, f, l, L):
+        """
+        vertex function
+        :param j:
+        :param n:
+        :param u:
+        :param v:
+        :param v1:
+        :param x0:
+        :param f0:
+        :param ipar:
+        :param isplit:
+        :param ichild:
+        :param z:
+        :param f:
+        :param l: Indication of the mid point
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        """
         x = np.multiply(np.Inf, np.ones(n))
         y = np.multiply(np.Inf, np.ones(n))
         x1 = np.multiply(np.Inf, np.ones(n))
@@ -466,6 +488,21 @@ class MCSUtils(UtilHelpers):
                 isplit, level, ipar, ichild, f, nboxes, prt):
         """
         Generates the boxes in the initializaiton procedure
+        :param theta0:
+        :param f0:
+        :param l: Indication of the mid point
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        :param istar:
+        :param u:
+        :param v:
+        :param isplit:
+        :param level:
+        :param ipar:
+        :param ichild:
+        :param ichild:
+        :param f: function value of the splitinhg float value
+        :param nboxes: counter for boxes not in the 'shopping bas
+        :param prt:
         """
         n = len(u)
  

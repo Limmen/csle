@@ -124,6 +124,7 @@ class MCSAgent(BaseAgent):
 
     def hparam_names(self) -> List[str]:
         """
+        Function that contains the hyperparameter names
         :return: a list with the hyperparameter names
         """
         return [agents_constants.MCS.STEP, agents_constants.MCS.STEP1,
@@ -332,10 +333,10 @@ class MCSAgent(BaseAgent):
         Computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
         :param theta0: theta0
-        :param l: l
-        :param L: L
+        :param l: Indication of the mid point
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
         :param stopping actions: stopping actions for the eval_theta function
-        :param n: n
+        :param n: dimension (should equal the number of stopping actions)
         :return : initial conditions
         '''
         # ncall = 0
@@ -348,9 +349,9 @@ class MCSAgent(BaseAgent):
                                       max_steps=self.experiment_config.hparams[
                                           agents_constants.COMMON.MAX_ENV_STEPS].value)
         J1 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        # print("J1 = ", J1)
+
         ncall += 1
-        
+
         J0 = np.zeros((L[0] + 1, n))
         J0[l[0], 0] = J1
 
@@ -392,15 +393,14 @@ class MCSAgent(BaseAgent):
         :param training_job: the configuration of the training job
         :param u: the initial lower bound ("lower corner" in 3D)
         :param v: the initial upper bound ("upper corner" in 3D)
-        :param smax: maximum level depth och local search
+        :param smax: maximum level depth
         :param nf: maximum number of function calls
-        :param stop:
-        :param iinit:
-        :param local:
-        :param gamma:
+        :param stop: stopping test
+        :param iinit: 
+        :param local: command for lsearch or no lsearch
+        :param gamma: acceptable relative accuracy for local search
         :param hess:
         :param stopping_actions: number of stopping actions
-        :param gamma:
         :param hess: the hessian of the multidimensional function
         :param eps: parameter value for the golden ratio
         :param n:
@@ -446,8 +446,8 @@ class MCSAgent(BaseAgent):
         nboxes: int = 0
         nbasket: int = -1
         nbasket0: int = -1
-        nsweepbest = 0
-        nsweep = 0
+        nsweepbest: int = 0
+        nsweep: int = 0
         m = n
         record[0] = 1
         nloc = 0
@@ -821,35 +821,35 @@ class MCSAgent(BaseAgent):
                 nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int, ncall: int = 0):
         """
         Splitting box at specified level s according to an initialization list
-        :param i : specified index
+        :param i: specified index
         :param s: current depth level
-        :param smax: maximum level depth
+        :param smax: maximum depth level
         :param par:
         :param x0: initial position
         :param n0:
         :param u: initial lower guess ("lower corner" in 3D)
         :param v: initial upper guess ("upper corner" in 3D)
-        :param x: evaluation argument
+        :param x: starting point
         :param y:
         :param x1: evaluation argument (position)
         :param x2: evaluation argument (position)
         :param L:
         :param l:
         :param xmin: evaluation argument (position)
-        :param fmi: minimal function value
+        :param fmi:
         :param ipar:
         :param level:
         :param ichild:
         :param f: function value
         :param xbest: best evaluation argument (position)
         :param fbest: best function value
-        :param stop:
-        :param prt: print option
+        :param stop: stopping test
+        :param prt: print - unsued in this implementation so far
         :param record:
-        :param nboxes: number of boxes
-        :param nbasket: number of baskets
-        :param nsweepbest:
-        :param nsweep: number of sweeps
+        :param nboxes: counter for boxes not in the 'shopping bas
+        :param nbasket: counter for boxes in the 'shopping bas
+        :param nsweepbest: number of sweep in which fbest was updated for the last
+        :param nsweep: sweep counter
         :stopping_actions: number of stopping actions
         :return: a collection of parameters and metrics from the initial split
         """
@@ -965,7 +965,7 @@ class MCSAgent(BaseAgent):
         :param n0:
         :param u: initial lower guess ("lower corner" in 3D)
         :param v: initial upper guess ("upper corner" in 3D)
-        :param x: evaluation argument (position)
+        :param x: starting point
         :param y:
         :param x1: evaluation argument (position)
         :param x2: evaluation argument (position)
@@ -978,13 +978,13 @@ class MCSAgent(BaseAgent):
         :param f: function value
         :param xbest: currently best position
         :param fbest: current best function value'
-        :param stop:
-        :param prt: print option
+        :param stop: stopping test
+        :param prt: print - unsued in this implementation so far
         :param record:
-        :param nboxes: number of boxes
-        :param nbasket: number of baskets
-        :param nsweepbest:
-        :param nsweep:
+        :param nboxes: counter for boxes not in the 'shopping bas
+        :param nbasket: counter for boxes in the 'shopping basket'
+        :param nsweepbest: number of sweep in which fbest was updated for the last
+        :param nsweep: sweep counter
         :param stopping_actions: the number of stopping actions
         :return: a collection of parameters and metrics afdter the arbitrary split
         """
@@ -1104,7 +1104,7 @@ class MCSAgent(BaseAgent):
                flag: int = 1, ncall: Union[float, int] = 0):
         """
         Function representing the basket functional
-        :param x: evalutaion argument (position)
+        :param x: starting point
         :param f: function value
         :param policy: current policy
         :param avg_metrics: current average metrics
@@ -1112,10 +1112,10 @@ class MCSAgent(BaseAgent):
         :param fmi:
         :param xbest: current best position
         :param fbest: current best function value
-        :param stop:
-        :param nbasket: number of baskets
-        :param nsweep: numbver of sweeps
-        :param nsweepbest:
+        :param stop: stopping test
+        :param nbasket: counter for boxes in the 'shopping basket'
+        :param nsweep: sweep counter
+        :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
         :return: a collection of parameters and metrics afdter the basket functional
         """
@@ -1221,19 +1221,19 @@ class MCSAgent(BaseAgent):
                 flag: int = 1, eps0: float = 0.001, nloc: int = 1, small: float = 0.1,
                 smaxls: int = 15, diag: int = 0, nstep: int = 0):
         """
-        The local searcg algorithm
-        :param x: the evalutaion argument (position)
+        The local search algorithm
+        :param x: starting point
         :param f: function value
         :param f0: function value
         :param u: lower initial guess ("lower corner" in 3D)
         :param v: initial upper guess ("upper corner" in 3D)
         :param nf:
-        :param stop:
-        :param maxstep:
-        :param gamma:
+        :param stop: stopping test
+        :param maxstep: maximum steps in the local search (mainly determined by the local command)
+        :param gamma: acceptable relative accuracy for local search
         :param hess: the function Hessian
-        :param nsweep: number of sweeps
-        :param nsweepbest: best number of sweeps
+        :param nsweep: sweep counter
+        :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
         :param eps: espilon
         :return: a collection of parameters and metrics afdter the local search
@@ -1451,25 +1451,24 @@ class MCSAgent(BaseAgent):
 
     def basket1(self, x: NDArray[np.float64], f: float,
                 xmin: List[Union[float, List[float], NDArray[np.float64]]], fmi: List[float],
-                xbest: List[float], fbest: float, stop: List[Union[float, int]], nbasket: int, nsweep: int,
-                nsweepbest: int, stopping_actions: int):
+                xbest: List[float], fbest: float, stop: List[Union[float, int]], nbasket: int,
+                nsweep: int, nsweepbest: int, stopping_actions: int, loc: int = 1,
+                flag: int = 1, ncall: int = 0):
         """
         Basket 1
-        :param x: evaluation agument (postition)
+        :param x: starting point
         :param f: function value(s)
         :param xmin: current minimum evaluation argument (position)
         :param fmi:
         :param xbest: current best evaluation argument (position)
         :param fbest: current best function value
-        :param stop:
-        :param nbasket: number of baskets
-        :param nsweep: number of sweeps
-        :param nsweepbest: best number of sweeps
+        :param stop: stopping test
+        :param nbasket: counter for boxes in the 'shopping basket'
+        :param nsweep: sweep counter
+        :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
         """
-        loc = 1
-        flag = 1
-        ncall = 0
+
         if not nbasket:
             return xbest, fbest, xmin, fmi, loc, flag, ncall, nsweep, nsweepbest
         dist = np.zeros(nbasket + 1)
@@ -1572,7 +1571,7 @@ class MCSAgent(BaseAgent):
                 stopping_actions: int, eps: float):
         """
         Performs the csearch algorithm
-        :param x: evaulation argument (position)
+        :param x: starting point
         :param f: function value
         :param u: lower initial guess ("Lower corner" in 3D)
         :param v: upper initial guess ("upper corner" in 3D)
@@ -1661,12 +1660,6 @@ class MCSAgent(BaseAgent):
             else:
                 alist = [0]
                 flist = [fmi]
-
-            # if np.isscalar(alist):
-            #     alist = [alist]
-
-            # if np.isscalar(flist):
-            #     flist = [flist]
 
             if linesearch:
                 alist, flist, nfls = self.gls(u, v, xmin, p, alist, flist, nloc,
@@ -1779,7 +1772,8 @@ class MCSAgent(BaseAgent):
 
     def gls(self, xl: List[int], xu: List[int], x: List[Union[float, int]], p: NDArray[Union[np.int32, np.float64]],
             alist: List[Union[float, int]], flist: List[Union[int, float]],
-            nloc: int, small: Union[float, int], smax: int, stopping_actions: int, prt: int = 2):
+            nloc: int, small: Union[float, int], smax: int, stopping_actions: int, prt: int = 2,
+            short: float = 0.381966, bend: int = 0):
         '''
         Global line search main function
         :param func: funciton name which is subjected to optimization
@@ -1788,11 +1782,13 @@ class MCSAgent(BaseAgent):
         :param x: starting point
         :param p: search direction [1 or -1 ? need to check]
         :param alist: list of known steps
-        :param flist: funciton values of known steps
-        :param nloc: best local optimizal
-        :param small: tollarance values
+        :param flist: function values of known steps
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
         :param smax: search list size
         :param prt: print - unsued in this implementation so far
+        :param short:
+        :param bend:
         :return: search list,function values,number of fucntion evaluation
         '''
 
@@ -1803,13 +1799,13 @@ class MCSAgent(BaseAgent):
         # if type(flist) != list:
         #     flist = flist.tolist()
 
-        short = 0.381966 # TODO: this should be parametrized
+        # short = 0.381966 # TODO: this should be parametrized
         sinit = len(alist)
 
-        bend = 0
+        # bend = 0
         xl, xu, x, p, amin, amax, scale = GLSUtils().lsrange(xl, xu, x, p, prt, bend)
         alist, flist, alp, alp1, alp2, falp = self.lsinit(x, p, alist, flist, amin, amax, scale, stopping_actions)
-        # TODO: Seems like lsinit gives a wierd return statement for flist
+
         alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s = GLSUtils().lssort(alist, flist)
         nf = s - sinit
 
@@ -1890,7 +1886,7 @@ class MCSAgent(BaseAgent):
     def lsinit(self, x, p, alist, flist, amin, amax, scale, stopping_actions):
         '''
         Line search algorithm
-        :param x: evualuation agrument (position)
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
@@ -1966,7 +1962,7 @@ class MCSAgent(BaseAgent):
                hess, G, stopping_actions, setG=False):
         """
         The triple function
-        :param x: evaluation argument (position)
+        :param x: starting point
         :param f: function value
         :param x1: evaluation argument (position)
         :param x2: evaluation argument (position)
@@ -2100,11 +2096,11 @@ class MCSAgent(BaseAgent):
               minima: List[int], nmin: int, unitlen: float, s: int, stopping_actions: int):
         """
         The lspar function
-        :param nloc:
-        :param small:
-        :param sinit:
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
+        :param sinit: length of list of known steps
         :param short:
-        :param x:
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
@@ -2187,11 +2183,11 @@ class MCSAgent(BaseAgent):
               unitlen: float, stopping_actions: int):
         """
         The lsnew function
-        :param nloc:
-        :param small:
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
         :param sinit:
         :param short:
-        :param x: function evaluation argument (position)
+        :param x: starting point
         :param p:
         :param s: current depth level
         :param alist:
@@ -2259,7 +2255,7 @@ class MCSAgent(BaseAgent):
                   nmin: int, unitlen: float, s: int, stopping_actions: int):
         """
         The lsdescent algorithm
-        :param x: function evaluation argument (position)
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
@@ -2328,11 +2324,11 @@ class MCSAgent(BaseAgent):
                 saturated: int, stopping_actions: int):
         """
         The lsaquart function
-        :param nloc:
-        :param small:
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
         :param sinit: initial depth level
         :param short:
-        :param x: evaluation argument (position)
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
@@ -2453,11 +2449,11 @@ class MCSAgent(BaseAgent):
               s: int, stopping_actions: int):
         """
         The lssep function
-        :param nloc:
-        :param small:
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
         :param sinit: initial depth levekl
         :param short:
-        :param x: evaluation argument (position)
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
@@ -2533,11 +2529,11 @@ class MCSAgent(BaseAgent):
                 saturated: int, stopping_actions: int):
         """
         The lslocal function
-        :param nloc:
-        :param small:
+        :param nloc: (for local ~= 0) counter of points that have been
+        :param small: tolerance values
         :param sinit: the initial depth level:
         :param short:
-        :param x:
+        :param x: starting point
         :param p:
         :param alist:
         :param flist:
