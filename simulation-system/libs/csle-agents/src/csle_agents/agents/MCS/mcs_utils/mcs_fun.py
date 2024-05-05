@@ -126,7 +126,13 @@ class UtilHelpers():
 
         return x1, x2, f1, f2
 
-    def vert3(self, j, x0, f0, L, x1, x2, f1, f2):
+    def vert3(self, j: int, x0, f0, L: int, x1: float, x2: float, f1: float, f2: float) \
+            -> Tuple[float, float, float, float]:
+        # TODO: signedinteger problem here for x0 and f0
+        """
+        Vert3 function
+        
+        """
         if j == 0:
             k1 = 1
             k2 = 2
@@ -173,7 +179,8 @@ class MCSUtils(UtilHelpers):
         else:
             return False
 
-    def strtsw(self, smax, level, f, nboxes, record):
+    def strtsw(self, smax: int, level: List[int], f: List[float], nboxes: int, record: NDArray[np.int32]) \
+            -> Tuple[int, NDArray[np.int32]]:
         """
         Function that does the strtsw
         :param smax:
@@ -195,7 +202,10 @@ class MCSUtils(UtilHelpers):
                     record[level[j]] = j
         return s, record
 
-    def exgain(self, n, n0, l, L, x, y, x1, x2, fx, f0, f1, f2):
+    def exgain(self, n: int, n0: NDArray[np.float64], l: NDArray[np.int32], L: NDArray[np.int32],
+               x: NDArray[np.float32], y: NDArray[np.float32], x1: NDArray[np.float32],
+               x2: NDArray[np.float32], fx: float, f0: NDArray[np.float64],
+               f1: NDArray[np.float32], f2: NDArray[np.float32]) -> Tuple[NDArray[np.float64], int, float]:
         '''
         Determines the splitting index, the splitting value and the expected
         gain vector e for (potentially) splitting a box by expected gain
@@ -256,7 +266,7 @@ class MCSUtils(UtilHelpers):
 
         return record
 
-    def chkloc(self, nloc, xloc, x):
+    def chkloc(self, nloc: int, xloc: List[float], x: float) -> int:
         """
         Checking the location
         :param nloc:
@@ -271,7 +281,7 @@ class MCSUtils(UtilHelpers):
                 break
         return loc
 
-    def addloc(self, nloc, xloc, x):
+    def addloc(self, nloc: int, xloc: List[float], x: float) -> Tuple[int, List[float]]:
         """
         adding a location
         :param nloc:
@@ -283,7 +293,7 @@ class MCSUtils(UtilHelpers):
         xloc.append(copy.deepcopy(x))
         return nloc, xloc
 
-    def chrelerr(self, fbest, stop):
+    def chrelerr(self, fbest: float, stop: List[Union[int, float]]) -> int:
         """
         Performing the chrelerr
         :param fbest:
@@ -298,11 +308,12 @@ class MCSUtils(UtilHelpers):
 
         return flag
 
-    def chvtr(self, f, vtr):
+    def chvtr(self, f: float, vtr: float) -> int:
         """
         Performing te chvtr function
         :param f:
-        :param vtr
+        :param vtr:
+        :return: flag
         """
         if f <= vtr:
             flag = 0
@@ -311,21 +322,22 @@ class MCSUtils(UtilHelpers):
 
         return flag
 
-    def fbestloc(self, fmi, fbest, xmin, xbest, nbasket0, stop):
+    def fbestloc(self, fmi: List[float], fbest: float, xmin: List[float],
+                 xbest: float, nbasket0: int, stop: List[Union[float, int]]) -> Tuple[float, float]:
         if fmi[nbasket0] < fbest:
             fbest = copy.deepcopy(fmi[nbasket0])
             xbest = copy.deepcopy(xmin[nbasket0])
         return fbest, xbest
 
-    def splrnk(self, n, n0, p, x, y):
+    def splrnk(self, n: int, n0: NDArray[np.float64], p: NDArray[np.int64], x: NDArray[np.float32],
+               y: NDArray[np.float32]) -> Tuple[int, float]:
         '''
-            Determines the splitting index and splitting value for splitting a box by rank
-            :param n: dimension of the problem
-            :param p: ranking of estimated variability of the function in the different coordinates
-            :param x: base vertex of the box
-            :param y: opposite vertex of the box
-            :return : splitting index
-            isplit   splitting index
+        Determines the splitting index and splitting value for splitting a box by rank
+        :param n: dimension of the problem
+        :param p: ranking of estimated variability of the function in the different coordinates
+        :param x: base vertex of the box
+        :param y: opposite vertex of the box
+        :return : splitting index and value at splitting point
         '''
 
         isplit = 0
@@ -342,7 +354,15 @@ class MCSUtils(UtilHelpers):
             splval = np.Inf
         return isplit, splval
 
-    def genbox(self, par, level0, nchild, f0):
+    def genbox(self, par: int, level0: int, nchild: int, f0: float) -> Tuple[int, int, int, float]:
+        """
+        Function that generates a box
+        :param par:
+        :param level0:
+        :param nchild:
+        :param f0:
+        :return: Metrics and parameters from generating the box
+        """
         ipar = par
         level = level0
         ichild = nchild
@@ -354,8 +374,9 @@ class MCSUtils(UtilHelpers):
                ipar: NDArray[np.int64], isplit: NDArray[np.int64], ichild: NDArray[np.int64],
                z: NDArray[np.float64], f: NDArray[np.float64], l: NDArray[np.int64],
                L: NDArray[np.int64]):
+        # TODO: make the correct typing, otherwise set an mypy ignore
         """
-        vertex function
+        Vertex function
         :param j:
         :param n:
         :param u:
@@ -492,6 +513,7 @@ class MCSUtils(UtilHelpers):
                 L: NDArray[np.int64], istar: NDArray[Union[np.float32, np.float64]], u: List[Union[int, float]],
                 v: List[Union[int, float]], isplit: NDArray[np.int64], level: NDArray[np.int64],
                 ipar: NDArray[np.int64], ichild: NDArray[np.int64], f: NDArray[np.float32], nboxes: int, prt: int):
+        # TODO: make the correct typing, otherwise set an mypy ignore
         """
         Generates the boxes in the initializaiton procedure
         :param theta0:
@@ -639,7 +661,7 @@ class MCSUtils(UtilHelpers):
         return g, G
 
     def hessian(self, i: int, k: int, x: List[Union[float, int]], x0: List[Union[float, int]],
-                f: float, f0: float, g: NDArray[np.float32], G: NDArray[np.float32]):
+                f: float, f0: float, g: NDArray[np.float32], G: NDArray[np.float32]) -> Any:
         '''
         Computes the element G(i,k) of the Hessian of the local quadratic model
         :param i:
