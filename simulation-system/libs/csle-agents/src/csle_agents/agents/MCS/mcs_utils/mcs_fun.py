@@ -1,7 +1,8 @@
 import numpy as np
 import copy
+from typing import Union, List, Tuple, Any
 import math
-# from numpy.typing import NDArray
+from numpy.typing import NDArray
 import sys
 
 
@@ -238,7 +239,7 @@ class MCSUtils(UtilHelpers):
                     splval = z
         return e, isplit, splval
 
-    def updtrec(self, j, s, f, record):
+    def updtrec(self, j: int, s: int, f: List[float], record: List[int]) -> List[int]:
         '''
             Updates the pointer record(s) to the best non-split box at level s
             :param j: label of a box
@@ -348,8 +349,11 @@ class MCSUtils(UtilHelpers):
         f = f0
         return ipar, level, ichild, f
 
-    def vertex(self, j, n, u, v, v1, x0,
-               f0, ipar, isplit, ichild, z, f, l, L):
+    def vertex(self, j: int, n: int, u: List[Union[int, float]], v: List[Union[int, float]],
+               v1: NDArray[np.float32], x0: NDArray[np.float32], f0: NDArray[np.float32],
+               ipar: NDArray[np.int64], isplit: NDArray[np.int64], ichild: NDArray[np.int64],
+               z: NDArray[np.float64], f: NDArray[np.float64], l: NDArray[np.int64],
+               L: NDArray[np.int64]):
         """
         vertex function
         :param j:
@@ -484,8 +488,10 @@ class MCSUtils(UtilHelpers):
 
         return n0, x, y, x1, x2, f1, f2
 
-    def initbox(self, theta0, f0, l, L, istar, u, v,
-                isplit, level, ipar, ichild, f, nboxes, prt):
+    def initbox(self, theta0: NDArray[np.float32], f0: NDArray[np.float32], l: NDArray[np.int64],
+                L: NDArray[np.int64], istar: NDArray[Union[np.float32, np.float64]], u: List[Union[int, float]],
+                v: List[Union[int, float]], isplit: NDArray[np.int64], level: NDArray[np.int64],
+                ipar: NDArray[np.int64], ichild: NDArray[np.int64], f: NDArray[np.float32], nboxes: int, prt: int):
         """
         Generates the boxes in the initializaiton procedure
         :param theta0:
@@ -502,7 +508,7 @@ class MCSUtils(UtilHelpers):
         :param ichild:
         :param f: function value of the splitinhg float value
         :param nboxes: counter for boxes not in the 'shopping bas
-        :param prt:
+        :param prt: print - unsued in this implementation so far
         """
         n = len(u)
  
@@ -597,11 +603,16 @@ class MCSUtils(UtilHelpers):
             xbest[i] = theta0[i, istar[i]]
         return ipar, level, ichild, f, isplit, p, xbest, fbest, nboxes
 
-    def neighbor(self, x, delta, u, v):
+    def neighbor(self, x: NDArray[np.float32], delta: List[float],
+                 u: List[Union[float, int]], v: List[Union[float, int]]) -> Tuple[List[Any], List[Any]]:
         '''
-            computes 'neighbors' x1 and x2 of x needed for making triple search
-            and building a local quadratic model such that x(i), x1(i), x2(i) are
-            pairwise distinct for i = 1,...,n
+        Computes 'neighbors' x1 and x2 of x needed for making triple search
+        and building a local quadratic model such that x(i), x1(i), x2(i) are
+        pairwise distinct for i = 1,...,n
+        :param x: current position
+        :param delta: radius of neighboring region
+        :param u:
+        :param v:
         '''
         i1 = [i for i in range(len(x)) if x[i] == u[i]]
         i2 = [i for i in range(len(x)) if x[i] == v[i]]
@@ -613,9 +624,12 @@ class MCSUtils(UtilHelpers):
             x2[i] = x[i] - 2 * delta[i]
         return x1, x2
 
-    def polint1(self, x, f):
+    def polint1(self, x: List[float], f: List[float]) -> Tuple[float, float]:
         '''
-            quadratic polynomial interpolation
+        Quadratic polynomial interpolation
+        :param x: positions
+        :param f: function values
+        :return: g, G
         '''
         f13 = (f[2] - f[0]) / (x[2] - x[0])
         f12 = (f[1] - f[0]) / (x[1] - x[0])
@@ -624,32 +638,41 @@ class MCSUtils(UtilHelpers):
         G = 2 * (f13 - f12) / (x[2] - x[1])
         return g, G
 
-    def hessian(self, i, k, x, x0, f, f0, g, G):
+    def hessian(self, i: int, k: int, x: List[Union[float, int]], x0: List[Union[float, int]],
+                f: float, f0: float, g: NDArray[np.float32], G: NDArray[np.float32]):
         '''
-        computes the element G(i,k) of the Hessian of the local quadratic model
+        Computes the element G(i,k) of the Hessian of the local quadratic model
+        :param i:
+        :param k:
+        :param x:
+        :param x0:
+        :param f:
+        :param f0:
+        :param g:
+        :param G:
         '''
         h = f - f0 - g[i] * (x[i] - x0[i]) - g[k] * (x[k] - x0[k]) - 0.5 * G[i, i] * (pow((x[i] - x0[i]), 2))\
             - 0.5 * G[k, k] * pow((x[k] - x0[k]), 2)
         h = h / (x[i] - x0[i]) / (x[k] - x0[k])
         return h
 
-    def get_theta0(self, iinit, u, v, n):
-        # theta0 = []
-        
+    def get_theta0(self, iinit: int, u: List[Union[float, int]], v: List[Union[float, int]], n: int) \
+            -> NDArray[np.float32]:
+        """
+        Function for obtaining initial position
+        :param iinit:
+        :param u:
+        :param v:
+        :param n:
+        :return: the initial position theta0
+        """
         if iinit == 0:
             theta0 = np.array([])
             theta0 = np.append(theta0, u, axis=0)
-            # theta0.append(u)
-
-            # theta0.append([(i + j) / 2 for i, j in zip(u, v)])
-            # theta0 = np.append([theta0], [(i + j) / 2 for i, j in zip(u, v)])
             theta0 = np.vstack([theta0, [(i + j) / 2 for i, j in zip(u, v)]])
-
-            # theta0.append(v)
             theta0 = np.vstack([theta0, v])
-
-            # theta0 = np.array(theta0).T
             theta0 = theta0.T
+
         elif iinit == 1:
             theta0 = np.zeros((n, 3))
             for i in range(n):
@@ -668,16 +691,9 @@ class MCSUtils(UtilHelpers):
         elif iinit == 2:
             theta0 = np.array([])
             theta0 = np.append(theta0, [(i * 5 + j) / 6 for i, j in zip(u, v)])
-            # theta0.append([(i * 5 + j) / 6 for i, j in zip(u, v)])
-
             theta0 = np.vstack([theta0, [0.5 * (i + j) for i, j in zip(u, v)]])
-            # theta0.append([0.5 * (i + j) for i, j in zip(u, v)])
-
             theta0 = np.vstack([theta0, [(i + j * 5) / 6 for i, j in zip(u, v)]])
-            # theta0.append([(i + j * 5) / 6 for i, j in zip(u, v)])
-
             theta0 = theta0.T
-            # theta0 = np.array(theta0).T
 
         if np.any(np.isinf(theta0)):
             sys.exit("Error- MCS main: infinities in ititialization list")

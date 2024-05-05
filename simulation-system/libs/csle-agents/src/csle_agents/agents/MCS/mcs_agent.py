@@ -396,7 +396,7 @@ class MCSAgent(BaseAgent):
         :param smax: maximum level depth
         :param nf: maximum number of function calls
         :param stop: stopping test
-        :param iinit: 
+        :param iinit:
         :param local: command for lsearch or no lsearch
         :param gamma: acceptable relative accuracy for local search
         :param hess:
@@ -818,7 +818,8 @@ class MCSAgent(BaseAgent):
                 level: NDArray[np.int32], ichild: NDArray[np.int32],
                 f: NDArray[np.float64], xbest: NDArray[np.float64], fbest: NDArray[np.float64],
                 stop: List[Union[float, int]], prt: int, record: NDArray[Union[np.int32, np.float64]],
-                nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int, ncall: int = 0):
+                nboxes: int, nbasket: int, nsweepbest: int, nsweep: int, stopping_actions: int, ncall: int = 0,
+                nchild: int = 0):
         """
         Splitting box at specified level s according to an initialization list
         :param i: specified index
@@ -854,7 +855,6 @@ class MCSAgent(BaseAgent):
         :return: a collection of parameters and metrics from the initial split
         """
 
-        # ncall = 0
         f0 = np.zeros(max(L) + 1)
         flag = 1
 
@@ -882,7 +882,7 @@ class MCSAgent(BaseAgent):
             else:
                 f0[j] = f[0, par]
         if s + 1 < smax:
-            nchild = 0
+            # nchild = 0
             if u[i] < x0[i, 0]:
                 nchild = nchild + 1
                 nboxes = nboxes + 1
@@ -1304,10 +1304,9 @@ class MCSAgent(BaseAgent):
             gain = f - fmi
             r = 0
 
-        # diag = 0
         ind = [i for i in range(n) if (u[i] < xmin[i] and xmin[i] < v[i])]
         b = np.dot(np.abs(g).T, [max(abs(xmin[i]), abs(xold[i])) for i in range(len(xmin))])
-        # nstep = 0
+
         while (ncall < nf) and (nstep < maxstep) and ((diag or len(ind) < n) or
                                                       (stop[0] == 0 and fmi - gain <= stop[1]) or
                                                       (b >= gamma * (f0 - f) and gain > 0)):
@@ -1780,7 +1779,7 @@ class MCSAgent(BaseAgent):
         :param xl: lower bound
         :param xu: upper bound
         :param x: starting point
-        :param p: search direction [1 or -1 ? need to check]
+        :param p: search direction
         :param alist: list of known steps
         :param flist: function values of known steps
         :param nloc: (for local ~= 0) counter of points that have been
@@ -1887,9 +1886,9 @@ class MCSAgent(BaseAgent):
         '''
         Line search algorithm
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param scale:
@@ -2101,9 +2100,9 @@ class MCSAgent(BaseAgent):
         :param sinit: length of list of known steps
         :param short:
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param alp:
@@ -2188,10 +2187,10 @@ class MCSAgent(BaseAgent):
         :param sinit:
         :param short:
         :param x: starting point
-        :param p:
+        :param p: search direction
         :param s: current depth level
-        :param alist:
-        :param flist:
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param alp:
@@ -2256,9 +2255,9 @@ class MCSAgent(BaseAgent):
         """
         The lsdescent algorithm
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param alp:
         :param abest:
         :param fbest:
@@ -2329,9 +2328,9 @@ class MCSAgent(BaseAgent):
         :param sinit: initial depth level
         :param short:
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param alp:
@@ -2454,9 +2453,9 @@ class MCSAgent(BaseAgent):
         :param sinit: initial depth levekl
         :param short:
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param alp:
@@ -2534,9 +2533,9 @@ class MCSAgent(BaseAgent):
         :param sinit: the initial depth level:
         :param short:
         :param x: starting point
-        :param p:
-        :param alist:
-        :param flist:
+        :param p: search direction
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param amin:
         :param amax:
         :param alp:
