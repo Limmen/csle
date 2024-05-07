@@ -107,10 +107,10 @@ class TestIntrusionTolerancePomdpSuite:
         s = 0
         s_prime = 1
         a = 0
-        p_a = 0.3
-        p_c_1 = 0.3
-        p_c_2 = 0.5
-        p_u = 0.2
+        p_a = 0.2
+        p_c_1 = 0.1
+        p_c_2 = 0.2
+        p_u = 0.5
         assert round(IntrusionRecoveryPomdpUtil.transition_function(s,s_prime,a,p_a,p_c_1,p_c_2,p_u),1) == 0.2
 
     def test_transition_tensor(self) -> None:
@@ -121,11 +121,11 @@ class TestIntrusionTolerancePomdpSuite:
         """
         states = [0,1]
         actions = [0]
-        p_a = 0.3
-        p_c_1 = 0.3
-        p_c_2 = 0.5
-        p_u = 0.2
-        expected = [[[0.5,0.2],[0.1,0.4]]]
+        p_a = 0.2
+        p_c_1 = 0.1
+        p_c_2 = 0.2
+        p_u = 0.5
+        expected = [[[0.7,0.2],[0.4,0.4]]]
         transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(states,actions,p_a,p_c_1,p_c_2,p_u)
         for i in range(len(transition_tensor)):
             for j in range(len(transition_tensor[i])):
@@ -168,8 +168,8 @@ class TestIntrusionTolerancePomdpSuite:
         states = [0,1]
         observations = [0,1]
         observation_tensor = [[0.8,0.2],[0.4,0.6]]
-        transition_tensor = [[[0.5,0.2],[0.1,0.4]]]
-        b_prime_s_prime = 0.5
+        transition_tensor = [[[0.6,0.4],[0.1,0.9]]]
+        b_prime_s_prime = 0.7
         assert round(IntrusionRecoveryPomdpUtil.bayes_filter(s_prime,o,a,b,states,observations,observation_tensor,transition_tensor),1) == b_prime_s_prime
 
     def test_p_o_given_b_a1_a2(self) -> None:
@@ -183,8 +183,8 @@ class TestIntrusionTolerancePomdpSuite:
         a = 0
         states = [0,1]
         observation_tensor = [[0.8,0.2],[0.4,0.6]]
-        transition_tensor = [[[0.5,0.2],[0.1,0.4]]]
-        expected = 0.3
+        transition_tensor = [[[0.6,0.4],[0.1,0.9]]]
+        expected = 0.5
         assert round(IntrusionRecoveryPomdpUtil.p_o_given_b_a1_a2(o,b,a,states,transition_tensor,observation_tensor),1) == expected
 
     def test_next_belief(self) -> None:
@@ -199,8 +199,8 @@ class TestIntrusionTolerancePomdpSuite:
         states = [0,1]
         observations = [0,1]
         observation_tensor = [[0.8,0.2],[0.4,0.6]]
-        transition_tensor = [[[0.5,0.2],[0.1,0.4]]]
-        assert sum(IntrusionRecoveryPomdpUtil.next_belief(o,a,b,states,observations,observation_tensor,transition_tensor)) == 1
+        transition_tensor = [[[0.3,0.7],[0.6,0.4]]]
+        assert round(sum(IntrusionRecoveryPomdpUtil.next_belief(o,a,b,states,observations,observation_tensor,transition_tensor)),1) == 1
 
     def test_pomdp_solver_file(self) -> None:
         """
@@ -208,5 +208,7 @@ class TestIntrusionTolerancePomdpSuite:
 
         :return: None
         """
-        assert IntrusionRecoveryPomdpUtil.pomdp_solver_file(IntrusionRecoveryPomdpConfig) is not None
         
+        assert IntrusionRecoveryPomdpUtil.pomdp_solver_file(IntrusionRecoveryPomdpConfig(eta=0.1,p_a=0.4,p_c_1=0.3,p_c_2=0.3,p_u=0.5,BTR=1,negate_costs=True,seed=1,discount_factor = 0.5,
+                                           states=[0,1],actions=[0],observations=[0,1],cost_tensor=[[0.1,0.5],[0.5,0.6]],observation_tensor = [[0.8,0.2],[0.4,0.6]],
+                                           transition_tensor = [[[0.8,0.2],[0.6,0.4]]],b1=[0.3,0.7],T=3,simulation_env_name="env",gym_env_name="gym",max_horizon=np.inf)) is not None
