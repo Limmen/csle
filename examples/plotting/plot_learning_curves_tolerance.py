@@ -3,12 +3,6 @@ import numpy as np
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
 if __name__ == '__main__':
-    # cross_entropy_ids = MetastoreFacade.list_experiment_executions_ids()
-    # for id in cross_entropy_ids:
-    #     ex = MetastoreFacade.get_experiment_execution(id=id[0])
-    #     print(f"id: {ex.id}, agent: {ex.config.agent_type}, BTR: {ex.config.hparams['L'].value}")
-    # import sys
-    # sys.exit(0)
     fontsize: int = 14
     lw: float = 0.75
     alpha: float = 0.35
@@ -54,32 +48,8 @@ if __name__ == '__main__':
         col += 1
         if col >= 8:
             col = 0
-    # for i in range(len(cross_entropy_ids)):
-    #     BTR = 11 + i
-    #     ax[1][i].spines['top'].set_visible(False)
-    #     ax[1][i].spines['right'].set_visible(False)
-    #     ax[1][i].set_xlabel(r"Time (min)", fontsize=fontsize)
-    #     if i == 0:
-    #         ax[1][i].set_ylabel(r"Average cost $J_i$", fontsize=fontsize)
-    #     ax[1][i].set_title(r"$\Delta_{\mathrm{R}}=" + str(BTR) + "$", fontsize=fontsize)
-    #     ax[1][i].tick_params(axis='both', which='major', labelsize=fontsize)
-    #     ax[1][i].tick_params(axis='both', which='minor', labelsize=fontsize)
-    #     ax[1][i].set_xlabel(r"Time (min)", fontsize=fontsize)
-    # for i in range(len(cross_entropy_ids)):
-    #     BTR = 11 + i
-    #     ax[2][i].spines['top'].set_visible(False)
-    #     ax[2][i].spines['right'].set_visible(False)
-    #     ax[2][i].set_xlabel(r"Time (min)", fontsize=fontsize)
-    #     if i == 0:
-    #         ax[2][i].set_ylabel(r"Average cost $J_i$", fontsize=fontsize)
-    #     ax[2][i].set_title(r"$\Delta_{\mathrm{R}}=" + str(BTR) + "$", fontsize=fontsize)
-    #     ax[2][i].tick_params(axis='both', which='major', labelsize=fontsize)
-    #     ax[2][i].tick_params(axis='both', which='minor', labelsize=fontsize)
-    #     ax[2][i].set_xlabel(r"Time (min)", fontsize=fontsize)
     fig.tight_layout()
     fig.subplots_adjust(wspace=0.55, hspace=0.4, bottom=0.14)
-    # fig.savefig(file_name + ".png", format="png", dpi=600)
-    # fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
     handles, labels = ax[0][0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.52, -0.02),
                ncol=8, fancybox=False, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,

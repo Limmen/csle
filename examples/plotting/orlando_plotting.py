@@ -19,10 +19,6 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
     plt.rcParams.update({'font.size': fontsize})
     plt.rcParams['font.family'] = ['serif']
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(11, 4))
-    # ax.plot(np.array(list(range(len(returns_means))))*10, returns_means, label=r"$\pi^{(i)}_D$ simulation",
-    #         marker="o", ls='-', color="black", markevery=1, markersize=3, lw=0.75)
-    # ax.fill_between(np.array(list(range(len(returns_means))))*10, returns_means - returns_stds,
-    #                 returns_means + returns_stds, alpha=0.35, color="black", lw=0.75)
 
     ax.plot(np.array(list(range(len(returns_means)))) * 200, returns_means, label=r"$\pi^{(i)}_D$ simulation",
             marker="o", ls='-', color="black", markevery=1, markersize=3, lw=0.75)
@@ -32,10 +28,6 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
     ax.spines['right'].set_visible(False)
     ax.set_xlabel(r"iteration $k$")
     ax.set_ylabel(r"Avg cumulative reward")
-    # ax.legend(loc='upper center', bbox_to_anchor=(0.51, -0.15),
-    #           ncol=4, fancybox=True, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,
-    #           fontsize=fontsize)
-    # ax.set_title(r"\textsc{ppo-base}-1")
     ax.set_title(r"\textsc{dqn-base}-1")
     fig.tight_layout()
     fig.subplots_adjust(wspace=0.0, hspace=0.75)
@@ -58,11 +50,8 @@ if __name__ == '__main__':
     metrics = experiment_result.all_metrics[seed]
     returns = metrics["average_return"]
     folder = "/home/kim/orlando_results/12_jan/"
-    # plot_file_name = "ppo_base_1"
     result_file_name = "ppo_base_1.json"
     plot_file_name = "dqn_base_1"
     experiment_result.to_json_file(f"{folder}/{result_file_name}")
-    # plot_returns(returns_means=np.array(returns), returns_stds=np.array([0]*len(returns)),
-    #              file_name=f"{folder}{plot_file_name}")
     plot_returns(returns_means=np.array(dqn_results), returns_stds=np.array([0] * len(dqn_results)),
                  file_name=f"{folder}{plot_file_name}")
