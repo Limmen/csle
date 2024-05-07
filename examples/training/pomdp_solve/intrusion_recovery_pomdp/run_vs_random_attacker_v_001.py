@@ -3,7 +3,6 @@ from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecovery
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 from csle_tolerance.util.pomdp_solve_parser import PomdpSolveParser
 
-
 if __name__ == '__main__':
     eta = 2
     p_a = 0.05
@@ -12,7 +11,7 @@ if __name__ == '__main__':
     p_u = 0.0
     BTR = np.inf
     negate_costs = False
-    discount_factor = 1-p_c_1
+    discount_factor = 1 - p_c_1
     num_observations = 100
     simulation_name = "csle-tolerance-intrusion-recovery-pomdp-defender-001"
     cost_tensor = IntrusionRecoveryPomdpUtil.cost_tensor(eta=eta, states=IntrusionRecoveryPomdpUtil.state_space(),
@@ -39,13 +38,13 @@ if __name__ == '__main__':
 
     alpha_vectors = PomdpSolveParser.parse_alpha_vectors(
         file_path="/home/kim/gamesec24/intrusion_recovery-3361312.alpha")
-    belief_space = np.linspace(0.0, 1, int(1.0/0.01))
+    belief_space = np.linspace(0.0, 1, int(1.0 / 0.01))
     print(belief_space)
     for i in range(len(alpha_vectors)):
         print(f"a*:{alpha_vectors[i][0]}, vector: {list(-np.array(alpha_vectors[i][1][0:2]))}")
     values_01 = []
     for j, b in enumerate(belief_space):
-        b_vec = [1-b, b]
+        b_vec = [1 - b, b]
         dot_vals = []
         for i in range(len(alpha_vectors)):
             dot_vals.append(np.dot(b_vec, list(-np.array(alpha_vectors[i][1][0:2]))))
@@ -54,5 +53,5 @@ if __name__ == '__main__':
         vec_dots = []
         print(f"{b} {values_01[-1]}")
         for b in belief_space:
-            b_vec = [1-b, b]
+            b_vec = [1 - b, b]
             vec_dots.append(-np.dot(b_vec, list(-np.array(alpha_vectors[min_index][1][0:2]))))
