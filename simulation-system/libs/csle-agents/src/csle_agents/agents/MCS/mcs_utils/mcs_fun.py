@@ -10,10 +10,11 @@ class UtilHelpers():
     def __init__(self) -> None:
         pass
 
-    def polint(self, x, f):
+    def polint(self, x: Union[List[float], NDArray[np.float64]],
+               f: Union[List[float], NDArray[np.float64], NDArray[np.float32]]) -> NDArray[np.float64]:
         '''
         Quadratic polynomial interpolation
-        
+
         :param x:  3 pairwise distinct support points
         :param f: corresponding function values
         :return d: the value of the interpolating polynomial
@@ -25,13 +26,13 @@ class UtilHelpers():
         d[2] = (f12 - d[1]) / (x[2] - x[0])
         return d
 
-    def subint(self, x1, x2):
+    def subint(self, x1: float, x2: float) -> Tuple[float, float]:
         '''
         Computes [min(x,y),max(x,y)] that are neither too close nor too far away from x
         :param x1:
         :param x2:
         '''
-        f = 1000
+        f: int = 1000
         if f * abs(x1) < 1:
             if abs(x2) > f:
                 x2 = np.sign(x2)
@@ -41,16 +42,19 @@ class UtilHelpers():
         x1 = x1 + (x2 - x1) / 10
         return x1, x2
 
-    def quadpol(self, x, d, x0):
+    def quadpol(self, x: float, d: NDArray[np.float64],
+                x0: Union[List[float], NDArray[np.float64]]):
+        # TODO: eliminate [no-any-return] mypy error (not covered by type ignore)
         '''
         Evaluates the quadratic polynomial
         :param x: starting point
         :param d: the value of the interpolating polynomial
-        :parm x0
+        :param x0:
         '''
         return d[0] + d[1] * (x - x0[0]) + d[2] * (x - x0[0]) * (x - x0[1])
 
-    def quadmin(self, a, b, d, x0):
+    def quadmin(self, a: float, b: float, d: NDArray[np.float64],
+                x0: Union[List[float], NDArray[np.float64]]) -> float:
         if d[2] == 0:
             if d[1] > 0:
                 x = a
@@ -71,16 +75,19 @@ class UtilHelpers():
                 x = b
         return x
 
-    def split1(self, x1, x2, f1, f2):
+    def split1(self, x1: float, x2: float, f1: float, f2: float) -> float:
         if f1 <= f2:
             return x1 + 0.5 * (-1 + math.sqrt(5)) * (x2 - x1)
         else:
             return x1 + 0.5 * (3 - math.sqrt(5)) * (x2 - x1)
 
-    def split2(self, x, y):
+    def split2(self, x: float, y: float) -> float:
         '''
-        determines a value x1 for splitting the interval [min(x,y),max(x,y)]
+        Determines a value x1 for splitting the interval [min(x,y),max(x,y)]
         is modeled on the function subint with safeguards for infinite y
+        :param x:
+        :param y:
+        :return:
         '''
         x2 = y
         if x == 0 and abs(y) > 1000:
@@ -90,7 +97,19 @@ class UtilHelpers():
         x1 = x + 2 * (x2 - x) / 3
         return x1
 
-    def vert1(self, j, z, f, x1, x2, f1, f2):
+    def vert1(self, j: int, z: NDArray[np.float64], f: NDArray[np.float64], x1: float,
+              x2: float, f1: float, f2: float) \
+            -> Tuple[float, float, float, float, float]:
+        """
+        :param j:
+        :param z:
+        :param f:
+        :param x1:
+        :param x2:
+        :param f1:
+        :param f2:
+        :return:
+        """
         if j == 0:
             j1 = 1
         else:
@@ -105,7 +124,19 @@ class UtilHelpers():
             
         return x, x1, x2, f1, f2
 
-    def vert2(self, j, x, z, f, x1, x2, f1, f2):
+    def vert2(self, j: int, x: float, z: NDArray[np.float64],
+              f: NDArray[np.float64], x1: float, x2: float,
+              f1: float, f2: float) -> Tuple[float, float, float, float]:
+        """
+        :param j:
+        :param x:
+        :param z:
+        :param f:
+        :param x1:
+        :param x2:
+        :param f1:
+        :param f2:
+        """
         if j == 0:
             j1 = 1
         else:
@@ -131,7 +162,14 @@ class UtilHelpers():
         # TODO: signedinteger problem here for x0 and f0
         """
         Vert3 function
-        
+        :param j:
+        :param x0:
+        :param f0:
+        :param L:
+        :param x1:
+        :param x2:
+        :param f1:
+        :param f2:
         """
         if j == 0:
             k1 = 1
@@ -148,7 +186,21 @@ class UtilHelpers():
         f2 = f2 + f0[k2]
         return x1, x2, f1, f2
 
-    def updtf(self, n, i, x1, x2, f1, f2, fold, f):
+    def updtf(self, n: int, i: int, x1: NDArray[np.float64], x2: NDArray[np.float64], f1: NDArray[np.float64],
+              f2: NDArray[np.float64], fold: Union[float, NDArray[np.float64]], f: NDArray[np.float64]) \
+            -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+        """
+        updtf function
+        :param n:
+        :param i:
+        :param x1:
+        :param x2:
+        :param f1:
+        :param f2:
+        :param fold:
+        :param f:
+        :return:
+        """
         for i1 in range(n):
             if i1 != i:
                 if x1[i1] == np.Inf:
@@ -163,11 +215,11 @@ class MCSUtils(UtilHelpers):
     def __init__(self) -> None:
         super(MCSUtils, self).__init__()
 
-    def check_box_bound(self, u, v):
+    def check_box_bound(self, u: List[int], v: List[int]):
         """
         Function that checks the bounds of the box
-        :param u:
-        :param v:
+        :param u: lower bound
+        :param v: upper bound
         :return: boolean indicating the bound
         """
         if v < u:
@@ -329,7 +381,7 @@ class MCSUtils(UtilHelpers):
             xbest = copy.deepcopy(xmin[nbasket0])
         return fbest, xbest
 
-    def splrnk(self, n: int, n0: NDArray[np.float64], p: NDArray[np.int64], x: NDArray[np.float32],
+    def splrnk(self, n: int, n0: NDArray[np.float64], p: NDArray[np.int32], x: NDArray[np.float64],
                y: NDArray[np.float32]) -> Tuple[int, float]:
         '''
         Determines the splitting index and splitting value for splitting a box by rank
@@ -371,10 +423,9 @@ class MCSUtils(UtilHelpers):
 
     def vertex(self, j: int, n: int, u: List[Union[int, float]], v: List[Union[int, float]],
                v1: NDArray[np.float32], x0: NDArray[np.float32], f0: NDArray[np.float32],
-               ipar: NDArray[np.int64], isplit: NDArray[np.int64], ichild: NDArray[np.int64],
-               z: NDArray[np.float64], f: NDArray[np.float64], l: NDArray[np.int64],
-               L: NDArray[np.int64]):
-        # TODO: make the correct typing, otherwise set an mypy ignore
+               ipar: NDArray[np.int32], isplit: NDArray[np.int32], ichild: NDArray[np.int32],
+               z: NDArray[np.float64], f: NDArray[np.float64], l: NDArray[np.int32],
+               L: NDArray[np.int32]):
         """
         Vertex function
         :param j:
@@ -509,11 +560,10 @@ class MCSUtils(UtilHelpers):
 
         return n0, x, y, x1, x2, f1, f2
 
-    def initbox(self, theta0: NDArray[np.float32], f0: NDArray[np.float32], l: NDArray[np.int64],
-                L: NDArray[np.int64], istar: NDArray[Union[np.float32, np.float64]], u: List[Union[int, float]],
-                v: List[Union[int, float]], isplit: NDArray[np.int64], level: NDArray[np.int64],
-                ipar: NDArray[np.int64], ichild: NDArray[np.int64], f: NDArray[np.float32], nboxes: int, prt: int):
-        # TODO: make the correct typing, otherwise set an mypy ignore
+    def initbox(self, theta0: NDArray[np.float64], f0: NDArray[np.float32], l: NDArray[np.int32],
+                L: NDArray[np.int32], istar: NDArray[Union[np.float32, np.float64]], u: List[Union[int, float]],
+                v: List[Union[int, float]], isplit: NDArray[np.int32], level: NDArray[np.int32],
+                ipar: NDArray[np.int32], ichild: NDArray[np.int32], f: NDArray[np.float32], nboxes: int, prt: int):
         """
         Generates the boxes in the initializaiton procedure
         :param theta0:

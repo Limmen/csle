@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import Any
+from typing import Any, Tuple, Union, List
 import sys
 from scipy.sparse import spdiags
 from scipy import sparse
@@ -10,19 +10,28 @@ class Minq():
     def __init__(self) -> None:
         pass
 
-    def ldlrk1(self, L, d, alp, u):
+    def ldlrk1(self, L: NDArray[np.float64], d: NDArray[np.float64],
+               alp: float, u: NDArray[np.float64], eps: float = 2.2204e-16) \
+            -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         p = np.array([])
+        """
+        lslrk1 function
+        :param L:
+        :param d:
+        :param alp:
+        :param u:
+        :param eps:
+        :return:
+        """
         if alp == 0:
             return L, d, p
 
-        eps = 2.2204e-16
         n = u.shape[0]
         neps = n * eps
 
         L0 = L
         d0 = d
 
-        # update
         for k in [i for i in range(n) if u[i] != 0]:
             delta = d[k] + alp * pow(u[k], 2)
             if alp < 0 and delta <= neps:
@@ -59,7 +68,15 @@ class UtilHelpers():
     def __init__(self) -> None:
         pass
 
-    def ldldown(self, L, d, j):
+    def ldldown(self, L: NDArray[np.float64], d: NDArray[np.float64], j: int) ->\
+            Tuple[NDArray[np.float64], NDArray[np.float64]]:
+        """
+        ldldown function
+        :param L:
+        :param d:
+        :param j:
+        :return:
+        """
         n = d.shape[0]
         if j < n:
             I = [i for i in range(0, j)]
@@ -88,9 +105,18 @@ class UtilHelpers():
         d[j] = 1
         return L, d
 
-    def ldlup(self, L, d, j, g, eps):
+    def ldlup(self, L: NDArray[np.float64], d: NDArray[np.float64], j: int, g: NDArray[np.float64],
+              eps: float) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+        """
+        ldlup function
+        :param L:
+        :param d:
+        :param j:
+        :param g:
+        :param eps:
+        :return:
+        """
         p = np.array([])
-        # eps = 2.2204e-16
         n = d.shape[0]
         I = [i for i in range(0, j)]
         K = [i for i in range(j + 1, n)]
@@ -125,7 +151,7 @@ class UtilHelpers():
             LKK, dK, q = Minq().ldlrk1(LKK, dK, -delta, w)
             d[K] = dK
         else:
-            q = []
+            q = np.array([])
 
         if len(q) == 0:
             r1 = L[I, :]
@@ -152,9 +178,15 @@ class UtilHelpers():
             p = np.asarray(piSolve.flatten().tolist() + (-1 * pi).flatten().tolist() + q.tolist())
         return L, d, p
 
-    def getalp(self, alpu, alpo, gTp, pTGp):
+    def getalp(self, alpu: float, alpo: float, gTp: float, pTGp: float) -> \
+            Tuple[float, bool , bool, int]:
         '''
-            Gives minimizer alp in [alpu,alpo] for a univariate quadratic q(alp)=alp*gTp+0.5*alp^2*pTGp
+        Gives minimizer alp in [alpu,alpo] for a univariate quadratic q(alp)=alp*gTp+0.5*alp^2*pTGp
+        :param aplu:
+        :param alpo:
+        :param gTp:
+        :parm pTGp:
+        :return:
         '''
         lba = False
         uba = False
@@ -194,11 +226,39 @@ class UtilHelpers():
             gTp, pTGp, alpu, alpo, alp, lba, uba, ier
         return alp, lba, uba, ier
 
-    def minqsub(self, nsub, free, L, dd, K, G, n, g, x, xo, xu, convex,
-                xx, fct, nfree, unfix, alp, alpu, alpo, lba, uba, ier, subdone, eps):
+    def minqsub(self, nsub: int, free: NDArray[np.bool_], L: NDArray[np.float64],
+                dd: NDArray[np.float64], K: NDArray[np.bool_], G: NDArray[np.float64],
+                n: int, g: NDArray[np.float64], x: NDArray[np.float64], xo: NDArray[np.float64],
+                xu: NDArray[np.float64], convex: int, xx: NDArray[np.float64], fct: float,
+                nfree: int, unfix: int, alp: float, alpu: float,
+                alpo: float, lba: bool, uba: bool, ier: int, subdone: int, eps: float):
+        """
+        Minqsub function
+        :param nsub:
+        :param free:
+        :param L:
+        :param dd:
+        :param n:
+        :param g:
+        :param x:
+        :param xo:
+        :param xu:
+        :param convex:
+        :param xx:
+        :param fct:
+        :param nfree:
+        :param unfix:
+        :param alp:
+        :param alpu:
+        :param alpo:
+        :param lba:
+        :param uba:
+        :param ier:
+        :param subdone:
+        :param eps:
+        :return:
+        """
         nsub = nsub + 1
-        # eps = 2.2204e-16
-
         freelK = [i for i in range(len(free)) if (free < K)[i] is True]
         for j in freelK:
             L, dd = self.ldldown(L, dd, j)
@@ -286,7 +346,17 @@ class LSUtils(UtilHelpers):
     def __init__(self) -> None:
         super(LSUtils, self).__init__()
 
-    def lsguard(self, alp, alist, amax, amin, small):
+    def lsguard(self, alp: float, alist: List[Union[float, int]], amax: float, amin: float, small: Union[float, int]) \
+            -> float:
+        """
+        Local search guard function
+        :param alp:
+        :param alist:
+        :param amax:
+        :param amin:
+        :param small:
+        :return:
+        """
         asort = alist
         asort.sort()
         s = len(asort)
@@ -304,7 +374,16 @@ class LSUtils(UtilHelpers):
 
         return alp
 
-    def lssplit(self, i, alist, flist, short):
+    def lssplit(self, i: int, alist: List[Union[float, int]], flist: List[Union[float, int]], short: float) \
+            -> Tuple[float, float]:
+        """
+        Local search split function
+        :param i:
+        :param alist:
+        :param flist:
+        :param short:
+        :return:
+        """
         if flist[i] < flist[i + 1]:
             fac = short
         elif flist[i] > flist[i + 1]:
@@ -315,8 +394,11 @@ class LSUtils(UtilHelpers):
         alp = alist[i] + fac * (alist[i + 1] - alist[i])
         return alp, fac
 
-    def minq(self, gam, c, G, xu, xo, prt, eps):
+    def minq(self, gam: float, c: NDArray[np.float64], G: NDArray[np.float64], xu: NDArray[np.float64],
+             xo: NDArray[np.float64], prt: int, eps: float) \
+            -> Tuple[NDArray[np.float64], float, int]:
         '''
+        Minq Function
         Minimizes an affine quadratic form subject to simple bounds.
         Using coordinate searches and reduced subspace minimizations, using LDL^T factorization updates
         fct  =  gam + c^T x + 0.5 x^T G x s.t. x in [xu,xo] (xu <= xo is assumed),
@@ -325,7 +407,7 @@ class LSUtils(UtilHelpers):
         if G is sparse, it is assumed that the ordering is such that
         a sparse modified Cholesky factorization is feasible
 
-        :param prt:	printlevel
+        :param prt:	print commans
         :param xx:	initial guess (optional)
         :param x: minimizer (but unbounded direction if ier = 1)
         :param fct:	optimal function value
@@ -374,7 +456,6 @@ class LSUtils(UtilHelpers):
         nitrefmax = 3
         xx = np.asarray([max(xu[i], min(xx[i], xo[i])) for i in range(len(xx))])
 
-        # eps = 2.2204e-16
         hpeps = 100 * eps
         G = G + spdiags(hpeps * np.diag(G), 0, n, n).toarray()
 
@@ -499,5 +580,11 @@ class LSUtils(UtilHelpers):
                     return x, fct, ier
         return x, fct, ier
 
-    def quartic(self, a, x):
+    def quartic(self, a: NDArray[np.float64], x: float):
+        """
+        quartic function
+        :param a:
+        :param x:
+        :return:
+        """
         return (((a[0] * x + a[1]) * x + a[2]) * x + a[3]) * x + a[4]

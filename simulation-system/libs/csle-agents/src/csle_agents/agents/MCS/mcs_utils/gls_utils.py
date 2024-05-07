@@ -1,6 +1,8 @@
-
+from typing import Union, List
 import numpy as np
 import sys
+from typing import Tuple
+from numpy.typing import NDArray
 
 
 class UtilHelpers():
@@ -80,7 +82,7 @@ class GLSUtils(UtilHelpers):
 
         return xl, xu, x, p, amin, amax, scale
  
-    def lssort(self, alist, flist):
+    def lssort(self, alist: List[Union[float, int]], flist: List[Union[float, int]]):
         """
         Performing the lssort
         :param alist: list of known steps
@@ -123,7 +125,8 @@ class GLSUtils(UtilHelpers):
 
         return alist, flist, abest, fbest, fmed, up, down, monotone, minima, nmin, unitlen, s
 
-    def lsconvex(self, alist, flist, nmin, s):
+    def lsconvex(self, alist: List[Union[float, int]], flist: List[Union[float, int]],
+                 nmin: int, s: int) -> int:
         """
         Performing the lsconvex
         :param alist: list of known steps
@@ -147,7 +150,9 @@ class GLSUtils(UtilHelpers):
             #     nothing_to_do = 'done!'
         return convex
 
-    def lssat(self, small, alist, flist, alp, amin, amax, s, saturated):
+    def lssat(self, small: Union[float, int], alist: List[Union[float, int]],
+              flist: List[Union[float, int]], alp: float, amin: float, amax: float, s: int,
+              saturated: int) -> Tuple[float, int]:
         """
         Performing the lssat
         :param small:

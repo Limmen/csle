@@ -339,7 +339,6 @@ class MCSAgent(BaseAgent):
         :param n: dimension (should equal the number of stopping actions)
         :return : initial conditions
         '''
-        # ncall = 0
         theta = np.zeros(n)
         for i in range(n):
             theta[i] = theta0[i, l[i]]
@@ -1117,7 +1116,7 @@ class MCSAgent(BaseAgent):
         :param nsweep: sweep counter
         :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
-        :return: a collection of parameters and metrics afdter the basket functional
+        :return: a collection of parameters and metrics after the basket functional
         """
         if not nbasket:
             return xbest, fbest, policy, avg_metrics, xmin, fmi, x, f, loc, flag, ncall, nsweep, nsweepbest
@@ -1466,6 +1465,7 @@ class MCSAgent(BaseAgent):
         :param nsweep: sweep counter
         :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
+        :return: the metrics and parameters from basket1
         """
 
         if not nbasket:
@@ -1591,7 +1591,6 @@ class MCSAgent(BaseAgent):
         xminnew = copy.deepcopy(xmin)
         fminew = copy.deepcopy(fmi)
         g = np.zeros(n)
-        # ind0 = []
         x1 = np.zeros(n)
         x2 = np.zeros(n)
         G = np.zeros((n, n))
@@ -1791,14 +1790,6 @@ class MCSAgent(BaseAgent):
         :return: search list,function values,number of fucntion evaluation
         '''
 
-        # if isinstance(alist, list): TODO: this should work
-        # if isinstance(flist, list): TODO: this should work
-        # if type(alist) != list:
-        #     alist = alist.tolist()
-        # if type(flist) != list:
-        #     flist = flist.tolist()
-
-        # short = 0.381966 # TODO: this should be parametrized
         sinit = len(alist)
 
         # bend = 0
