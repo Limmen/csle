@@ -209,6 +209,6 @@ class TestIntrusionTolerancePomdpSuite:
         :return: None
         """
         
-        assert IntrusionRecoveryPomdpUtil.pomdp_solver_file(IntrusionRecoveryPomdpConfig(eta=0.1,p_a=0.4,p_c_1=0.3,p_c_2=0.3,p_u=0.5,BTR=1,negate_costs=True,seed=1,discount_factor = 0.5,
+        assert IntrusionRecoveryPomdpUtil.pomdp_solver_file(IntrusionRecoveryPomdpConfig(eta=0.1,p_a=0.2,p_c_1=0.2,p_c_2=0.3,p_u=0.3,BTR=1,negate_costs=True,seed=1,discount_factor = 0.5,
                                            states=[0,1],actions=[0],observations=[0,1],cost_tensor=[[0.1,0.5],[0.5,0.6]],observation_tensor = [[0.8,0.2],[0.4,0.6]],
                                            transition_tensor = [[[0.8,0.2],[0.6,0.4]]],b1=[0.3,0.7],T=3,simulation_env_name="env",gym_env_name="gym",max_horizon=np.inf)) is not None
