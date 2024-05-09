@@ -30,7 +30,7 @@ class TestMCSSuite:
         :return: the example experiment config
         """
         experiment_config = ExperimentConfig(
-            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}particle_swarm_test",
+            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}MCS_test",
             title="Multilevel Coordinate Search",
             random_seeds=[399, 98912],
             agent_type=AgentType.MCS,
@@ -128,12 +128,12 @@ class TestMCSSuite:
                 ),
                 agents_constants.MCS.POLICY_TYPE: HParam(
                     value=PolicyType.MULTI_THRESHOLD,
-                    name=agents_constants.PARTICLE_SWARM.POLICY_TYPE,
+                    name=agents_constants.MCS.POLICY_TYPE,
                     descr="policy type for the execution",
                 ),
                 agents_constants.MCS.OBJECTIVE_TYPE: HParam(
                     value=ObjectiveType.MAX,
-                    name=agents_constants.PARTICLE_SWARM.OBJECTIVE_TYPE,
+                    name=agents_constants.MCS.OBJECTIVE_TYPE,
                     descr="Objective type",
                 ),
             },

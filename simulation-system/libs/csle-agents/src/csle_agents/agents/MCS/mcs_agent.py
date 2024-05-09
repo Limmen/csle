@@ -1,3 +1,8 @@
+"""
+MIT License
+
+Copyright (c) 2019 MCS developers https://github.com/vojha-code/Multilevel-Coordinate-Search
+"""
 import copy
 import sys
 from mcs_utils.mcs_fun import MCSUtils
