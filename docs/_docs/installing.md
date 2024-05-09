@@ -675,8 +675,7 @@ docker swarm join --token <my_roken> leader_ip:2377
 Listing 64: Commands to add a worker node to the Docker swarm.
 </p>
 
-| Note: If you forget the swarm token, you can display it by running the following command on the leader: `docker swarm join-token worker`. |
-|-----------------------------------------------------------------------------------------------------------------------|
+Note: If you forget the swarm token, you can display it by running the following command on the leader: `docker swarm join-token worker`.
 
 You can verify the Docker swarm configuration by running `docker node ls`.
 
