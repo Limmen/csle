@@ -9,7 +9,7 @@ The recommended way to install CSLE is to use Ansible, as described above.
 This section describes an alternative, manual, way of installing CSLE. The
 manual installation can be suitable if you want to customize the installation.
 
-The installation of CSLE can be divided in four main steps (see Fig. 26). 
+The installation of CSLE can be divided in four main steps (see Fig. 27). 
 The first step is "Installation setup", which comprises installation configuration 
 and installation of build tools. 
 In the second step, the metastore and the simulation system are installed. 
@@ -76,7 +76,7 @@ set -gx CSLE_HOME "/path/to/csle"
 Listing 11: Line to add to the fish configuration file to set the `CSLE_HOME` environment variable.
 </p>
 
-After performing the steps above, you should have the directory layout shown in Fig. 27.
+After performing the steps above, you should have the directory layout shown in Fig. 28.
 
 <p align="center">
 <img src="./../../img/dir_layout.png" width="70%">

@@ -208,7 +208,7 @@ what the changes are and possibly even why they were necessary.
 
 We use continuous integration (CI) with GitHub Actions to build the project
 and run tests on every pull request submitted to CSLE.
-The CI pipeline used in CSLE is illustrated in Fig. 29.
+The CI pipeline used in CSLE is illustrated in Fig. 30.
 Developers make commits on a branch that is separated from the master/main branch.
 Once a developer has completed a bugfix or a new feature, he/she submits a pull request to GitHub.
 The pull request then triggers a set of automated tests and automated builds using GitHub actions.

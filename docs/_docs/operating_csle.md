@@ -7,7 +7,7 @@ permalink: /docs/operating/
 
 This section describes commands and procedures that are useful when operating CSLE.
 The framework can be operated in two ways,
-either through the web interface or through the CLI (see Fig. 28).
+either through the web interface or through the CLI (see Fig. 29).
 This section focuses on the CLI, but more or less the same commands can be invoked through the web interface,
 which should be self-explanatory.
 
