@@ -15,7 +15,7 @@ class UtilHelpers():
         '''
         Quadratic polynomial interpolation
 
-        :param x:  3 pairwise distinct support points
+        :param x: pairwise distinct support points
         :param f: corresponding function values
         :return d: the value of the interpolating polynomial
         '''
@@ -29,8 +29,8 @@ class UtilHelpers():
     def subint(self, x1: float, x2: float) -> Tuple[float, float]:
         '''
         Computes [min(x,y),max(x,y)] that are neither too close nor too far away from x
-        :param x1:
-        :param x2:
+        :param x1: corresponding parameter/coordinate value
+        :param x2: corresponding parameter/coordinate value
         '''
         f: int = 1000
         if f * abs(x1) < 1:
@@ -49,7 +49,7 @@ class UtilHelpers():
         Evaluates the quadratic polynomial
         :param x: starting point
         :param d: the value of the interpolating polynomial
-        :param x0:
+        :param x0: initial position
         '''
         return d[0] + d[1] * (x - x0[0]) + d[2] * (x - x0[0]) * (x - x0[1])
 
@@ -101,13 +101,13 @@ class UtilHelpers():
               x2: float, f1: float, f2: float) \
             -> Tuple[float, float, float, float, float]:
         """
-        :param j:
+        :param j: label
         :param z:
-        :param f:
-        :param x1:
-        :param x2:
-        :param f1:
-        :param f2:
+        :param f: function value
+        :param x1: corresponding parameter/coordinate value
+        :param x2: corresponding parameter/coordinate value
+        :param f1: corresponding function value
+        :param f2: corresponding function value
         :return:
         """
         if j == 0:
@@ -128,14 +128,14 @@ class UtilHelpers():
               f: NDArray[np.float64], x1: float, x2: float,
               f1: float, f2: float) -> Tuple[float, float, float, float]:
         """
-        :param j:
+        :param j: label
         :param x:
         :param z:
-        :param f:
-        :param x1:
-        :param x2:
-        :param f1:
-        :param f2:
+        :param f: function values
+        :param x1: corresponding parameter/coordinate value
+        :param x2: corresponding parameter/coordinate value
+        :param f1: corresponding function value
+        :param f2: corresponding function value
         """
         if j == 0:
             j1 = 1
@@ -162,14 +162,14 @@ class UtilHelpers():
         # TODO: signedinteger problem here for x0 and f0
         """
         Vert3 function
-        :param j:
-        :param x0:
-        :param f0:
+        :param j: label
+        :param x0: initial position
+        :param f0: inital function value
         :param L:
-        :param x1:
-        :param x2:
-        :param f1:
-        :param f2:
+        :param x1: corresponding parameter/coordinate value
+        :param x2: corresponding parameter/coordinate value
+        :param f1: corresponding function value
+        :param f2: corresponding function value
         """
         if j == 0:
             k1 = 1
@@ -193,12 +193,12 @@ class UtilHelpers():
         updtf function
         :param n:
         :param i:
-        :param x1:
-        :param x2:
-        :param f1:
-        :param f2:
-        :param fold:
-        :param f:
+        :param x1: corresponding parameter/coordinate value
+        :param x2: corresponding parameter/coordinate value
+        :param f1: corresponding function value
+        :param f2: corresponding function value
+        :param fold: former function value
+        :param f: function values
         :return:
         """
         for i1 in range(n):
@@ -412,7 +412,7 @@ class MCSUtils(UtilHelpers):
         :param par:
         :param level0:
         :param nchild:
-        :param f0:
+        :param f0: inital function value
         :return: Metrics and parameters from generating the box
         """
         ipar = par
@@ -428,13 +428,13 @@ class MCSUtils(UtilHelpers):
                L: NDArray[np.int32]):
         """
         Vertex function
-        :param j:
+        :param j: label
         :param n:
-        :param u:
-        :param v:
+        :param u: the initial lower bound ("lower corner" in 3D)
+        :param v: the initial upper bound ("upper corner" in 3D)
         :param v1:
-        :param x0:
-        :param f0:
+        :param x0: initial position
+        :param f0: inital function value
         :param ipar:
         :param isplit:
         :param ichild:
@@ -567,7 +567,7 @@ class MCSUtils(UtilHelpers):
         """
         Generates the boxes in the initializaiton procedure
         :param theta0:
-        :param f0:
+        :param f0: inital function value
         :param l: Indication of the mid point
         :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
         :param istar:
@@ -716,10 +716,10 @@ class MCSUtils(UtilHelpers):
         Computes the element G(i,k) of the Hessian of the local quadratic model
         :param i:
         :param k:
-        :param x:
-        :param x0:
-        :param f:
-        :param f0:
+        :param x: position
+        :param x0: initial position
+        :param f: function values
+        :param f0: inital function value
         :param g:
         :param G:
         '''

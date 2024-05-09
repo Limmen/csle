@@ -1234,7 +1234,7 @@ class MCSAgent(BaseAgent):
         :param nsweep: sweep counter
         :param nsweepbest: number of sweep in which fbest was updated for the last
         :param stopping_actions: number of stopping actions
-        :param eps: espilon
+        :param eps: parameter value for the golden ratio
         :return: a collection of parameters and metrics afdter the local search
         """
         n = len(x)
@@ -2097,8 +2097,8 @@ class MCSAgent(BaseAgent):
         :param amin:
         :param amax:
         :param alp:
-        :param abest:
-        :param fbest:
+        :param abest: best step
+        :param fbest: best function value so far
         :param fmed:
         :param up:
         :param down:
@@ -2185,7 +2185,7 @@ class MCSAgent(BaseAgent):
         :param amin:
         :param amax:
         :param alp:
-        :param abest:
+        :param abest: best step
         :param fmed:
         :param unitlen:
         :param stopping_actions
@@ -2250,8 +2250,8 @@ class MCSAgent(BaseAgent):
         :param alist: list of known steps
         :param flist: function values of known steps
         :param alp:
-        :param abest:
-        :param fbest:
+        :param abest: best step
+        :param fbest: best function value so far
         :param fmed:
         :param up:
         :param down:
@@ -2450,7 +2450,7 @@ class MCSAgent(BaseAgent):
         :param amin:
         :param amax:
         :param alp:
-        :param abest:
+        :param abest: best step
         :param fbest: best function value so far
         :param fmed: median function value
         :param up:
@@ -2530,12 +2530,12 @@ class MCSAgent(BaseAgent):
         :param amin:
         :param amax:
         :param alp:
-        :param abest:
-        :param fbest:
-        :param fmed:
+        :param abest: best step
+        :param fbest: best function value so far
+        :param fmed: median function value
         :param up:
         :param down:
-        :param monotone:
+        :param monotone: if function is monotone or not
         :param minima:
         :param nmin:
         :param unitlen:

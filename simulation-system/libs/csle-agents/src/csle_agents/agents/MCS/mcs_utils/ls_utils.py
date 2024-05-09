@@ -16,11 +16,11 @@ class Minq():
         p = np.array([])
         """
         lslrk1 function
-        :param L:
-        :param d:
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        :param d: the value of the interpolating polynomial
         :param alp:
         :param u:
-        :param eps:
+        :param eps: parameter value for the golden ratio
         :return:
         """
         if alp == 0:
@@ -72,9 +72,9 @@ class UtilHelpers():
             Tuple[NDArray[np.float64], NDArray[np.float64]]:
         """
         ldldown function
-        :param L:
-        :param d:
-        :param j:
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        :param d:  the value of the interpolating polynomial
+        :param j: label
         :return:
         """
         n = d.shape[0]
@@ -109,11 +109,11 @@ class UtilHelpers():
               eps: float) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         """
         ldlup function
-        :param L:
-        :param d:
-        :param j:
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        :param d: the value of the interpolating polynomial
+        :param j: label
         :param g:
-        :param eps:
+        :param eps: parameter value for the golden ratio
         :return:
         """
         p = np.array([])
@@ -130,7 +130,6 @@ class UtilHelpers():
             w = np.asarray([g[i] / delta for i in K])
             L[j, I] = v.T
             d[j] = delta
-            # p = np.asarray(p)
             return L, d, p
         LII = np.asarray([[L[i, j] for j in I] for i in I])
         gI = [g[i] for i in I]
@@ -179,10 +178,10 @@ class UtilHelpers():
         return L, d, p
 
     def getalp(self, alpu: float, alpo: float, gTp: float, pTGp: float) -> \
-            Tuple[float, bool , bool, int]:
+            Tuple[float, bool, bool, int]:
         '''
         Gives minimizer alp in [alpu,alpo] for a univariate quadratic q(alp)=alp*gTp+0.5*alp^2*pTGp
-        :param aplu:
+        :param alpu:
         :param alpo:
         :param gTp:
         :parm pTGp:
@@ -236,7 +235,7 @@ class UtilHelpers():
         Minqsub function
         :param nsub:
         :param free:
-        :param L:
+        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
         :param dd:
         :param n:
         :param g:
@@ -255,7 +254,7 @@ class UtilHelpers():
         :param uba:
         :param ier:
         :param subdone:
-        :param eps:
+        :param eps: parameter value for the golden ratio
         :return:
         """
         nsub = nsub + 1
@@ -351,9 +350,9 @@ class LSUtils(UtilHelpers):
         """
         Local search guard function
         :param alp:
-        :param alist:
-        :param amax:
-        :param amin:
+        :param alist: list of known steps
+        :param amax: maximum step
+        :param amin: minimum step
         :param small:
         :return:
         """
@@ -378,9 +377,9 @@ class LSUtils(UtilHelpers):
             -> Tuple[float, float]:
         """
         Local search split function
-        :param i:
-        :param alist:
-        :param flist:
+        :param i: label index
+        :param alist: list of known steps
+        :param flist: function values of known steps
         :param short:
         :return:
         """
@@ -395,7 +394,7 @@ class LSUtils(UtilHelpers):
         return alp, fac
 
     def minq(self, gam: float, c: NDArray[np.float64], G: NDArray[np.float64], xu: NDArray[np.float64],
-             xo: NDArray[np.float64], prt: int, eps: float) \
+             xo: NDArray[np.float64], prt: int, eps: float, ier: int = 0, convex: int = 0) \
             -> Tuple[NDArray[np.float64], float, int]:
         '''
         Minq Function
@@ -407,17 +406,15 @@ class LSUtils(UtilHelpers):
         if G is sparse, it is assumed that the ordering is such that
         a sparse modified Cholesky factorization is feasible
 
-        :param prt:	print commans
-        :param xx:	initial guess (optional)
+        :param prt:	print command
+        :param xx: initial guess (optional)
         :param x: minimizer (but unbounded direction if ier = 1)
         :param fct:	optimal function value
-        :param ier:	0  (local minimizer found)
+        :param ier:	0 (local minimizer found)
         '''
 
-        convex = 0
         n = G.shape[0]
 
-        ier = 0
         if G.shape[1] != n:
             ier = -1
             print('minq: Hessian has wrong dimension')
@@ -444,7 +441,7 @@ class LSUtils(UtilHelpers):
                 print('minq: lower bound has wrong dimension')
         else:
             xx = np.zeros(n)
-   
+
         if ier == -1:
             x = np.NAN + np.zeros(n)
             fct = np.NAN
@@ -583,8 +580,8 @@ class LSUtils(UtilHelpers):
     def quartic(self, a: NDArray[np.float64], x: float):
         """
         quartic function
-        :param a:
-        :param x:
-        :return:
+        :param a: vector of function values, normalized by its maximum value
+        :param x: positional argument generated from alp
+        :return: scalar value adjused for quart bool in main code (mcs_agent)
         """
         return (((a[0] * x + a[1]) * x + a[2]) * x + a[3]) * x + a[4]
