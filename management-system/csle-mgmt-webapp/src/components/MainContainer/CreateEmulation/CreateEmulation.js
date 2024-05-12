@@ -34,6 +34,7 @@ import AddInterfaces from "./AddInterfaces/AddInterfaces"
 import AddUsers from './AddUsers/AddUsers'
 import AddContainerGeneral from './AddContainerGeneral/AddContainerGeneral'
 import AddEmulationGeneral from './AddEmulationGeneral/AddEmulationGeneral'
+import AddVulns from './AddVulns/AddVulns'
 
 /**
  * Component representing the /create-emulation-page
@@ -111,6 +112,8 @@ const CreateEmulation = (props) => {
     const inputFlagScoreRef = useRef(null)
     const inputPacketDelayDistributionRef = useRef(null)
     const inputPacketLossTypeRef = useRef(null)
+    const inputVulnNameRef = useRef(null)
+    const [shouldFocusVulnName, setShouldFocusVulnName] = useState(false)
     const [shouldFocusName, setShouldFocusName] = useState(false)
     const [shouldFocusIP, setShouldFocusIP] = useState(false)
     const [shouldFocusSubnetMask, setShouldFocusSubnetMask] = useState(false)
@@ -205,7 +208,7 @@ const CreateEmulation = (props) => {
             {
                 name: newContainer.name, os: newContainer.os, version: '', level: '', restartPolicy: '', networkId: '',
                 subnetMask: '', subnetPrefix: '', cpu: '', mem: '', flagId: '', flagScore: '',
-                flagPermission: true, interfaces: [], reachableByAgent: true, users: [], services: []
+                flagPermission: true, interfaces: [], reachableByAgent: true, users: [], services: [], vulns: []
             }])
         handleClosePopup()
     }
@@ -304,6 +307,8 @@ const CreateEmulation = (props) => {
         setShouldFocusServiceIp(false)
         setShouldFocusServicePort(false)
         setShouldFocusServiceProtocol(false)
+        setShouldFocusVulnName(false)
+        setShouldFocusServiceName(false)
     }
 
     // const fetchImages = useCallback(() => {
@@ -400,6 +405,26 @@ const CreateEmulation = (props) => {
         console.log("The value username is: " + containers[containerIndex].users[userIndex].userName)
     }
 
+    const handleContainerVulnNameChange = (event, containerIndex, vulnIndex) => {
+        const vulnNameValue = event.target.value
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers]
+            const containerToUpdate = {...updatedContainers[containerIndex]}
+            const updatedVulns = [...containerToUpdate.vulns]
+            updatedVulns[vulnIndex] = {
+                ...updatedVulns[vulnIndex],
+                vulnName: vulnNameValue
+            }
+            containerToUpdate.vulns = updatedVulns
+            updatedContainers[containerIndex] = containerToUpdate
+            return updatedContainers
+        })
+        deFocus()
+        setShouldFocusVulnName(true)
+        console.log("The value vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnName)
+    }
+
+
     const handleContainerUserPwChange = (event, containerIndex, userIndex) => {
         const PwValue = event.target.value
         setContainers(prevContainers => {
@@ -491,6 +516,69 @@ const CreateEmulation = (props) => {
         deFocus()
         setShouldFocusServiceIp(true)
     }
+
+    // const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) =>{
+    //     const newVulnServiceIndex = event.target.value
+    //     console.log("Service number: " + newVulnServiceIndex)
+    //     console.log("Vuln index is: " + vulnIndex)
+    //     const newVulnService = containers[containerIndex].services[newVulnServiceIndex]
+    //     console.log("name of the chosen service is: " + newVulnService.name)
+    //     console.log("ip of the chosen service is: " + newVulnService.serviceIp)
+    //
+    //     console.log("name: " + containers[containerIndex].services[newVulnServiceIndex].name)
+    //     console.log("ip: " + containers[containerIndex].services[newVulnServiceIndex].serviceIp)
+    //
+    //
+    //     setContainers(prevContainers => {
+    //         const updatedContainers = [...prevContainers]
+    //         const containerToUpdate = {...updatedContainers[containerIndex]}
+    //         const updatedVulns = [...containerToUpdate.vulns]
+    //         updatedVulns[vulnIndex] = {
+    //             ...updatedVulns[vulnIndex],
+    //             vulnService: newVulnService
+    //         }
+    //         containerToUpdate.vulns = updatedVulns
+    //         updatedContainers[containerIndex] = containerToUpdate
+    //         console.log("Vuln service name is: " + updatedContainers[containerIndex].vulns[vulnIndex].vulnService.name)
+    //         console.log("container Vuln service name is: " + containers[containerIndex].vulns[vulnIndex].vulnService.name)
+    //         return updatedContainers
+    //     })
+    //     deFocus()
+    // }
+
+    const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) => {
+        const newVulnServiceIndex = parseInt(event.target.value, 10); // Parse the value to an integer
+        console.log("Service number: " + newVulnServiceIndex);
+        console.log("Vuln index is: " + vulnIndex);
+
+        const newVulnService = containers[containerIndex].services[newVulnServiceIndex]
+        console.log("Name of the chosen service is: " + newVulnService.name);
+        console.log("IP of the chosen service is: " + newVulnService.serviceIp);
+
+        setContainers(prevContainers => {
+            const updatedContainers = prevContainers.map((container, index) => {
+                if (index === containerIndex) {
+                    const updatedVulns = container.vulns.map((vuln, vIndex) => {
+                        if (vIndex === vulnIndex) {
+                            return {
+                                ...vuln,
+                                vulnService: newVulnService
+                            };
+                        }
+                        return vuln;
+                    });
+                    return {
+                        ...container,
+                        vulns: updatedVulns
+                    };
+                }
+                return container;
+            });
+            console.log("Updated Containers:", updatedContainers);
+            return updatedContainers;
+        });
+        deFocus()
+    };
 
     const handleContainerServiceNameChange = (event, containerIndex, serviceIndex) => {
         const newServiceName = event.target.value
@@ -1158,6 +1246,8 @@ const CreateEmulation = (props) => {
             inputServiceProtocolRef.current.focus()
         } else if (inputServiceNameRef.current && shouldFocusServiceName) {
             inputServiceNameRef.current.focus()
+        } else if (inputVulnNameRef.current && shouldFocusVulnName) {
+            inputVulnNameRef.current.focus()
         }
     }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
         shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1170,7 +1260,7 @@ const CreateEmulation = (props) => {
         shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
         shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
         shouldFocusUserName, shouldFocusPw, shouldFocusRoot, shouldFocusServiceIp, shouldFocusServicePort,
-        shouldFocusServiceProtocol, shouldFocusServiceName])
+        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName])
 
     const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
         const packetDelayDistributionValue = event.target.value
@@ -1301,6 +1391,29 @@ const CreateEmulation = (props) => {
         deFocus()
     }
 
+    const handleAddContainerVulns = (containerIndex) => {
+        const vulnsToAdd = {
+            vulnName: 'Vulnerability name',
+            vulnType: '',
+            vulnService: {name:'', protocol: '', port:'', serviceIp: ''},
+            vulnRoot:''
+        }
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers]
+            if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
+                const container = updatedContainers[containerIndex]
+                const vulnExists = container.vulns.some(existingVuln =>
+                  existingVuln.name === vulnsToAdd.name
+                )
+                if (!vulnExists) {
+                    container.vulns.push(vulnsToAdd)
+                }
+            }
+            return updatedContainers
+        })
+        deFocus()
+    }
+
     const handleDeleteContainerUser = (containerIndex, userIndex) => {
         setContainers(prevContainers => {
             return prevContainers.map((container, index) => {
@@ -1324,6 +1437,21 @@ const CreateEmulation = (props) => {
                       (_, i) => i !== serviceIndex
                     )
                     return {...container, services: updatedService}
+                }
+                return container
+            })
+        })
+        deFocus()
+    }
+
+    const handleDeleteContainerVuln = (containerIndex, vulnIndex) => {
+        setContainers(prevContainers => {
+            return prevContainers.map((container, index) => {
+                if (index === containerIndex) {
+                    const updatedVuln = container.vulns.filter(
+                      (_, i) => i !== vulnIndex
+                    )
+                    return {...container, vulns: updatedVuln}
                 }
                 return container
             })
@@ -1641,6 +1769,15 @@ const CreateEmulation = (props) => {
                                                                  handleServiceIpChange={handleContainerServiceIpChange}
                                                                  inputServiceNameRef={inputServiceNameRef}
                                                                  inputServicePortRef={inputServicePortRef}
+                                                    />
+
+                                                    <AddVulns container={containers[index]}
+                                                              containerIndex={index}
+                                                              inputVulnNameRef={inputVulnNameRef}
+                                                              handleVulnNameChange={handleContainerVulnNameChange}
+                                                              handleDeleteVuln={handleDeleteContainerVuln}
+                                                              addVulnHandler={handleAddContainerVulns}
+                                                              handleVulnServiceChange={handleContainerVulnServiceChange}
                                                     />
                                                 </div>
                                             </div>
