@@ -2,31 +2,27 @@ from typing import Union, List
 import numpy as np
 import sys
 from typing import Tuple
-from numpy.typing import NDArray
 
 
-class UtilHelpers():
-    def __init__(self) -> None:
-        pass
-
-
-class GLSUtils(UtilHelpers):
-    def __init__(self) -> None:
-        super(GLSUtils, self).__init__()
+class GLSUtils:
+    """
+    Class with util functions for MCS
+    """
 
     def lsrange(self, xl, xu, x, p, prt, bend):
-        '''
+        """
         Defining line search range
+
         :param xl: lower bound
         :param xu: upper bound
         :param x: starting point
         :param p: Search direction
         :param prt: print command - unused in this implementation sofar
         :param bend:
-        '''
+        """
         if np.max(np.abs(p)) == 0:
             sys.exit('GLS Error: zero search direction in line search')
-        
+
         # Find sensible step size scale
         if type(p) is not np.ndarray:
             if type(p) is not list:
@@ -45,15 +41,15 @@ class GLSUtils(UtilHelpers):
         # this is test for python
         if x.shape != p.shape:
             sys.exit('GLS Error: dim of x and p does not match: program is going to fail')
-        
+
         pp = np.abs(p[p != 0])
         u = np.divide(np.abs(x[p != 0]), pp)
         scale = min(u)
-        
+
         if scale == 0:
             u[u == 0] = np.divide(1, pp[u == 0])
             scale = min(u)
-        
+
         if not bend:
             # find range of useful alp in truncated line search
             amin = -np.Inf
@@ -81,10 +77,11 @@ class GLSUtils(UtilHelpers):
                     amax = max(amax, (xl[i] - x[i]) / p[i])
 
         return xl, xu, x, p, amin, amax, scale
- 
+
     def lssort(self, alist: List[Union[float, int]], flist: List[Union[float, int]]):
         """
         Performing the lssort
+
         :param alist: list of known steps
         :param flist: function values of known steps
         :return: metrics and parameters obtained from doing the lssort
@@ -110,10 +107,10 @@ class GLSUtils(UtilHelpers):
 
         fbest = min(flist)
         i = np.argmin(flist)
-        
+
         abest = alist[i]
         fmed = np.median(flist)
-        
+
         if nmin > 1:
             al = [alist[i] for i in range(len(minima)) if minima[i]]
             if abest in al:

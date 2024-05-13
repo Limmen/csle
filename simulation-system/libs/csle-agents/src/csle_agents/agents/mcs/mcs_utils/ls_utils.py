@@ -6,16 +6,17 @@ from scipy.sparse import spdiags
 from scipy import sparse
 
 
-class Minq():
-    def __init__(self) -> None:
-        pass
+class Minq:
+    """
+    The minQ class helper for MCS
+    """
 
     def ldlrk1(self, L: NDArray[np.float64], d: NDArray[np.float64],
                alp: float, u: NDArray[np.float64], eps: float = 2.2204e-16) \
             -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-        p = np.array([])
         """
         lslrk1 function
+
         :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
         :param d: the value of the interpolating polynomial
         :param alp:
@@ -23,6 +24,7 @@ class Minq():
         :param eps: parameter value for the golden ratio
         :return:
         """
+        p = np.array([])
         if alp == 0:
             return L, d, p
 
@@ -64,18 +66,20 @@ class Minq():
         return L, d, p
 
 
-class UtilHelpers():
-    def __init__(self) -> None:
-        pass
+class UtilHelpers:
+    """
+    A class with util functions for MCS
+    """
 
-    def ldldown(self, L: NDArray[np.float64], d: NDArray[np.float64], j: int) ->\
-            Tuple[NDArray[np.float64], NDArray[np.float64]]:
+    def ldldown(self, L: NDArray[np.float64], d: NDArray[np.float64], j: int)  \
+            -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
         """
         ldldown function
-        :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
-        :param d:  the value of the interpolating polynomial
+
+        :param L: indication of the end point (or total number of partition of the value x in the i'th dimenstion)
+        :param d: the value of the interpolating polynomial
         :param j: label
-        :return:
+        :return: the updated end point and the updated value
         """
         n = d.shape[0]
         if j < n:
@@ -179,14 +183,15 @@ class UtilHelpers():
 
     def getalp(self, alpu: float, alpo: float, gTp: float, pTGp: float) -> \
             Tuple[float, bool, bool, int]:
-        '''
+        """
         Gives minimizer alp in [alpu,alpo] for a univariate quadratic q(alp)=alp*gTp+0.5*alp^2*pTGp
+
         :param alpu:
         :param alpo:
         :param gTp:
         :parm pTGp:
         :return:
-        '''
+        """
         lba = False
         uba = False
 
@@ -233,6 +238,7 @@ class UtilHelpers():
                 alpo: float, lba: bool, uba: bool, ier: int, subdone: int, eps: float):
         """
         Minqsub function
+
         :param nsub:
         :param free:
         :param L: Indication of the end point (or total number of partition of the value x in the i'th dimenstion)
@@ -342,13 +348,15 @@ class UtilHelpers():
 
 
 class LSUtils(UtilHelpers):
-    def __init__(self) -> None:
-        super(LSUtils, self).__init__()
+    """
+    Class with utility functions for MCS
+    """
 
     def lsguard(self, alp: float, alist: List[Union[float, int]], amax: float, amin: float, small: Union[float, int]) \
             -> float:
         """
         Local search guard function
+
         :param alp:
         :param alist: list of known steps
         :param amax: maximum step
@@ -377,6 +385,7 @@ class LSUtils(UtilHelpers):
             -> Tuple[float, float]:
         """
         Local search split function
+
         :param i: label index
         :param alist: list of known steps
         :param flist: function values of known steps
@@ -396,7 +405,7 @@ class LSUtils(UtilHelpers):
     def minq(self, gam: float, c: NDArray[np.float64], G: NDArray[np.float64], xu: NDArray[np.float64],
              xo: NDArray[np.float64], prt: int, eps: float, ier: int = 0, convex: int = 0) \
             -> Tuple[NDArray[np.float64], float, int]:
-        '''
+        """
         Minq Function
         Minimizes an affine quadratic form subject to simple bounds.
         Using coordinate searches and reduced subspace minimizations, using LDL^T factorization updates
@@ -411,7 +420,7 @@ class LSUtils(UtilHelpers):
         :param x: minimizer (but unbounded direction if ier = 1)
         :param fct:	optimal function value
         :param ier:	0 (local minimizer found)
-        '''
+        """
 
         n = G.shape[0]
 
@@ -469,7 +478,7 @@ class LSUtils(UtilHelpers):
         unfix = 1
         nitref = 0
         improvement = 1
- 
+
         while 1:
             if np.linalg.norm(xx, np.inf) == np.inf:
                 sys.exit('infinite xx in minq.m')
@@ -506,7 +515,6 @@ class LSUtils(UtilHelpers):
                     if free[k] or unfix:
                         break
                 if count > n:
-
                     break
                 q = G[:, k]
                 alpu = xu[k] - x[k]
@@ -580,6 +588,7 @@ class LSUtils(UtilHelpers):
     def quartic(self, a: NDArray[np.float64], x: float):
         """
         quartic function
+
         :param a: vector of function values, normalized by its maximum value
         :param x: positional argument generated from alp
         :return: scalar value adjused for quart bool in main code (mcs_agent)

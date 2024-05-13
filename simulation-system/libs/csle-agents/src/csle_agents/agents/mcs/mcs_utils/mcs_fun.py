@@ -6,19 +6,20 @@ from numpy.typing import NDArray
 import sys
 
 
-class UtilHelpers():
-    def __init__(self) -> None:
-        pass
+class UtilHelpers:
+    """
+    Class with utility functions for MCS
+    """
 
     def polint(self, x: Union[List[float], NDArray[np.float64]],
                f: Union[List[float], NDArray[np.float64], NDArray[np.float32]]) -> NDArray[np.float64]:
-        '''
+        """
         Quadratic polynomial interpolation
 
         :param x: pairwise distinct support points
         :param f: corresponding function values
         :return d: the value of the interpolating polynomial
-        '''
+        """
         d = np.zeros(3)
         d[0] = f[0]
         d[1] = (f[1] - f[0]) / (x[1] - x[0])
@@ -27,11 +28,12 @@ class UtilHelpers():
         return d
 
     def subint(self, x1: float, x2: float) -> Tuple[float, float]:
-        '''
+        """
         Computes [min(x,y),max(x,y)] that are neither too close nor too far away from x
+
         :param x1: corresponding parameter/coordinate value
         :param x2: corresponding parameter/coordinate value
-        '''
+        """
         f: int = 1000
         if f * abs(x1) < 1:
             if abs(x2) > f:
@@ -42,19 +44,26 @@ class UtilHelpers():
         x1 = x1 + (x2 - x1) / 10
         return x1, x2
 
-    def quadpol(self, x: float, d: NDArray[np.float64],
-                x0: Union[List[float], NDArray[np.float64]]):
-        # TODO: eliminate [no-any-return] mypy error (not covered by type ignore)
-        '''
+    def quadpol(self, x: float, d: NDArray[np.float64], x0: Union[List[float], NDArray[np.float64]]):
+        """
         Evaluates the quadratic polynomial
+
         :param x: starting point
         :param d: the value of the interpolating polynomial
         :param x0: initial position
-        '''
+        """
         return d[0] + d[1] * (x - x0[0]) + d[2] * (x - x0[0]) * (x - x0[1])
 
-    def quadmin(self, a: float, b: float, d: NDArray[np.float64],
-                x0: Union[List[float], NDArray[np.float64]]) -> float:
+    def quadmin(self, a: float, b: float, d: NDArray[np.float64], x0: Union[List[float], NDArray[np.float64]]) -> float:
+        """
+        The quadmin method
+
+        :param a:
+        :param b:
+        :param d:
+        :param x0:
+        :return:
+        """
         if d[2] == 0:
             if d[1] > 0:
                 x = a
@@ -76,19 +85,29 @@ class UtilHelpers():
         return x
 
     def split1(self, x1: float, x2: float, f1: float, f2: float) -> float:
+        """
+        The split1 method
+
+        :param x1:
+        :param x2:
+        :param f1:
+        :param f2:
+        :return:
+        """
         if f1 <= f2:
             return x1 + 0.5 * (-1 + math.sqrt(5)) * (x2 - x1)
         else:
             return x1 + 0.5 * (3 - math.sqrt(5)) * (x2 - x1)
 
     def split2(self, x: float, y: float) -> float:
-        '''
-        Determines a value x1 for splitting the interval [min(x,y),max(x,y)]
+        """
+        The split2 method. Determines a value x1 for splitting the interval [min(x,y),max(x,y)]
         is modeled on the function subint with safeguards for infinite y
+
         :param x:
         :param y:
         :return:
-        '''
+        """
         x2 = y
         if x == 0 and abs(y) > 1000:
             x2 = np.sign(y)
@@ -101,6 +120,8 @@ class UtilHelpers():
               x2: float, f1: float, f2: float) \
             -> Tuple[float, float, float, float, float]:
         """
+        The vert1 method
+
         :param j: label
         :param z:
         :param f: function value
@@ -121,13 +142,15 @@ class UtilHelpers():
         elif x2 == np.Inf and x1 != z[j]:
             x2 = z[j]
             f2 = f2 + f[j]
-            
+
         return x, x1, x2, f1, f2
 
     def vert2(self, j: int, x: float, z: NDArray[np.float64],
               f: NDArray[np.float64], x1: float, x2: float,
               f1: float, f2: float) -> Tuple[float, float, float, float]:
         """
+        The vert2 function
+
         :param j: label
         :param x:
         :param z:
@@ -159,9 +182,9 @@ class UtilHelpers():
 
     def vert3(self, j: int, x0, f0, L: int, x1: float, x2: float, f1: float, f2: float) \
             -> Tuple[float, float, float, float]:
-        # TODO: signedinteger problem here for x0 and f0
         """
         Vert3 function
+
         :param j: label
         :param x0: initial position
         :param f0: inital function value
@@ -191,6 +214,7 @@ class UtilHelpers():
             -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         """
         updtf function
+
         :param n:
         :param i:
         :param x1: corresponding parameter/coordinate value
@@ -212,8 +236,9 @@ class UtilHelpers():
 
 
 class MCSUtils(UtilHelpers):
-    def __init__(self) -> None:
-        super(MCSUtils, self).__init__()
+    """
+    Class with utiltiy functions for MCS
+    """
 
     def check_box_bound(self, u: List[int], v: List[int]):
         """
@@ -231,10 +256,11 @@ class MCSUtils(UtilHelpers):
         else:
             return False
 
-    def strtsw(self, smax: int, level: List[int], f: List[float], nboxes: int, record: NDArray[np.int32]) \
+    def strtsw(self, smax: int, level: List[int], f: List[float], nboxes: int, record: NDArray[Any]) \
             -> Tuple[int, NDArray[np.int32]]:
         """
         Function that does the strtsw
+
         :param smax:
         :param level:
         :param f:
@@ -255,12 +281,13 @@ class MCSUtils(UtilHelpers):
         return s, record
 
     def exgain(self, n: int, n0: NDArray[np.float64], l: NDArray[np.int32], L: NDArray[np.int32],
-               x: NDArray[np.float32], y: NDArray[np.float32], x1: NDArray[np.float32],
-               x2: NDArray[np.float32], fx: float, f0: NDArray[np.float64],
+               x: NDArray[np.float64], y: NDArray[np.float32], x1: NDArray[np.float32],
+               x2: NDArray[np.float32], fx: float, f0: NDArray[np.float32],
                f1: NDArray[np.float32], f2: NDArray[np.float32]) -> Tuple[NDArray[np.float64], int, float]:
-        '''
+        """
         Determines the splitting index, the splitting value and the expected
         gain vector e for (potentially) splitting a box by expected gain
+
         :param n: dimension of the problem
         :param n0: the ith coordinate has been split n0(i) times in the history of the box
         :param l: Pointer to the initial point of the initialization list
@@ -276,7 +303,7 @@ class MCSUtils(UtilHelpers):
         :return e: maximal expected gain in function value by changing coordinate i
         :return isplit: splitting index
         :return splval: Inf  if n0(isplit) = 0, splitting value  otherwise
-        '''
+        """
         e = np.zeros(n)
         emin = np.Inf
         for i in range(n):
@@ -302,13 +329,13 @@ class MCSUtils(UtilHelpers):
         return e, isplit, splval
 
     def updtrec(self, j: int, s: int, f: List[float], record: List[int]) -> List[int]:
-        '''
-            Updates the pointer record(s) to the best non-split box at level s
-            :param j: label of a box
-            :param s: its level
-            :param f: vector containing the base vertex function values of the already defined boxes.
-            :param record: record list
-        '''
+        """
+        Updates the pointer record(s) to the best non-split box at level s
+        :param j: label of a box
+        :param s: its level
+        :param f: vector containing the base vertex function values of the already defined boxes.
+        :param record: record list
+        """
         if len(record) < s:
             record[s] = j
         elif record[s] == 0:
@@ -321,6 +348,7 @@ class MCSUtils(UtilHelpers):
     def chkloc(self, nloc: int, xloc: List[float], x: float) -> int:
         """
         Checking the location
+
         :param nloc:
         :param xloc:
         :param x:
@@ -335,7 +363,8 @@ class MCSUtils(UtilHelpers):
 
     def addloc(self, nloc: int, xloc: List[float], x: float) -> Tuple[int, List[float]]:
         """
-        adding a location
+        Adding a location
+
         :param nloc:
         :param xloc:
         :param x:
@@ -348,6 +377,7 @@ class MCSUtils(UtilHelpers):
     def chrelerr(self, fbest: float, stop: List[Union[int, float]]) -> int:
         """
         Performing the chrelerr
+
         :param fbest:
         :param stop:
         :return: flags
@@ -363,6 +393,7 @@ class MCSUtils(UtilHelpers):
     def chvtr(self, f: float, vtr: float) -> int:
         """
         Performing te chvtr function
+
         :param f:
         :param vtr:
         :return: flag
@@ -376,6 +407,17 @@ class MCSUtils(UtilHelpers):
 
     def fbestloc(self, fmi: List[float], fbest: float, xmin: List[float],
                  xbest: float, nbasket0: int, stop: List[Union[float, int]]) -> Tuple[float, float]:
+        """
+        The fbestloc function of MCS
+
+        :param fmi:
+        :param fbest:
+        :param xmin:
+        :param xbest:
+        :param nbasket0:
+        :param stop:
+        :return:
+        """
         if fmi[nbasket0] < fbest:
             fbest = copy.deepcopy(fmi[nbasket0])
             xbest = copy.deepcopy(xmin[nbasket0])
@@ -383,14 +425,15 @@ class MCSUtils(UtilHelpers):
 
     def splrnk(self, n: int, n0: NDArray[np.float64], p: NDArray[np.int32], x: NDArray[np.float64],
                y: NDArray[np.float32]) -> Tuple[int, float]:
-        '''
+        """
         Determines the splitting index and splitting value for splitting a box by rank
+
         :param n: dimension of the problem
         :param p: ranking of estimated variability of the function in the different coordinates
         :param x: base vertex of the box
         :param y: opposite vertex of the box
         :return : splitting index and value at splitting point
-        '''
+        """
 
         isplit = 0
         n1 = n0[0]
@@ -409,6 +452,7 @@ class MCSUtils(UtilHelpers):
     def genbox(self, par: int, level0: int, nchild: int, f0: float) -> Tuple[int, int, int, float]:
         """
         Function that generates a box
+
         :param par:
         :param level0:
         :param nchild:
@@ -422,12 +466,13 @@ class MCSUtils(UtilHelpers):
         return ipar, level, ichild, f
 
     def vertex(self, j: int, n: int, u: List[Union[int, float]], v: List[Union[int, float]],
-               v1: NDArray[np.float32], x0: NDArray[np.float32], f0: NDArray[np.float32],
+               v1: NDArray[np.float64], x0: NDArray[np.float64], f0: NDArray[np.float64],
                ipar: NDArray[np.int32], isplit: NDArray[np.int32], ichild: NDArray[np.int32],
                z: NDArray[np.float64], f: NDArray[np.float64], l: NDArray[np.int32],
                L: NDArray[np.int32]):
         """
         Vertex function
+
         :param j: label
         :param n:
         :param u: the initial lower bound ("lower corner" in 3D)
@@ -499,7 +544,7 @@ class MCSUtils(UtilHelpers):
                         j3 = -1
                 j1 -= 1
                 j2 -= 1
-            
+
                 if int(isplit[ipar[m]]) < 0:
                     k = copy.deepcopy(i)
                 else:
@@ -566,6 +611,7 @@ class MCSUtils(UtilHelpers):
                 ipar: NDArray[np.int32], ichild: NDArray[np.int32], f: NDArray[np.float32], nboxes: int, prt: int):
         """
         Generates the boxes in the initializaiton procedure
+
         :param theta0:
         :param f0: inital function value
         :param l: Indication of the mid point
@@ -583,7 +629,7 @@ class MCSUtils(UtilHelpers):
         :param prt: print - unsued in this implementation so far
         """
         n = len(u)
- 
+
         ipar[0] = -1
         level[0] = 1
         ichild[0] = 1
@@ -599,7 +645,7 @@ class MCSUtils(UtilHelpers):
             if theta0[i, 0] > u[i]:
                 nboxes = nboxes + 1
                 nchild = nchild + 1
-                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] =\
+                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] = \
                     MCSUtils().genbox(par, level[par] + 1, - nchild, f0[0, i])
             if L[i] == 2:
                 v1 = v[i]
@@ -624,7 +670,7 @@ class MCSUtils(UtilHelpers):
                     s = 1
                 else:
                     s = 2
-                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] =\
+                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] = \
                     MCSUtils().genbox(par, level[par] + s, - nchild, f0[j, i])
 
                 if j >= 1:
@@ -646,7 +692,7 @@ class MCSUtils(UtilHelpers):
 
                 nboxes = nboxes + 1
                 nchild = nchild + 1
-                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] =\
+                ipar[nboxes], level[nboxes], ichild[nboxes], f[0, nboxes] = \
                     MCSUtils().genbox(par, level[par] + 3 - s, -nchild, f0[j + 1, i])
             if theta0[i, L[i]] < v[i]:
                 nboxes = nboxes + 1
@@ -663,7 +709,7 @@ class MCSUtils(UtilHelpers):
                 else:
                     par1 = nboxes
             var[i] = fu - fl
-            
+
             level[par] = 0
             par = par1
         fbest = f0[istar[n - 1], n - 1]
@@ -677,15 +723,16 @@ class MCSUtils(UtilHelpers):
 
     def neighbor(self, x: NDArray[np.float32], delta: List[float],
                  u: List[Union[float, int]], v: List[Union[float, int]]) -> Tuple[List[Any], List[Any]]:
-        '''
+        """
         Computes 'neighbors' x1 and x2 of x needed for making triple search
         and building a local quadratic model such that x(i), x1(i), x2(i) are
         pairwise distinct for i = 1,...,n
+
         :param x: current position
         :param delta: radius of neighboring region
         :param u:
         :param v:
-        '''
+        """
         i1 = [i for i in range(len(x)) if x[i] == u[i]]
         i2 = [i for i in range(len(x)) if x[i] == v[i]]
         x1 = [max(u[i], x[i] - delta[i]) for i in range(len(x))]
@@ -697,12 +744,13 @@ class MCSUtils(UtilHelpers):
         return x1, x2
 
     def polint1(self, x: List[float], f: List[float]) -> Tuple[float, float]:
-        '''
+        """
         Quadratic polynomial interpolation
+
         :param x: positions
         :param f: function values
         :return: g, G
-        '''
+        """
         f13 = (f[2] - f[0]) / (x[2] - x[0])
         f12 = (f[1] - f[0]) / (x[1] - x[0])
         f23 = (f[2] - f[1]) / (x[2] - x[1])
@@ -711,9 +759,10 @@ class MCSUtils(UtilHelpers):
         return g, G
 
     def hessian(self, i: int, k: int, x: List[Union[float, int]], x0: List[Union[float, int]],
-                f: float, f0: float, g: NDArray[np.float32], G: NDArray[np.float32]) -> Any:
-        '''
+                f: float, f0: float, g: NDArray[np.float64], G: NDArray[np.float64]) -> Any:
+        """
         Computes the element G(i,k) of the Hessian of the local quadratic model
+
         :param i:
         :param k:
         :param x: position
@@ -722,8 +771,8 @@ class MCSUtils(UtilHelpers):
         :param f0: inital function value
         :param g:
         :param G:
-        '''
-        h = f - f0 - g[i] * (x[i] - x0[i]) - g[k] * (x[k] - x0[k]) - 0.5 * G[i, i] * (pow((x[i] - x0[i]), 2))\
+        """
+        h = f - f0 - g[i] * (x[i] - x0[i]) - g[k] * (x[k] - x0[k]) - 0.5 * G[i, i] * (pow((x[i] - x0[i]), 2)) \
             - 0.5 * G[k, k] * pow((x[k] - x0[k]), 2)
         h = h / (x[i] - x0[i]) / (x[k] - x0[k])
         return h
@@ -732,6 +781,7 @@ class MCSUtils(UtilHelpers):
             -> NDArray[np.float32]:
         """
         Function for obtaining initial position
+
         :param iinit:
         :param u:
         :param v:
@@ -758,8 +808,8 @@ class MCSUtils(UtilHelpers):
                     theta0[i, 1] = 0.5 * (theta0[i, 0] + theta0[i, 2])
                 else:
                     theta0[i, 1] = 0
-                    _, theta0[i, 0] = self.subint(0, u[i]) # type: ignore[name-defined]
-                    _, theta0[i, 2] = self.subint(0, v[i]) # type: ignore[name-defined]
+                    _, theta0[i, 0] = self.subint(0, u[i])  # type: ignore[name-defined]
+                    _, theta0[i, 2] = self.subint(0, v[i])  # type: ignore[name-defined]
         elif iinit == 2:
             theta0 = np.array([])
             theta0 = np.append(theta0, [(i * 5 + j) / 6 for i, j in zip(u, v)])

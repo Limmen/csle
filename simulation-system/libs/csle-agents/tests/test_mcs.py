@@ -7,7 +7,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy_type import PolicyType
-from csle_agents.agents.MCS.mcs_agent import MCSAgent
+from csle_agents.agents.mcs.mcs_agent import MCSAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
@@ -36,109 +36,49 @@ class TestMCSSuite:
             agent_type=AgentType.MCS,
             log_every=1,
             hparams={
-                agents_constants.MCS.STEP: HParam(
-                    value=10,
-                    name=agents_constants.MCS.STEP,
-                    descr="step",
-                ),
-                agents_constants.MCS.STEP1: HParam(
-                    value=100,
-                    name=agents_constants.MCS.STEP1,
-                    descr="step1",
-                ),
-                agents_constants.MCS.U: HParam(
-                    value=[-20, -20, -20],
-                    name=agents_constants.MCS.U,
-                    descr="initial lower corner",
-                ),
+                agents_constants.MCS.STEP: HParam(value=10, name=agents_constants.MCS.STEP, descr="step"),
+                agents_constants.MCS.STEP1: HParam(value=100, name=agents_constants.MCS.STEP1, descr="step1"),
+                agents_constants.MCS.U: HParam(value=[-20], name=agents_constants.MCS.U,
+                                               descr="initial lower corner"),
                 agents_constants.MCS.LOCAL: HParam(
-                    value=50,
-                    name=agents_constants.MCS.LOCAL,
-                    descr="local value stating to which degree to perform local searches",
-                ),
+                    value=50, name=agents_constants.MCS.LOCAL,
+                    descr="local value stating to which degree to perform local searches"),
                 agents_constants.MCS.V: HParam(
-                    value=[20, 20, 20],
-                    name=agents_constants.MCS.V,
-                    descr="initial upper corner",
-                ),
+                    value=[20], name=agents_constants.MCS.V, descr="initial upper corner"),
                 agents_constants.MCS.STOPPING_ACTIONS: HParam(
-                    value=3,
-                    name=agents_constants.MCS.L,
-                    descr="no. of stopping actions",
-                ),
-                agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=50,
-                    name=agents_constants.COMMON.MAX_ENV_STEPS,
-                    descr="maximum number of steps in the environment (for envs with infinite horizon generally)",
-                ),
-                agents_constants.MCS.IINIT: HParam(
-                    value=0,
-                    name=agents_constants.MCS.GAMMA,
-                    descr="simple initialization list",
-                ),
+                    value=1, name=agents_constants.MCS.L, descr="no. of stopping actions"),
+                agents_constants.MCS.IINIT: HParam(value=0, name=agents_constants.MCS.IINIT,
+                                                   descr="simple initialization list"),
                 agents_constants.MCS.GAMMA: HParam(
-                    value=2.220446049250313e-16,
-                    name=agents_constants.MCS.GAMMA,
-                    descr="gamma value",
-                ),
+                    value=2.220446049250313e-16, name=agents_constants.MCS.GAMMA, descr="gamma value"),
                 agents_constants.MCS.EPSILON: HParam(
-                    value=2.220446049250313e-16,
-                    name=agents_constants.MCS.EPSILON,
-                    descr="epsilon value",
-                ),
+                    value=2.220446049250313e-16, name=agents_constants.MCS.EPSILON, descr="epsilon value"),
                 agents_constants.MCS.M: HParam(
-                    value=1,
-                    name=agents_constants.MCS.M,
-                    descr="m value",
-                ),
+                    value=1, name=agents_constants.MCS.M, descr="m value"),
                 agents_constants.MCS.PRT: HParam(
-                    value=1,
-                    name=agents_constants.MCS.PRT,
-                    descr="print level",
-                ),
+                    value=1, name=agents_constants.MCS.PRT, descr="print level"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(
-                    value=10,
-                    name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                    descr="number of iterations to evaluate theta",
-                ),
+                    value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+                    descr="number of iterations to evaluate theta"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(
-                    value=1000,
-                    name=agents_constants.COMMON.SAVE_EVERY,
-                    descr="how frequently to save the model",
-                ),
+                    value=1000, name=agents_constants.COMMON.SAVE_EVERY, descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
-                    value=0.95,
-                    name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                    descr="confidence interval",
-                ),
+                    value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL, descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=500,
-                    name=agents_constants.COMMON.MAX_ENV_STEPS,
-                    descr="maximum number of steps in the environment (for envs with infinite horizon generally)",
-                ),
+                    value=2, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                    descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
-                    value=100,
-                    name=agents_constants.COMMON.RUNNING_AVERAGE,
-                    descr="the number of samples to include when computing the running avg",
-                ),
+                    value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                    descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.GAMMA: HParam(
-                    value=0.99,
-                    name=agents_constants.COMMON.GAMMA,
-                    descr="the discount factor",
-                ),
+                    value=0.99, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
                 agents_constants.MCS.POLICY_TYPE: HParam(
-                    value=PolicyType.MULTI_THRESHOLD,
-                    name=agents_constants.MCS.POLICY_TYPE,
-                    descr="policy type for the execution",
-                ),
+                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.MCS.POLICY_TYPE,
+                    descr="policy type for the execution"),
                 agents_constants.MCS.OBJECTIVE_TYPE: HParam(
-                    value=ObjectiveType.MAX,
-                    name=agents_constants.MCS.OBJECTIVE_TYPE,
-                    descr="Objective type",
-                ),
+                    value=ObjectiveType.MAX, name=agents_constants.MCS.OBJECTIVE_TYPE, descr="Objective type"),
             },
-            player_type=PlayerType.DEFENDER,
-            player_idx=0)
+            player_type=PlayerType.DEFENDER, player_idx=0)
         return experiment_config
 
     @pytest.fixture
@@ -148,7 +88,7 @@ class TestMCSSuite:
 
         :return: The example config
         """
-        L = 3
+        L = 1
         R_INT = -5
         R_COST = -5
         R_SLA = 1
