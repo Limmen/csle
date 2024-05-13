@@ -114,6 +114,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 35) {
         return "PPG CLEAN"
     }
+    if(agentType === 36) {
+        return "MCS"
+    }
     else {
         return "Unknown"
     }
