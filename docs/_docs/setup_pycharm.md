@@ -23,48 +23,48 @@ Run the following command on your local machine and on one of the servers where 
 git clone https://github.com/Limmen/csle
 ```
 <p class="captionFig">
-Listing 181: Command for cloning the source code of CSLE.
+Listing 183: Command for cloning the source code of CSLE.
 </p>
 
 #### Step 3: Setup PyCharm for remote development.
 
-Start PyCharm on your local machine and open the CSLE project. Next, go to "Preferences" in PyCharm (see Fig. 31).
+Start PyCharm on your local machine and open the CSLE project. Next, go to "Preferences" in PyCharm (see Fig. 32).
 
 <p align="center">
 <img src="./../../img/pycharm_1.png" width="45%">
 <p class="captionFig">
-Figure 31: The preferences tab in PyCharm.
+Figure 32: The preferences tab in PyCharm.
 </p>
 </p>
 
 Then configure an SSH interpreter for the project by selecting the Python interpreter of the server where 
-CSLE is installed (see Figs. 32-35).
+CSLE is installed (see Figs. 33-36).
 
 <p align="center">
 <img src="./../../img/pycharm_2.png" width="45%">
 <p class="captionFig">
-Figure 32: Configuration of a remote SSH Python interpreter in PyCharm (1/4).
+Figure 33: Configuration of a remote SSH Python interpreter in PyCharm (1/4).
 </p>
 </p>
 
 <p align="center">
 <img src="./../../img/pycharm_3.png" width="45%">
 <p class="captionFig">
-Figure 33: Configuration of a remote SSH Python interpreter in PyCharm (2/4).
+Figure 34: Configuration of a remote SSH Python interpreter in PyCharm (2/4).
 </p>
 </p>
 
 <p align="center">
 <img src="./../../img/pycharm_4.png" width="45%">
 <p class="captionFig">
-Figure 34: Configuration of a remote SSH Python interpreter in PyCharm (3/4).
+Figure 35: Configuration of a remote SSH Python interpreter in PyCharm (3/4).
 </p>
 </p>
 
 <p align="center">
 <img src="./../../img/pycharm_5.png" width="45%">
 <p class="captionFig">
-Figure 35: Configuration of a remote SSH Python interpreter in PyCharm (4/4).
+Figure 36: Configuration of a remote SSH Python interpreter in PyCharm (4/4).
 </p>
 </p>
 

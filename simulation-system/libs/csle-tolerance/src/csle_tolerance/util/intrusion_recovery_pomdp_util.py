@@ -2,6 +2,7 @@ from typing import List
 from scipy.stats import betabinom
 import numpy as np
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
+from csle_tolerance.dao.intrusion_recovery_game_config import IntrusionRecoveryGameConfig
 
 
 class IntrusionRecoveryPomdpUtil:
@@ -26,7 +27,7 @@ class IntrusionRecoveryPomdpUtil:
         :param p_a: the attack probability
         :return: the initial belief state
         """
-        return [1 - p_a, p_a, 0]
+        return [1, 0, 0]
 
     @staticmethod
     def action_space() -> List[int]:
@@ -166,6 +167,33 @@ class IntrusionRecoveryPomdpUtil:
             return 0
 
     @staticmethod
+    def transition_function_game(s: int, s_prime: int, a1: int, a2: int, p_a: float, p_c_1: float) -> float:
+        """
+        The transition function of the POSG
+
+        :param s: the state
+        :param s_prime: the next state
+        :param a1: the defender action
+        :param a2: the attacker action
+        :param p_a: the intrusion probability
+        :param p_c_1: the crash probability
+        :return: P(s_prime | s, a1, a2)
+        """
+        if s == 2 and s_prime == 2:
+            return 1.0
+        elif s_prime == 2 and s in [0, 1]:
+            return p_c_1
+        elif s_prime == 0 and a1 == 0 and a2 == 1 and s == 0:
+            return (1 - p_a) * (1 - p_c_1)
+        elif (s_prime == 0 and a2 == 0 and s == 0) or (s_prime == 0 and s == 1 and a1 == 1) \
+                or (s_prime == 1 and s == 1 and a1 == 0):
+            return (1 - p_c_1)
+        elif (s_prime == 1 and s == 0 and a2 == 1):
+            return (1 - p_c_1) * p_a
+        else:
+            return 0
+
+    @staticmethod
     def transition_tensor(states: List[int], actions: List[int], p_a: float, p_c_1: float, p_c_2: float, p_u: float) \
             -> List[List[List[float]]]:
         """
@@ -187,8 +215,37 @@ class IntrusionRecoveryPomdpUtil:
                 for s_prime in states:
                     s_a_transitions.append(IntrusionRecoveryPomdpUtil.transition_function(
                         s=s, s_prime=s_prime, a=a, p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u))
+                assert round(sum(s_a_transitions), 2) == 1.0
                 a_transitions.append(s_a_transitions)
             transition_tensor.append(a_transitions)
+        return transition_tensor
+
+    @staticmethod
+    def transition_tensor_game(states: List[int], defender_actions: List[int], attacker_actions: List[int],
+                               p_a: float, p_c_1: float) -> List[List[List[List[float]]]]:
+        """
+        Creates a |A|x|A|x|S|x|S| tensor with the transition probabilities of the POSG
+
+        :param states: the list of states
+        :param defender_actions: the list of defender actions
+        :param attacker_actions: the list of attacker actions
+        :param p_a: the intrusion probability
+        :param p_c_1: the crash probability
+        :return: the transition tensor
+        """
+        transition_tensor = []
+        for a1 in defender_actions:
+            a1_transitions = []
+            for a2 in attacker_actions:
+                a2_transitions = []
+                for s in states:
+                    s_a1_a2_transitions = []
+                    for s_prime in states:
+                        s_a1_a2_transitions.append(IntrusionRecoveryPomdpUtil.transition_function_game(
+                            s=s, s_prime=s_prime, a1=a1, a2=a2, p_a=p_a, p_c_1=p_c_1))
+                    a2_transitions.append(s_a1_a2_transitions)
+                a1_transitions.append(a2_transitions)
+            transition_tensor.append(a1_transitions)
         return transition_tensor
 
     @staticmethod
@@ -216,6 +273,20 @@ class IntrusionRecoveryPomdpUtil:
             observation_probs.append(observation_tensor[s_prime][o])
         o = np.random.choice(np.arange(0, len(observations)), p=observation_probs)
         return int(o)
+
+    @staticmethod
+    def sample_next_state_game(transition_tensor: List[List[List[List[float]]]], s: int, a1: int, a2: int) -> int:
+        """
+        Samples the next observation
+
+        :param s: the current state
+        :param a1: the defender action
+        :param a2: the attacker action
+        :param transition_tensor: the transition tensor
+        :return: the next state a
+        """
+        s_prime = np.random.choice(np.arange(0, len(transition_tensor[a1][a2][s])), p=transition_tensor[a1][a2][s])
+        return int(s_prime)
 
     @staticmethod
     def bayes_filter(s_prime: int, o: int, a: int, b: List[float], states: List[int], observations: List[int],
@@ -342,3 +413,92 @@ class IntrusionRecoveryPomdpUtil:
                         c = config.cost_tensor[a][s]
                         file_str = file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
         return file_str
+
+    @staticmethod
+    def generate_transitions(game_config: IntrusionRecoveryGameConfig) -> List[str]:
+        """
+        Generates the transition rows of the POSG config file of HSVI
+
+        :param game_config: the game configuration
+        :return: list of transition rows
+        """
+        transitions = []
+        for s in game_config.states:
+            for a1 in game_config.actions:
+                for a2 in game_config.actions:
+                    for s_prime in game_config.states:
+                        for i, _ in enumerate(game_config.observations):
+                            tr_prob = game_config.transition_tensor[a1][a2][s][s_prime]
+                            obs_prob = game_config.observation_tensor[a2][i]
+                            prob = tr_prob * obs_prob
+                            if prob > 0:
+                                transition = f"{s} {a1} {a2} {i} {s_prime} {prob}"
+                                transitions.append(transition)
+
+        return transitions
+
+    @staticmethod
+    def generate_rewards(game_config: IntrusionRecoveryGameConfig) -> List[str]:
+        """
+        Generates the reward rows of the POSG config file of HSVI
+
+        :param game_config: the game configuration
+        :return: list of reward rows
+        """
+        rewards = []
+        for s in game_config.states:
+            for a1 in game_config.actions:
+                for a2 in game_config.actions:
+                    r = -game_config.cost_tensor[a1][s]
+                    if r != 0:
+                        rew = f"{s} {a1} {a2} {r}"
+                        rewards.append(rew)
+        return rewards
+
+    @staticmethod
+    def generate_os_posg_game_file(game_config: IntrusionRecoveryGameConfig) -> str:
+        """
+        Generates the POSG game file for HSVI
+
+        :param game_config: the game configuration
+        :return: a string with the contents of the config file
+        """
+        num_partitions = 1
+        transitions = IntrusionRecoveryPomdpUtil.generate_transitions(game_config=game_config)
+        rewards = IntrusionRecoveryPomdpUtil.generate_rewards(game_config=game_config)
+        game_description = f"{len(game_config.states)} {num_partitions} {len(game_config.actions)} " \
+                           f"{len(game_config.actions)} " \
+                           f"{len(game_config.observations)} {len(transitions)} " \
+                           f"{len(rewards)} {game_config.discount_factor}"
+        state_desriptions = []
+        for s in game_config.states:
+            state_desriptions.append(f"{s} {0}")
+        player_1_actions = ["WAIT", "RECOVER"]
+        player_2_actions = ["FALSEALARM", "ATTACK"]
+
+        player_2_legal_actions = []
+        for _ in game_config.states:
+            player_2_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
+
+        player_1_legal_actions = []
+        player_1_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
+
+        obs_desriptions = []
+        for i, o in enumerate(game_config.observations):
+            obs_desriptions.append(f"o_{o}")
+
+        initial_belief_str = f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
+        game_file_str = ""
+        game_file_str = game_file_str + game_description + "\n"
+        game_file_str = game_file_str + "\n".join(state_desriptions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_1_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_2_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(obs_desriptions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_2_legal_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(player_1_legal_actions) + "\n"
+        game_file_str = game_file_str + "\n".join(transitions) + "\n"
+        game_file_str = game_file_str + "\n".join(rewards) + "\n"
+        game_file_str = game_file_str + initial_belief_str
+        with open('recovery_game.txt', 'w') as f:
+            f.write(game_file_str)
+        return game_file_str

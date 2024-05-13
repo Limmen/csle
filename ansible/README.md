@@ -4,6 +4,8 @@ CSLE can be installed in two ways: (1) by manually executing the installation co
 (2) through Ansible. The recommended way to install CSLE is with Ansible as it automates repetitive tasks and simplifies management of the installation.
 This folder contains configuration files and ansible playbooks for installing CSLE.
 
+A video walkthrough of the installation process is available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc). 
+
 Ansible documentation can be found at [https://docs.ansible.com/](https://docs.ansible.com/).
 
 ## Network topology for the installation

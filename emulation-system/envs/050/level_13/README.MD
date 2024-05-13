@@ -1,9 +1,9 @@
 # Capture the Flag - Level 13
 
-TODO
+The target infrastructure in https://link.springer.com/chapter/10.1007/978-3-031-50670-3_9.
 
-- Number of nodes: 7
-- Number of OVS switches: 3
+- Number of nodes: 64
+- Number of OVS switches: 24
 - Number of SDN controllers: 1
 - IDS: Yes (Snort)
 - Traffic generation: Yes

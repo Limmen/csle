@@ -80,7 +80,12 @@ This folder contains python projects that implement the functionality of the sim
 - **gym-csle-cyborg** ([gym-csle-cyborg](./gym-csle-cyborg)):
   - [![PyPI version](https://badge.fury.io/py/gym-csle-cyborg.svg)](https://badge.fury.io/py/gym-csle-cyborg)
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-cyborg)
-  - A gym environment wrapper for CybORG 
+  - A gym environment wrapper for CybORG
+
+- **csle-attack-profiler** ([csle-attack-profiler](./csle-attack-profiler)):
+  - [![PyPI version](https://badge.fury.io/py/csle-attack-profiler.svg)](https://badge.fury.io/py/csle-attack-profiler)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-attack-profiler)
+  - An attack profiler for CSLE based on MITRE ATT&CK
 
 ## Commands
 To generate API docs, execute:

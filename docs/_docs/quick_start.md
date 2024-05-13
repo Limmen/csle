@@ -12,7 +12,7 @@ csle ls --all
 ```
 
 <p class="captionFig">
-Listing 95: Command to list all information about CSLE.
+Listing 97: Command to list all information about CSLE.
 </p>
 
 The above command lists information about the CSLE installation,
@@ -25,7 +25,7 @@ csle start csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 96: Command to start an execution of the emulation configuration csle-level9-010.
+Listing 98: Command to start an execution of the emulation configuration csle-level9-010.
 </p>
 
 The above command will start all containers of the emulation and apply the configuration.
@@ -41,7 +41,7 @@ csle start managementsystem
 ```
 
 <p class="captionFig">
-Listing 97: Command to start monitoring systems and the management system of CSLE.
+Listing 99: Command to start monitoring systems and the management system of CSLE.
 </p>
 
 After the above commands have completed, the web interface of CSLE can be accessed
@@ -58,5 +58,5 @@ python csle/examples/training/ppo/
 ```
 
 <p class="captionFig">
-Listing 98: Command to run the Proximal Policy Optimization (PPO) algorithm for learning defender strategies in CSLE.
+Listing 100: Command to run the Proximal Policy Optimization (PPO) algorithm for learning defender strategies in CSLE.
 </p>

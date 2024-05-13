@@ -57,14 +57,17 @@ The Python dependencies are defined in the following files:
 - `csle/simulation-system/libs/csle-tolerance/requirements.txt`
 - `csle/simulation-system/libs/csle-tolerance/requirements_dev.txt`
 - `csle/simulation-system/libs/csle-tolerance/setup.cfg`
+- `csle/simulation-system/libs/csle-attack-profiler/requirements.txt`
+- `csle/simulation-system/libs/csle-attack-profiler/requirements_dev.txt`
+- `csle/simulation-system/libs/csle-attack-profiler/setup.cfg`
 
 These files need to be updated whenever a Python dependency is added or removed. 
-The dependency structure among the CSLE Python libraries is shown in Fig. 30.
+The dependency structure among the CSLE Python libraries is shown in Fig. 31.
 
 <p align="center">
 <img src="./../../img/dependencies.png" width="75%">
 <p class="captionFig">
-Figure 30: Dependency graph showing the dependencies among the CSLE Python libraries; 
+Figure 31: Dependency graph showing the dependencies among the CSLE Python libraries; 
 an arrow from X to Y indicates that X depends on Y; dependency arrows are transitive.
 </p>
 </p>

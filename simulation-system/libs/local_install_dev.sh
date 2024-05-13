@@ -4,6 +4,7 @@ cd csle-base; pip install -r requirements_dev.txt; cd ..
 cd csle-collector; pip install -r requirements_dev.txt; cd ..
 cd csle-ryu; pip install -r requirements_dev.txt; cd ..
 cd csle-common; pip install -r requirements_dev.txt; cd ..
+cd csle-attack-profiler; pip install -r requirements_dev.txt; cd ..
 cd csle-cluster; pip install -r requirements_dev.txt; cd ..
 cd csle-attacker; pip install -r requirements_dev.txt; cd ..
 cd csle-defender; pip install -r requirements_dev.txt; cd ..

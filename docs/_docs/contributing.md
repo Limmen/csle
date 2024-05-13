@@ -35,3 +35,5 @@ should be on the list but is not):
 - Arvid Lagerqvist, software development.
 - Nils Forsgren, software development.
 - Bength Roland Pappila, software development.
+- Yu Hu, software development.
+- Yan Wang, software development.

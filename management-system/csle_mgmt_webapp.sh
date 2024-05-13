@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd csle_monitor; npm run build
+cd csle-mgmt-webapp; npm run build
 
-cd csle_monitor; python server/server.py &
+cd csle-mgmt-webapp; python server/server.py &

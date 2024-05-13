@@ -88,7 +88,9 @@ class OVSController:
                   f"protocols={','.join(ovs_sw.openflow_protocols)}"
             logger.info(f"Running cmd:{cmd} on container: {ovs_sw.container_name}")
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.docker_gw_bridge_ip])
+            logger.info(f"Command: {cmd} completed")
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set-controller {bridge_name} " \
                   f"{ovs_sw.controller_transport_protocol}:{ovs_sw.controller_ip}:{ovs_sw.controller_port}"
             logger.info(f"Running cmd:{cmd} on container: {ovs_sw.container_name}")
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[ovs_sw.docker_gw_bridge_ip])
+            logger.info(f"Command: {cmd} completed")

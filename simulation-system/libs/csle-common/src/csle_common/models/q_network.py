@@ -31,19 +31,18 @@ class QNetwork(nn.Module):
         self.input_dim = input_dim
         self.agent_type = agent_type
         self.hidden_layer_dim = hidden_layer_dim
+        self.action_space_dim = action_space_dim
 
-        if self.agent_type == AgentType.DQN_CLEAN:
+        if self.agent_type == AgentType.DQN_CLEAN or agent_type == AgentType.DQN:
             self.network = nn.Sequential()
             for layer in range(self.num_hidden_layers):
                 self.network.add_module(name=f'Layer {layer}', module=nn.Linear(input_dim, self.hidden_layer_dim))
                 self.network.add_module(name='activation', module=nn.ReLU())
                 input_dim = self.hidden_layer_dim
-
         elif self.agent_type == AgentType.C51_CLEAN:
             self.start = start
             self.end = end
             self.steps = steps
-            self.action_space_dim = action_space_dim
             self.n_atoms = n_atoms
             self.network = nn.Sequential()
             for layer in range(self.num_hidden_layers):
@@ -52,6 +51,8 @@ class QNetwork(nn.Module):
                 self.network.add_module(name='activation', module=nn.ReLU())
                 input_dim = self.hidden_layer_dim * self.n_atoms
             self.network.add_module(name='Output layer', module=nn.Linear(input_dim, self.action_space_dim * n_atoms))
+        else:
+            raise ValueError(f"Agent type: {agent_type} not recognized")
 
     def get_action(self, x) -> Tuple[torch.Tensor, torch.Tensor]:
         """
