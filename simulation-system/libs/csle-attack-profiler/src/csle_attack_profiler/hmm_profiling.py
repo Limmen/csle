@@ -96,6 +96,7 @@ class HMMProfiler:
 
         :param statistics: The list of EmulationStatistics objects
         :param metric: The metric to get the emission matrix for
+        :param states: The list of states
 
         :return: The emission matrix, the list of observations, the list of states
         """
@@ -403,24 +404,22 @@ class HMMProfiler:
         generated based on emission matrix and transition matrix. The length of this intrusion
         sequence is given by the intrusion_length parameter.
 
-        :param P_obs: The emission matrix
-        :param P_states: The transition matrix
-        :param states: The list of states
-        :param observations: The list of observations
         :param intrusion_length: The length of the intrusion
-        :param initial_state: The initial state
+        :param initial_state_index: The index of the initial state
+        :param seed: The seed for the random number generator
         
         return: The sequence of states and observations
         """
+        
         P_obs = self.emission_matrix
         P_states = self.transition_matrix
         states = self.hidden_states
         observations = self.emission_matrix_observations
+        
         if seed:
             np.random.seed(seed)
         obs_len = len(observations)
         states_len = len(states)
-
         # Return the geometric distribution of the initial state
         dist = np.random.geometric(p=P_states[initial_state_index][0], size=1000)
         T_i = round(sum(dist) / len(dist))
@@ -435,18 +434,19 @@ class HMMProfiler:
         recon_states_sum = np.sum(P_states[initial_state_index][1:])
         recon_states = P_states[initial_state_index][1:] / recon_states_sum
 
-        intrusion_start_state = np.random.choice(states_len - 1, p=recon_states)
+        intrusion_start_state = np.random.choice(states_len - 1, p=recon_states) + 1
         intrusion_start_observation = np.random.choice(obs_len, p=P_obs[intrusion_start_state])
         state_seq.append(states[intrusion_start_state])
         obs_seq.append(observations[intrusion_start_observation])
 
         s_i = intrusion_start_state
-        for i in range(intrusion_length):
+        if intrusion_length == 1:
+            return state_seq, obs_seq
+        for i in range(intrusion_length - 1):
             # si ~ Ps(si | si-1)
             s_i = np.random.choice(states_len, p=P_states[s_i])
             # oi ~ Po(oi | si)
             o_i = np.random.choice(obs_len, p=P_obs[s_i])
             state_seq.append(states[s_i])
             obs_seq.append(observations[o_i])
-        
         return state_seq, obs_seq
