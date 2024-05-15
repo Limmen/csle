@@ -1,8 +1,12 @@
 from typing import List
 from scipy.stats import betabinom
 import numpy as np
-from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
-from csle_tolerance.dao.intrusion_recovery_game_config import IntrusionRecoveryGameConfig
+from csle_tolerance.dao.intrusion_recovery_pomdp_config import (
+    IntrusionRecoveryPomdpConfig,
+)
+from csle_tolerance.dao.intrusion_recovery_game_config import (
+    IntrusionRecoveryGameConfig,
+)
 
 
 class IntrusionRecoveryPomdpUtil:
@@ -68,7 +72,9 @@ class IntrusionRecoveryPomdpUtil:
             return cost
 
     @staticmethod
-    def cost_tensor(eta: float, states: List[int], actions: List[int], negate: bool = False) -> List[List[float]]:
+    def cost_tensor(
+        eta: float, states: List[int], actions: List[int], negate: bool = False
+    ) -> List[List[float]]:
         """
         Creates a |A|x|S| tensor with the costs (or rewards) of the POMDP
 
@@ -82,7 +88,11 @@ class IntrusionRecoveryPomdpUtil:
         for a in actions:
             a_costs = []
             for s in states:
-                a_costs.append(IntrusionRecoveryPomdpUtil.cost_function(s=s, a=a, eta=eta, negate=negate))
+                a_costs.append(
+                    IntrusionRecoveryPomdpUtil.cost_function(
+                        s=s, a=a, eta=eta, negate=negate
+                    )
+                )
             cost_tensor.append(a_costs)
         return cost_tensor
 
@@ -109,7 +119,9 @@ class IntrusionRecoveryPomdpUtil:
                 return 0.0
 
     @staticmethod
-    def observation_tensor(states: List[int], observations: List[int]) -> List[List[float]]:
+    def observation_tensor(
+        states: List[int], observations: List[int]
+    ) -> List[List[float]]:
         """
         Creates a |S|x|O| tensor with the observation probabilities
 
@@ -122,13 +134,18 @@ class IntrusionRecoveryPomdpUtil:
         for s in states:
             s_observations = []
             for o in observations:
-                s_observations.append(IntrusionRecoveryPomdpUtil.observation_function(
-                    s=s, o=o, num_observations=num_observations))
+                s_observations.append(
+                    IntrusionRecoveryPomdpUtil.observation_function(
+                        s=s, o=o, num_observations=num_observations
+                    )
+                )
             observation_tensor.append(s_observations)
         return observation_tensor
 
     @staticmethod
-    def transition_function(s: int, s_prime: int, a: int, p_a: float, p_c_1: float, p_u: float, p_c_2: float) -> float:
+    def transition_function(
+        s: int, s_prime: int, a: int, p_a: float, p_c_1: float, p_u: float, p_c_2: float
+    ) -> float:
         """
         The transition function of the POMDP
 
@@ -167,7 +184,9 @@ class IntrusionRecoveryPomdpUtil:
             return 0
 
     @staticmethod
-    def transition_function_game(s: int, s_prime: int, a1: int, a2: int, p_a: float, p_c_1: float) -> float:
+    def transition_function_game(
+        s: int, s_prime: int, a1: int, a2: int, p_a: float, p_c_1: float
+    ) -> float:
         """
         The transition function of the POSG
 
@@ -185,17 +204,26 @@ class IntrusionRecoveryPomdpUtil:
             return p_c_1
         elif s_prime == 0 and a1 == 0 and a2 == 1 and s == 0:
             return (1 - p_a) * (1 - p_c_1)
-        elif (s_prime == 0 and a2 == 0 and s == 0) or (s_prime == 0 and s == 1 and a1 == 1) \
-                or (s_prime == 1 and s == 1 and a1 == 0):
-            return (1 - p_c_1)
-        elif (s_prime == 1 and s == 0 and a2 == 1):
+        elif (
+            (s_prime == 0 and a2 == 0 and s == 0)
+            or (s_prime == 0 and s == 1 and a1 == 1)
+            or (s_prime == 1 and s == 1 and a1 == 0)
+        ):
+            return 1 - p_c_1
+        elif s_prime == 1 and s == 0 and a2 == 1:
             return (1 - p_c_1) * p_a
         else:
             return 0
 
     @staticmethod
-    def transition_tensor(states: List[int], actions: List[int], p_a: float, p_c_1: float, p_c_2: float, p_u: float) \
-            -> List[List[List[float]]]:
+    def transition_tensor(
+        states: List[int],
+        actions: List[int],
+        p_a: float,
+        p_c_1: float,
+        p_c_2: float,
+        p_u: float,
+    ) -> List[List[List[float]]]:
         """
         Creates a |A|x|S|x|S| tensor with the transition probabilities of the POMDP
 
@@ -207,22 +235,36 @@ class IntrusionRecoveryPomdpUtil:
         :param p_u: the upgrade probability
         :return: the transition tensor
         """
+        assert states == [0, 1, 2]
         transition_tensor = []
         for a in actions:
             a_transitions = []
             for s in states:
                 s_a_transitions = []
                 for s_prime in states:
-                    s_a_transitions.append(IntrusionRecoveryPomdpUtil.transition_function(
-                        s=s, s_prime=s_prime, a=a, p_a=p_a, p_c_1=p_c_1, p_c_2=p_c_2, p_u=p_u))
-                assert round(sum(s_a_transitions), 2) == 1.0
+                    s_a_transitions.append(
+                        IntrusionRecoveryPomdpUtil.transition_function(
+                            s=s,
+                            s_prime=s_prime,
+                            a=a,
+                            p_a=p_a,
+                            p_c_1=p_c_1,
+                            p_c_2=p_c_2,
+                            p_u=p_u,
+                        )
+                    )
                 a_transitions.append(s_a_transitions)
             transition_tensor.append(a_transitions)
         return transition_tensor
 
     @staticmethod
-    def transition_tensor_game(states: List[int], defender_actions: List[int], attacker_actions: List[int],
-                               p_a: float, p_c_1: float) -> List[List[List[List[float]]]]:
+    def transition_tensor_game(
+        states: List[int],
+        defender_actions: List[int],
+        attacker_actions: List[int],
+        p_a: float,
+        p_c_1: float,
+    ) -> List[List[List[List[float]]]]:
         """
         Creates a |A|x|A|x|S|x|S| tensor with the transition probabilities of the POSG
 
@@ -241,8 +283,11 @@ class IntrusionRecoveryPomdpUtil:
                 for s in states:
                     s_a1_a2_transitions = []
                     for s_prime in states:
-                        s_a1_a2_transitions.append(IntrusionRecoveryPomdpUtil.transition_function_game(
-                            s=s, s_prime=s_prime, a1=a1, a2=a2, p_a=p_a, p_c_1=p_c_1))
+                        s_a1_a2_transitions.append(
+                            IntrusionRecoveryPomdpUtil.transition_function_game(
+                                s=s, s_prime=s_prime, a1=a1, a2=a2, p_a=p_a, p_c_1=p_c_1
+                            )
+                        )
                     a2_transitions.append(s_a1_a2_transitions)
                 a1_transitions.append(a2_transitions)
             transition_tensor.append(a1_transitions)
@@ -259,7 +304,9 @@ class IntrusionRecoveryPomdpUtil:
         return int(np.random.choice(np.arange(0, len(b1)), p=b1))
 
     @staticmethod
-    def sample_next_observation(observation_tensor: List[List[float]], s_prime: int, observations: List[int]) -> int:
+    def sample_next_observation(
+        observation_tensor: List[List[float]], s_prime: int, observations: List[int]
+    ) -> int:
         """
         Samples the next observation
 
@@ -275,7 +322,9 @@ class IntrusionRecoveryPomdpUtil:
         return int(o)
 
     @staticmethod
-    def sample_next_state_game(transition_tensor: List[List[List[List[float]]]], s: int, a1: int, a2: int) -> int:
+    def sample_next_state_game(
+        transition_tensor: List[List[List[List[float]]]], s: int, a1: int, a2: int
+    ) -> int:
         """
         Samples the next observation
 
@@ -285,12 +334,23 @@ class IntrusionRecoveryPomdpUtil:
         :param transition_tensor: the transition tensor
         :return: the next state a
         """
-        s_prime = np.random.choice(np.arange(0, len(transition_tensor[a1][a2][s])), p=transition_tensor[a1][a2][s])
+        s_prime = np.random.choice(
+            np.arange(0, len(transition_tensor[a1][a2][s])),
+            p=transition_tensor[a1][a2][s],
+        )
         return int(s_prime)
 
     @staticmethod
-    def bayes_filter(s_prime: int, o: int, a: int, b: List[float], states: List[int], observations: List[int],
-                     observation_tensor: List[List[float]], transition_tensor: List[List[List[float]]]) -> float:
+    def bayes_filter(
+        s_prime: int,
+        o: int,
+        a: int,
+        b: List[float],
+        states: List[int],
+        observations: List[int],
+        observation_tensor: List[List[float]],
+        transition_tensor: List[List[List[float]]],
+    ) -> float:
         """
         A Bayesian filter to compute b[s_prime] of the POMDP
 
@@ -314,7 +374,9 @@ class IntrusionRecoveryPomdpUtil:
         temp = 0.0
 
         for s in states:
-            temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
+            temp += (
+                observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
+            )
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a}, s_prime:{s_prime}")
@@ -324,8 +386,14 @@ class IntrusionRecoveryPomdpUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List[float], a: int, states: List[int],
-                          transition_tensor: List[List[List[float]]], observation_tensor: List[List[float]]) -> float:
+    def p_o_given_b_a1_a2(
+        o: int,
+        b: List[float],
+        a: int,
+        states: List[int],
+        transition_tensor: List[List[List[float]]],
+        observation_tensor: List[List[float]],
+    ) -> float:
         """
         Computes P[o|a,b] of the POMDP
 
@@ -340,13 +408,24 @@ class IntrusionRecoveryPomdpUtil:
         prob = 0.0
         for s in states:
             for s_prime in states:
-                prob += b[s] * transition_tensor[a][s][s_prime] * observation_tensor[s_prime][o]
+                prob += (
+                    b[s]
+                    * transition_tensor[a][s][s_prime]
+                    * observation_tensor[s_prime][o]
+                )
         assert prob < 1
         return prob
 
     @staticmethod
-    def next_belief(o: int, a: int, b: List[float], states: List[int], observations: List[int],
-                    observation_tensor: List[List[float]], transition_tensor: List[List[List[float]]]) -> List[float]:
+    def next_belief(
+        o: int,
+        a: int,
+        b: List[float],
+        states: List[int],
+        observations: List[int],
+        observation_tensor: List[List[float]],
+        transition_tensor: List[List[List[float]]],
+    ) -> List[float]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -362,8 +441,15 @@ class IntrusionRecoveryPomdpUtil:
         b_prime = [0.0] * len(states)
         for s_prime in states:
             b_prime[s_prime] = IntrusionRecoveryPomdpUtil.bayes_filter(
-                s_prime=s_prime, o=o, a=a, b=b, states=states, observations=observations,
-                transition_tensor=transition_tensor, observation_tensor=observation_tensor)
+                s_prime=s_prime,
+                o=o,
+                a=a,
+                b=b,
+                states=states,
+                observations=observations,
+                transition_tensor=transition_tensor,
+                observation_tensor=observation_tensor,
+            )
         if round(sum(b_prime), 2) != 1:
             print(f"error, b_prime:{b_prime}, o:{o}, a:{a}, b:{b}")
         assert round(sum(b_prime), 2) == 1
@@ -411,7 +497,9 @@ class IntrusionRecoveryPomdpUtil:
                 for s_prime in config.states:
                     for o in config.observations:
                         c = config.cost_tensor[a][s]
-                        file_str = file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
+                        file_str = (
+                            file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
+                        )
         return file_str
 
     @staticmethod
@@ -464,12 +552,16 @@ class IntrusionRecoveryPomdpUtil:
         :return: a string with the contents of the config file
         """
         num_partitions = 1
-        transitions = IntrusionRecoveryPomdpUtil.generate_transitions(game_config=game_config)
+        transitions = IntrusionRecoveryPomdpUtil.generate_transitions(
+            game_config=game_config
+        )
         rewards = IntrusionRecoveryPomdpUtil.generate_rewards(game_config=game_config)
-        game_description = f"{len(game_config.states)} {num_partitions} {len(game_config.actions)} " \
-                           f"{len(game_config.actions)} " \
-                           f"{len(game_config.observations)} {len(transitions)} " \
-                           f"{len(rewards)} {game_config.discount_factor}"
+        game_description = (
+            f"{len(game_config.states)} {num_partitions} {len(game_config.actions)} "
+            f"{len(game_config.actions)} "
+            f"{len(game_config.observations)} {len(transitions)} "
+            f"{len(rewards)} {game_config.discount_factor}"
+        )
         state_desriptions = []
         for s in game_config.states:
             state_desriptions.append(f"{s} {0}")
@@ -478,16 +570,22 @@ class IntrusionRecoveryPomdpUtil:
 
         player_2_legal_actions = []
         for _ in game_config.states:
-            player_2_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
+            player_2_legal_actions.append(
+                " ".join(list(map(lambda x: str(x), game_config.actions)))
+            )
 
         player_1_legal_actions = []
-        player_1_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
+        player_1_legal_actions.append(
+            " ".join(list(map(lambda x: str(x), game_config.actions)))
+        )
 
         obs_desriptions = []
         for i, o in enumerate(game_config.observations):
             obs_desriptions.append(f"o_{o}")
 
-        initial_belief_str = f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
+        initial_belief_str = (
+            f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
+        )
         game_file_str = ""
         game_file_str = game_file_str + game_description + "\n"
         game_file_str = game_file_str + "\n".join(state_desriptions) + "\n"
@@ -499,6 +597,6 @@ class IntrusionRecoveryPomdpUtil:
         game_file_str = game_file_str + "\n".join(transitions) + "\n"
         game_file_str = game_file_str + "\n".join(rewards) + "\n"
         game_file_str = game_file_str + initial_belief_str
-        with open('recovery_game.txt', 'w') as f:
+        with open("recovery_game.txt", "w") as f:
             f.write(game_file_str)
         return game_file_str

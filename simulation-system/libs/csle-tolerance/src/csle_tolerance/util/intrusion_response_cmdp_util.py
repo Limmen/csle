@@ -142,9 +142,6 @@ class IntrusionResponseCmdpUtil:
             for s in states:
                 s_a_transitions = []
                 normalizing_constant = 0.0
-                for delta in range(-s_max, s_max + 1):
-                    normalizing_constant += IntrusionResponseCmdpUtil.delta_function(s=s, p_a=p_a, p_c=p_c, p_u=p_u,
-                                                                                     delta=delta, s_max=s_max)
                 for s_prime in states:
                     s_a_transitions.append(IntrusionResponseCmdpUtil.transition_function(
                         s=s, s_prime=s_prime, a=a, p_a=p_a, p_c=p_c, p_u=p_u, s_max=s_max))
