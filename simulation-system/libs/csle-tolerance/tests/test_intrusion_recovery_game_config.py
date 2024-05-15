@@ -186,8 +186,6 @@ class TestIntrusionRecoveryGameConfigSuite:
         eta = 2
         p_a = 0.05
         p_c_1 = 0.01
-        p_c_2 = 0.01
-        p_u = 0.0
         BTR = np.inf
         negate_costs = False
         discount_factor = 1 - p_c_1
