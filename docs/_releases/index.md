@@ -6,7 +6,19 @@ permalink: /releases/
 
 ### Releases
 
-The following is a list of official releases of of the Cyber Security Learning Environment (CSLE).
+The following is a list of official releases of the Cyber Security Learning Environment (CSLE).
+
+##### **CSLE 0.5.0**
+
+**Release Date:** 2/3 2024
+
+**Description:** The fifth beta release of CSLE. Notable features: (1) Cyborg integration;
+(2) C51 agent; (3) Nelder-Mead for black box optimization; (4) Particle swarm for black box optimization; 
+(5) unit tests; and (6), bugfixes.
+
+**Download:** [https://github.com/Limmen/csle/releases/tag/v0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0)
+
+**Documentation:** [https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.5.0_DOCUMENTATION.pdf](https://github.com/Limmen/csle/blob/master/releases/CSLE_RELEASE_v0.5.0_DOCUMENTATION.pdf)
 
 ##### **CSLE 0.4.0**
 

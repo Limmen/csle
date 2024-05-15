@@ -10,7 +10,7 @@ drop:
 
 # Setup db and citus (should be done before build)
 db:
-	sudo psql -U postgres -a -f create_db.sql
+	sudo psql -U postgres -a -f create_db_manual.sql
 
 # Setup cluster (should be done before build and after citus)
 cluster:

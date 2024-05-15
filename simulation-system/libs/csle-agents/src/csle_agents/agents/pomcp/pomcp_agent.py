@@ -1,7 +1,6 @@
 from typing import Union, List, Dict, Optional
 import math
 import time
-import random
 import gymnasium as gym
 import os
 import numpy as np
@@ -75,6 +74,14 @@ class POMCPAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
 
+        eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+        initial_particles = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value
+        rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
+        value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = -1
         # Initialize training job
         if self.training_job is None:
             emulation_name = ""
@@ -109,6 +116,11 @@ class POMCPAgent(BaseAgent):
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
+
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = eval_env_config
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = initial_particles
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = rollout_policy
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = value_function
 
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
@@ -153,8 +165,16 @@ class POMCPAgent(BaseAgent):
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
         if self.save_to_metastore:
+            eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+            initial_particles = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value
+            rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
+            value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
             MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                         id=self.exp_execution.id)
+            self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = eval_env_config
+            self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = initial_particles
+            self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = rollout_policy
+            self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = value_function
         return self.exp_execution
 
     def hparam_names(self) -> List[str]:
@@ -164,13 +184,15 @@ class POMCPAgent(BaseAgent):
         return [agents_constants.POMCP.OBJECTIVE_TYPE, agents_constants.POMCP.ROLLOUT_POLICY,
                 agents_constants.POMCP.VALUE_FUNCTION, agents_constants.POMCP.N, agents_constants.POMCP.REINVIGORATION,
                 agents_constants.POMCP.A, agents_constants.POMCP.GAMMA,
-                agents_constants.POMCP.INITIAL_BELIEF, agents_constants.POMCP.PLANNING_TIME,
+                agents_constants.POMCP.INITIAL_PARTICLES, agents_constants.POMCP.PLANNING_TIME,
                 agents_constants.POMCP.LOG_STEP_FREQUENCY, agents_constants.POMCP.VERBOSE,
                 agents_constants.POMCP.DEFAULT_NODE_VALUE, agents_constants.POMCP.MAX_NEGATIVE_SAMPLES,
                 agents_constants.POMCP.MAX_PARTICLES, agents_constants.POMCP.C,
                 agents_constants.POMCP.MAX_PLANNING_DEPTH, agents_constants.POMCP.PARALLEL_ROLLOUT,
                 agents_constants.POMCP.NUM_PARALLEL_PROCESSES, agents_constants.POMCP.NUM_EVALS_PER_PROCESS,
-                agents_constants.POMCP.PRIOR_WEIGHT,
+                agents_constants.POMCP.PRIOR_WEIGHT, agents_constants.POMCP.PRUNE_ACTION_SPACE,
+                agents_constants.POMCP.PRUNE_SIZE, agents_constants.POMCP.EVAL_ENV_NAME,
+                agents_constants.POMCP.EVAL_ENV_CONFIG,
                 agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE, agents_constants.COMMON.MAX_ENV_STEPS]
 
@@ -187,68 +209,79 @@ class POMCPAgent(BaseAgent):
         """
         start: float = time.time()
         rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value
+        use_rollout_policy = self.experiment_config.hparams[agents_constants.POMCP.USE_ROLLOUT_POLICY].value
         value_function = self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value
         log_steps_frequency = self.experiment_config.hparams[agents_constants.POMCP.LOG_STEP_FREQUENCY].value
         verbose = self.experiment_config.hparams[agents_constants.POMCP.VERBOSE].value
         default_node_value = self.experiment_config.hparams[agents_constants.POMCP.DEFAULT_NODE_VALUE].value
-        max_negative_samples = self.experiment_config.hparams[agents_constants.POMCP.MAX_NEGATIVE_SAMPLES].value
-        parallel_rollout = self.experiment_config.hparams[agents_constants.POMCP.PARALLEL_ROLLOUT].value
-        num_processes = self.experiment_config.hparams[agents_constants.POMCP.NUM_PARALLEL_PROCESSES].value
-        num_evals_per_process = self.experiment_config.hparams[agents_constants.POMCP.NUM_EVALS_PER_PROCESS].value
         prior_weight = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_WEIGHT].value
+        prior_confidence = self.experiment_config.hparams[agents_constants.POMCP.PRIOR_CONFIDENCE].value
         max_env_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
         N = self.experiment_config.hparams[agents_constants.POMCP.N].value
         A = self.experiment_config.hparams[agents_constants.POMCP.A].value
+        acquisition_function_type = \
+            self.experiment_config.hparams[agents_constants.POMCP.ACQUISITION_FUNCTION_TYPE].value
         reinvigoration = self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATION].value
         gamma = self.experiment_config.hparams[agents_constants.POMCP.GAMMA].value
-        b1 = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_BELIEF].value
+        initial_particles = self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value
         planning_time = self.experiment_config.hparams[agents_constants.POMCP.PLANNING_TIME].value
         max_particles = self.experiment_config.hparams[agents_constants.POMCP.MAX_PARTICLES].value
         c = self.experiment_config.hparams[agents_constants.POMCP.C].value
+        c2 = self.experiment_config.hparams[agents_constants.POMCP.C2].value
         max_rollout_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_ROLLOUT_DEPTH].value
         max_planning_depth = self.experiment_config.hparams[agents_constants.POMCP.MAX_PLANNING_DEPTH].value
+        prune_action_space = self.experiment_config.hparams[agents_constants.POMCP.PRUNE_ACTION_SPACE].value
+        prune_size = self.experiment_config.hparams[agents_constants.POMCP.PRUNE_SIZE].value
+        reinvigorated_particles_ratio = \
+            self.experiment_config.hparams[agents_constants.POMCP.REINVIGORATED_PARTICLES_RATIO].value
         config = self.simulation_env_config.simulation_env_input_config
-        eval_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        eval_env_name = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_NAME].value
+        eval_env_config = self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value
+        eval_env: BaseEnv = gym.make(eval_env_name, config=eval_env_config)
+        self.experiment_config.hparams[agents_constants.POMCP.EVAL_ENV_CONFIG].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.INITIAL_PARTICLES].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.ROLLOUT_POLICY].value = -1
+        self.experiment_config.hparams[agents_constants.POMCP.VALUE_FUNCTION].value = -1
 
         # Run N episodes
+        returns = []
         for i in range(N):
             done = False
             action_sequence = []
-            eval_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
             train_env: BaseEnv = gym.make(self.simulation_env_config.gym_env_name, config=config)
-
             _, info = eval_env.reset()
             s = info[agents_constants.COMMON.STATE]
             train_env.reset()
-            belief = b1.copy()
-            pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_belief=belief,
+            pomcp = POMCP(A=A, gamma=gamma, env=train_env, c=c, initial_particles=initial_particles,
                           planning_time=planning_time, max_particles=max_particles, rollout_policy=rollout_policy,
                           value_function=value_function, reinvigoration=reinvigoration, verbose=verbose,
-                          default_node_value=default_node_value, parallel_rollout=parallel_rollout,
-                          num_parallel_processes=num_processes, num_evals_per_process=num_evals_per_process,
-                          prior_weight=prior_weight)
+                          default_node_value=default_node_value, prior_weight=prior_weight,
+                          acquisition_function_type=acquisition_function_type, c2=c2,
+                          use_rollout_policy=use_rollout_policy, prior_confidence=prior_confidence,
+                          reinvigorated_particles_ratio=reinvigorated_particles_ratio,
+                          prune_action_space=prune_action_space, prune_size=prune_size)
             R = 0
             t = 1
             if t % log_steps_frequency == 0:
-                Logger.__call__().get_logger().info(f"[POMCP] t: {t}, b: {belief}, s: {s}")
+                Logger.__call__().get_logger().info(f"[POMCP] t: {t}, s: {s}")
+
             # Run episode
             while not done and t <= max_env_steps:
-                pomcp.solve(max_rollout_depth=max_rollout_depth, max_planning_depth=max_planning_depth)
+                rollout_depth = max_rollout_depth
+                planning_depth = max_planning_depth
+                pomcp.solve(max_rollout_depth=rollout_depth, max_planning_depth=planning_depth, t=t)
                 action = pomcp.get_action()
                 o, r, done, _, info = eval_env.step(action)
                 action_sequence.append(action)
                 s_prime = info[agents_constants.COMMON.STATE]
                 obs_id = info[agents_constants.COMMON.OBSERVATION]
-                belief = pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id,
-                                                            max_negative_samples=max_negative_samples,
-                                                            observation_vector=o)
+                pomcp.update_tree_with_new_samples(action_sequence=action_sequence, observation=obs_id, t=t)
                 R += r
                 t += 1
                 if t % log_steps_frequency == 0:
-                    b = list(map(lambda x: belief[x], random.sample(list(belief.keys()), min(10, len(belief.keys())))))
                     Logger.__call__().get_logger().info(f"[POMCP] t: {t}, a: {action}, r: {r}, o: {obs_id}, "
-                                                        f"s_prime: {s_prime}, b: {b}")
-                    Logger.__call__().get_logger().info(f"action: {eval_env.action_id_to_type_and_host[action]}")
+                                                        f"s_prime: {s_prime}, action sequence: {action_sequence}, "
+                                                        f"R: {R}")
 
             if i % self.experiment_config.log_every == 0:
                 # Logging
@@ -286,6 +319,8 @@ class POMCPAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
+            returns.append(R)
+            Logger.__call__().get_logger().info(f"avg return: {np.mean(returns)}")
 
         if eval_env is not None:
             # Save latest trace

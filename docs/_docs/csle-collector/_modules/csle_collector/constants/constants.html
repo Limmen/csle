@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.constants.constants &mdash; csle-collector 0.3.0 documentation</title>
+  <title>csle_collector.constants.constants &mdash; csle-collector 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -61,9 +59,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_collector.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_collector.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -287,7 +285,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to GRPC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">60</span>
     <span class="n">CONFIG_TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">300</span>
     <span class="n">OPERATION_TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30000</span></div>
 
@@ -325,6 +323,10 @@
     <span class="n">KAFKA_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/kafka/logs/server.log&quot;</span>
     <span class="n">RYU_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;ryu_manager.log&quot;</span>
     <span class="n">RYU_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+    <span class="n">MINBFT_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;minbft_manager.log&quot;</span>
+    <span class="n">MINBFT_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+    <span class="n">MINBFT_CLIENT_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;minbft_manager.log&quot;</span>
+    <span class="n">MINBFT_CLIENT_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">DEFAULT_LOG_FILE_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/*.log&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/log/*.log&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/log/*/*.log&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/log/*/*/*.log&quot;</span><span class="p">]</span></div>
 
 
@@ -829,8 +831,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Spark</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">START_SPARK_MASTER</span> <span class="o">=</span> <span class="s2">&quot;/spark-3.3.2-bin-hadoop3/sbin/start-master.sh&quot;</span>
-    <span class="n">START_SPARK_WORKER</span> <span class="o">=</span> <span class="s2">&quot;/spark-3.3.2-bin-hadoop3/sbin/start-worker.sh spark://15.13.1.161:7077 -m 2G -c 1&quot;</span>
+    <span class="n">START_SPARK_MASTER</span> <span class="o">=</span> <span class="s2">&quot;/spark-3.3.3-bin-hadoop3/sbin/start-master.sh&quot;</span>
+    <span class="n">START_SPARK_WORKER</span> <span class="o">=</span> <span class="s2">&quot;/spark-3.3.3-bin-hadoop3/sbin/start-worker.sh spark://15.13.1.161:7077 -m 2G -c 1&quot;</span>
     <span class="n">SPARK_MASTER_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/tmp/spark--org.apache.spark.deploy.master.Master-1.pid&quot;</span>
     <span class="n">SPARK_WORKER_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/tmp/spark--org.apache.spark.deploy.worker.Worker-1.pid&quot;</span>
     <span class="n">STOP_SPARK_WORKER</span> <span class="o">=</span> <span class="s2">&quot;sudo kill -9 </span><span class="si">{}</span><span class="s2">&quot;</span>

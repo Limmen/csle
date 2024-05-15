@@ -383,6 +383,8 @@ class QLearningAgent(BaseAgent):
                     o, r, done, _, info = self.env.step(policy)
                 else:
                     a = int(np.argmax(policy[s]))
+                    if t == 1:
+                        print(f"initial action: {a}")
                     o, r, done, _, info = self.env.step(a)
                 if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                     s = int(o[2])

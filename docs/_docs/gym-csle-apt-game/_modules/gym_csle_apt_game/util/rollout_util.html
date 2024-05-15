@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_apt_game.util.rollout_util &mdash; gym_csle_apt_game 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> gym_csle_apt_game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_apt_game.constants.html">gym_csle_apt_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_apt_game.dao.html">gym_csle_apt_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_apt_game.envs.html">gym_csle_apt_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_apt_game.util.html">gym_csle_apt_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym_csle_apt_game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_apt_game.util.rollout_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_apt_game.util.rollout_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.multiprocessing_util</span> <span class="kn">import</span> <span class="n">NestablePool</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.util.apt_game_util</span> <span class="kn">import</span> <span class="n">AptGameUtil</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.dao.apt_game_config</span> <span class="kn">import</span> <span class="n">AptGameConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_apt_game.envs.apt_game_env</span> <span class="kn">import</span> <span class="n">AptGameEnv</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+
+
+<div class="viewcode-block" id="RolloutUtil"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil">[docs]</a><span class="k">class</span> <span class="nc">RolloutUtil</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for rollout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RolloutUtil.eval_attacker_base"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_attacker_base</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                           <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for evaluating a base threshold strategy of the attacker</span>
+
+<span class="sd">        :param alpha: the defender&#39;s threshold</span>
+<span class="sd">        :param pi2: the attacker&#39;s base strategy</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param horizon: the horizon for the Monte-Carlo sampling</span>
+<span class="sd">        :param id: the id of the parallel processor</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param b: the belief</span>
+<span class="sd">        :return: the average return</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">378</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">23</span> <span class="o">+</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">378</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">23</span> <span class="o">+</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">AptGameEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">cumulative_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">horizon</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">b</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span>
+            <span class="n">a1</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">alpha</span><span class="p">):</span>
+                <span class="n">a1</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">a2</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">))</span>
+            <span class="n">action_profile</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+            <span class="n">o</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action_profile</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">cumulative_cost</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">cumulative_cost</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.eval_attacker_base_parallel"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base_parallel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_attacker_base_parallel</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                    <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts a pool of parallel processors for evaluating a threshold base strategy of the attacker</span>
+
+<span class="sd">        :param alpha: the threshold of the defender</span>
+<span class="sd">        :param pi2: the base strategy of the attacker</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param num_samples: the number of monte carlo samples</span>
+<span class="sd">        :param horizon: the horizon of the Monte-Carlo sampling</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param b: the belief</span>
+<span class="sd">        :return: the average cost-to-go of the base strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">RolloutUtil</span><span class="o">.</span><span class="n">eval_attacker_base</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cumulative_costs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.eval_defender_base"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_defender_base</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                           <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for evaluating a base threshold strategy of the defender</span>
+
+<span class="sd">        :param alpha: the defender&#39;s threshold</span>
+<span class="sd">        :param pi2: the attacker&#39;s strategy</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param horizon: the horizon for the Monte-Carlo sampling</span>
+<span class="sd">        :param id: the id of the parallel processor</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param b: the belief</span>
+<span class="sd">        :return: the average return</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">378</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">23</span> <span class="o">+</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">378</span> <span class="o">*</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">23</span> <span class="o">+</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">AptGameEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">cumulative_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">horizon</span><span class="p">):</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">b</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span>
+            <span class="n">a1</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">alpha</span><span class="p">):</span>
+                <span class="n">a1</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">a2</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi2</span><span class="p">,</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">))</span>
+            <span class="n">action_profile</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
+            <span class="n">o</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action_profile</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cumulative_cost</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">cumulative_cost</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.eval_defender_base_parallel"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base_parallel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_defender_base_parallel</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                    <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts a pool of parallel processors for evaluating a threshold base strategy of the defender</span>
+
+<span class="sd">        :param alpha: the threshold</span>
+<span class="sd">        :param pi2: the defender strategy</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param num_samples: the number of monte carlo samples</span>
+<span class="sd">        :param horizon: the horizon of the Monte-Carlo sampling</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :param b: the belief</span>
+<span class="sd">        :return: the average cost-to-go of the base strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">RolloutUtil</span><span class="o">.</span><span class="n">eval_defender_base</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cumulative_costs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.exact_defender_rollout"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.exact_defender_rollout">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">exact_defender_rollout</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                               <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ell</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs exact rollout of the defender against a fixed attacker strategy and with a threshold base strategy</span>
+
+<span class="sd">        :param alpha: the threshold base strategy</span>
+<span class="sd">        :param pi2: the strategy of the attacker</span>
+<span class="sd">        :param config: the game configuraton</span>
+<span class="sd">        :param num_samples: the number of Monte-Carlo samples</span>
+<span class="sd">        :param horizon: the horizon for the Monte-Carlo sampling</span>
+<span class="sd">        :param ell: the lookahead length</span>
+<span class="sd">        :param b: the belief state</span>
+<span class="sd">        :return: The rollout action and the corresponding Q-factor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">RolloutUtil</span><span class="o">.</span><span class="n">eval_defender_base_parallel</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                                              <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="n">horizon</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A_costs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="n">expected_immediate_cost</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">expected_cost</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">C</span><span class="p">),</span> <span class="n">S</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span>
+                <span class="n">expected_future_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">):</span>
+                        <span class="n">b_prime</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">next_belief</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">)</span>
+                        <span class="n">_</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">RolloutUtil</span><span class="o">.</span><span class="n">exact_defender_rollout</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                                                     <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="n">horizon</span><span class="p">,</span>
+                                                                     <span class="n">ell</span><span class="o">=</span><span class="n">ell</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">b_prime</span><span class="p">))</span>
+                        <span class="n">obs_prob</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="n">action_prob</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                            <span class="n">action_prob</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                                <span class="n">obs_prob</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">s_prime</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">expected_future_cost</span> <span class="o">+=</span> <span class="n">action_prob</span> <span class="o">*</span> <span class="n">obs_prob</span> <span class="o">*</span> <span class="n">cost</span>
+                <span class="n">A_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expected_immediate_cost</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">expected_future_cost</span><span class="p">)</span>
+            <span class="n">best_action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">A_costs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_action</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">A_costs</span><span class="p">[</span><span class="n">best_action</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.monte_carlo_defender_rollout"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_defender_rollout">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">monte_carlo_defender_rollout</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                     <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ell</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">a2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                     <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monte-Carlo based on rollout of the defender with a threshold base strategy</span>
+
+<span class="sd">        :param alpha: the threshold of the base strategy</span>
+<span class="sd">        :param pi2: the attacker strategy</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param num_samples: the number of monte-carlo samples</span>
+<span class="sd">        :param horizon: the horizon for monte-carlo sampling</span>
+<span class="sd">        :param ell: the lookahead length</span>
+<span class="sd">        :param b: the belief state</span>
+<span class="sd">        :param a2: the action of the attacker</span>
+<span class="sd">        :param s: the state</span>
+<span class="sd">        :return: The rollout action and the corresponding Q-factor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">RolloutUtil</span><span class="o">.</span><span class="n">eval_defender_base_parallel</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                                              <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="n">horizon</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                              <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A_costs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">expected_immediate_cost</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">expected_cost</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">C</span><span class="p">),</span> <span class="n">S</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">expected_immediate_cost</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">C</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">NestablePool</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">a2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">a2</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+                    <span class="n">s_prime</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">a2</span><span class="p">),</span> <span class="n">S</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+                    <span class="n">o</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)</span>
+                    <span class="n">o_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+                    <span class="n">b_prime</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">next_belief</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o_idx</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                                      <span class="n">a2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">a2</span><span class="p">))</span>
+                    <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">ell</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b_prime</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+                <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">RolloutUtil</span><span class="o">.</span><span class="n">monte_carlo_defender_rollout</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+                <span class="n">expected_future_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cumulative_costs</span><span class="p">)))</span>
+                <span class="n">A_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expected_immediate_cost</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">expected_future_cost</span><span class="p">)</span>
+            <span class="n">best_action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">A_costs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_action</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">A_costs</span><span class="p">[</span><span class="n">best_action</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RolloutUtil.monte_carlo_attacker_rollout"><a class="viewcode-back" href="../../../gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_attacker_rollout">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">monte_carlo_attacker_rollout</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AptGameConfig</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                     <span class="n">horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ell</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                                     <span class="n">a1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monte-Carlo based on rollout of the attacker with a threshold base strategy</span>
+
+<span class="sd">        :param alpha: the threshold of the defender</span>
+<span class="sd">        :param pi: the base strategy of the attacker</span>
+<span class="sd">        :param config: the game configuration</span>
+<span class="sd">        :param num_samples: the number of monte-carlo samples</span>
+<span class="sd">        :param horizon: the horizon for monte-carlo sampling</span>
+<span class="sd">        :param ell: the lookahead length</span>
+<span class="sd">        :param b: the belief state</span>
+<span class="sd">        :param a1: the action of the defender</span>
+<span class="sd">        :return: The rollout action and the corresponding Q-factor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">RolloutUtil</span><span class="o">.</span><span class="n">eval_attacker_base_parallel</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                                              <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="n">horizon</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A_costs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">a1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">a1</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">&gt;=</span> <span class="n">alpha</span><span class="p">:</span>
+                    <span class="n">a1</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">expected_immediate_cost</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">expected_cost</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">C</span><span class="p">),</span> <span class="n">S</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">NestablePool</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+                    <span class="n">s_prime</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+                    <span class="n">o</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)</span>
+                    <span class="n">o_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+                    <span class="n">b_prime</span> <span class="o">=</span> <span class="n">AptGameUtil</span><span class="o">.</span><span class="n">next_belief</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o_idx</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">)</span>
+                    <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">alpha</span><span class="p">,</span> <span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">ell</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b_prime</span><span class="p">))</span>
+                <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">RolloutUtil</span><span class="o">.</span><span class="n">monte_carlo_attacker_rollout</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+                <span class="n">expected_future_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cumulative_costs</span><span class="p">)))</span>
+                <span class="n">A_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expected_immediate_cost</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">expected_future_cost</span><span class="p">)</span>
+            <span class="n">best_action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">A_costs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_action</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">A_costs</span><span class="p">[</span><span class="n">best_action</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

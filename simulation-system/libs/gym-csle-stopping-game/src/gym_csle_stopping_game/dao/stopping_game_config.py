@@ -15,7 +15,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
                  R: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
                  A2: npt.NDArray[np.int_], L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int,
                  b1: npt.NDArray[np.float_],
-                 save_dir: str, checkpoint_traces_freq: int, gamma: float = 1) -> None:
+                 save_dir: str, checkpoint_traces_freq: int, gamma: float = 1, compute_beliefs: bool = True,
+                 save_trace: bool = True) -> None:
         """
         Initializes the DTO
 
@@ -36,6 +37,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :param save_dir: the directory to save artefacts produced by the environment
         :param checkpoint_traces_freq: how frequently to checkpoint traces to disk
         :param gamma: the discount factor
+        :param compute_beliefs: boolean flag indicating whether beliefs should be computed or not
+        :param save_trace: boolean flag indicating whether traces should be saved
         """
         super().__init__()
         self.T = T
@@ -55,6 +58,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         self.env_name = env_name
         self.checkpoint_traces_freq = checkpoint_traces_freq
         self.gamma = gamma
+        self.compute_beliefs = compute_beliefs
+        self.save_trace = save_trace
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -80,6 +85,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         d["env_name"] = self.env_name
         d["checkpoint_traces_freq"] = self.checkpoint_traces_freq
         d["gamma"] = self.gamma
+        d["compute_beliefs"] = self.compute_beliefs
+        d["save_trace"] = self.save_trace
         return d
 
     @staticmethod
@@ -90,11 +97,18 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
+        compute_beliefs = False
+        if "compute_beliefs" in d:
+            compute_beliefs = d["compute_beliefs"]
+        save_trace = False
+        if "save_trace" in d:
+            save_trace = d["save_trace"]
         obj = StoppingGameConfig(
             T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
             A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
             R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"],
-            env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"]
+            env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"],
+            compute_beliefs=compute_beliefs, save_trace=save_trace
         )
         return obj
 
@@ -105,7 +119,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, L:{self.L}, " \
                f"R_INT:{self.R_INT}, R_COST:{self.R_COST}, R_SLA:{self.R_SLA}, R_ST:{self.R_ST}, b1:{self.b1}, " \
                f"save_dir: {self.save_dir}, env_name: {self.env_name}, " \
-               f"checkpoint_traces_freq: {self.checkpoint_traces_freq}, gamma: {self.gamma}"
+               f"checkpoint_traces_freq: {self.checkpoint_traces_freq}, gamma: {self.gamma}, " \
+               f"compute_beliefs: {self.compute_beliefs}, save_trace: {self.save_trace}"
 
     def attacker_observation_space(self) -> gym.spaces.Box:
         """

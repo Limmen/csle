@@ -16,7 +16,7 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 class StoppingGamePomdpDefenderEnv(BaseEnv):
     """
-    OpenAI Gym Env for the MDP of the defender when facing a static attacker
+    OpenAI Gym Env for the POMDP of the defender when facing a static attacker
     """
 
     def __init__(self, config: StoppingGameDefenderPomdpConfig):
@@ -58,31 +58,12 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
-
         # Step the game
         o, r, d, _, info = self.stopping_game_env.step((a1, (pi2, a2)))
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
 
         return defender_obs, r[0], d, d, info
-
-    def step_test(self, a1: int, sample_Z) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
-        """
-        Takes a step in the environment by executing the given action
-
-        :param a1: defender action
-        :return: (obs, reward, done, info)
-        """
-        # Get attacker action from static strategy
-        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
-
-        # Step the game
-        o, r, d, info = self.stopping_game_env.step_test((a1, (pi2, a2)), sample_Z=sample_Z)
-        self.latest_attacker_obs = o[1]
-        defender_obs = o[0]
-
-        return defender_obs, r[0], d, info
 
     def reset(self, seed: Union[None, int] = None, soft: bool = False, options: Union[Dict[str, Any], None] = None) \
             -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
@@ -94,11 +75,10 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param options: optional configuration parameters
         :return: initial observation
         """
-        o, _ = self.stopping_game_env.reset()
+        o, info = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-        dict: Dict[str, Any] = {}
-        return defender_obs, dict
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
@@ -214,6 +194,39 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: None
         """
         return self.stopping_game_env.is_state_terminal(state=state)
+
+    def add_observation_vector(self, obs_vector: List[Any], obs_id: int) -> None:
+        """
+        Adds an observation vector to the history
+
+        :param obs_vector: the observation vector to add
+        :param obs_id: the id of the observation
+        :return: None
+        """
+        pass
+
+    def generate_random_particles(self, o: int, num_particles: int) -> List[int]:
+        """
+        Generates a random list of state particles from a given observation
+
+        :param o: the latest observation
+        :param num_particles: the number of particles to generate
+        :return: the list of random particles
+        """
+        return self.stopping_game_env.generate_random_particles(o=o, num_particles=num_particles)
+
+    def get_actions_from_particles(self, particles: List[int], t: int, observation: int,
+                                   verbose: bool = False) -> List[int]:
+        """
+        Prunes the set of actiosn based on the current particle set
+
+        :param particles: the set of particles
+        :param t: the current time step
+        :param observation: the latest observation
+        :param verbose: boolean flag indicating whether logging should be verbose or not
+        :return: the list of pruned actions
+        """
+        return list(self.config.stopping_game_config.A1)
 
     def manual_play(self) -> None:
         """

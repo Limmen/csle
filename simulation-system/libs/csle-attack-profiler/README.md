@@ -4,7 +4,7 @@ Scripts and programs to profile attacks, attack sequences, and a probabilistic H
 using data from the csle platform, profiling attacks to MITRE ATT&CK techniques, and tactics.
 
 [![PyPI version]] 0.5.1
-![PyPI - Downloads] (https://pypi.org/project/mitreattack-python/)
+![PyPI - Downloads] (https://pypi.org/project/csle-attack-profiler/)
 
 ## Requirements
 
@@ -71,7 +71,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-base](https://limmen.dev/csle/docs/csle-base)
+The latest documentation is available at [https://limmen.dev/csle/docs/csle-attack-profiler](https://limmen.dev/csle/docs/csle-attack-profiler)
 
 ### Generate API Documentation
 

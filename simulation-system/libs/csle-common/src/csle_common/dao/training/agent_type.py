@@ -38,3 +38,7 @@ class AgentType(IntEnum):
     PARTICLE_SWARM = 30
     PPO_CLEAN = 31
     POMCP = 32
+    DQN_CLEAN = 33
+    C51_CLEAN = 34
+    PPG_CLEAN = 35
+    MCS = 36

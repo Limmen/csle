@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; csle-collector 0.4.0 documentation</title>
+  <title>Index &mdash; csle-collector 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -61,8 +59,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Index</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Index</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -600,8 +598,6 @@
         <li><a href="csle_collector.constants.html#module-csle_collector.constants">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_collector.constants.constants
 
@@ -609,6 +605,8 @@
         <li><a href="csle_collector.constants.html#module-csle_collector.constants.constants">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_collector.docker_stats_manager
 
@@ -1009,6 +1007,13 @@
 </li>
       </ul></li>
       <li>
+    csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert
+
+      <ul>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert">module</a>
+</li>
+      </ul></li>
+      <li>
     csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters
 
       <ul>
@@ -1366,13 +1371,21 @@
 </li>
         <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_dict">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 </li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt.from_dict">(csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt static method)</a>
+</li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_dict">(csle_collector.host_manager.dao.host_metrics.HostMetrics static method)</a>
+</li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.successful_login.SuccessfulLogin.from_dict">(csle_collector.host_manager.dao.successful_login.SuccessfulLogin static method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert.from_dict">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert static method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_dict">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters static method)</a>
 </li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.from_dict">(csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert static method)</a>
+</li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict">(csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert.from_dict">(csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert static method)</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_dict">(csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters static method)</a>
 </li>
@@ -1403,9 +1416,11 @@
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_grpc_object">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters static method)</a>
 </li>
       </ul></li>
-      <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_json_file">from_json_file() (csle_collector.client_manager.dao.arrival_config.ArrivalConfig static method)</a>
+      <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.from_json_file">from_json_file() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics static method)</a>
 
       <ul>
+        <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.arrival_config.ArrivalConfig.from_json_file">(csle_collector.client_manager.dao.arrival_config.ArrivalConfig static method)</a>
+</li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.from_json_file">(csle_collector.client_manager.dao.client.Client static method)</a>
 </li>
         <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig.from_json_file">(csle_collector.client_manager.dao.constant_arrival_config.ConstantArrivalConfig static method)</a>
@@ -1426,9 +1441,25 @@
 </li>
         <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.from_json_file">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats static method)</a>
 </li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt.from_json_file">(csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt static method)</a>
+</li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.from_json_file">(csle_collector.host_manager.dao.host_metrics.HostMetrics static method)</a>
+</li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.successful_login.SuccessfulLogin.from_json_file">(csle_collector.host_manager.dao.successful_login.SuccessfulLogin static method)</a>
+</li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert.from_json_file">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert static method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.from_json_file">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.from_json_file">(csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.from_json_file">(csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert.from_json_file">(csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.from_json_file">(csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters static method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters.from_json_file">(csle_collector.snort_ids_manager.dao.snort_ids_rule_counters.SnortIdsRuleCounters static method)</a>
 </li>
       </ul></li>
       <li><a href="csle_collector.client_manager.html#csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics.from_kafka_record">from_kafka_record() (csle_collector.client_manager.client_population_metrics.ClientPopulationMetrics static method)</a>
@@ -1939,6 +1970,14 @@
 </li>
       <li><a href="csle_collector.constants.html#csle_collector.constants.constants.BEATS.METRICSETS_PROPERTY">METRICSETS_PROPERTY (csle_collector.constants.constants.BEATS attribute)</a>
 </li>
+      <li><a href="csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_DIR">MINBFT_CLIENT_MANAGER_LOG_DIR (csle_collector.constants.constants.LOG_FILES attribute)</a>
+</li>
+      <li><a href="csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_FILE">MINBFT_CLIENT_MANAGER_LOG_FILE (csle_collector.constants.constants.LOG_FILES attribute)</a>
+</li>
+      <li><a href="csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES.MINBFT_MANAGER_LOG_DIR">MINBFT_MANAGER_LOG_DIR (csle_collector.constants.constants.LOG_FILES attribute)</a>
+</li>
+      <li><a href="csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES.MINBFT_MANAGER_LOG_FILE">MINBFT_MANAGER_LOG_FILE (csle_collector.constants.constants.LOG_FILES attribute)</a>
+</li>
       <li>
     module
 
@@ -2108,6 +2147,8 @@
         <li><a href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_alert">csle_collector.snort_ids_manager.dao.snort_ids_alert</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_alert_counters">csle_collector.snort_ids_manager.dao.snort_ids_alert_counters</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert">csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#module-csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters">csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters</a>
 </li>
@@ -2646,7 +2687,7 @@
 </li>
       <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters">SnortIdsAlertCounters (class in csle_collector.snort_ids_manager.dao.snort_ids_alert_counters)</a>
 </li>
-      <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsFastLogAlert">SnortIdsFastLogAlert (class in csle_collector.snort_ids_manager.dao.snort_ids_alert)</a>
+      <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert">SnortIdsFastLogAlert (class in csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert)</a>
 </li>
       <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters">SnortIdsIPAlertCounters (class in csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters)</a>
 </li>
@@ -3225,13 +3266,21 @@
 </li>
         <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_dict">(csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 </li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt.to_dict">(csle_collector.host_manager.dao.failed_login_attempt.FailedLoginAttempt method)</a>
+</li>
         <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.host_metrics.HostMetrics.to_dict">(csle_collector.host_manager.dao.host_metrics.HostMetrics method)</a>
+</li>
+        <li><a href="csle_collector.host_manager.dao.html#csle_collector.host_manager.dao.successful_login.SuccessfulLogin.to_dict">(csle_collector.host_manager.dao.successful_login.SuccessfulLogin method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert.to_dict">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert.OSSECIDSAlert method)</a>
 </li>
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_dict">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters method)</a>
 </li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert.to_dict">(csle_collector.snort_ids_manager.dao.snort_ids_alert.SnortIdsAlert method)</a>
+</li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict">(csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters method)</a>
+</li>
+        <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert.to_dict">(csle_collector.snort_ids_manager.dao.snort_ids_fast_log_alert.SnortIdsFastLogAlert method)</a>
 </li>
         <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters.to_dict">(csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters.SnortIdsIPAlertCounters method)</a>
 </li>
@@ -3244,6 +3293,8 @@
         <li><a href="csle_collector.snort_ids_manager.dao.html#csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto">(csle_collector.snort_ids_manager.dao.snort_ids_alert_counters.SnortIdsAlertCounters method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_collector.client_manager.dao.html#csle_collector.client_manager.dao.client.Client.to_grpc_object">to_grpc_object() (csle_collector.client_manager.dao.client.Client method)</a>
 
       <ul>
@@ -3266,8 +3317,6 @@
         <li><a href="csle_collector.ossec_ids_manager.dao.html#csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters.to_grpc_object">(csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters.OSSECIdsAlertCounters method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_collector.docker_stats_manager.dao.html#csle_collector.docker_stats_manager.dao.docker_stats.DockerStats.to_kafka_record">to_kafka_record() (csle_collector.docker_stats_manager.dao.docker_stats.DockerStats method)</a>
 
       <ul>

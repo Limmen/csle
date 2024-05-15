@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents package &mdash; csle-agents 0.4.0 documentation</title>
+  <title>csle_agents.agents package &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -45,11 +43,13 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html">csle_agents.agents.bayesian_optimization_emukit package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.c51_clean.html">csle_agents.agents.c51_clean package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn_clean.html">csle_agents.agents.dqn_clean package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a></li>
@@ -57,13 +57,18 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.nelder_mead.html">csle_agents.agents.nelder_mead package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.particle_swarm.html">csle_agents.agents.particle_swarm package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pomcp.html">csle_agents.agents.pomcp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo_clean.html">csle_agents.agents.ppo_clean package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html">csle_agents.agents.simulated_annealing package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a></li>
@@ -91,8 +96,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_agents.agents package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_agents.agents package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_agents.agents.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,27 +108,20 @@
            <div itemprop="articleBody">
              
   <section id="csle-agents-agents-package">
-<h1>csle_agents.agents package<a class="headerlink" href="#csle-agents-agents-package" title="Permalink to this heading"></a></h1>
+<h1>csle_agents.agents package<a class="headerlink" href="#csle-agents-agents-package" title="Permalink to this headline"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.base.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.base.html#module-csle_agents.agents.base.base_agent">csle_agents.agents.base.base_agent module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent"><code class="docutils literal notranslate"><span class="pre">BaseAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.hparam_names"><code class="docutils literal notranslate"><span class="pre">BaseAgent.hparam_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.train"><code class="docutils literal notranslate"><span class="pre">BaseAgent.train()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.base.html#module-csle_agents.agents.base.base_agent">csle_agents.agents.base.base_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.base.html#module-csle_agents.agents.base">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#csle-agents-agents-bayesian-optimization-bayes-opt-agent-module">csle_agents.agents.bayesian_optimization.bayes_opt_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization.bayes_opt_agent">csle_agents.agents.bayesian_optimization.bayes_opt_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization">Module contents</a></li>
 </ul>
 </li>
@@ -140,146 +138,195 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#csle-agents-agents-bayesian-optimization-emukit-bayes-opt-emukit-agent-module">csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#module-csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent">csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html#module-csle_agents.agents.bayesian_optimization_emukit">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.c51_clean.html">csle_agents.agents.c51_clean package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.c51_clean.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.c51_clean.html#module-csle_agents.agents.c51_clean.c51_clean_agent">csle_agents.agents.c51_clean.c51_clean_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.c51_clean.html#module-csle_agents.agents.c51_clean">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#csle-agents-agents-cma-es-cma-es-agent-module">csle_agents.agents.cma_es.cma_es_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#module-csle_agents.agents.cma_es.cma_es_agent">csle_agents.agents.cma_es.cma_es_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cma_es.html#module-csle_agents.agents.cma_es">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#csle-agents-agents-cross-entropy-cross-entropy-agent-module">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy.cross_entropy_agent">csle_agents.agents.cross_entropy.cross_entropy_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle-agents-agents-dfsp-local-dfsp-local-agent-module">csle_agents.agents.dfsp_local.dfsp_local_agent module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#csle-agents-agents-dfsp-local-dfsp-local-ppo-agent-module">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_agent">csle_agents.agents.dfsp_local.dfsp_local_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local.dfsp_local_ppo_agent">csle_agents.agents.dfsp_local.dfsp_local_ppo_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dfsp_local.html#module-csle_agents.agents.dfsp_local">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#csle-agents-agents-differential-evolution-differential-evolution-agent-module">csle_agents.agents.differential_evolution.differential_evolution_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution.differential_evolution_agent">csle_agents.agents.differential_evolution.differential_evolution_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#csle-agents-agents-dqn-dqn-agent-module">csle_agents.agents.dqn.dqn_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn.dqn_agent">csle_agents.agents.dqn.dqn_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dqn_clean.html">csle_agents.agents.dqn_clean package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn_clean.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn_clean.html#module-csle_agents.agents.dqn_clean.dqn_clean_agent">csle_agents.agents.dqn_clean.dqn_clean_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dqn_clean.html#module-csle_agents.agents.dqn_clean">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#csle-agents-agents-dynasec-dynasec-agent-module">csle_agents.agents.dynasec.dynasec_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec.dynasec_agent">csle_agents.agents.dynasec.dynasec_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.dynasec.html#module-csle_agents.agents.dynasec">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#csle-agents-agents-fp-fictitious-play-agent-module">csle_agents.agents.fp.fictitious_play_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp.fictitious_play_agent">csle_agents.agents.fp.fictitious_play_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.fp.html#module-csle_agents.agents.fp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#csle-agents-agents-hsvi-hsvi-agent-module">csle_agents.agents.hsvi.hsvi_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi.hsvi_agent">csle_agents.agents.hsvi.hsvi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi.html#module-csle_agents.agents.hsvi">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#csle-agents-agents-hsvi-os-posg-hsvi-os-posg-agent-module">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent">csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html#module-csle_agents.agents.hsvi_os_posg">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#csle-agents-agents-kiefer-wolfowitz-kiefer-wolfowitz-agent-module">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html#module-csle_agents.agents.kiefer_wolfowitz">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#csle-agents-agents-lp-cmdp-linear-programming-cmdp-agent-module">csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#module-csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent">csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html#module-csle_agents.agents.lp_cmdp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#csle-agents-agents-lp-nf-linear-programming-normal-form-game-agent-module">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.nelder_mead.html">csle_agents.agents.nelder_mead package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.nelder_mead.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.nelder_mead.html#module-csle_agents.agents.nelder_mead.nelder_mead_agent">csle_agents.agents.nelder_mead.nelder_mead_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.nelder_mead.html#module-csle_agents.agents.nelder_mead">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.particle_swarm.html">csle_agents.agents.particle_swarm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.particle_swarm.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.particle_swarm.html#module-csle_agents.agents.particle_swarm.particle_swarm_agent">csle_agents.agents.particle_swarm.particle_swarm_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.particle_swarm.html#module-csle_agents.agents.particle_swarm">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#csle-agents-agents-pi-pi-agent-module">csle_agents.agents.pi.pi_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi.pi_agent">csle_agents.agents.pi.pi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pi.html#module-csle_agents.agents.pi">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.pomcp.html">csle_agents.agents.pomcp package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.action_node">csle_agents.agents.pomcp.action_node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.belief_node">csle_agents.agents.pomcp.belief_node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.belief_tree">csle_agents.agents.pomcp.belief_tree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.node">csle_agents.agents.pomcp.node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp">csle_agents.agents.pomcp.pomcp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_acquisition_function_type">csle_agents.agents.pomcp.pomcp_acquisition_function_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_agent">csle_agents.agents.pomcp.pomcp_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_util">csle_agents.agents.pomcp.pomcp_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#csle-agents-agents-ppo-ppo-agent-module">csle_agents.agents.ppo.ppo_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo.ppo_agent">csle_agents.agents.ppo.ppo_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.ppo_clean.html">csle_agents.agents.ppo_clean package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo_clean.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo_clean.html#module-csle_agents.agents.ppo_clean.ppo_clean_agent">csle_agents.agents.ppo_clean.ppo_clean_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.ppo_clean.html#module-csle_agents.agents.ppo_clean">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#csle-agents-agents-q-learning-q-learning-agent-module">csle_agents.agents.q_learning.q_learning_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning.q_learning_agent">csle_agents.agents.q_learning.q_learning_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.q_learning.html#module-csle_agents.agents.q_learning">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#csle-agents-agents-random-search-random-search-agent-module">csle_agents.agents.random_search.random_search_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search.random_search_agent">csle_agents.agents.random_search.random_search_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.random_search.html#module-csle_agents.agents.random_search">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#csle-agents-agents-reinforce-reinforce-agent-module">csle_agents.agents.reinforce.reinforce_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce.reinforce_agent">csle_agents.agents.reinforce.reinforce_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.reinforce.html#module-csle_agents.agents.reinforce">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#csle-agents-agents-sarsa-sarsa-agent-module">csle_agents.agents.sarsa.sarsa_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa.sarsa_agent">csle_agents.agents.sarsa.sarsa_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sarsa.html#module-csle_agents.agents.sarsa">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#csle-agents-agents-shapley-iteration-shapley-iteration-agent-module">csle_agents.agents.shapley_iteration.shapley_iteration_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration.shapley_iteration_agent">csle_agents.agents.shapley_iteration.shapley_iteration_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html#module-csle_agents.agents.shapley_iteration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html">csle_agents.agents.simulated_annealing package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html#module-csle_agents.agents.simulated_annealing.simulated_annealing_agent">csle_agents.agents.simulated_annealing.simulated_annealing_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html#module-csle_agents.agents.simulated_annealing">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#csle-agents-agents-sondik-vi-sondik-vi-agent-module">csle_agents.agents.sondik_vi.sondik_vi_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi.sondik_vi_agent">csle_agents.agents.sondik_vi.sondik_vi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.sondik_vi.html#module-csle_agents.agents.sondik_vi">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#csle-agents-agents-t-fp-t-fp-agent-module">csle_agents.agents.t_fp.t_fp_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp.t_fp_agent">csle_agents.agents.t_fp.t_fp_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_fp.html#module-csle_agents.agents.t_fp">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#csle-agents-agents-t-spsa-t-spsa-agent-module">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa.t_spsa_agent">csle_agents.agents.t_spsa.t_spsa_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.t_spsa.html#module-csle_agents.agents.t_spsa">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#csle-agents-agents-vi-vi-agent-module">csle_agents.agents.vi.vi_agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi.vi_agent">csle_agents.agents.vi.vi_agent module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.vi.html#module-csle_agents.agents.vi">Module contents</a></li>
 </ul>
 </li>
@@ -287,7 +334,7 @@
 </div>
 </section>
 <section id="module-csle_agents.agents">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_tolerance.util package &mdash; csle-tolerancexsg 0.4.0 documentation</title>
+  <title>csle_tolerance.util package &mdash; csle-tolerance 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,7 +26,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-tolerancexsg
+            <a href="index.html" class="icon icon-home"> csle-tolerance
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,61 +42,10 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_tolerance.envs.html">csle_tolerance.envs package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_tolerance.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.general_util">csle_tolerance.util.general_util module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_tolerance.util.general_util.GeneralUtil"><code class="docutils literal notranslate"><span class="pre">GeneralUtil</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.general_util.GeneralUtil.inverse_sigmoid"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.inverse_sigmoid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.general_util.GeneralUtil.sample_next_state"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.sample_next_state()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.general_util.GeneralUtil.sigmoid"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.sigmoid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.general_util.GeneralUtil.threshold_probability"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.threshold_probability()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.intrusion_recovery_pomdp_util">csle_tolerance.util.intrusion_recovery_pomdp_util module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.action_space"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.action_space()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.bayes_filter"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.bayes_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.cost_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.cost_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.cost_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.cost_tensor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.initial_belief"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.initial_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.manual_play"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.manual_play()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.next_belief"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.next_belief()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.observation_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.observation_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.observation_space"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.observation_space()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.observation_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.observation_tensor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.p_o_given_b_a1_a2"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.p_o_given_b_a1_a2()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.pomdp_solver_file"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.pomdp_solver_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.sample_initial_state"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.sample_initial_state()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.sample_next_observation"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.sample_next_observation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.state_space"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.state_space()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.transition_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.transition_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.transition_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryPomdpUtil.transition_tensor()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.intrusion_response_cmdp_util">csle_tolerance.util.intrusion_response_cmdp_util module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.action_space"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.action_space()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.constraint_cost_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.constraint_cost_tensor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.cost_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.cost_tensor()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.delta_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.delta_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.state_space"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.state_space()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_function"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.transition_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_tensor"><code class="docutils literal notranslate"><span class="pre">IntrusionRecoveryCmdpUtil.transition_tensor()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.pomdp_solve_parser">csle_tolerance.util.pomdp_solve_parser module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser"><code class="docutils literal notranslate"><span class="pre">PomdpSolveParser</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser.parse_alpha_vectors"><code class="docutils literal notranslate"><span class="pre">PomdpSolveParser.parse_alpha_vectors()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.general_util">csle_tolerance.util.general_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.intrusion_recovery_pomdp_util">csle_tolerance.util.intrusion_recovery_pomdp_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.intrusion_response_cmdp_util">csle_tolerance.util.intrusion_response_cmdp_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util.pomdp_solve_parser">csle_tolerance.util.pomdp_solve_parser module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_tolerance.util">Module contents</a></li>
 </ul>
 </li>
@@ -110,15 +57,15 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">csle-tolerancexsg</a>
+          <a href="index.html">csle-tolerance</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_tolerance.util package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_tolerance.util package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_tolerance.util.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -129,16 +76,17 @@
            <div itemprop="articleBody">
              
   <section id="csle-tolerance-util-package">
-<h1>csle_tolerance.util package<a class="headerlink" href="#csle-tolerance-util-package" title="Permalink to this heading"></a></h1>
+<h1>csle_tolerance.util package<a class="headerlink" href="#csle-tolerance-util-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-csle_tolerance.util.general_util">
-<span id="csle-tolerance-util-general-util-module"></span><h2>csle_tolerance.util.general_util module<a class="headerlink" href="#module-csle_tolerance.util.general_util" title="Permalink to this heading"></a></h2>
+<span id="csle-tolerance-util-general-util-module"></span><h2>csle_tolerance.util.general_util module<a class="headerlink" href="#module-csle_tolerance.util.general_util" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_tolerance.util.general_util.GeneralUtil">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_tolerance.util.general_util.</span></span><span class="sig-name descname"><span class="pre">GeneralUtil</span></span><a class="reference internal" href="_modules/csle_tolerance/util/general_util.html#GeneralUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.general_util.GeneralUtil" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with general utility functions related to csle-tolerance</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_tolerance.util.general_util.GeneralUtil.inverse_sigmoid">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_sigmoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/general_util.html#GeneralUtil.inverse_sigmoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.general_util.GeneralUtil.inverse_sigmoid" title="Permalink to this definition"></a></dt>
@@ -149,6 +97,17 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>sigmoid(x)^(-1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_tolerance.util.general_util.GeneralUtil.register_envs">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_envs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/general_util.html#GeneralUtil.register_envs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.general_util.GeneralUtil.register_envs" title="Permalink to this definition"></a></dt>
+<dd><p>Utility method for registering Gymnasium environments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -188,7 +147,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_tolerance.util.general_util.GeneralUtil.threshold_probability">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">threshold_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/general_util.html#GeneralUtil.threshold_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.general_util.GeneralUtil.threshold_probability" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">threshold_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/general_util.html#GeneralUtil.threshold_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.general_util.GeneralUtil.threshold_probability" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the probability of taking an action given a belief and a threshold</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -207,7 +166,7 @@
 
 </section>
 <section id="module-csle_tolerance.util.intrusion_recovery_pomdp_util">
-<span id="csle-tolerance-util-intrusion-recovery-pomdp-util-module"></span><h2>csle_tolerance.util.intrusion_recovery_pomdp_util module<a class="headerlink" href="#module-csle_tolerance.util.intrusion_recovery_pomdp_util" title="Permalink to this heading"></a></h2>
+<span id="csle-tolerance-util-intrusion-recovery-pomdp-util-module"></span><h2>csle_tolerance.util.intrusion_recovery_pomdp_util module<a class="headerlink" href="#module-csle_tolerance.util.intrusion_recovery_pomdp_util" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_tolerance.util.intrusion_recovery_pomdp_util.</span></span><span class="sig-name descname"><span class="pre">IntrusionRecoveryPomdpUtil</span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil" title="Permalink to this definition"></a></dt>
@@ -287,7 +246,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.initial_belief">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil.initial_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.initial_belief" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_belief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil.initial_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.initial_belief" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the initial belief state of the POMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -295,20 +254,6 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the initial belief state</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.manual_play">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">manual_play</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig" title="csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig"><span class="pre">IntrusionRecoveryPomdpConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil.manual_play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.manual_play" title="Permalink to this definition"></a></dt>
-<dd><p>An interactive loop to test the POMDP manually</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> – the POMDP config</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,7 +352,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.pomdp_solver_file">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pomdp_solver_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig" title="csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig"><span class="pre">IntrusionRecoveryPomdpConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil.pomdp_solver_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.pomdp_solver_file" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pomdp_solver_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_tolerance.dao.html#csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig" title="csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig"><span class="pre">csle_tolerance.dao.intrusion_recovery_pomdp_config.IntrusionRecoveryPomdpConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_recovery_pomdp_util.html#IntrusionRecoveryPomdpUtil.pomdp_solver_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_recovery_pomdp_util.IntrusionRecoveryPomdpUtil.pomdp_solver_file" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the POMDP environment specification based on the format at <a class="reference external" href="http://www.pomdp.org/code/index.html">http://www.pomdp.org/code/index.html</a>,
 for the defender’s local problem against a static attacker</p>
 <dl class="field-list simple">
@@ -510,15 +455,15 @@ for the defender’s local problem against a static attacker</p>
 
 </section>
 <section id="module-csle_tolerance.util.intrusion_response_cmdp_util">
-<span id="csle-tolerance-util-intrusion-response-cmdp-util-module"></span><h2>csle_tolerance.util.intrusion_response_cmdp_util module<a class="headerlink" href="#module-csle_tolerance.util.intrusion_response_cmdp_util" title="Permalink to this heading"></a></h2>
+<span id="csle-tolerance-util-intrusion-response-cmdp-util-module"></span><h2>csle_tolerance.util.intrusion_response_cmdp_util module<a class="headerlink" href="#module-csle_tolerance.util.intrusion_response_cmdp_util" title="Permalink to this headline"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_tolerance.util.intrusion_response_cmdp_util.</span></span><span class="sig-name descname"><span class="pre">IntrusionRecoveryCmdpUtil</span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_tolerance.util.intrusion_response_cmdp_util.</span></span><span class="sig-name descname"><span class="pre">IntrusionResponseCmdpUtil</span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class with utility functions for the intrusion-response CMDP</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.action_space">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.action_space" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.action_space">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_space</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.action_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.action_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the action space of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -528,8 +473,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_function">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_cost_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.constraint_cost_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_function" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.constraint_cost_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_cost_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.constraint_cost_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.constraint_cost_function" title="Permalink to this definition"></a></dt>
 <dd><p>Constraint cost function of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -545,8 +490,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_tensor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_cost_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.constraint_cost_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.constraint_cost_tensor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.constraint_cost_tensor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_cost_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.constraint_cost_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.constraint_cost_tensor" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a <a href="#id7"><span class="problematic" id="id8">|S|</span></a> tensor with the constraint costs of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -562,8 +507,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_function">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cost_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.cost_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_function" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.cost_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cost_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.cost_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.cost_function" title="Permalink to this definition"></a></dt>
 <dd><p>Cost function of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -579,8 +524,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_tensor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cost_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.cost_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.cost_tensor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.cost_tensor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cost_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.cost_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.cost_tensor" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a <a href="#id9"><span class="problematic" id="id10">|S|</span></a> tensor with the costs (or rewards) of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -596,8 +541,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.delta_function">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.delta_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.delta_function" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.delta_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.delta_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.delta_function" title="Permalink to this definition"></a></dt>
 <dd><p>The delta function that gives the probability of the change in the number of healthy nodes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -617,8 +562,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.state_space">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_max</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.state_space" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.state_space">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_max</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.state_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.state_space" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state space of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -628,8 +573,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_function">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.transition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_function" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.transition_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.transition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.transition_function" title="Permalink to this definition"></a></dt>
 <dd><p>The transition function of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -650,8 +595,8 @@ for the defender’s local problem against a static attacker</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_tensor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transition_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionRecoveryCmdpUtil.transition_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionRecoveryCmdpUtil.transition_tensor" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.transition_tensor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transition_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/intrusion_response_cmdp_util.html#IntrusionResponseCmdpUtil.transition_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.intrusion_response_cmdp_util.IntrusionResponseCmdpUtil.transition_tensor" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a <a href="#id11"><span class="problematic" id="id12">|A|x|S|x|S|</span></a> tensor with the transition probabilities of the CMDP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -673,21 +618,49 @@ for the defender’s local problem against a static attacker</p>
 
 </section>
 <section id="module-csle_tolerance.util.pomdp_solve_parser">
-<span id="csle-tolerance-util-pomdp-solve-parser-module"></span><h2>csle_tolerance.util.pomdp_solve_parser module<a class="headerlink" href="#module-csle_tolerance.util.pomdp_solve_parser" title="Permalink to this heading"></a></h2>
+<span id="csle-tolerance-util-pomdp-solve-parser-module"></span><h2>csle_tolerance.util.pomdp_solve_parser module<a class="headerlink" href="#module-csle_tolerance.util.pomdp_solve_parser" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_tolerance.util.pomdp_solve_parser.</span></span><span class="sig-name descname"><span class="pre">PomdpSolveParser</span></span><a class="reference internal" href="_modules/csle_tolerance/util/pomdp_solve_parser.html#PomdpSolveParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Parser of the results of the pomdp-solver by Cassandra et. al. (See <a class="reference external" href="http://www.pomdp.org/">http://www.pomdp.org/</a>)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser.optimal_avg_value">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optimal_avg_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_to_alpha_vectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_belief</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">btr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/pomdp_solve_parser.html#PomdpSolveParser.optimal_avg_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser.optimal_avg_value" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the optimal average value given a set of alpha vectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path_to_alpha_vectors</strong> – </p></li>
+<li><p><strong>initial_belief</strong> – the belief to compute the value for</p></li>
+<li><p><strong>btr</strong> – the BTR constraint/horizon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the optimal average value</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser.parse_alpha_vectors">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_alpha_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_tolerance/util/pomdp_solve_parser.html#PomdpSolveParser.parse_alpha_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_tolerance.util.pomdp_solve_parser.PomdpSolveParser.parse_alpha_vectors" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Parses alpha vectors from a given file location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> – path to the file where the alpha vectors are solved</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list with (action, alphavector)</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-csle_tolerance.util">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_tolerance.util" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_tolerance.util" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

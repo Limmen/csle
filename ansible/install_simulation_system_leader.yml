@@ -1,0 +1,26 @@
+---
+
+- hosts: leader
+
+  tasks:
+
+    - name: List installed simulation environments
+      become: yes
+      become_method: sudo
+      become_user: postgres
+      community.postgresql.postgresql_query:
+        db: csle
+        login_user: postgres
+        login_password: "{{ postgres_password }}"
+        query: "SELECT id FROM simulations;"
+      register: simulations
+
+    - name: Check if the simulation environments are installed
+      set_fact:
+        simulation_environments_installed: "{{ simulations.rowcount > 0 }}"
+
+    - name: Install CSLE simulation environments on the leader node
+      shell: "source /home/{{ user }}/anaconda3/bin/activate {{ conda_environment_name }}; cd /home/{{ user }}/csle/simulation-system/envs; make install"
+      args:
+        executable: /bin/bash
+      when: not simulation_environments_installed

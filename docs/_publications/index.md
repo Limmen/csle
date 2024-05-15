@@ -8,6 +8,38 @@ permalink: /publications/
 
 The following publications are based on CSLE:
 
+##### **Automated Security Response through Online Learning with Adaptive Conjectures**
+**Journal**: Under review, IEEE Transactions on Information Forensics and Security.
+[Preprint.](https://arxiv.org/abs/2402.12499)
+
+**Bibtex**:
+```bash
+@misc{kim_tifs_24,
+      title={Automated Security Response through Online Learning with Adaptive Conjectures},
+      author={Kim Hammar and Tao Li and Rolf Stadler and Quanyan Zhu},
+      year={2024},
+      eprint={2402.12499},
+      archivePrefix={arXiv},
+      primaryClass={cs.GT}
+}
+```
+
+##### **IT Intrusion Detection Using Statistical Learning and Testbed Measurements**
+**Conference**: IEEE/IFIP Network Operations and Management Symposium 2024.
+[Preprint.](https://arxiv.org/abs/2402.13081)
+
+**Bibtex**:
+```bash
+@misc{wang2024intrusion,
+      title={IT Intrusion Detection Using Statistical Learning and Testbed Measurements},
+      author={Xiaoxuan Wang and Rolf Stadler},
+      year={2024},
+      eprint={2402.13081},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
 ##### **Scalable Learning of Intrusion Responses through Recursive Decomposition**
 **Conference**: International Conference on Decision and Game Theory for Security 2023 (GameSec).
 [Preprint.](https://arxiv.org/abs/2309.03292)

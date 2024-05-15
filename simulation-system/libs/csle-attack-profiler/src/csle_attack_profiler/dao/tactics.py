@@ -5,6 +5,9 @@ from enum import Enum
 
 
 class Tactics(Enum):
+    """
+    Enum representing different MITRE ATT&CK tactics
+    """
     RECONNAISSANCE = "reconnaissance"
     RESOURCE_DEVELOPMENT = "resource-development"
     INITIAL_ACCESS = "initial-access"

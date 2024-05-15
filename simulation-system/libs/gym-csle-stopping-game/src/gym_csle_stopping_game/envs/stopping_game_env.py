@@ -1,3 +1,4 @@
+import random
 from typing import Tuple, Dict, List, Any, Union
 import numpy as np
 import numpy.typing as npt
@@ -24,7 +25,6 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 
 
 class StoppingGameEnv(BaseEnv):
@@ -77,167 +77,25 @@ class StoppingGameEnv(BaseEnv):
         done = False
         info: Dict[str, Any] = {}
 
-        # Compute r, s', b',o'
-        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                          T=self.config.T,
-                                                          S=self.config.S, s=self.state.s)
         o = max(self.config.O)
         if self.state.s == 2:
             done = True
+            r = 0
         else:
-            o = StoppingGameUtil.sample_next_observation(Z=self.config.Z,
-                                                         O=self.config.O, s_prime=self.state.s)
-            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                        config=self.config,
-                                                        l=self.state.l, a2=a2)
-
-        # Update stops remaining
-        self.state.l = self.state.l - a1
-
-        # Update time-step
-        self.state.t += 1
-
-        # Populate info dict
-        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
-        info[env_constants.ENV_METRICS.STATE] = self.state.s
-        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
-        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = o
-        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
-
-        # Get observations
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
-
-        # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
-        self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
-        self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
-        self.trace.infrastructure_metrics.append(o)
-        if not done:
-            self.trace.attacker_observations.append(attacker_obs)
-            self.trace.defender_observations.append(defender_obs)
-
-        # Populate info
-        info = self._info(info)
-
-        return (defender_obs, attacker_obs), (r, -r), done, done, info
-
-    def step_test(self, action_profile: Tuple[int, Tuple[npt.NDArray[Any], int]], sample_Z) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
-        """
-        Takes a step in the environment by executing the given action
-
-        :param action_profile: the actions to take (both players actions
-        :return: (obs, reward, done, info)
-        """
-
-        # Setup initial values
-        a1, a2_profile = action_profile
-        pi2, a2 = a2_profile
-        assert pi2.shape[0] == len(self.config.S)
-        assert pi2.shape[1] == len(self.config.A1)
-        done = False
-        info: Dict[str, Any] = {}
-
-        # Compute r, s', b',o'
-        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                          T=self.config.T,
-                                                          S=self.config.S, s=self.state.s)
-        o = max(self.config.O)
-        if self.state.s == 2:
-            done = True
-        else:
-            o = StoppingGameUtil.sample_next_observation(Z=sample_Z,
-                                                         O=self.config.O, s_prime=self.state.s)
-            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                        config=self.config,
-                                                        l=self.state.l, a2=a2)
-        # Update stops remaining
-        self.state.l = self.state.l - a1
-
-        # Update time-step
-        self.state.t += 1
-
-        # Populate info dict
-        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
-        info[env_constants.ENV_METRICS.STATE] = self.state.s
-        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
-        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = o
-        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
-
-        # Get observations
-        attacker_obs = self.state.attacker_observation()
-        defender_obs = self.state.defender_observation()
-
-        # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
-        self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
-        self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
-        self.trace.infrastructure_metrics.append(o)
-        if not done:
-            self.trace.attacker_observations.append(attacker_obs)
-            self.trace.defender_observations.append(defender_obs)
-
-        # Populate info
-        info = self._info(info)
-
-        return (defender_obs, attacker_obs), (r, -r), done, info
-
-    def step_trace(self, trace: EmulationTrace, a1: int, pi2: npt.NDArray[Any]) \
-            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
-        """
-        Utility function for stepping a given trace
-
-        :param trace: the trace to step
-        :param a1: the action to step with
-        :param pi2: the policy of the attacker
-        :return: the result of the step
-        """
-        done = False
-        info: Dict[str, Any] = {}
-        if (self.state.t - 1) < len(trace.attacker_actions):
-            a2_emulation_action = trace.attacker_actions[self.state.t - 1]
-            a2 = 0
-            if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE and self.state.s == 0:
-                a2 = 1
-            if self.state.s == 1:
-                a2 = 0
             # Compute r, s', b',o'
             r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
             self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
                                                               T=self.config.T,
                                                               S=self.config.S, s=self.state.s)
-            o = max(self.config.O)
-            if self.state.s == 2:
-                done = True
-            else:
-                o = trace.defender_observation_states[self.state.t - 1].avg_snort_ids_alert_counters.warning_alerts
-                if o >= len(self.config.O):
-                    o = len(self.config.O) - 1
+            o = StoppingGameUtil.sample_next_observation(Z=self.config.Z,
+                                                         O=self.config.O, s_prime=self.state.s)
+            if self.config.compute_beliefs:
                 self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
                                                             config=self.config,
                                                             l=self.state.l, a2=a2)
 
             # Update stops remaining
             self.state.l = self.state.l - a1
-        else:
-            self.state.s = 2
-            done = True
-            a2 = 0
-            o = 0
-            r = 0
 
         # Update time-step
         self.state.t += 1
@@ -255,19 +113,23 @@ class StoppingGameEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
 
         # Log trace
-        self.trace.defender_rewards.append(r)
-        self.trace.attacker_rewards.append(-r)
-        self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
-        self.trace.infos.append(info)
-        self.trace.states.append(self.state.s)
-        self.trace.beliefs.append(self.state.b[1])
-        self.trace.infrastructure_metrics.append(o)
-        if not done:
-            self.trace.attacker_observations.append(attacker_obs)
-            self.trace.defender_observations.append(defender_obs)
+        if self.config.save_trace:
+            self.trace.defender_rewards.append(r)
+            self.trace.attacker_rewards.append(-r)
+            self.trace.attacker_actions.append(a2)
+            self.trace.defender_actions.append(a1)
+            self.trace.infos.append(info)
+            self.trace.states.append(self.state.s)
+            self.trace.beliefs.append(self.state.b[1])
+            self.trace.infrastructure_metrics.append(o)
+            if not done:
+                self.trace.attacker_observations.append(attacker_obs)
+                self.trace.defender_observations.append(defender_obs)
+
+        # Populate info
         info = self._info(info)
-        return (defender_obs, attacker_obs), (r, -r), done, info
+
+        return (defender_obs, attacker_obs), (r, -r), done, done, info
 
     def mean(self, prob_vector):
         """
@@ -374,9 +236,14 @@ class StoppingGameEnv(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
-        self.trace.attacker_observations.append(attacker_obs)
-        self.trace.defender_observations.append(defender_obs)
+        if self.config.save_trace:
+            self.trace.attacker_observations.append(attacker_obs)
+            self.trace.defender_observations.append(defender_obs)
         info: Dict[str, Any] = {}
+        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
+        info[env_constants.ENV_METRICS.STATE] = self.state.s
+        info[env_constants.ENV_METRICS.OBSERVATION] = 0
+        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
         return (defender_obs, attacker_obs), info
 
     @staticmethod
@@ -570,16 +437,20 @@ class StoppingGameEnv(BaseEnv):
         :param l: the number of stops remaining
         :return: the observation
         """
-        b = self.config.b1.copy()
-        l = l
-        t = 0
-        while t < len(history) - 1:
-            a1 = history[t]
-            o = history[t + 1]
-            b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=pi2, config=self.config, l=l, a2=0)
-            l = max(l - a1, 0)
-            t += 2
-        return [l, b[1]]
+        return [history[-1]]
+
+    def generate_random_particles(self, o: int, num_particles: int) -> List[int]:
+        """
+        Generates a random list of state particles from a given observation
+
+        :param o: the latest observation
+        :param num_particles: the number of particles to generate
+        :return: the list of random particles
+        """
+        particles = []
+        for i in range(num_particles):
+            particles.append(random.choice([0, 1]))
+        return particles
 
     def manual_play(self) -> None:
         """

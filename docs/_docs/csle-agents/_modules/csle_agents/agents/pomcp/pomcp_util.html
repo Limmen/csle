@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.pomcp.pomcp_util &mdash; csle-agents 0.5.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.pomcp.pomcp_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.pomcp.pomcp_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span> <span class="nn">csle_agents.agents.pomcp.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="POMCPUtil"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil">[docs]</a><span class="k">class</span> <span class="nc">POMCPUtil</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions related to POMCP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="POMCPUtil.sample_from_distribution"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.sample_from_distribution">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_from_distribution</span><span class="p">(</span><span class="n">probability_vector</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function to sample from a probability vector</span>
+
+<span class="sd">        :param probability_vector: the probability vector to sample from</span>
+<span class="sd">        :return: the sampled element</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probability_vector_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">probability_vector</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">probability_vector_np</span><span class="p">))),</span>
+                                  <span class="n">p</span><span class="o">=</span><span class="n">probability_vector_np</span> <span class="o">/</span> <span class="n">probability_vector_np</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.rand_choice"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.rand_choice">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">rand_choice</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects an element from a given list uniformly at random</span>
+
+<span class="sd">        :param candidates: the list to sample from</span>
+<span class="sd">        :return: the sample</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.convert_samples_to_distribution"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.convert_samples_to_distribution">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_samples_to_distribution</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a list of samples to a probability distribution</span>
+
+<span class="sd">        :param samples: the list of samples</span>
+<span class="sd">        :return: a dict with the sample values and their probabilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="n">_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cnt</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="o">/</span> <span class="n">_sum</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cnt</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.ucb"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ucb</span><span class="p">(</span><span class="n">history_visit_count</span><span class="p">,</span> <span class="n">action_visit_count</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements the upper-confidence-bound acquisiton function</span>
+
+<span class="sd">        :param history_visit_count: counter of the number of times the history has been visited</span>
+<span class="sd">        :param action_visit_count: counter of the number of times the action has been taken in the history</span>
+<span class="sd">        :return: the ucb acquisition value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If we have never seen this history before, its exploration utility is initialized to zero</span>
+        <span class="k">if</span> <span class="n">history_visit_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="c1"># If we have never taken this action before, its utility is infinity to encourage exploration</span>
+        <span class="k">if</span> <span class="n">action_visit_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="c1"># If we have taken this action before, return the UCB exploration bonus</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">history_visit_count</span><span class="p">)</span> <span class="o">/</span> <span class="n">action_visit_count</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.ucb_acquisition_function"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb_acquisition_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">ucb_acquisition_function</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="s2">&quot;Node&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The UCB acquisition function</span>
+
+<span class="sd">        :param action: the action node</span>
+<span class="sd">        :param c: the exploration parameter</span>
+<span class="sd">        :param rollout_policy: the rollout policy</span>
+<span class="sd">        :param prior_weight: the weight to put on the prior</span>
+<span class="sd">        :return: the acquisition value of the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">visit_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">visit_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">ucb</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">visit_count</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">visit_count</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.alpha_go_acquisition_function"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.alpha_go_acquisition_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">alpha_go_acquisition_function</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="s2">&quot;Node&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">prior</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">prior_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The UCB acquisition function</span>
+
+<span class="sd">        :param action: the action node</span>
+<span class="sd">        :param c: the exploration parameter</span>
+<span class="sd">        :param c2: the c2 parameter</span>
+<span class="sd">        :param prior: the prior weight</span>
+<span class="sd">        :param prior_weight: the weight to put on the prior</span>
+<span class="sd">        :return: the acquisition value of the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># prior = rollout_policy.probability(o=o, a=action.action)</span>
+        <span class="c1"># visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)</span>
+        <span class="c1"># base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)</span>
+        <span class="c1"># prior_term = prior_weight * prior * visit_term * base_term</span>
+        <span class="n">exploration_term</span> <span class="o">=</span> <span class="n">POMCPUtil</span><span class="o">.</span><span class="n">ucb</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">visit_count</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">visit_count</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">prior_weight</span> <span class="o">*</span> <span class="n">prior</span><span class="p">)</span> <span class="o">*</span> <span class="n">exploration_term</span><span class="p">)</span></div>
+        <span class="c1"># return float(action.value + prior_term + exploration_term)</span>
+
+<div class="viewcode-block" id="POMCPUtil.trajectory_simulation_particles"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.trajectory_simulation_particles">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">trajectory_simulation_particles</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnv</span><span class="p">,</span> <span class="n">action_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">num_particles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs trajectory simulations to find possible states matching to the given observation</span>
+
+<span class="sd">        :param o: the observation to match against</span>
+<span class="sd">        :param env: the black-box simulator to sue for generating trajectories</span>
+<span class="sd">        :param action_sequence: the action sequence for the trajectory</span>
+<span class="sd">        :param num_particles: the number of particles to collect</span>
+<span class="sd">        :param verbose: boolean flag indicating whether logging should be verbose or not</span>
+<span class="sd">        :return: the list of particles matching the given observation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">particles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filling </span><span class="si">{</span><span class="n">num_particles</span><span class="si">}</span><span class="s2"> particles&quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot; through trajectory simulations, &quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;action sequence: </span><span class="si">{</span><span class="n">action_sequence</span><span class="si">}</span><span class="s2">, observation: </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">particles</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_particles</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_sequence</span><span class="p">):</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">action_sequence</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+                <span class="n">sampled_o</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_sequence</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sampled_o</span> <span class="o">==</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">particles</span></div>
+
+<div class="viewcode-block" id="POMCPUtil.get_default_value"><a class="viewcode-back" href="../../../../csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.get_default_value">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="n">particles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">action</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">default_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnv</span><span class="p">,</span>
+                          <span class="n">value_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the default value of a node</span>
+
+<span class="sd">        :param particles: the particles of the parent node</span>
+<span class="sd">        :param action: the action of the node</span>
+<span class="sd">        :param default_value: the default value</span>
+<span class="sd">        :param env: the black-box simulator</span>
+<span class="sd">        :param value_function: the value function</span>
+<span class="sd">        :return: the value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node_value</span> <span class="o">=</span> <span class="n">default_value</span>
+        <span class="k">if</span> <span class="n">value_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sample_values</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">POMCPUtil</span><span class="o">.</span><span class="n">rand_choice</span><span class="p">(</span><span class="n">particles</span><span class="p">))</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span>
+                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">sample_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_function</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
+            <span class="n">node_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample_values</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">node_value</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

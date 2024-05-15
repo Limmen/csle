@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.connection_util &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.util.connection_util &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.util.connection_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.connection_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,7 +70,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.util.connection_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">paramiko</span>
 <span class="kn">import</span> <span class="nn">telnetlib</span>
@@ -119,8 +117,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not find any EmulationAttackerObservationState object&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
-                <span class="n">target_machine</span> <span class="o">=</span> <span class="n">m</span>
-                <span class="n">target_machine</span> <span class="o">=</span> <span class="n">target_machine</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">target_machine</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">break</span>
         <span class="c1"># Check if already logged in</span>
         <span class="k">if</span> <span class="n">target_machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -252,7 +249,6 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ssh_connections_sorted_by_root</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">proxy_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ssh_connections_sorted_by_root</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">service_name</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">:</span>
             <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionUtil</span><span class="o">.</span><span class="n">_ssh_setup_connection</span><span class="p">(</span>
                 <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
@@ -268,6 +264,8 @@
                 <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
                 <span class="n">credentials</span><span class="o">=</span><span class="n">non_used_nor_cached_credentials</span><span class="p">,</span>
                 <span class="n">proxy_connections</span><span class="o">=</span><span class="n">proxy_connections</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Service: </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2"> not recognized&quot;</span><span class="p">)</span>
 
         <span class="n">s_prime</span> <span class="o">=</span> <span class="n">s</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -320,14 +318,21 @@
 <span class="sd">        Helper function for setting up a SSH connection</span>
 
 <span class="sd">        :param a: the action of the connection</span>
-<span class="sd">        :param emulation_env_config: the emulation environment config</span>
 <span class="sd">        :param credentials: list of credentials to try</span>
 <span class="sd">        :param proxy_connections: list of proxy connections to try</span>
 <span class="sd">        :param s: env state</span>
 <span class="sd">        :return: a DTO with connection setup information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">()</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">target_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_failed_credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">proxies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">forward_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">interactive_shells</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tunnel_threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ForwardTunnelThread</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">proxy_conn</span> <span class="ow">in</span> <span class="n">proxy_connections</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;EmulationConnectionObservationState is None&quot;</span><span class="p">)</span>
@@ -338,7 +343,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;EmulationAttackerObservationState is None&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)):</span>
                     <span class="k">continue</span>
             <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">credentials</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
@@ -353,17 +358,19 @@
                             <span class="n">target_conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
                             <span class="k">if</span> <span class="n">target_conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection failed&quot;</span><span class="p">)</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
                             <span class="n">target_conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">cr</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">cr</span><span class="o">.</span><span class="n">pw</span><span class="p">,</span> <span class="n">sock</span><span class="o">=</span><span class="n">relay_channel</span><span class="p">)</span>
-                            <span class="n">target_conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+                            <span class="n">transport</span> <span class="o">=</span> <span class="n">target_conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection failed&quot;</span><span class="p">)</span>
+                            <span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                            <span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
+                            <span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
+                            <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                            <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+                            <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
                             <span class="k">break</span>
                         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;SSH exception :</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
@@ -374,13 +381,17 @@
                                 <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">))</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Action:</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">descr</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;List is None&quot;</span><span class="p">)</span>
-                        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+                        <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
                 <span class="k">break</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">(</span>
+            <span class="n">connected</span><span class="o">=</span><span class="n">connected</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span> <span class="n">target_connections</span><span class="o">=</span><span class="n">target_connections</span><span class="p">,</span>
+            <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span> <span class="n">non_failed_credentials</span><span class="o">=</span><span class="n">non_failed_credentials</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span> <span class="n">forward_ports</span><span class="o">=</span><span class="n">forward_ports</span><span class="p">,</span> <span class="n">interactive_shells</span><span class="o">=</span><span class="n">interactive_shells</span><span class="p">,</span>
+            <span class="n">tunnel_threads</span><span class="o">=</span><span class="n">tunnel_threads</span><span class="p">,</span> <span class="n">total_time</span><span class="o">=</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">connection_setup_dto</span>
 
     <span class="nd">@staticmethod</span>
@@ -396,8 +407,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">ATTACKER_RETRY_CHECK_ROOT</span><span class="p">):</span>
             <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;sudo -l&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -432,34 +441,46 @@
 
 <span class="sd">        :param a: the action of the connection</span>
 <span class="sd">        :param credentials: list of credentials to try</span>
-<span class="sd">        :param proxies: proxy connections</span>
+<span class="sd">        :param proxy_connections: proxy connections</span>
 <span class="sd">        :param s: env state</span>
 <span class="sd">        :return: a DTO with the connection setup information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">()</span>
+        <span class="n">target_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_failed_credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">proxies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">forward_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">interactive_shells</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tunnel_threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ForwardTunnelThread</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">proxy_conn</span> <span class="ow">in</span> <span class="n">proxy_connections</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="o">!=</span> <span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;EmulationConnectionObservationState is None&quot;</span><span class="p">)</span>
                 <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_attacker_machine</span><span class="p">(</span><span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">reachable</span> <span class="ow">or</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">no_match</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">reachable</span><span class="p">:</span>
+                        <span class="n">no_match</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">no_match</span><span class="p">:</span>
                     <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;EmulationAttackerObservationState or agent_reachable is None&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)):</span>
                     <span class="k">continue</span>
             <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">credentials</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not obatin list of Credential objects&quot;</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">cr</span><span class="o">.</span><span class="n">service</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">forward_port</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_port_forward_port</span><span class="p">()</span>
                             <span class="n">agent_transport</span> <span class="o">=</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
-                            <span class="k">if</span> <span class="n">cr</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;port is None&quot;</span><span class="p">)</span>
                             <span class="n">tunnel_thread</span> <span class="o">=</span> <span class="n">ForwardTunnelThread</span><span class="p">(</span><span class="n">local_port</span><span class="o">=</span><span class="n">forward_port</span><span class="p">,</span>
                                                                 <span class="n">remote_host</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">remote_port</span><span class="o">=</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
                                                                 <span class="n">transport</span><span class="o">=</span><span class="n">agent_transport</span><span class="p">)</span>
@@ -473,34 +494,35 @@
                             <span class="n">response</span> <span class="o">=</span> <span class="n">target_conn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
                             <span class="n">response_1</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
                             <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">INCORRECT_LOGIN</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response_1</span> <span class="ow">and</span> <span class="n">response_1</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-                                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">tunnel_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tunnel_thread</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">forward_ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">forward_port</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
-                            <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                                <span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                                <span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
+                                <span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
+                                <span class="n">tunnel_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tunnel_thread</span><span class="p">)</span>
+                                <span class="n">forward_ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">forward_port</span><span class="p">)</span>
+                                <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+                                <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+                                <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
                             <span class="k">break</span>
                         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;telnet exception:</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not obatin EmulationAttackerObservationState&quot;</span><span class="p">)</span>
-                            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Target ip in agent reachable: </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Agent reachable:</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;Target ip in agent reachable: </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;Agent reachable:</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+                        <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
                     <span class="k">break</span>
-            <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
                 <span class="k">break</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">(</span>
+            <span class="n">connected</span><span class="o">=</span><span class="n">connected</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span> <span class="n">target_connections</span><span class="o">=</span><span class="n">target_connections</span><span class="p">,</span>
+            <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span> <span class="n">non_failed_credentials</span><span class="o">=</span><span class="n">non_failed_credentials</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span> <span class="n">forward_ports</span><span class="o">=</span><span class="n">forward_ports</span><span class="p">,</span> <span class="n">interactive_shells</span><span class="o">=</span><span class="n">interactive_shells</span><span class="p">,</span>
+            <span class="n">tunnel_threads</span><span class="o">=</span><span class="n">tunnel_threads</span><span class="p">,</span> <span class="n">total_time</span><span class="o">=</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">connection_setup_dto</span>
 
     <span class="nd">@staticmethod</span>
@@ -516,8 +538,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">ATTACKER_RETRY_CHECK_ROOT</span><span class="p">):</span>
             <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;sudo -l</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -554,22 +574,36 @@
 <span class="sd">        :param a: the action of the connection</span>
 <span class="sd">        :param credentials: list of credentials to try</span>
 <span class="sd">        :param proxy_connections: proxy connections</span>
-<span class="sd">        :param env_state: env state</span>
+<span class="sd">        :param s: env state</span>
 <span class="sd">        :return: a DTO with connection setup information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">()</span>
+        <span class="n">target_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_failed_credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">proxies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">forward_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">interactive_shells</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tunnel_threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ForwardTunnelThread</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">proxy_conn</span> <span class="ow">in</span> <span class="n">proxy_connections</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="o">!=</span> <span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ip is None&quot;</span><span class="p">)</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_attacker_machine</span><span class="p">(</span><span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">reachable</span> <span class="ow">or</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="o">!=</span> <span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span> <span class="ow">and</span> <span class="n">proxy_conn</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_attacker_machine</span><span class="p">(</span><span class="n">proxy_conn</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">m</span><span class="o">.</span><span class="n">ips</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">no_match</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">reachable</span><span class="p">:</span>
+                        <span class="n">no_match</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">no_match</span><span class="p">:</span>
                     <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;EmulationAttackerObservationState or agent_reachable is None&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)):</span>
                     <span class="k">continue</span>
             <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">credentials</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
@@ -577,8 +611,6 @@
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">forward_port</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_port_forward_port</span><span class="p">()</span>
                             <span class="n">agent_transport</span> <span class="o">=</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
-                            <span class="k">if</span> <span class="n">cr</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;port is None&quot;</span><span class="p">)</span>
                             <span class="n">tunnel_thread</span> <span class="o">=</span> <span class="n">ForwardTunnelThread</span><span class="p">(</span><span class="n">local_port</span><span class="o">=</span><span class="n">forward_port</span><span class="p">,</span>
                                                                 <span class="n">remote_host</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">remote_port</span><span class="o">=</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
                                                                 <span class="n">transport</span><span class="o">=</span><span class="n">agent_transport</span><span class="p">)</span>
@@ -587,16 +619,14 @@
                             <span class="n">target_conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FTP</span><span class="o">.</span><span class="n">LOCALHOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">forward_port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
                             <span class="n">login_result</span> <span class="o">=</span> <span class="n">target_conn</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">cr</span><span class="o">.</span><span class="n">pw</span><span class="p">)</span>
                             <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">FTP</span><span class="o">.</span><span class="n">INCORRECT_LOGIN</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">login_result</span><span class="p">:</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-                                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">tunnel_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tunnel_thread</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">forward_ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">forward_port</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+                                <span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="n">credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                                <span class="n">target_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_conn</span><span class="p">)</span>
+                                <span class="n">proxies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proxy_conn</span><span class="p">)</span>
+                                <span class="n">tunnel_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tunnel_thread</span><span class="p">)</span>
+                                <span class="n">forward_ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">forward_port</span><span class="p">)</span>
+                                <span class="n">ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+                                <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
                                 <span class="c1"># Create LFTP connection too to be able to search file system</span>
                                 <span class="n">shell</span> <span class="o">=</span> <span class="n">proxy_conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">invoke_shell</span><span class="p">()</span>
                                 <span class="c1"># clear output</span>
@@ -607,30 +637,30 @@
                                 <span class="c1"># clear output</span>
                                 <span class="k">if</span> <span class="n">shell</span><span class="o">.</span><span class="n">recv_ready</span><span class="p">():</span>
                                     <span class="n">shell</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">DEFAULT_RECV_SIZE</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">interactive_shells</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
-                                        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Interactive shells or list is None&quot;</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">interactive_shells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shell</span><span class="p">)</span>
-                                <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                                <span class="n">interactive_shells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shell</span><span class="p">)</span>
+                                <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
                                 <span class="k">break</span>
                         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not obtain EmulationAttackerObservationState&quot;</span><span class="p">)</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FTP exception: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Target ip in agent reacahble </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="sa">f</span><span class="s2">&quot;Target ip in agent reachable &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">ips_match</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent reachable: &quot;</span>
                                                                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;List is None&quot;</span><span class="p">)</span>
-                        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+                        <span class="n">non_failed_credentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
                     <span class="k">break</span>
-            <span class="k">if</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">connected</span><span class="p">:</span>
                 <span class="k">break</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">connection_setup_dto</span> <span class="o">=</span> <span class="n">ConnectionSetupDTO</span><span class="p">(</span>
+            <span class="n">connected</span><span class="o">=</span><span class="n">connected</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">credentials</span><span class="p">,</span> <span class="n">target_connections</span><span class="o">=</span><span class="n">target_connections</span><span class="p">,</span>
+            <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span> <span class="n">non_failed_credentials</span><span class="o">=</span><span class="n">non_failed_credentials</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span> <span class="n">forward_ports</span><span class="o">=</span><span class="n">forward_ports</span><span class="p">,</span> <span class="n">interactive_shells</span><span class="o">=</span><span class="n">interactive_shells</span><span class="p">,</span>
+            <span class="n">tunnel_threads</span><span class="o">=</span><span class="n">tunnel_threads</span><span class="p">,</span> <span class="n">total_time</span><span class="o">=</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">connection_setup_dto</span>
 
     <span class="nd">@staticmethod</span>
@@ -640,14 +670,11 @@
 <span class="sd">        Helper function for creating the connection DTO for FTP</span>
 
 <span class="sd">        :param target_machine: the target machine to connect to</span>
-<span class="sd">        :param users: list of users that are connected</span>
 <span class="sd">        :param i: current index</span>
 <span class="sd">        :param connection_setup_dto: DTO with information about the connection setup</span>
 <span class="sd">        :return: boolean, whether the connection has root privileges, cost</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">is_connection_active</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection Failed&quot;</span><span class="p">)</span>
         <span class="n">connection_dto</span> <span class="o">=</span> <span class="n">EmulationConnectionObservationState</span><span class="p">(</span>
             <span class="n">conn</span><span class="o">=</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">credential</span><span class="o">=</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
             <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">,</span>
@@ -665,7 +692,6 @@
 
 <span class="sd">        :param ip: the ip to reach</span>
 <span class="sd">        :param s: the current state</span>
-<span class="sd">        :param emulation_env_config: the emulation environment configuration</span>
 <span class="sd">        :return: a connection DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -680,8 +706,10 @@
                 <span class="n">proxy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">c</span>
         <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">sort_machines</span><span class="p">()</span>
-
+        <span class="n">err_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
+            <span class="n">err_str</span> <span class="o">=</span> <span class="n">err_str</span> <span class="o">+</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ips: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">ips</span><span class="si">}</span><span class="s2">, logged in: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">logged_in</span><span class="si">}</span><span class="s2">, tools installed: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">tools_installed</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                 <span class="sa">f</span><span class="s2">&quot;reachable: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">reachable</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">logged_in</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">tools_installed</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">backdoor_installed</span> <span class="ow">and</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">reachable</span><span class="p">:</span>
 
                 <span class="c1"># Start with ssh connections</span>
@@ -695,7 +723,7 @@
                     <span class="n">alive</span> <span class="o">=</span> <span class="n">ConnectionUtil</span><span class="o">.</span><span class="n">test_connection</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">alive</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">c</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No JumpHost found&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No JumpHost found for ip: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, topology: </span><span class="si">{</span><span class="n">err_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConnectionUtil.test_connection"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.test_connection">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">test_connection</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -707,7 +735,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">AUXILLARY_COMMANDS</span><span class="o">.</span><span class="n">WHOAMI</span>
         <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">outdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outdata</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">outdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
@@ -721,12 +749,16 @@
 <span class="sd">        :return: the new connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;could not obtain ocnnection&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection failed&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">proxy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">pw</span><span class="p">)</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection failed&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">proxy</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">proxy</span>
             <span class="k">if</span> <span class="n">proxy</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">proxy</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">is_active</span><span class="p">():</span>
@@ -740,7 +772,11 @@
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">()</span>
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">set_missing_host_key_policy</span><span class="p">(</span><span class="n">paramiko</span><span class="o">.</span><span class="n">AutoAddPolicy</span><span class="p">())</span>
             <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">pw</span><span class="p">,</span> <span class="n">sock</span><span class="o">=</span><span class="n">relay_channel</span><span class="p">)</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_transport</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">transport</span><span class="o">.</span><span class="n">set_keepalive</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Connection failed&quot;</span><span class="p">)</span>
             <span class="n">c</span><span class="o">.</span><span class="n">proxy</span> <span class="o">=</span> <span class="n">proxy</span>
         <span class="k">return</span> <span class="n">c</span></div>
 
@@ -751,6 +787,7 @@
 <span class="sd">        Reconnects the given Telnet connection if it has died for some reason</span>
 
 <span class="sd">        :param c: the connection to reconnect</span>
+<span class="sd">        :param forward_port: the port for port-forwarding</span>
 <span class="sd">        :return: the new connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">proxy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

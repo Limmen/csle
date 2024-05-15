@@ -1,0 +1,76 @@
+user: "kim"
+csle_git_repo_url: "https://github.com/Limmen/csle"
+leader_ip: "34.142.42.219"
+leader_public_ip: "34.142.42.219"
+nginx_content_name: "nginx_configuration_content.txt"
+web_port: 7777
+postgres_version: "15"
+postgres_citus_version: "postgresql-15-citus-11.2"
+postgresql_url: "https://install.citusdata.com/community/deb.sh"
+anaconda_url: "https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh"
+anaconda_install_script: "Anaconda3-2022.10-Linux-x86_64.sh"
+conda_environment_name: "base"
+python_version: "3.9"
+postgres_password: "postgres"
+citus_port: 5432
+csle_config:
+  management_admin_username_default: "admin"
+  management_admin_password_default: "admin"
+  management_admin_first_name_default: "admin"
+  management_admin_last_name_default: "admin"
+  management_admin_email_default: "admin"
+  management_admin_organization_default: "CSLE"
+  management_guest_username_default: "guest"
+  management_guest_password_default: "guest"
+  management_guest_first_name_default: "guest"
+  management_guest_last_name_default: "guestson"
+  management_guest_email_default: "guest@csle.com"
+  management_guest_organization_default: "CSLE"
+  ssh_admin_username: "csle_admin"
+  ssh_admin_password: "csle@admin-pw_191"
+  ssh_agent_username: "agent"
+  ssh_agent_password: "agent"
+  grafana_username: "admin"
+  grafana_password: "admin"
+  pgadmin_username: "csle@scle.com"
+  pgadmin_password: "cslePassword"
+  node_exporter_port: 9100
+  grafana_port: 3000
+  management_system_port: 7777
+  cadvisor_port: 8080
+  prometheus_port: 9090
+  pgadmin_port: 7778
+  node_exporter_pid_file: "/var/log/csle/node_exporter.pid"
+  csle_mgmt_webapp_pid_file: "/var/log/csle/csle_mgmt_webapp.pid"
+  node_exporter_log_file: "/var/log/csle/node_exporter.log"
+  flask_log_file: "/var/log/csle/flask.log"
+  cluster_manager_log_file: "/var/log/csle/cluster_manager.log"
+  docker_stats_manager_log_file: "docker_stats_manager.log"
+  docker_stats_manager_log_dir: "/var/log/csle/"
+  docker_stats_manager_port: 50051
+  docker_stats_manager_max_workers: 10
+  docker_stats_manager_outfile: "/var/log/csle/statsmanager.out"
+  docker_stats_manager_pidfile: "/var/log/csle/statsmanager.pid"
+  prometheus_pid_file: "/var/log/csle/prometheus.pid"
+  prometheus_log_file: "/var/log/csle/prometheus.log"
+  prometheus_config_file: "$CSLE_HOME/management-system/prometheus.yml"
+  postgresql_log_dir: "/var/log/postgresql/"
+  nginx_log_dir: "/var/log/nginx/"
+  default_log_dir: "/tmp/csle/"
+  metastore_ip: "34.142.42.219"
+  metastore_user: "csle"
+  metastore_password: "csle"
+  metastore_database_name: "csle"
+  cluster_config:
+    cluster_nodes:
+      - ip: "34.142.42.219"
+        leader: true
+        cpus: 8
+        gpus: 0
+        RAM: 64
+      - ip: "35.246.78.21"
+        leader: false
+        cpus: 8
+        gpus: 0
+        RAM: 64
+  allow_registration: true

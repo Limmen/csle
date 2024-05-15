@@ -47,11 +47,12 @@ class LinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> Union[int, List[int], float, NDArray[Any]]:
+    def action(self, o: List[float], deterministic: bool = True) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         stop = self.stopping_policy.action(o=o[1:])

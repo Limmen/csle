@@ -40,33 +40,26 @@ class PPOPolicy(Policy):
         self.id = -1
         self.simulation_name = simulation_name
         self.save_path = save_path
-        if self.model is None and self.save_path != "":
-            try:
-                self.model = PPO.load(path=self.save_path)
-            except Exception as e1:
-                try:
-                    self.model = PPONetwork.load(path=self.save_path)
-                except Exception as e2:
-                    Logger.__call__().get_logger().warning(
-                        f"There was an exception loading the model from path: {self.save_path}, "
-                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")
+        self.load()
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: Union[List[float], List[int]]) -> Union[int, float, npt.NDArray[Any]]:
+    def action(self, o: Union[List[float], List[int]], deterministic: bool = True) \
+            -> Union[int, float, npt.NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the selected action
         """
         if self.model is None:
             raise ValueError("The model is None")
         if isinstance(self.model, PPO):
-            a = self.model.predict(np.array(o), deterministic=False)[0]
+            a = self.model.predict(np.array(o), deterministic=deterministic)[0]
             try:
                 return int(a)
             except Exception:
@@ -226,3 +219,20 @@ class PPOPolicy(Policy):
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
+
+    def load(self) -> None:
+        """
+        Attempts to load the policy from disk
+
+        :return: None
+        """
+        if self.model is None and self.save_path != "":
+            try:
+                self.model = PPO.load(path=self.save_path)
+            except Exception as e1:
+                try:
+                    self.model = PPONetwork.load(path=self.save_path)
+                except Exception as e2:
+                    Logger.__call__().get_logger().warning(
+                        f"There was an exception loading the model from path: {self.save_path}, "
+                        f"exception: {str(e1)}, {repr(e1)} {str(e2)}, {repr(e2)}")

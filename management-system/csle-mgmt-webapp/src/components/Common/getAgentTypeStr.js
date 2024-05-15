@@ -105,6 +105,18 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 32) {
         return "POMCP"
     }
+    if(agentType === 33) {
+        return "DQN CLEAN"
+    }
+    if(agentType === 34) {
+        return "C51 CLEAN"
+    }
+    if(agentType === 35) {
+        return "PPG CLEAN"
+    }
+    if(agentType === 36) {
+        return "MCS"
+    }
     else {
         return "Unknown"
     }

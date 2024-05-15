@@ -7,6 +7,9 @@ To see options, run:
 import logging
 from typing import List, Tuple, Union
 import click
+import warnings
+
+warnings.filterwarnings("ignore")
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.cluster_util import ClusterUtil
 from csle_common.util.general_util import GeneralUtil
@@ -19,6 +22,7 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import SnortIdsStatusDTO
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImageDTO
 
 ClusterUtil.set_config_parameters_from_config_file()
+ClusterUtil.get_config()
 
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
@@ -2004,7 +2008,7 @@ def list_node_exporter() -> None:
                                                    f"ip:{node.ip}, port:{constants.COMMANDS.NODE_EXPORTER_PORT}",
                         bold=False)
         else:
-            click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
+            click.secho("Node exporter status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}",
                         bold=False)
 
 

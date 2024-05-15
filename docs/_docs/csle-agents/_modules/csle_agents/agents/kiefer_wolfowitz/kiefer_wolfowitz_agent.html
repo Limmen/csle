@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,12 +66,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">gym_csle_stopping_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
@@ -90,6 +89,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.policy_type</span> <span class="kn">import</span> <span class="n">PolicyType</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
 <span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
 <span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
 
@@ -101,7 +101,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span>
                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">EmulationEnvConfig</span><span class="p">],</span>
-                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEnv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Kiefer-Wolfowitz agent</span>
@@ -176,10 +176,13 @@
 
         <span class="c1"># Initialize training job</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">emulation_env_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">emulation_env_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span> <span class="o">=</span> <span class="n">TrainingJobConfig</span><span class="p">(</span>
                 <span class="n">simulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">experiment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="p">,</span>
                 <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span>
-                <span class="n">emulation_env_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">emulation_env_name</span><span class="o">=</span><span class="n">emulation_env_name</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
                 <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_CACHED_SIMULATION_TRACES</span><span class="p">,</span>
                 <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span>
                 <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">())</span>
@@ -195,7 +198,7 @@
 
         <span class="c1"># Initialize execution result</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">emulation_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">emulation_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">emulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
         <span class="n">simulation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_env_config</span><span class="o">.</span><span class="n">name</span>
@@ -402,7 +405,7 @@
                 <span class="n">progress</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">iterations_done</span> <span class="o">/</span> <span class="n">total_iterations</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="n">progress</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">training_job</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">:</span>
                     <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span> <span class="o">=</span> <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -434,15 +437,17 @@
         <span class="k">return</span> <span class="n">exp_result</span></div>
 
 <div class="viewcode-block" id="KieferWolfowitzAgent.eval_theta"><a class="viewcode-back" href="../../../../csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.eval_theta">[docs]</a>    <span class="k">def</span> <span class="nf">eval_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="p">,</span> <span class="n">LinearThresholdStoppingPolicy</span><span class="p">],</span>
-                   <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+                   <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluates a given threshold policy by running monte-carlo simulations</span>
 
 <span class="sd">        :param policy: the policy to evaluate</span>
 <span class="sd">        :return: the average metrics of the evaluation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;An environment has to be specified to run the evaluation&quot;</span><span class="p">)</span>
         <span class="n">eval_batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">EVAL_BATCH_SIZE</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_batch_size</span><span class="p">):</span>
             <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -451,7 +456,7 @@
             <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">max_steps</span><span class="p">:</span>
                 <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t:</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, b1:</span><span class="si">{</span><span class="n">b1</span><span class="si">}</span><span class="s2">, r:</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">, l:</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">, info:</span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">player_type</span> <span class="o">==</span> <span class="n">PlayerType</span><span class="o">.</span><span class="n">ATTACKER</span><span class="p">:</span>
@@ -499,7 +504,7 @@
         <span class="k">return</span> <span class="n">avg_metrics</span></div>
 
 <div class="viewcode-block" id="KieferWolfowitzAgent.initial_theta"><a class="viewcode-back" href="../../../../csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.initial_theta">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">initial_theta</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">initial_theta</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes theta randomly</span>
 
@@ -509,8 +514,7 @@
         <span class="n">theta_1</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
             <span class="n">theta_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="n">theta_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">theta_1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">theta_1</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">theta_1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KieferWolfowitzAgent.batch_gradient"><a class="viewcode-back" href="../../../../csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.batch_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">batch_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">gradient_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -529,7 +533,7 @@
         <span class="n">batch_gk</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">gradients</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">gradient_batch_size</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">batch_gk</span></div>
 
-<div class="viewcode-block" id="KieferWolfowitzAgent.estimate_gk"><a class="viewcode-back" href="../../../../csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.estimate_gk">[docs]</a>    <span class="k">def</span> <span class="nf">estimate_gk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="KieferWolfowitzAgent.estimate_gk"><a class="viewcode-back" href="../../../../csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.estimate_gk">[docs]</a>    <span class="k">def</span> <span class="nf">estimate_gk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Estimate the gradient at iteration k of the Kiefer-Wolfowitz algorithm</span>
 

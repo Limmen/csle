@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,7 +84,7 @@
 <span class="sd">    Represents the attacker&#39;s agent&#39;s current belief state of the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catched_flags</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent_reachable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catched_flags</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent_reachable</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the state</span>
 
@@ -98,8 +96,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">catched_flags</span> <span class="o">=</span> <span class="n">catched_flags</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions_tried</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="o">=</span> <span class="n">agent_reachable</span>
-        <span class="k">if</span> <span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EmulationAttackerObservationState.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state.EmulationAttackerObservationState.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationAttackerObservationState&quot;</span><span class="p">:</span>
@@ -109,11 +105,14 @@
 <span class="sd">        :param d: the dict to convert</span>
 <span class="sd">        :return: the instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationAttackerObservationState</span><span class="p">(</span>
-            <span class="n">catched_flags</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;catched_flags&quot;</span><span class="p">],</span> <span class="n">agent_reachable</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;agent_reachable&quot;</span><span class="p">]),</span>
-        <span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationAttackerObservationState</span><span class="p">(</span><span class="n">catched_flags</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;catched_flags&quot;</span><span class="p">],</span>
+                                                <span class="n">agent_reachable</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;agent_reachable&quot;</span><span class="p">]))</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;machines&quot;</span><span class="p">]))</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">actions_tried</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">])</span>
+        <span class="n">actions_tried</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">])):</span>
+            <span class="n">actions_tried</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                               <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">actions_tried</span> <span class="o">=</span> <span class="n">actions_tried</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerObservationState.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state.EmulationAttackerObservationState.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -125,8 +124,8 @@
         <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;machines&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">machines</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;catched_flags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">catched_flags</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_tried</span><span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;agent_reachable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_tried</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;agent_reachable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="EmulationAttackerObservationState.sort_machines"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.attacker.html#csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state.EmulationAttackerObservationState.sort_machines">[docs]</a>    <span class="k">def</span> <span class="nf">sort_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -263,11 +262,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;agent_reachable is None&quot;</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">EmulationAttackerObservationState</span><span class="p">(</span><span class="n">catched_flags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">catched_flags</span><span class="p">,</span>
-                                              <span class="n">agent_reachable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">actions_tried</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_tried</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                                              <span class="n">agent_reachable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_reachable</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">actions_tried</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_tried</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">machines</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">machines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">c</span></div>
@@ -308,8 +305,6 @@
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationAttackerObservationState</span><span class="p">(</span><span class="n">catched_flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">agent_reachable</span><span class="o">=</span><span class="nb">set</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">dto</span><span class="o">.</span><span class="n">agent_reachable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;agent_reachable is None&quot;</span><span class="p">)</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">agent_reachable</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">actions_tried</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="n">dto</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">()]</span>

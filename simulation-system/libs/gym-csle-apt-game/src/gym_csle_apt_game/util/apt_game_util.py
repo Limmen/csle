@@ -12,7 +12,7 @@ class AptGameUtil:
     """
 
     @staticmethod
-    def b1(N: int) -> npt.NDArray[np.int_]:
+    def b1(N: int) -> npt.NDArray[np.float_]:
         """
         Gets the initial belief
 

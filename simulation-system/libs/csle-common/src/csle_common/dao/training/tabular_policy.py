@@ -37,11 +37,12 @@ class TabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.TABULAR
 
-    def action(self, o: Union[int, float]) -> Union[int, List[int], float, NDArray[Any]]:
+    def action(self, o: Union[int, float], deterministic: bool = True) -> Union[int, List[int], float, NDArray[Any]]:
         """
         Selects the next action
 
         :param o: the input observation
+        :param deterministic: boolean flag indicating whether the action selection should be deterministic
         :return: the next action and its probability
         """
         return int(np.random.choice(np.arange(0, len(self.lookup_table[int(o)])), p=self.lookup_table[int(o)]))

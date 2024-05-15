@@ -5,8 +5,8 @@
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
-    <a href="https://img.shields.io/badge/version-0.4.0-blue">
-        <img src="https://img.shields.io/badge/version-0.4.0-blue" /></a>
+    <a href="https://img.shields.io/badge/version-0.5.0-blue">
+        <img src="https://img.shields.io/badge/version-0.5.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
@@ -83,13 +83,15 @@ access to components of emulations.
 ## 🎓 Documentation
 
 Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
-version of the documentation is available [here](./releases/)
+version of the documentation is available [here](./releases/).
+A video walkthrough of the installation process is available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc).
 
 ## 📋 Supported Releases
 
 | Release                                                       | Last date of support |
 |---------------------------------------------------------------|----------------------|
-| [v.0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0) | 2024-02-07           |
+| [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | 2024-06-02           |
+| [v.0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0) | ~~2024-02-07~~       |
 | [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | ~~2024-01-17~~       |
 | [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | ~~2023-10-30~~       |
 | [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | ~~2023-06-06~~       |
@@ -99,23 +101,24 @@ features. We currently support each release for a window of 6 months.
 
 ## 📈 Build Status
 
-| Workflow                                                                                                                                       | Status                                                                                                                    |
-|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| [csle-agents](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml)                                                   | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml/badge.svg)                        |
-| [csle-attacker](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml)                                               | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml/badge.svg)                      |
-| [csle-collector](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml/badge.svg)                     |
-| [csle-common](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml)                                                   | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml/badge.svg)                        |
-| [csle-defender](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml)                                               | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml/badge.svg)                      |
-| [csle-ryu](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml)                                                         | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml/badge.svg)                           |
-| [csle-base](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml)                                                       | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml/badge.svg)                          |
-| [csle-system-identification](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml)                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml/badge.svg)         |
-| [gym-csle-stopping-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml)                       | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml/badge.svg)             |
-| [gym-csle-intrusion-response-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml)   | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml/badge.svg)   |
-| [python-linter](https://github.com/Limmen/csle/actions/workflows/python-linter.yml)                                                            | ![status](https://github.com/Limmen/csle/actions/workflows/python-linter.yml/badge.svg)                                   |
-| [csle-tolerance-build](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml)                                       | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml/badge.svg)                     |
-| [gym-csle-apt-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml)                                 | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml/badge.svg)                  |
-| [gym-csle-cyborg-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-cyborg-build.yml)                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-cyborg-build.yml/badge.svg)                    |
-| [management-system](https://github.com/Limmen/csle/actions/workflows/js-management-system-build)                                               | ![status](https://github.com/Limmen/csle/actions/workflows/js-management-system-build.yml/badge.svg)                      |
+| Workflow                                                                                                                                     | Status                                                                                                                  |
+|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| [csle-agents](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml)                                                 | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-agents-build.yml/badge.svg)                      |
+| [csle-attacker](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-attacker-build.yml/badge.svg)                    |
+| [csle-collector](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml)                                           | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-collector-build.yml/badge.svg)                   |
+| [csle-common](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml)                                                 | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-common-build.yml/badge.svg)                      |
+| [csle-defender](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-defender-build.yml/badge.svg)                    |
+| [csle-ryu](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml)                                                       | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-ryu-build.yml/badge.svg)                         |
+| [csle-base](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml)                                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-base-build.yml/badge.svg)                        |
+| [csle-system-identification](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml)                   | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-system-identification-build.yml/badge.svg)       |
+| [gym-csle-stopping-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml)                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-stopping-game-build.yml/badge.svg)           |
+| [gym-csle-intrusion-response-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml) | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-intrusion-response-game-build.yml/badge.svg) |
+| [python-linter](https://github.com/Limmen/csle/actions/workflows/python-linter.yml)                                                          | ![status](https://github.com/Limmen/csle/actions/workflows/python-linter.yml/badge.svg)                                 |
+| [csle-tolerance-build](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml)                                     | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-tolerance-build.yml/badge.svg)                   |
+| [gym-csle-apt-game-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml)                               | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-apt-game-build.yml/badge.svg)                |
+| [gym-csle-cyborg-build](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-cyborg-build.yml)                                   | ![status](https://github.com/Limmen/csle/actions/workflows/python-gym-csle-cyborg-build.yml/badge.svg)                  |
+| [csle-attack-profiler-build](https://github.com/Limmen/csle/actions/workflows/python-csle-attack-profiler-build.yml)                         | ![status](https://github.com/Limmen/csle/actions/workflows/python-csle-attack-profiler-build.yml/badge.svg)             |
+| [management-system](https://github.com/Limmen/csle/actions/workflows/js-management-system-build)                                             | ![status](https://github.com/Limmen/csle/actions/workflows/js-management-system-build.yml/badge.svg)                    |
 
 ## Supported Platforms
 
@@ -157,6 +160,11 @@ Thanks go to these people!
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Arvid Lagerqvist"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nforsg"><img src="https://github.com/nforsg.png" width="100px;" alt="Nils Forsgren"/><br /><sub><b>Nils Forsgren</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/foroughsh"><img src="https://github.com/foroughsh.png" width="100px;" alt="Forough Shahab Samani"/><br /><sub><b>Forough Shahab Samani</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ppplbngth"><img src="https://github.com/ppplbngth.png" width="100px;" alt="Bength Roland Pappila"/><br /><sub><b>Bength Roland Pappila</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yuhu-kth"><img src="https://github.com/Yuhu-kth.png" width="100px;" alt="Yu Hu"/><br /><sub><b>Yu Hu</b></sub></a></td>
+    </tr>
+    <tr>
+       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kingxiaofire"><img src="https://github.com/kingxiaofire.png" width="100px;" alt="Yan Wang"/><br /><sub><b>Yan Wang</b></sub></a></td>
     </tr>
   </tbody>
 </table>
@@ -188,9 +196,12 @@ Made with &#10084; &nbsp;
 at &nbsp; <a href="https://www.kth.se/" target="_blank">
 <img align="absmiddle" src="docs/img/kth_logo.png" width="10%" height="10%">
 </a>
-&nbsp;
-and
+&nbsp;,
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
 <img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%" height="10%">
+</a>
+and
+&nbsp;<a href="https://www.darpa.mil/program/cyber-agents-for-security-testing-and-learning-environments" target="_blank">
+<img align="absmiddle" src="docs/img/darpa.png" width="10%" height="10%">
 </a>
 </p>

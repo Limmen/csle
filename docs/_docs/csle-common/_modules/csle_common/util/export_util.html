@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.util.export_util &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.util.export_util &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.util.export_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.util.export_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -325,7 +323,10 @@
             <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">SCHEMA_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">NUM_TRACES_PER_FILE_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_traces_per_file</span>
             <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">ADDED_BY_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">added_by</span>
-            <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">columns</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata_dict</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">COLUMNS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="n">ExportUtil</span><span class="o">.</span><span class="n">zipdir</span><span class="p">(</span><span class="n">dir_path</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="n">zip_file_output</span><span class="p">)</span>
         <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export of emulation traces to disk complete, &quot;</span>

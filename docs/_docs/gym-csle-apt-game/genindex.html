@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; gym_csle_apt_game 0.4.0 documentation</title>
+  <title>Index &mdash; gym_csle_apt_game 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -34,8 +34,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.constants.html">gym_csle_apt_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.dao.html">gym_csle_apt_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.envs.html">gym_csle_apt_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.util.html">gym_csle_apt_game.util package</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -78,7 +83,6 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -102,10 +106,10 @@
 </li>
       <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv">AptGameMdpAttackerEnv (class in gym_csle_apt_game.envs.apt_game_mdp_attacker_env)</a>
 </li>
-      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv">AptGamePomdpDefenderEnv (class in gym_csle_apt_game.envs.apt_game_pomdp_defender_env)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv">AptGamePomdpDefenderEnv (class in gym_csle_apt_game.envs.apt_game_pomdp_defender_env)</a>
+</li>
       <li><a href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState">AptGameState (class in gym_csle_apt_game.dao.apt_game_state)</a>
 </li>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil">AptGameUtil (class in gym_csle_apt_game.util.apt_game_util)</a>
@@ -119,8 +123,6 @@
       <li><a href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.attacker_observation">attacker_observation() (gym_csle_apt_game.dao.apt_game_state.AptGameState method)</a>
 </li>
       <li><a href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.attacker_observation_space">attacker_observation_space() (gym_csle_apt_game.dao.apt_game_config.AptGameConfig method)</a>
-</li>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN">AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN">AVERAGE_UPPER_BOUND_RETURN (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
@@ -143,6 +145,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.calculate_stage_policy">calculate_stage_policy() (gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.cost_function">cost_function() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.cost_tensor">cost_tensor() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -169,6 +177,20 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS">ENV_METRICS (class in gym_csle_apt_game.constants.constants)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base">eval_attacker_base() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base_parallel">eval_attacker_base_parallel() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base">eval_defender_base() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base_parallel">eval_defender_base_parallel() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.exact_defender_rollout">exact_defender_rollout() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.expected_cost">expected_cost() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -204,6 +226,12 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_os_posg_game_file">generate_os_posg_game_file() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_rewards">generate_rewards() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_transitions">generate_transitions() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.get_traces">get_traces() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
 
       <ul>
@@ -216,7 +244,7 @@
     gym_csle_apt_game
 
       <ul>
-        <li><a href="gym_csle_apt_game.html#module-gym_csle_apt_game">module</a>
+        <li><a href="gym_csle_apt_game.html#module-gym_csle_apt_game">module</a>, <a href="index.html#module-gym_csle_apt_game">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -254,6 +282,8 @@
         <li><a href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_config">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gym_csle_apt_game.dao.apt_game_defender_pomdp_config
 
@@ -261,8 +291,6 @@
         <li><a href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_defender_pomdp_config">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gym_csle_apt_game.dao.apt_game_state
 
@@ -313,10 +341,10 @@
 </li>
       </ul></li>
       <li>
-    gym_csle_stopping_game
+    gym_csle_apt_game.util.rollout_util
 
       <ul>
-        <li><a href="index.html#module-gym_csle_stopping_game">module</a>
+        <li><a href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.rollout_util">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -325,12 +353,6 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.INTRUSION_END">INTRUSION_END (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
-</li>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.INTRUSION_LENGTH">INTRUSION_LENGTH (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
-</li>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.INTRUSION_START">INTRUSION_START (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
-</li>
       <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.is_attack_action_legal">is_attack_action_legal() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
 
       <ul>
@@ -369,7 +391,7 @@
     module
 
       <ul>
-        <li><a href="gym_csle_apt_game.html#module-gym_csle_apt_game">gym_csle_apt_game</a>
+        <li><a href="gym_csle_apt_game.html#module-gym_csle_apt_game">gym_csle_apt_game</a>, <a href="index.html#module-gym_csle_apt_game">[1]</a>
 </li>
         <li><a href="gym_csle_apt_game.constants.html#module-gym_csle_apt_game.constants">gym_csle_apt_game.constants</a>
 </li>
@@ -397,9 +419,15 @@
 </li>
         <li><a href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.apt_game_util">gym_csle_apt_game.util.apt_game_util</a>
 </li>
-        <li><a href="index.html#module-gym_csle_stopping_game">gym_csle_stopping_game</a>
+        <li><a href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.rollout_util">gym_csle_apt_game.util.rollout_util</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_attacker_rollout">monte_carlo_attacker_rollout() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_defender_rollout">monte_carlo_defender_rollout() (gym_csle_apt_game.util.rollout_util.RolloutUtil static method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -429,8 +457,6 @@
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.observation_space">observation_space() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.observation_tensor">observation_tensor() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
-</li>
-      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.observation_tensor_from_emulation_statistics">observation_tensor_from_emulation_statistics() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -482,7 +508,7 @@
       </ul></li>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.RETURN">RETURN (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
-      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.reward_tensor">reward_tensor() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil">RolloutUtil (class in gym_csle_apt_game.util.rollout_util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -491,6 +517,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_attacker_action">sample_attacker_action() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_defender_action">sample_defender_action() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_initial_state">sample_initial_state() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
@@ -506,14 +534,20 @@
         <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.set_model">(gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv method)</a>
 </li>
       </ul></li>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.START_POINT_CORRECT">START_POINT_CORRECT (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
+      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.set_state">set_state() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
+
+      <ul>
+        <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.set_state">(gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv method)</a>
 </li>
+        <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.set_state">(gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.STATE">STATE (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.state_space">state_space() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_ATTACKER_STRATEGIES">STATIC_ATTACKER_STRATEGIES (class in gym_csle_apt_game.constants.constants)</a>
 </li>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_DEFENDER_STRATEGIES">STATIC_DEFENDER_STRATEGIES (class in gym_csle_apt_game.constants.constants)</a>
@@ -526,21 +560,7 @@
         <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step">(gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv method)</a>
 </li>
       </ul></li>
-      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.step_test">step_test() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
-
-      <ul>
-        <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step_test">(gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv method)</a>
-</li>
-      </ul></li>
-      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.step_trace">step_trace() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
-
-      <ul>
-        <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step_trace">(gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv method)</a>
-</li>
-      </ul></li>
       <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.STOP">STOP (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
-</li>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.STOPS_REMAINING">STOPS_REMAINING (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -564,19 +584,9 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.transition_function">transition_function() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.transition_tensor">transition_tensor() (gym_csle_apt_game.util.apt_game_util.AptGameUtil static method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="W">W</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE">WEIGHTED_INTRUSION_PREDICTION_DISTANCE (gym_csle_apt_game.constants.constants.ENV_METRICS attribute)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.weighted_intrusion_prediction_distance">weighted_intrusion_prediction_distance() (gym_csle_apt_game.envs.apt_game_env.AptGameEnv method)</a>
 </li>
   </ul></td>
 </tr></table>

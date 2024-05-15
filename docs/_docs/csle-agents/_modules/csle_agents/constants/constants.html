@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.constants.constants &mdash; csle-agents 0.3.0 documentation</title>
+  <title>csle_agents.constants.constants &mdash; csle-agents 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_agents.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_agents.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -123,7 +121,10 @@
     <span class="n">SGD</span> <span class="o">=</span> <span class="s2">&quot;SGD&quot;</span>
     <span class="n">LEARNING_RATE_EXP_DECAY</span> <span class="o">=</span> <span class="s2">&quot;learning_rate_exp_decay&quot;</span>
     <span class="n">LEARNING_RATE_DECAY_RATE</span> <span class="o">=</span> <span class="s2">&quot;learning_rate_decay_rate&quot;</span>
-    <span class="n">RUNTIME</span> <span class="o">=</span> <span class="s2">&quot;runtime&quot;</span></div>
+    <span class="n">RUNTIME</span> <span class="o">=</span> <span class="s2">&quot;runtime&quot;</span>
+    <span class="n">EVALUATE_WITH_DISCOUNT</span> <span class="o">=</span> <span class="s2">&quot;evaluate_with_discount&quot;</span>
+    <span class="n">STATE</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">OBSERVATION</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span></div>
 
 
 <div class="viewcode-block" id="PPO"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.PPO">[docs]</a><span class="k">class</span> <span class="nc">PPO</span><span class="p">:</span>
@@ -138,7 +139,92 @@
     <span class="n">VF_COEF</span> <span class="o">=</span> <span class="s2">&quot;vf_coef&quot;</span>
     <span class="n">MAX_GRAD_NORM</span> <span class="o">=</span> <span class="s2">&quot;max_grad_norm&quot;</span>
     <span class="n">TARGET_KL</span> <span class="o">=</span> <span class="s2">&quot;target_kl&quot;</span>
-    <span class="n">MLP_POLICY</span> <span class="o">=</span> <span class="s2">&quot;MlpPolicy&quot;</span></div>
+    <span class="n">MLP_POLICY</span> <span class="o">=</span> <span class="s2">&quot;MlpPolicy&quot;</span>
+    <span class="n">NUM_GRADIENT_STEPS</span> <span class="o">=</span> <span class="s2">&quot;num_gradient_steps&quot;</span></div>
+
+
+<div class="viewcode-block" id="PPO_CLEAN"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN">[docs]</a><span class="k">class</span> <span class="nc">PPO_CLEAN</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to PPO clean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">STEPS_BETWEEN_UPDATES</span> <span class="o">=</span> <span class="s2">&quot;steps_between_updates&quot;</span>
+    <span class="n">GAE_LAMBDA</span> <span class="o">=</span> <span class="s2">&quot;gae_lambda&quot;</span>
+    <span class="n">CLIP_RANGE</span> <span class="o">=</span> <span class="s2">&quot;clip_range&quot;</span>
+    <span class="n">CLIP_RANGE_VF</span> <span class="o">=</span> <span class="s2">&quot;clip_range_vf&quot;</span>
+    <span class="n">ENT_COEF</span> <span class="o">=</span> <span class="s2">&quot;ent_coef&quot;</span>
+    <span class="n">VF_COEF</span> <span class="o">=</span> <span class="s2">&quot;vf_coef&quot;</span>
+    <span class="n">MAX_GRAD_NORM</span> <span class="o">=</span> <span class="s2">&quot;max_grad_norm&quot;</span>
+    <span class="n">TARGET_KL</span> <span class="o">=</span> <span class="s2">&quot;target_kl&quot;</span>
+    <span class="n">MLP_POLICY</span> <span class="o">=</span> <span class="s2">&quot;MlpPolicy&quot;</span>
+    <span class="n">MINIBATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;minibatch_size&quot;</span>
+    <span class="n">NUM_STEPS</span> <span class="o">=</span> <span class="s2">&quot;num_steps&quot;</span>
+    <span class="n">NUM_MINIBATCHES</span> <span class="o">=</span> <span class="s2">&quot;num_minibatches&quot;</span>
+    <span class="n">NUM_ENVS</span> <span class="o">=</span> <span class="s2">&quot;num_envs&quot;</span>
+    <span class="n">ANNEAL_LR</span> <span class="o">=</span> <span class="s2">&quot;anneal_lr&quot;</span>
+    <span class="n">UPDATE_EPOCHS</span> <span class="o">=</span> <span class="s2">&quot;update_epochs&quot;</span>
+    <span class="n">CLIP_VLOSS</span> <span class="o">=</span> <span class="s2">&quot;clip_vloss&quot;</span>
+    <span class="n">REWARD_SCALER</span> <span class="o">=</span> <span class="s2">&quot;reward_scaler&quot;</span>
+    <span class="n">NORM_ADV</span> <span class="o">=</span> <span class="s2">&quot;norm_adv&quot;</span>
+    <span class="n">CUDA</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span></div>
+
+
+<div class="viewcode-block" id="DQN_CLEAN"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN">[docs]</a><span class="k">class</span> <span class="nc">DQN_CLEAN</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to the DQN-Clean agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">STEPS_BETWEEN_UPDATES</span> <span class="o">=</span> <span class="s2">&quot;steps_between_updates&quot;</span>
+    <span class="n">GAE_LAMBDA</span> <span class="o">=</span> <span class="s2">&quot;gae_lambda&quot;</span>
+    <span class="n">CLIP_RANGE</span> <span class="o">=</span> <span class="s2">&quot;clip_range&quot;</span>
+    <span class="n">CLIP_RANGE_VF</span> <span class="o">=</span> <span class="s2">&quot;clip_range_vf&quot;</span>
+    <span class="n">ENT_COEF</span> <span class="o">=</span> <span class="s2">&quot;ent_coef&quot;</span>
+    <span class="n">VF_COEF</span> <span class="o">=</span> <span class="s2">&quot;vf_coef&quot;</span>
+    <span class="n">MAX_GRAD_NORM</span> <span class="o">=</span> <span class="s2">&quot;max_grad_norm&quot;</span>
+    <span class="n">TARGET_KL</span> <span class="o">=</span> <span class="s2">&quot;target_kl&quot;</span>
+    <span class="n">MLP_POLICY</span> <span class="o">=</span> <span class="s2">&quot;MlpPolicy&quot;</span>
+    <span class="n">MINIBATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;minibatch_size&quot;</span>
+    <span class="n">NUM_STEPS</span> <span class="o">=</span> <span class="s2">&quot;num_steps&quot;</span>
+    <span class="n">NUM_MINIBATCHES</span> <span class="o">=</span> <span class="s2">&quot;num_minibatches&quot;</span>
+    <span class="n">NUM_ENVS</span> <span class="o">=</span> <span class="s2">&quot;num_envs&quot;</span>
+    <span class="n">ANNEAL_LR</span> <span class="o">=</span> <span class="s2">&quot;anneal_lr&quot;</span>
+    <span class="n">UPDATE_EPOCHS</span> <span class="o">=</span> <span class="s2">&quot;update_epochs&quot;</span>
+    <span class="n">CLIP_VLOSS</span> <span class="o">=</span> <span class="s2">&quot;clip_vloss&quot;</span>
+    <span class="n">REWARD_SCALER</span> <span class="o">=</span> <span class="s2">&quot;reward_scaler&quot;</span>
+    <span class="n">NORM_ADV</span> <span class="o">=</span> <span class="s2">&quot;norm_adv&quot;</span>
+    <span class="n">TAU</span> <span class="o">=</span> <span class="s2">&quot;tau&quot;</span>
+    <span class="n">EXP_FRAC</span> <span class="o">=</span> <span class="s2">&quot;exploration_fraction&quot;</span>
+    <span class="n">LEARNING_STARTS</span> <span class="o">=</span> <span class="s2">&quot;learning_starts&quot;</span>
+    <span class="n">TRAIN_FREQ</span> <span class="o">=</span> <span class="s2">&quot;train_frequency&quot;</span>
+    <span class="n">T_N_FREQ</span> <span class="o">=</span> <span class="s2">&quot;target_network_frequency&quot;</span>
+    <span class="n">BUFFER_SIZE</span> <span class="o">=</span> <span class="s2">&quot;buffer_size&quot;</span>
+    <span class="n">SAVE_MODEL</span> <span class="o">=</span> <span class="s2">&quot;save_model&quot;</span>
+    <span class="n">CUDA</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span></div>
+
+
+<div class="viewcode-block" id="C51_CLEAN"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.C51_CLEAN">[docs]</a><span class="k">class</span> <span class="nc">C51_CLEAN</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to the C51-clean agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">STEPS_BETWEEN_UPDATES</span> <span class="o">=</span> <span class="s2">&quot;steps_between_updates&quot;</span>
+    <span class="n">MINIBATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;minibatch_size&quot;</span>
+    <span class="n">NUM_STEPS</span> <span class="o">=</span> <span class="s2">&quot;num_steps&quot;</span>
+    <span class="n">NUM_ENVS</span> <span class="o">=</span> <span class="s2">&quot;num_envs&quot;</span>
+    <span class="n">ANNEAL_LR</span> <span class="o">=</span> <span class="s2">&quot;anneal_lr&quot;</span>
+    <span class="n">CLIP_VLOSS</span> <span class="o">=</span> <span class="s2">&quot;clip_vloss&quot;</span>
+    <span class="n">REWARD_SCALER</span> <span class="o">=</span> <span class="s2">&quot;reward_scaler&quot;</span>
+    <span class="n">NORM_ADV</span> <span class="o">=</span> <span class="s2">&quot;norm_adv&quot;</span>
+    <span class="n">TAU</span> <span class="o">=</span> <span class="s2">&quot;tau&quot;</span>
+    <span class="n">EXP_FRAC</span> <span class="o">=</span> <span class="s2">&quot;exploration_fraction&quot;</span>
+    <span class="n">LEARNING_STARTS</span> <span class="o">=</span> <span class="s2">&quot;learning_starts&quot;</span>
+    <span class="n">TRAIN_FREQ</span> <span class="o">=</span> <span class="s2">&quot;train_frequency&quot;</span>
+    <span class="n">T_N_FREQ</span> <span class="o">=</span> <span class="s2">&quot;target_network_frequency&quot;</span>
+    <span class="n">BUFFER_SIZE</span> <span class="o">=</span> <span class="s2">&quot;buffer_size&quot;</span>
+    <span class="n">START_EXPLORATION_RATE</span> <span class="o">=</span> <span class="s2">&quot;start_exploration_rate&quot;</span>
+    <span class="n">END_EXPLORATION_RATE</span> <span class="o">=</span> <span class="s2">&quot;end_exploration_rate&quot;</span>
+    <span class="n">SAVE_MODEL</span> <span class="o">=</span> <span class="s2">&quot;save_model&quot;</span>
+    <span class="n">CUDA</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span>
+    <span class="n">N_ATOMS</span> <span class="o">=</span> <span class="s2">&quot;n_atoms&quot;</span>
+    <span class="n">V_MIN</span> <span class="o">=</span> <span class="s2">&quot;v_min&quot;</span>
+    <span class="n">V_MAX</span> <span class="o">=</span> <span class="s2">&quot;v_max&quot;</span></div>
 
 
 <div class="viewcode-block" id="T_FP"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.T_FP">[docs]</a><span class="k">class</span> <span class="nc">T_FP</span><span class="p">:</span>
@@ -265,6 +351,29 @@
     <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span></div>
 
 
+<div class="viewcode-block" id="NELDER_MEAD"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD">[docs]</a><span class="k">class</span> <span class="nc">NELDER_MEAD</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to Nelder-Mead</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="n">IMPROVE_THRESHOLD</span> <span class="o">=</span> <span class="s2">&quot;improve_threshold&quot;</span>
+    <span class="n">IMPROVE_BREAK</span> <span class="o">=</span> <span class="s2">&quot;improve_break&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+    <span class="n">STEP</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+    <span class="n">THETA1</span> <span class="o">=</span> <span class="s2">&quot;theta1&quot;</span>
+    <span class="n">UCB</span> <span class="o">=</span> <span class="s2">&quot;ucb&quot;</span>
+    <span class="n">THRESHOLDS</span> <span class="o">=</span> <span class="s2">&quot;thresholds&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_ATTACKER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_attacker&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_defender&quot;</span>
+    <span class="n">UTILITY_FUNCTION</span> <span class="o">=</span> <span class="s2">&quot;utility_function&quot;</span>
+    <span class="n">THETAS</span> <span class="o">=</span> <span class="s2">&quot;thetas&quot;</span>
+    <span class="n">DELTA</span> <span class="o">=</span> <span class="s2">&quot;delta&quot;</span>
+    <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
+    <span class="n">COOLING_FACTOR</span> <span class="o">=</span> <span class="s2">&quot;cooling_factor&quot;</span>
+    <span class="n">INITIAL_TEMPERATURE</span> <span class="o">=</span> <span class="s2">&quot;initial_temperature&quot;</span>
+    <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span></div>
+
+
 <div class="viewcode-block" id="BAYESIAN_OPTIMIZATION"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION">[docs]</a><span class="k">class</span> <span class="nc">BAYESIAN_OPTIMIZATION</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants related to Bayesian Optimization</span>
@@ -305,6 +414,28 @@
     <span class="n">UCB</span> <span class="o">=</span> <span class="s2">&quot;ucb&quot;</span>
     <span class="n">TARGET</span> <span class="o">=</span> <span class="s2">&quot;target&quot;</span>
     <span class="n">PARAMS</span> <span class="o">=</span> <span class="s2">&quot;params&quot;</span>
+    <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
+    <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span></div>
+
+
+<div class="viewcode-block" id="PARTICLE_SWARM"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM">[docs]</a><span class="k">class</span> <span class="nc">PARTICLE_SWARM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to simulated annealing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
+    <span class="n">B_LOW</span> <span class="o">=</span> <span class="s2">&quot;b_lo&quot;</span>
+    <span class="n">B_UP</span> <span class="o">=</span> <span class="s2">&quot;b_up&quot;</span>
+    <span class="n">INERTIA_WEIGHT</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span>
+    <span class="n">COGNITIVE_COEFFICIENT</span> <span class="o">=</span> <span class="s2">&quot;Phi_p&quot;</span>
+    <span class="n">SOCIAL_COEFFICIENT</span> <span class="o">=</span> <span class="s2">&quot;Phi_g&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+    <span class="n">THETA1</span> <span class="o">=</span> <span class="s2">&quot;theta1&quot;</span>
+    <span class="n">THRESHOLDS</span> <span class="o">=</span> <span class="s2">&quot;thresholds&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_ATTACKER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_attacker&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_defender&quot;</span>
+    <span class="n">THETAS</span> <span class="o">=</span> <span class="s2">&quot;thetas&quot;</span>
+    <span class="n">DELTA</span> <span class="o">=</span> <span class="s2">&quot;delta&quot;</span>
     <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
     <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span></div>
 
@@ -390,7 +521,8 @@
     <span class="n">EPSILON</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span>
     <span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
     <span class="n">A</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
-    <span class="n">INITIAL_STATE_VALUES</span> <span class="o">=</span> <span class="s2">&quot;initial_state_values&quot;</span></div>
+    <span class="n">INITIAL_STATE_VALUES</span> <span class="o">=</span> <span class="s2">&quot;initial_state_values&quot;</span>
+    <span class="n">EPSILON_DECAY_RATE</span> <span class="o">=</span> <span class="s2">&quot;epsilon_decay_rate&quot;</span></div>
 
 
 <div class="viewcode-block" id="SARSA"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.SARSA">[docs]</a><span class="k">class</span> <span class="nc">SARSA</span><span class="p">:</span>
@@ -536,6 +668,44 @@
     <span class="n">AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_best_response_attacker_return&quot;</span>
     <span class="n">RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span> <span class="o">=</span> <span class="s2">&quot;running_average_best_response_attacker_return&quot;</span>
     <span class="n">N_2</span> <span class="o">=</span> <span class="s2">&quot;N_2&quot;</span></div>
+
+
+<div class="viewcode-block" id="POMCP"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.POMCP">[docs]</a><span class="k">class</span> <span class="nc">POMCP</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to POMCP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ROLLOUT_POLICY</span> <span class="o">=</span> <span class="s2">&quot;rollout_policy&quot;</span>
+    <span class="n">VALUE_FUNCTION</span> <span class="o">=</span> <span class="s2">&quot;value_function&quot;</span>
+    <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+    <span class="n">O</span> <span class="o">=</span> <span class="s2">&quot;O&quot;</span>
+    <span class="n">GAMMA</span> <span class="o">=</span> <span class="s2">&quot;gamma&quot;</span>
+    <span class="n">INITIAL_PARTICLES</span> <span class="o">=</span> <span class="s2">&quot;initial_particles&quot;</span>
+    <span class="n">REINVIGORATION</span> <span class="o">=</span> <span class="s2">&quot;reinvigoration&quot;</span>
+    <span class="n">PLANNING_TIME</span> <span class="o">=</span> <span class="s2">&quot;planning_time&quot;</span>
+    <span class="n">MAX_PARTICLES</span> <span class="o">=</span> <span class="s2">&quot;max_particles&quot;</span>
+    <span class="n">MAX_NEGATIVE_SAMPLES</span> <span class="o">=</span> <span class="s2">&quot;max_negative_samples&quot;</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
+    <span class="n">C2</span> <span class="o">=</span> <span class="s2">&quot;c2&quot;</span>
+    <span class="n">PRIOR_WEIGHT</span> <span class="o">=</span> <span class="s2">&quot;prior_weight&quot;</span>
+    <span class="n">PRIOR_CONFIDENCE</span> <span class="o">=</span> <span class="s2">&quot;prior_confidence&quot;</span>
+    <span class="n">MAX_PLANNING_DEPTH</span> <span class="o">=</span> <span class="s2">&quot;max_planning_depth&quot;</span>
+    <span class="n">USE_ROLLOUT_POLICY</span> <span class="o">=</span> <span class="s2">&quot;use_rollout_policy&quot;</span>
+    <span class="n">MAX_ROLLOUT_DEPTH</span> <span class="o">=</span> <span class="s2">&quot;max_rollout_depth&quot;</span>
+    <span class="n">LOG_STEP_FREQUENCY</span> <span class="o">=</span> <span class="s2">&quot;log_step_frequency&quot;</span>
+    <span class="n">DEFAULT_NODE_VALUE</span> <span class="o">=</span> <span class="s2">&quot;default_node_value&quot;</span>
+    <span class="n">VERBOSE</span> <span class="o">=</span> <span class="s2">&quot;verbose&quot;</span>
+    <span class="n">PARALLEL_ROLLOUT</span> <span class="o">=</span> <span class="s2">&quot;parallel_rollout&quot;</span>
+    <span class="n">NUM_PARALLEL_PROCESSES</span> <span class="o">=</span> <span class="s2">&quot;num_parallel_processes&quot;</span>
+    <span class="n">NUM_EVALS_PER_PROCESS</span> <span class="o">=</span> <span class="s2">&quot;num_evals_per_process&quot;</span>
+    <span class="n">ACQUISITION_FUNCTION_TYPE</span> <span class="o">=</span> <span class="s2">&quot;acquisition_function_type&quot;</span>
+    <span class="n">REINVIGORATED_PARTICLES_RATIO</span> <span class="o">=</span> <span class="s2">&quot;reinvigorated_particles_ratio&quot;</span>
+    <span class="n">EVAL_ENV_NAME</span> <span class="o">=</span> <span class="s2">&quot;eval_env_name&quot;</span>
+    <span class="n">EVAL_ENV_CONFIG</span> <span class="o">=</span> <span class="s2">&quot;eval_env_config&quot;</span>
+    <span class="n">PRUNE_ACTION_SPACE</span> <span class="o">=</span> <span class="s2">&quot;prune_action_space&quot;</span>
+    <span class="n">PRUNE_SIZE</span> <span class="o">=</span> <span class="s2">&quot;prune_size&quot;</span></div>
 </pre></div>
 
            </div>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.pomcp package &mdash; csle-agents 0.5.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_agents.agents.ppo package" href="csle_agents.agents.ppo.html" />
+    <link rel="prev" title="csle_agents.agents.pi package" href="csle_agents.agents.pi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="csle_agents.agents.html">csle_agents.agents package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="csle_agents.agents.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.base.html">csle_agents.agents.base package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization.html">csle_agents.agents.bayesian_optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.bayesian_optimization_emukit.html">csle_agents.agents.bayesian_optimization_emukit package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.c51_clean.html">csle_agents.agents.c51_clean package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cma_es.html">csle_agents.agents.cma_es package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.cross_entropy.html">csle_agents.agents.cross_entropy package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dfsp_local.html">csle_agents.agents.dfsp_local package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.differential_evolution.html">csle_agents.agents.differential_evolution package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn.html">csle_agents.agents.dqn package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dqn_clean.html">csle_agents.agents.dqn_clean package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.dynasec.html">csle_agents.agents.dynasec package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.fp.html">csle_agents.agents.fp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi.html">csle_agents.agents.hsvi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.hsvi_os_posg.html">csle_agents.agents.hsvi_os_posg package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.nelder_mead.html">csle_agents.agents.nelder_mead package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.particle_swarm.html">csle_agents.agents.particle_swarm package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">csle_agents.agents.pomcp package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.action_node">csle_agents.agents.pomcp.action_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.belief_node">csle_agents.agents.pomcp.belief_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.belief_tree">csle_agents.agents.pomcp.belief_tree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.node">csle_agents.agents.pomcp.node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.pomcp">csle_agents.agents.pomcp.pomcp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.pomcp_acquisition_function_type">csle_agents.agents.pomcp.pomcp_acquisition_function_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.pomcp_agent">csle_agents.agents.pomcp.pomcp_agent module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp.pomcp_util">csle_agents.agents.pomcp.pomcp_util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_agents.agents.pomcp">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo_clean.html">csle_agents.agents.ppo_clean package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.random_search.html">csle_agents.agents.random_search package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.reinforce.html">csle_agents.agents.reinforce package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sarsa.html">csle_agents.agents.sarsa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.shapley_iteration.html">csle_agents.agents.shapley_iteration package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.simulated_annealing.html">csle_agents.agents.simulated_annealing package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.sondik_vi.html">csle_agents.agents.sondik_vi package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_fp.html">csle_agents.agents.t_fp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.t_spsa.html">csle_agents.agents.t_spsa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.vi.html">csle_agents.agents.vi package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_agents.agents.html#module-csle_agents.agents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="csle_agents.agents.html">csle_agents.agents package</a> &raquo;</li>
+      <li>csle_agents.agents.pomcp package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_agents.agents.pomcp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-agents-agents-pomcp-package">
+<h1>csle_agents.agents.pomcp package<a class="headerlink" href="#csle-agents-agents-pomcp-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-csle_agents.agents.pomcp.action_node">
+<span id="csle-agents-agents-pomcp-action-node-module"></span><h2>csle_agents.agents.pomcp.action_node module<a class="headerlink" href="#module-csle_agents.agents.pomcp.action_node" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.action_node.ActionNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.action_node.</span></span><span class="sig-name descname"><span class="pre">ActionNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/action_node.html#ActionNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.action_node.ActionNode" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_agents.agents.pomcp.node.Node</span></code></a></p>
+<p>A node in the POMCP history tree where the last element of the history was an action</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.action_node.ActionNode.add_child">
+<span class="sig-name descname"><span class="pre">add_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/action_node.html#ActionNode.add_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.action_node.ActionNode.add_child" title="Permalink to this definition"></a></dt>
+<dd><p>Adds a child node to the tree. Since an action is always followed by an observation in the history, the next
+node will be an observation/belief node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – the new child node to add</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.action_node.ActionNode.get_child">
+<span class="sig-name descname"><span class="pre">get_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/action_node.html#ActionNode.get_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.action_node.ActionNode.get_child" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the child node corresponding to a specific observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – the observation to get the node for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the child node or None if it was not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.action_node.ActionNode.update_stats">
+<span class="sig-name descname"><span class="pre">update_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">immediate_reward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/action_node.html#ActionNode.update_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.action_node.ActionNode.update_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the mean return from the node by computing the rolling average</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>immediate_reward</strong> – the latest reward sample</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.belief_node">
+<span id="csle-agents-agents-pomcp-belief-node-module"></span><h2>csle_agents.agents.pomcp.belief_node module<a class="headerlink" href="#module-csle_agents.agents.pomcp.belief_node" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_node.BeliefNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.belief_node.</span></span><span class="sig-name descname"><span class="pre">BeliefNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_node.html#BeliefNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_node.BeliefNode" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_agents.agents.pomcp.node.Node</span></code></a></p>
+<p>Represents a node that holds the belief distribution given its history sequence in a belief tree.
+It also holds the received observation after which the belief is updated accordingly</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_node.BeliefNode.add_child">
+<span class="sig-name descname"><span class="pre">add_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_node.html#BeliefNode.add_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_node.BeliefNode.add_child" title="Permalink to this definition"></a></dt>
+<dd><p>Adds a child node to this node. Since an observation is always followed by an action in the history, the next
+node will be an action node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – the child action node</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_node.BeliefNode.add_particle">
+<span class="sig-name descname"><span class="pre">add_particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_node.html#BeliefNode.add_particle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_node.BeliefNode.add_particle" title="Permalink to this definition"></a></dt>
+<dd><p>Adds a paticle (a sample state) to the list of particles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>particle</strong> – the particle to add</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_node.BeliefNode.get_child">
+<span class="sig-name descname"><span class="pre">get_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_node.html#BeliefNode.get_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_node.BeliefNode.get_child" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the child node corresponding to a specific action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – the action to get the node for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the node or None if it was not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_node.BeliefNode.sample_state">
+<span class="sig-name descname"><span class="pre">sample_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_node.html#BeliefNode.sample_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_node.BeliefNode.sample_state" title="Permalink to this definition"></a></dt>
+<dd><p>Samples a state from the belief state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the sampled state</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.belief_tree">
+<span id="csle-agents-agents-pomcp-belief-tree-module"></span><h2>csle_agents.agents.pomcp.belief_tree module<a class="headerlink" href="#module-csle_agents.agents.pomcp.belief_tree" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_tree.BeliefTree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.belief_tree.</span></span><span class="sig-name descname"><span class="pre">BeliefTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_node_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_tree.html#BeliefTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_tree.BeliefTree" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The belief tree of POMCP. Each node in the tree corresponds to a history of the POMDP, where a history is a sequence
+of actions and observations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_tree.BeliefTree.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.action_node.ActionNode" title="csle_agents.agents.pomcp.action_node.ActionNode"><span class="pre">csle_agents.agents.pomcp.action_node.ActionNode</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.belief_node.BeliefNode" title="csle_agents.agents.pomcp.belief_node.BeliefNode"><span class="pre">csle_agents.agents.pomcp.belief_node.BeliefNode</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_tree.html#BeliefTree.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_tree.BeliefTree.add" title="Permalink to this definition"></a></dt>
+<dd><p>Creates and adds a new belief node or action node to the belief search tree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> – history sequence</p></li>
+<li><p><strong>parent</strong> – either ActionNode or BeliefNode</p></li>
+<li><p><strong>action</strong> – action</p></li>
+<li><p><strong>observation</strong> – observation</p></li>
+<li><p><strong>particle</strong> – new node’s particle set</p></li>
+<li><p><strong>cost</strong> – action cost of an action node</p></li>
+<li><p><strong>value</strong> – the value of the node</p></li>
+<li><p><strong>initial_visit_count</strong> – the initial visit count</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The newly added node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_tree.BeliefTree.find_or_create">
+<span class="sig-name descname"><span class="pre">find_or_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.belief_node.BeliefNode" title="csle_agents.agents.pomcp.belief_node.BeliefNode"><span class="pre">csle_agents.agents.pomcp.belief_node.BeliefNode</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.action_node.ActionNode" title="csle_agents.agents.pomcp.action_node.ActionNode"><span class="pre">csle_agents.agents.pomcp.action_node.ActionNode</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_tree.html#BeliefTree.find_or_create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_tree.BeliefTree.find_or_create" title="Permalink to this definition"></a></dt>
+<dd><p>Search for the node that corresponds to given history, otherwise create one using given params</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>history</strong> – the current history</p></li>
+<li><p><strong>parent</strong> – the parent of the node</p></li>
+<li><p><strong>observation</strong> – the latest observation</p></li>
+<li><p><strong>initial_value</strong> – the initial value of a created node</p></li>
+<li><p><strong>initial_visit_count</strong> – the initial visit count of a created node</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.belief_tree.BeliefTree.prune">
+<span class="sig-name descname"><span class="pre">prune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/belief_tree.html#BeliefTree.prune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.belief_tree.BeliefTree.prune" title="Permalink to this definition"></a></dt>
+<dd><p>Removes the entire subtree subscribed to ‘node’ with exceptions.
+:param node: root of the subtree to be removed
+:param exclude: exception component
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.node">
+<span id="csle-agents-agents-pomcp-node-module"></span><h2>csle_agents.agents.pomcp.node module<a class="headerlink" href="#module-csle_agents.agents.pomcp.node" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.node.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.node.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/node.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.node.Node" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract node type, represents a node in the lookahead tree</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.node.Node.add_child">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/node.html#Node.add_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.node.Node.add_child" title="Permalink to this definition"></a></dt>
+<dd><p>Method that adds a child to the node. Should be implemented by classes that inherit from this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – the node to add</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.node.Node.get_child">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/node.html#Node.get_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.node.Node.get_child" title="Permalink to this definition"></a></dt>
+<dd><p>Method that gets the child to the node. Should be implemented by classes that inherit from this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – the key to identify the child</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the child</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.pomcp">
+<span id="csle-agents-agents-pomcp-pomcp-module"></span><h2>csle_agents.agents.pomcp.pomcp module<a class="headerlink" href="#module-csle_agents.agents.pomcp.pomcp" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.pomcp.</span></span><span class="sig-name descname"><span class="pre">POMCP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planning_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reinvigoration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reinvigorated_particles_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rollout_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.training.policy.Policy</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_node_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_confidence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType" title="csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType"><span class="pre">csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">POMCPAcquisitionFunctionType.UCB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rollout_policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_action_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that implements the POMCP algorithm</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.compute_belief">
+<span class="sig-name descname"><span class="pre">compute_belief</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.compute_belief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.compute_belief" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the belief state based on the particles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the belief state</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.get_action">
+<span class="sig-name descname"><span class="pre">get_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.get_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.get_action" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the next action to execute based on the state of the tree. Selects the action with the highest value
+from the root node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the next action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.rollout">
+<span class="sig-name descname"><span class="pre">rollout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rollout_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.rollout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.rollout" title="Permalink to this definition"></a></dt>
+<dd><p>Perform randomized recursive rollout search starting from the given history
+until the max depth has been achieved</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – the initial state of the rollout</p></li>
+<li><p><strong>history</strong> – the history of the root node</p></li>
+<li><p><strong>depth</strong> – current planning horizon</p></li>
+<li><p><strong>max_rollout_depth</strong> – max rollout depth</p></li>
+<li><p><strong>t</strong> – the time step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the estimated value of the root node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rollout_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_planning_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.belief_node.BeliefNode" title="csle_agents.agents.pomcp.belief_node.BeliefNode"><span class="pre">csle_agents.agents.pomcp.belief_node.BeliefNode</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#csle_agents.agents.pomcp.action_node.ActionNode" title="csle_agents.agents.pomcp.action_node.ActionNode"><span class="pre">csle_agents.agents.pomcp.action_node.ActionNode</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.simulate" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the POMCP simulation starting from a given belief node and a sampled state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – the sampled state from the belief state of the node</p></li>
+<li><p><strong>max_rollout_depth</strong> – the maximum depth of rollout</p></li>
+<li><p><strong>max_planning_depth</strong> – the maximum depth of planning</p></li>
+<li><p><strong>c</strong> – the weighting factor for the ucb acquisition function</p></li>
+<li><p><strong>depth</strong> – the current depth of the simulation</p></li>
+<li><p><strong>history</strong> – the current history (history of the start node plus the simulation history)</p></li>
+<li><p><strong>parent</strong> – the parent node in the tree</p></li>
+<li><p><strong>t</strong> – the time-step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the Monte-Carlo value of the node and the current depth</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_rollout_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_planning_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.solve" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the POMCP algorithm with a given max depth for the lookahead</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_rollout_depth</strong> – the max depth for rollout</p></li>
+<li><p><strong>max_planning_depth</strong> – the max depth for planning</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp.POMCP.update_tree_with_new_samples">
+<span class="sig-name descname"><span class="pre">update_tree_with_new_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp.html#POMCP.update_tree_with_new_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp.POMCP.update_tree_with_new_samples" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the tree after an action has been selected and a new observation been received</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action_sequence</strong> – the action sequence that was executed</p></li>
+<li><p><strong>observation</strong> – the observation that was received</p></li>
+<li><p><strong>t</strong> – the time-step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated particle state</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.pomcp_acquisition_function_type">
+<span id="csle-agents-agents-pomcp-pomcp-acquisition-function-type-module"></span><h2>csle_agents.agents.pomcp.pomcp_acquisition_function_type module<a class="headerlink" href="#module-csle_agents.agents.pomcp.pomcp_acquisition_function_type" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.pomcp_acquisition_function_type.</span></span><span class="sig-name descname"><span class="pre">POMCPAcquisitionFunctionType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_acquisition_function_type.html#POMCPAcquisitionFunctionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>Enum representing the different types of acquisition functions in POMCP</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType.ALPHA_GO">
+<span class="sig-name descname"><span class="pre">ALPHA_GO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType.ALPHA_GO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType.UCB">
+<span class="sig-name descname"><span class="pre">UCB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType.UCB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.pomcp_agent">
+<span id="csle-agents-agents-pomcp-pomcp-agent-module"></span><h2>csle_agents.agents.pomcp.pomcp_agent module<a class="headerlink" href="#module-csle_agents.agents.pomcp.pomcp_agent" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.pomcp_agent.</span></span><span class="sig-name descname"><span class="pre">POMCPAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_config.ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.jobs.training_job_config.TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_agents.agents.base.base_agent.BaseAgent</span></code></a></p>
+<p>POMCP Agent</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.compute_avg_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_avg_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent.compute_avg_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.compute_avg_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics of a dict with aggregated metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metrics</strong> – the dict with the aggregated metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the average metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.hparam_names">
+<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.hparam_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with the hyperparameter names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.pomcp">
+<span class="sig-name descname"><span class="pre">pomcp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.jobs.training_job_config.TrainingJobConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seeds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent.pomcp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.pomcp" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the POMCP algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exp_result</strong> – the experiment result object to store the result</p></li>
+<li><p><strong>seed</strong> – the seed</p></li>
+<li><p><strong>training_job</strong> – the training job config</p></li>
+<li><p><strong>random_seeds</strong> – list of seeds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated experiment result and the trained policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_execution.ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.train" title="Permalink to this definition"></a></dt>
+<dd><p>Performs the policy training for the given random seeds using POMCP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the training metrics and the trained policies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.update_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_agent.html#POMCPAgent.update_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.update_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Update a dict with aggregated metrics using new information from the environment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – the dict with the aggregated metrics</p></li>
+<li><p><strong>info</strong> – the new information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the updated dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp.pomcp_util">
+<span id="csle-agents-agents-pomcp-pomcp-util-module"></span><h2>csle_agents.agents.pomcp.pomcp_util module<a class="headerlink" href="#module-csle_agents.agents.pomcp.pomcp_util" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.pomcp.pomcp_util.</span></span><span class="sig-name descname"><span class="pre">POMCPUtil</span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with utility functions related to POMCP</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.alpha_go_acquisition_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_go_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.alpha_go_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.alpha_go_acquisition_function" title="Permalink to this definition"></a></dt>
+<dd><p>The UCB acquisition function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – the action node</p></li>
+<li><p><strong>c</strong> – the exploration parameter</p></li>
+<li><p><strong>c2</strong> – the c2 parameter</p></li>
+<li><p><strong>prior</strong> – the prior weight</p></li>
+<li><p><strong>prior_weight</strong> – the weight to put on the prior</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the acquisition value of the action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.convert_samples_to_distribution">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_samples_to_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.convert_samples_to_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.convert_samples_to_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a list of samples to a probability distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>samples</strong> – the list of samples</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict with the sample values and their probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.get_default_value">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.get_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.get_default_value" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the default value of a node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>particles</strong> – the particles of the parent node</p></li>
+<li><p><strong>action</strong> – the action of the node</p></li>
+<li><p><strong>default_value</strong> – the default value</p></li>
+<li><p><strong>env</strong> – the black-box simulator</p></li>
+<li><p><strong>value_function</strong> – the value function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.rand_choice">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rand_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.rand_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.rand_choice" title="Permalink to this definition"></a></dt>
+<dd><p>Selects an element from a given list uniformly at random</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> – the list to sample from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the sample</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.sample_from_distribution">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_from_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probability_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.sample_from_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.sample_from_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function to sample from a probability vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>probability_vector</strong> – the probability vector to sample from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the sampled element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.trajectory_simulation_particles">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trajectory_simulation_particles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_particles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.trajectory_simulation_particles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.trajectory_simulation_particles" title="Permalink to this definition"></a></dt>
+<dd><p>Performs trajectory simulations to find possible states matching to the given observation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – the observation to match against</p></li>
+<li><p><strong>env</strong> – the black-box simulator to sue for generating trajectories</p></li>
+<li><p><strong>action_sequence</strong> – the action sequence for the trajectory</p></li>
+<li><p><strong>num_particles</strong> – the number of particles to collect</p></li>
+<li><p><strong>verbose</strong> – boolean flag indicating whether logging should be verbose or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of particles matching the given observation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ucb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history_visit_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_visit_count</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.ucb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the upper-confidence-bound acquisiton function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>history_visit_count</strong> – counter of the number of times the history has been visited</p></li>
+<li><p><strong>action_visit_count</strong> – counter of the number of times the action has been taken in the history</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the ucb acquisition value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb_acquisition_function">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ucb_acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_agents.agents.pomcp.node.Node" title="csle_agents.agents.pomcp.node.Node"><span class="pre">csle_agents.agents.pomcp.node.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/pomcp/pomcp_util.html#POMCPUtil.ucb_acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.pomcp.pomcp_util.POMCPUtil.ucb_acquisition_function" title="Permalink to this definition"></a></dt>
+<dd><p>The UCB acquisition function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – the action node</p></li>
+<li><p><strong>c</strong> – the exploration parameter</p></li>
+<li><p><strong>rollout_policy</strong> – the rollout policy</p></li>
+<li><p><strong>prior_weight</strong> – the weight to put on the prior</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the acquisition value of the action</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_agents.agents.pomcp">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.pomcp" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_agents.agents.pi.html" class="btn btn-neutral float-left" title="csle_agents.agents.pi package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_agents.agents.ppo.html" class="btn btn-neutral float-right" title="csle_agents.agents.ppo package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

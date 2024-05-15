@@ -12,7 +12,7 @@ import os
 
 class AttackProfiler:
     """
-    Class represting the attack profile based on the MITRE ATT&CK framework for Enterprise.
+    Class representing the attack profile based on the MITRE ATT&CK framework for Enterprise.
     """
 
     def __init__(self, techniques_tactics: Dict[str, List[str]], mitigations: Dict[str, List[str]],
@@ -22,13 +22,13 @@ class AttackProfiler:
         Class constructor
 
         :params techniques_tactics: the techniques and tactics used by the attacker action.
-        The key is the technique and the value is the tactics
+                                    The key is the technique and the value is the tactics
         :params mitigations: the mitigations used by the attacker action. The key is the technique and the
-        value is the mitigations
+                             value is the mitigations
         :params data_sources: the data sources used by the attacker action. The key is the technqiue and the value is
-        the data sources
+                              the data sources
         :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and
-        the value is the sub-techniques
+                                the value is the sub-techniques
         :params action_id: the id of the attacker action
         """
         
@@ -44,7 +44,6 @@ class AttackProfiler:
         Returns the attack profile of the actions
 
         :params attacker_action: the attacker action
-
         :return: the attack profile of the action
         """
         current_dir = os.path.dirname(__file__)
@@ -55,8 +54,8 @@ class AttackProfiler:
         attacker_id = attacker_action.id
         # Get the defined tactics and techniques for the attack
         attack_mapping = EmulationAttackerMapping.get_attack_info(attacker_id)
-        if attack_mapping == {None} or attack_mapping is None:
-            return AttackProfiler({}, {}, {}, {}, None)
+        if attack_mapping is None:
+            return AttackProfiler({}, {}, {}, {}, EmulationAttackerActionId.CONTINUE)
 
         attack_techniques_vals = [technique.value for technique in attack_mapping['techniques']]
         
@@ -150,7 +149,9 @@ class AttackProfiler:
                             techniques_to_keep.append(technique)
                             # If the child is not in the possible_children, add it to the list.
                             if attack_graph.get_node(child[0], child[1]) not in possible_nodes:
-                                possible_nodes.append(attack_graph.get_node(child[0], child[1]))
+                                p_node = attack_graph.get_node(child[0], child[1])
+                                if p_node is not None:
+                                    possible_nodes.append(p_node)
 
                 # If the possible node is just one node, move to that node
                 if len(possible_nodes) == 1:

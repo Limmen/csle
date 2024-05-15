@@ -12,6 +12,14 @@ gym\_csle\_cyborg.envs.cyborg\_scenario\_two\_defender module
    :undoc-members:
    :show-inheritance:
 
+gym\_csle\_cyborg.envs.cyborg\_scenario\_two\_wrapper module
+------------------------------------------------------------
+
+.. automodule:: gym_csle_cyborg.envs.cyborg_scenario_two_wrapper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

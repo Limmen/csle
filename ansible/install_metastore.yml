@@ -1,0 +1,161 @@
+---
+
+- hosts: all
+
+  tasks:
+
+    - name: Check if PostgreSQL is installed, if you see error here just ignore it!
+      shell: "psql --version"
+      register: postgresql_installed
+      ignore_errors: true
+
+    - name: Download PostgreSQL
+      ansible.builtin.get_url:
+        url: "{{ postgresql_url }}"
+        dest: "/home/{{ user }}"
+        mode: '0770'
+      when: postgresql_installed.rc != 0
+
+    - name: Install PostgreSQL
+      become: true
+      shell: "/home/{{ user }}/deb.sh"
+      when: postgresql_installed.rc != 0
+
+    - name: Install PostgreSQL Citus extension
+      become: true
+      apt:
+        name: "{{ postgres_citus_version }}"
+        state: present
+        update_cache: yes
+      when: postgresql_installed.rc != 0
+
+    - name: Install libpq-dev lib
+      become: true
+      apt:
+        name: libpq-dev
+        state: present
+        update_cache: yes
+
+    - name: Install expect lib
+      become: true
+      apt:
+        name: expect
+        state: present
+        update_cache: yes
+
+    - name: Install pip
+      become: true
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install PostgreSQL python lib
+      become: true
+      pip:
+        name: psycopg2
+        state: present
+
+    - name: Set shared_preload_libraries using pg_conftool
+      become: true
+      shell: "pg_conftool {{ postgres_version }} main set shared_preload_libraries citus"
+
+    - name: Set listen address using pg_conftool
+      become: true
+      shell: "pg_conftool {{ postgres_version }} main set listen_addresses '*'"
+
+    - name: Clear postgres configuration file
+      become: true
+      shell: "sudo echo '' > /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+    - name: Update the postgres configuration file
+      become: true
+      shell: "sudo echo 'local\tall\tpostgres\ttrust' > /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+    - name: Update the postgres configuration file
+      become: true
+      shell: "sudo echo 'host\tall\tall\t0.0.0.0/0\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+    - name: Update the postgres configuration file
+      become: true
+      shell: "sudo echo 'host\tall\tall\t::1/128\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+    - name: Update the postgres configuration file
+      become: true
+      shell: "sudo echo 'host\tall\tall\t127.0.0.0/8\ttrust' >> /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+
+
+    - name: Restart postgres
+      become: true
+      service:
+        name: postgresql
+        state: restarted
+
+    - name: Run the update-rc.d command
+      become: true
+      shell: update-rc.d postgresql enable
+
+    - name: Copy create_db.sql script to postgres home
+      become: true
+      copy:
+        dest: /var/lib/postgresql/create_db.sql
+        src: "/home/{{ user }}/csle/metastore/create_db.sql"
+        remote_src: yes
+        owner: postgres
+        group: postgres
+        mode: u=rwx,g=rwx,o=rwx,a=rwx
+
+    - name: Remove extension from create_db.sql file
+      become: true
+      lineinfile:
+        path: /var/lib/postgresql/create_db.sql
+        regexp: '^CREATE EXTENSION'
+        line: ''
+
+    - name: Remove create transaction from create_db.sql file
+      become: true
+      lineinfile:
+        path: /var/lib/postgresql/create_db.sql
+        regexp: "SELECT 'CREATE"
+        line: ''
+
+    - name: Create PostgreSQL database, if you see error here just ignore it!
+      become: yes
+      become_method: sudo
+      become_user: postgres
+      community.postgresql.postgresql_query:
+        db: postgres
+        autocommit: yes
+        login_user: postgres
+#        login_password: "{{ postgres_password }}"
+        query: "CREATE DATABASE csle"
+      ignore_errors: true
+
+    - name: Setup database privileges, if you see error here just ignore it!
+      become: yes
+      become_method: sudo
+      become_user: postgres
+      community.postgresql.postgresql_script:
+        db: postgres
+        login_user: postgres
+#        login_password: "{{ postgres_password }}"
+        path: /var/lib/postgresql/create_db.sql
+      ignore_errors: true
+
+    - name: Add citus extension, if you see error here just ignore it!
+      become: yes
+      become_method: sudo
+      become_user: postgres
+      community.postgresql.postgresql_ext:
+        login_user: postgres
+#        login_password: "{{ postgres_password }}"
+        db: csle
+        name: citus
+        version: latest
+      ignore_errors: true
+
+    - name: Change mode and ownership of the /var/log/postgresql
+      file:
+        path: /var/log/postgresql
+        owner: "{{ user }}"
+        mode: "0775"
+      become: true

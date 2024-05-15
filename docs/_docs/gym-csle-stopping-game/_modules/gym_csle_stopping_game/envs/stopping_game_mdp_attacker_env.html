@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env &mdash; gym-csle-stopping-game 0.3.0 documentation</title>
+  <title>gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env &mdash; gym-csle-stopping-game 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,7 +66,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -171,10 +169,14 @@
 
         <span class="k">return</span> <span class="n">attacker_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span></div>
 
-<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.reset"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">soft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.reset"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">soft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the environment state, this should be called whenever step() returns &lt;done&gt;</span>
 
+<span class="sd">        :param seed: the random seed</span>
+<span class="sd">        :param soft: boolean flag indicating whether it is a soft reset or not</span>
+<span class="sd">        :param options: optional configuration parameters</span>
 <span class="sd">        :return: initial observation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -192,6 +194,15 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.set_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the state. Allows to simulate samples from specific states</span>
+
+<span class="sd">        :param state: the state</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGameMdpAttackerEnv.calculate_stage_policy"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.calculate_stage_policy">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -283,14 +294,28 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">reset_traces</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.close"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.generate_random_particles"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.generate_random_particles">[docs]</a>    <span class="k">def</span> <span class="nf">generate_random_particles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_particles</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Closes the viewer (cleanup)</span>
-<span class="sd">        :return: None</span>
+<span class="sd">        Generates a random list of state particles from a given observation</span>
+
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param num_particles: the number of particles to generate</span>
+<span class="sd">        :return: the list of random particles</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="o">.</span><span class="n">generate_random_particles</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">num_particles</span><span class="o">=</span><span class="n">num_particles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoppingGameMdpAttackerEnv.get_actions_from_particles"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.get_actions_from_particles">[docs]</a>    <span class="k">def</span> <span class="nf">get_actions_from_particles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">observation</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                   <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prunes the set of actiosn based on the current particle set</span>
+
+<span class="sd">        :param particles: the set of particles</span>
+<span class="sd">        :param t: the current time step</span>
+<span class="sd">        :param observation: the latest observation</span>
+<span class="sd">        :param verbose: boolean flag indicating whether logging should be verbose or not</span>
+<span class="sd">        :return: the list of pruned actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stopping_game_config</span><span class="o">.</span><span class="n">A2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGameMdpAttackerEnv.manual_play"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.manual_play">[docs]</a>    <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

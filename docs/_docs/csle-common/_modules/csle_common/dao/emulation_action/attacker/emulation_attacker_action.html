@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_action &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.emulation_action.attacker.emulation_attacker_action &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_action.attacker.emulation_attacker_action</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_action.attacker.emulation_attacker_action</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -112,13 +110,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="o">=</span> <span class="n">cmds</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cmds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="n">ips</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vulnerability</span> <span class="o">=</span> <span class="n">vulnerability</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_outcome</span> <span class="o">=</span> <span class="n">action_outcome</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backdoor</span> <span class="o">=</span> <span class="n">backdoor</span>
@@ -127,7 +121,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backdoor</span> <span class="o">=</span> <span class="n">backdoor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">execution_time</span> <span class="o">=</span> <span class="n">execution_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_time</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">execution_time</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span>
 
 <div class="viewcode-block" id="EmulationAttackerAction.nmap_cmds"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction.nmap_cmds">[docs]</a>    <span class="k">def</span> <span class="nf">nmap_cmds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine_ips</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
@@ -200,7 +194,8 @@
         <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationAttackerAction</span><span class="p">(</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="nb">id</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">cmds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cmds&quot;</span><span class="p">],</span> <span class="n">descr</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">],</span>
             <span class="n">ips</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips&quot;</span><span class="p">],</span> <span class="n">vulnerability</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;vulnerability&quot;</span><span class="p">],</span> <span class="n">action_outcome</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;action_outcome&quot;</span><span class="p">],</span>
-            <span class="n">backdoor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;backdoor&quot;</span><span class="p">],</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;alt_cmds&quot;</span><span class="p">],</span> <span class="n">execution_time</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span>
+            <span class="n">backdoor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;backdoor&quot;</span><span class="p">],</span> <span class="n">alt_cmds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;alt_cmds&quot;</span><span class="p">],</span>
+            <span class="n">execution_time</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">],</span> <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
@@ -210,7 +205,7 @@
 
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cmds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmds</span><span class="p">)</span>
@@ -220,7 +215,7 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;action_outcome&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_outcome</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;vulnerability&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vulnerability</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alt_cmds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alt_cmds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_cmds</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;backdoor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backdoor</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_time</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>

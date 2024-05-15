@@ -2,7 +2,7 @@ from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 
-class TestCSLECyborgConfigSuite(object):
+class TestCSLECyborgConfigSuite:
     """
     Test suite for csle_cyborg_config.py
     """

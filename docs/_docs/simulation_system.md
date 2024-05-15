@@ -135,6 +135,7 @@ Listing 2: Example of strategy optimization through the Q-learning algorithm in 
 | T-SPSA                                                           | Reinforcement learning    |
 | Expectation maximization                                         | System identification     |
 | POMCP                                                            | POMDP planning            |
+| Phasic Policy Gradient (PPG)                                     | Reinforcement learning    |
 
 <p class="captionFig">
 Table 19: Numerical algorithms.

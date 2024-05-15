@@ -17,6 +17,7 @@ pip uninstall gym-csle-apt-game
 pip uninstall gym-csle-cyborg
 pip uninstall csle-tolerance
 pip uninstall csle-common
+pip uninstall csle-attack-profiler
 pip uninstall csle-collector
 pip uninstall csle-agents
 pip uninstall csle-ryu
@@ -31,7 +32,7 @@ cd metastore; make clean
 ```
 
 <p class="captionFig">
-Listing 96: Commands to uninstall CSLE.
+Listing 101: Commands to uninstall CSLE.
 </p>
 
 Also remove the `CSLE_HOME` environment variable from `.bashrc`.

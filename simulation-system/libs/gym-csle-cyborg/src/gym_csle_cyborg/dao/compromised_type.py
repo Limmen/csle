@@ -6,9 +6,9 @@ class CompromisedType(IntEnum):
     Enum representing the different compromised types in CAGE scenario 2
     """
     NO = 0
-    UNKNOWN = 1
-    USER = 2
-    PRIVILEGED = 3
+    USER = 1
+    PRIVILEGED = 2
+    UNKNOWN = 3
 
     @staticmethod
     def from_str(compromised_type_str: str) -> "CompromisedType":

@@ -1,8 +1,8 @@
-from typing import List, Dict, Any, Callable, Union
+from typing import List, Dict, Any, Callable
+import random
 import numpy as np
 from collections import Counter
 from csle_common.logging.log import Logger
-from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_agents.agents.pomcp.node import Node
 import csle_agents.constants.constants as constants
@@ -34,7 +34,7 @@ class POMCPUtil:
         :param candidates: the list to sample from
         :return: the sample
         """
-        return np.random.choice(candidates)
+        return random.choice(candidates)
 
     @staticmethod
     def convert_samples_to_distribution(samples) -> Dict[int, float]:
@@ -47,18 +47,6 @@ class POMCPUtil:
         cnt = Counter(samples)
         _sum = sum(cnt.values())
         return {k: v / _sum for k, v in cnt.items()}
-
-    @staticmethod
-    def generate_particles(num_particles: int, belief: Dict[int, float]) -> List[int]:
-        """
-        Generates a list of particles (sample states) for a given list of states
-        with a frequency determined by a given probability vector
-
-        :param probability_vector: probability vector to determine the frequency of each sample
-        :return: sampled particles (states)
-        """
-        states = list(belief.keys())
-        return [states[int(POMCPUtil.sample_from_distribution(list(belief.values())))] for _ in range(num_particles)]
 
     @staticmethod
     def ucb(history_visit_count, action_visit_count):
@@ -79,8 +67,7 @@ class POMCPUtil:
         return np.sqrt(np.log(history_visit_count) / action_visit_count)
 
     @staticmethod
-    def ucb_acquisition_function(action: "Node", c: float, rollout_policy: Union[Policy, None], o: List[Any],
-                                 prior_weight: float) -> float:
+    def ucb_acquisition_function(action: "Node", c: float) -> float:
         """
         The UCB acquisition function
 
@@ -90,15 +77,31 @@ class POMCPUtil:
         :param prior_weight: the weight to put on the prior
         :return: the acquisition value of the action
         """
+        if action.parent.visit_count == 0:
+            return 0
         if action.visit_count == 0:
             return np.inf
-        else:
-            return action.value + (prior_weight * prior_weight) / action.visit_count
-        # prior = 1.0
-        # if rollout_policy is not None:
-        #     prior = rollout_policy.probability(o=o, a=action.action)
-        # return float(action.value + prior*prior_weight
-        #              + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+        return float(action.value + c * POMCPUtil.ucb(action.parent.visit_count, action.visit_count))
+
+    @staticmethod
+    def alpha_go_acquisition_function(action: "Node", c: float, c2: float, prior: float, prior_weight: float) -> float:
+        """
+        The UCB acquisition function
+
+        :param action: the action node
+        :param c: the exploration parameter
+        :param c2: the c2 parameter
+        :param prior: the prior weight
+        :param prior_weight: the weight to put on the prior
+        :return: the acquisition value of the action
+        """
+        # prior = rollout_policy.probability(o=o, a=action.action)
+        # visit_term = math.sqrt(action.parent.visit_count) / (action.visit_count + 1)
+        # base_term = math.log((action.parent.visit_count + c2 + 1) / c2 + c)
+        # prior_term = prior_weight * prior * visit_term * base_term
+        exploration_term = POMCPUtil.ucb(action.parent.visit_count, action.visit_count)
+        return float(action.value + (c + prior_weight * prior) * exploration_term)
+        # return float(action.value + prior_term + exploration_term)
 
     @staticmethod
     def trajectory_simulation_particles(o: int, env: BaseEnv, action_sequence: List[int], num_particles: int,
@@ -119,10 +122,8 @@ class POMCPUtil:
                                                 f" through trajectory simulations, "
                                                 f"action sequence: {action_sequence}, observation: {o}")
         while len(particles) < num_particles:
-            # print(f"{len(particles)} particles")
             done = False
             _, info = env.reset()
-            s = info[constants.COMMON.STATE]
             t = 0
             while not done and t < len(action_sequence):
                 _, r, done, _, info = env.step(action=action_sequence[t])

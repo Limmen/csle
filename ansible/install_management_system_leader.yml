@@ -1,0 +1,28 @@
+---
+
+- hosts: leader
+
+  vars:
+    pg_admin: "pgadmin"
+
+  tasks:
+
+    - name: List running docker containers
+      become: true
+      shell: "docker ps"
+      args:
+        executable: /bin/bash
+      register: docker_containers_list
+      changed_when: false
+
+    - name: Check if pg_admin is running
+      set_fact:
+        pg_admin_running: "{{ pg_admin in docker_containers_list.stdout }}"
+
+    - name: Install and start pgadmin
+      become: true
+      shell: docker pull dpage/pgadmin4 && docker run -p 7778:80 -e "PGADMIN_DEFAULT_EMAIL=user@domain.com" -e "PGADMIN_DEFAULT_PASSWORD=SuperSecret" -d --name=pgadmin dpage/pgadmin4
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+      when: not pg_admin_running

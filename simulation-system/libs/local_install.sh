@@ -4,6 +4,7 @@ cd csle-base; pip install -e .; cd ..
 cd csle-collector; pip install -e .; cd ..
 cd csle-ryu; pip install -e .; cd ..
 cd csle-common; pip install -e .; cd ..
+cd csle-attack-profiler; pip install -e .; cd ..
 cd csle-cluster; pip install -e .; cd ..
 cd csle-attacker; pip install -e .; cd ..
 cd csle-defender; pip install -e .; cd ..

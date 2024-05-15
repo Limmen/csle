@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +82,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.consumer_threads.ossec_ids_log_consumer_thread</span> <span class="kn">import</span> <span class="n">OSSECIdsLogConsumerThread</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.kafka_config</span> <span class="kn">import</span> <span class="n">KafkaConfig</span>
 <span class="kn">from</span> <span class="nn">csle_collector.host_manager.dao.host_metrics</span> <span class="kn">import</span> <span class="n">HostMetrics</span>
-<span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
+<span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.dao.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
 <span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsIPAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
@@ -95,10 +93,9 @@
 <span class="sd">    Represents the defender&#39;s belief state of a component in the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_config</span><span class="p">:</span> <span class="n">KafkaConfig</span><span class="p">,</span>
-                 <span class="n">host_metrics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HostMetrics</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">docker_stats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DockerStats</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">snort_ids_ip_alert_counters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SnortIdsIPAlertCounters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ossec_ids_alert_counters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OSSECIdsAlertCounters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KafkaConfig</span><span class="p">],</span> <span class="n">host_metrics</span><span class="p">:</span> <span class="n">HostMetrics</span><span class="p">,</span>
+                 <span class="n">docker_stats</span><span class="p">:</span> <span class="n">DockerStats</span><span class="p">,</span> <span class="n">snort_ids_ip_alert_counters</span><span class="p">:</span> <span class="n">SnortIdsIPAlertCounters</span><span class="p">,</span>
+                 <span class="n">ossec_ids_alert_counters</span><span class="p">:</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
@@ -115,17 +112,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="o">=</span> <span class="n">kafka_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span> <span class="o">=</span> <span class="n">host_metrics</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span> <span class="o">=</span> <span class="n">docker_stats</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span> <span class="o">=</span> <span class="n">DockerStats</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span> <span class="o">=</span> <span class="n">SnortIdsIPAlertCounters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span> <span class="o">=</span> <span class="n">ossec_ids_alert_counters</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics_consumer_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HostMetricsConsumerThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_consumer_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DockerHostStatsConsumerThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_log_consumer_thread</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SnortIdsLogConsumerThread</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -137,6 +126,8 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot start monitoring threads since the kafka config is None.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics_consumer_thread</span> <span class="o">=</span> <span class="n">HostMetricsConsumerThread</span><span class="p">(</span>
             <span class="n">host_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kafka_server_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
             <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_port_external</span><span class="p">,</span> <span class="n">host_metrics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span><span class="p">)</span>
@@ -164,7 +155,9 @@
 <span class="sd">        :return: the created instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderMachineObservationState</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">(),</span> <span class="n">kafka_config</span><span class="o">=</span><span class="n">kafka_config</span><span class="p">,</span>
-                                                       <span class="n">host_metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">docker_stats</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                                                       <span class="n">host_metrics</span><span class="o">=</span><span class="n">HostMetrics</span><span class="p">(),</span> <span class="n">docker_stats</span><span class="o">=</span><span class="n">DockerStats</span><span class="p">(),</span>
+                                                       <span class="n">ossec_ids_alert_counters</span><span class="o">=</span><span class="n">OSSECIdsAlertCounters</span><span class="p">(),</span>
+                                                       <span class="n">snort_ids_ip_alert_counters</span><span class="o">=</span><span class="n">SnortIdsIPAlertCounters</span><span class="p">())</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">os</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
@@ -188,8 +181,6 @@
             <span class="n">ossec_alert_counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_alert_counters&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ossec_alert_counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">kafka_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;KafkaConfig is None&quot;</span><span class="p">)</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderMachineObservationState</span><span class="p">(</span>
             <span class="n">ips</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips&quot;</span><span class="p">],</span> <span class="n">kafka_config</span><span class="o">=</span><span class="n">kafka_config</span><span class="p">,</span>
             <span class="n">host_metrics</span><span class="o">=</span><span class="n">HostMetrics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;host_metrics&quot;</span><span class="p">]),</span>
@@ -214,12 +205,11 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_connections&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_connections</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;host_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_ip_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_ip_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -270,8 +260,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m_copy</span> <span class="o">=</span> <span class="n">EmulationDefenderMachineObservationState</span><span class="p">(</span>
             <span class="n">ips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">,</span> <span class="n">kafka_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="p">,</span>
-            <span class="n">host_metrics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span><span class="p">,</span>
-            <span class="n">docker_stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span><span class="p">)</span>
+            <span class="n">host_metrics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host_metrics</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="n">docker_stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="n">ossec_ids_alert_counters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="n">snort_ids_ip_alert_counters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
         <span class="n">m_copy</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">os</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span> <span class="o">==</span> <span class="p">[]:</span>
             <span class="n">m_copy</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span>

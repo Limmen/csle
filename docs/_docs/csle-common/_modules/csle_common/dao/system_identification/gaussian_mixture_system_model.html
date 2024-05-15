@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.system_identification.gaussian_mixture_system_model &mdash; csle-common 0.3.0 documentation</title>
+  <title>csle_common.dao.system_identification.gaussian_mixture_system_model &mdash; csle-common 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.system_identification.gaussian_mixture_system_model</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.system_identification.gaussian_mixture_system_model</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -97,7 +95,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GaussianMixtureSystemModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">SystemModelType</span><span class="o">.</span><span class="n">GAUSSIAN_MIXTURE</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conditional_metric_distributions</span> <span class="o">=</span> <span class="n">conditional_metric_distributions</span>
-        <span class="n">complete_sample_space</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">complete_sample_space</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">conds</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditional_metric_distributions</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">conds</span><span class="p">:</span>
                 <span class="n">complete_sample_space</span> <span class="o">=</span> <span class="n">complete_sample_space</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">cond</span><span class="o">.</span><span class="n">sample_space</span><span class="p">)</span>
@@ -108,7 +106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_name</span> <span class="o">=</span> <span class="n">emulation_env_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">emulation_statistic_id</span> <span class="o">=</span> <span class="n">emulation_statistic_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conditionals_kl_divergences</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conditionals_kl_divergences</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_kl_divergences</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GaussianMixtureSystemModel.compute_kl_divergences"><a class="viewcode-back" href="../../../../csle_common.dao.system_identification.html#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.compute_kl_divergences">[docs]</a>    <span class="k">def</span> <span class="nf">compute_kl_divergences</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -131,8 +129,7 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">conditionals_kl_divergences</span><span class="p">[</span><span class="n">metric_distributions_condition_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conditional_name</span><span class="p">][</span>
                                 <span class="n">metric_distributions_condition_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conditional_name</span><span class="p">][</span><span class="n">metric_dist</span><span class="o">.</span><span class="n">metric_name</span><span class="p">]):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">conditionals_kl_divergences</span><span class="p">[</span><span class="n">metric_distributions_condition_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conditional_name</span><span class="p">][</span>
-                            <span class="n">metric_distributions_condition_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conditional_name</span><span class="p">][</span>
-                            <span class="n">metric_dist</span><span class="o">.</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;inf&quot;</span></div>
+                            <span class="n">metric_distributions_condition_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conditional_name</span><span class="p">][</span><span class="n">metric_dist</span><span class="o">.</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span></div>
 
 <div class="viewcode-block" id="GaussianMixtureSystemModel.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.system_identification.html#csle_common.dao.system_identification.gaussian_mixture_system_model.GaussianMixtureSystemModel.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;GaussianMixtureSystemModel&quot;</span><span class="p">:</span>

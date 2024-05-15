@@ -168,7 +168,7 @@ class TrafficController:
             )
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip))
-            time.sleep(2)
+            time.sleep(5)
             return True
         return False
 

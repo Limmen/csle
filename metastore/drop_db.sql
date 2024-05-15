@@ -1,6 +1,3 @@
--- Connect to the csle db --
-\connect csle
-
 -- Try Dropping the database --
 DROP DATABASE csle WITH (FORCE) ;
 

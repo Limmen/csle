@@ -7,14 +7,14 @@ permalink: /docs/operating/
 
 This section describes commands and procedures that are useful when operating CSLE.
 The framework can be operated in two ways,
-either through the web interface or through the CLI (see Fig. 28).
+either through the web interface or through the CLI (see Fig. 29).
 This section focuses on the CLI, but more or less the same commands can be invoked through the web interface,
 which should be self-explanatory.
 
 <p align="center">
 <img src="./../../img/csle_operation.png" width="70%">
 <p class="captionFig">
-Figure 28: User interfaces of CSLE; a user can execute commands to the management system 
+Figure 29: User interfaces of CSLE; a user can execute commands to the management system 
 through two interfaces: a web interface and a Command-Line Interface (CLI).
 </p>
 </p>
@@ -27,7 +27,7 @@ csle help
 ```
 
 <p class="captionFig">
-Listing 97: Command to list the available commands in the CSLE CLI.
+Listing 102: Command to list the available commands in the CSLE CLI.
 </p>
 
 ### Listing the State of CSLE
@@ -38,7 +38,7 @@ csle ls --all
 ```
 
 <p class="captionFig">
-Listing 98: Command to list the state of a CSLE installation.
+Listing 103: Command to list the state of a CSLE installation.
 </p>
 
 ### Starting, Stopping, and Resetting the Metastore
@@ -50,7 +50,7 @@ sudo service postgresql start
 ```
 
 <p class="captionFig">
-Listing 99: Command to start the metastore.
+Listing 104: Command to start the metastore.
 </p>
 
 The metastore can be stopped by executing the command:
@@ -60,7 +60,7 @@ sudo service postgresql stop
 ```
 
 <p class="captionFig">
-Listing 100: Command to stop the metastore.
+Listing 105: Command to stop the metastore.
 </p>
 
 To reset the metastore, execute the commands:
@@ -71,7 +71,7 @@ cd metastore; make build
 ```
 
 <p class="captionFig">
-Listing 101: Commands to reset the metastore. 
+Listing 106: Commands to reset the metastore. 
 </p>
 
 ### Starting and Stopping the Management System
@@ -83,7 +83,7 @@ csle start managementsystem
 ```
 
 <p class="captionFig">
-Listing 102: Command to start the management system.
+Listing 107: Command to start the management system.
 </p>
 
 The management system can be stopped by executing the command:
@@ -93,7 +93,7 @@ csle stop managementsystem
 ```
 
 <p class="captionFig">
-Listing 103: Command to stop the management system.
+Listing 108: Command to stop the management system.
 </p>
 
 ### Starting and Stopping Monitoring Systems
@@ -109,7 +109,7 @@ csle start prometheus
 ```
 
 <p class="captionFig">
-Listing 104: Commands to start monitoring systems.
+Listing 109: Commands to start monitoring systems.
 </p>
 
 Similarly, Grafana, cAdvisor, Node exporter, and Prometheus can be stopped by executing the commands:
@@ -122,7 +122,7 @@ csle stop prometheus
 ```
 
 <p class="captionFig">
-Listing 105: Commands to stop monitoring systems.
+Listing 110: Commands to stop monitoring systems.
 </p>
 
 ### Starting and Stopping Emulation Executions
@@ -134,7 +134,7 @@ csle start csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 106: Command to start an execution of the emulation with configuration `csle-level9-010`.
+Listing 111: Command to start an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 Similarly, to stop an execution of an emulation configuration
@@ -145,12 +145,12 @@ csle stop csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 107: Command to stop an execution of the emulation with configuration `csle-level9-010`.
+Listing 112: Command to stop an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 The above command will stop all containers but will not remove them,
 which means that the emulation can be started again with the same configuration
-by running the command in Listing 106.
+by running the command in Listing 111.
 
 To stop an emulation execution and remove all of its containers and virtual networks, run the command:
 
@@ -159,7 +159,7 @@ csle clean csle-level9-010
 ```
 
 <p class="captionFig">
-Listing 108: Command to stop and clean an execution of the emulation with configuration `csle-level9-010`.
+Listing 113: Command to stop and clean an execution of the emulation with configuration `csle-level9-010`.
 </p>
 
 ### Access a Terminal in an Emulated Container
@@ -171,7 +171,7 @@ csle ls --all
 ```
 
 <p class="captionFig">
-Listing 109: Command to list running CSLE containers.
+Listing 114: Command to list running CSLE containers.
 </p>
 
 To open a terminal in a running container,
@@ -182,5 +182,5 @@ csle shell mycontainer
 ```
 
 <p class="captionFig">
-Listing 110: Command to open a terminal in an emulated container. 
+Listing 115: Command to open a terminal in an emulated container. 
 </p>

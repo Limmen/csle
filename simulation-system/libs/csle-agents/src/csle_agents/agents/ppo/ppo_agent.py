@@ -206,7 +206,7 @@ class PPOAgent(BaseAgent):
                 os.chmod(save_path, 0o777)
 
             # Save latest trace
-            if self.save_to_metastore:
+            if self.save_to_metastore and len(orig_env.get_traces()) > 0:
                 MetastoreFacade.save_simulation_trace(orig_env.get_traces()[-1])
             orig_env.reset_traces()
 

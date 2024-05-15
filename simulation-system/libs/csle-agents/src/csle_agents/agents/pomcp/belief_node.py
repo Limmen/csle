@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 from csle_agents.agents.pomcp.node import Node
 from csle_agents.agents.pomcp.pomcp_util import POMCPUtil
 
@@ -46,14 +46,13 @@ class BeliefNode(Node):
         """
         return self.action_to_node_map.get(key, None)
 
-    def sample_state(self) -> int:
+    def sample_state(self) -> Any:
         """
         Samples a state from the belief state
 
         :return: the sampled state
         """
-        sample = POMCPUtil.rand_choice(self.particles)
-        return int(sample)
+        return POMCPUtil.rand_choice(self.particles)
 
     def add_particle(self, particle: Union[int, List[int]]) -> None:
         """

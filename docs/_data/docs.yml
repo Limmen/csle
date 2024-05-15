@@ -20,6 +20,7 @@
 
 - title: Getting Started
   docs:
+    - ansible-installing
     - installing
     - quick-start
     - uninstalling

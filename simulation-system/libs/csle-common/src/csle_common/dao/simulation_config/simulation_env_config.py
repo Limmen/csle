@@ -108,8 +108,7 @@ class SimulationEnvConfig(JSONSerializable):
                            WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict,
                            WorkflowIntrusionResponsePOMDPAttackerConfig.from_dict,
                            IntrusionRecoveryPomdpConfig.from_dict,
-                           IntrusionResponseCmdpConfig.from_dict,
-                           CSLECyborgConfig.from_dict]
+                           IntrusionResponseCmdpConfig.from_dict, CSLECyborgConfig.from_dict]
         for parse_fun in parse_functions:
             try:
                 input_config = parse_fun(d["simulation_env_input_config"])

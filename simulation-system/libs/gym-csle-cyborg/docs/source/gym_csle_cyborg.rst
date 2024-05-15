@@ -10,6 +10,7 @@ Subpackages
    gym_csle_cyborg.constants
    gym_csle_cyborg.dao
    gym_csle_cyborg.envs
+   gym_csle_cyborg.util
 
 Module contents
 ---------------

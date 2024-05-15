@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_ryu.controllers.learning_switch_stp_controller &mdash; csle-ryu 0.0.1 documentation</title>
+  <title>csle_ryu.controllers.learning_switch_stp_controller &mdash; csle-ryu 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -78,7 +78,7 @@
 
 
 <div class="viewcode-block" id="LearningSwitchSTPController"><a class="viewcode-back" href="../../../csle_ryu.controllers.html#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController">[docs]</a><span class="k">class</span> <span class="nc">LearningSwitchSTPController</span><span class="p">(</span><span class="n">FlowAndPortStatsMonitor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RYU Controller implementing a learning L2 switch for OpenFlow 1.3 with the STP spanning tree protocol</span>
 
 <span class="sd">    To avoid the problems associated with redundant links in a switched LAN,</span>
@@ -93,10 +93,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Spanning tree protocol to use</span>
-    <span class="n">_CONTEXTS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;stplib&#39;</span><span class="p">:</span> <span class="n">stplib</span><span class="o">.</span><span class="n">Stp</span><span class="p">}</span>
+    <span class="n">_CONTEXTS</span> <span class="o">=</span> <span class="p">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STPLIB</span><span class="p">:</span> <span class="n">stplib</span><span class="o">.</span><span class="n">Stp</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes  the switch</span>
 
 <span class="sd">        :param args: RYU arguments</span>
@@ -108,16 +108,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mac_to_port</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># The spanning tree protocol version version</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;stplib&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STPLIB</span><span class="p">]</span>
 
         <span class="c1"># Controller type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">=</span> <span class="n">RYUControllerType</span><span class="o">.</span><span class="n">LEARNING_SWITCH_STP</span>
 
 <div class="viewcode-block" id="LearningSwitchSTPController.delete_flow"><a class="viewcode-back" href="../../../csle_ryu.controllers.html#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.delete_flow">[docs]</a>    <span class="k">def</span> <span class="nf">delete_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datapath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for instructing a switch to delete all flows that have been installed</span>
 
-<span class="sd">        :param datapath: the datapath, i.e. abstraction of the link to the switch</span>
+<span class="sd">        :param datapath: the datapath, i.e., abstraction of the link to the switch</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -139,19 +139,19 @@
             <span class="n">datapath</span><span class="o">.</span><span class="n">send_msg</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LearningSwitchSTPController.switch_features_handler"><a class="viewcode-back" href="../../../csle_ryu.controllers.html#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.switch_features_handler">[docs]</a>    <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">ofp_event</span><span class="o">.</span><span class="n">EventOFPSwitchFeatures</span><span class="p">,</span> <span class="n">CONFIG_DISPATCHER</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">switch_features_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">switch_features_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handler called after OpenFlow handshake with switch completed. It adds teh Table-miss flow entry to</span>
 <span class="sd">        the flow tables of the switch so that next packet which yield a flow-table-miss will be sent to the</span>
 <span class="sd">        controller</span>
 
 <span class="sd">        :param ev: the handshake complete event</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># the datapath, i.e. abstraction of the link to the switch</span>
+        <span class="c1"># the datapath, i.e., abstraction of the link to the switch</span>
         <span class="n">datapath</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">datapath</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{self.controller_type}</span><span class="s2">] OpenFlow handshake with switch DPID:</span><span class="si">{datapath.id}</span><span class="s2">, &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span><span class="si">}</span><span class="s2">] OpenFlow handshake with switch DPID:</span><span class="si">{</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, &quot;</span>
                          <span class="sa">f</span><span class="s2">&quot;completed, adding the default flow-miss entry to the table&quot;</span><span class="p">)</span>
 
         <span class="c1"># Extract version and packet parser</span>
@@ -175,18 +175,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_flow</span><span class="p">(</span><span class="n">datapath</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">actions</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LearningSwitchSTPController.add_flow"><a class="viewcode-back" href="../../../csle_ryu.controllers.html#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.add_flow">[docs]</a>    <span class="k">def</span> <span class="nf">add_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datapath</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">buffer_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for adding a flow to a switch</span>
 
-<span class="sd">        :param datapath: the datapath, i.e. abstraction of the link to the switch</span>
+<span class="sd">        :param datapath: the datapath, i.e., abstraction of the link to the switch</span>
 <span class="sd">        :param priority: the priority of the flow (higher priority are prioritized)</span>
 <span class="sd">        :param match: the pattern for matching packets to the flow based on the header</span>
-<span class="sd">        :param actions: the actions to take when the flow is matched, e.g. where to send the packet</span>
+<span class="sd">        :param actions: the actions to take when the flow is matched, e.g., where to send the packet</span>
 <span class="sd">        :param buffer_id: the id of the buffer where packets for this flow are queued if they cannot be sent</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">openflow_protocol</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto</span> <span class="c1"># Extract the openflow protocol used for communicating with the switch</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto_parser</span> <span class="c1"># extract packet parser</span>
+        <span class="n">openflow_protocol</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto</span>  <span class="c1"># Extract the openflow protocol used for communicating with the switch</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">datapath</span><span class="o">.</span><span class="n">ofproto_parser</span>  <span class="c1"># extract packet parser</span>
 
         <span class="c1"># Define the instruction that the switch should perform if the flow is matched</span>
         <span class="n">instruction</span> <span class="o">=</span> <span class="p">[</span><span class="n">parser</span><span class="o">.</span><span class="n">OFPInstructionActions</span><span class="p">(</span><span class="n">openflow_protocol</span><span class="o">.</span><span class="n">OFPIT_APPLY_ACTIONS</span><span class="p">,</span> <span class="n">actions</span><span class="p">)]</span>
@@ -197,15 +197,14 @@
                                     <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">match</span><span class="p">,</span>
                                     <span class="n">instructions</span><span class="o">=</span><span class="n">instruction</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">OFPFlowMod</span><span class="p">(</span><span class="n">datapath</span><span class="o">=</span><span class="n">datapath</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span>
-                                    <span class="n">match</span><span class="o">=</span><span class="n">match</span><span class="p">,</span> <span class="n">instructions</span><span class="o">=</span><span class="n">instruction</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">OFPFlowMod</span><span class="p">(</span><span class="n">datapath</span><span class="o">=</span><span class="n">datapath</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">match</span><span class="p">,</span> <span class="n">instructions</span><span class="o">=</span><span class="n">instruction</span><span class="p">)</span>
 
         <span class="c1"># Send the message to the switch</span>
         <span class="n">datapath</span><span class="o">.</span><span class="n">send_msg</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span></div>
 
     <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">stplib</span><span class="o">.</span><span class="n">EventPacketIn</span><span class="p">,</span> <span class="n">MAIN_DISPATCHER</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_packet_in_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handler called when the switch has received a packet with an unknown destination and thus forwards</span>
 <span class="sd">        the packet to the controller. Excludes BPDU (bridge protocol data units) packets that are part of the</span>
 <span class="sd">        STP protocol.</span>
@@ -234,10 +233,10 @@
         <span class="c1"># Initialize empty row in the mac-to-port table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mac_to_port</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">datapath_id</span><span class="p">,</span> <span class="p">{})</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{self.controller_type}</span><span class="s2">] received packet in, DPID:</span><span class="si">{datapath_id}</span><span class="s2">, &quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;src_mac_address:</span><span class="si">{src_mac_address}</span><span class="s2">, dst_mac_address:</span><span class="si">{dst_mac_address}</span><span class="s2">, port number:</span><span class="si">{in_port}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span><span class="si">}</span><span class="s2">] received packet in, DPID:</span><span class="si">{</span><span class="n">datapath_id</span><span class="si">}</span><span class="s2">, &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;src_mac_address:</span><span class="si">{</span><span class="n">src_mac_address</span><span class="si">}</span><span class="s2">, dst_mac_address:</span><span class="si">{</span><span class="n">dst_mac_address</span><span class="si">}</span><span class="s2">, port number:</span><span class="si">{</span><span class="n">in_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># learn a mac address to avoid FLOOD next time, i.e. map the port of the switch to the source MAC address</span>
+        <span class="c1"># learn a mac address to avoid FLOOD next time, i.e., map the port of the switch to the source MAC address</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mac_to_port</span><span class="p">[</span><span class="n">datapath_id</span><span class="p">][</span><span class="n">src_mac_address</span><span class="p">]</span> <span class="o">=</span> <span class="n">in_port</span>
 
         <span class="k">if</span> <span class="n">dst_mac_address</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_to_port</span><span class="p">[</span><span class="n">datapath_id</span><span class="p">]:</span>
@@ -278,7 +277,7 @@
 
     <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">stplib</span><span class="o">.</span><span class="n">EventTopologyChange</span><span class="p">,</span> <span class="n">MAIN_DISPATCHER</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_topology_change_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handler called when a topology change has been detected by the STP protocol</span>
 
 <span class="sd">        :param ev: the topology change event</span>
@@ -287,8 +286,8 @@
         <span class="c1"># Extract the datapath (abstraction of the communication link to the switch)</span>
         <span class="n">datapath</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">dp</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{self.controller_type}</span><span class="s2">] received topology change event from &quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;DPID:</span><span class="si">{datapath.id}</span><span class="s2">, &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span><span class="si">}</span><span class="s2">] received topology change event from &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;DPID:</span><span class="si">{</span><span class="n">datapath</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, &quot;</span>
                          <span class="sa">f</span><span class="s2">&quot;flushing the MAC table and deleting installed flows&quot;</span><span class="p">)</span>
 
         <span class="c1"># If we have flows installed for this switch and learned mac-to-port mappings, delete them</span>
@@ -298,7 +297,7 @@
 
     <span class="nd">@set_ev_cls</span><span class="p">(</span><span class="n">stplib</span><span class="o">.</span><span class="n">EventPortStateChange</span><span class="p">,</span> <span class="n">MAIN_DISPATCHER</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_port_state_change_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handler called when the controller receives a message from the switch which indicates that one of its</span>
 <span class="sd">        ports has changed</span>
 
@@ -311,14 +310,12 @@
         <span class="n">port_no</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">port_no</span>
 
         <span class="c1"># Map port state to strings for logging</span>
-        <span class="n">openflow_state</span> <span class="o">=</span> <span class="p">{</span><span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_DISABLE</span><span class="p">:</span> <span class="s1">&#39;DISABLE&#39;</span><span class="p">,</span>
-                    <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_BLOCK</span><span class="p">:</span> <span class="s1">&#39;BLOCK&#39;</span><span class="p">,</span>
-                    <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_LISTEN</span><span class="p">:</span> <span class="s1">&#39;LISTEN&#39;</span><span class="p">,</span>
-                    <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_LEARN</span><span class="p">:</span> <span class="s1">&#39;LEARN&#39;</span><span class="p">,</span>
-                    <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_FORWARD</span><span class="p">:</span> <span class="s1">&#39;FORWARD&#39;</span><span class="p">}</span>
+        <span class="n">openflow_state</span> <span class="o">=</span> <span class="p">{</span><span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_DISABLE</span><span class="p">:</span> <span class="s1">&#39;DISABLE&#39;</span><span class="p">,</span> <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_BLOCK</span><span class="p">:</span> <span class="s1">&#39;BLOCK&#39;</span><span class="p">,</span>
+                          <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_LISTEN</span><span class="p">:</span> <span class="s1">&#39;LISTEN&#39;</span><span class="p">,</span> <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_LEARN</span><span class="p">:</span> <span class="s1">&#39;LEARN&#39;</span><span class="p">,</span>
+                          <span class="n">stplib</span><span class="o">.</span><span class="n">PORT_STATE_FORWARD</span><span class="p">:</span> <span class="s1">&#39;FORWARD&#39;</span><span class="p">}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{self.controller_type}</span><span class="s2">] a port </span><span class="si">{port_no}</span><span class="s2"> was modified on switch with &quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;DPID: </span><span class="si">{datapath_id}</span><span class="s2">. Port state: </span><span class="si">{openflow_state[ev.port_state]}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SDN-Controller </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span><span class="si">}</span><span class="s2">] a port </span><span class="si">{</span><span class="n">port_no</span><span class="si">}</span><span class="s2"> was modified on switch with &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;DPID: </span><span class="si">{</span><span class="n">datapath_id</span><span class="si">}</span><span class="s2">. Port state: </span><span class="si">{</span><span class="n">openflow_state</span><span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">port_state</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

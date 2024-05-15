@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_tolerance.envs.intrusion_response_cmdp_env &mdash; csle-tolerancexsg 0.3.0 documentation</title>
+  <title>csle_tolerance.envs.intrusion_response_cmdp_env &mdash; csle-tolerance 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-tolerancexsg
+            <a href="../../../index.html" class="icon icon-home"> csle-tolerance
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -49,16 +47,16 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">csle-tolerancexsg</a>
+          <a href="../../../index.html">csle-tolerance</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_tolerance.envs.intrusion_response_cmdp_env</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_tolerance.envs.intrusion_response_cmdp_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,14 +66,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_tolerance.envs.intrusion_response_cmdp_env</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_tolerance.dao.intrusion_response_cmdp_config</span> <span class="kn">import</span> <span class="n">IntrusionResponseCmdpConfig</span>
 <span class="kn">from</span> <span class="nn">csle_tolerance.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
+<span class="kn">import</span> <span class="nn">csle_tolerance.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
 
 
-<div class="viewcode-block" id="IntrusionResponseCmdpEnv"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseCmdpEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseCmdpEnv</span><span class="p">(</span><span class="n">BaseEnv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gym Environment representing the intrusion response CMDP</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -87,11 +91,21 @@
 <span class="sd">        :param config: the environment configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="c1"># Setup spaces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">actions</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)),</span>
                                                 <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+
+        <span class="c1"># Initialize state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">initial_state</span>
+
+        <span class="c1"># Setup traces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">SimulationTrace</span><span class="p">(</span><span class="n">simulation_env</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gym_env_name</span><span class="p">)</span>
+
+        <span class="c1"># Reset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -103,11 +117,38 @@
 <span class="sd">        :return: (obs, reward, terminated, truncated, info)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Cost</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_tensor</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">]</span>
+
+        <span class="c1"># Sample next state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">GeneralUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">transition_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">transition_tensor</span><span class="p">,</span>
                                                <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+
+        <span class="c1"># Update time-step</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Populate info dict</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">DEFENDER_ACTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="c1"># Log trace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">infrastructure_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseCmdpEnv.reset"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">soft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
@@ -121,10 +162,134 @@
 <span class="sd">        :return: initial observation and info</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">SimulationTrace</span><span class="p">(</span><span class="n">simulation_env</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_env_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">initial_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">info</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">info</span></div>
+
+    <span class="k">def</span> <span class="nf">_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the cumulative reward and episode length to the info dict</span>
+
+<span class="sd">        :param info: the info dict to update</span>
+<span class="sd">        :return: the updated info dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">)):</span>
+            <span class="n">R</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">discount_factor</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.render"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</span>
+
+<span class="sd">        :param mode: the rendering mode</span>
+<span class="sd">        :return: True (if human mode) otherwise an rgb array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Rendering is not implemented for this environment&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.get_traces"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.get_traces">[docs]</a>    <span class="k">def</span> <span class="nf">get_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the list of simulation traces</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traces</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.reset_traces"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.reset_traces">[docs]</a>    <span class="k">def</span> <span class="nf">reset_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the list of traces</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+    <span class="k">def</span> <span class="nf">__checkpoint_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checkpoints agent traces</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">SimulationTrace</span><span class="o">.</span><span class="n">save_traces</span><span class="p">(</span><span class="n">traces_save_dir</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">LOGGING</span><span class="o">.</span><span class="n">DEFAULT_LOG_DIR</span><span class="p">,</span>
+                                    <span class="n">traces</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">,</span> <span class="n">traces_file</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;taus</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.set_model"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.set_model">[docs]</a>    <span class="k">def</span> <span class="nf">set_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract</span>
+
+<span class="sd">        :param model: the model</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.set_state"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the state. Allows to simulate samples from specific states</span>
+
+<span class="sd">        :param state: the state</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseCmdpEnv.manual_play"><a class="viewcode-back" href="../../../csle_tolerance.envs.html#csle_tolerance.envs.intrusion_response_cmdp_env.IntrusionResponseCmdpEnv.manual_play">[docs]</a>    <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An interactive loop to test the CMDP manually</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">initial_state</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="p">)</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="n">raw_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;help&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter an action id to execute the action, &quot;</span>
+                      <span class="s2">&quot;press R to reset,&quot;</span>
+                      <span class="s2">&quot;press S to print the set of states&quot;</span>
+                      <span class="s2">&quot;press A to print the set of actions&quot;</span>
+                      <span class="s2">&quot;press s to print the current state, press A to print the actions, &quot;</span>
+                      <span class="s2">&quot;press D to check if done&quot;</span>
+                      <span class="s2">&quot;press C to check the cumulative costs&quot;</span>
+                      <span class="s2">&quot;press H to print the history of actions&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;s&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">cumulative_costs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resetting the state&quot;</span><span class="p">)</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">initial_state</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">cumulative_costs</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_tensor</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">GeneralUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">transition_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">transition_tensor</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
+                                                  <span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">cumulative_costs</span> <span class="o">+=</span> <span class="n">c</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">, c: </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">, t: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

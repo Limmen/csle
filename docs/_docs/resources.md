@@ -8,13 +8,14 @@ permalink: /docs/resources/
 Resources for getting started with CSLE are described below.
 
 ### Documentation
-Apart from the web documentation (i.e the documentation you are reading now), which is available at
+Apart from the web documentation (i.e., the documentation you are reading now), which is available at
 <a href="https://limmen.dev/csle/">https://limmen.dev/csle/</a>, there are official release documents, 
 which are available in PDF format for each release <a href="https://github.com/Limmen/csle/tree/master/releases">here</a>. 
-Video demonstrations of earlier versions of CSLE are available on Youtube: 
+Video demonstrations of earlier versions of CSLE are available on YouTube: 
 
 - <a href="https://www.youtube.com/watch?v=18P7MjPKNDg&t=1s">Demonstration of v0.0.1</a>
 - <a href="https://www.youtube.com/watch?v=iE2KPmtIs2A&">Demonstration of v0.2.0</a>
+- <a href="https://www.youtube.com/watch?v=l_g3sRJwwhc">Demonstration of the installation of v0.5.0</a>
 
 ### Source code, Binaries, and Docker Images
 
@@ -40,22 +41,25 @@ Further, binaries of the Python libraries in CSLE are available on PyPi:
 - <a href="https://pypi.org/project/csle-cluster">https://pypi.org/project/csle-cluster</a>
 - <a href="https://pypi.org/project/gym-csle-intrusion-response-game">https://pypi.org/project/gym-csle-intrusion-response-game</a>
 - <a href="https://pypi.org/project/csle-tolerance">https://pypi.org/project/csle-tolerance</a>
+- <a href="https://pypi.org/project/csle-attack-profiler">https://pypi.org/project/csle-attack-profiler</a>
 
 
 #### Lines of code
 
-CSLE consists of around 200,000 lines of Python \cite{van1995python}, 
+CSLE consists of around 275,000 lines of Python, 
 40,000 lines of JavaScript, 
 3000 lines of Dockerfiles, 
-5000 lines of Makefile, 
-and 14000 lines of Bash. 
+5400 lines of Makefile, 
+14000 lines of Bash, 
+and 7600 lines of YAML.
 The lines of code can be counted by executing the following commands from the project root:
 ```bash
 find . -name '*.py' | xargs wc -l
-find . -name '*.js' | xargs wc -l
+cd management-system/src; find . -name '*.js' | xargs wc -l
 find . -name 'Dockerfile' | xargs wc -l
 find . -name 'Makefile' | xargs wc -l
 find . -name '*.sh' | xargs wc -l
+find . -name '*.yml' | xargs wc -l
 ```
 <p class="captionFig">
 Listing 1: Commands for counting the lines of code in CSLE.

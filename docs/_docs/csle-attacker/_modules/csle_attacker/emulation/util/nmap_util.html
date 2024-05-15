@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_attacker.emulation.util.nmap_util &mdash; csle-attacker 0.3.0 documentation</title>
+  <title>csle_attacker.emulation.util.nmap_util &mdash; csle-attacker 0.5.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -53,9 +51,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_attacker.emulation.util.nmap_util</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_attacker.emulation.util.nmap_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -233,8 +231,8 @@
         <span class="k">return</span> <span class="n">hostnames</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_nmap_ports_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapPort</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span>
-                                                                                  <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">_parse_nmap_ports_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapPort</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses a ports XML element in the XML tree</span>
 
@@ -389,10 +387,9 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_nmap_script</span><span class="p">(</span><span class="n">xml_data</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">TransportProtocol</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                           <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span>
-                                                                           <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">],</span>
-                                                                           <span class="n">NmapHttpEnum</span><span class="p">,</span> <span class="n">NmapHttpGrep</span><span class="p">,</span>
-                                                                           <span class="n">NmapVulscan</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+                           <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">NmapBruteCredentials</span><span class="p">],</span> <span class="n">NmapHttpEnum</span><span class="p">,</span> <span class="n">NmapHttpGrep</span><span class="p">,</span> <span class="n">NmapVulscan</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                     <span class="n">Union</span><span class="p">[</span><span class="n">NmapVuln</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses a XML script element</span>
 
@@ -541,6 +538,9 @@
         <span class="k">if</span> <span class="n">masscan</span><span class="p">:</span>
             <span class="n">cmds</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">masscan_cmds</span><span class="p">()</span>
 
+        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Running NMAP scan on container: </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">agent_ip</span><span class="si">}</span><span class="s2">, commands: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_hacker_connection</span><span class="p">())</span>
         <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">results</span><span class="p">)))</span>
 
@@ -803,6 +803,9 @@
             <span class="n">c2</span> <span class="o">=</span> <span class="n">c</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ENV_CONSTANTS</span><span class="o">.</span><span class="n">NUM_RETRIES</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
+                    <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Running NMAP scan on container(s): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">ips</span><span class="si">}</span><span class="s2">, commands: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">results</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="n">cmds</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">c2</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
                     <span class="k">break</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
