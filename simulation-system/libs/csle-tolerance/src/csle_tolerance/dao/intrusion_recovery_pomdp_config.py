@@ -1,5 +1,8 @@
 from typing import List, Dict, Any
 import numpy as np
+import logging
+import io
+import json
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
@@ -111,7 +114,7 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
         d["b1"] = self.b1
         d["T"] = self.T
         d["simulation_env_name"] = self.simulation_env_name
-        d["gym_env_name"] = self.simulation_env_name
+        d["gym_env_name"] = self.gym_env_name
         return d
 
     @staticmethod
@@ -122,8 +125,8 @@ class IntrusionRecoveryPomdpConfig(SimulationEnvInputConfig):
         :param json_file_path: the json file path
         :return: the converted DTO
         """
-        import io
-        import json
+        logging.info(msg="msg")
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
+            print(json_str)
         return IntrusionRecoveryPomdpConfig.from_dict(json.loads(json_str))

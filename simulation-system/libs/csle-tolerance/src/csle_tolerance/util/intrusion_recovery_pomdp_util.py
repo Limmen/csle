@@ -179,6 +179,7 @@ class IntrusionRecoveryPomdpUtil:
         :param p_u: the upgrade probability
         :return: the transition tensor
         """
+        assert states == [0,1,2]
         transition_tensor = []
         for a in actions:
             a_transitions = []
