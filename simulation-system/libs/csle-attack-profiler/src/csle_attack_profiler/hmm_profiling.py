@@ -885,12 +885,14 @@ class HMMProfiler:
         recon_states_sum = np.sum(P_states[initial_state_index][1:])
         recon_states = P_states[initial_state_index][1:] / recon_states_sum
 
-        intrusion_start_state = np.random.choice(states_len - 1, p=recon_states)
+        intrusion_start_state = np.random.choice(states_len - 1, p=recon_states) + 1
         intrusion_start_observation = np.random.choice(obs_len, p=P_obs[intrusion_start_state])
         state_seq.append(states[intrusion_start_state])
         obs_seq.append(observations[intrusion_start_observation])
 
         s_i = intrusion_start_state
+        if intrusion_length == 1:
+            return state_seq, obs_seq
         for i in range(intrusion_length):
             # si ~ Ps(si | si-1)
             s_i = np.random.choice(states_len, p=P_states[s_i])
