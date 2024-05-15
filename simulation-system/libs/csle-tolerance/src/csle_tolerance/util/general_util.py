@@ -72,9 +72,7 @@ class GeneralUtil:
 
         :return: None
         """
-        #import logging
         from gymnasium.envs.registration import register
-        #logging.info(f"mocked object?: {register}")
         register(
             id='csle-tolerance-intrusion-recovery-pomdp-v1',
             entry_point='csle_tolerance.envs.intrusion_recovery_pomdp_env:IntrusionRecoveryPomdpEnv',

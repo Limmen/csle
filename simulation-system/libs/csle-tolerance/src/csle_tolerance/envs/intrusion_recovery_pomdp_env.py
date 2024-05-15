@@ -146,7 +146,6 @@ class IntrusionRecoveryPomdpEnv(BaseEnv):
         upper_bound_return = 0
         s = self.trace.states[0]
         for i in range(len(self.trace.states)):
-            print(i)
             if s == 0 or s == 2:
                 a = 0
             else:
