@@ -9,7 +9,7 @@ The recommended way to install CSLE is to use Ansible, as described above.
 This section describes an alternative, manual, way of installing CSLE. The
 manual installation can be suitable if you want to customize the installation.
 
-The installation of CSLE can be divided in four main steps (see Fig. 26). 
+The installation of CSLE can be divided in four main steps (see Fig. 27). 
 The first step is "Installation setup", which comprises installation configuration 
 and installation of build tools. 
 In the second step, the metastore and the simulation system are installed. 
@@ -76,7 +76,7 @@ set -gx CSLE_HOME "/path/to/csle"
 Listing 11: Line to add to the fish configuration file to set the `CSLE_HOME` environment variable.
 </p>
 
-After performing the steps above, you should have the directory layout shown in Fig. 27.
+After performing the steps above, you should have the directory layout shown in Fig. 28.
 
 <p align="center">
 <img src="./../../img/dir_layout.png" width="70%">
@@ -675,8 +675,7 @@ docker swarm join --token <my_roken> leader_ip:2377
 Listing 64: Commands to add a worker node to the Docker swarm.
 </p>
 
-| Note: If you forget the swarm token, you can display it by running the following command on the leader: `docker swarm join-token worker`. |
-|-----------------------------------------------------------------------------------------------------------------------|
+Note: If you forget the swarm token, you can display it by running the following command on the leader: `docker swarm join-token worker`.
 
 You can verify the Docker swarm configuration by running `docker node ls`.
 
@@ -848,8 +847,9 @@ npm run build
 Listing 78: Commands to install the web application of the CSLE management system.
 </p>
 
-| Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. Further, if you have an old operating system you may need to run the command `export NODE_OPTIONS=--openssl-legacy-provider` before running `npm run build` |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+Note: when you run the command `npm install` you may need to add the flag `--legacy-peer-deps`. 
+Further, if you have an old operating system you may need to 
+run the command `export NODE_OPTIONS=--openssl-legacy-provider` before running `npm run build`
 
 Next, install and start `pgadmin` **on the leader** by running the following commands:
 ```bash

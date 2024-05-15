@@ -36,3 +36,4 @@ should be on the list but is not):
 - Nils Forsgren, software development.
 - Bength Roland Pappila, software development.
 - Yu Hu, software development.
+- Yan Wang, software development.
