@@ -58,7 +58,7 @@ class IntrusionRecoveryGameConfig(SimulationEnvInputConfig):
         """
         :return: a string representation of the DTO
         """
-        return (f"eta: {self.eta}, p_a: {self.p_a}, p_c_1: {self.p_c_1},"
+        return (f"eta: {self.eta}, p_a: {self.p_a}, p_c_1: {self.p_c_1}, "
                 f"BTR: {self.BTR}, negate_costs: {self.negate_costs}, seed: {self.seed}, "
                 f"discount_factor: {self.discount_factor}, states: {self.states}, actions: {self.actions}, "
                 f"observations: {self.observation_tensor}, cost_tensor: {self.cost_tensor}, "
@@ -105,7 +105,7 @@ class IntrusionRecoveryGameConfig(SimulationEnvInputConfig):
         d["b1"] = self.b1
         d["T"] = self.T
         d["simulation_env_name"] = self.simulation_env_name
-        d["gym_env_name"] = self.simulation_env_name
+        d["gym_env_name"] = self.gym_env_name
         return d
 
     @staticmethod
