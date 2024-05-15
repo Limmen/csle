@@ -50,7 +50,7 @@ const AddVulns = (props) => {
                   </Button>
                 </td>
               </tr>
-              <tr className="custom-td">
+              <tr>
                 <td>Vulnerability service</td>
                 <td>
                   <select
@@ -65,30 +65,30 @@ const AddVulns = (props) => {
                   </select>
                 </td>
               </tr>
-
-
-              {/*<tr key={'service-protocol' + containerService.protocol + '-' + serviceIndex + '-' + props.containerIndex}>*/}
-              {/*  <td> Service protocol</td>*/}
-              {/*  <td>*/}
-              {/*    <select*/}
-              {/*      value={containerService.protocol}*/}
-              {/*      onChange={(e) => props.handleProtocolChange(e, props.containerIndex, serviceIndex)}>*/}
-              {/*      <option value="tcp">tcp</option>*/}
-              {/*      <option value="udp">udp</option>*/}
-              {/*    </select>*/}
-              {/*  </td>*/}
-              {/*</tr>*/}
-              {/*<tr key={'service-port' + containerService.port + '-' + serviceIndex + '-' + props.containerIndex}>*/}
-              {/*  <td> Service port</td>*/}
-              {/*  <td>*/}
-              {/*    <input*/}
-              {/*      ref={props.inputServicePortRef}*/}
-              {/*      type="text"*/}
-              {/*      value={containerService.port}*/}
-              {/*      onChange={(event) => props.handleServicePortChange(event, props.containerIndex, serviceIndex)}*/}
-              {/*    />*/}
-              {/*  </td>*/}
-              {/*</tr>*/}
+              <tr>
+                <td>Vulnerability needed Root access</td>
+                <td>
+                  <select
+                    value={props.container.vulns[vulnIndex].vulnRoot}
+                    onChange={(e) => props.handleVulnAccessChange(e, props.containerIndex, vulnIndex)}>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
+                </td>
+              </tr>
+              <tr className="custom-td">
+                <td>Vulnerability type</td>
+                <td>
+                  <select
+                    value={props.container.vulns[vulnIndex].vulnType}
+                    onChange={(e) => props.handleVulnTypeChange(e, props.containerIndex, vulnIndex)}>
+                    <option value="0">Weak password</option>
+                    <option value="1">Remote code execution</option>
+                    <option value="2">SQL injection</option>
+                    <option value="3">Privilage escalation</option>
+                  </select>
+                </td>
+              </tr>
 
             </React.Fragment>
           ))}

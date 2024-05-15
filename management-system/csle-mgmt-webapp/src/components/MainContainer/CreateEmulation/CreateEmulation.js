@@ -424,6 +424,42 @@ const CreateEmulation = (props) => {
         console.log("The value vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnName)
     }
 
+    const handleContainerVulnAccessChange = (event, containerIndex, vulnIndex) => {
+        const vulnAccessValue = event.target.value
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers]
+            const containerToUpdate = {...updatedContainers[containerIndex]}
+            const updatedVulns = [...containerToUpdate.vulns]
+            updatedVulns[vulnIndex] = {
+                ...updatedVulns[vulnIndex],
+                vulnRoot: vulnAccessValue
+            }
+            containerToUpdate.vulns = updatedVulns
+            updatedContainers[containerIndex] = containerToUpdate
+            return updatedContainers
+        })
+        deFocus()
+        console.log("The Access value for vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnRoot)
+    }
+
+    const handleContainerVulnTypeChange = (event, containerIndex, vulnIndex) => {
+        const vulnTypeValue = event.target.value
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers]
+            const containerToUpdate = {...updatedContainers[containerIndex]}
+            const updatedVulns = [...containerToUpdate.vulns]
+            updatedVulns[vulnIndex] = {
+                ...updatedVulns[vulnIndex],
+                vulnType: vulnTypeValue
+            }
+            containerToUpdate.vulns = updatedVulns
+            updatedContainers[containerIndex] = containerToUpdate
+            return updatedContainers
+        })
+        deFocus()
+        console.log("The type value for vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnType)
+    }
+
 
     const handleContainerUserPwChange = (event, containerIndex, userIndex) => {
         const PwValue = event.target.value
@@ -1778,6 +1814,8 @@ const CreateEmulation = (props) => {
                                                               handleDeleteVuln={handleDeleteContainerVuln}
                                                               addVulnHandler={handleAddContainerVulns}
                                                               handleVulnServiceChange={handleContainerVulnServiceChange}
+                                                              handleVulnAccessChange={handleContainerVulnAccessChange}
+                                                              handleVulnTypeChange={handleContainerVulnTypeChange}
                                                     />
                                                 </div>
                                             </div>
