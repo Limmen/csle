@@ -1204,7 +1204,6 @@ const CreateEmulation = (props) => {
 
     // Use useEffect to focus on the input field when containers state changes
     useEffect(() => {
-        createEmulationRequest()
         if (inputNameRef.current && shouldFocusName) {
             inputNameRef.current.focus()
         } else if (inputIPRef.current && shouldFocusIP) {
@@ -1297,7 +1296,7 @@ const CreateEmulation = (props) => {
         shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
         shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
         shouldFocusUserName, shouldFocusPw, shouldFocusRoot, shouldFocusServiceIp, shouldFocusServicePort,
-        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName, createEmulationRequest])
+        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName])
 
     const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
         const packetDelayDistributionValue = event.target.value
@@ -1588,249 +1587,260 @@ const CreateEmulation = (props) => {
     return (
       <div className="CreateEmulation">
           <h3 className="managementTitle"> Create Emulation </h3>
-          <Accordion defaultActiveKey="0">
-              <Card className="subCard">
-                  <Card.Header>
-                      <Button
-                        onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
-                        aria-controls="generalInfoBody"
-                        aria-expanded={generalInfoOpen}
-                        variant="link"
-                      >
-                          <h5 className="semiTitle">
-                              General information about the emulation
-                              <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
-                          </h5>
-                      </Button>
-                  </Card.Header>
-                  <Collapse in={generalInfoOpen}>
-                      <div id="generalInfoBody" className="cardBodyHidden">
-                          <AddEmulationGeneral nameValue={nameValue}
-                                               handleNameChange={handleNameChange}
-                                               networkIdValue={networkIdValue}
-                                               handleNetworkIdChange={handleNetworkIdChange}
-                                               levelValue={levelValue}
-                                               handleLevelChange={handleLevelChange}
-                                               versionValue={versionValue}
-                                               handleVersionChange={handleVersionChange}
-                                               timeStepLengthValue={timeStepLengthValue}
-                                               handleTimeStepLengthChange={handleTimeStepLengthChange}
-                                               idsEnabled={idsEnabled}
-                                               handleContainerIdsEnabledChange={handleContainerIdsEnabledChange}
-                                               description={description}
-                                               handleDescriptionChange={handleDescriptionChange}
-                          />
-                      </div>
-                  </Collapse>
-              </Card>
-          </Accordion>
-          <Accordion defaultActiveKey="1">
-              <Card className="subCard">
-                  <Card.Header>
-                      <Button
-                        onClick={() => setContainerOpen(!containerOpen)}
-                        aria-controls="container"
-                        aria-expanded={containerOpen}
-                        variant="link"
-                      >
-                          <h5 className="semiTitle">
-                              Containers
-                              <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
-                          </h5>
-                      </Button>
-                  </Card.Header>
-                  <Collapse in={containerOpen}>
-                      <div id="container" className="cardBodyHidden">
-                          <div>
-                              Add a new container &nbsp;&nbsp;
-                              <Button onClick={addContainer}
-                                      variant="success" size="sm">
-                                  <i className="fa fa-plus" aria-hidden="true"/>
-                              </Button>
-                              <div style={{margin: '20px'}}>
-                                  {showPopup && (
-                                    <div className="popup">
-                                        <div>
-                                            <h5>Enter Container Name:</h5>
-                                        </div>
-                                        <div className="popup-content" style={{
-                                            display: 'flex', justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}>
-
-                                            <select value={JSON.stringify(newContainer)}
-                                                    onChange={(e) => handleContainerSelectChange(e)}>
-                                                <option value="">--Please choose an option--</option>
-                                                {containerAndOs.map((option, index) => (
-                                                  <option key={index} value={JSON.stringify(option)}>
-                                                      {`${option.name} (${option.os})`}
-                                                  </option>
-                                                ))}
-
-                                            </select>
-
-                                            <Button onClick={handleConfirmAdd}
-                                                    variant="primary" size="sm" style={{marginLeft: '5px'}}>
-                                                <i className="fa fa-check" aria-hidden="true"/>
-                                            </Button>
-                                            <Button onClick={handleClosePopup}
-                                                    variant="danger" size="sm" style={{marginLeft: '2px'}}>
-                                                <i className="fa fa-times" aria-hidden="true"/>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                  )}
-                              </div>
-
-
-                              {containers.map((container, index) => (
-                                <Accordion defaultActiveKey={index}>
-                                    <card className="subCard">
-                                        <Card.Header>
-                                            <Button
-                                              onClick={() => toggleContainerAccordion(index)}
-                                              aria-controls="container"
-                                              aria-expanded={container.containerAccordionOpen}
-                                              variant="link"
-                                            >
-                                                <h5 className="semiTitle">
-                                                    {containers[index].name}
-                                                    <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
-                                                </h5>
-                                            </Button>
-                                        </Card.Header>
-                                        <Collapse in={container.containerAccordionOpen}>
-                                            <div id="eachContainer" className="cardBodyHidden">
-                                                <div>
-                                                    Delete the container {containers[index].name} &nbsp;&nbsp;
-                                                    <Button onClick={() => deleteContainer(index)}
-                                                            variant="danger" size="sm">
-                                                        <i className="fa fa-trash startStopIcon"
-                                                           aria-hidden="true"/>
-                                                    </Button>
-                                                    <AddContainerGeneral container={containers[index]}
-                                                                         handleCpuChange={handleContainerCpuChange}
-                                                                         containerIndex={index}
-                                                                         handleMemoryChange={handleContainerMemoryChange}
-                                                                         handleFlagIdChange={handleContainerFlagIdChange}
-                                                                         handleFlagScoreChange={handleContainerFlagScoreChange}
-                                                                         handleFlagPermissionChange={handleContainerFlagPermissionChange}
-                                                                         handleReachableByAgentChange={handleContainerReachableByAgentChange}
-                                                    />
-
-                                                    <AddUsers container={containers[index]}
-                                                              handleAddUser={handleAddContainerUser}
-                                                              containerIndex={index}
-                                                              inputUserNameRef={inputUserNameRef}
-                                                              handleContainerUserNameChange={handleContainerUserNameChange}
-                                                              handleDeleteContainerUser={handleDeleteContainerUser}
-                                                              inputPwRef={inputPwRef}
-                                                              handleContainerUserPwChange={handleContainerUserPwChange}
-                                                              handleContainerUserAccessChange={handleContainerUserAccessChange}
-                                                    />
-
-                                                    <AddInterfaces container={containers[index]}
-                                                                   addInterfaceHandler={handleAddContainerInterface}
-                                                                   containerIndex={index}
-                                                                   handleInterfaceNameChange={handleContainerInterfaceNameChange}
-                                                                   deleteInterfaceHandler={handleDeleteContainerInterface}
-                                                                   handleIPChange={handleContainerInterfaceIPChange}
-                                                                   handleSubnetMaskChange={handleContainerInterfaceSubnetMaskChange}
-                                                                   handleNetworkPhysicalInterface={handleContainerNetworkPhysicalInterface}
-                                                                   handleLimitPacketsQueueChange={handleContainerInterfaceLimitPacketsQueueChange}
-                                                                   handlePacketDelayMs={handleContainerInterfacePacketDelayMs}
-                                                                   handlePacketDelayJitterMs={handleContainerInterfacePacketDelayJitterMs}
-                                                                   handlePacketDelayCorrelationPercentage={handleContainerInterfacePacketDelayCorrelationPercentage}
-                                                                   handlePacketDelayDistribution={handleContainerInterfacePacketDelayDistribution}
-                                                                   handlePacketLossType={handleContainerInterfacePacketLossType}
-                                                                   handleLossGemodelp={handleContainerInterfaceLossGemodelp}
-                                                                   handleLossGemodelr={handleContainerInterfaceLossGemodelr}
-                                                                   handleLossGemodelk={handleContainerInterfaceLossGemodelk}
-                                                                   handleLossGemodelh={handleContainerInterfaceLossGemodelh}
-                                                                   handlePacketCorruptPercentage={handleContainerInterfacePacketCorruptPercentage}
-                                                                   handlePacketCorruptCorrelationPercentage={handleContainerInterfacePacketCorruptCorrelationPercentage}
-                                                                   handlePacketDuplicatePercentage={handleContainerInterfacePacketDuplicatePercentage}
-                                                                   handlePacketDuplicateCorrelationPercentage={handleContainerInterfacePacketDuplicateCorrelationPercentage}
-                                                                   handlePacketReorderPercentage={handleContainerInterfacePacketReorderPercentage}
-                                                                   handlePacketReorderCorrelationPercentage={handleContainerInterfacePacketReorderCorrelationPercentage}
-                                                                   handlePacketReorderGap={handleContainerInterfacePacketReorderGap}
-                                                                   handleRateLimitMbit={handleContainerInterfaceRateLimitMbit}
-                                                                   handlePacketOverheadBytes={handleContainerInterfacePacketOverheadBytes}
-                                                                   handleCellOverheadBytes={handleContainerInterfaceCellOverheadBytes}
-                                                                   handleDefaultGateway={handleContainerInterfaceDefaultGateway}
-                                                                   handleDefaultInput={handleContainerInterfaceDefaultInput}
-                                                                   handleDefaultOutput={handleContainerInterfaceDefaultOutput}
-                                                                   handleDefaultForward={handleContainerInterfaceDefaultForward}
-                                                                   handleTrafficManagerPort={handleContainerInterfaceTrafficManagerPort}
-                                                                   handleTrafficManagerLogFile={handleContainerInterfaceTrafficManagerLogFile}
-                                                                   handleTrafficManagerLogDir={handleContainerInterfaceTrafficManagerLogDir}
-                                                                   handleTrafficManagerMaxWorkers={handleContainerInterfaceTrafficManagerMaxWorkers}
-
-                                                                   inputNameRef={inputNameRef}
-                                                                   inputIPRef={inputIPRef}
-                                                                   inputSubnetMaskRef={inputSubnetMaskRef}
-                                                                   inputPacketDelayMsRef={inputPacketDelayMsRef}
-                                                                   inputPacketDelayJitterMsRef={inputPacketDelayJitterMsRef}
-                                                                   inputPacketDelayCorrelationPercentageRef={inputPacketDelayCorrelationPercentageRef}
-                                                                   inputLossGemodelpRef={inputLossGemodelpRef}
-                                                                   inputLossGemodelrRef={inputLossGemodelrRef}
-                                                                   inputLossGemodelkRef={inputLossGemodelkRef}
-                                                                   inputLossGemodelhRef={inputLossGemodelhRef}
-                                                                   inputPacketCorruptPercentageRef={inputPacketCorruptPercentageRef}
-                                                                   inputPacketCorruptCorrelationPercentageRef={inputPacketCorruptCorrelationPercentageRef}
-                                                                   inputPacketDuplicatePercentageRef={inputPacketDuplicatePercentageRef}
-                                                                   inputPacketDuplicateCorrelationPercentageRef={inputPacketDuplicateCorrelationPercentageRef}
-                                                                   inputPacketReorderPercentageRef={inputPacketReorderPercentageRef}
-                                                                   inputPacketReorderCorrelationPercentageRef={inputPacketReorderCorrelationPercentageRef}
-                                                                   inputPacketReorderGapRef={inputPacketReorderGapRef}
-                                                                   inputRateLimitMbitRef={inputRateLimitMbitRef}
-                                                                   inputPacketOverheadBytesRef={inputPacketOverheadBytesRef}
-                                                                   inputCellOverheadBytesRef={inputCellOverheadBytesRef}
-                                                                   inputDefaultGatewayRef={inputDefaultGatewayRef}
-                                                                   inputTrafficManagerPortRef={inputTrafficManagerPortRef}
-                                                                   inputTrafficManagerLogFileRef={inputTrafficManagerLogFileRef}
-                                                                   inputTrafficManagerLogDirRef={inputTrafficManagerLogDirRef}
-                                                                   inputTrafficManagerMaxWorkersRef={inputTrafficManagerMaxWorkersRef}
-                                                                   inputPacketDelayDistributionRef={inputPacketDelayDistributionRef}
-                                                                   inputPacketLossTypeRef={inputPacketLossTypeRef}
-                                                    />
-
-
-                                                    <AddServices container={containers[index]}
-                                                                 addServiceHandler={handleAddContainerService}
-                                                                 containerIndex={index}
-                                                                 handleServiceNameChange={handleContainerServiceNameChange}
-                                                                 handleDeleteService={handleDeleteContainerService}
-                                                                 handleProtocolChange={handleContainerServiceProtocolChange}
-                                                                 handleServicePortChange={handleContainerServicePortChange}
-                                                                 handleServiceIpChange={handleContainerServiceIpChange}
-                                                                 inputServiceNameRef={inputServiceNameRef}
-                                                                 inputServicePortRef={inputServicePortRef}
-                                                    />
-
-                                                    <AddVulns container={containers[index]}
-                                                              containerIndex={index}
-                                                              inputVulnNameRef={inputVulnNameRef}
-                                                              handleVulnNameChange={handleContainerVulnNameChange}
-                                                              handleDeleteVuln={handleDeleteContainerVuln}
-                                                              addVulnHandler={handleAddContainerVulns}
-                                                              handleVulnServiceChange={handleContainerVulnServiceChange}
-                                                              handleVulnAccessChange={handleContainerVulnAccessChange}
-                                                              handleVulnTypeChange={handleContainerVulnTypeChange}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Collapse>
-                                    </card>
-                                </Accordion>
-                              ))}
+          <div>
+              <Accordion defaultActiveKey="0">
+                  <Card className="subCard">
+                      <Card.Header>
+                          <Button
+                            onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
+                            aria-controls="generalInfoBody"
+                            aria-expanded={generalInfoOpen}
+                            variant="link"
+                          >
+                              <h5 className="semiTitle">
+                                  General information about the emulation
+                                  <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                              </h5>
+                          </Button>
+                      </Card.Header>
+                      <Collapse in={generalInfoOpen}>
+                          <div id="generalInfoBody" className="cardBodyHidden">
+                              <AddEmulationGeneral nameValue={nameValue}
+                                                   handleNameChange={handleNameChange}
+                                                   networkIdValue={networkIdValue}
+                                                   handleNetworkIdChange={handleNetworkIdChange}
+                                                   levelValue={levelValue}
+                                                   handleLevelChange={handleLevelChange}
+                                                   versionValue={versionValue}
+                                                   handleVersionChange={handleVersionChange}
+                                                   timeStepLengthValue={timeStepLengthValue}
+                                                   handleTimeStepLengthChange={handleTimeStepLengthChange}
+                                                   idsEnabled={idsEnabled}
+                                                   handleContainerIdsEnabledChange={handleContainerIdsEnabledChange}
+                                                   description={description}
+                                                   handleDescriptionChange={handleDescriptionChange}
+                              />
                           </div>
-                      </div>
-                  </Collapse>
-              </Card>
-          </Accordion>
+                      </Collapse>
+                  </Card>
+              </Accordion>
+              <Accordion defaultActiveKey="1">
+                  <Card className="subCard">
+                      <Card.Header>
+                          <Button
+                            onClick={() => setContainerOpen(!containerOpen)}
+                            aria-controls="container"
+                            aria-expanded={containerOpen}
+                            variant="link"
+                          >
+                              <h5 className="semiTitle">
+                                  Containers
+                                  <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
+                              </h5>
+                          </Button>
+                      </Card.Header>
+                      <Collapse in={containerOpen}>
+                          <div id="container" className="cardBodyHidden">
+                              <div>
+                                  Add a new container &nbsp;&nbsp;
+                                  <Button onClick={addContainer}
+                                          variant="success" size="sm">
+                                      <i className="fa fa-plus" aria-hidden="true" />
+                                  </Button>
+                                  <div style={{ margin: '20px' }}>
+                                      {showPopup && (
+                                        <div className="popup">
+                                            <div>
+                                                <h5>Enter Container Name:</h5>
+                                            </div>
+                                            <div className="popup-content" style={{
+                                                display: 'flex', justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+
+                                                <select value={JSON.stringify(newContainer)}
+                                                        onChange={(e) => handleContainerSelectChange(e)}>
+                                                    <option value="">--Please choose an option--</option>
+                                                    {containerAndOs.map((option, index) => (
+                                                      <option key={index} value={JSON.stringify(option)}>
+                                                          {`${option.name} (${option.os})`}
+                                                      </option>
+                                                    ))}
+
+                                                </select>
+
+                                                <Button onClick={handleConfirmAdd}
+                                                        variant="primary" size="sm" style={{ marginLeft: '5px' }}>
+                                                    <i className="fa fa-check" aria-hidden="true" />
+                                                </Button>
+                                                <Button onClick={handleClosePopup}
+                                                        variant="danger" size="sm" style={{ marginLeft: '2px' }}>
+                                                    <i className="fa fa-times" aria-hidden="true" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                      )}
+                                  </div>
+
+
+                                  {containers.map((container, index) => (
+                                    <Accordion defaultActiveKey={index}>
+                                        <card className="subCard">
+                                            <Card.Header>
+                                                <Button
+                                                  onClick={() => toggleContainerAccordion(index)}
+                                                  aria-controls="container"
+                                                  aria-expanded={container.containerAccordionOpen}
+                                                  variant="link"
+                                                >
+                                                    <h5 className="semiTitle">
+                                                        {containers[index].name}
+                                                        <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
+                                                    </h5>
+                                                </Button>
+                                            </Card.Header>
+                                            <Collapse in={container.containerAccordionOpen}>
+                                                <div id="eachContainer" className="cardBodyHidden">
+                                                    <div>
+                                                        Delete the container {containers[index].name} &nbsp;&nbsp;
+                                                        <Button onClick={() => deleteContainer(index)}
+                                                                variant="danger" size="sm">
+                                                            <i className="fa fa-trash startStopIcon"
+                                                               aria-hidden="true" />
+                                                        </Button>
+                                                        <AddContainerGeneral container={containers[index]}
+                                                                             handleCpuChange={handleContainerCpuChange}
+                                                                             containerIndex={index}
+                                                                             handleMemoryChange={handleContainerMemoryChange}
+                                                                             handleFlagIdChange={handleContainerFlagIdChange}
+                                                                             handleFlagScoreChange={handleContainerFlagScoreChange}
+                                                                             handleFlagPermissionChange={handleContainerFlagPermissionChange}
+                                                                             handleReachableByAgentChange={handleContainerReachableByAgentChange}
+                                                        />
+
+                                                        <AddUsers container={containers[index]}
+                                                                  handleAddUser={handleAddContainerUser}
+                                                                  containerIndex={index}
+                                                                  inputUserNameRef={inputUserNameRef}
+                                                                  handleContainerUserNameChange={handleContainerUserNameChange}
+                                                                  handleDeleteContainerUser={handleDeleteContainerUser}
+                                                                  inputPwRef={inputPwRef}
+                                                                  handleContainerUserPwChange={handleContainerUserPwChange}
+                                                                  handleContainerUserAccessChange={handleContainerUserAccessChange}
+                                                        />
+
+                                                        <AddInterfaces container={containers[index]}
+                                                                       addInterfaceHandler={handleAddContainerInterface}
+                                                                       containerIndex={index}
+                                                                       handleInterfaceNameChange={handleContainerInterfaceNameChange}
+                                                                       deleteInterfaceHandler={handleDeleteContainerInterface}
+                                                                       handleIPChange={handleContainerInterfaceIPChange}
+                                                                       handleSubnetMaskChange={handleContainerInterfaceSubnetMaskChange}
+                                                                       handleNetworkPhysicalInterface={handleContainerNetworkPhysicalInterface}
+                                                                       handleLimitPacketsQueueChange={handleContainerInterfaceLimitPacketsQueueChange}
+                                                                       handlePacketDelayMs={handleContainerInterfacePacketDelayMs}
+                                                                       handlePacketDelayJitterMs={handleContainerInterfacePacketDelayJitterMs}
+                                                                       handlePacketDelayCorrelationPercentage={handleContainerInterfacePacketDelayCorrelationPercentage}
+                                                                       handlePacketDelayDistribution={handleContainerInterfacePacketDelayDistribution}
+                                                                       handlePacketLossType={handleContainerInterfacePacketLossType}
+                                                                       handleLossGemodelp={handleContainerInterfaceLossGemodelp}
+                                                                       handleLossGemodelr={handleContainerInterfaceLossGemodelr}
+                                                                       handleLossGemodelk={handleContainerInterfaceLossGemodelk}
+                                                                       handleLossGemodelh={handleContainerInterfaceLossGemodelh}
+                                                                       handlePacketCorruptPercentage={handleContainerInterfacePacketCorruptPercentage}
+                                                                       handlePacketCorruptCorrelationPercentage={handleContainerInterfacePacketCorruptCorrelationPercentage}
+                                                                       handlePacketDuplicatePercentage={handleContainerInterfacePacketDuplicatePercentage}
+                                                                       handlePacketDuplicateCorrelationPercentage={handleContainerInterfacePacketDuplicateCorrelationPercentage}
+                                                                       handlePacketReorderPercentage={handleContainerInterfacePacketReorderPercentage}
+                                                                       handlePacketReorderCorrelationPercentage={handleContainerInterfacePacketReorderCorrelationPercentage}
+                                                                       handlePacketReorderGap={handleContainerInterfacePacketReorderGap}
+                                                                       handleRateLimitMbit={handleContainerInterfaceRateLimitMbit}
+                                                                       handlePacketOverheadBytes={handleContainerInterfacePacketOverheadBytes}
+                                                                       handleCellOverheadBytes={handleContainerInterfaceCellOverheadBytes}
+                                                                       handleDefaultGateway={handleContainerInterfaceDefaultGateway}
+                                                                       handleDefaultInput={handleContainerInterfaceDefaultInput}
+                                                                       handleDefaultOutput={handleContainerInterfaceDefaultOutput}
+                                                                       handleDefaultForward={handleContainerInterfaceDefaultForward}
+                                                                       handleTrafficManagerPort={handleContainerInterfaceTrafficManagerPort}
+                                                                       handleTrafficManagerLogFile={handleContainerInterfaceTrafficManagerLogFile}
+                                                                       handleTrafficManagerLogDir={handleContainerInterfaceTrafficManagerLogDir}
+                                                                       handleTrafficManagerMaxWorkers={handleContainerInterfaceTrafficManagerMaxWorkers}
+
+                                                                       inputNameRef={inputNameRef}
+                                                                       inputIPRef={inputIPRef}
+                                                                       inputSubnetMaskRef={inputSubnetMaskRef}
+                                                                       inputPacketDelayMsRef={inputPacketDelayMsRef}
+                                                                       inputPacketDelayJitterMsRef={inputPacketDelayJitterMsRef}
+                                                                       inputPacketDelayCorrelationPercentageRef={inputPacketDelayCorrelationPercentageRef}
+                                                                       inputLossGemodelpRef={inputLossGemodelpRef}
+                                                                       inputLossGemodelrRef={inputLossGemodelrRef}
+                                                                       inputLossGemodelkRef={inputLossGemodelkRef}
+                                                                       inputLossGemodelhRef={inputLossGemodelhRef}
+                                                                       inputPacketCorruptPercentageRef={inputPacketCorruptPercentageRef}
+                                                                       inputPacketCorruptCorrelationPercentageRef={inputPacketCorruptCorrelationPercentageRef}
+                                                                       inputPacketDuplicatePercentageRef={inputPacketDuplicatePercentageRef}
+                                                                       inputPacketDuplicateCorrelationPercentageRef={inputPacketDuplicateCorrelationPercentageRef}
+                                                                       inputPacketReorderPercentageRef={inputPacketReorderPercentageRef}
+                                                                       inputPacketReorderCorrelationPercentageRef={inputPacketReorderCorrelationPercentageRef}
+                                                                       inputPacketReorderGapRef={inputPacketReorderGapRef}
+                                                                       inputRateLimitMbitRef={inputRateLimitMbitRef}
+                                                                       inputPacketOverheadBytesRef={inputPacketOverheadBytesRef}
+                                                                       inputCellOverheadBytesRef={inputCellOverheadBytesRef}
+                                                                       inputDefaultGatewayRef={inputDefaultGatewayRef}
+                                                                       inputTrafficManagerPortRef={inputTrafficManagerPortRef}
+                                                                       inputTrafficManagerLogFileRef={inputTrafficManagerLogFileRef}
+                                                                       inputTrafficManagerLogDirRef={inputTrafficManagerLogDirRef}
+                                                                       inputTrafficManagerMaxWorkersRef={inputTrafficManagerMaxWorkersRef}
+                                                                       inputPacketDelayDistributionRef={inputPacketDelayDistributionRef}
+                                                                       inputPacketLossTypeRef={inputPacketLossTypeRef}
+                                                        />
+
+
+                                                        <AddServices container={containers[index]}
+                                                                     addServiceHandler={handleAddContainerService}
+                                                                     containerIndex={index}
+                                                                     handleServiceNameChange={handleContainerServiceNameChange}
+                                                                     handleDeleteService={handleDeleteContainerService}
+                                                                     handleProtocolChange={handleContainerServiceProtocolChange}
+                                                                     handleServicePortChange={handleContainerServicePortChange}
+                                                                     handleServiceIpChange={handleContainerServiceIpChange}
+                                                                     inputServiceNameRef={inputServiceNameRef}
+                                                                     inputServicePortRef={inputServicePortRef}
+                                                        />
+
+                                                        <AddVulns container={containers[index]}
+                                                                  containerIndex={index}
+                                                                  inputVulnNameRef={inputVulnNameRef}
+                                                                  handleVulnNameChange={handleContainerVulnNameChange}
+                                                                  handleDeleteVuln={handleDeleteContainerVuln}
+                                                                  addVulnHandler={handleAddContainerVulns}
+                                                                  handleVulnServiceChange={handleContainerVulnServiceChange}
+                                                                  handleVulnAccessChange={handleContainerVulnAccessChange}
+                                                                  handleVulnTypeChange={handleContainerVulnTypeChange}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </Collapse>
+                                        </card>
+                                    </Accordion>
+                                  ))}
+                              </div>
+                          </div>
+                      </Collapse>
+                  </Card>
+              </Accordion>
+          </div>
+
+          <div>
+              <p><br/> Save the emulation</p>
+              <Button onClick={createEmulationRequest}
+                      variant="primary" size="md">
+                  <i className="fa fa-save" aria-hidden="true"/>
+              </Button>
+          </div>
 
       </div>
+
     )
 }
 
