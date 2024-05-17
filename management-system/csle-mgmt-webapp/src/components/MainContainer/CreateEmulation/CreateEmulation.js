@@ -9,7 +9,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import Collapse from 'react-bootstrap/Collapse'
 import {
     HTTP_PREFIX,
-    IMAGES_RESOURCE,
+    CREATE_EMULATION_RESOURCE,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
     CONTAINERS_OS,
@@ -311,40 +311,40 @@ const CreateEmulation = (props) => {
         setShouldFocusServiceName(false)
     }
 
-    // const fetchImages = useCallback(() => {
-    //   /**
-    //    * Fetches container images from the REST API backend
-    //    *
-    //    * @type {(function(): void)|*}
-    //    */
-    //   fetch(
-    //     `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-    //     {
-    //       method: "GET",
-    //       headers: new Headers({
-    //         Accept: "application/vnd.github.cloak-preview"
-    //       })
-    //     }
-    //   )
-    //     .then(res => {
-    //       if(res.status === 401) {
-    //         alert.show("Session token expired. Please login again.")
-    //         setSessionData(null)
-    //         navigate(`/${LOGIN_PAGE_RESOURCE}`)
-    //         return null
-    //       }
-    //       return res.json()
-    //     })
-    //     .then(response => {
-    //       if(response === null) {
-    //         return
-    //       }
-    //       setImages(response)
-    //       setFilteredImages(response)
-    //       setLoading(false)
-    //     })
-    //     .catch(error => console.log("error:" + error))
-    // }, [alert, ip, navigate, port, props.sessionData, setSessionData])
+    const createEmulationRequest = useCallback(() => {
+      /**
+       * Makes a reqeust to the REST API backend to create the new emulation
+       *
+       * @type {(function(): void)|*}
+       */
+      console.log("FETCHING create emulation")
+      fetch(
+        `${HTTP_PREFIX}${ip}:${port}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+        {
+          method: "POST",
+          headers: new Headers({
+            Accept: "application/vnd.github.cloak-preview"
+          })
+        }
+      )
+        .then(res => {
+          if(res.status === 401) {
+            alert.show("Session token expired. Please login again.")
+            setSessionData(null)
+            navigate(`/${LOGIN_PAGE_RESOURCE}`)
+            return null
+          }
+          return res.json()
+        })
+        .then(response => {
+            console.log("REQUEST REPLY")
+          if(response === null) {
+            return
+          }
+          console.log("Backend request was successful")
+        })
+        .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData, setSessionData])
     //
     // useEffect(() => {
     //   setLoading(true)
@@ -1204,6 +1204,7 @@ const CreateEmulation = (props) => {
 
     // Use useEffect to focus on the input field when containers state changes
     useEffect(() => {
+        createEmulationRequest()
         if (inputNameRef.current && shouldFocusName) {
             inputNameRef.current.focus()
         } else if (inputIPRef.current && shouldFocusIP) {
@@ -1296,7 +1297,7 @@ const CreateEmulation = (props) => {
         shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
         shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
         shouldFocusUserName, shouldFocusPw, shouldFocusRoot, shouldFocusServiceIp, shouldFocusServicePort,
-        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName])
+        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName, createEmulationRequest])
 
     const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
         const packetDelayDistributionValue = event.target.value
