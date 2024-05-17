@@ -21,6 +21,7 @@ def create_emulation() -> Tuple[Response, int]:
     :return: The given policy or deletes the policy
     """
     print("Create emulation")
+    print(request.data)
     requires_admin = True
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:

@@ -317,6 +317,14 @@ const CreateEmulation = (props) => {
        *
        * @type {(function(): void)|*}
        */
+
+      console.log("Name: " + nameValue)
+      const requestData = {
+          // Include state values here
+          emulationName: nameValue,
+          // stateKey2: stateValue2,
+      };
+
       console.log("FETCHING create emulation")
       fetch(
         `${HTTP_PREFIX}${ip}:${port}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -324,7 +332,9 @@ const CreateEmulation = (props) => {
           method: "POST",
           headers: new Headers({
             Accept: "application/vnd.github.cloak-preview"
-          })
+          }),
+
+            body: JSON.stringify(requestData),
         }
       )
         .then(res => {
@@ -344,47 +354,8 @@ const CreateEmulation = (props) => {
           console.log("Backend request was successful")
         })
         .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData, setSessionData])
-    //
-    // useEffect(() => {
-    //   setLoading(true)
-    //   fetchImages()
-    // }, [fetchImages])
-    //
-    // const handleImageChange = (index, selectedImage) => {
-    //   setContainers(prevContainers => {
-    //     // Create a new array with the updated container
-    //     const updatedContainers = [...prevContainers]
-    //     updatedContainers[index] = {
-    //       ...updatedContainers[index],
-    //       image: selectedImage // Toggle the value
-    //     }
-    //     return updatedContainers
-    //   })
-    //   // setSelectedImage(event.target.value)
-    //   console.log(containers[index].os)
-    // }
-    //
-    // const SpinnerOrTable = (props) => {
-    //   if (props.loading) {
-    //     return (
-    //       <Spinner animation="border" role="status">
-    //         <span className="visually-hidden"></span>
-    //       </Spinner>)
-    //   } else {
-    //     return (
-    //       <div className="select-responsive">
-    //         <select value={containers[props.index].image} onChange={(e) => handleContainerSelectChange(e)}>
-    //           <option value="">--Please choose an option--</option>
-    //           {props.images.map((img, index) =>
-    //             <option value={img.name + "-" + index}>{img.name} &nbsp;&nbsp;&nbsp;&nbsp; {formatBytes(img.size, 2)}</option>
-    //           )}
-    //
-    //         </select>
-    //       </div>
-    //     )
-    //   }
-    // }
+    }, [alert, ip, navigate, port, props.sessionData, setSessionData, nameValue])
+
 
     const handleContainerUserNameChange = (event, containerIndex, userIndex) => {
         const userNameValue = event.target.value
@@ -552,35 +523,6 @@ const CreateEmulation = (props) => {
         deFocus()
         setShouldFocusServiceIp(true)
     }
-
-    // const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) =>{
-    //     const newVulnServiceIndex = event.target.value
-    //     console.log("Service number: " + newVulnServiceIndex)
-    //     console.log("Vuln index is: " + vulnIndex)
-    //     const newVulnService = containers[containerIndex].services[newVulnServiceIndex]
-    //     console.log("name of the chosen service is: " + newVulnService.name)
-    //     console.log("ip of the chosen service is: " + newVulnService.serviceIp)
-    //
-    //     console.log("name: " + containers[containerIndex].services[newVulnServiceIndex].name)
-    //     console.log("ip: " + containers[containerIndex].services[newVulnServiceIndex].serviceIp)
-    //
-    //
-    //     setContainers(prevContainers => {
-    //         const updatedContainers = [...prevContainers]
-    //         const containerToUpdate = {...updatedContainers[containerIndex]}
-    //         const updatedVulns = [...containerToUpdate.vulns]
-    //         updatedVulns[vulnIndex] = {
-    //             ...updatedVulns[vulnIndex],
-    //             vulnService: newVulnService
-    //         }
-    //         containerToUpdate.vulns = updatedVulns
-    //         updatedContainers[containerIndex] = containerToUpdate
-    //         console.log("Vuln service name is: " + updatedContainers[containerIndex].vulns[vulnIndex].vulnService.name)
-    //         console.log("container Vuln service name is: " + containers[containerIndex].vulns[vulnIndex].vulnService.name)
-    //         return updatedContainers
-    //     })
-    //     deFocus()
-    // }
 
     const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) => {
         const newVulnServiceIndex = parseInt(event.target.value, 10); // Parse the value to an integer
@@ -1832,7 +1774,8 @@ const CreateEmulation = (props) => {
           </div>
 
           <div>
-              <p><br/> Save the emulation</p>
+
+              <h5><br/><br/>Save the emulation</h5>
               <Button onClick={createEmulationRequest}
                       variant="primary" size="md">
                   <i className="fa fa-save" aria-hidden="true"/>

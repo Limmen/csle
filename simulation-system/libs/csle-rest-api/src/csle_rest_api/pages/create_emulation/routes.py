@@ -30,6 +30,7 @@ def get_new_emulation_page_bp(static_folder: str) -> Blueprint:
         """
         :return: static resources for the /emulations-page url
         """
+        #emulation_name = request.args.get('some_param')
         return (emulations_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX),
                 constants.HTTPS.OK_STATUS_CODE)
 
