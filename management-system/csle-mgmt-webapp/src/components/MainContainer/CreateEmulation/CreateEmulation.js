@@ -322,7 +322,12 @@ const CreateEmulation = (props) => {
       const requestData = {
           // Include state values here
           emulationName: nameValue,
-          // stateKey2: stateValue2,
+          emulationNetworkId: networkIdValue,
+          emulationLevel: levelValue,
+          emulationVersion: versionValue,
+          emulationTimeStepLengh: timeStepLengthValue,
+          emulatioIdsEnabled: idsEnabled,
+          emulationDescription: description,
       };
 
       console.log("FETCHING create emulation")
@@ -354,7 +359,8 @@ const CreateEmulation = (props) => {
           console.log("Backend request was successful")
         })
         .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData, setSessionData, nameValue])
+    }, [alert, ip, navigate, port, props.sessionData, setSessionData, nameValue, networkIdValue, levelValue,
+        versionValue, timeStepLengthValue, idsEnabled, description])
 
 
     const handleContainerUserNameChange = (event, containerIndex, userIndex) => {
