@@ -328,9 +328,13 @@ const CreateEmulation = (props) => {
           emulationTimeStepLengh: timeStepLengthValue,
           emulatioIdsEnabled: idsEnabled,
           emulationDescription: description,
+          emulationContainer: containers,
       };
 
-      console.log("FETCHING create emulation")
+
+      console.log("FETCHING create emulation");
+      console.log("Request Data: ", JSON.stringify(requestData));
+
       fetch(
         `${HTTP_PREFIX}${ip}:${port}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
         {
@@ -341,6 +345,7 @@ const CreateEmulation = (props) => {
 
             body: JSON.stringify(requestData),
         }
+
       )
         .then(res => {
           if(res.status === 401) {
@@ -360,7 +365,7 @@ const CreateEmulation = (props) => {
         })
         .catch(error => console.log("error:" + error))
     }, [alert, ip, navigate, port, props.sessionData, setSessionData, nameValue, networkIdValue, levelValue,
-        versionValue, timeStepLengthValue, idsEnabled, description])
+        versionValue, timeStepLengthValue, idsEnabled, description, containers])
 
 
     const handleContainerUserNameChange = (event, containerIndex, userIndex) => {
