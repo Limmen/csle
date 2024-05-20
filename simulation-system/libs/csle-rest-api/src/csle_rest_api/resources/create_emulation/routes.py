@@ -23,6 +23,11 @@ def create_emulation() -> Tuple[Response, int]:
     :return: The given policy or deletes the policy
     """
     print("Create emulation")
+    requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
     print(request.data)
     emulation_data = json.loads(request.data)
     emulation_name = emulation_data["emulationName"]
@@ -106,11 +111,7 @@ def create_emulation() -> Tuple[Response, int]:
             vuln_service_ip = vuln["vulnService"]["serviceIp"]
             vuln_root_access = vuln["vulnRoot"]
             print("Container vuln service name: ", vuln_service_name)
-    requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-    if authorized is not None:
-        return authorized
-
+            
     response = jsonify({"TEST": "TEST"})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
