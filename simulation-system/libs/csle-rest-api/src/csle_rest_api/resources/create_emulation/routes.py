@@ -9,6 +9,46 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 import json
 
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
+
+def vulnerabilities(emulation_data:json) -> VulnerabilitiesConfig:
+
+    # This function has problems. In this function in the front end the credentials are not defined and prepared on
+    # the web page.
+
+    print(emulation_data)
+
+    vulns = []
+
+    emulation_containers = emulation_data["emulationContainer"]
+    for containers in emulation_containers:
+        container_interfaces = containers["interfaces"]
+        for interfaces in container_interfaces:
+            interface_ip = interfaces["ip"]
+        container_vulns = containers["vulns"]
+        for vuln in container_vulns:
+            vuln_name = vuln["vulnName"]
+            vuln_type = vuln["vulnType"]
+            vuln_service_name = vuln["vulnService"]["name"]
+            vuln_service_protocol = vuln["vulnService"]["protocol"]
+            vuln_service_port = vuln["vulnService"]["port"]
+            vuln_service_ip = vuln["vulnService"]["serviceIp"]
+            vuln_root_access = vuln["vulnRoot"]
+
+            node_vuln_config = NodeVulnerabilityConfig(
+                name=vuln_name,
+                ip=interface_ip,
+                vuln_type=vuln_type,
+                credentials=[],
+                cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                cve=None,
+                root=vuln_root_access, port=vuln_service_port,
+                protocol=vuln_service_protocol, service=vuln_service_name)
+            vulns.append(node_vuln_config)
+    vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
+    return vulns_config
+
 # Creates a blueprint "sub application" of the main REST app
 create_emulation_bp = Blueprint(
     api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE, __name__,
@@ -28,7 +68,7 @@ def create_emulation() -> Tuple[Response, int]:
     if authorized is not None:
         return authorized
 
-    print(request.data)
+    # print(request.data)
     emulation_data = json.loads(request.data)
     emulation_name = emulation_data["emulationName"]
     emulation_network_id = emulation_data["emulationNetworkId"]
@@ -111,7 +151,9 @@ def create_emulation() -> Tuple[Response, int]:
             vuln_service_ip = vuln["vulnService"]["serviceIp"]
             vuln_root_access = vuln["vulnRoot"]
             print("Container vuln service name: ", vuln_service_name)
-            
+
+    vulnerabilities(emulation_data)
+
     response = jsonify({"TEST": "TEST"})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
