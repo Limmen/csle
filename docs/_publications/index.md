@@ -9,6 +9,21 @@ permalink: /publications/
 The following publications are based on CSLE:
 
 ##### **Automated Security Response through Online Learning with Adaptive Conjectures**
+**Conference**: IEEE/IFIP Dependable Systems and Networks Conference (DSN’24).
+[Preprint.](https://arxiv.org/abs/2404.01741)
+
+**Bibtex**:
+```bash
+@INPROCEEDINGS{dsn24_hammar_stadler,
+  author={Kim Hammar and Rolf Stadler},
+  booktitle={2024 54th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)},
+  title={Intrusion Tolerance for Networked Systems through Two-Level Feedback Control},
+  year={2024},
+  note={\url{https://arxiv.org/abs/2404.01741}}
+}
+```
+
+##### **Automated Security Response through Online Learning with Adaptive Conjectures**
 **Journal**: Under review, IEEE Transactions on Information Forensics and Security.
 [Preprint.](https://arxiv.org/abs/2402.12499)
 
