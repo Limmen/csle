@@ -2,7 +2,7 @@
 
 This folder contains emulation environments.
 
-- Version: **030** [./030](040):
+- Version: **060** [./060](060):
   - *Level 1* [level_1](040/level_1): A simple infrastructure with 6 nodes and weak-password-vulnerabilities
   - *Level 2* [level_2](040/level_2): An infrastructure with 12 nodes and weak-password-vulnerabilities
   - *Level 3* [level_3](040/level_3): A complex infrastructure with 33 nodes and weak-password-vulnerabilities
