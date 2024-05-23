@@ -1,6 +1,6 @@
 # OS
 # Debian GNU/Linux 8 (jessie)
-FROM kimham/csle_debian_10_base:0.5.0
+FROM kimham/csle_debian_10_base:0.6.0
 USER root
 
 ADD docker_files/cve_2016_10033_base/docker/www /www

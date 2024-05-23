@@ -1,5 +1,5 @@
 # OS
-FROM kimham/csle_ubuntu_20_base:0.5.0
+FROM kimham/csle_ubuntu_20_base:0.6.0
 USER root
 
 # SSH
