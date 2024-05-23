@@ -24,10 +24,12 @@ Subpackages
    csle_agents.agents.kiefer_wolfowitz
    csle_agents.agents.lp_cmdp
    csle_agents.agents.lp_nf
+   csle_agents.agents.mcs
    csle_agents.agents.nelder_mead
    csle_agents.agents.particle_swarm
    csle_agents.agents.pi
    csle_agents.agents.pomcp
+   csle_agents.agents.ppg_clean
    csle_agents.agents.ppo
    csle_agents.agents.ppo_clean
    csle_agents.agents.q_learning

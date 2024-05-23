@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.mcs.mcs_utils.ls_utils &mdash; csle-agents 0.6.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.mcs.mcs_utils.ls_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.mcs.mcs_utils.ls_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">spdiags</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+
+
+<div class="viewcode-block" id="Minq"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.Minq">[docs]</a><span class="k">class</span> <span class="nc">Minq</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The minQ class helper for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Minq.ldlrk1"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.Minq.ldlrk1">[docs]</a>    <span class="k">def</span> <span class="nf">ldlrk1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+               <span class="n">alp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.2204e-16</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        lslrk1 function</span>
+
+<span class="sd">        :param L: Indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        :param d: the value of the interpolating polynomial</span>
+<span class="sd">        :param alp:</span>
+<span class="sd">        :param u:</span>
+<span class="sd">        :param eps: parameter value for the golden ratio</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">neps</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">eps</span>
+
+        <span class="n">L0</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="n">d0</span> <span class="o">=</span> <span class="n">d</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">alp</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">alp</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">delta</span> <span class="o">&lt;=</span> <span class="n">neps</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">p0Krange</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+                <span class="n">p0K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p0Krange</span><span class="p">])</span>
+                <span class="n">L0K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">p0Krange</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p0Krange</span><span class="p">])</span>
+                <span class="n">p0K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">L0K</span><span class="p">,</span> <span class="n">p0K</span><span class="p">)</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">p0K</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">p0Krange</span><span class="p">)</span> <span class="k">else</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">))])</span>
+                <span class="n">L</span> <span class="o">=</span> <span class="n">L0</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">d0</span>
+                <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span>
+
+            <span class="n">q</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">delta</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+            <span class="n">LindK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">])</span>
+            <span class="n">uk</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">LindK</span><span class="p">,</span> <span class="n">uk</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)):</span>
+                <span class="n">L</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">LindK</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span> <span class="o">+</span> <span class="p">(</span><span class="n">alp</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)):</span>
+                <span class="n">u</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">alp</span> <span class="o">=</span> <span class="n">alp</span> <span class="o">*</span> <span class="n">q</span>
+            <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span></div></div>
+
+
+<div class="viewcode-block" id="UtilHelpers"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers">[docs]</a><span class="k">class</span> <span class="nc">UtilHelpers</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class with util functions for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UtilHelpers.ldldown"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.ldldown">[docs]</a>    <span class="k">def</span> <span class="nf">ldldown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span>  \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ldldown function</span>
+
+<span class="sd">        :param L: indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        :param d: the value of the interpolating polynomial</span>
+<span class="sd">        :param j: label</span>
+<span class="sd">        :return: the updated end point and the updated value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+
+            <span class="n">LKK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">K</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">dK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">LKj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">LKK</span><span class="p">,</span> <span class="n">dK</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Minq</span><span class="p">()</span><span class="o">.</span><span class="n">ldlrk1</span><span class="p">(</span><span class="n">LKK</span><span class="p">,</span> <span class="n">dK</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">LKj</span><span class="p">)</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="o">=</span> <span class="n">dK</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">r3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">LKK</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">LKI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">r3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">LKI</span><span class="p">,</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">LKK</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.ldlup"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.ldlup">[docs]</a>    <span class="k">def</span> <span class="nf">ldlup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+              <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ldlup function</span>
+<span class="sd">        :param L: Indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        :param d: the value of the interpolating polynomial</span>
+<span class="sd">        :param j: label</span>
+<span class="sd">        :param g:</span>
+<span class="sd">        :param eps: parameter value for the golden ratio</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">eps</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">delta</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">I</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+            <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span>
+        <span class="n">LII</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">])</span>
+        <span class="n">gI</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">LII</span><span class="p">,</span> <span class="n">gI</span><span class="p">)</span>
+        <span class="n">dI</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dI</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">eps</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">LII</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">LKI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">gK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">gK</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">LKI</span><span class="p">,</span> <span class="n">u</span><span class="p">)),</span> <span class="n">delta</span><span class="p">)</span>
+            <span class="n">LKK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">K</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">dK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="p">])</span>
+            <span class="n">LKK</span><span class="p">,</span> <span class="n">dK</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Minq</span><span class="p">()</span><span class="o">.</span><span class="n">ldlrk1</span><span class="p">(</span><span class="n">LKK</span><span class="p">,</span> <span class="n">dK</span><span class="p">,</span> <span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="o">=</span> <span class="n">dK</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">K</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r2</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">r3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">LKI</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">LKK</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">LKI</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">LKK</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+            <span class="n">piv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">LKIq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">LKI</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+            <span class="n">pivLKIq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">piv</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">LKIq</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+            <span class="n">piSolve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">LII</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">pivLKIq</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">piSolve</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="n">q</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.getalp"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.getalp">[docs]</a>    <span class="k">def</span> <span class="nf">getalp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gTp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pTGp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gives minimizer alp in [alpu,alpo] for a univariate quadratic q(alp)=alp*gTp+0.5*alp^2*pTGp</span>
+
+<span class="sd">        :param alpu:</span>
+<span class="sd">        :param alpo:</span>
+<span class="sd">        :param gTp:</span>
+<span class="sd">        :parm pTGp:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lba</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">uba</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">ier</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">alpu</span> <span class="o">==</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pTGp</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pTGp</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gTp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">lba</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">alpo</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pTGp</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pTGp</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gTp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">uba</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">ier</span><span class="p">:</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
+            <span class="k">return</span> <span class="n">alp</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span>
+
+        <span class="k">if</span> <span class="n">pTGp</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gTp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">pTGp</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alpu</span> <span class="o">==</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">lba</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="n">alpo</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">lba</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lba</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">gTp</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpu</span> <span class="o">+</span> <span class="n">alpo</span><span class="p">)</span> <span class="o">*</span> <span class="n">pTGp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">uba</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">lba</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="o">-</span><span class="n">gTp</span> <span class="o">/</span> <span class="n">pTGp</span>
+            <span class="n">lba</span> <span class="o">=</span> <span class="p">(</span><span class="n">alp</span> <span class="o">&lt;=</span> <span class="n">alpu</span><span class="p">)</span>
+            <span class="n">uba</span> <span class="o">=</span> <span class="p">(</span><span class="n">alp</span> <span class="o">&gt;=</span> <span class="n">alpo</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lba</span><span class="p">:</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="n">alpu</span>
+        <span class="k">if</span> <span class="n">uba</span><span class="p">:</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="n">alpo</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alp</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+            <span class="n">gTp</span><span class="p">,</span> <span class="n">pTGp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span>
+        <span class="k">return</span> <span class="n">alp</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.minqsub"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.minqsub">[docs]</a>    <span class="k">def</span> <span class="nf">minqsub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsub</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">free</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+                <span class="n">dd</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">K</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">],</span> <span class="n">G</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+                <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">xo</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+                <span class="n">xu</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">convex</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xx</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">fct</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">nfree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unfix</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">alp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">alpo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lba</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">uba</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">ier</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">subdone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Minqsub function</span>
+
+<span class="sd">        :param nsub:</span>
+<span class="sd">        :param free:</span>
+<span class="sd">        :param L: Indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        :param dd:</span>
+<span class="sd">        :param n:</span>
+<span class="sd">        :param g:</span>
+<span class="sd">        :param x:</span>
+<span class="sd">        :param xo:</span>
+<span class="sd">        :param xu:</span>
+<span class="sd">        :param convex:</span>
+<span class="sd">        :param xx:</span>
+<span class="sd">        :param fct:</span>
+<span class="sd">        :param nfree:</span>
+<span class="sd">        :param unfix:</span>
+<span class="sd">        :param alp:</span>
+<span class="sd">        :param alpu:</span>
+<span class="sd">        :param alpo:</span>
+<span class="sd">        :param lba:</span>
+<span class="sd">        :param uba:</span>
+<span class="sd">        :param ier:</span>
+<span class="sd">        :param subdone:</span>
+<span class="sd">        :param eps: parameter value for the golden ratio</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nsub</span> <span class="o">=</span> <span class="n">nsub</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">freelK</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">free</span> <span class="o">&lt;</span> <span class="n">K</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">freelK</span><span class="p">:</span>
+            <span class="n">L</span><span class="p">,</span> <span class="n">dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ldldown</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">K</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">definite</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">freeuK</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">free</span> <span class="o">&gt;</span> <span class="n">K</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">freeuK</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">if</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">))])</span>
+            <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+            <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ldlup</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+            <span class="n">definite</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">definite</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">K</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">definite</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">))])</span>
+            <span class="n">LPsolve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+            <span class="n">LPsolve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">LPsolve</span><span class="p">,</span> <span class="n">dd</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">LPsolve</span><span class="p">))</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">unfix</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">subdone</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">nsub</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xo</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">convex</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span>
+                    <span class="n">nfree</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span><span class="p">,</span> <span class="n">unfix</span><span class="p">,</span> <span class="n">subdone</span><span class="p">)</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">])</span>
+        <span class="n">oo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">([</span><span class="n">xo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">])</span> <span class="o">/</span> <span class="n">pp</span>
+        <span class="n">uu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">([</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">])</span> <span class="o">/</span> <span class="n">pp</span>
+        <span class="n">alpu</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">oo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">if</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">uu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">if</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+        <span class="n">alpo</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">oo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">if</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">uu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">if</span> <span class="n">pp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">alpo</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">alpu</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;programming error: no alp&#39;</span><span class="p">)</span>
+
+        <span class="n">gTp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">agTp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">gTp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">agTp</span><span class="p">:</span>
+            <span class="n">gTp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">pTGp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">convex</span><span class="p">:</span>
+            <span class="n">pTGp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pTGp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">definite</span> <span class="ow">and</span> <span class="n">pTGp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pTGp</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">alp</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getalp</span><span class="p">(</span><span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">gTp</span><span class="p">,</span> <span class="n">pTGp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ier</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lba</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">p</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">p</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">nsub</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xo</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">convex</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span>
+                    <span class="n">fct</span><span class="p">,</span> <span class="n">nfree</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span><span class="p">,</span> <span class="n">unfix</span><span class="p">,</span> <span class="n">subdone</span><span class="p">)</span>
+
+        <span class="n">unfix</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">lba</span> <span class="ow">or</span> <span class="n">uba</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)):</span>
+            <span class="n">ik</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">alp</span> <span class="o">==</span> <span class="n">uu</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="n">xx</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">=</span> <span class="n">xu</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span>
+                <span class="n">free</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">alp</span> <span class="o">==</span> <span class="n">oo</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="n">xx</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">=</span> <span class="n">xo</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span>
+                <span class="n">free</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xx</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span> <span class="o">+</span> <span class="n">alp</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xx</span><span class="p">[</span><span class="n">ik</span><span class="p">])</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">ik</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">ik</span><span class="p">]</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;infinite xx in minq&#39;</span><span class="p">)</span>
+
+        <span class="n">nfree</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>
+        <span class="n">subdone</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">nsub</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xo</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">convex</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span>
+                <span class="n">fct</span><span class="p">,</span> <span class="n">nfree</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span><span class="p">,</span> <span class="n">unfix</span><span class="p">,</span> <span class="n">subdone</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LSUtils"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils">[docs]</a><span class="k">class</span> <span class="nc">LSUtils</span><span class="p">(</span><span class="n">UtilHelpers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LSUtils.lsguard"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.lsguard">[docs]</a>    <span class="k">def</span> <span class="nf">lsguard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">amax</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">amin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">small</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Local search guard function</span>
+
+<span class="sd">        :param alp:</span>
+<span class="sd">        :param alist: list of known steps</span>
+<span class="sd">        :param amax: maximum step</span>
+<span class="sd">        :param amin: minimum step</span>
+<span class="sd">        :param small:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">asort</span> <span class="o">=</span> <span class="n">alist</span>
+        <span class="n">asort</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">asort</span><span class="p">)</span>
+
+        <span class="n">al</span> <span class="o">=</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">small</span>
+        <span class="n">au</span> <span class="o">=</span> <span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">small</span>
+        <span class="n">alp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">alp</span><span class="p">,</span> <span class="n">au</span><span class="p">))</span>
+        <span class="n">alp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">alp</span><span class="p">,</span> <span class="n">amax</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alp</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">small</span> <span class="o">*</span> <span class="p">(</span><span class="n">asort</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">asort</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">asort</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alp</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">small</span> <span class="o">*</span> <span class="p">(</span><span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="n">alp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">asort</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span>
+
+        <span class="k">return</span> <span class="n">alp</span></div>
+
+<div class="viewcode-block" id="LSUtils.lssplit"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.lssplit">[docs]</a>    <span class="k">def</span> <span class="nf">lssplit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">alist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">flist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">short</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Local search split function</span>
+
+<span class="sd">        :param i: label index</span>
+<span class="sd">        :param alist: list of known steps</span>
+<span class="sd">        :param flist: function values of known steps</span>
+<span class="sd">        :param short:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">fac</span> <span class="o">=</span> <span class="n">short</span>
+        <span class="k">elif</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">fac</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">short</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fac</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="n">alp</span> <span class="o">=</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">fac</span> <span class="o">*</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">alp</span><span class="p">,</span> <span class="n">fac</span></div>
+
+<div class="viewcode-block" id="LSUtils.minq"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.minq">[docs]</a>    <span class="k">def</span> <span class="nf">minq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">G</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">xu</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+             <span class="n">xo</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">prt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">convex</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Minq Function</span>
+<span class="sd">        Minimizes an affine quadratic form subject to simple bounds.</span>
+<span class="sd">        Using coordinate searches and reduced subspace minimizations, using LDL^T factorization updates</span>
+<span class="sd">        fct  =  gam + c^T x + 0.5 x^T G x s.t. x in [xu,xo] (xu &lt;= xo is assumed),</span>
+<span class="sd">        where G is a symmetric n x n matrix, not necessarily definite</span>
+<span class="sd">        (if G is indefinite, only a local minimum is found)</span>
+<span class="sd">        if G is sparse, it is assumed that the ordering is such that</span>
+<span class="sd">        a sparse modified Cholesky factorization is feasible</span>
+
+<span class="sd">        :param prt:	print command</span>
+<span class="sd">        :param xx: initial guess (optional)</span>
+<span class="sd">        :param x: minimizer (but unbounded direction if ier = 1)</span>
+<span class="sd">        :param fct:	optimal function value</span>
+<span class="sd">        :param ier:	0 (local minimizer found)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minq: Hessian has wrong dimension&#39;</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">fct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
+            <span class="n">nsub</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span>
+
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minq: linear term has wrong dimension&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minq: lower bound has wrong dimension&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">xo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">ier</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minq: lower bound has wrong dimension&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;xx&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">xx</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()[</span><span class="s2">&quot;xx&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">ier</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minq: lower bound has wrong dimension&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ier</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">fct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
+            <span class="n">nsub</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span>
+
+        <span class="n">maxit</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span>
+
+        <span class="n">nitrefmax</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xo</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">))])</span>
+
+        <span class="n">hpeps</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">eps</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">G</span> <span class="o">+</span> <span class="n">spdiags</span><span class="p">(</span><span class="n">hpeps</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+
+        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="n">free</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">nfree</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nfree_old</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">fct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+        <span class="n">nsub</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">unfix</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">nitref</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">improvement</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;infinite xx in minq.m&#39;</span><span class="p">)</span>
+
+            <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">xx</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span>
+            <span class="n">fctnew</span> <span class="o">=</span> <span class="n">gam</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">xx</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">g</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">improvement</span><span class="p">:</span>
+                <span class="n">ier</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">nitref</span> <span class="o">&gt;</span> <span class="n">nitrefmax</span><span class="p">:</span>
+
+                <span class="n">ier</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">nitref</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nfree_old</span> <span class="o">==</span> <span class="n">nfree</span> <span class="ow">and</span> <span class="n">fctnew</span> <span class="o">&gt;=</span> <span class="n">fct</span><span class="p">:</span>
+                <span class="n">ier</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">nitref</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">xx</span>
+                <span class="n">fct</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">fct</span><span class="p">,</span> <span class="n">fctnew</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">xx</span>
+                <span class="n">fct</span> <span class="o">=</span> <span class="n">fctnew</span>
+            <span class="k">if</span> <span class="n">nitref</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nsub</span> <span class="o">&gt;=</span> <span class="n">maxit</span><span class="p">:</span>
+                <span class="n">ier</span> <span class="o">=</span> <span class="mi">99</span>
+                <span class="k">break</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">count</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">k</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="ow">or</span> <span class="n">unfix</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">G</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span>
+                <span class="n">alpu</span> <span class="o">=</span> <span class="n">xu</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">alpo</span> <span class="o">=</span> <span class="n">xo</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+                <span class="n">alp</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getalp</span><span class="p">(</span><span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">ier</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">lba</span><span class="p">:</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+                    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span>
+
+                <span class="n">xnew</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">alp</span>
+                <span class="k">if</span> <span class="n">prt</span> <span class="ow">and</span> <span class="n">nitref</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">xnew</span><span class="p">,</span> <span class="n">alp</span>
+
+                <span class="k">if</span> <span class="n">lba</span> <span class="ow">or</span> <span class="n">xnew</span> <span class="o">&lt;=</span> <span class="n">xu</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">alpu</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">xu</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="n">g</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">alpu</span> <span class="o">*</span> <span class="n">q</span>
+                        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">elif</span> <span class="n">uba</span> <span class="ow">or</span> <span class="n">xnew</span> <span class="o">&gt;=</span> <span class="n">xo</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">alpo</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">xo</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="n">g</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">alpo</span> <span class="o">*</span> <span class="n">q</span>
+                        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">alp</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">prt</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                            <span class="n">unfixstep</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">alp</span><span class="p">]</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">xnew</span>
+                        <span class="n">g</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">alp</span> <span class="o">*</span> <span class="n">q</span>
+                        <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">nfree</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">unfix</span> <span class="ow">and</span> <span class="n">nfree_old</span> <span class="o">==</span> <span class="n">nfree</span><span class="p">):</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span>
+                <span class="n">nitref</span> <span class="o">=</span> <span class="n">nitref</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nitref</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">nfree_old</span> <span class="o">=</span> <span class="n">nfree</span>
+            <span class="n">gain_cs</span> <span class="o">=</span> <span class="n">fct</span> <span class="o">-</span> <span class="n">gam</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">g</span><span class="p">))</span>
+            <span class="n">improvement</span> <span class="o">=</span> <span class="p">(</span><span class="n">gain_cs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">unfix</span><span class="p">)</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">improvement</span> <span class="ow">or</span> <span class="n">nitref</span> <span class="o">&gt;</span> <span class="n">nitrefmax</span><span class="p">:</span>
+
+                <span class="n">nothing_to_do</span> <span class="o">=</span> <span class="s1">&#39;done!&#39;</span>
+            <span class="k">elif</span> <span class="n">nitref</span> <span class="o">&gt;</span> <span class="n">nitrefmax</span><span class="p">:</span>
+                <span class="n">nothing_to_do</span> <span class="o">=</span> <span class="s1">&#39;done!&#39;</span>
+            <span class="k">elif</span> <span class="n">nfree</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">unfix</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subdone</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="p">(</span><span class="n">nsub</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xo</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">convex</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span>
+                 <span class="n">nfree</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span> <span class="n">ier</span><span class="p">,</span> <span class="n">unfix</span><span class="p">,</span> <span class="n">subdone</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minqsub</span><span class="p">(</span><span class="n">nsub</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">dd</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                                                                                       <span class="n">xo</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">convex</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">nfree</span><span class="p">,</span>
+                                                                                       <span class="n">unfix</span><span class="p">,</span> <span class="n">alp</span><span class="p">,</span> <span class="n">alpu</span><span class="p">,</span> <span class="n">alpo</span><span class="p">,</span> <span class="n">lba</span><span class="p">,</span> <span class="n">uba</span><span class="p">,</span>
+                                                                                       <span class="n">ier</span><span class="p">,</span> <span class="n">subdone</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">subdone</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span>
+                <span class="k">if</span> <span class="n">ier</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">fct</span><span class="p">,</span> <span class="n">ier</span></div>
+
+<div class="viewcode-block" id="LSUtils.quartic"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.quartic">[docs]</a>    <span class="k">def</span> <span class="nf">quartic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        quartic function</span>
+
+<span class="sd">        :param a: vector of function values, normalized by its maximum value</span>
+<span class="sd">        :param x: positional argument generated from alp</span>
+<span class="sd">        :return: scalar value adjused for quart bool in main code (mcs_agent)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(((</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

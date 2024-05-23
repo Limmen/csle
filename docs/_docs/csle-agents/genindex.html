@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; csle-agents 0.5.0 documentation</title>
+  <title>Index &mdash; csle-agents 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -54,8 +56,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Index</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -158,6 +160,10 @@
       </ul></li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_node.BeliefNode.add_particle">add_particle() (csle_agents.agents.pomcp.belief_node.BeliefNode method)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.addloc">addloc() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.ADV_NORM_FULLBATCH">ADV_NORM_FULLBATCH (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType.ALPHA_GO">ALPHA_GO (csle_agents.agents.pomcp.pomcp_acquisition_function_type.POMCPAcquisitionFunctionType attribute)</a>
 </li>
   </ul></td>
@@ -168,6 +174,8 @@
 
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.ANNEAL_LR">(csle_agents.constants.constants.DQN_CLEAN attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.ANNEAL_LR">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.ANNEAL_LR">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
@@ -185,6 +193,8 @@
 </li>
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.ATTACKER_THRESHOLDS">ATTACKER_THRESHOLDS (csle_agents.constants.constants.T_FP attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.AUX_BATCH_ROLLOUTS">AUX_BATCH_ROLLOUTS (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.auxillary_game">auxillary_game() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 
@@ -244,6 +254,10 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.BASELINE_PREFIX">BASELINE_PREFIX (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.basket">basket() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.basket1">basket1() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
       <li><a href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.batch_gradient">batch_gradient() (csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent method)</a>
 
       <ul>
@@ -251,7 +265,11 @@
 </li>
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.BATCH_SIZE">BATCH_SIZE (csle_agents.constants.constants.COMMON attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.BATCH_SIZE">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
+      </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.bayes_filter">bayes_filter() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -266,10 +284,10 @@
         <li><a href="csle_agents.agents.bayesian_optimization_emukit.html#csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent.BayesOptEmukitAgent.bayesian_optimization">(csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent.BayesOptEmukitAgent method)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT">BAYESIAN_OPTIMIZATION_EMUKIT (class in csle_agents.constants.constants)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT">BAYESIAN_OPTIMIZATION_EMUKIT (class in csle_agents.constants.constants)</a>
+</li>
       <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent">BayesOptAgent (class in csle_agents.agents.bayesian_optimization.bayes_opt_agent)</a>
 </li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.html#csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent.BayesOptEmukitAgent">BayesOptEmukitAgent (class in csle_agents.agents.bayesian_optimization_emukit.bayes_opt_emukit_agent)</a>
@@ -287,6 +305,8 @@
 </li>
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT.BETA">BETA (csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.BETA_CLONE">BETA_CLONE (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_config.BOConfig">BOConfig (class in csle_agents.agents.bayesian_optimization_emukit.bo.bo_config)</a>
 </li>
@@ -320,6 +340,8 @@
 </li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type.AcquisitionOptimizerType.CAUSAL_GRADIENT">CAUSAL_GRADIENT (csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_optimizer_type.AcquisitionOptimizerType attribute)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.check_box_bound">check_box_bound() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.common.html#csle_agents.common.pruning.check_dominance_lp">check_dominance_lp() (in module csle_agents.common.pruning)</a>
 </li>
       <li><a href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.check_duplicate">check_duplicate() (csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent method)</a>
@@ -328,9 +350,17 @@
         <li><a href="csle_agents.common.html#csle_agents.common.pruning.check_duplicate">(in module csle_agents.common.pruning)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chkloc">chkloc() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.choose_a_o_for_exploration">choose_a_o_for_exploration() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chrelerr">chrelerr() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chvtr">chvtr() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.CLIENTS_ARRIVAL_RATE">CLIENTS_ARRIVAL_RATE (csle_agents.constants.constants.DYNASEC attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.CLIP_COEF">CLIP_COEF (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.REINFORCE.CLIP_GRADIENT">CLIP_GRADIENT (csle_agents.constants.constants.REINFORCE attribute)</a>
 </li>
@@ -354,6 +384,8 @@
 
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.CLIP_VLOSS">(csle_agents.constants.constants.DQN_CLEAN attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.CLIP_VLOSS">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.CLIP_VLOSS">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
@@ -394,6 +426,8 @@
         <li><a href="csle_agents.agents.lp_cmdp.html#csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent.LinearProgrammingCMDPAgent.compute_avg_metrics">(csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent.LinearProgrammingCMDPAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.compute_avg_metrics">(csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent static method)</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.compute_avg_metrics">(csle_agents.agents.mcs.mcs_agent.MCSAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.compute_avg_metrics">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent static method)</a>
 </li>
@@ -471,6 +505,8 @@
       <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.cross_entropy">cross_entropy() (csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent">CrossEntropyAgent (class in csle_agents.agents.cross_entropy.cross_entropy_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.csearch">csearch() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
 </li>
       <li>
     csle_agents
@@ -689,8 +725,6 @@
         <li><a href="csle_agents.agents.differential_evolution.html#module-csle_agents.agents.differential_evolution.differential_evolution_agent">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_agents.agents.dqn
 
@@ -705,6 +739,8 @@
         <li><a href="csle_agents.agents.dqn.html#module-csle_agents.agents.dqn.dqn_agent">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_agents.agents.dqn_clean
 
@@ -818,6 +854,48 @@
 </li>
       </ul></li>
       <li>
+    csle_agents.agents.mcs
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.html#module-csle_agents.agents.mcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.mcs.mcs_agent
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.html#module-csle_agents.agents.mcs.mcs_agent">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.mcs.mcs_utils
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.mcs.mcs_utils.gls_utils
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.gls_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.mcs.mcs_utils.ls_utils
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.ls_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.mcs.mcs_utils.mcs_fun
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.mcs_fun">module</a>
+</li>
+      </ul></li>
+      <li>
     csle_agents.agents.nelder_mead
 
       <ul>
@@ -920,6 +998,20 @@
 
       <ul>
         <li><a href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_util">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.ppg_clean
+
+      <ul>
+        <li><a href="csle_agents.agents.ppg_clean.html#module-csle_agents.agents.ppg_clean">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.ppg_clean.ppg_clean_agent
+
+      <ul>
+        <li><a href="csle_agents.agents.ppg_clean.html#module-csle_agents.agents.ppg_clean.ppg_clean_agent">module</a>
 </li>
       </ul></li>
       <li>
@@ -1235,6 +1327,10 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.E_AUXILIARY">E_AUXILIARY (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.E_POLICY">E_POLICY (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME">EMULATION_MONITOR_SLEEP_TIME (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB">EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB (csle_agents.constants.constants.DYNASEC attribute)</a>
@@ -1250,6 +1346,8 @@
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.ENT_COEF">ENT_COEF (csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.ENT_COEF">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.ENT_COEF">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.ENT_COEF">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
@@ -1269,6 +1367,8 @@
 
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.HSVI_OS_POSG.EPSILON">(csle_agents.constants.constants.HSVI_OS_POSG attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.EPSILON">(csle_agents.constants.constants.MCS attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.Q_LEARNING.EPSILON">(csle_agents.constants.constants.Q_LEARNING attribute)</a>
 </li>
@@ -1311,6 +1411,8 @@
         <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.eval_theta">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.eval_theta">(csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.eval_theta">(csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.eval_theta">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent method)</a>
 </li>
@@ -1375,6 +1477,8 @@
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.HSVI_OS_POSG.EXCESSES">EXCESSES (csle_agents.constants.constants.HSVI_OS_POSG attribute)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.exgain">exgain() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.C51_CLEAN.EXP_FRAC">EXP_FRAC (csle_agents.constants.constants.C51_CLEAN attribute)</a>
 
       <ul>
@@ -1413,6 +1517,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.fbestloc">fbestloc() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.FICTITIOUS_PLAY">FICTITIOUS_PLAY (class in csle_agents.constants.constants)</a>
 </li>
       <li><a href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.fictitious_play">fictitious_play() (csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent method)</a>
@@ -1468,6 +1574,8 @@
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.GAE_LAMBDA">GAE_LAMBDA (csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.GAE_LAMBDA">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.GAE_LAMBDA">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.GAE_LAMBDA">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
@@ -1476,9 +1584,15 @@
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.GAMMA">GAMMA (csle_agents.constants.constants.COMMON attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.GAMMA">(csle_agents.constants.constants.MCS attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.POMCP.GAMMA">(csle_agents.constants.constants.POMCP attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.GAMMA">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       </ul></li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.genbox">genbox() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.ppo_clean.html#csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent.generalized_advantage_estimation">generalized_advantage_estimation() (csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.generate_corner_belief">generate_corner_belief() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
@@ -1536,6 +1650,8 @@
 </li>
         <li><a href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.get_policy">(csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.get_policy">(csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.get_policy">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.particle_swarm.html#csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent.get_policy">(csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent method)</a>
@@ -1549,6 +1665,8 @@
       </ul></li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_spsa_experiment_config">get_spsa_experiment_config() (csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent method)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.get_theta0">get_theta0() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.get_theta_vector_from_param_dict">get_theta_vector_from_param_dict() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 
       <ul>
@@ -1556,6 +1674,12 @@
 </li>
       </ul></li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_Z_from_system_model">get_Z_from_system_model() (csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent static method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.getalp">getalp() (csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.gls">gls() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils">GLSUtils (class in csle_agents.agents.mcs.mcs_utils.gls_utils)</a>
 </li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.gp.html#csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config.GPConfig">GPConfig (class in csle_agents.agents.bayesian_optimization_emukit.bo.gp.gp_config)</a>
 </li>
@@ -1575,6 +1699,8 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.hessian">hessian() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.hparam_names">hparam_names() (csle_agents.agents.base.base_agent.BaseAgent method)</a>
 
       <ul>
@@ -1612,6 +1738,8 @@
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.hparam_names">(csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.hparam_names">(csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.hparam_names">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.particle_swarm.html#csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent.hparam_names">(csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent method)</a>
@@ -1619,6 +1747,8 @@
         <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.hparam_names">(csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.hparam_names">(csle_agents.agents.pomcp.pomcp_agent.POMCPAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.hparam_names">(csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOAgent.hparam_names">(csle_agents.agents.ppo.ppo_agent.PPOAgent method)</a>
 </li>
@@ -1671,11 +1801,17 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.IINIT">IINIT (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.IMPROVE_BREAK">IMPROVE_BREAK (csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.IMPROVE_THRESHOLD">IMPROVE_THRESHOLD (csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.INERTIA_WEIGHT">INERTIA_WEIGHT (csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.init_list">init_list() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.initbox">initbox() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.INITIAL_ALPHA">INITIAL_ALPHA (csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
 </li>
@@ -1820,6 +1956,8 @@
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.L">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.L">(csle_agents.constants.constants.MCS attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.L">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.L">(csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
@@ -1835,8 +1973,18 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.HSVI.LB_SIZES">LB_SIZES (csle_agents.constants.constants.HSVI attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.LEARNING_RATE">LEARNING_RATE (csle_agents.constants.constants.COMMON attribute)</a>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.ldldown">ldldown() (csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers method)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.Minq.ldlrk1">ldlrk1() (csle_agents.agents.mcs.mcs_utils.ls_utils.Minq method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.ldlup">ldlup() (csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.LEARNING_RATE">LEARNING_RATE (csle_agents.constants.constants.COMMON attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.LEARNING_RATE">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.LEARNING_RATE_DECAY_RATE">LEARNING_RATE_DECAY_RATE (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.LEARNING_RATE_EXP_DECAY">LEARNING_RATE_EXP_DECAY (csle_agents.constants.constants.COMMON attribute)</a>
@@ -1861,12 +2009,14 @@
         <li><a href="csle_agents.agents.dqn_clean.html#csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent.linear_schedule">(csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.lp_cmdp.html#csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent.LinearProgrammingCMDPAgent">LinearProgrammingCMDPAgent (class in csle_agents.agents.lp_cmdp.linear_programming_cmdp_agent)</a>
 </li>
       <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent">LinearProgrammingNormalFormGameAgent (class in csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.LOCAL">LOCAL (csle_agents.constants.constants.MCS attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LOCAL_DFSP">LOCAL_DFSP (class in csle_agents.constants.constants)</a>
 </li>
       <li><a href="csle_agents.agents.dfsp_local.html#csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent.local_dfsp">local_dfsp() (csle_agents.agents.dfsp_local.dfsp_local_agent.DFSPLocalAgent method)</a>
@@ -1895,12 +2045,6 @@
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.POMCP.LOG_STEP_FREQUENCY">LOG_STEP_FREQUENCY (csle_agents.constants.constants.POMCP attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.logger">logger (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.logger">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
-</li>
-      </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_backup">lower_bound_backup() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -1921,16 +2065,50 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.LP_FOR_NF_GAMES">LP_FOR_NF_GAMES (class in csle_agents.constants.constants)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lsconvex">lsconvex() (csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lsdescent">lsdescent() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lsearch">lsearch() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.lsguard">lsguard() (csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lsinit">lsinit() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lslocal">lslocal() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lsnew">lsnew() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lspar">lspar() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lsquart">lsquart() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lsrange">lsrange() (csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lssat">lssat() (csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.lssep">lssep() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lssort">lssort() (csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.lssplit">lssplit() (csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils">LSUtils (class in csle_agents.agents.mcs.mcs_utils.ls_utils)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.M">M (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.agents.c51_clean.html#csle_agents.agents.c51_clean.c51_clean_agent.C51CleanAgent.make_env">make_env() (csle_agents.agents.c51_clean.c51_clean_agent.C51CleanAgent method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.dqn_clean.html#csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent.make_env">(csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.make_env">(csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.ppo_clean.html#csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent.make_env">(csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent method)</a>
 </li>
@@ -1943,6 +2121,8 @@
 
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.MAX_GRAD_NORM">(csle_agents.constants.constants.DQN_CLEAN attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.MAX_GRAD_NORM">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.MAX_GRAD_NORM">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
@@ -1961,6 +2141,14 @@
 </li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.maxcomp_shapley_bellman_operator">maxcomp_shapley_bellman_operator() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS">MCS (class in csle_agents.constants.constants)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.MCS">MCS() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent">MCSAgent (class in csle_agents.agents.mcs.mcs_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils">MCSUtils (class in csle_agents.agents.mcs.mcs_utils.mcs_fun)</a>
+</li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.mdp_reward_matrix_p2">mdp_reward_matrix_p2() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.mdp_transition_tensor_p2">mdp_transition_tensor_p2() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
@@ -1974,9 +2162,17 @@
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.MINIBATCH_SIZE">(csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.MINIBATCH_SIZE">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.MINIBATCH_SIZE">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.Minq">Minq (class in csle_agents.agents.mcs.mcs_utils.ls_utils)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.minq">minq() (csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers.minqsub">minqsub() (csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers method)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.MLP_POLICY">MLP_POLICY (csle_agents.constants.constants.DQN attribute)</a>
 
       <ul>
@@ -1985,12 +2181,6 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.MLP_POLICY">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.MLP_POLICY">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.model">model (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.model">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
 </li>
       </ul></li>
       <li>
@@ -2095,6 +2285,18 @@
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#module-csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent">csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#module-csle_agents.agents.mcs">csle_agents.agents.mcs</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.html#module-csle_agents.agents.mcs.mcs_agent">csle_agents.agents.mcs.mcs_agent</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils">csle_agents.agents.mcs.mcs_utils</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.gls_utils">csle_agents.agents.mcs.mcs_utils.gls_utils</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.ls_utils">csle_agents.agents.mcs.mcs_utils.ls_utils</a>
+</li>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#module-csle_agents.agents.mcs.mcs_utils.mcs_fun">csle_agents.agents.mcs.mcs_utils.mcs_fun</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#module-csle_agents.agents.nelder_mead">csle_agents.agents.nelder_mead</a>
 </li>
         <li><a href="csle_agents.agents.nelder_mead.html#module-csle_agents.agents.nelder_mead.nelder_mead_agent">csle_agents.agents.nelder_mead.nelder_mead_agent</a>
@@ -2124,6 +2326,10 @@
         <li><a href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_agent">csle_agents.agents.pomcp.pomcp_agent</a>
 </li>
         <li><a href="csle_agents.agents.pomcp.html#module-csle_agents.agents.pomcp.pomcp_util">csle_agents.agents.pomcp.pomcp_util</a>
+</li>
+        <li><a href="csle_agents.agents.ppg_clean.html#module-csle_agents.agents.ppg_clean">csle_agents.agents.ppg_clean</a>
+</li>
+        <li><a href="csle_agents.agents.ppg_clean.html#module-csle_agents.agents.ppg_clean.ppg_clean_agent">csle_agents.agents.ppg_clean.ppg_clean_agent</a>
 </li>
         <li><a href="csle_agents.agents.ppo.html#module-csle_agents.agents.ppo">csle_agents.agents.ppo</a>
 </li>
@@ -2252,7 +2458,11 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.N_EPISODES_ROLLOUT">N_EPISODES_ROLLOUT (csle_agents.constants.constants.DQN attribute)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.N_ITERATION">N_ITERATION (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType.NEGATIVE_LOWER_CONFIDENCE_BOUND">NEGATIVE_LOWER_CONFIDENCE_BOUND (csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType attribute)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.neighbor">neighbor() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD">NELDER_MEAD (class in csle_agents.constants.constants)</a>
 </li>
@@ -2266,10 +2476,12 @@
         <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.next_belief">(csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.NF">NF (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN">NO_INTRUSION_ALERTS_MEAN (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE">NO_INTRUSION_ALERTS_MEAN_BASELINE (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.node.Node">Node (class in csle_agents.agents.pomcp.node)</a>
@@ -2290,6 +2502,10 @@
       </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.SONDIK_VI.NUM_ALPHA_VECTORS">NUM_ALPHA_VECTORS (csle_agents.constants.constants.SONDIK_VI attribute)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_AUX_GRAD_ACCUM">NUM_AUX_GRAD_ACCUM (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_AUX_ROLLOUTS">NUM_AUX_ROLLOUTS (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.NUM_CACHED_SIMULATION_TRACES">NUM_CACHED_SIMULATION_TRACES (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.NUM_CLIENTS">NUM_CLIENTS (csle_agents.constants.constants.DYNASEC attribute)</a>
@@ -2306,9 +2522,13 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.NUM_GRADIENT_STEPS">NUM_GRADIENT_STEPS (csle_agents.constants.constants.PPO attribute)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_ITERATIONS">NUM_ITERATIONS (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.NUM_MINIBATCHES">NUM_MINIBATCHES (csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_MINIBATCHES">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.NUM_MINIBATCHES">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
       </ul></li>
@@ -2317,6 +2537,8 @@
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.NUM_PARALLEL_ENVS">NUM_PARALLEL_ENVS (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.POMCP.NUM_PARALLEL_PROCESSES">NUM_PARALLEL_PROCESSES (csle_agents.constants.constants.POMCP attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_PHASES">NUM_PHASES (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PI.NUM_STATES">NUM_STATES (csle_agents.constants.constants.PI attribute)</a>
 
@@ -2328,6 +2550,8 @@
 
       <ul>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.NUM_STEPS">(csle_agents.constants.constants.DQN_CLEAN attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.NUM_STEPS">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.NUM_STEPS">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
@@ -2354,6 +2578,8 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.CROSS_ENTROPY.OBJECTIVE_TYPE">(csle_agents.constants.constants.CROSS_ENTROPY attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.OBJECTIVE_TYPE">(csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.OBJECTIVE_TYPE">(csle_agents.constants.constants.MCS attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.OBJECTIVE_TYPE">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
@@ -2483,6 +2709,8 @@
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.POLICY_TYPE">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.POLICY_TYPE">(csle_agents.constants.constants.MCS attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.POLICY_TYPE">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.POLICY_TYPE">(csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
@@ -2497,6 +2725,10 @@
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread">PolicyEvaluationThread (class in csle_agents.agents.dynasec.dynasec_agent)</a>
 </li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyOptimizationProcess">PolicyOptimizationProcess (class in csle_agents.agents.dynasec.dynasec_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.polint">polint() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.polint1">polint1() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
 </li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP">POMCP (class in csle_agents.agents.pomcp.pomcp)</a>
 
@@ -2513,6 +2745,10 @@
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_util.POMCPUtil">POMCPUtil (class in csle_agents.agents.pomcp.pomcp_util)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE">POPULATION_SIZE (csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN">PPG_CLEAN (class in csle_agents.constants.constants)</a>
+</li>
+      <li><a href="csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent">PPGCleanAgent (class in csle_agents.agents.ppg_clean.ppg_clean_agent)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO">PPO (class in csle_agents.constants.constants)</a>
 </li>
@@ -2531,6 +2767,8 @@
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType.PROBABILITY_OF_FEASIBILITY">PROBABILITY_OF_FEASIBILITY (csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType attribute)</a>
 </li>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.html#csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType.PROBABILITY_OF_IMPROVEMENT">PROBABILITY_OF_IMPROVEMENT (csle_agents.agents.bayesian_optimization_emukit.bo.acquisition.acquisition_function_type.AcquisitionFunctionType attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.PRT">PRT (csle_agents.constants.constants.MCS attribute)</a>
 </li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.belief_tree.BeliefTree.prune">prune() (csle_agents.agents.pomcp.belief_tree.BeliefTree method)</a>
 
@@ -2568,17 +2806,23 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.Q_LEARNING">Q_LEARNING (class in csle_agents.constants.constants)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.q_learning">q_learning() (csle_agents.agents.q_learning.q_learning_agent.QLearningAgent method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.q_learning">(csle_agents.agents.sarsa.sarsa_agent.SARSAAgent method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.q_learning_update">q_learning_update() (csle_agents.agents.q_learning.q_learning_agent.QLearningAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent">QLearningAgent (class in csle_agents.agents.q_learning.q_learning_agent)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.quadmin">quadmin() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.quadpol">quadpol() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils.quartic">quartic() (csle_agents.agents.mcs.mcs_utils.ls_utils.LSUtils method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2685,6 +2929,8 @@
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.round_vec">(csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent static method)</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.round_vec">(csle_agents.agents.mcs.mcs_agent.MCSAgent static method)</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.round_vec">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.particle_swarm.html#csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent.round_vec">(csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent static method)</a>
@@ -2719,6 +2965,8 @@
       <li><a href="csle_agents.agents.c51_clean.html#csle_agents.agents.c51_clean.c51_clean_agent.C51CleanAgent.run_c51">run_c51() (csle_agents.agents.c51_clean.c51_clean_agent.C51CleanAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.dqn_clean.html#csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent.run_dqn">run_dqn() (csle_agents.agents.dqn_clean.dqn_clean_agent.DQNCleanAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.run_ppg">run_ppg() (csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.ppo_clean.html#csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent.run_ppo">run_ppo() (csle_agents.agents.ppo_clean.ppo_clean_agent.PPOCleanAgent method)</a>
 </li>
@@ -2834,6 +3082,8 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.SLEEP_TIME">SLEEP_TIME (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.SMAX">SMAX (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.SOCIAL_COEFFICIENT">SOCIAL_COEFFICIENT (csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
 </li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.solve">solve() (csle_agents.agents.pomcp.pomcp.POMCP method)</a>
@@ -2846,6 +3096,16 @@
 </li>
       <li><a href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent">SondikVIAgent (class in csle_agents.agents.sondik_vi.sondik_vi_agent)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.splinit">splinit() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.split">split() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.split1">split1() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.split2">split2() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.splrnk">splrnk() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.spsa">spsa() (csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ak">standard_ak() (csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent static method)</a>
@@ -2854,10 +3114,10 @@
 </li>
       <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_deltak">standard_deltak() (csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.C51_CLEAN.START_EXPLORATION_RATE">START_EXPLORATION_RATE (csle_agents.constants.constants.C51_CLEAN attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.START_POINT_CORRECT">START_POINT_CORRECT (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
       <li><a href="csle_agents.job_controllers.html#csle_agents.job_controllers.training_job_manager.TrainingJobManager.start_training_job_in_background">start_training_job_in_background() (csle_agents.job_controllers.training_job_manager.TrainingJobManager static method)</a>
@@ -2882,7 +3142,13 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.STATIC_ATTACKER_TYPE">STATIC_ATTACKER_TYPE (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
-      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.STEP">STEP (csle_agents.constants.constants.NELDER_MEAD attribute)</a>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.STEP">STEP (csle_agents.constants.constants.MCS attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.STEP">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.STEP1">STEP1 (csle_agents.constants.constants.MCS attribute)</a>
 </li>
       <li><a href="csle_agents.agents.q_learning.html#csle_agents.agents.q_learning.q_learning_agent.QLearningAgent.step_size">step_size() (csle_agents.agents.q_learning.q_learning_agent.QLearningAgent method)</a>
 
@@ -2900,6 +3166,8 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.STEPS_BETWEEN_UPDATES">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.STOP">STOP (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER">STOP_DISTRIBUTION_ATTACKER (csle_agents.constants.constants.BAYESIAN_OPTIMIZATION attribute)</a>
 
       <ul>
@@ -2931,6 +3199,8 @@
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.STOP_DISTRIBUTION_DEFENDER">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.STOP_DISTRIBUTION_DEFENDER">(csle_agents.constants.constants.MCS attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.STOP_DISTRIBUTION_DEFENDER">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.STOP_DISTRIBUTION_DEFENDER">(csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
@@ -2940,7 +3210,13 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.SIMULATED_ANNEALING.STOP_DISTRIBUTION_DEFENDER">(csle_agents.constants.constants.SIMULATED_ANNEALING attribute)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.STOPPING_ACTIONS">STOPPING_ACTIONS (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.STOPPING_ENVS">STOPPING_ENVS (csle_agents.constants.constants.COMMON attribute)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.strtsw">strtsw() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.subint">subint() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
 </li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.SystemIdentificationProcess">SystemIdentificationProcess (class in csle_agents.agents.dynasec.dynasec_agent)</a>
 </li>
@@ -2969,6 +3245,8 @@
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.TARGET_KL">TARGET_KL (csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.TARGET_KL">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.TARGET_KL">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.TARGET_KL">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>
@@ -3027,6 +3305,8 @@
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THETAS">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
 </li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.THETAS">(csle_agents.constants.constants.MCS attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.THETAS">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PARTICLE_SWARM.THETAS">(csle_agents.constants.constants.PARTICLE_SWARM attribute)</a>
@@ -3046,6 +3326,8 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS">(csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THRESHOLDS">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.THRESHOLDS">(csle_agents.constants.constants.MCS attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.NELDER_MEAD.THRESHOLDS">(csle_agents.constants.constants.NELDER_MEAD attribute)</a>
 </li>
@@ -3078,14 +3360,16 @@
         <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config.KernelConfig.to_json_file">(csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config.KernelConfig method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.html#csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults.to_json_str">to_json_str() (csle_agents.agents.bayesian_optimization_emukit.bo.bo_results.BOResults method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.bayesian_optimization_emukit.bo.kernel.html#csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config.KernelConfig.to_json_str">(csle_agents.agents.bayesian_optimization_emukit.bo.kernel.kernel_config.KernelConfig method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.TOTAL_STEPS">TOTAL_STEPS (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
       <li><a href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.train">train() (csle_agents.agents.base.base_agent.BaseAgent method)</a>
 
       <ul>
@@ -3123,6 +3407,8 @@
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.train">(csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent method)</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.train">(csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.train">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.particle_swarm.html#csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent.train">(csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent method)</a>
@@ -3130,6 +3416,8 @@
         <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.train">(csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp_agent.POMCPAgent.train">(csle_agents.agents.pomcp.pomcp_agent.POMCPAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.train">(csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOAgent.train">(csle_agents.agents.ppo.ppo_agent.PPOAgent method)</a>
 </li>
@@ -3168,12 +3456,6 @@
 </li>
       <li><a href="csle_agents.agents.sarsa.html#csle_agents.agents.sarsa.sarsa_agent.SARSAAgent.train_sarsa">train_sarsa() (csle_agents.agents.sarsa.sarsa_agent.SARSAAgent method)</a>
 </li>
-      <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.training">training (csle_agents.common.fnn_w_gaussian.FNNwithGaussian attribute)</a>
-
-      <ul>
-        <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.training">(csle_agents.common.fnn_w_linear.FNNwithLinear attribute)</a>
-</li>
-      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DYNASEC.TRAINING_EPOCHS">TRAINING_EPOCHS (csle_agents.constants.constants.DYNASEC attribute)</a>
 </li>
       <li><a href="csle_agents.agents.reinforce.html#csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent.training_step">training_step() (csle_agents.agents.reinforce.reinforce_agent.ReinforceAgent method)</a>
@@ -3200,6 +3482,8 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.VI.TRANSITION_TENSOR">(csle_agents.constants.constants.VI attribute)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.triple">triple() (csle_agents.agents.mcs.mcs_agent.MCSAgent method)</a>
+</li>
       <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent">TSPSAAgent (class in csle_agents.agents.t_spsa.t_spsa_agent)</a>
 </li>
   </ul></td>
@@ -3208,6 +3492,8 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.U">U (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.HSVI.UB_SIZE">UB_SIZE (csle_agents.constants.constants.HSVI attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.HSVI.UB_SIZES">UB_SIZES (csle_agents.constants.constants.HSVI attribute)</a>
@@ -3269,6 +3555,8 @@
 </li>
         <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.update_metrics">(csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent static method)</a>
 </li>
+        <li><a href="csle_agents.agents.mcs.html#csle_agents.agents.mcs.mcs_agent.MCSAgent.update_metrics">(csle_agents.agents.mcs.mcs_agent.MCSAgent static method)</a>
+</li>
         <li><a href="csle_agents.agents.nelder_mead.html#csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent.update_metrics">(csle_agents.agents.nelder_mead.nelder_mead_agent.NelderMeadAgent static method)</a>
 </li>
         <li><a href="csle_agents.agents.particle_swarm.html#csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent.update_metrics">(csle_agents.agents.particle_swarm.particle_swarm_agent.ParticleSwarmAgent static method)</a>
@@ -3294,6 +3582,10 @@
 </li>
       <li><a href="csle_agents.agents.pomcp.html#csle_agents.agents.pomcp.pomcp.POMCP.update_tree_with_new_samples">update_tree_with_new_samples() (csle_agents.agents.pomcp.pomcp.POMCP method)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.updtf">updtf() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.updtrec">updtrec() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.upper_bound_backup">upper_bound_backup() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 
       <ul>
@@ -3312,6 +3604,12 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.POMCP.USE_ROLLOUT_POLICY">USE_ROLLOUT_POLICY (csle_agents.constants.constants.POMCP attribute)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.ls_utils.UtilHelpers">UtilHelpers (class in csle_agents.agents.mcs.mcs_utils.ls_utils)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers">(class in csle_agents.agents.mcs.mcs_utils.mcs_fun)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION">UTILITY_FUNCTION (csle_agents.constants.constants.BAYESIAN_OPTIMIZATION attribute)</a>
 
       <ul>
@@ -3326,9 +3624,13 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.MCS.V">V (csle_agents.constants.constants.MCS attribute)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.C51_CLEAN.V_MAX">V_MAX (csle_agents.constants.constants.C51_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.C51_CLEAN.V_MIN">V_MIN (csle_agents.constants.constants.C51_CLEAN attribute)</a>
+</li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.V_VALUE">V_VALUE (csle_agents.constants.constants.PPG_CLEAN attribute)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.valcomp">valcomp() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
@@ -3342,11 +3644,21 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.POMCP.VERBOSE">VERBOSE (csle_agents.constants.constants.POMCP attribute)</a>
 </li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert1">vert1() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert2">vert2() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert3">vert3() (csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers method)</a>
+</li>
+      <li><a href="csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.vertex">vertex() (csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils method)</a>
+</li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN.VF_COEF">VF_COEF (csle_agents.constants.constants.DQN_CLEAN attribute)</a>
 
       <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN.VF_COEF">(csle_agents.constants.constants.PPG_CLEAN attribute)</a>
+</li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.VF_COEF">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO_CLEAN.VF_COEF">(csle_agents.constants.constants.PPO_CLEAN attribute)</a>

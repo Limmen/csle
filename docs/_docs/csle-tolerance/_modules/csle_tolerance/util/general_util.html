@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_tolerance.util.general_util &mdash; csle-tolerance 0.5.0 documentation</title>
+  <title>csle_tolerance.util.general_util &mdash; csle-tolerance 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_tolerance.util.general_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_tolerance.util.general_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -67,7 +69,6 @@
              
   <h1>Source code for csle_tolerance.util.general_util</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -90,9 +91,14 @@
             <span class="k">return</span> <span class="mf">1.0</span>
         <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">b1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">b1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(((</span><span class="n">b1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">))),</span> <span class="n">k</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span>
+                    <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(((</span><span class="n">b1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b1</span><span class="p">))),</span> <span class="n">k</span><span class="p">),</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mf">0.0</span>
         <span class="k">else</span><span class="p">:</span>
@@ -119,7 +125,9 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">e</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GeneralUtil.sample_next_state"><a class="viewcode-back" href="../../../csle_tolerance.util.html#csle_tolerance.util.general_util.GeneralUtil.sample_next_state">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span><span class="n">transition_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span>
+        <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the next state of a MDP or POMDP</span>
 
@@ -141,15 +149,17 @@
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
+
         <span class="n">register</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;csle-tolerance-intrusion-recovery-pomdp-v1&#39;</span><span class="p">,</span>
-            <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;csle_tolerance.envs.intrusion_recovery_pomdp_env:IntrusionRecoveryPomdpEnv&#39;</span><span class="p">,</span>
-            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;csle-tolerance-intrusion-recovery-pomdp-v1&quot;</span><span class="p">,</span>
+            <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;csle_tolerance.envs.intrusion_recovery_pomdp_env:IntrusionRecoveryPomdpEnv&quot;</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="n">register</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;csle-tolerance-intrusion-response-cmdp-v1&#39;</span><span class="p">,</span>
-            <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;csle_tolerance.envs.intrusion_response_cmdp_env:IntrusionResponseCmdpEnv&#39;</span><span class="p">,</span>
-            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;csle-tolerance-intrusion-response-cmdp-v1&quot;</span><span class="p">,</span>
+            <span class="n">entry_point</span><span class="o">=</span><span class="s2">&quot;csle_tolerance.envs.intrusion_response_cmdp_env:IntrusionResponseCmdpEnv&quot;</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
         <span class="p">)</span></div></div>
 </pre></div>
 

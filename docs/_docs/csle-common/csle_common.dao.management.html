@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.management package &mdash; csle-common 0.5.0 documentation</title>
+  <title>csle_common.dao.management package &mdash; csle-common 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -85,9 +87,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="csle_common.dao.html">csle_common.dao package</a> &raquo;</li>
-      <li>csle_common.dao.management package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="csle_common.dao.html">csle_common.dao package</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.management package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_common.dao.management.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -98,20 +100,20 @@
            <div itemprop="articleBody">
              
   <section id="csle-common-dao-management-package">
-<h1>csle_common.dao.management package<a class="headerlink" href="#csle-common-dao-management-package" title="Permalink to this headline"></a></h1>
+<h1>csle_common.dao.management package<a class="headerlink" href="#csle-common-dao-management-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_common.dao.management.management_user">
-<span id="csle-common-dao-management-management-user-module"></span><h2>csle_common.dao.management.management_user module<a class="headerlink" href="#module-csle_common.dao.management.management_user" title="Permalink to this headline"></a></h2>
+<span id="csle-common-dao-management-management-user-module"></span><h2>csle_common.dao.management.management_user module<a class="headerlink" href="#module-csle_common.dao.management.management_user" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.management.management_user.ManagementUser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.management.management_user.</span></span><span class="sig-name descname"><span class="pre">ManagementUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">organization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/management/management_user.html#ManagementUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.management_user.ManagementUser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">csle_base.json_serializable.JSONSerializable</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
 <p>DTO representing a management user</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.management.management_user.ManagementUser.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.management_user.ManagementUser" title="csle_common.dao.management.management_user.ManagementUser"><span class="pre">csle_common.dao.management.management_user.ManagementUser</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/management_user.html#ManagementUser.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.management_user.ManagementUser.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.management_user.ManagementUser" title="csle_common.dao.management.management_user.ManagementUser"><span class="pre">ManagementUser</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/management_user.html#ManagementUser.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.management_user.ManagementUser.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -125,7 +127,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.management.management_user.ManagementUser.from_json_file">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.management_user.ManagementUser" title="csle_common.dao.management.management_user.ManagementUser"><span class="pre">csle_common.dao.management.management_user.ManagementUser</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/management_user.html#ManagementUser.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.management_user.ManagementUser.from_json_file" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.management_user.ManagementUser" title="csle_common.dao.management.management_user.ManagementUser"><span class="pre">ManagementUser</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/management_user.html#ManagementUser.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.management_user.ManagementUser.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -152,11 +154,11 @@
 
 </section>
 <section id="module-csle_common.dao.management.session_token">
-<span id="csle-common-dao-management-session-token-module"></span><h2>csle_common.dao.management.session_token module<a class="headerlink" href="#module-csle_common.dao.management.session_token" title="Permalink to this headline"></a></h2>
+<span id="csle-common-dao-management-session-token-module"></span><h2>csle_common.dao.management.session_token module<a class="headerlink" href="#module-csle_common.dao.management.session_token" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.dao.management.session_token.SessionToken">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.management.session_token.</span></span><span class="sig-name descname"><span class="pre">SessionToken</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/management/session_token.html#SessionToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.session_token.SessionToken" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">csle_base.json_serializable.JSONSerializable</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONSerializable</span></code></p>
 <p>DTO representing a session token</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.management.session_token.SessionToken.expired">
@@ -174,7 +176,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.management.session_token.SessionToken.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.session_token.SessionToken" title="csle_common.dao.management.session_token.SessionToken"><span class="pre">csle_common.dao.management.session_token.SessionToken</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/session_token.html#SessionToken.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.session_token.SessionToken.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.session_token.SessionToken" title="csle_common.dao.management.session_token.SessionToken"><span class="pre">SessionToken</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/session_token.html#SessionToken.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.session_token.SessionToken.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of the DTO into an instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -188,7 +190,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.management.session_token.SessionToken.from_json_file">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.session_token.SessionToken" title="csle_common.dao.management.session_token.SessionToken"><span class="pre">csle_common.dao.management.session_token.SessionToken</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/session_token.html#SessionToken.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.session_token.SessionToken.from_json_file" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.management.session_token.SessionToken" title="csle_common.dao.management.session_token.SessionToken"><span class="pre">SessionToken</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/management/session_token.html#SessionToken.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.management.session_token.SessionToken.from_json_file" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a json file and converts it to a DTO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -215,7 +217,7 @@
 
 </section>
 <section id="module-csle_common.dao.management">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.dao.management" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.dao.management" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

@@ -5,8 +5,8 @@
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
-    <a href="https://img.shields.io/badge/version-0.5.0-blue">
-        <img src="https://img.shields.io/badge/version-0.5.0-blue" /></a>
+    <a href="https://img.shields.io/badge/version-0.6.0-blue">
+        <img src="https://img.shields.io/badge/version-0.6.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
@@ -90,6 +90,7 @@ A video walkthrough of the installation process is available [here](https://www.
 
 | Release                                                       | Last date of support |
 |---------------------------------------------------------------|----------------------|
+| [v.0.6.0](https://github.com/Limmen/csle/releases/tag/v0.6.0) | 2024-12-24           |
 | [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | 2024-06-02           |
 | [v.0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0) | ~~2024-02-07~~       |
 | [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | ~~2024-01-17~~       |

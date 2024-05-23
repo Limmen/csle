@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_apt_game package &mdash; gym_csle_apt_game 0.5.0 documentation</title>
+  <title>gym_csle_apt_game package &mdash; gym_csle_apt_game 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -56,8 +58,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>gym_csle_apt_game package</li>
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">gym_csle_apt_game package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -68,38 +70,185 @@
            <div itemprop="articleBody">
              
   <section id="gym-csle-apt-game-package">
-<h1>gym_csle_apt_game package<a class="headerlink" href="#gym-csle-apt-game-package" title="Permalink to this headline"></a></h1>
+<h1>gym_csle_apt_game package<a class="headerlink" href="#gym-csle-apt-game-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.constants.html">gym_csle_apt_game.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.constants.html#module-gym_csle_apt_game.constants.constants">gym_csle_apt_game.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.constants.html#module-gym_csle_apt_game.constants.constants">gym_csle_apt_game.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.ATTACKER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.ATTACKER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.DEFENDER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.DEFENDER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.OBSERVATION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.OBSERVATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.STATE"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.STOP"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.TIME_HORIZON"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.ENV_METRICS.TIME_STEP"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_STEP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_ATTACKER_STRATEGIES"><code class="docutils literal notranslate"><span class="pre">STATIC_ATTACKER_STRATEGIES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_ATTACKER_STRATEGIES.RANDOM"><code class="docutils literal notranslate"><span class="pre">STATIC_ATTACKER_STRATEGIES.RANDOM</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_DEFENDER_STRATEGIES"><code class="docutils literal notranslate"><span class="pre">STATIC_DEFENDER_STRATEGIES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.constants.html#gym_csle_apt_game.constants.constants.STATIC_DEFENDER_STRATEGIES.RANDOM"><code class="docutils literal notranslate"><span class="pre">STATIC_DEFENDER_STRATEGIES.RANDOM</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.constants.html#module-gym_csle_apt_game.constants">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.dao.html">gym_csle_apt_game.dao package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_attacker_mdp_config">gym_csle_apt_game.dao.apt_game_attacker_mdp_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_config">gym_csle_apt_game.dao.apt_game_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_defender_pomdp_config">gym_csle_apt_game.dao.apt_game_defender_pomdp_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_state">gym_csle_apt_game.dao.apt_game_state module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_attacker_mdp_config">gym_csle_apt_game.dao.apt_game_attacker_mdp_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_attacker_mdp_config.AptGameAttackerMdpConfig"><code class="docutils literal notranslate"><span class="pre">AptGameAttackerMdpConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_attacker_mdp_config.AptGameAttackerMdpConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">AptGameAttackerMdpConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_attacker_mdp_config.AptGameAttackerMdpConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">AptGameAttackerMdpConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_attacker_mdp_config.AptGameAttackerMdpConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">AptGameAttackerMdpConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_config">gym_csle_apt_game.dao.apt_game_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig"><code class="docutils literal notranslate"><span class="pre">AptGameConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.attacker_action_space"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.attacker_action_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.attacker_observation_space"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.attacker_observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.defender_action_space"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.defender_action_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.defender_observation_space"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.defender_observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_config.AptGameConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">AptGameConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_defender_pomdp_config">gym_csle_apt_game.dao.apt_game_defender_pomdp_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_defender_pomdp_config.AptGameDefenderPomdpConfig"><code class="docutils literal notranslate"><span class="pre">AptGameDefenderPomdpConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_defender_pomdp_config.AptGameDefenderPomdpConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">AptGameDefenderPomdpConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_defender_pomdp_config.AptGameDefenderPomdpConfig.from_json_file"><code class="docutils literal notranslate"><span class="pre">AptGameDefenderPomdpConfig.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_defender_pomdp_config.AptGameDefenderPomdpConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">AptGameDefenderPomdpConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao.apt_game_state">gym_csle_apt_game.dao.apt_game_state module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState"><code class="docutils literal notranslate"><span class="pre">AptGameState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.attacker_observation"><code class="docutils literal notranslate"><span class="pre">AptGameState.attacker_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.defender_observation"><code class="docutils literal notranslate"><span class="pre">AptGameState.defender_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.from_dict"><code class="docutils literal notranslate"><span class="pre">AptGameState.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.from_json_file"><code class="docutils literal notranslate"><span class="pre">AptGameState.from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.reset"><code class="docutils literal notranslate"><span class="pre">AptGameState.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.dao.html#gym_csle_apt_game.dao.apt_game_state.AptGameState.to_dict"><code class="docutils literal notranslate"><span class="pre">AptGameState.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.dao.html#module-gym_csle_apt_game.dao">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.envs.html">gym_csle_apt_game.envs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_env">gym_csle_apt_game.envs.apt_game_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_mdp_attacker_env">gym_csle_apt_game.envs.apt_game_mdp_attacker_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_pomdp_defender_env">gym_csle_apt_game.envs.apt_game_pomdp_defender_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_env">gym_csle_apt_game.envs.apt_game_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv"><code class="docutils literal notranslate"><span class="pre">AptGameEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.mean"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.mean()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.render"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.reset"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.set_model"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.set_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.set_state"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.set_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_env.AptGameEnv.step"><code class="docutils literal notranslate"><span class="pre">AptGameEnv.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_mdp_attacker_env">gym_csle_apt_game.envs.apt_game_mdp_attacker_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.calculate_stage_policy"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.calculate_stage_policy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.render"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.reset"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.set_model"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.set_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.set_state"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.set_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_mdp_attacker_env.AptGameMdpAttackerEnv.step"><code class="docutils literal notranslate"><span class="pre">AptGameMdpAttackerEnv.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs.apt_game_pomdp_defender_env">gym_csle_apt_game.envs.apt_game_pomdp_defender_env module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.get_traces"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.get_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.is_attack_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.is_attack_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.is_defense_action_legal"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.is_defense_action_legal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.manual_play"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.manual_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.render"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.reset"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.reset_traces"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.reset_traces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.set_model"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.set_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.set_state"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.set_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.envs.html#gym_csle_apt_game.envs.apt_game_pomdp_defender_env.AptGamePomdpDefenderEnv.step"><code class="docutils literal notranslate"><span class="pre">AptGamePomdpDefenderEnv.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.envs.html#module-gym_csle_apt_game.envs">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_apt_game.util.html">gym_csle_apt_game.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.apt_game_util">gym_csle_apt_game.util.apt_game_util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.rollout_util">gym_csle_apt_game.util.rollout_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.apt_game_util">gym_csle_apt_game.util.apt_game_util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil"><code class="docutils literal notranslate"><span class="pre">AptGameUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.attacker_actions"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.attacker_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.b1"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.b1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.bayes_filter"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.bayes_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.cost_function"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.cost_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.cost_tensor"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.cost_tensor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.defender_actions"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.defender_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.expected_cost"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.expected_cost()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_os_posg_game_file"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.generate_os_posg_game_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_rewards"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.generate_rewards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.generate_transitions"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.generate_transitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.next_belief"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.next_belief()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.observation_space"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.observation_tensor"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.observation_tensor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.p_o_given_b_a1_a2"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.p_o_given_b_a1_a2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_attacker_action"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.sample_attacker_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_defender_action"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.sample_defender_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_initial_state"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.sample_initial_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_next_observation"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.sample_next_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.sample_next_state"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.sample_next_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.state_space"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.state_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.transition_function"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.transition_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.apt_game_util.AptGameUtil.transition_tensor"><code class="docutils literal notranslate"><span class="pre">AptGameUtil.transition_tensor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util.rollout_util">gym_csle_apt_game.util.rollout_util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil"><code class="docutils literal notranslate"><span class="pre">RolloutUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.eval_attacker_base()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_attacker_base_parallel"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.eval_attacker_base_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.eval_defender_base()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.eval_defender_base_parallel"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.eval_defender_base_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.exact_defender_rollout"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.exact_defender_rollout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_attacker_rollout"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.monte_carlo_attacker_rollout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_apt_game.util.html#gym_csle_apt_game.util.rollout_util.RolloutUtil.monte_carlo_defender_rollout"><code class="docutils literal notranslate"><span class="pre">RolloutUtil.monte_carlo_defender_rollout()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_apt_game.util.html#module-gym_csle_apt_game.util">Module contents</a></li>
 </ul>
 </li>
@@ -107,7 +256,7 @@
 </div>
 </section>
 <section id="module-gym_csle_apt_game">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gym_csle_apt_game" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gym_csle_apt_game" title="Permalink to this heading"></a></h2>
 <p>Register OpenAI Envs</p>
 </section>
 </section>

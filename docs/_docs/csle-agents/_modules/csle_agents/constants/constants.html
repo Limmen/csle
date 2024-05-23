@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.constants.constants &mdash; csle-agents 0.5.0 documentation</title>
+  <title>csle_agents.constants.constants &mdash; csle-agents 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -166,6 +168,38 @@
     <span class="n">REWARD_SCALER</span> <span class="o">=</span> <span class="s2">&quot;reward_scaler&quot;</span>
     <span class="n">NORM_ADV</span> <span class="o">=</span> <span class="s2">&quot;norm_adv&quot;</span>
     <span class="n">CUDA</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span></div>
+
+
+<div class="viewcode-block" id="PPG_CLEAN"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.PPG_CLEAN">[docs]</a><span class="k">class</span> <span class="nc">PPG_CLEAN</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to PPG clean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">TOTAL_STEPS</span> <span class="o">=</span> <span class="s2">&quot;total_steps&quot;</span>
+    <span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="s2">&quot;learning_rate&quot;</span>
+    <span class="n">NUM_STEPS</span> <span class="o">=</span> <span class="s2">&quot;num_steps&quot;</span>
+    <span class="n">ANNEAL_LR</span> <span class="o">=</span> <span class="s2">&quot;anneal_lr&quot;</span>
+    <span class="n">GAMMA</span> <span class="o">=</span> <span class="s2">&quot;gamma&quot;</span>
+    <span class="n">GAE_LAMBDA</span> <span class="o">=</span> <span class="s2">&quot;gae_lambda&quot;</span>
+    <span class="n">NUM_MINIBATCHES</span> <span class="o">=</span> <span class="s2">&quot;num_minibatches&quot;</span>
+    <span class="n">ADV_NORM_FULLBATCH</span> <span class="o">=</span> <span class="s2">&quot;adv_norm_fullbatch&quot;</span>
+    <span class="n">CLIP_COEF</span> <span class="o">=</span> <span class="s2">&quot;clip_coef&quot;</span>
+    <span class="n">ENT_COEF</span> <span class="o">=</span> <span class="s2">&quot;ent_coef&quot;</span>
+    <span class="n">CLIP_VLOSS</span> <span class="o">=</span> <span class="s2">&quot;clip_vloss&quot;</span>
+    <span class="n">VF_COEF</span> <span class="o">=</span> <span class="s2">&quot;vf_coef&quot;</span>
+    <span class="n">MAX_GRAD_NORM</span> <span class="o">=</span> <span class="s2">&quot;max_grad_norm&quot;</span>
+    <span class="n">TARGET_KL</span> <span class="o">=</span> <span class="s2">&quot;target_kl&quot;</span>
+    <span class="n">N_ITERATION</span> <span class="o">=</span> <span class="s2">&quot;n_iteration&quot;</span>
+    <span class="n">E_POLICY</span> <span class="o">=</span> <span class="s2">&quot;e_policy&quot;</span>
+    <span class="n">E_AUXILIARY</span> <span class="o">=</span> <span class="s2">&quot;e_auxiliary&quot;</span>
+    <span class="n">BETA_CLONE</span> <span class="o">=</span> <span class="s2">&quot;beta_clone&quot;</span>
+    <span class="n">NUM_AUX_ROLLOUTS</span> <span class="o">=</span> <span class="s2">&quot;num_aux_rollouts&quot;</span>
+    <span class="n">NUM_AUX_GRAD_ACCUM</span> <span class="o">=</span> <span class="s2">&quot;num_aux_grad_accum&quot;</span>
+    <span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;batch_size&quot;</span>
+    <span class="n">MINIBATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;minibatch_size&quot;</span>
+    <span class="n">NUM_ITERATIONS</span> <span class="o">=</span> <span class="s2">&quot;num_iterations&quot;</span>
+    <span class="n">NUM_PHASES</span> <span class="o">=</span> <span class="s2">&quot;num_phases&quot;</span>
+    <span class="n">AUX_BATCH_ROLLOUTS</span> <span class="o">=</span> <span class="s2">&quot;aux_batch_rollouts&quot;</span>
+    <span class="n">V_VALUE</span> <span class="o">=</span> <span class="s2">&quot;v_value&quot;</span></div>
 
 
 <div class="viewcode-block" id="DQN_CLEAN"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.DQN_CLEAN">[docs]</a><span class="k">class</span> <span class="nc">DQN_CLEAN</span><span class="p">:</span>
@@ -438,6 +472,32 @@
     <span class="n">DELTA</span> <span class="o">=</span> <span class="s2">&quot;delta&quot;</span>
     <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
     <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span></div>
+
+
+<div class="viewcode-block" id="MCS"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.MCS">[docs]</a><span class="k">class</span> <span class="nc">MCS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to Multilevel Coordinate Search</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">STEP</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
+    <span class="n">STEP1</span> <span class="o">=</span> <span class="s2">&quot;step1&quot;</span>
+    <span class="n">THETAS</span> <span class="o">=</span> <span class="s2">&quot;thetas&quot;</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="s2">&quot;u&quot;</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="s2">&quot;v&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="n">STOPPING_ACTIONS</span> <span class="o">=</span> <span class="s2">&quot;stopping_actions&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_defender&quot;</span>
+    <span class="n">GAMMA</span> <span class="o">=</span> <span class="s2">&quot;gamma&quot;</span>
+    <span class="n">EPSILON</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span>
+    <span class="n">LOCAL</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span>
+    <span class="n">IINIT</span> <span class="o">=</span> <span class="s2">&quot;iinit&quot;</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+    <span class="n">PRT</span> <span class="o">=</span> <span class="s2">&quot;prt&quot;</span>
+    <span class="n">SMAX</span> <span class="o">=</span> <span class="s2">&quot;smax&quot;</span>
+    <span class="n">NF</span> <span class="o">=</span> <span class="s2">&quot;nf&quot;</span>
+    <span class="n">STOP</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span>
+    <span class="n">POLICY_TYPE</span> <span class="o">=</span> <span class="s2">&quot;policy_type&quot;</span>
+    <span class="n">OBJECTIVE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;objective_type&quot;</span>
+    <span class="n">THRESHOLDS</span> <span class="o">=</span> <span class="s2">&quot;thresholds&quot;</span></div>
 
 
 <div class="viewcode-block" id="BAYESIAN_OPTIMIZATION_EMUKIT"><a class="viewcode-back" href="../../../csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION_EMUKIT">[docs]</a><span class="k">class</span> <span class="nc">BAYESIAN_OPTIMIZATION_EMUKIT</span><span class="p">:</span>

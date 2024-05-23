@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.sondik_vi package &mdash; csle-agents 0.5.0 documentation</title>
+  <title>csle_agents.agents.sondik_vi package &mdash; csle-agents 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -57,10 +59,12 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.kiefer_wolfowitz.html">csle_agents.agents.kiefer_wolfowitz package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_cmdp.html">csle_agents.agents.lp_cmdp package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.lp_nf.html">csle_agents.agents.lp_nf package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.mcs.html">csle_agents.agents.mcs package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.nelder_mead.html">csle_agents.agents.nelder_mead package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.particle_swarm.html">csle_agents.agents.particle_swarm package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pi.html">csle_agents.agents.pi package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.pomcp.html">csle_agents.agents.pomcp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppg_clean.html">csle_agents.agents.ppg_clean package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo.html">csle_agents.agents.ppo package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.ppo_clean.html">csle_agents.agents.ppo_clean package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_agents.agents.q_learning.html">csle_agents.agents.q_learning package</a></li>
@@ -101,9 +105,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="csle_agents.agents.html">csle_agents.agents package</a> &raquo;</li>
-      <li>csle_agents.agents.sondik_vi package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="csle_agents.agents.html">csle_agents.agents package</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.sondik_vi package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_agents.agents.sondik_vi.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -114,16 +118,16 @@
            <div itemprop="articleBody">
              
   <section id="csle-agents-agents-sondik-vi-package">
-<h1>csle_agents.agents.sondik_vi package<a class="headerlink" href="#csle-agents-agents-sondik-vi-package" title="Permalink to this headline"></a></h1>
+<h1>csle_agents.agents.sondik_vi package<a class="headerlink" href="#csle-agents-agents-sondik-vi-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_agents.agents.sondik_vi.sondik_vi_agent">
-<span id="csle-agents-agents-sondik-vi-sondik-vi-agent-module"></span><h2>csle_agents.agents.sondik_vi.sondik_vi_agent module<a class="headerlink" href="#module-csle_agents.agents.sondik_vi.sondik_vi_agent" title="Permalink to this headline"></a></h2>
+<span id="csle-agents-agents-sondik-vi-sondik-vi-agent-module"></span><h2>csle_agents.agents.sondik_vi.sondik_vi_agent module<a class="headerlink" href="#module-csle_agents.agents.sondik_vi.sondik_vi_agent" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.sondik_vi.sondik_vi_agent.</span></span><span class="sig-name descname"><span class="pre">SondikVIAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.simulation_config.simulation_env_config.SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_config.ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.jobs.training_job_config.TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.simulation_config.base_env.BaseEnv</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_agents.agents.base.base_agent.BaseAgent</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.agents.sondik_vi.sondik_vi_agent.</span></span><span class="sig-name descname"><span class="pre">SondikVIAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">TrainingJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_metastore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseEnv</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent" title="csle_agents.agents.base.base_agent.BaseAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgent</span></code></a></p>
 <p>Sondik’s value iteration for POMDPs (Sondik 1971)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.check_duplicate">
@@ -168,7 +172,7 @@ n_alpha_vectors_t_plus_one should be followed.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.evaluate_policy">
-<span class="sig-name descname"><span class="pre">evaluate_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.evaluate_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.evaluate_policy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">evaluate_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AlphaVectorsPolicy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.evaluate_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.evaluate_policy" title="Permalink to this definition"></a></dt>
 <dd><p>Evalutes a tabular policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,7 +232,7 @@ at each iteration</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi_algorithm">
-<span class="sig-name descname"><span class="pre">sondik_vi_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_result.ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.sondik_vi_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi_algorithm" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sondik_vi_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExperimentResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentResult</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.sondik_vi_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.sondik_vi_algorithm" title="Permalink to this definition"></a></dt>
 <dd><p>Runs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -245,7 +249,7 @@ at each iteration</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.training.experiment_execution.ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.train" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ExperimentExecution</span></span></span><a class="reference internal" href="_modules/csle_agents/agents/sondik_vi/sondik_vi_agent.html#SondikVIAgent.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.train" title="Permalink to this definition"></a></dt>
 <dd><p>Runs the value iteration algorithm to compute V*</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -258,7 +262,7 @@ at each iteration</p></li>
 
 </section>
 <section id="module-csle_agents.agents.sondik_vi">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.sondik_vi" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.agents.sondik_vi" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

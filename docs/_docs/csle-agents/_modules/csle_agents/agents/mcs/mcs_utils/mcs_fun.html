@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.mcs.mcs_utils.mcs_fun &mdash; csle-agents 0.6.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.mcs.mcs_utils.mcs_fun</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.mcs.mcs_utils.mcs_fun</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<div class="viewcode-block" id="UtilHelpers"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers">[docs]</a><span class="k">class</span> <span class="nc">UtilHelpers</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UtilHelpers.polint"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.polint">[docs]</a>    <span class="k">def</span> <span class="nf">polint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+               <span class="n">f</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quadratic polynomial interpolation</span>
+
+<span class="sd">        :param x: pairwise distinct support points</span>
+<span class="sd">        :param f: corresponding function values</span>
+<span class="sd">        :return d: the value of the interpolating polynomial</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">f12</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f12</span> <span class="o">-</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.subint"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.subint">[docs]</a>    <span class="k">def</span> <span class="nf">subint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes [min(x,y),max(x,y)] that are neither too close nor too far away from x</span>
+
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">x2</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.quadpol"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.quadpol">[docs]</a>    <span class="k">def</span> <span class="nf">quadpol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x0</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the quadratic polynomial</span>
+
+<span class="sd">        :param x: starting point</span>
+<span class="sd">        :param d: the value of the interpolating polynomial</span>
+<span class="sd">        :param x0: initial position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.quadmin"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.quadmin">[docs]</a>    <span class="k">def</span> <span class="nf">quadmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x0</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The quadmin method</span>
+
+<span class="sd">        :param a:</span>
+<span class="sd">        :param b:</span>
+<span class="sd">        :param d:</span>
+<span class="sd">        :param x0:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">elif</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">x1</span> <span class="ow">and</span> <span class="n">x1</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x1</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">x0</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.split1"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.split1">[docs]</a>    <span class="k">def</span> <span class="nf">split1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The split1 method</span>
+
+<span class="sd">        :param x1:</span>
+<span class="sd">        :param x2:</span>
+<span class="sd">        :param f1:</span>
+<span class="sd">        :param f2:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">f1</span> <span class="o">&lt;=</span> <span class="n">f2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.split2"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.split2">[docs]</a>    <span class="k">def</span> <span class="nf">split2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The split2 method. Determines a value x1 for splitting the interval [min(x,y),max(x,y)]</span>
+<span class="sd">        is modeled on the function subint with safeguards for infinite y</span>
+
+<span class="sd">        :param x:</span>
+<span class="sd">        :param y:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="k">return</span> <span class="n">x1</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.vert1"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert1">[docs]</a>    <span class="k">def</span> <span class="nf">vert1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+              <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The vert1 method</span>
+
+<span class="sd">        :param j: label</span>
+<span class="sd">        :param z:</span>
+<span class="sd">        :param f: function value</span>
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        :param f1: corresponding function value</span>
+<span class="sd">        :param f2: corresponding function value</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">j1</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">j1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">x2</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="n">x1</span> <span class="o">!=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.vert2"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert2">[docs]</a>    <span class="k">def</span> <span class="nf">vert2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+              <span class="n">f</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+              <span class="n">f1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The vert2 function</span>
+
+<span class="sd">        :param j: label</span>
+<span class="sd">        :param x:</span>
+<span class="sd">        :param z:</span>
+<span class="sd">        :param f: function values</span>
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        :param f1: corresponding function value</span>
+<span class="sd">        :param f2: corresponding function value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">j1</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">j1</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">z</span><span class="p">[</span><span class="n">j1</span><span class="p">]:</span>
+                <span class="n">x2</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+                <span class="n">f2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">x2</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="n">x1</span> <span class="o">!=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">x2</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.vert3"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.vert3">[docs]</a>    <span class="k">def</span> <span class="nf">vert3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vert3 function</span>
+
+<span class="sd">        :param j: label</span>
+<span class="sd">        :param x0: initial position</span>
+<span class="sd">        :param f0: inital function value</span>
+<span class="sd">        :param L:</span>
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        :param f1: corresponding function value</span>
+<span class="sd">        :param f2: corresponding function value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">k2</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">j</span> <span class="o">==</span> <span class="n">L</span><span class="p">:</span>
+            <span class="n">k1</span> <span class="o">=</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">2</span>
+            <span class="n">k2</span> <span class="o">=</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">k1</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">k2</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">k1</span><span class="p">]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">k2</span><span class="p">]</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">k1</span><span class="p">]</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">k2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span></div>
+
+<div class="viewcode-block" id="UtilHelpers.updtf"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.UtilHelpers.updtf">[docs]</a>    <span class="k">def</span> <span class="nf">updtf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x2</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">f1</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+              <span class="n">f2</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">fold</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span> <span class="n">f</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updtf function</span>
+
+<span class="sd">        :param n:</span>
+<span class="sd">        :param i:</span>
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        :param f1: corresponding function value</span>
+<span class="sd">        :param f2: corresponding function value</span>
+<span class="sd">        :param fold: former function value</span>
+<span class="sd">        :param f: function values</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i1</span> <span class="o">!=</span> <span class="n">i</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x1</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                    <span class="n">f1</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">=</span> <span class="n">f1</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fold</span> <span class="o">-</span> <span class="n">f</span>
+                <span class="k">if</span> <span class="n">x2</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                    <span class="n">f2</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fold</span> <span class="o">-</span> <span class="n">f</span>
+        <span class="n">fold</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="k">return</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span></div></div>
+
+
+<div class="viewcode-block" id="MCSUtils"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils">[docs]</a><span class="k">class</span> <span class="nc">MCSUtils</span><span class="p">(</span><span class="n">UtilHelpers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utiltiy functions for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MCSUtils.check_box_bound"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.check_box_bound">[docs]</a>    <span class="k">def</span> <span class="nf">check_box_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">v</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that checks the bounds of the box</span>
+<span class="sd">        :param u: lower bound</span>
+<span class="sd">        :param v: upper bound</span>
+<span class="sd">        :return: boolean indicating the bound</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">u</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;incompatible box bounds&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;degenerate box bound&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="MCSUtils.strtsw"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.strtsw">[docs]</a>    <span class="k">def</span> <span class="nf">strtsw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">nboxes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that does the strtsw</span>
+
+<span class="sd">        :param smax:</span>
+<span class="sd">        :param level:</span>
+<span class="sd">        :param f:</span>
+<span class="sd">        :param nboxes: counter for boxes not in the &#39;shopping bas</span>
+<span class="sd">        :param record:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">smax</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">smax</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]]:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">j</span>
+
+                <span class="k">elif</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]]]:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="n">level</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">record</span></div>
+
+<div class="viewcode-block" id="MCSUtils.exgain"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.exgain">[docs]</a>    <span class="k">def</span> <span class="nf">exgain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+               <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">x1</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span>
+               <span class="n">x2</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span>
+               <span class="n">f1</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">f2</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the splitting index, the splitting value and the expected</span>
+<span class="sd">        gain vector e for (potentially) splitting a box by expected gain</span>
+
+<span class="sd">        :param n: dimension of the problem</span>
+<span class="sd">        :param n0: the ith coordinate has been split n0(i) times in the history of the box</span>
+<span class="sd">        :param l: Pointer to the initial point of the initialization list</span>
+<span class="sd">        :param L: lengths of the initialization list</span>
+<span class="sd">        :param x: base vertex of the box</span>
+<span class="sd">        :param y: opposite vertex of the box</span>
+<span class="sd">        :param x1: corresponding parameter/coordinate value</span>
+<span class="sd">        :param x2: corresponding parameter/coordinate value</span>
+<span class="sd">        :param f1: corresponding function value</span>
+<span class="sd">        :param f2: corresponding function value</span>
+<span class="sd">        :param fx: function value at the base vertex</span>
+<span class="sd">        :param f0:  function values appertaining to the init. list</span>
+<span class="sd">        :return e: maximal expected gain in function value by changing coordinate i</span>
+<span class="sd">        :return isplit: splitting index</span>
+<span class="sd">        :return splval: Inf  if n0(isplit) = 0, splitting value  otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">f0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">f0</span><span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">emin</span><span class="p">:</span>
+                    <span class="n">emin</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">isplit</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">splval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">z1</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">z2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">fx</span><span class="p">,</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">fx</span><span class="p">]</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polint</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+                <span class="n">eta1</span><span class="p">,</span> <span class="n">eta2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subint</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">xi1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">eta1</span><span class="p">,</span> <span class="n">eta2</span><span class="p">)</span>
+                <span class="n">xi2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eta1</span><span class="p">,</span> <span class="n">eta2</span><span class="p">)</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadmin</span><span class="p">(</span><span class="n">xi1</span><span class="p">,</span> <span class="n">xi2</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">z1</span><span class="p">)</span>
+                <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">z1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">emin</span><span class="p">:</span>
+                    <span class="n">emin</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">isplit</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">splval</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="k">return</span> <span class="n">e</span><span class="p">,</span> <span class="n">isplit</span><span class="p">,</span> <span class="n">splval</span></div>
+
+<div class="viewcode-block" id="MCSUtils.updtrec"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.updtrec">[docs]</a>    <span class="k">def</span> <span class="nf">updtrec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">record</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the pointer record(s) to the best non-split box at level s</span>
+<span class="sd">        :param j: label of a box</span>
+<span class="sd">        :param s: its level</span>
+<span class="sd">        :param f: vector containing the base vertex function values of the already defined boxes.</span>
+<span class="sd">        :param record: record list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">record</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="k">elif</span> <span class="n">record</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">record</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="k">elif</span> <span class="n">f</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="n">s</span><span class="p">]]:</span>
+            <span class="n">record</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="k">return</span> <span class="n">record</span></div>
+
+<div class="viewcode-block" id="MCSUtils.chkloc"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chkloc">[docs]</a>    <span class="k">def</span> <span class="nf">chkloc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nloc</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xloc</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checking the location</span>
+
+<span class="sd">        :param nloc:</span>
+<span class="sd">        :param xloc:</span>
+<span class="sd">        :param x:</span>
+<span class="sd">        :return: the location</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nloc</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xloc</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">loc</span></div>
+
+<div class="viewcode-block" id="MCSUtils.addloc"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.addloc">[docs]</a>    <span class="k">def</span> <span class="nf">addloc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nloc</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xloc</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adding a location</span>
+
+<span class="sd">        :param nloc:</span>
+<span class="sd">        :param xloc:</span>
+<span class="sd">        :param x:</span>
+<span class="sd">        :return: locations including the added one</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nloc</span> <span class="o">=</span> <span class="n">nloc</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xloc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">nloc</span><span class="p">,</span> <span class="n">xloc</span></div>
+
+<div class="viewcode-block" id="MCSUtils.chrelerr"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chrelerr">[docs]</a>    <span class="k">def</span> <span class="nf">chrelerr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">stop</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performing the chrelerr</span>
+
+<span class="sd">        :param fbest:</span>
+<span class="sd">        :param stop:</span>
+<span class="sd">        :return: flags</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fglob</span> <span class="o">=</span> <span class="n">stop</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">fbest</span> <span class="o">-</span> <span class="n">fglob</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stop</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fglob</span><span class="p">),</span> <span class="n">stop</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">flag</span></div>
+
+<div class="viewcode-block" id="MCSUtils.chvtr"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.chvtr">[docs]</a>    <span class="k">def</span> <span class="nf">chvtr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">vtr</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performing te chvtr function</span>
+
+<span class="sd">        :param f:</span>
+<span class="sd">        :param vtr:</span>
+<span class="sd">        :return: flag</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="n">vtr</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">flag</span></div>
+
+<div class="viewcode-block" id="MCSUtils.fbestloc"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.fbestloc">[docs]</a>    <span class="k">def</span> <span class="nf">fbestloc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmi</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">fbest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                 <span class="n">xbest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nbasket0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stop</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The fbestloc function of MCS</span>
+
+<span class="sd">        :param fmi:</span>
+<span class="sd">        :param fbest:</span>
+<span class="sd">        :param xmin:</span>
+<span class="sd">        :param xbest:</span>
+<span class="sd">        :param nbasket0:</span>
+<span class="sd">        :param stop:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fmi</span><span class="p">[</span><span class="n">nbasket0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fbest</span><span class="p">:</span>
+            <span class="n">fbest</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">fmi</span><span class="p">[</span><span class="n">nbasket0</span><span class="p">])</span>
+            <span class="n">xbest</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">xmin</span><span class="p">[</span><span class="n">nbasket0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">fbest</span><span class="p">,</span> <span class="n">xbest</span></div>
+
+<div class="viewcode-block" id="MCSUtils.splrnk"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.splrnk">[docs]</a>    <span class="k">def</span> <span class="nf">splrnk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">p</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+               <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the splitting index and splitting value for splitting a box by rank</span>
+
+<span class="sd">        :param n: dimension of the problem</span>
+<span class="sd">        :param p: ranking of estimated variability of the function in the different coordinates</span>
+<span class="sd">        :param x: base vertex of the box</span>
+<span class="sd">        :param y: opposite vertex of the box</span>
+<span class="sd">        :return : splitting index and value at splitting point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">isplit</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n1</span> <span class="o">=</span> <span class="n">n0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">n1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">n1</span> <span class="ow">and</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p1</span><span class="p">):</span>
+                <span class="n">isplit</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">n1</span> <span class="o">=</span> <span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">n1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">splval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split2</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">isplit</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">isplit</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">splval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+        <span class="k">return</span> <span class="n">isplit</span><span class="p">,</span> <span class="n">splval</span></div>
+
+<div class="viewcode-block" id="MCSUtils.genbox"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.genbox">[docs]</a>    <span class="k">def</span> <span class="nf">genbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">level0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nchild</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function that generates a box</span>
+
+<span class="sd">        :param par:</span>
+<span class="sd">        :param level0:</span>
+<span class="sd">        :param nchild:</span>
+<span class="sd">        :param f0: inital function value</span>
+<span class="sd">        :return: Metrics and parameters from generating the box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ipar</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">level0</span>
+        <span class="n">ichild</span> <span class="o">=</span> <span class="n">nchild</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">f0</span>
+        <span class="k">return</span> <span class="n">ipar</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">ichild</span><span class="p">,</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="MCSUtils.vertex"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.vertex">[docs]</a>    <span class="k">def</span> <span class="nf">vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">v</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+               <span class="n">v1</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">x0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">f0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+               <span class="n">ipar</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">isplit</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">ichild</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+               <span class="n">z</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+               <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vertex function</span>
+
+<span class="sd">        :param j: label</span>
+<span class="sd">        :param n:</span>
+<span class="sd">        :param u: the initial lower bound (&quot;lower corner&quot; in 3D)</span>
+<span class="sd">        :param v: the initial upper bound (&quot;upper corner&quot; in 3D)</span>
+<span class="sd">        :param v1:</span>
+<span class="sd">        :param x0: initial position</span>
+<span class="sd">        :param f0: inital function value</span>
+<span class="sd">        :param ipar:</span>
+<span class="sd">        :param isplit:</span>
+<span class="sd">        :param ichild:</span>
+<span class="sd">        :param z:</span>
+<span class="sd">        :param f:</span>
+<span class="sd">        :param l: Indication of the mid point</span>
+<span class="sd">        :param L: Indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="n">n0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">fold</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="k">while</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">isplit</span><span class="p">[</span><span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">isplit</span><span class="p">[</span><span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]]))</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">isplit</span><span class="p">[</span><span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]]))</span>
+
+            <span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">or</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]]:</span>
+                    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span>
+                                                                  <span class="n">f</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updtf</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]])</span>
+                    <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span>
+                                                            <span class="n">f</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updtf</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]])</span>
+                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">or</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]]:</span>
+                    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span>
+                                                                  <span class="n">f</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span>
+                                                            <span class="n">f</span><span class="p">[:,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="ow">and</span> <span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split1</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]],</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]])</span>
+
+            <span class="k">if</span> <span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">j1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">j2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">&lt;</span> <span class="n">j1</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">j1</span> <span class="o">==</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">j3</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">j3</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">j1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">j2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ichild</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">j1</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">&lt;</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">j3</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">j3</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">j1</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">j2</span> <span class="o">-=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">isplit</span><span class="p">[</span><span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]])</span>
+
+                <span class="k">if</span> <span class="n">j1</span> <span class="o">!=</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]]):</span>
+                    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updtf</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">f0</span><span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">k</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">or</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span><span class="p">]:</span>
+                    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                        <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert3</span><span class="p">(</span><span class="n">j1</span><span class="p">,</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">f0</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                                <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span> <span class="ow">and</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]:</span>
+                        <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]</span>
+                        <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">j1</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">!=</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">-</span> <span class="n">j3</span><span class="p">]</span>
+                            <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">-</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">j3</span><span class="p">]</span>
+                            <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                        <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span><span class="p">]</span>
+                        <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]:</span>
+                            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]</span>
+                            <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span><span class="p">]:</span>
+                            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span><span class="p">]</span>
+                            <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="k">elif</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]:</span>
+                            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">]</span>
+                            <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">+</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">j1</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">!=</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                                <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">-</span> <span class="n">j3</span><span class="p">]</span>
+                                <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">-</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">j3</span><span class="p">]</span>
+                                <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">f0</span><span class="p">[</span><span class="n">j1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">j3</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">j2</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">j2</span> <span class="o">==</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split1</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j2</span><span class="p">],</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f0</span><span class="p">[</span><span class="n">j2</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span> <span class="n">f0</span><span class="p">[</span><span class="n">j2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="p">])</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">ipar</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vert3</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">f0</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">f2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span><span class="p">:</span>
+                <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">n0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span></div>
+
+<div class="viewcode-block" id="MCSUtils.initbox"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.initbox">[docs]</a>    <span class="k">def</span> <span class="nf">initbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">f0</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+                <span class="n">L</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">istar</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span> <span class="n">u</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+                <span class="n">v</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">isplit</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">level</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+                <span class="n">ipar</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">ichild</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">nboxes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">prt</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the boxes in the initializaiton procedure</span>
+
+<span class="sd">        :param theta0:</span>
+<span class="sd">        :param f0: inital function value</span>
+<span class="sd">        :param l: Indication of the mid point</span>
+<span class="sd">        :param L: Indication of the end point (or total number of partition of the value x in the i&#39;th dimenstion)</span>
+<span class="sd">        :param istar:</span>
+<span class="sd">        :param u:</span>
+<span class="sd">        :param v:</span>
+<span class="sd">        :param isplit:</span>
+<span class="sd">        :param level:</span>
+<span class="sd">        :param ipar:</span>
+<span class="sd">        :param ichild:</span>
+<span class="sd">        :param ichild:</span>
+<span class="sd">        :param f: function value of the splitinhg float value</span>
+<span class="sd">        :param nboxes: counter for boxes not in the &#39;shopping bas</span>
+<span class="sd">        :param prt: print - unsued in this implementation so far</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+        <span class="n">ipar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">level</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ichild</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">f0</span><span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">par</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">isplit</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">nchild</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">nboxes</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">nchild</span> <span class="o">=</span> <span class="n">nchild</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">ipar</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">level</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">ichild</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">nboxes</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">MCSUtils</span><span class="p">()</span><span class="o">.</span><span class="n">genbox</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">level</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span> <span class="n">nchild</span><span class="p">,</span> <span class="n">f0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">v1</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v1</span> <span class="o">=</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polint</span><span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">],</span> <span class="n">f0</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">xl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadmin</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">])</span>
+            <span class="n">fl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">xl</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">])</span>
+            <span class="n">xu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadmin</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v1</span><span class="p">,</span> <span class="o">-</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">])</span>
+            <span class="n">fu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">xu</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">istar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">xl</span> <span class="o">&lt;</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                <span class="n">nboxes</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">nchild</span> <span class="o">=</span> <span class="n">nchild</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">f0</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">f0</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="n">ipar</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">level</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">ichild</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">nboxes</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">MCSUtils</span><span class="p">()</span><span class="o">.</span><span class="n">genbox</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">level</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">,</span> <span class="o">-</span> <span class="n">nchild</span><span class="p">,</span> <span class="n">f0</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">istar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">xl</span> <span class="o">&lt;=</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]:</span>
+                            <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">-</span> <span class="mi">1</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polint</span><span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f0</span><span class="p">[</span><span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">u1</span> <span class="o">=</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">u1</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">xl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadmin</span><span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">u1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                        <span class="n">fl</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">xl</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">fl</span><span class="p">)</span>
+                        <span class="n">xu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quadmin</span><span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">u1</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                        <span class="n">fu</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quadpol</span><span class="p">(</span><span class="n">xu</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">fu</span><span class="p">)</span>
+
+                <span class="n">nboxes</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">nchild</span> <span class="o">=</span> <span class="n">nchild</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">ipar</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">level</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">ichild</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">nboxes</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">MCSUtils</span><span class="p">()</span><span class="o">.</span><span class="n">genbox</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">level</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="o">-</span><span class="n">nchild</span><span class="p">,</span> <span class="n">f0</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">nboxes</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">nchild</span> <span class="o">=</span> <span class="n">nchild</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">ipar</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">level</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">ichild</span><span class="p">[</span><span class="n">nboxes</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">nboxes</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">MCSUtils</span><span class="p">()</span><span class="o">.</span><span class="n">genbox</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">level</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">nchild</span><span class="p">,</span> <span class="n">f0</span><span class="p">[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">istar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">xl</span> <span class="o">&lt;=</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]]:</span>
+                        <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">par1</span> <span class="o">=</span> <span class="n">nboxes</span>
+            <span class="n">var</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fu</span> <span class="o">-</span> <span class="n">fl</span>
+
+            <span class="n">level</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="n">par1</span>
+        <span class="n">fbest</span> <span class="o">=</span> <span class="n">f0</span><span class="p">[</span><span class="n">istar</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">xbest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+            <span class="n">var</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">xbest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">istar</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">ipar</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">ichild</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">isplit</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">xbest</span><span class="p">,</span> <span class="n">fbest</span><span class="p">,</span> <span class="n">nboxes</span></div>
+
+<div class="viewcode-block" id="MCSUtils.neighbor"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.neighbor">[docs]</a>    <span class="k">def</span> <span class="nf">neighbor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">delta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                 <span class="n">u</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">v</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes &#39;neighbors&#39; x1 and x2 of x needed for making triple search</span>
+<span class="sd">        and building a local quadratic model such that x(i), x1(i), x2(i) are</span>
+<span class="sd">        pairwise distinct for i = 1,...,n</span>
+
+<span class="sd">        :param x: current position</span>
+<span class="sd">        :param delta: radius of neighboring region</span>
+<span class="sd">        :param u:</span>
+<span class="sd">        :param v:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i1</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">i2</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i1</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i2</span><span class="p">:</span>
+            <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span></div>
+
+<div class="viewcode-block" id="MCSUtils.polint1"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.polint1">[docs]</a>    <span class="k">def</span> <span class="nf">polint1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">f</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quadratic polynomial interpolation</span>
+
+<span class="sd">        :param x: positions</span>
+<span class="sd">        :param f: function values</span>
+<span class="sd">        :return: g, G</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f13</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">f12</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">f23</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">f13</span> <span class="o">+</span> <span class="n">f12</span> <span class="o">-</span> <span class="n">f23</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">f13</span> <span class="o">-</span> <span class="n">f12</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">g</span><span class="p">,</span> <span class="n">G</span></div>
+
+<div class="viewcode-block" id="MCSUtils.hessian"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.hessian">[docs]</a>    <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">x0</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">G</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the element G(i,k) of the Hessian of the local quadratic model</span>
+
+<span class="sd">        :param i:</span>
+<span class="sd">        :param k:</span>
+<span class="sd">        :param x: position</span>
+<span class="sd">        :param x0: initial position</span>
+<span class="sd">        :param f: function values</span>
+<span class="sd">        :param f0: inital function value</span>
+<span class="sd">        :param g:</span>
+<span class="sd">        :param G:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">f</span> <span class="o">-</span> <span class="n">f0</span> <span class="o">-</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">g</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">pow</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span> \
+            <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">G</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">h</span></div>
+
+<div class="viewcode-block" id="MCSUtils.get_theta0"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.mcs_fun.MCSUtils.get_theta0">[docs]</a>    <span class="k">def</span> <span class="nf">get_theta0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iinit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">v</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function for obtaining initial position</span>
+
+<span class="sd">        :param iinit:</span>
+<span class="sd">        :param u:</span>
+<span class="sd">        :param v:</span>
+<span class="sd">        :param n:</span>
+<span class="sd">        :return: the initial position theta0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">iinit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">theta0</span><span class="p">,</span> <span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">theta0</span><span class="p">,</span> <span class="n">v</span><span class="p">])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">theta0</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">elif</span> <span class="n">iinit</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subint</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subint</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># type: ignore[name-defined]</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">theta0</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># type: ignore[name-defined]</span>
+        <span class="k">elif</span> <span class="n">iinit</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="p">[(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">theta0</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">theta0</span><span class="p">,</span> <span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]])</span>
+            <span class="n">theta0</span> <span class="o">=</span> <span class="n">theta0</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">theta0</span><span class="p">)):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Error- MCS main: infinities in ititialization list&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">theta0</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

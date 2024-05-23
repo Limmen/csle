@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.models.ppo_network &mdash; csle-common 0.5.0 documentation</title>
+  <title>csle_common.models.ppo_network &mdash; csle-common 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -58,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.models.ppo_network</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.models.ppo_network</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -104,6 +106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">std_action</span> <span class="o">=</span> <span class="n">std_action</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">critic</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actor</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aux_critic</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_hidden_layers</span> <span class="o">=</span> <span class="n">num_hidden_layers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_dim</span> <span class="o">=</span> <span class="n">hidden_layer_dim</span>
         <span class="n">input_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span>
@@ -111,6 +114,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span>
                                                                                            <span class="n">hidden_layer_dim</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aux_critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span>
+                                                                                               <span class="n">hidden_layer_dim</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aux_critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span>
                                                                                           <span class="n">hidden_layer_dim</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">())</span>
@@ -118,6 +124,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Classifier&#39;</span><span class="p">,</span>
                                <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_layer_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim_critic</span><span class="p">),</span>
                                                       <span class="n">std</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">std_critic</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aux_critic</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Classifier&#39;</span><span class="p">,</span>
+                                   <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_layer_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim_critic</span><span class="p">),</span>
+                                                          <span class="n">std</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">std_critic</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Classifier&#39;</span><span class="p">,</span>
                               <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_init</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_layer_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim_action</span><span class="p">),</span>
                                                      <span class="n">std</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">std_action</span><span class="p">))</span>
@@ -159,6 +168,25 @@
         <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">action</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">action</span><span class="p">,</span> <span class="n">probs</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> <span class="n">probs</span><span class="o">.</span><span class="n">entropy</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PPONetwork.get_pi"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.ppo_network.PPONetwork.get_pi">[docs]</a>    <span class="k">def</span> <span class="nf">get_pi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">Categorical</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for PPG</span>
+
+<span class="sd">        :param x: the input vector</span>
+<span class="sd">        :return: the output action distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PPONetwork.get_pi_value_and_aux_value"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.ppo_network.PPONetwork.get_pi_value_and_aux_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_pi_value_and_aux_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">Categorical</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for PPG</span>
+
+<span class="sd">        :param x: the input vector</span>
+<span class="sd">        :return: output distribution, critic value, and auxiliary critic value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_critic</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PPONetwork.save"><a class="viewcode-back" href="../../../csle_common.models.html#csle_common.models.ppo_network.PPONetwork.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

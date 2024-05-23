@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_defender package &mdash; csle-defender 0.5.0 documentation</title>
+  <title>csle_defender package &mdash; csle-defender 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,8 +55,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_defender package</li>
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">csle_defender package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -65,15 +67,29 @@
            <div itemprop="articleBody">
              
   <section id="csle-defender-package">
-<h1>csle_defender package<a class="headerlink" href="#csle-defender-package" title="Permalink to this headline"></a></h1>
+<h1>csle_defender package<a class="headerlink" href="#csle-defender-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="csle_defender.emulation.html">csle_defender.emulation package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.defender_stopping_middleware">csle_defender.emulation.defender_stopping_middleware module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.emulated_defender">csle_defender.emulation.emulated_defender module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.defender_stopping_middleware">csle_defender.emulation.defender_stopping_middleware module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.continue_monitor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.stop_monitor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation.emulated_defender">csle_defender.emulation.emulated_defender module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_stopping_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_transition()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_defender.emulation.html#module-csle_defender.emulation">Module contents</a></li>
 </ul>
 </li>
@@ -81,7 +97,7 @@
 </div>
 </section>
 <section id="module-csle_defender">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_defender" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_defender" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

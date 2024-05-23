@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.constants.constants &mdash; csle-common 0.5.0 documentation</title>
+  <title>csle_common.constants.constants &mdash; csle-common 0.6.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -58,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -989,7 +991,8 @@
     <span class="n">POSTGRESQL_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/postgresql/&quot;</span>
     <span class="n">NGINX_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/nginx/&quot;</span>
     <span class="n">PROMETHEUS_PORT</span> <span class="o">=</span> <span class="mi">9090</span>
-    <span class="n">START_PROMETHEUS</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup prometheus --config.file=</span><span class="si">{</span><span class="n">PROMETHEUS_CONFIG_FILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
+    <span class="n">START_PROMETHEUS</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup $CSLE_HOME/management-system/prometheus/prometheus &quot;</span> \
+                       <span class="sa">f</span><span class="s2">&quot;--config.file=</span><span class="si">{</span><span class="n">PROMETHEUS_CONFIG_FILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
                        <span class="s2">&quot;--storage.tsdb.retention.size=10GB &quot;</span> \
                        <span class="sa">f</span><span class="s2">&quot;--storage.tsdb.retention.time=5d &amp; &gt; </span><span class="si">{</span><span class="n">PROMETHEUS_LOG_FILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
                        <span class="sa">f</span><span class="s2">&quot;&amp;&amp; echo $! &gt; </span><span class="si">{</span><span class="n">PROMETHEUS_PID_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1024,7 +1027,8 @@
     <span class="n">CSLE_MGMT_WEBAPP_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/csle_mgmt_webapp.pid&quot;</span>
     <span class="n">NODE_EXPORTER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/node_exporter.log&quot;</span>
     <span class="n">FLASK_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/flask.log&quot;</span>
-    <span class="n">START_NODE_EXPORTER</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup node_exporter &amp; &gt; </span><span class="si">{</span><span class="n">NODE_EXPORTER_LOG_FILE</span><span class="si">}</span><span class="s2"> &amp;&amp; echo $! &quot;</span> \
+    <span class="n">START_NODE_EXPORTER</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup $CSLE_HOME/management-system/node_exporter/node_exporter &quot;</span> \
+                          <span class="sa">f</span><span class="s2">&quot;&amp; &gt; </span><span class="si">{</span><span class="n">NODE_EXPORTER_LOG_FILE</span><span class="si">}</span><span class="s2"> &amp;&amp; echo $! &quot;</span> \
                           <span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">NODE_EXPORTER_PID_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">BUILD_CSLE_MGMT_WEBAPP</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd $</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/csle-mgmt-webapp &amp;&amp; npm run &quot;</span> \
                              <span class="sa">f</span><span class="s2">&quot;build&quot;</span>

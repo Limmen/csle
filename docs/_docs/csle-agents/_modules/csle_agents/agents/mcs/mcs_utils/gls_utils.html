@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_agents.agents.mcs.mcs_utils.gls_utils &mdash; csle-agents 0.6.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> csle-agents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.agents.html">csle_agents.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.common.html">csle_agents.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.constants.html">csle_agents.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_agents.job_controllers.html">csle_agents.job_controllers package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">csle-agents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.mcs.mcs_utils.gls_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_agents.agents.mcs.mcs_utils.gls_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+
+<div class="viewcode-block" id="GLSUtils"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils">[docs]</a><span class="k">class</span> <span class="nc">GLSUtils</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with util functions for MCS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GLSUtils.lsrange"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lsrange">[docs]</a>    <span class="k">def</span> <span class="nf">lsrange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xl</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">prt</span><span class="p">,</span> <span class="n">bend</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defining line search range</span>
+
+<span class="sd">        :param xl: lower bound</span>
+<span class="sd">        :param xu: upper bound</span>
+<span class="sd">        :param x: starting point</span>
+<span class="sd">        :param p: Search direction</span>
+<span class="sd">        :param prt: print command - unused in this implementation sofar</span>
+<span class="sd">        :param bend:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;GLS Error: zero search direction in line search&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Find sensible step size scale</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+                <span class="n">xl</span> <span class="o">=</span> <span class="p">[</span><span class="n">xl</span><span class="p">]</span>
+                <span class="n">xu</span> <span class="o">=</span> <span class="p">[</span><span class="n">xu</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">xl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xl</span><span class="p">)</span>
+            <span class="n">xu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xu</span><span class="p">)</span>
+
+        <span class="c1"># this is test for python</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;GLS Error: dim of x and p does not match: program is going to fail&#39;</span><span class="p">)</span>
+
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">pp</span><span class="p">)</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">u</span><span class="p">[</span><span class="n">u</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pp</span><span class="p">[</span><span class="n">u</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bend</span><span class="p">:</span>
+            <span class="c1"># find range of useful alp in truncated line search</span>
+            <span class="n">amin</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+            <span class="n">amax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">amin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="p">(</span><span class="n">xl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">amax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">amax</span><span class="p">,</span> <span class="p">(</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">amin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="p">(</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">amax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">amax</span><span class="p">,</span> <span class="p">(</span><span class="n">xl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">amin</span> <span class="o">&gt;</span> <span class="n">amax</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;GLS Error: no admissible step in line search&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+            <span class="n">amax</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">amin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="p">(</span><span class="n">xl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">amax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amax</span><span class="p">,</span> <span class="p">(</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">amin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="p">(</span><span class="n">xu</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">amax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amax</span><span class="p">,</span> <span class="p">(</span><span class="n">xl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">xl</span><span class="p">,</span> <span class="n">xu</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">amin</span><span class="p">,</span> <span class="n">amax</span><span class="p">,</span> <span class="n">scale</span></div>
+
+<div class="viewcode-block" id="GLSUtils.lssort"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lssort">[docs]</a>    <span class="k">def</span> <span class="nf">lssort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">flist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performing the lssort</span>
+
+<span class="sd">        :param alist: list of known steps</span>
+<span class="sd">        :param flist: function values of known steps</span>
+<span class="sd">        :return: metrics and parameters obtained from doing the lssort</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">alist</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">alist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">flist</span> <span class="o">=</span> <span class="p">[</span><span class="n">flist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">perm</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">flist</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alist</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span>
+
+        <span class="n">up</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">flist</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span> <span class="n">s</span><span class="p">])]</span>
+        <span class="n">down</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flist</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span> <span class="n">s</span><span class="p">],</span> <span class="n">flist</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">down</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">down</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">flist</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">flist</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">down</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">flist</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">flist</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">monotone</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">up</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">sum</span><span class="p">(</span><span class="n">down</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">minima</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="ow">and</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">up</span> <span class="o">+</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">+</span> <span class="n">down</span><span class="p">)]</span>
+        <span class="n">nmin</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">minima</span><span class="p">)</span>
+
+        <span class="n">fbest</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span>
+
+        <span class="n">abest</span> <span class="o">=</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">fmed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nmin</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">al</span> <span class="o">=</span> <span class="p">[</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">minima</span><span class="p">))</span> <span class="k">if</span> <span class="n">minima</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">abest</span> <span class="ow">in</span> <span class="n">al</span><span class="p">:</span>
+                <span class="n">al</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">abest</span><span class="p">)</span>
+            <span class="n">unitlen</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">abest</span><span class="p">)))</span>
+            <span class="c1"># TODO: investigate edge case error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unitlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">abest</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alist</span><span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">abest</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">alist</span><span class="p">,</span> <span class="n">flist</span><span class="p">,</span> <span class="n">abest</span><span class="p">,</span> <span class="n">fbest</span><span class="p">,</span> <span class="n">fmed</span><span class="p">,</span> <span class="n">up</span><span class="p">,</span> <span class="n">down</span><span class="p">,</span> <span class="n">monotone</span><span class="p">,</span> <span class="n">minima</span><span class="p">,</span> <span class="n">nmin</span><span class="p">,</span> <span class="n">unitlen</span><span class="p">,</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="GLSUtils.lsconvex"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lsconvex">[docs]</a>    <span class="k">def</span> <span class="nf">lsconvex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">flist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                 <span class="n">nmin</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performing the lsconvex</span>
+<span class="sd">        :param alist: list of known steps</span>
+<span class="sd">        :param flist: function values of known steps</span>
+<span class="sd">        :param nmin:</span>
+<span class="sd">        :param s:</span>
+<span class="sd">        :return: convex</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">nmin</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">convex</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">convex</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">f12</span> <span class="o">=</span> <span class="p">(</span><span class="n">flist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">f13</span> <span class="o">=</span> <span class="p">(</span><span class="n">flist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">flist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">f123</span> <span class="o">=</span> <span class="p">(</span><span class="n">f13</span> <span class="o">-</span> <span class="n">f12</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">f123</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">convex</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">break</span>
+            <span class="c1"># if convex:</span>
+            <span class="c1">#     nothing_to_do = &#39;done!&#39;</span>
+        <span class="k">return</span> <span class="n">convex</span></div>
+
+<div class="viewcode-block" id="GLSUtils.lssat"><a class="viewcode-back" href="../../../../../csle_agents.agents.mcs.mcs_utils.html#csle_agents.agents.mcs.mcs_utils.gls_utils.GLSUtils.lssat">[docs]</a>    <span class="k">def</span> <span class="nf">lssat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">small</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">alist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+              <span class="n">flist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">alp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">amin</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">amax</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+              <span class="n">saturated</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performing the lssat</span>
+<span class="sd">        :param small:</span>
+<span class="sd">        :param alist:</span>
+<span class="sd">        :param flist:</span>
+<span class="sd">        :param alp:</span>
+<span class="sd">        :param amin:</span>
+<span class="sd">        :param amin:</span>
+<span class="sd">        :param amax:</span>
+<span class="sd">        :param s:</span>
+<span class="sd">        :param saturated:</span>
+<span class="sd">        :return: alp, saturated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="n">saturated</span>
+        <span class="k">if</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">flist</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">cont</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="n">aa</span> <span class="o">=</span> <span class="p">[</span><span class="n">alist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">ff</span> <span class="o">=</span> <span class="p">[</span><span class="n">flist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+            <span class="n">f12</span> <span class="o">=</span> <span class="p">(</span><span class="n">ff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ff</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">aa</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">f23</span> <span class="o">=</span> <span class="p">(</span><span class="n">ff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ff</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">aa</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">f123</span> <span class="o">=</span> <span class="p">(</span><span class="n">f23</span> <span class="o">-</span> <span class="n">f12</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">aa</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">f123</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">alp</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">aa</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">f23</span> <span class="o">/</span> <span class="n">f123</span><span class="p">)</span>
+                <span class="n">alp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">amin</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">alp</span><span class="p">,</span> <span class="n">amax</span><span class="p">))</span>
+                <span class="n">alptol</span> <span class="o">=</span> <span class="n">small</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">aa</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">saturated</span> <span class="o">=</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">alp</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">alptol</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">saturated</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># if not saturated:</span>
+            <span class="c1">#     no_print = 0</span>
+        <span class="k">return</span> <span class="n">alp</span><span class="p">,</span> <span class="n">saturated</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

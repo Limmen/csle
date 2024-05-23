@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-   csle_attack_profiler.dao
+   csle_attack_profiler
 
 Module contents
 ---------------

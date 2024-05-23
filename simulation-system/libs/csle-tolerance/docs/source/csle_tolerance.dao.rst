@@ -4,6 +4,14 @@ csle\_tolerance.dao package
 Submodules
 ----------
 
+csle\_tolerance.dao.intrusion\_recovery\_game\_config module
+------------------------------------------------------------
+
+.. automodule:: csle_tolerance.dao.intrusion_recovery_game_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_tolerance.dao.intrusion\_recovery\_pomdp\_config module
 -------------------------------------------------------------
 
