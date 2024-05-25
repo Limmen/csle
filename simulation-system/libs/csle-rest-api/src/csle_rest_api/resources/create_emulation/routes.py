@@ -675,6 +675,87 @@ def default_kafka_config(emulation_data: json) -> KafkaConfig:
                          kafka_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
     return config
 
+def default_resource_constraints_config(emulation_data: json) -> ResourcesConfig:
+    """
+    Generates default resource constraints config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: generates the ResourcesConfig
+    """
+    node_resources_configurations = []
+    emulation_containers = emulation_data["emulationContainer"]
+    for containers in emulation_containers:
+        container_name = containers["name"]
+        container_cpu = containers["cpu"]
+        container_memory = containers["mem"]
+        container_interfaces = containers["interfaces"]
+        ips_and_network_configs = []
+        for interfaces in container_interfaces:
+            interface_ip = interfaces["ip"]
+            interface_physical_interface = interfaces["physicalInterface"]
+            interface_limit_packet_queue = interfaces["limitPacketsQueue"]
+            interface_packet_delay_ms = interfaces["packetDelayMs"]
+            interface_packet_delay_jitter_ms = interfaces["packetDelayJitterMs"]
+            interface_packet_delay_correlation_percentage = interfaces["packetDelayCorrelationPercentage"]
+            interfaces_packet_delay_distribution = interfaces["packetDelayDistribution"]
+            interface_packet_loss_type = interfaces["packetLossType"]
+            interface_loss_gmodel_p = interfaces["lossGemodelp"]
+            interface_loss_gmodel_r = interfaces["lossGemodelr"]
+            interface_loss_gmodel_k = interfaces["lossGemodelk"]
+            interface_loss_gmodel_h = interfaces["lossGemodelh"]
+            interface_packet_corruption_percentage = interfaces["packetCorruptPercentage"]
+            interface_packet_corruption_correlation_percentage = interfaces["packetCorruptCorrelationPercentage"]
+            interface_packet_duplication_percentage = interfaces["packetDuplicatePercentage"]
+            interface_packet_duplicate_correlation_percentage = interfaces["packetDuplicateCorrelationPercentage"]
+            interface_packet_reorder_percentage = interfaces["packetReorderPercentage"]
+            interface_packet_reorder_correlation_percentage = interfaces["packetReorderCorrelationPercentage"]
+            interface_packet_reorder_gap = interfaces["packetReorderGap"]
+            interface_rate_limit_m_bit = interfaces["rateLimitMbit"]
+            interface_packet_overhead_bytes = interfaces["packetOverheadBytes"]
+            interface_cell_overhead_bytes = interfaces["cellOverheadBytes"]
+            ips_and_network_configs.append(
+                (interface_ip, NodeNetworkConfig(
+                    interface=interface_physical_interface,
+                    limit_packets_queue=interface_limit_packet_queue, packet_delay_ms=interface_packet_delay_ms,
+                    packet_delay_jitter_ms=interface_packet_delay_jitter_ms,
+                    packet_delay_correlation_percentage=interface_packet_delay_correlation_percentage,
+                    packet_delay_distribution=interfaces_packet_delay_distribution,
+                    packet_loss_type=interface_packet_loss_type,
+                    loss_gemodel_p=interface_loss_gmodel_p,
+                    loss_gemodel_r=interface_loss_gmodel_r,
+                    loss_gemodel_k=interface_loss_gmodel_k,
+                    loss_gemodel_h=interface_loss_gmodel_h,
+                    packet_corrupt_percentage=interface_packet_corruption_percentage,
+                    packet_corrupt_correlation_percentage=interface_packet_corruption_correlation_percentage,
+                    packet_duplicate_percentage=interface_packet_duplication_percentage,
+                    packet_duplicate_correlation_percentage=interface_packet_duplicate_correlation_percentage,
+                    packet_reorder_percentage=interface_packet_reorder_percentage,
+                    packet_reorder_correlation_percentage=interface_packet_reorder_correlation_percentage,
+                    packet_reorder_gap=interface_packet_reorder_gap,
+                    rate_limit_mbit=interface_rate_limit_m_bit,
+                    packet_overhead_bytes=interface_packet_overhead_bytes,
+                    cell_overhead_bytes=interface_cell_overhead_bytes
+                 ))
+            )
+
+        node_resource_config = NodeResourcesConfig(
+            container_name=container_name,
+            num_cpus=container_cpu, available_memory_gb=container_memory,
+            ips_and_network_configs=ips_and_network_configs)
+        node_resources_configurations.append(node_resource_config)
+    resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
+    return resources_config
+
+def default_topology_config(emulation_data: json) -> TopologyConfig:
+    """
+    Generates default topology config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: the Topology configuration
+    """
+    # *** The function is incomplete
+
+
 # Creates a blueprint "sub application" of the main REST app
 create_emulation_bp = Blueprint(
     api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE, __name__,
