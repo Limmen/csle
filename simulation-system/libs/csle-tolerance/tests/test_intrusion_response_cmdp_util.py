@@ -57,8 +57,8 @@ class TestInstrusionToleranceCmdpSuite:
         :return: None
         """
         states = [1, 2]
-        f = 0.5
-        expected = [0.0, 1.0]
+        f = 5
+        expected = [0.0, 0.0]
         assert (
             IntrusionResponseCmdpUtil.constraint_cost_function(states[0], f)
             == expected[0]
@@ -75,8 +75,8 @@ class TestInstrusionToleranceCmdpSuite:
         :return: None
         """
         states = [1, 2]
-        f = 0.5
-        expected = [0.0, 1.0]
+        f = 5
+        expected = [0.0, 0.0]
         assert IntrusionResponseCmdpUtil.constraint_cost_tensor(states, f) == expected
 
     def test_delta_function(self) -> None:

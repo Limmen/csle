@@ -202,7 +202,7 @@ class TestIntrusionRecoveryPomdpConfigSuite:
         p_c_1 = 0.01
         p_c_2 = 0.01
         p_u = 0.0
-        BTR = np.inf
+        BTR = 10
         negate_costs = False
         discount_factor = 1 - p_c_1
         num_observations = 100
@@ -259,7 +259,7 @@ class TestIntrusionRecoveryPomdpConfigSuite:
         assert dto.p_c_1 == 0.01
         assert dto.p_c_2 == 0.01
         assert dto.p_u == 0.0
-        assert dto.BTR == np.inf
+        assert dto.BTR == BTR
         assert dto.negate_costs is False
         assert dto.seed == 999
         assert dto.discount_factor == 1 - p_c_1
