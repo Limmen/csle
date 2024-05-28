@@ -2,11 +2,6 @@ from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
 from csle_common.constants import constants
-from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
-from csle_common.dao.training.policy import Policy
 from unittest.mock import patch, MagicMock
 from gym.spaces import Box, Discrete
 import pytest
@@ -19,7 +14,12 @@ class TestStoppingGameEnvSuite:
     """
 
     @pytest.fixture(autouse=True)
-    def setup_env(self):
+    def setup_env(self) -> None:
+        """
+        Sets up the configuration of the stopping game
+        
+        :return: None
+        """
         env_name = "test_env"
         T = np.array([[[0.1, 0.9], [0.4, 0.6]], [[0.7, 0.3], [0.2, 0.8]]])
         O = np.array([0, 1])
@@ -469,7 +469,6 @@ class TestStoppingGameEnvSuite:
         print(updated_info)
         assert updated_info[env_constants.ENV_METRICS.RETURN] == sum(env.trace.defender_rewards)
     
-    
     def test_emulation_evaluation(self) -> None:
         """
         Tests the function for evaluating a strategy profile in the emulation environment
@@ -479,6 +478,3 @@ class TestStoppingGameEnvSuite:
         env = StoppingGameEnv(self.config)
         env.state.b1 = [0.5, 0.5]
         pass
-        
-        
-
