@@ -1,11 +1,13 @@
+from typing import Dict, Any
+import pytest
+from unittest.mock import patch, MagicMock
+from gym.spaces import Box, Discrete
+import numpy as np
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
+import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.constants import constants
-from unittest.mock import patch, MagicMock
-from gym.spaces import Box, Discrete
-import pytest
-import numpy as np
 
 
 class TestStoppingGameEnvSuite:
@@ -93,39 +95,24 @@ class TestStoppingGameEnvSuite:
 
         env = StoppingGameEnv(self.config)
         assert env.config == self.config
-        assert (
-            env.attacker_observation_space.low.any()
-            == attacker_observation_space.low.any()
-        )
-        assert (
-            env.defender_observation_space.low.any()
-            == defender_observation_space.low.any()
-        )
+        assert env.attacker_observation_space.low.any() == attacker_observation_space.low.any()
+        assert env.defender_observation_space.low.any() == defender_observation_space.low.any()
         assert env.attacker_action_space.n == attacker_action_space.n
         assert env.defender_action_space.n == defender_action_space.n
         assert env.traces == []
 
-        with patch(
-            "gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState"
-        ) as MockStoppingGameState:
+        with patch("gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState") as MockStoppingGameState:
             MockStoppingGameState(b1=self.config.b1, L=self.config.L)
-            with patch(
-                "gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state"
-            ) as MockSampleInitialState:
+            with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state"
+                       ) as MockSampleInitialState:
                 MockSampleInitialState.return_value = 0
-                env = StoppingGameEnv(self.config)
+                StoppingGameEnv(self.config)
                 MockSampleInitialState.assert_called()
-                MockStoppingGameState.assert_called_once_with(
-                    b1=self.config.b1, L=self.config.L
-                )
+                MockStoppingGameState.assert_called_once_with(b1=self.config.b1, L=self.config.L)
 
-        with patch(
-            "csle_common.dao.simulation_config.simulation_trace.SimulationTrace"
-        ) as MockSimulationTrace:
-            mock_trace = MockSimulationTrace(self.config.env_name).return_value
-            print(mock_trace)
-            env = StoppingGameEnv(self.config)
-            print(env.trace)
+        with patch("csle_common.dao.simulation_config.simulation_trace.SimulationTrace") as MockSimulationTrace:
+            MockSimulationTrace(self.config.env_name).return_value
+            StoppingGameEnv(self.config)
             MockSimulationTrace.assert_called_once_with(self.config.env_name)
 
     def test_mean(self) -> None:
@@ -148,21 +135,15 @@ class TestStoppingGameEnvSuite:
         Tests the function of computing the weighed intrusion start time prediction distance
         """
         # Test case when first_stop is before intrusion_start
-        result1 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(
-            5, 3
-        )
+        result1 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(5, 3)
         assert result1 == 0
 
         # Test case when first_stop is after intrusion_start
-        result2 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(
-            3, 5
-        )
+        result2 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(3, 5)
         assert result2 == 0.95
 
         # Test case when first_stop is equal to intrusion_start
-        result3 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(
-            3, 3
-        )
+        result3 = StoppingGameEnv(self.config).weighted_intrusion_prediction_distance(3, 3)
         assert result3 == 0
 
     def test_reset(self) -> None:
@@ -186,25 +167,13 @@ class TestStoppingGameEnvSuite:
         observation, info = env.reset()
         # Assertions
         assert env.state.reset.called, "State's reset method was not called."
-        assert (
-            env.trace.simulation_env == self.config.env_name
-        ), "Trace was not initialized correctly."
-        assert (
-            observation[0].all() == np.array([4, 5, 6]).all()
-        ), "Observation does not match expected values."
-
-        assert (
-            info[env_constants.ENV_METRICS.STOPS_REMAINING] == env.state.l
-        ), "Stops remaining does not match expected value."
-        assert (
-            info[env_constants.ENV_METRICS.STATE] == env.state.s
-        ), "State info does not match expected value."
-        assert (
-            info[env_constants.ENV_METRICS.OBSERVATION] == 0
-        ), "Observation info does not match expected value."
-        assert (
-            info[env_constants.ENV_METRICS.TIME_STEP] == env.state.t
-        ), "Time step info does not match expected value."
+        assert env.trace.simulation_env == self.config.env_name, "Trace was not initialized correctly."
+        assert observation[0].all() == np.array([4, 5, 6]).all(), "Observation does not match expected values."
+        assert info[env_constants.ENV_METRICS.STOPS_REMAINING] == env.state.l, \
+            "Stops remaining does not match expected value."
+        assert info[env_constants.ENV_METRICS.STATE] == env.state.s, "State info does not match expected value."
+        assert info[env_constants.ENV_METRICS.OBSERVATION] == 0, "Observation info does not match expected value."
+        assert info[env_constants.ENV_METRICS.TIME_STEP] == env.state.t, "Time step info does not match expected value."
 
         # Check if trace was appended correctly
         if len(env.trace.attacker_rewards) > 0:
@@ -241,10 +210,7 @@ class TestStoppingGameEnvSuite:
 
         :return: None
         """
-        assert (
-            StoppingGameEnv(self.config).get_traces()
-            == StoppingGameEnv(self.config).traces
-        )
+        assert StoppingGameEnv(self.config).get_traces() == StoppingGameEnv(self.config).traces
 
     def test_reset_traces(self) -> None:
         """
@@ -267,7 +233,7 @@ class TestStoppingGameEnvSuite:
         fixed_timestamp = 123
         with patch("time.time", return_value=fixed_timestamp):
             with patch(
-                "csle_common.dao.simulation_config.simulation_trace.SimulationTrace.save_traces"
+                    "csle_common.dao.simulation_config.simulation_trace.SimulationTrace.save_traces"
             ) as mock_save_traces:
                 env.traces = ["trace1", "trace2"]
                 env._StoppingGameEnv__checkpoint_traces()
@@ -312,7 +278,7 @@ class TestStoppingGameEnvSuite:
         assert env.state.l == state_tuple[1]
 
         with pytest.raises(ValueError):
-            env.set_state([1, 2, 3])
+            env.set_state([1, 2, 3])  # type: ignore
 
     def test_is_state_terminal(self) -> None:
         """
@@ -338,7 +304,7 @@ class TestStoppingGameEnvSuite:
         assert not env.is_state_terminal(state_tuple)
 
         with pytest.raises(ValueError):
-            env.is_state_terminal([1, 2, 3])
+            env.is_state_terminal([1, 2, 3]) # type: ignore
 
     def test_get_observation_from_history(self) -> None:
         """
@@ -400,18 +366,12 @@ class TestStoppingGameEnvSuite:
         env.trace.attacker_observations = []
         env.trace.defender_observations = []
 
-        with patch(
-            "gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state",
-            return_value=2,
-        ):
-            with patch(
-                "gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation",
-                return_value=1,
-            ):
-                with patch(
-                    "gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief",
-                    return_value=np.array([0.3, 0.7, 0.0]),
-                ):
+        with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state",
+                   return_value=2):
+            with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation",
+                       return_value=1):
+                with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief",
+                           return_value=np.array([0.3, 0.7, 0.0])):
                     action_profile = (
                         1,
                         (
@@ -425,12 +385,8 @@ class TestStoppingGameEnvSuite:
                         action_profile
                     )
 
-                    assert (
-                        observations[0] == np.array([4, 5, 6])
-                    ).all(), "Incorrect defender observations"
-                    assert (
-                        observations[1] == np.array([1, 2, 3])
-                    ).all(), "Incorrect attacker observations"
+                    assert (observations[0] == np.array([4, 5, 6])).all(), "Incorrect defender observations"
+                    assert (observations[1] == np.array([1, 2, 3])).all(), "Incorrect attacker observations"
                     assert rewards == (0, 0)
                     assert not terminated
                     assert not truncated
@@ -443,13 +399,9 @@ class TestStoppingGameEnvSuite:
                     print(env.trace.beliefs)
                     assert env.trace.beliefs[-1] == 0.7
                     assert env.trace.infrastructure_metrics[-1] == 1
-                    assert (
-                        env.trace.attacker_observations[-1] == np.array([1, 2, 3])
-                    ).all()
-                    assert (
-                        env.trace.defender_observations[-1] == np.array([4, 5, 6])
-                    ).all()
-                    
+                    assert (env.trace.attacker_observations[-1] == np.array([1, 2, 3])).all()
+                    assert (env.trace.defender_observations[-1] == np.array([4, 5, 6])).all()
+
     def test_info(self) -> None:
         """
         Tests the function of adding the cumulative reward and episode length to the info dict
@@ -463,18 +415,14 @@ class TestStoppingGameEnvSuite:
         env.trace.defender_actions = [0, 1]
         env.trace.states = [0, 1]
         env.trace.infrastructure_metrics = [0, 1]
-        
-        info = {}
+        info: Dict[str, Any] = {}
         updated_info = env._info(info)
-        print(updated_info)
         assert updated_info[env_constants.ENV_METRICS.RETURN] == sum(env.trace.defender_rewards)
-    
+
     def test_emulation_evaluation(self) -> None:
         """
         Tests the function for evaluating a strategy profile in the emulation environment
         
         :return: None
         """
-        env = StoppingGameEnv(self.config)
-        env.state.b1 = [0.5, 0.5]
-        pass
+        StoppingGameEnv(self.config)

@@ -20,9 +20,7 @@ class TestIntrusionTolerancePomdpSuite:
 
         :return: None
         """
-        assert (
-            isinstance(item, int) for item in IntrusionRecoveryPomdpUtil.state_space()
-        )
+        assert (isinstance(item, int) for item in IntrusionRecoveryPomdpUtil.state_space())
         assert IntrusionRecoveryPomdpUtil.state_space() is not None
         assert IntrusionRecoveryPomdpUtil.state_space() == [0, 1, 2]
 
@@ -40,9 +38,7 @@ class TestIntrusionTolerancePomdpSuite:
 
         :return: None
         """
-        assert (
-            isinstance(item, int) for item in IntrusionRecoveryPomdpUtil.action_space()
-        )
+        assert (isinstance(item, int) for item in IntrusionRecoveryPomdpUtil.action_space())
         assert IntrusionRecoveryPomdpUtil.action_space() is not None
         assert IntrusionRecoveryPomdpUtil.action_space() == [0, 1]
 
@@ -79,10 +75,7 @@ class TestIntrusionTolerancePomdpSuite:
         actions = [0]
         negate = False
         expected = [[0, 0.5]]
-        assert (
-            IntrusionRecoveryPomdpUtil.cost_tensor(eta, states, actions, negate)
-            == expected
-        )
+        assert IntrusionRecoveryPomdpUtil.cost_tensor(eta, states, actions, negate) == expected
 
     def test_observation_function(self) -> None:
         """
@@ -93,9 +86,7 @@ class TestIntrusionTolerancePomdpSuite:
         s = 1
         o = 1
         num_observations = 2
-        assert round(
-            IntrusionRecoveryPomdpUtil.observation_function(s, o, num_observations), 1
-        )
+        assert round(IntrusionRecoveryPomdpUtil.observation_function(s, o, num_observations), 1)
 
     def test_observation_tensor(self) -> None:
         """
@@ -126,15 +117,7 @@ class TestIntrusionTolerancePomdpSuite:
         p_c_1 = 0.1
         p_c_2 = 0.2
         p_u = 0.5
-        assert (
-            round(
-                IntrusionRecoveryPomdpUtil.transition_function(
-                    s, s_prime, a, p_a, p_c_1, p_c_2, p_u
-                ),
-                1,
-            )
-            == 0.2
-        )
+        assert (round(IntrusionRecoveryPomdpUtil.transition_function(s, s_prime, a, p_a, p_c_1, p_c_2, p_u), 1) == 0.2)
 
     def test_transition_function_game(self) -> None:
         """
@@ -148,15 +131,7 @@ class TestIntrusionTolerancePomdpSuite:
         a2 = 1
         p_a = 0.2
         p_c_1 = 0.1
-        assert (
-            round(
-                IntrusionRecoveryPomdpUtil.transition_function_game(
-                    s, s_prime, a1, a2, p_a, p_c_1
-                ),
-                2,
-            )
-            == 0.18
-        )
+        assert (round(IntrusionRecoveryPomdpUtil.transition_function_game(s, s_prime, a1, a2, p_a, p_c_1), 2) == 0.18)
 
     def test_transition_tensor(self) -> None:
         """
@@ -171,9 +146,7 @@ class TestIntrusionTolerancePomdpSuite:
         p_c_2 = 0.2
         p_u = 0.5
         expected = [[[0.7, 0.2, 0.1], [0.4, 0.4, 0.2], [0, 0, 1.0]]]
-        transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(
-            states, actions, p_a, p_c_1, p_c_2, p_u
-        )
+        transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(states, actions, p_a, p_c_1, p_c_2, p_u)
         for i in range(len(transition_tensor)):
             for j in range(len(transition_tensor[i])):
                 for k in range(len(transition_tensor[i][j])):
@@ -181,9 +154,7 @@ class TestIntrusionTolerancePomdpSuite:
         assert transition_tensor == expected
         states = [0, 1]
         with pytest.raises(AssertionError):
-            transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(
-                states, actions, p_a, p_c_1, p_c_2, p_u
-            )
+            IntrusionRecoveryPomdpUtil.transition_tensor(states, actions, p_a, p_c_1, p_c_2, p_u)
 
     def test_transition_tensor_game(self) -> None:
         """
@@ -196,14 +167,12 @@ class TestIntrusionTolerancePomdpSuite:
         attacker_actions = [0, 1]
         p_a = 0.5
         p_c_1 = 0.3
-        result = IntrusionRecoveryPomdpUtil.transition_tensor_game(
-            states, defender_actions, attacker_actions, p_a, p_c_1
-        )
+        result = IntrusionRecoveryPomdpUtil.transition_tensor_game(states, defender_actions, attacker_actions, p_a,
+                                                                   p_c_1)
         assert len(result) == len(defender_actions)
         assert all(len(a1) == len(attacker_actions) for a1 in result)
         assert all(len(a2) == len(states) for a1 in result for a2 in a1)
         assert all(len(s) == len(states) for a1 in result for a2 in a1 for s in a2)
-
         assert result[0][1][0][0] == (1 - p_a) * (1 - p_c_1)
         assert result[1][0][1][1] == 0
         assert result[1][1][2][2] == 1.0
@@ -234,12 +203,8 @@ class TestIntrusionTolerancePomdpSuite:
         observation_tensor = [[0.8, 0.2], [0.4, 0.6]]
         s_prime = 1
         observations = [0, 1]
-        assert isinstance(
-            IntrusionRecoveryPomdpUtil.sample_next_observation(
-                observation_tensor, s_prime, observations
-            ),
-            int,
-        )
+        assert isinstance(IntrusionRecoveryPomdpUtil.sample_next_observation(observation_tensor, s_prime, observations),
+                          int)
 
     def test_bayes_filter(self) -> None:
         """
@@ -256,22 +221,9 @@ class TestIntrusionTolerancePomdpSuite:
         observation_tensor = [[0.8, 0.2], [0.4, 0.6]]
         transition_tensor = [[[0.6, 0.4], [0.1, 0.9]]]
         b_prime_s_prime = 0.7
-        assert (
-            round(
-                IntrusionRecoveryPomdpUtil.bayes_filter(
-                    s_prime,
-                    o,
-                    a,
-                    b,
-                    states,
-                    observations,
-                    observation_tensor,
-                    transition_tensor,
-                ),
-                1,
-            )
-            == b_prime_s_prime
-        )
+        assert (round(IntrusionRecoveryPomdpUtil.bayes_filter(s_prime, o, a, b, states, observations,
+                                                              observation_tensor, transition_tensor), 1)
+                == b_prime_s_prime)
 
     def test_p_o_given_b_a1_a2(self) -> None:
         """
@@ -286,15 +238,8 @@ class TestIntrusionTolerancePomdpSuite:
         observation_tensor = [[0.8, 0.2], [0.4, 0.6]]
         transition_tensor = [[[0.6, 0.4], [0.1, 0.9]]]
         expected = 0.5
-        assert (
-            round(
-                IntrusionRecoveryPomdpUtil.p_o_given_b_a1_a2(
-                    o, b, a, states, transition_tensor, observation_tensor
-                ),
-                1,
-            )
-            == expected
-        )
+        assert (round(IntrusionRecoveryPomdpUtil.p_o_given_b_a1_a2(o, b, a, states, transition_tensor,
+                                                                   observation_tensor), 1) == expected)
 
     def test_next_belief(self) -> None:
         """
@@ -309,23 +254,8 @@ class TestIntrusionTolerancePomdpSuite:
         observations = [0, 1]
         observation_tensor = [[0.8, 0.2], [0.4, 0.6]]
         transition_tensor = [[[0.3, 0.7], [0.6, 0.4]]]
-        assert (
-            round(
-                sum(
-                    IntrusionRecoveryPomdpUtil.next_belief(
-                        o,
-                        a,
-                        b,
-                        states,
-                        observations,
-                        observation_tensor,
-                        transition_tensor,
-                    )
-                ),
-                1,
-            )
-            == 1
-        )
+        assert (round(sum(IntrusionRecoveryPomdpUtil.next_belief(o, a, b, states, observations, observation_tensor,
+                                                                 transition_tensor)), 1) == 1)
 
     def test_pomdp_solver_file(self) -> None:
         """
@@ -334,33 +264,14 @@ class TestIntrusionTolerancePomdpSuite:
         :return: None
         """
 
-        assert (
-            IntrusionRecoveryPomdpUtil.pomdp_solver_file(
-                IntrusionRecoveryPomdpConfig(
-                    eta=0.1,
-                    p_a=0.2,
-                    p_c_1=0.2,
-                    p_c_2=0.3,
-                    p_u=0.3,
-                    BTR=1,
-                    negate_costs=True,
-                    seed=1,
-                    discount_factor=0.5,
-                    states=[0, 1],
-                    actions=[0],
-                    observations=[0, 1],
-                    cost_tensor=[[0.1, 0.5], [0.5, 0.6]],
-                    observation_tensor=[[0.8, 0.2], [0.4, 0.6]],
-                    transition_tensor=[[[0.8, 0.2], [0.6, 0.4]]],
-                    b1=[0.3, 0.7],
-                    T=3,
-                    simulation_env_name="env",
-                    gym_env_name="gym",
-                    max_horizon=np.inf,
-                )
-            )
-            is not None
-        )
+        assert (IntrusionRecoveryPomdpUtil.pomdp_solver_file(
+            IntrusionRecoveryPomdpConfig(eta=0.1, p_a=0.2, p_c_1=0.2, p_c_2=0.3, p_u=0.3, BTR=1, negate_costs=True,
+                                         seed=1, discount_factor=0.5, states=[0, 1], actions=[0], observations=[0, 1],
+                                         cost_tensor=[[0.1, 0.5], [0.5, 0.6]],
+                                         observation_tensor=[[0.8, 0.2], [0.4, 0.6]],
+                                         transition_tensor=[[[0.8, 0.2], [0.6, 0.4]]], b1=[0.3, 0.7], T=3,
+                                         simulation_env_name="env", gym_env_name="gym", max_horizon=np.inf))
+                is not None)
 
     def test_sample_next_state_game(self) -> None:
         """
@@ -444,9 +355,7 @@ class TestIntrusionTolerancePomdpSuite:
             gym_env_name="gym_env",
             max_horizon=1000,
         )
-        assert (
-            IntrusionRecoveryPomdpUtil.generate_transitions(dto)[0] == "0 0 0 0 0 0.06"
-        )
+        assert IntrusionRecoveryPomdpUtil.generate_transitions(dto)[0] == "0 0 0 0 0 0.06"
 
     def test_generate_rewards(self) -> None:
         """
@@ -502,7 +411,11 @@ class TestIntrusionTolerancePomdpSuite:
         assert IntrusionRecoveryPomdpUtil.generate_rewards(dto)[0] == "0 0 0 -1"
 
     def test_generate_os_posg_game_file(self) -> None:
-        """ """
+        """
+        Tests the generate_os_posg_game function
+
+        :return: None
+        """
 
         states = [0, 1, 2]
         actions = [0, 1]
@@ -580,24 +493,13 @@ class TestIntrusionTolerancePomdpSuite:
 
         output_lines = game_file_str.split("\n")
 
-        assert (
-            output_lines[0] == expected_game_description
-        ), f"Game description mismatch: {output_lines[0]}"
-        assert (
-            output_lines[1:4] == expected_state_descriptions
-        ), f"State descriptions mismatch: {output_lines[1:4]}"
-        assert (
-            output_lines[4:6] == expected_player_1_actions
-        ), f"Player 1 actions mismatch: {output_lines[4:6]}"
-        assert (
-            output_lines[6:8] == expected_player_2_actions
-        ), f"Player 2 actions mismatch: {output_lines[6:8]}"
-        assert (
-            output_lines[8:10] == expected_obs_descriptions
-        ), f"Observation descriptions mismatch: {output_lines[8:10]}"
-        assert (
-            output_lines[10:13] == expected_player_2_legal_actions
-        ), f"Player 2 legal actions mismatch: {output_lines[10:13]}"
-        assert (
-            output_lines[13:14] == expected_player_1_legal_actions
-        ), f"Player 1 legal actions mismatch: {output_lines[13:14]}"
+        assert (output_lines[0] == expected_game_description), f"Game description mismatch: {output_lines[0]}"
+        assert (output_lines[1:4] == expected_state_descriptions), f"State descriptions mismatch: {output_lines[1:4]}"
+        assert (output_lines[4:6] == expected_player_1_actions), f"Player 1 actions mismatch: {output_lines[4:6]}"
+        assert (output_lines[6:8] == expected_player_2_actions), f"Player 2 actions mismatch: {output_lines[6:8]}"
+        assert (output_lines[8:10] == expected_obs_descriptions), \
+            f"Observation descriptions mismatch: {output_lines[8:10]}"
+        assert (output_lines[10:13] == expected_player_2_legal_actions), \
+            f"Player 2 legal actions mismatch: {output_lines[10:13]}"
+        assert (output_lines[13:14] == expected_player_1_legal_actions), \
+            f"Player 1 legal actions mismatch: {output_lines[13:14]}"

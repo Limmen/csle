@@ -108,7 +108,7 @@ class TestStoppingGameMdpAttackerEnvSuite:
 
         env = StoppingGameMdpAttackerEnv(config=attacker_mdp_config)
         attacker_obs, info = env.reset()
-        assert env.latest_defender_obs.all() == np.array([2, 0.4]).all()
+        assert env.latest_defender_obs.all() == np.array([2, 0.4]).all() # type: ignore
         assert info == {}
 
     def test_set_model(self) -> None:
@@ -144,7 +144,7 @@ class TestStoppingGameMdpAttackerEnvSuite:
         )
 
         env = StoppingGameMdpAttackerEnv(config=attacker_mdp_config)
-        assert not env.set_state(1)
+        assert not env.set_state(1) # type: ignore
 
     def test_calculate_stage_policy(self) -> None:
         """

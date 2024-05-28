@@ -3,7 +3,6 @@ from csle_tolerance.dao.intrusion_recovery_pomdp_config import (
 )
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 import pytest_mock
-import numpy as np
 
 
 class TestIntrusionRecoveryPomdpConfigSuite:

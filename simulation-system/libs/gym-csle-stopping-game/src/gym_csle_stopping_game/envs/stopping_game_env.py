@@ -72,7 +72,7 @@ class StoppingGameEnv(BaseEnv):
         a1, a2_profile = action_profile
         pi2, a2 = a2_profile
         assert pi2.shape[0] == len(self.config.S)
-        assert pi2.shape[1] == len(self.config.A1)
+        assert pi2.shape[1] == len(self.config.A2)
         done = False
         info: Dict[str, Any] = {}
 
@@ -83,8 +83,7 @@ class StoppingGameEnv(BaseEnv):
         else:
             # Compute r, s', b',o'
             r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-            self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                              T=self.config.T,
+            self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2, T=self.config.T,
                                                               S=self.config.S, s=self.state.s)
             o = StoppingGameUtil.sample_next_observation(Z=self.config.Z,
                                                          O=self.config.O, s_prime=self.state.s)
