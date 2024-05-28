@@ -199,8 +199,6 @@ class TestIntrusionTolerancePomdpSuite:
         result = IntrusionRecoveryPomdpUtil.transition_tensor_game(
             states, defender_actions, attacker_actions, p_a, p_c_1
         )
-        print(result)
-        print(result[1][0])
         assert len(result) == len(defender_actions)
         assert all(len(a1) == len(attacker_actions) for a1 in result)
         assert all(len(a2) == len(states) for a1 in result for a2 in a1)
