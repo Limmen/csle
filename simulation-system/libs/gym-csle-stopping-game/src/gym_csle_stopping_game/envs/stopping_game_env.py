@@ -42,7 +42,6 @@ class StoppingGameEnv(BaseEnv):
 
         # Initialize environment state
         self.state = StoppingGameState(b1=self.config.b1, L=self.config.L)
-
         # Setup spaces
         self.attacker_observation_space = self.config.attacker_observation_space()
         self.defender_observation_space = self.config.defender_observation_space()
@@ -437,6 +436,8 @@ class StoppingGameEnv(BaseEnv):
         :param l: the number of stops remaining
         :return: the observation
         """
+        if not history:
+            raise ValueError("History must not be empty")
         return [history[-1]]
 
     def generate_random_particles(self, o: int, num_particles: int) -> List[int]:

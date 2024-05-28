@@ -7,6 +7,7 @@ import csle_tolerance.constants.constants as env_constants
 import csle_common.constants.constants as constants
 import numpy as np
 import pytest
+from typing import Dict, Any
 
 
 class TestInstrusionRecoveryPomdpEnvSuite:
@@ -153,7 +154,7 @@ class TestInstrusionRecoveryPomdpEnvSuite:
             gym_env_name="gym",
             max_horizon=np.inf,
         )
-        info = {}
+        info: Dict[str, Any] = {}
         with pytest.raises(IndexError):
             assert IntrusionRecoveryPomdpEnv(config)._info(info) is not None
 
@@ -247,7 +248,7 @@ class TestInstrusionRecoveryPomdpEnvSuite:
             gym_env_name="gym",
             max_horizon=np.inf,
         )
-        assert IntrusionRecoveryPomdpEnv(config).reset_traces() is None
+        assert not IntrusionRecoveryPomdpEnv(config).reset_traces()
 
     @patch("time.time")  # Mock the time.time function
     @patch(

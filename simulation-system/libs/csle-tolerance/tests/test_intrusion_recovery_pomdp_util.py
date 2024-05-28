@@ -2,6 +2,9 @@ from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryP
 from csle_tolerance.dao.intrusion_recovery_pomdp_config import (
     IntrusionRecoveryPomdpConfig,
 )
+from csle_tolerance.dao.intrusion_recovery_game_config import (
+    IntrusionRecoveryGameConfig,
+)
 import numpy as np
 import pytest
 
@@ -133,6 +136,28 @@ class TestIntrusionTolerancePomdpSuite:
             == 0.2
         )
 
+    def test_transition_function_game(self) -> None:
+        """
+        Tests the transition function of the POSG
+
+        :return: None
+        """
+        s = 0
+        s_prime = 1
+        a1 = 0
+        a2 = 1
+        p_a = 0.2
+        p_c_1 = 0.1
+        assert (
+            round(
+                IntrusionRecoveryPomdpUtil.transition_function_game(
+                    s, s_prime, a1, a2, p_a, p_c_1
+                ),
+                2,
+            )
+            == 0.18
+        )
+
     def test_transition_tensor(self) -> None:
         """
         Tests the function of creating  a tensor with the transition probabilities of the POMDP
@@ -159,6 +184,31 @@ class TestIntrusionTolerancePomdpSuite:
             transition_tensor = IntrusionRecoveryPomdpUtil.transition_tensor(
                 states, actions, p_a, p_c_1, p_c_2, p_u
             )
+
+    def test_transition_tensor_game(self) -> None:
+        """
+        Tests the function of creating a tensor with the transition probabilities of the POSG
+
+        :return: None
+        """
+        states = [0, 1, 2]
+        defender_actions = [0, 1]
+        attacker_actions = [0, 1]
+        p_a = 0.5
+        p_c_1 = 0.3
+        result = IntrusionRecoveryPomdpUtil.transition_tensor_game(
+            states, defender_actions, attacker_actions, p_a, p_c_1
+        )
+        assert len(result) == len(defender_actions)
+        assert all(len(a1) == len(attacker_actions) for a1 in result)
+        assert all(len(a2) == len(states) for a1 in result for a2 in a1)
+        assert all(len(s) == len(states) for a1 in result for a2 in a1 for s in a2)
+
+        assert result[0][1][0][0] == (1 - p_a) * (1 - p_c_1)
+        assert result[1][0][1][1] == 0
+        assert result[1][1][2][2] == 1.0
+        assert result[0][1][0][1] == (1 - p_c_1) * p_a
+        assert result[0][0][0][2] == p_c_1
 
     def test_sample_initial_state(self) -> None:
         """
@@ -311,3 +361,243 @@ class TestIntrusionTolerancePomdpSuite:
             )
             is not None
         )
+
+    def test_sample_next_state_game(self) -> None:
+        """
+        Tests the function of sampling the next observation
+
+        :return: None
+        """
+        np.random.seed(40)
+        transition_tensor = [
+            [
+                [[0.1, 0.9], [0.7, 0.3], [0.5, 0.5]],
+                [[0.2, 0.8], [0.6, 0.4], [0.4, 0.6]],
+            ],
+            [
+                [[0.3, 0.7], [0.8, 0.2], [0.6, 0.4]],
+                [[0.4, 0.6], [0.5, 0.5], [0.3, 0.7]],
+            ],
+        ]
+
+        s = 0
+        a1 = 0
+        a2 = 0
+
+        count = [0, 0]
+        for _ in range(1000):
+            s_prime = IntrusionRecoveryPomdpUtil.sample_next_state_game(
+                transition_tensor, s, a1, a2
+            )
+            count[s_prime] += 1
+        assert 850 <= count[1] <= 950
+        assert 50 <= count[0] <= 150
+
+    def test_generate_transitions(self) -> None:
+        """
+        Tests the function of generating the transition rows of the POSG config file of HSVI
+
+        :return: None
+        """
+        dto = IntrusionRecoveryGameConfig(
+            eta=0.5,
+            p_a=0.8,
+            p_c_1=0.1,
+            BTR=10,
+            negate_costs=True,
+            seed=123,
+            discount_factor=0.9,
+            states=[0, 1, 2],
+            actions=[0, 1],
+            observations=[0, 1],
+            cost_tensor=[[1, 2], [3, 4]],
+            observation_tensor=[[0.6, 0.4], [0.5, 0.5]],
+            transition_tensor=[
+                [
+                    [
+                        [0.1, 0.2, 0.7],
+                        [0.3, 0.4, 0.3],
+                        [0.2, 0.2, 0.6],
+                    ],
+                    [
+                        [0.2, 0.3, 0.5],
+                        [0.4, 0.3, 0.3],
+                        [0.3, 0.3, 0.4],
+                    ],
+                ],
+                [
+                    [
+                        [0.5, 0.3, 0.2],
+                        [0.3, 0.5, 0.2],
+                        [0.4, 0.3, 0.3],
+                    ],
+                    [
+                        [0.3, 0.4, 0.3],
+                        [0.5, 0.4, 0.1],
+                        [0.2, 0.5, 0.3],
+                    ],
+                ],
+            ],
+            b1=[0.1, 0.9],
+            T=100,
+            simulation_env_name="sim_env",
+            gym_env_name="gym_env",
+            max_horizon=1000,
+        )
+        assert (
+            IntrusionRecoveryPomdpUtil.generate_transitions(dto)[0] == "0 0 0 0 0 0.06"
+        )
+
+    def test_generate_rewards(self) -> None:
+        """
+        Tests the function of generating the reward rows of the POSG config file of HSVI
+
+        :return: None
+        """
+        dto = IntrusionRecoveryGameConfig(
+            eta=0.5,
+            p_a=0.8,
+            p_c_1=0.1,
+            BTR=10,
+            negate_costs=True,
+            seed=123,
+            discount_factor=0.9,
+            states=[0, 1, 2],
+            actions=[0, 1],
+            observations=[0, 1],
+            cost_tensor=[[1, 2, 3], [4, 5, 6]],
+            observation_tensor=[[0.6, 0.4], [0.5, 0.5]],
+            transition_tensor=[
+                [
+                    [
+                        [0.1, 0.2, 0.7],
+                        [0.3, 0.4, 0.3],
+                        [0.2, 0.2, 0.6],
+                    ],
+                    [
+                        [0.2, 0.3, 0.5],
+                        [0.4, 0.3, 0.3],
+                        [0.3, 0.3, 0.4],
+                    ],
+                ],
+                [
+                    [
+                        [0.5, 0.3, 0.2],
+                        [0.3, 0.5, 0.2],
+                        [0.4, 0.3, 0.3],
+                    ],
+                    [
+                        [0.3, 0.4, 0.3],
+                        [0.5, 0.4, 0.1],
+                        [0.2, 0.5, 0.3],
+                    ],
+                ],
+            ],
+            b1=[0.1, 0.9],
+            T=100,
+            simulation_env_name="sim_env",
+            gym_env_name="gym_env",
+            max_horizon=1000,
+        )
+        assert IntrusionRecoveryPomdpUtil.generate_rewards(dto)[0] == "0 0 0 -1"
+
+    def test_generate_os_posg_game_file(self) -> None:
+        """ """
+
+        states = [0, 1, 2]
+        actions = [0, 1]
+        observations = [0, 1]
+
+        transition_tensor = [
+            [
+                [
+                    [0.1, 0.2, 0.7],
+                    [0.3, 0.4, 0.3],
+                    [0.2, 0.2, 0.6],
+                ],
+                [
+                    [0.2, 0.3, 0.5],
+                    [0.4, 0.3, 0.3],
+                    [0.3, 0.3, 0.4],
+                ],
+            ],
+            [
+                [
+                    [0.5, 0.3, 0.2],
+                    [0.3, 0.5, 0.2],
+                    [0.4, 0.3, 0.3],
+                ],
+                [
+                    [0.3, 0.4, 0.3],
+                    [0.5, 0.4, 0.1],
+                    [0.2, 0.5, 0.3],
+                ],
+            ],
+        ]
+
+        observation_tensor = [
+            [0.6, 0.4],
+            [0.5, 0.5],
+        ]
+
+        cost_tensor = [
+            [1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+        ]
+
+        game_config = IntrusionRecoveryGameConfig(
+            eta=0.5,
+            p_a=0.8,
+            p_c_1=0.1,
+            BTR=10,
+            negate_costs=True,
+            seed=123,
+            discount_factor=0.9,
+            states=states,
+            actions=actions,
+            observations=observations,
+            cost_tensor=cost_tensor,
+            observation_tensor=observation_tensor,
+            transition_tensor=transition_tensor,
+            b1=[0.1, 0.9],
+            T=100,
+            simulation_env_name="sim_env",
+            gym_env_name="gym_env",
+            max_horizon=1000,
+        )
+
+        game_file_str = IntrusionRecoveryPomdpUtil.generate_os_posg_game_file(
+            game_config
+        )
+
+        expected_game_description = "3 1 2 2 2 72 12 0.9"
+        expected_state_descriptions = ["0 0", "1 0", "2 0"]
+        expected_player_1_actions = ["WAIT", "RECOVER"]
+        expected_player_2_actions = ["FALSEALARM", "ATTACK"]
+        expected_obs_descriptions = ["o_0", "o_1"]
+        expected_player_2_legal_actions = ["0 1", "0 1", "0 1"]
+        expected_player_1_legal_actions = ["0 1"]
+
+        output_lines = game_file_str.split("\n")
+
+        assert (
+            output_lines[0] == expected_game_description
+        ), f"Game description mismatch: {output_lines[0]}"
+        assert (
+            output_lines[1:4] == expected_state_descriptions
+        ), f"State descriptions mismatch: {output_lines[1:4]}"
+        assert (
+            output_lines[4:6] == expected_player_1_actions
+        ), f"Player 1 actions mismatch: {output_lines[4:6]}"
+        assert (
+            output_lines[6:8] == expected_player_2_actions
+        ), f"Player 2 actions mismatch: {output_lines[6:8]}"
+        assert (
+            output_lines[8:10] == expected_obs_descriptions
+        ), f"Observation descriptions mismatch: {output_lines[8:10]}"
+        assert (
+            output_lines[10:13] == expected_player_2_legal_actions
+        ), f"Player 2 legal actions mismatch: {output_lines[10:13]}"
+        assert (
+            output_lines[13:14] == expected_player_1_legal_actions
+        ), f"Player 1 legal actions mismatch: {output_lines[13:14]}"

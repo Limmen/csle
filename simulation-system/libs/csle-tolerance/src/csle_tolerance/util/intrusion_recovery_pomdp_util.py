@@ -522,7 +522,6 @@ class IntrusionRecoveryPomdpUtil:
                             if prob > 0:
                                 transition = f"{s} {a1} {a2} {i} {s_prime} {prob}"
                                 transitions.append(transition)
-
         return transitions
 
     @staticmethod
