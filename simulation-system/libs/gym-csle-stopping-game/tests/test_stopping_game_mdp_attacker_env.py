@@ -108,9 +108,6 @@ class TestStoppingGameMdpAttackerEnvSuite:
 
         env = StoppingGameMdpAttackerEnv(config=attacker_mdp_config)
         attacker_obs, info = env.reset()
-        print(attacker_obs)
-        # assert (attacker_obs == np.array([2, 0.4, 1])).all()
-        print(env.latest_defender_obs)
         assert env.latest_defender_obs.all() == np.array([2, 0.4]).all()
         assert info == {}
 
