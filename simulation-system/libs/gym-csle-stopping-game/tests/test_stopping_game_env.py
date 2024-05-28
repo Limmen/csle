@@ -1,7 +1,7 @@
 from typing import Dict, Any
 import pytest
 from unittest.mock import patch, MagicMock
-from gym.spaces import Box, Discrete
+from gymnasium.spaces import Box, Discrete
 import numpy as np
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig

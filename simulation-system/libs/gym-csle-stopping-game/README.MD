@@ -15,6 +15,7 @@ An OpenAI gym reinforcement learning environment that represents the optimal sto
 - `csle-attacker`
 - `csle-defender`
 - `csle-collector`
+- `csle-system-identification`
 - `gymnasium` for specifying the RL environment API
 
 ## Development Requirements
