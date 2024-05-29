@@ -2,7 +2,6 @@
 Routes and sub-resources for the /create-emulation resource
 """
 from typing import Tuple
-import csle_common.constants.constants as constants
 from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -10,9 +9,6 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 import json
 
 from typing import Dict, List, Union
-import argparse
-import os
-import multiprocessing
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
@@ -31,23 +27,17 @@ from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
-from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
-from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
-from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
-from csle_common.dao.emulation_config.credential import Credential
-from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
@@ -213,11 +203,6 @@ def default_ovs_config(emulation_data: json) -> OVSConfig:
 
     :param emulation_data: the emulation data in JSON format received from front-end
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
 
     ovs_config = OVSConfig(switch_configs=[])
     return ovs_config
@@ -230,11 +215,6 @@ def default_sdn_controller_config(emulation_data: json) \
 
     :param emulation_data: the emulation data in JSON format received from front-end
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
     return None
 
 
@@ -246,9 +226,6 @@ def default_host_manager_config(emulation_data: json) \
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the host manager configuration
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
     version = emulation_data["emulationVersion"]
     time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
     config = HostManagerConfig(version=version, time_step_len_seconds=time_step_len_seconds,
@@ -267,9 +244,7 @@ def default_snort_ids_manager_config(emulation_data: json) \
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the Snort IDS manager configuration
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
+
     version = emulation_data["emulationVersion"]
     time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
 
@@ -290,9 +265,7 @@ def default_ossec_ids_manager_config(emulation_data: json) \
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the OSSEC IDS manager configuration
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
+
     version = emulation_data["emulationVersion"]
     time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
 
@@ -313,9 +286,7 @@ def default_docker_stats_manager_config(emulation_data: json) \
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the docker stats manager configuration
     """
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
+
     version = emulation_data["emulationVersion"]
     time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
 
@@ -338,7 +309,6 @@ def default_elk_config(emulation_data: json) -> ElkConfig:
 
     # *** This function I am not sure if we have already collected all the paramters needed.
 
-    name = emulation_data["emulationName"]
     network_id = emulation_data["emulationNetworkId"]
     level = emulation_data["emulationLevel"]
     version = emulation_data["emulationVersion"]
@@ -424,9 +394,6 @@ def default_beats_config(emulation_data: json) -> BeatsConfig:
     # *** Compared to other files this one seems incomplete.
 
     network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
 
     node_beats_configs = []
     emulation_containers = emulation_data["emulationContainer"]
@@ -434,8 +401,6 @@ def default_beats_config(emulation_data: json) -> BeatsConfig:
         container_interfaces = containers["interfaces"]
         for interfaces in container_interfaces:
             interface_ip = interfaces["ip"]
-            interface_subnet_mask = interfaces["subnetMask"]
-            interface_subnet_prefix = interfaces["subnetPrefix"]
         node_beats = NodeBeatsConfig(ip=interface_ip,
                         log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
