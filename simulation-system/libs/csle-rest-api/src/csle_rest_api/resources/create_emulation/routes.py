@@ -64,49 +64,14 @@ from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
-def vulnerabilities(emulation_data:json) -> VulnerabilitiesConfig:
-
-    # This function has problems. In this function in the front end the credentials are not defined and prepared on
-    # the web page.
-
-    print(emulation_data)
-
-    vulns = []
-    # *** We need to add credentials in the front end
-    # *** Moreover here we consider one interface ip however each container can have more than one interface,
-    # how should we condsier the ip? Can we consider the service ip defined for that vuln?
-    credentials = []
-
-    emulation_containers = emulation_data["emulationContainer"]
-    for containers in emulation_containers:
-        container_interfaces = containers["interfaces"]
-        interface_ip = ""
-        for interfaces in container_interfaces:
-            interface_ip = interfaces["ip"]
-        container_vulns = containers["vulns"]
-        for vuln in container_vulns:
-            vuln_name = vuln["vulnName"]
-            vuln_type = vuln["vulnType"]
-            vuln_service_name = vuln["vulnService"]["name"]
-            vuln_service_protocol = vuln["vulnService"]["protocol"]
-            vuln_service_port = vuln["vulnService"]["port"]
-            vuln_service_ip = vuln["vulnService"]["serviceIp"]
-            vuln_root_access = vuln["vulnRoot"]
-
-            node_vuln_config = NodeVulnerabilityConfig(
-                name=vuln_name,
-                ip=interface_ip,
-                vuln_type=vuln_type,
-                credentials=credentials,
-                cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
-                cve=None,
-                root=vuln_root_access, port=vuln_service_port,
-                protocol=vuln_service_protocol, service=vuln_service_name)
-            vulns.append(node_vuln_config)
-    vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
-    return vulns_config
-
 def default_config(emulation_data:json) -> EmulationEnvConfig:
+    """
+    Returns the default configuration of the emulation environment
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: the emulation environment configuration
+    """
+
     name = emulation_data["emulationName"]
     network_id = emulation_data["emulationNetworkId"]
     level = emulation_data["emulationLevel"]
@@ -145,6 +110,12 @@ def default_config(emulation_data:json) -> EmulationEnvConfig:
     return emulation_env_cfg
 
 def default_containers_config(emulation_data:json) -> ContainersConfig:
+    """
+    Generates default containers config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: the ContainersConfig of the emulation
+    """
     containers = []
     vulnerable_nodes = []
     # *** We need to define the agent reachable nodes
@@ -753,7 +724,215 @@ def default_topology_config(emulation_data: json) -> TopologyConfig:
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the Topology configuration
     """
-    # *** The function is incomplete
+    node_configs = []
+    emulation_containers = emulation_data["emulationContainer"]
+    for containers in emulation_containers:
+        subnetwork_masks=[]
+        container_name = containers["name"]
+        ips_gw_default_policy_networks=[]
+        container_interfaces = containers["interfaces"]
+        for interfaces in container_interfaces:
+            interface_default_gateway = interfaces["defaultGateway"]
+            interface_default_input = interfaces["defaultInput"]
+            interface_default_output = interfaces["defaultOutput"]
+            interface_default_forward = interfaces["defaultForward"]
+            interface_ip = interfaces["ip"]
+            interface_name = interfaces["name"]
+            interface_subnet_mask = interfaces["subnetMask"]
+            interface_subnet_prefix = interfaces["subnetPrefix"]
+            interface_bit_mask = interfaces["bitmask"]
+            subnetwork_masks.append(interface_subnet_mask)
+            default_network_firewall_config = DefaultNetworkFirewallConfig(
+                ip=interface_ip,
+                default_gw=interface_default_gateway,
+                default_input=interface_default_input,
+                default_output=interface_default_output,
+                default_forward=interface_default_forward,
+                network=ContainerNetwork(
+                    name=interface_name,
+                    subnet_mask=interface_subnet_mask,
+                    subnet_prefix=interface_subnet_prefix,
+                    bitmask=interface_bit_mask
+                )
+            )
+            ips_gw_default_policy_networks.append(default_network_firewall_config)
+        node_configs.append(NodeFirewallConfig(
+            hostname=container_name,
+            ips_gw_default_policy_networks=ips_gw_default_policy_networks,
+            output_accept=set([]),
+            input_accept=set([]),
+            forward_accept=set([]),
+            output_drop=set(), input_drop=set(), forward_drop=set(), routes=set()))
+
+        topology = TopologyConfig(node_configs=node_configs,
+                                  subnetwork_masks=subnetwork_masks)
+        return topology
+
+
+def default_traffic_config(emulation_data: json) -> TrafficConfig:
+    """
+    Generates default traffic config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: the traffic configuration
+    """
+    traffic_generators = []
+    emulation_containers = emulation_data["emulationContainer"]
+    emulation_time_step_length = emulation_data["emulationTimeStepLengh"]
+    for containers in emulation_containers:
+        container_name = containers["name"]
+        container_interfaces = containers["interfaces"]
+        for interfaces in container_interfaces:
+            interface_ip = interfaces["ip"]
+        traffic_generators.append(NodeTrafficConfig(ip=interface_ip,
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[container_name]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
+        if ("client" in container_name):
+            client_ip = interfaces["ip"]
+            client_interface_name = interfaces["name"]
+            client_subnet_mask = interfaces["subnetMask"]
+            client_subnet_prefix = interfaces["subnetPrefix"]
+            client_bit_mask = interfaces["bitmask"]
+
+    all_ips_and_commands = []
+    for i in range(len(traffic_generators)):
+        all_ips_and_commands.append((traffic_generators[i].ip, traffic_generators[i].commands))
+    workflows_config = WorkflowsConfig(
+        workflow_services=[
+            WorkflowService(id=0, ips_and_commands=all_ips_and_commands)
+        ],
+        workflow_markov_chains=[
+            WorkflowMarkovChain(
+                transition_matrix=[
+                    [0.8, 0.2],
+                    [0, 1]
+                ],
+                initial_state=0,
+                id=0
+            )
+        ]
+    )
+    client_population_config = ClientPopulationConfig(
+        networks=[ContainerNetwork(
+            name=client_interface_name,
+            subnet_mask=client_subnet_mask,
+            subnet_prefix=client_subnet_prefix,
+            bitmask=client_bit_mask
+        )],
+        ip=client_ip,
+        client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
+        client_time_step_len_seconds=emulation_time_step_length,
+        client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
+        client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
+        client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
+        clients=[
+            Client(id=0, workflow_distribution=[1],
+                   arrival_config=ConstantArrivalConfig(lamb=20), mu=4, exponential_service_time=True)
+        ],
+        workflows_config=workflows_config)
+    traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
+                                 client_population_config=client_population_config)
+    return traffic_conf
+
+def default_users_config(emulation_data: json) -> UsersConfig:
+    """
+    Generates default users config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: generates the UsersConfig
+    """
+    emulation_containers = emulation_data["emulationContainer"]
+    users = []
+    for containers in emulation_containers:
+        container_users = containers["users"]
+        container_interfaces = containers["interfaces"]
+        for interfaces in container_interfaces:
+            interface_name = interfaces["name"]
+            interface_ip = interfaces["ip"]
+        all_users = []
+        for user in container_users:
+            user_name = user["userName"]
+            user_pw = user["pw"]
+            user_access = user["root"]
+            all_users.append(User(username=user_name, pw=user_pw, root=user_access))
+        users.append(NodeUsersConfig(ip=interface_ip,
+                        users=all_users))
+
+    users_conf = UsersConfig(users_configs=users)
+    return users_conf
+
+def default_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
+    """
+    Generates default vulnerabilities config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: the vulnerability config
+    """
+    emulation_containers = emulation_data["emulationContainer"]
+    vulns=[]
+    for containers in emulation_containers:
+        container_vulns = containers["vulns"]
+        for vuln in container_vulns:
+            vuln_name = vuln["vulnName"]
+            vuln_type = vuln["vulnType"]
+            vuln_service_name = vuln["vulnService"]["name"]
+            vuln_service_protocol = vuln["vulnService"]["protocol"]
+            vuln_service_port = vuln["vulnService"]["port"]
+            vuln_service_ip = vuln["vulnService"]["serviceIp"]
+            vuln_root_access = vuln["vulnRoot"]
+            vulns.append(NodeVulnerabilityConfig(
+                    name=vuln_name,
+                    # *** I think we can also use service ip instead of interface ip, it will be the same. If it is not true we can use interface ip
+                    ip=vuln_service_ip,
+                    vuln_type=vuln_type,
+                    # *** We should define credentials in the front end
+                    credentials=[],
+                    # *** We should define cvss in the front end
+                    cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                    cve=None,
+                    root=vuln_root_access, port=vuln_service_port,
+                    protocol=vuln_service_protocol, service=vuln_service_name))
+    vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
+    return vulns_config
+
+def default_services_config(emulation_data: json) -> ServicesConfig:
+    """
+    Generates default services config
+
+    :param emulation_data: the emulation data in JSON format received from front-end
+    :return: The services configuration
+    """
+    emulation_containers = emulation_data["emulationContainer"]
+    services_configs = []
+    for containers in emulation_containers:
+        container_services = containers["services"]
+        services = []
+        for service in container_services:
+            service_name = service["name"]
+            service_protocol = service["protocol"]
+            service_port = service["port"]
+            service_ip = service["serviceIp"]
+            services.append(NetworkService(protocol=service_protocol, port=service_port,
+                               name=service_name, credentials=[]))
+    # *** for NodeServicesConfig the ip can be also the interface ip. I think it should be the same unless the node
+    # has two or more interfaces
+    services_configs.append(NodeServicesConfig(
+            ip=service_ip,
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ))
+
+    service_cfg = ServicesConfig(
+        services_configs=services_configs
+    )
+    return service_cfg
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -777,89 +956,7 @@ def create_emulation() -> Tuple[Response, int]:
 
     # print(request.data)
     emulation_data = json.loads(request.data)
-    emulation_name = emulation_data["emulationName"]
-    emulation_network_id = emulation_data["emulationNetworkId"]
-    emulation_level = emulation_data["emulationLevel"]
-    emulation_version = emulation_data["emulationVersion"]
-    emulation_time_step_length = emulation_data["emulationTimeStepLengh"]
-    emulation_ids_enabled = emulation_data["emulatioIdsEnabled"]
-    emulation_description = emulation_data["emulationDescription"]
-    emulation_containers = emulation_data["emulationContainer"]
-    for containers in emulation_containers:
-        container_name = containers["name"]
-        container_os = containers["os"]
-        container_version = containers["version"]
-        containers_level = containers["level"]
-        container_restart_policy = containers["restartPolicy"]
-        container_network_id = containers["networkId"]
-        container_subnet_mask = containers["subnetMask"]
-        container_subnet_prefix = containers["subnetPrefix"]
-        container_cpu = containers["cpu"]
-        container_memory = containers["mem"]
-        container_falg_id = containers["flagId"]
-        container_flag_score = containers["flagScore"]
-        container_flag_permission = containers["flagPermission"]
-        container_interfaces = containers["interfaces"]
-        for interfaces in container_interfaces:
-            interface_name = interfaces["name"]
-            interface_ip = interfaces["ip"]
-            interface_subnet_mask = interfaces["subnetMask"]
-            interface_subnet_prefix = interfaces["subnetPrefix"]
-            interface_physical_interface = interfaces["physicalInterface"]
-            interface_bit_mask = interfaces["bitmask"]
-            interface_limit_packet_queue = interfaces["limitPacketsQueue"]
-            interface_packet_delay_ms = interfaces["packetDelayMs"]
-            interface_packet_delay_jitter_ms = interfaces["packetDelayJitterMs"]
-            interface_packet_delay_correlation_percentage = interfaces["packetDelayCorrelationPercentage"]
-            interfaces_packet_delay_distribution = interfaces["packetDelayDistribution"]
-            interface_packet_loss_type = interfaces["packetLossType"]
-            interface_loss_gmodel_p = interfaces["lossGemodelp"]
-            interface_loss_gmodel_p = interfaces["lossGemodelr"]
-            interface_loss_gmodel_p = interfaces["lossGemodelk"]
-            interface_loss_gmodel_p = interfaces["lossGemodelh"]
-            interface_packet_corruption_percentage = interfaces["packetCorruptPercentage"]
-            interface_packet_corruption_correlation_percentage = interfaces["packetCorruptCorrelationPercentage"]
-            interface_packet_duplication_percentage = interfaces["packetDuplicatePercentage"]
-            interface_packet_duplicate_correlation_percentage = interfaces["packetDuplicateCorrelationPercentage"]
-            interface_packet_reorder_percentage = interfaces["packetReorderPercentage"]
-            interface_packet_reorder_correlation_percentage = interfaces["packetReorderCorrelationPercentage"]
-            interface_packet_reorder_gap = interfaces["packetReorderGap"]
-            interface_rate_limit_m_bit = interfaces["rateLimitMbit"]
-            interface_packet_overhead_bytes = interfaces["packetOverheadBytes"]
-            interface_cell_overhead_bytes = interfaces["cellOverheadBytes"]
-            interface_default_gateway = interfaces["defaultGateway"]
-            interface_default_input = interfaces["defaultInput"]
-            interface_default_output = interfaces["defaultOutput"]
-            interface_default_forward = interfaces["defaultForward"]
-            interfaces_traffic_manager_port = interfaces["trafficManagerPort"]
-            interface_traffic_manager_log_file = interfaces["trafficManagerLogFile"]
-            interface_traffic_manager_log_dir = interfaces["trafficManagerLogDir"]
-            interface_traffic_manager_max_workers = interfaces["trafficManagerMaxWorkers"]
-            print("Container name: ", container_name, " interface is:", interface_name)
-        container_reachable_by_agent = containers["reachableByAgent"]
-        container_users = containers["users"]
-        for user in container_users:
-            user_name = user["userName"]
-            user_pw = user["pw"]
-            user_access = user["root"]
-        container_services = containers["services"]
-        for service in container_services:
-            service_name = service["name"]
-            service_protocol = service["protocol"]
-            service_port = service["port"]
-            service_ip = service["serviceIp"]
-        container_vulns = containers["vulns"]
-        for vuln in container_vulns:
-            vuln_name = vuln["vulnName"]
-            vuln_type = vuln["vulnType"]
-            vuln_service_name = vuln["vulnService"]["name"]
-            vuln_service_protocol = vuln["vulnService"]["protocol"]
-            vuln_service_port = vuln["vulnService"]["port"]
-            vuln_service_ip = vuln["vulnService"]["serviceIp"]
-            vuln_root_access = vuln["vulnRoot"]
-            print("Container vuln service name: ", vuln_service_name)
-
-    vulnerabilities(emulation_data)
+    # *** Here we call the funcion default_config with the emulation_data as input
 
     response = jsonify({"TEST": "TEST"})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
