@@ -158,6 +158,7 @@ import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env import StoppingGamePomdpDefenderEnv
+from csle_system_identification.environment_evaluations.stopping_game_emulation_eval import StoppingGameEmulationEval
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.agent_type import AgentType
 
@@ -173,7 +174,7 @@ env = gym.make(simulation_env_config.gym_env_name, config=config)
 tspsa_policy = MultiThresholdStoppingPolicy(..)
 
 # Perform the evaluation
-StoppingGamePomdpDefenderEnv.emulation_evaluation(
+StoppingGameEmulationEval.emulation_evaluation(
     env=env, n_episodes=10, intrusion_seq=[], 
     defender_policy=tspsa_policy, 
     emulation_env_config=emulation_env_config, 

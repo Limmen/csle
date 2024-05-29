@@ -3,6 +3,7 @@ csle-common==0.6.2
 csle-collector==0.6.2
 csle-attacker==0.6.2
 csle-defender==0.6.2
+csle-cluster==0.6.2
 gpytorch==1.9.0
 pymc==5.5.0
 pytensor==2.12.3

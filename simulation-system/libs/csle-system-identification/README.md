@@ -14,6 +14,7 @@ from emulated infrastructures.
 - `csle-collector`
 - `csle-attacker`
 - `csle-defender`
+- `csle-cluster`
 - `gpytorch` (For system identification algorithms based on Gaussian processes)
 - `pymc` (For Markov-Chain Monte Carlo and Bayesian modeling)
 - `pytensor` (For numerical computations)

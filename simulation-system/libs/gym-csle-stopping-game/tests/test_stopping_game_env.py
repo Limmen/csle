@@ -418,11 +418,3 @@ class TestStoppingGameEnvSuite:
         info: Dict[str, Any] = {}
         updated_info = env._info(info)
         assert updated_info[env_constants.ENV_METRICS.RETURN] == sum(env.trace.defender_rewards)
-
-    def test_emulation_evaluation(self) -> None:
-        """
-        Tests the function for evaluating a strategy profile in the emulation environment
-        
-        :return: None
-        """
-        StoppingGameEnv(self.config)

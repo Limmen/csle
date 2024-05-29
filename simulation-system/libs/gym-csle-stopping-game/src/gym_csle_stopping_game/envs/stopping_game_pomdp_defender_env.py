@@ -4,12 +4,7 @@ import numpy.typing as npt
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
-from csle_common.dao.training.policy import Policy
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
@@ -102,28 +97,6 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
         return defender_obs, r[0], d, info
-
-    @staticmethod
-    def emulation_evaluation(env: "StoppingGamePomdpDefenderEnv",
-                             n_episodes: int, intrusion_seq: List[EmulationAttackerAction],
-                             defender_policy: Policy,
-                             emulation_env_config: EmulationEnvConfig, simulation_env_config: SimulationEnvConfig) \
-            -> List[EmulationSimulationTrace]:
-        """
-        Utility function for evaluating policies in the emulation environment
-
-        :param env: the environment to use for evaluation
-        :param n_episodes: the number of episodes to use for evaluation
-        :param intrusion_seq: the sequence of intrusion actions to use for evaluation
-        :param defender_policy: the defender policy to use for evaluation
-        :param emulation_env_config: the configuration of the emulation environment to use for evaluation
-        :param simulation_env_config: the configuration of the simulation environment to use for evaluation
-        :return: traces with the evaluation results
-        """
-        return StoppingGameEnv.emulation_evaluation(
-            env=env.stopping_game_env, n_episodes=n_episodes, intrusion_seq=intrusion_seq,
-            defender_policy=defender_policy, attacker_policy=env.static_attacker_strategy,
-            emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config)
 
     def is_defense_action_legal(self, defense_action_id: int) -> bool:
         """
