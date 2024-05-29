@@ -71,12 +71,12 @@ def default_config(emulation_data:json) -> EmulationEnvConfig:
 
     containers_cfg = default_containers_config(emulation_data=emulation_data)
     flags_cfg = default_flags_config(emulation_data=emulation_data)
-    resources_cfg = default_resource_constraints_config(network_id=network_id, level=level)
-    topology_cfg = default_topology_config(network_id=network_id)
-    traffic_cfg = default_traffic_config(network_id=network_id, time_step_len_seconds=time_step_len_seconds)
-    users_cfg = default_users_config(network_id=network_id)
-    vuln_cfg = default_vulns_config(network_id=network_id)
-    services_cfg = default_services_config(network_id=network_id)
+    resources_cfg = default_resource_constraints_config(emulation_data=emulation_data)
+    topology_cfg = default_topology_config(emulation_data=emulation_data)
+    traffic_cfg = default_traffic_config(emulation_data=emulation_data)
+    users_cfg = default_users_config(emulation_data=emulation_data)
+    vuln_cfg = default_vulns_config(emulation_data=emulation_data)
+    services_cfg = default_services_config(emulation_data=emulation_data)
     kafka_cfg = default_kafka_config(emulation_data=emulation_data)
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_cfg = default_ovs_config(emulation_data=emulation_data)
@@ -143,7 +143,7 @@ def default_containers_config(emulation_data:json) -> ContainersConfig:
                 agent_ip = interface_ip
             if ("router" in container_name):
                 router_ip = interface_ip
-        container_vulns = containers["vulns"]
+        container_vulns = container["vulns"]
         for vuln in container_vulns:
             vuln_service_ip = vuln["vulnService"]["serviceIp"]
             vulnerable_nodes.append(vuln_service_ip)
@@ -744,11 +744,26 @@ def default_traffic_config(emulation_data: json) -> TrafficConfig:
     traffic_generators = []
     emulation_containers = emulation_data["emulationContainer"]
     emulation_time_step_length = emulation_data["emulationTimeStepLengh"]
+    client_ip = ""
+    client_name = ""
+    client_subnet_mask = ""
+    client_subnet_prefix = ""
+    client_bit_mask = ""
     for containers in emulation_containers:
         container_name = containers["name"]
         container_interfaces = containers["interfaces"]
+        interface_ip = ""
+        interface_name = ""
+        interface_subnet_mask = ""
+        interface_subnet_prefix = ""
+        interface_bit_mask = ""
         for interfaces in container_interfaces:
             interface_ip = interfaces["ip"]
+            interface_name = interfaces["name"]
+            interface_subnet_prefix = interfaces["subnetPrefix"]
+            interface_subnet_mask = interfaces["subnetMask"]
+            interface_bit_mask = interfaces["bitmask"]
+
         traffic_generators.append(NodeTrafficConfig(ip=interface_ip,
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[container_name]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
@@ -758,11 +773,11 @@ def default_traffic_config(emulation_data: json) -> TrafficConfig:
                           traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
                           traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
         if ("client" in container_name):
-            client_ip = interfaces["ip"]
-            client_interface_name = interfaces["name"]
-            client_subnet_mask = interfaces["subnetMask"]
-            client_subnet_prefix = interfaces["subnetPrefix"]
-            client_bit_mask = interfaces["bitmask"]
+            client_ip = interface_ip
+            client_name = interface_name
+            client_subnet_mask = interface_subnet_mask
+            client_subnet_prefix = interface_subnet_prefix
+            client_bit_mask = interface_bit_mask
 
     all_ips_and_commands = []
     for i in range(len(traffic_generators)):
@@ -784,7 +799,7 @@ def default_traffic_config(emulation_data: json) -> TrafficConfig:
     )
     client_population_config = ClientPopulationConfig(
         networks=[ContainerNetwork(
-            name=client_interface_name,
+            name=client_name,
             subnet_mask=client_subnet_mask,
             subnet_prefix=client_subnet_prefix,
             bitmask=client_bit_mask
@@ -921,6 +936,8 @@ def create_emulation() -> Tuple[Response, int]:
 
     # print(request.data)
     emulation_data = json.loads(request.data)
+    config = default_config(emulation_data)
+    config.to_json_file("/home/shahab/config.json")
     # *** Here we call the funcion default_config with the emulation_data as input
 
     response = jsonify({"TEST": "TEST"})
