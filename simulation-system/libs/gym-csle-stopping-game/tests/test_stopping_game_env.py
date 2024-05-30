@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from gymnasium.spaces import Box, Discrete
 import numpy as np
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
@@ -23,19 +24,19 @@ class TestStoppingGameEnvSuite:
         :return: None
         """
         env_name = "test_env"
-        T = np.array([[[0.1, 0.9], [0.4, 0.6]], [[0.7, 0.3], [0.2, 0.8]]])
-        O = np.array([0, 1])
-        Z = np.array([[[0.8, 0.2], [0.5, 0.5]], [[0.4, 0.6], [0.9, 0.1]]])
+        T = StoppingGameUtil.transition_tensor(L=3, p=0)
+        O = StoppingGameUtil.observation_space(n=100)
+        Z = StoppingGameUtil.observation_tensor(n=100)
         R = np.zeros((2, 3, 3, 3))
-        S = np.array([0, 1, 2])
-        A1 = np.array([0, 1, 2])
-        A2 = np.array([0, 1, 2])
+        S = StoppingGameUtil.state_space()
+        A1 = StoppingGameUtil.defender_actions()
+        A2 = StoppingGameUtil.attacker_actions()
         L = 2
         R_INT = 1
         R_COST = 2
         R_SLA = 3
         R_ST = 4
-        b1 = np.array([0.6, 0.4])
+        b1 = StoppingGameUtil.b1()
         save_dir = "save_directory"
         checkpoint_traces_freq = 100
         gamma = 0.9
@@ -69,12 +70,12 @@ class TestStoppingGameEnvSuite:
 
         :return: None
         """
-        T = np.array([[[0.1, 0.9], [0.4, 0.6]], [[0.7, 0.3], [0.2, 0.8]]])
-        O = np.array([0, 1])
-        A1 = np.array([0, 1, 2])
-        A2 = np.array([0, 1, 2])
+        T = StoppingGameUtil.transition_tensor(L=3, p=0)
+        O = StoppingGameUtil.observation_space(n=100)
+        A1 = StoppingGameUtil.defender_actions()
+        A2 = StoppingGameUtil.attacker_actions()
         L = 2
-        b1 = np.array([0.6, 0.4])
+        b1 = StoppingGameUtil.b1()
         attacker_observation_space = Box(
             low=np.array([0.0, 0.0, 0.0]),
             high=np.array([float(L), 1.0, 2.0]),
@@ -376,7 +377,7 @@ class TestStoppingGameEnvSuite:
                         1,
                         (
                             np.array(
-                                [[0.2, 0.8, 0.0], [0.6, 0.4, 0.0], [0.5, 0.5, 0.0]]
+                                [[0.2, 0.8], [0.6, 0.4], [0.5, 0.5]]
                             ),
                             2,
                         ),
@@ -396,7 +397,6 @@ class TestStoppingGameEnvSuite:
                     assert env.trace.defender_actions[-1] == 1
                     assert env.trace.infos[-1] == info
                     assert env.trace.states[-1] == 2
-                    print(env.trace.beliefs)
                     assert env.trace.beliefs[-1] == 0.7
                     assert env.trace.infrastructure_metrics[-1] == 1
                     assert (env.trace.attacker_observations[-1] == np.array([1, 2, 3])).all()
