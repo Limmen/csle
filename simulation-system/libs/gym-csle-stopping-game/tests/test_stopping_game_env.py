@@ -305,7 +305,7 @@ class TestStoppingGameEnvSuite:
         assert not env.is_state_terminal(state_tuple)
 
         with pytest.raises(ValueError):
-            env.is_state_terminal([1, 2, 3]) # type: ignore
+            env.is_state_terminal([1, 2, 3])  # type: ignore
 
     def test_get_observation_from_history(self) -> None:
         """

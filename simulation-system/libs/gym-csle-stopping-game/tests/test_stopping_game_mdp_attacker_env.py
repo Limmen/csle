@@ -10,6 +10,7 @@ from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.simulation_config.action import Action
 import pytest
 from unittest.mock import MagicMock
 import numpy as np
@@ -146,7 +147,7 @@ class TestStoppingGameMdpAttackerEnvSuite:
         )
 
         env = StoppingGameMdpAttackerEnv(config=attacker_mdp_config)
-        assert not env.set_state(1) # type: ignore
+        assert not env.set_state(1)  # type: ignore
 
     def test_calculate_stage_policy(self) -> None:
         """
@@ -192,7 +193,7 @@ class TestStoppingGameMdpAttackerEnvSuite:
     def test_render(self) -> None:
         """
         Tests the function for rendering the environment
-        
+
         :return: None
         """
         defender_strategy = MagicMock(spec=Policy)
@@ -328,7 +329,7 @@ class TestStoppingGameMdpAttackerEnvSuite:
     def test_step(self) -> None:
         """
         Tests the function for taking a step in the environment by executing the given action
-        
+
         :return: None
         """
         defender_stage_strategy = np.zeros((3, 2))
@@ -336,18 +337,24 @@ class TestStoppingGameMdpAttackerEnvSuite:
         defender_stage_strategy[0][1] = 0.1
         defender_stage_strategy[1][0] = 0.9
         defender_stage_strategy[1][1] = 0.1
-        defender_stage_strategy[2] = defender_stage_strategy[1]
-        defender_strategy = RandomPolicy(actions=list(self.config.A1), player_type=PlayerType.DEFENDER,
-                                         stage_policy_tensor=list(defender_stage_strategy))
+        defender_actions = list(map(lambda x: Action(id=x, descr=""), self.config.A1))
+        defender_strategy = RandomPolicy(
+            actions=defender_actions,
+            player_type=PlayerType.DEFENDER,
+            stage_policy_tensor=list(defender_stage_strategy),
+        )
         attacker_mdp_config = StoppingGameAttackerMdpConfig(
             env_name="test_env",
             stopping_game_config=self.config,
             defender_strategy=defender_strategy,
             stopping_game_name="csle-stopping-game-v1",
         )
-
         env = StoppingGameMdpAttackerEnv(config=attacker_mdp_config)
         env.reset()
-        pi2 = env.calculate_stage_policy(o=list(env.latest_attacker_obs),a2=0)
-        attacker_obs, r[1], d, d, info = env.step(pi2)
-        assert isinstance(attacker_obs[0], float) # type: ignore
+        pi2 = env.calculate_stage_policy(o=list(env.latest_attacker_obs), a2=0)  # type: ignore
+        attacker_obs, reward, terminated, truncated, info = env.step(pi2)
+        assert isinstance(attacker_obs[0], float)  # type: ignore
+        assert isinstance(terminated, bool)  # type: ignore
+        assert isinstance(truncated, bool)  # type: ignore
+        assert isinstance(reward, float)  # type: ignore
+        assert isinstance(info, dict)  # type: ignore
