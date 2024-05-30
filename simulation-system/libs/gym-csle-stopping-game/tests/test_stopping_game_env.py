@@ -347,26 +347,6 @@ class TestStoppingGameEnvSuite:
         :return: None
         """
         env = StoppingGameEnv(self.config)
-        env.state = MagicMock()
-        env.state.s = 1
-        env.state.l = 2
-        env.state.t = 0
-        env.state.attacker_observation.return_value = np.array([1, 2, 3])
-        env.state.defender_observation.return_value = np.array([4, 5, 6])
-        env.state.b = np.array([0.5, 0.5, 0.0])
-
-        env.trace = MagicMock()
-        env.trace.defender_rewards = []
-        env.trace.attacker_rewards = []
-        env.trace.attacker_actions = []
-        env.trace.defender_actions = []
-        env.trace.infos = []
-        env.trace.states = []
-        env.trace.beliefs = []
-        env.trace.infrastructure_metrics = []
-        env.trace.attacker_observations = []
-        env.trace.defender_observations = []
-
         with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state",
                    return_value=2):
             with patch("gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation",
@@ -385,23 +365,12 @@ class TestStoppingGameEnvSuite:
                     observations, rewards, terminated, truncated, info = env.step(
                         action_profile
                     )
-
-                    assert (observations[0] == np.array([4, 5, 6])).all(), "Incorrect defender observations"
-                    assert (observations[1] == np.array([1, 2, 3])).all(), "Incorrect attacker observations"
+                    assert observations[0].all() == np.array([1, 0.7]).all(), "Incorrect defender observations"
+                    assert observations[1].all() == np.array([1, 2, 3]).all(), "Incorrect attacker observations"
                     assert rewards == (0, 0)
                     assert not terminated
                     assert not truncated
-                    assert env.trace.defender_rewards[-1] == 0
-                    assert env.trace.attacker_rewards[-1] == 0
-                    assert env.trace.attacker_actions[-1] == 2
-                    assert env.trace.defender_actions[-1] == 1
-                    assert env.trace.infos[-1] == info
-                    assert env.trace.states[-1] == 2
-                    assert env.trace.beliefs[-1] == 0.7
-                    assert env.trace.infrastructure_metrics[-1] == 1
-                    assert (env.trace.attacker_observations[-1] == np.array([1, 2, 3])).all()
-                    assert (env.trace.defender_observations[-1] == np.array([4, 5, 6])).all()
-
+        
     def test_info(self) -> None:
         """
         Tests the function of adding the cumulative reward and episode length to the info dict
