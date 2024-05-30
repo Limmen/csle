@@ -1,9 +1,14 @@
-from gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env import StoppingGamePomdpDefenderEnv
+from gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env import (
+    StoppingGamePomdpDefenderEnv,
+)
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import (
+    StoppingGameDefenderPomdpConfig,
+)
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.player_type import PlayerType
 import pytest
@@ -219,7 +224,7 @@ class TestStoppingGamePomdpDefenderEnvSuite:
             stopping_game_name="csle-stopping-game-v1",
         )
         env = StoppingGamePomdpDefenderEnv(config=defender_pomdp_config)
-        assert env.set_state(1) is None # type: ignore
+        assert env.set_state(1) is None  # type: ignore
 
     def test_get_observation_from_history(self) -> None:
         """
@@ -301,7 +306,10 @@ class TestStoppingGamePomdpDefenderEnvSuite:
         t = 0
         observation = 0
         expected_actions = [0, 1]
-        assert env.get_actions_from_particles(particles, t, observation) == expected_actions
+        assert (
+            env.get_actions_from_particles(particles, t, observation)
+            == expected_actions
+        )
 
     def test_step(self) -> None:
         """
@@ -315,8 +323,12 @@ class TestStoppingGamePomdpDefenderEnvSuite:
         attacker_stage_strategy[1][0] = 0.9
         attacker_stage_strategy[1][1] = 0.1
         attacker_stage_strategy[2] = attacker_stage_strategy[1]
-        attacker_strategy = RandomPolicy(actions=list(self.config.A2), player_type=PlayerType.ATTACKER,
-                                         stage_policy_tensor=list(attacker_stage_strategy))
+        attacker_actions = list(map(lambda x: Action(id=x, descr=""), self.config.A2))
+        attacker_strategy = RandomPolicy(
+            actions=attacker_actions,
+            player_type=PlayerType.ATTACKER,
+            stage_policy_tensor=list(attacker_stage_strategy),
+        )
         defender_pomdp_config = StoppingGameDefenderPomdpConfig(
             env_name="test_env",
             stopping_game_config=self.config,
@@ -328,9 +340,9 @@ class TestStoppingGamePomdpDefenderEnvSuite:
         env.reset()
         defender_obs, reward, terminated, truncated, info = env.step(a1)
         assert len(defender_obs) == 2
-        assert isinstance(defender_obs[0], float) # type: ignore
-        assert isinstance(defender_obs[1], float) # type: ignore
-        assert isinstance(reward, float) # type: ignore
-        assert isinstance(terminated, bool) # type: ignore
-        assert isinstance(truncated, bool) # type: ignore
-        assert isinstance(info, dict) # type: ignore
+        assert isinstance(defender_obs[0], float)  # type: ignore
+        assert isinstance(defender_obs[1], float)  # type: ignore
+        assert isinstance(reward, float)  # type: ignore
+        assert isinstance(terminated, bool)  # type: ignore
+        assert isinstance(truncated, bool)  # type: ignore
+        assert isinstance(info, dict)  # type: ignore
