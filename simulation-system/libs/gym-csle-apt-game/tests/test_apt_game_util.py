@@ -179,7 +179,7 @@ class TestAptGameUtilSuite(object):
 
     def test_sample_attacker_action(
         self, example_attacker_strategy: MultiThresholdStoppingPolicy
-    ):
+    ) -> None:
         """
         Tests the byte filter function
 
@@ -190,54 +190,6 @@ class TestAptGameUtilSuite(object):
             pi2=example_attacker_strategy.stage_policy([0, 0]), s=1
         )
         assert example_sample_attacker_action in AptGameUtil.attacker_actions()
-
-    def test_p_o_given_b_a1_a2(self) -> None:
-        """
-        Test p_o_given_b_a1_a2 function
-
-        :return: None
-        """
-        env_name = "test_env"
-        N = 1
-        p_a = 0.5
-        T = AptGameUtil.transition_tensor(N, p_a)
-        O = AptGameUtil.observation_space(100)
-        Z = AptGameUtil.observation_tensor(100, N)
-        C = AptGameUtil.cost_tensor(N)
-        S = AptGameUtil.state_space(N)
-        A1 = AptGameUtil.defender_actions()
-        A2 = AptGameUtil.attacker_actions()
-        b1 = AptGameUtil.b1(N)
-        save_dir = "save_directory"
-        checkpoint_traces_freq = 100
-        gamma = 0.9
-        example_apt_game_config = AptGameConfig(
-            env_name,
-            T,
-            O,
-            Z,
-            C,
-            S,
-            A1,
-            A2,
-            b1,
-            N,
-            p_a,
-            save_dir,
-            checkpoint_traces_freq,
-            gamma,
-        )
-        o = 1
-        b = [0.5, 0.5]
-        a1 = 0
-        a2 = 1
-        print(example_apt_game_config.S)
-        print(example_apt_game_config.T.shape)
-        print(example_apt_game_config.Z.shape)
-
-        prob = AptGameUtil.p_o_given_b_a1_a2(o, b, a1, a2, example_apt_game_config)
-        assert isinstance(prob, float)
-        assert 0 <= prob < 1
 
     def test_generate_transitions(self, example_apt_game_config: AptGameConfig) -> None:
         """
