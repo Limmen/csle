@@ -236,25 +236,6 @@ class AptGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: AptGameConfig) -> float:
-        """
-        Computes P[o|a,b]
-
-        :param o: the observation
-        :param b: the belief point
-        :param a1: the action of player 1
-        :param a2: the action of player 2
-        :param config: the game config
-        :return: the probability of observing o when taking action a in belief point b
-        """
-        prob = 0
-        for s in config.S:
-            for s_prime in config.S:
-                prob += b[s] * config.T[a1][a2][s][s_prime] * config.Z[a1][a2][s_prime][o]
-        assert prob < 1
-        return prob
-
-    @staticmethod
     def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
                     config: AptGameConfig, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
         """
