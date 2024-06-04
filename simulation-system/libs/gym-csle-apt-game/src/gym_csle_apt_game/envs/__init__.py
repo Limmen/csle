@@ -1,1 +1,1 @@
-from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
+from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
