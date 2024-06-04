@@ -5,4 +5,4 @@ if __name__ == '__main__':
     #                                                   emulation_name="csle-level9-030")
     for i in range(1, 64):
         ImportUtil.import_emulation_traces_from_disk_json(
-            input_file=f"/media/lagring/traces_31_oct/{i}.json", emulation_name="csle-level9-050")
+            input_file=f"/media/lagring/traces_31_oct/{i}.json", emulation_name="csle-level9-060")
