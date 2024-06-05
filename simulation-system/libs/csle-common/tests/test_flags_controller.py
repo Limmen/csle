@@ -3,7 +3,7 @@ import logging
 from unittest.mock import MagicMock, patch
 from csle_common.controllers.flags_controller import FlagsController
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.constants.constants import COMMANDS
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.flag import Flag
@@ -35,4 +35,4 @@ class TestFlagsControllerSuite:
         FlagsController.create_flags(emulation_env_config,physical_server_ip,logger)
         mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip='172.17.0.1')
         mock_disconnect_admin.assert_called_once_with(emulation_env_config=emulation_env_config)
- 
+        mock_execute_ssh_cmd.assert_called()
