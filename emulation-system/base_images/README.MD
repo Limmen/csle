@@ -15,7 +15,7 @@ more specific Docker images.
      - OS: Debian:10.2. 
      - Inherits from `debian_10_base`.
 - `cve_2015_3306_base` ([cve_2015_3306_base](./docker_files/cve_2015_3306_base)): a base image for csle emulations with the CVE-2015-3306 vulnerability.
-     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_csle_cve_2010_0426_1/
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_csle_cve_2010_0426_1/)
      - OS: Debian:10.2. 
      - Inherits from `debian_10_base`.
 - `cve_2015_5602_base` ([cve_2015_5602_base](./docker_files/cve_2015_5602_base)): a base image for csle emulations with the CVE-2015-5602 vulnerability.

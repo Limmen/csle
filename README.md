@@ -91,7 +91,7 @@ A video walkthrough of the installation process is available [here](https://www.
 | Release                                                       | Last date of support |
 |---------------------------------------------------------------|----------------------|
 | [v.0.6.0](https://github.com/Limmen/csle/releases/tag/v0.6.0) | 2024-12-24           |
-| [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | 2024-06-02           |
+| [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | ~~2024-06-02~~       |
 | [v.0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0) | ~~2024-02-07~~       |
 | [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | ~~2024-01-17~~       |
 | [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | ~~2023-10-30~~       |
