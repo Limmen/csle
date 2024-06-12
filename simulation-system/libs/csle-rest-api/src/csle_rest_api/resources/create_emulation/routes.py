@@ -53,6 +53,7 @@ from csle_common.dao.emulation_config.docker_stats_manager_config import DockerS
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
+from csle_common.dao.emulation_config.credential import Credential
 
 def default_config(emulation_data:json) -> EmulationEnvConfig:
     """
@@ -862,16 +863,27 @@ def default_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
             vuln_type = vuln["vulnType"]
             vuln_service_name = vuln["vulnService"]["name"]
             vuln_service_protocol = vuln["vulnService"]["protocol"]
+            vuln_service_protocol = TransportProtocol(int(vuln_service_protocol))
             vuln_service_port = vuln["vulnService"]["port"]
             vuln_service_ip = vuln["vulnService"]["serviceIp"]
             vuln_root_access = vuln["vulnRoot"]
+            vuln_credentials = vuln["vulnCredentials"]
+            cred = []
+            for credentials in vuln_credentials:
+                print(credentials["vulnCredUsername"], credentials["vulnCredPw"], credentials["vulnCredRoot"], vuln_service_protocol)
+                cred.append(Credential(username=credentials["vulnCredUsername"], pw=credentials["vulnCredPw"],
+                                       root=credentials["vulnCredRoot"],
+                                       service=vuln_service_name,
+                                       protocol=vuln_service_protocol,
+                                       port=vuln_service_port))
+
             vulns.append(NodeVulnerabilityConfig(
                     name=vuln_name,
                     # *** I think we can also use service ip instead of interface ip, it will be the same. If it is not true we can use interface ip
                     ip=vuln_service_ip,
                     vuln_type=vuln_type,
                     # *** We should define credentials in the front end
-                    credentials=[],
+                    credentials=cred,
                     # *** We should define cvss in the front end
                     cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
                     cve=None,

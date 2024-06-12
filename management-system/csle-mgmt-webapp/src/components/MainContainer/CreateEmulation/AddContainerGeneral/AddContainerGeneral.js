@@ -77,8 +77,8 @@ const AddContainerGeneral = (props) => {
             <td>
               <select value={props.container.flagPermission}
                       onChange={(e) => props.handleFlagPermissionChange(e, props.containerIndex)}>
-                <option value="true">True</option>
-                <option value="false">False</option>
+                <option value="True">True</option>
+                <option value="False">False</option>
 
               </select>
             </td>
@@ -89,8 +89,8 @@ const AddContainerGeneral = (props) => {
               <select
                 value={props.container.reachableByAgent}
                 onChange={(e) => props.handleReachableByAgentChange(e, props.containerIndex)}>
-                <option value="true">True</option>
-                <option value="false">False</option>
+                <option value="True">True</option>
+                <option value="False">False</option>
 
               </select>
             </td>

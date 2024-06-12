@@ -71,8 +71,8 @@ const AddVulns = (props) => {
                   <select
                     value={props.container.vulns[vulnIndex].vulnRoot}
                     onChange={(e) => props.handleVulnAccessChange(e, props.containerIndex, vulnIndex)}>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
                   </select>
                 </td>
               </tr>
@@ -114,8 +114,8 @@ const AddVulns = (props) => {
                       <select
                         value={credential.vulnCredRoot}
                         onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredRoot')}>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
+                        <option value="True">True</option>
+                        <option value="False">False</option>
                       </select>
                     </div>
                     <div style={{ marginTop: '5px' }}>
@@ -156,8 +156,8 @@ const AddVulns = (props) => {
                       name="vulnCredRoot"
                       value={props.newVulnCredentials.vulnCredRoot}
                       onChange={props.handleNewCredentialChange}>
-                      <option value="true">True</option>
-                      <option value="false">False</option>
+                      <option value="True">True</option>
+                      <option value="False">False</option>
                     </select>
                   </div>
                   <div style={{ marginTop: '5px' }}>

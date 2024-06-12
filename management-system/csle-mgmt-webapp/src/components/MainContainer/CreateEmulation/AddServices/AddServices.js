@@ -56,8 +56,8 @@ const AddServices = (props) => {
                                     <select
                                         value={containerService.protocol}
                                         onChange={(e) => props.handleProtocolChange(e, props.containerIndex, serviceIndex)}>
-                                        <option value="tcp">tcp</option>
-                                        <option value="udp">udp</option>
+                                        <option value="0">TCP</option>
+                                        <option value="1">UDP</option>
                                     </select>
                                 </td>
                             </tr>

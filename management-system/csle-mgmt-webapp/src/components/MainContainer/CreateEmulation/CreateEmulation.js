@@ -72,7 +72,7 @@ const CreateEmulation = (props) => {
     const [levelValue, setLevelValue] = useState('')
     const [versionValue, setVersionValue] = useState('')
     const [timeStepLengthValue, setTimeStepLengthValue] = useState('')
-    const [newService, setNewService] = useState({name: '', protocol: 'tcp', port: '', serviceIp: ''})
+    const [newService, setNewService] = useState({name: '', protocol: '0', port: '', serviceIp: ''})
     const inputServiceProtocolRef = useRef(null)
     const inputServicePortRef = useRef(null)
     const inputServiceIpRef = useRef(null)
@@ -1363,7 +1363,7 @@ const CreateEmulation = (props) => {
         const userToAdd = {
             userName: '',
             pw: '',
-            root: "false"
+            root: "False"
         }
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
@@ -1384,7 +1384,7 @@ const CreateEmulation = (props) => {
     const handleAddContainerService = (containerIndex) => {
         const serviceToAdd = {
             name: 'Service name',
-            protocol: 'tcp',
+            protocol: '0',
             port: '',
             serviceIp: ''
         }
@@ -1425,7 +1425,7 @@ const CreateEmulation = (props) => {
         });
 
         // Optionally, reset the newVulnCredentials after adding
-        setNewVulnCredentials({ vulnCredUsername: 'username', vulnCredPw: 'password', vulnCredRoot: 'false' });
+        setNewVulnCredentials({ vulnCredUsername: 'username', vulnCredPw: 'password', vulnCredRoot: 'False' });
         deFocus()
     };
 

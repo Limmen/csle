@@ -67,8 +67,8 @@ const AddUsers = (props) => {
                   <select value={containerUsers.root}
                           onChange={(e) => props.handleContainerUserAccessChange(e, props.containerIndex,
                             userIndex)}>
-                    <option value="true">true</option>
-                    <option value="false">false</option>
+                    <option value="True">True</option>
+                    <option value="False">false</option>
                   </select>
                 </td>
               </tr>

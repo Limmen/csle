@@ -74,8 +74,8 @@ const AddEmulationGeneral = (props) => {
             <td>
               <select value={props.idsEnabled}
                       onChange={(e) => props.handleContainerIdsEnabledChange(e)}>
-                <option value="true">True</option>
-                <option value="false">False</option>
+                <option value="True">True</option>
+                <option value="False">False</option>
 
               </select>
             </td>
