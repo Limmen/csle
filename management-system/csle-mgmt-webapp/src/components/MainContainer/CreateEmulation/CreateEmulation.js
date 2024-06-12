@@ -1426,9 +1426,10 @@ const CreateEmulation = (props) => {
 
         // Optionally, reset the newVulnCredentials after adding
         setNewVulnCredentials({ vulnCredUsername: 'username', vulnCredPw: 'password', vulnCredRoot: 'false' });
+        deFocus()
     };
 
-    const handleVulnCredentialChange = (event, containerIndex, vulnIndex, fieldName) => {
+    const handleVulnCredentialChange = (event, containerIndex, vulnIndex, credIndex, fieldName) => {
         const { value } = event.target;
 
         setContainers(prevContainers => {
@@ -1436,27 +1437,28 @@ const CreateEmulation = (props) => {
             const selectedVuln = updatedContainers[containerIndex].vulns[vulnIndex];
             const updatedCredentials = [...selectedVuln.vulnCredentials];
 
-            // Find the credential object in the array
-            const credentialIndex = updatedCredentials.findIndex(cred => cred.vulnCredUsername === newVulnCredentials.vulnCredUsername &&
-              cred.vulnCredPw === newVulnCredentials.vulnCredPw &&
-              cred.vulnCredRoot === newVulnCredentials.vulnCredRoot
-            );
-
-            // Update the specified field of the credential
-            if (credentialIndex !== -1) {
-                updatedCredentials[credentialIndex][fieldName] = value;
+            // Update the specified field of the credential with the given index
+            if (credIndex >= 0 && credIndex < updatedCredentials.length) {
+                updatedCredentials[credIndex][fieldName] = value;
                 selectedVuln.vulnCredentials = updatedCredentials;
+
+                return updatedContainers;
             }
 
-            return updatedContainers;
+            // If the credential index is invalid, return the previous state
+            return prevContainers;
         });
-        deFocus()
-        if (fieldName === 'vulnCredPw') {
-            setShouldFocusVulnCredPwForChange(true)
-        } else if (fieldName === 'vulnCredUsername') {
-            setShouldFocusVulnCredUsernameForChange(true)
-        }
+        // console.log("The field of " + fieldName + "in container " + containerIndex +
+        //   " vuln of " + vulnIndex + " and credential of " + credIndex + " is changed to " +
+        //   containers[containerIndex].vulns[vulnIndex].credentials[credIndex].vulnCredUsername)
+        // deFocus()
+        // if (fieldName === 'vulnCredPw') {
+        //     setShouldFocusVulnCredPwForChange(true)
+        // } else if (fieldName === 'vulnCredUsername') {
+        //     setShouldFocusVulnCredUsernameForChange(true)
+        // }
     };
+
 
     const handleDeleteVulnCredential = (containerIndex, vulnIndex, credentialIndex) => {
         setContainers(prevContainers => {
