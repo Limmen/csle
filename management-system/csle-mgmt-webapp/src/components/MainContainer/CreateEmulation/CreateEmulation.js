@@ -58,6 +58,8 @@ const CreateEmulation = (props) => {
     const [showPopup, setShowPopup] = useState(false)
     const [newContainer, setNewContainer] = useState({name: '', os: ''})
     const [newUser, setNewUser] = useState({userName: '', pw: '', root: "false"})
+    const [newVulnCredentials, setNewVulnCredentials] = useState({vulnCredUsername: 'username', vulnCredPw: 'password',
+        vulnCredRoot: "false"})
     const inputUserNameRef = useRef(null)
     const inputPwRef = useRef(null)
     const inputRootRef = useRef(null)
@@ -106,6 +108,8 @@ const CreateEmulation = (props) => {
     const inputTrafficManagerLogFileRef = useRef(null)
     const inputTrafficManagerLogDirRef = useRef(null)
     const inputTrafficManagerMaxWorkersRef = useRef(null)
+    const inputVulnCredPwForChangeRef = useRef(null)
+    const inputVulnCredUsernameForChangeRef = useRef(null)
     const inputCpuRef = useRef(null)
     const inputMemRef = useRef(null)
     const inputFlagIdRef = useRef(null)
@@ -113,7 +117,13 @@ const CreateEmulation = (props) => {
     const inputPacketDelayDistributionRef = useRef(null)
     const inputPacketLossTypeRef = useRef(null)
     const inputVulnNameRef = useRef(null)
+    const inputVulnCredUsernameRef = useRef(null)
+    const inputVulnCredPwRef = useRef(null)
     const [shouldFocusVulnName, setShouldFocusVulnName] = useState(false)
+    const [shouldFocusVulnCredUsername, setShouldFocusVulnCredUsername] = useState(false)
+    const [shouldFocusVulnCredPw, setShouldFocusVulnCredPw] = useState(false)
+    const [shouldFocusVulnCredUsernameForChange, setShouldFocusVulnCredUsernameForChange] = useState(false)
+    const [shouldFocusVulnCredPwForChange, setShouldFocusVulnCredPwForChange] = useState(false)
     const [shouldFocusName, setShouldFocusName] = useState(false)
     const [shouldFocusIP, setShouldFocusIP] = useState(false)
     const [shouldFocusSubnetMask, setShouldFocusSubnetMask] = useState(false)
@@ -309,6 +319,10 @@ const CreateEmulation = (props) => {
         setShouldFocusServiceProtocol(false)
         setShouldFocusVulnName(false)
         setShouldFocusServiceName(false)
+        setShouldFocusVulnCredUsername(false)
+        setShouldFocusVulnCredPw(false)
+        setShouldFocusVulnCredUsernameForChange(false)
+        setShouldFocusVulnCredPwForChange(false)
     }
 
     const createEmulationRequest = useCallback(() => {
@@ -423,7 +437,6 @@ const CreateEmulation = (props) => {
         deFocus()
         console.log("The Access value for vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnRoot)
     }
-
     const handleContainerVulnTypeChange = (event, containerIndex, vulnIndex) => {
         const vulnTypeValue = event.target.value
         setContainers(prevContainers => {
@@ -1237,6 +1250,16 @@ const CreateEmulation = (props) => {
             inputServiceNameRef.current.focus()
         } else if (inputVulnNameRef.current && shouldFocusVulnName) {
             inputVulnNameRef.current.focus()
+        } else if (inputVulnCredUsernameRef.current && shouldFocusVulnCredUsername) {
+            inputVulnCredUsernameRef.current.focus()
+        } else if (inputVulnCredPwRef.current && shouldFocusVulnCredPw) {
+            inputVulnCredPwRef.current.focus()
+        }
+        else if (inputVulnCredPwForChangeRef.current && shouldFocusVulnCredPwForChange) {
+            inputVulnCredPwForChangeRef.current.focus()
+        }
+        else if (inputVulnCredUsernameForChangeRef.current && shouldFocusVulnCredUsernameForChange) {
+            inputVulnCredUsernameForChangeRef.current.focus()
         }
     }, [containers, shouldFocusName, shouldFocusIP, shouldFocusSubnetMask, shouldFocusLimitPacketsQueue,
         shouldFocusPacketDelayMs, shouldFocusPacketDelayJitterMs, shouldFocusPacketDelayCorrelationPercentage,
@@ -1249,7 +1272,8 @@ const CreateEmulation = (props) => {
         shouldFocusTrafficManagerPort, shouldFocusTrafficManagerLogDir, shouldFocusTrafficManagerLogFile,
         shouldFocusTrafficManagerMaxWorkers, shouldFocusPacketDelayDistribution, shouldFocusPacketLossType,
         shouldFocusUserName, shouldFocusPw, shouldFocusRoot, shouldFocusServiceIp, shouldFocusServicePort,
-        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName])
+        shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName, shouldFocusVulnCredUsername,
+        shouldFocusVulnCredPw, shouldFocusVulnCredPwForChange, shouldFocusVulnCredUsernameForChange])
 
     const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
         const packetDelayDistributionValue = event.target.value
@@ -1380,12 +1404,97 @@ const CreateEmulation = (props) => {
         deFocus()
     }
 
+    const handleAddVulnCredentials = (containerIndex, vulnIndex) => {
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers];
+            const selectedVuln = updatedContainers[containerIndex].vulns[vulnIndex];
+
+            // Check if the credential already exists
+            const existingCredential = selectedVuln.vulnCredentials.find(cred =>
+              cred.vulnCredUsername === newVulnCredentials.vulnCredUsername &&
+              cred.vulnCredPw === newVulnCredentials.vulnCredPw &&
+              cred.vulnCredRoot === newVulnCredentials.vulnCredRoot
+            );
+
+            // If the credential doesn't exist, add it
+            if (!existingCredential) {
+                selectedVuln.vulnCredentials = [...selectedVuln.vulnCredentials, newVulnCredentials];
+            }
+
+            return updatedContainers;
+        });
+
+        // Optionally, reset the newVulnCredentials after adding
+        setNewVulnCredentials({ vulnCredUsername: 'username', vulnCredPw: 'password', vulnCredRoot: 'false' });
+    };
+
+    const handleVulnCredentialChange = (event, containerIndex, vulnIndex, fieldName) => {
+        const { value } = event.target;
+
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers];
+            const selectedVuln = updatedContainers[containerIndex].vulns[vulnIndex];
+            const updatedCredentials = [...selectedVuln.vulnCredentials];
+
+            // Find the credential object in the array
+            const credentialIndex = updatedCredentials.findIndex(cred => cred.vulnCredUsername === newVulnCredentials.vulnCredUsername &&
+              cred.vulnCredPw === newVulnCredentials.vulnCredPw &&
+              cred.vulnCredRoot === newVulnCredentials.vulnCredRoot
+            );
+
+            // Update the specified field of the credential
+            if (credentialIndex !== -1) {
+                updatedCredentials[credentialIndex][fieldName] = value;
+                selectedVuln.vulnCredentials = updatedCredentials;
+            }
+
+            return updatedContainers;
+        });
+        deFocus()
+        if (fieldName === 'vulnCredPw') {
+            setShouldFocusVulnCredPwForChange(true)
+        } else if (fieldName === 'vulnCredUsername') {
+            setShouldFocusVulnCredUsernameForChange(true)
+        }
+    };
+
+    const handleDeleteVulnCredential = (containerIndex, vulnIndex, credentialIndex) => {
+        setContainers(prevContainers => {
+            const updatedContainers = [...prevContainers];
+            const selectedVuln = updatedContainers[containerIndex].vulns[vulnIndex];
+            const updatedCredentials = [...selectedVuln.vulnCredentials];
+
+            // Remove the credential from the array
+            updatedCredentials.splice(credentialIndex, 1);
+            selectedVuln.vulnCredentials = updatedCredentials;
+
+            return updatedContainers;
+        });
+    };
+
+
+    const handleNewCredentialChange = (event) => {
+        const { name, value } = event.target;
+        setNewVulnCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            [name]: value,
+        }));
+        deFocus()
+        if (name === 'vulnCredPw') {
+            setShouldFocusVulnCredPw(true)
+        } else if (name === 'vulnCredUsername') {
+            setShouldFocusVulnCredUsername(true)
+        }
+        console.log("The new credential " + name + "value is " + value)
+    };
+
     const handleAddContainerVulns = (containerIndex) => {
         const vulnsToAdd = {
             vulnName: 'Vulnerability name',
             vulnType: '',
             vulnService: {name:'', protocol: '', port:'', serviceIp: ''},
-            vulnRoot:''
+            vulnRoot:'',
+            vulnCredentials:[]
         }
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
@@ -1764,12 +1873,21 @@ const CreateEmulation = (props) => {
                                                         <AddVulns container={containers[index]}
                                                                   containerIndex={index}
                                                                   inputVulnNameRef={inputVulnNameRef}
+                                                                  newVulnCredentials={newVulnCredentials}
+                                                                  inputVulnCredUsernameRef={inputVulnCredUsernameRef}
+                                                                  inputVulnCredPwRef={inputVulnCredPwRef}
+                                                                  inputVulnCredUsernameForChangeRef={inputVulnCredUsernameForChangeRef}
+                                                                  inputVulnCredPwForChangeRef={inputVulnCredPwForChangeRef}
                                                                   handleVulnNameChange={handleContainerVulnNameChange}
                                                                   handleDeleteVuln={handleDeleteContainerVuln}
                                                                   addVulnHandler={handleAddContainerVulns}
                                                                   handleVulnServiceChange={handleContainerVulnServiceChange}
                                                                   handleVulnAccessChange={handleContainerVulnAccessChange}
                                                                   handleVulnTypeChange={handleContainerVulnTypeChange}
+                                                                  handleNewCredentialChange={handleNewCredentialChange}
+                                                                  handleAddVulnCredentials={handleAddVulnCredentials}
+                                                                  handleVulnCredentialChange={handleVulnCredentialChange}
+                                                                  handleDeleteVulnCredential={handleDeleteVulnCredential}
                                                         />
                                                     </div>
                                                 </div>

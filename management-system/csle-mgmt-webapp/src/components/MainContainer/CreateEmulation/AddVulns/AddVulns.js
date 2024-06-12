@@ -15,7 +15,7 @@ const AddVulns = (props) => {
         <Button type="button"
                 onClick={() => props.addVulnHandler(props.containerIndex)}
                 variant="success" size="sm">
-          <i className="fa fa-plus" aria-hidden="true"/>
+          <i className="fa fa-plus" aria-hidden="true" />
         </Button>
       </div>
 
@@ -76,7 +76,7 @@ const AddVulns = (props) => {
                   </select>
                 </td>
               </tr>
-              <tr className="custom-td">
+              <tr>
                 <td>Vulnerability type</td>
                 <td>
                   <select
@@ -89,12 +89,98 @@ const AddVulns = (props) => {
                   </select>
                 </td>
               </tr>
+              {props.container.vulns[vulnIndex].vulnCredentials.map((credential, credIndex) => (
+                <tr className="custom-td" key={`cred-${vulnIndex}-${credIndex}`}>
+                  <td>Vulnerability Credential {credIndex + 1}</td>
+                  <td>
+                    <div>
+                      <input
+                        ref={props.inputVulnCredUsernameForChangeRef}
+                        type="text"
+                        value={credential.vulnCredUsername}
+                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredUsername')}
+                      />
+                    </div>
+                    <div style={{ marginTop: '5px' }}>
+                      <input
+                        ref={props.inputVulnCredPwForChangeRef}
+                        type="text"
+                        value={credential.vulnCredPw}
+                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredPw')}
+                      />
+                    </div>
+                    <div style={{ marginTop: '5px' }}>
+                      <label style={{fontSize: '12px', marginRight: '5px'}}>Credentials access level</label>
+                      <select
+                        value={credential.vulnCredRoot}
+                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredRoot')}>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                      </select>
+                    </div>
+                    <div style={{ marginTop: '5px' }}>
+                      <Button
+                        onClick={() => props.handleDeleteVulnCredential(props.containerIndex, vulnIndex, credIndex)}
+                        style={{ marginLeft: '5px' }}
+                        variant="danger" size="sm">
+                        <i className="fa fa-trash" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              <tr className="custom-td">
+                <td>Add vulnerability credentials</td>
+                <td>
+                  <div>
+                    <input
+                      ref={props.inputVulnCredUsernameRef}
+                      type="text"
+                      name="vulnCredUsername"
+                      value={props.newVulnCredentials.vulnCredUsername}
+                      onChange={props.handleNewCredentialChange}
+                    />
+                  </div>
+                  <div style={{ marginTop: '5px' }}>
+                    <input
+                      ref={props.inputVulnCredPwRef}
+                      type="text"
+                      name="vulnCredPw"
+                      value={props.newVulnCredentials.vulnCredPw}
+                      onChange={props.handleNewCredentialChange}
+                    />
+                  </div>
+                  <div style={{ marginTop: '5px' }}>
+                    <label style={{fontSize: '12px', marginRight: '5px'}}>Credentials access level</label>
+                    <select
+                      name="vulnCredRoot"
+                      value={props.newVulnCredentials.vulnCredRoot}
+                      onChange={props.handleNewCredentialChange}>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </div>
+                  <div style={{ marginTop: '5px' }}>
+                    <Button
+                      onClick={() => {
+                        if (props.containerIndex !== null && vulnIndex !== null) {
+                          props.handleAddVulnCredentials(props.containerIndex, vulnIndex);
+                        }
+                      }}
+                      style={{ marginLeft: '5px' }}
+                      variant="success" size="sm">
+                      <i className="fa fa-plus" aria-hidden="true" />
+                    </Button>
+                  </div>
 
+                </td>
+              </tr>
             </React.Fragment>
           ))}
           </tbody>
         </Table>
       </div>
+
     </div>
   )
 }

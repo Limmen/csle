@@ -939,6 +939,7 @@ def create_emulation() -> Tuple[Response, int]:
     config = default_config(emulation_data)
     config.to_json_file("/home/shahab/config.json")
     # *** Here we call the funcion default_config with the emulation_data as input
+    print("Emulation configuration is saved...")
 
     response = jsonify({"TEST": "TEST"})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
