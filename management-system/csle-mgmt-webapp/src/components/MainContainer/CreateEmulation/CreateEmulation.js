@@ -1448,9 +1448,9 @@ const CreateEmulation = (props) => {
             // If the credential index is invalid, return the previous state
             return prevContainers;
         });
-        // console.log("The field of " + fieldName + "in container " + containerIndex +
-        //   " vuln of " + vulnIndex + " and credential of " + credIndex + " is changed to " +
-        //   containers[containerIndex].vulns[vulnIndex].credentials[credIndex].vulnCredUsername)
+        console.log("The field of " + fieldName + "in container " + containerIndex +
+          " vuln of " + vulnIndex + " and credential of " + credIndex + " is changed to " +
+          containers[containerIndex].vulns[vulnIndex].vulnCredentials[credIndex].vulnCredUsername)
         // deFocus()
         // if (fieldName === 'vulnCredPw') {
         //     setShouldFocusVulnCredPwForChange(true)
