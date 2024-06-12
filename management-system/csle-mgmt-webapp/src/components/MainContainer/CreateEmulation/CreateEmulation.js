@@ -1451,12 +1451,6 @@ const CreateEmulation = (props) => {
         console.log("The field of " + fieldName + "in container " + containerIndex +
           " vuln of " + vulnIndex + " and credential of " + credIndex + " is changed to " +
           containers[containerIndex].vulns[vulnIndex].vulnCredentials[credIndex].vulnCredUsername)
-        // deFocus()
-        // if (fieldName === 'vulnCredPw') {
-        //     setShouldFocusVulnCredPwForChange(true)
-        // } else if (fieldName === 'vulnCredUsername') {
-        //     setShouldFocusVulnCredUsernameForChange(true)
-        // }
     };
 
 
@@ -1491,28 +1485,44 @@ const CreateEmulation = (props) => {
     };
 
     const handleAddContainerVulns = (containerIndex) => {
+        console.log("New vuln is called.")
         const vulnsToAdd = {
             vulnName: 'Vulnerability name',
             vulnType: '',
-            vulnService: {name:'', protocol: '', port:'', serviceIp: ''},
-            vulnRoot:'',
-            vulnCredentials:[]
-        }
+            vulnService: { name: '', protocol: '', port: '', serviceIp: '' },
+            vulnRoot: '',
+            vulnCredentials: []
+        };
+
         setContainers(prevContainers => {
-            const updatedContainers = [...prevContainers]
-            if (containerIndex >= 0 && containerIndex < updatedContainers.length) {
-                const container = updatedContainers[containerIndex]
+            const updatedContainers = [...prevContainers];
+
+            if (containerIndex >= 0 && containerIndex < updatedContainers.length)
+            {
+                const container = updatedContainers[containerIndex];
+
+                // Check if the vulnerability exist
+
                 const vulnExists = container.vulns.some(existingVuln =>
-                  existingVuln.name === vulnsToAdd.name
+                  existingVuln.vulnName === vulnsToAdd.vulnName
                 )
-                if (!vulnExists) {
-                    container.vulns.push(vulnsToAdd)
+
+                if (!vulnExists)
+                {
+                    // Add the new vulnerability only if none exists
+                    container.vulns.push(vulnsToAdd);
                 }
             }
-            return updatedContainers
-        })
-        deFocus()
-    }
+
+            return updatedContainers;
+        });
+
+        // Ensure that the following actions are only taken when the function is explicitly called
+        deFocus();
+    };
+
+
+
 
     const handleDeleteContainerUser = (containerIndex, userIndex) => {
         setContainers(prevContainers => {

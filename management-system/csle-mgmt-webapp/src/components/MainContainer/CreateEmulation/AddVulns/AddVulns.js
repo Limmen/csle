@@ -90,7 +90,7 @@ const AddVulns = (props) => {
                 </td>
               </tr>
               {props.container.vulns[vulnIndex].vulnCredentials.map((credential, credIndex) => (
-                <tr className="custom-td" key={`cred-${vulnIndex}-${credIndex}`}>
+                <tr key={`cred-${vulnIndex}-${credIndex}`}>
                   <td>Vulnerability Credential {credIndex + 1}</td>
                   <td>
                     <div>
